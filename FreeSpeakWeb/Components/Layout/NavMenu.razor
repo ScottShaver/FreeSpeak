@@ -1,16 +1,20 @@
-﻿@implements IDisposable
+﻿@rendermode InteractiveServer
+@implements IDisposable
 
 @inject NavigationManager NavigationManager
 
+<!-- Always visible header across the top -->
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
+        <button class="navbar-toggler" @onclick="ToggleNavMenu" type="button" title="Toggle navigation menu" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <a class="navbar-brand" href="">FreeSpeakWeb</a>
     </div>
 </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+<!-- Collapsible navigation menu -->
+<div class="@NavMenuCssClass" @onclick="CloseNavMenu">
     <nav class="nav flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -70,7 +74,21 @@
 </div>
 
 @code {
+    private bool collapseNavMenu = false;
     private string? currentUrl;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "nav-scrollable" : "nav-scrollable show";
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+        StateHasChanged();
+    }
+
+    private void CloseNavMenu()
+    {
+        collapseNavMenu = true;
+    }
 
     protected override void OnInitialized()
     {
