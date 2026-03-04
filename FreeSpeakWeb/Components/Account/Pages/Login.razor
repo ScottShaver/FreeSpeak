@@ -3,6 +3,7 @@
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
 
 @inject UserManager<ApplicationUser> UserManager
@@ -10,8 +11,9 @@
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject IOptions<SiteSettings> SiteSettings
 
-<PageTitle>Log in</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - Log in</PageTitle>
 
 <h1>Log in</h1>
 <div class="row">

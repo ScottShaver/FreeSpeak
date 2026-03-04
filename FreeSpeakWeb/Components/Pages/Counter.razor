@@ -1,7 +1,10 @@
 ﻿@page "/counter"
 @rendermode InteractiveServer
 
-<PageTitle>Counter</PageTitle>
+@using Microsoft.Extensions.Options
+@inject IOptions<SiteSettings> SiteSettings
+
+<PageTitle>@SiteSettings.Value.SiteName - Counter</PageTitle>
 
 <h1>Counter</h1>
 

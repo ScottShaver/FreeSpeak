@@ -1,14 +1,16 @@
 ﻿@page "/Account/Manage/ResetAuthenticator"
 
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<ResetAuthenticator> Logger
+@inject IOptions<SiteSettings> SiteSettings
 
-<PageTitle>Reset authenticator key</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - Reset authenticator key</PageTitle>
 
 <StatusMessage />
 <h3>Reset authenticator key</h3>

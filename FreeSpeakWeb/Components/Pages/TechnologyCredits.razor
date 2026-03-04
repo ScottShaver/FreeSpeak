@@ -1,6 +1,9 @@
 @page "/technology-credits"
 
-<PageTitle>Technology Credits</PageTitle>
+@using Microsoft.Extensions.Options
+@inject IOptions<SiteSettings> SiteSettings
+
+<PageTitle>@SiteSettings.Value.SiteName - Technology Credits</PageTitle>
 
 <h1>Technology Credits</h1>
 

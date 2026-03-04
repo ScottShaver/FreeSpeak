@@ -3,13 +3,15 @@
 @using System.Text
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
+@inject IOptions<SiteSettings> SiteSettings
 
-<PageTitle>Confirm email change</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - Confirm email change</PageTitle>
 
 <h1>Confirm email change</h1>
 

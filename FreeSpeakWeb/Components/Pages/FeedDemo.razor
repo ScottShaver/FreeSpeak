@@ -1,8 +1,11 @@
 @page "/feed-demo"
 @rendermode InteractiveServer
 @using FreeSpeakWeb.Components.SocialFeed
+@using Microsoft.Extensions.Options
 
-<PageTitle>Social Feed Demo</PageTitle>
+@inject IOptions<SiteSettings> SiteSettings
+
+<PageTitle>@SiteSettings.Value.SiteName - Social Feed Demo</PageTitle>
 
 <h1>Social Feed Components Demo</h1>
 

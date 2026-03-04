@@ -1,6 +1,9 @@
 ﻿@page "/Account/AccessDenied"
 
-<PageTitle>Access denied</PageTitle>
+@using Microsoft.Extensions.Options
+@inject IOptions<SiteSettings> SiteSettings
+
+<PageTitle>@SiteSettings.Value.SiteName - Access denied</PageTitle>
 
 <header>
     <h1 class="text-danger">Access denied</h1>

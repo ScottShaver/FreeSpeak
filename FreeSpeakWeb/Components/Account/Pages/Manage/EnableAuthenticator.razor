@@ -5,6 +5,7 @@
 @using System.Text
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
 
 @using Net.Codecrete.QrCodeGenerator
@@ -13,6 +14,7 @@
 @inject UrlEncoder UrlEncoder
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<EnableAuthenticator> Logger
+@inject IOptions<SiteSettings> SiteSettings
 
 <PageTitle>Configure authenticator app</PageTitle>
 
@@ -177,7 +179,7 @@ else
         return string.Format(
             CultureInfo.InvariantCulture,
             AuthenticatorUriFormat,
-            UrlEncoder.Encode("FreeSpeakWeb"),
+            UrlEncoder.Encode(SiteSettings.Value.SiteName),
             UrlEncoder.Encode(email),
             unformattedKey);
     }

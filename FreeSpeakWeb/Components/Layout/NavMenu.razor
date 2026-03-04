@@ -1,8 +1,10 @@
 ﻿@rendermode InteractiveServer
 @implements IDisposable
 
+@using Microsoft.Extensions.Options
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JS
+@inject IOptions<SiteSettings> SiteSettings
 
 <!-- Always visible header across the top -->
 <div class="top-row ps-3 navbar navbar-dark">
@@ -10,7 +12,7 @@
         <button class="navbar-toggler" @onclick="ToggleNavMenu" type="button" title="Toggle navigation menu" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="">FreeSpeakWeb</a>
+        <a class="navbar-brand" href="">@SiteSettings.Value.SiteName</a>
     </div>
 </div>
 

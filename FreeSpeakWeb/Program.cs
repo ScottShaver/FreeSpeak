@@ -17,6 +17,9 @@ namespace FreeSpeakWeb
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
+            // Configure SiteSettings
+            builder.Services.Configure<SiteSettings>(builder.Configuration);
+
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<IdentityRedirectManager>();
             builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();

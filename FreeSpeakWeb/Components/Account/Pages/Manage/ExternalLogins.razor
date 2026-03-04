@@ -2,14 +2,16 @@
 
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IUserStore<ApplicationUser> UserStore
 @inject IdentityRedirectManager RedirectManager
+@inject IOptions<SiteSettings> SiteSettings
 
-<PageTitle>Manage your external logins</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - Manage your external logins</PageTitle>
 
 <StatusMessage />
 @if (currentLogins?.Count > 0)

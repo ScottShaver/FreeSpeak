@@ -1,7 +1,10 @@
 ﻿@page "/Error"
 @using System.Diagnostics
+@using Microsoft.Extensions.Options
 
-<PageTitle>Error</PageTitle>
+@inject IOptions<SiteSettings> SiteSettings
+
+<PageTitle>@SiteSettings.Value.SiteName - Error</PageTitle>
 
 <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
