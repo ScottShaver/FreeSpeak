@@ -1,6 +1,9 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+@using Microsoft.Extensions.Options
+@inject IOptions<SiteSettings> SiteSettings
+
+<PageTitle>@SiteSettings.Value.SiteName - Home</PageTitle>
 
 <h1>Hello, world!</h1>
 

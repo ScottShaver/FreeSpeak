@@ -2,14 +2,16 @@
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<LoginWith2fa> Logger
+@inject IOptions<SiteSettings> SiteSettings
 
-<PageTitle>Two-factor authentication</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - Two-factor authentication</PageTitle>
 
 <h1>Two-factor authentication</h1>
 <hr />

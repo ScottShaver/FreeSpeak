@@ -1,6 +1,9 @@
 ﻿@page "/Account/Lockout"
 
-<PageTitle>Locked out</PageTitle>
+@using Microsoft.Extensions.Options
+@inject IOptions<SiteSettings> SiteSettings
+
+<PageTitle>@SiteSettings.Value.SiteName - Locked out</PageTitle>
 
 <header>
     <h1 class="text-danger">Locked out</h1>

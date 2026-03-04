@@ -2,14 +2,16 @@
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<DeletePersonalData> Logger
+@inject IOptions<SiteSettings> SiteSettings
 
-<PageTitle>Delete Personal Data</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - Delete Personal Data</PageTitle>
 
 <StatusMessage Message="@message" />
 

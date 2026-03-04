@@ -5,6 +5,7 @@
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
 
 @inject UserManager<ApplicationUser> UserManager
@@ -14,8 +15,9 @@
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject IOptions<SiteSettings> SiteSettings
 
-<PageTitle>Register</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - Register</PageTitle>
 
 <h1>Register</h1>
 

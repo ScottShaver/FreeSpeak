@@ -5,14 +5,16 @@
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IEmailSender<ApplicationUser> EmailSender
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject IOptions<SiteSettings> SiteSettings
 
-<PageTitle>Manage email</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - Manage email</PageTitle>
 
 <h3>Manage email</h3>
 

@@ -2,14 +2,16 @@
 
 @using FreeSpeakWeb.Data
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
 @using System.ComponentModel.DataAnnotations
 @using System.Buffers.Text
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
+@inject IOptions<SiteSettings> SiteSettings
 
-<PageTitle>Manage your passkeys</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - Manage your passkeys</PageTitle>
 
 <h3>Manage your passkeys</h3>
 

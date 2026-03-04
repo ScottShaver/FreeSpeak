@@ -6,6 +6,7 @@
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
 
 @inject SignInManager<ApplicationUser> SignInManager
@@ -15,8 +16,9 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<ExternalLogin> Logger
+@inject IOptions<SiteSettings> SiteSettings
 
-<PageTitle>Register</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - Register</PageTitle>
 
 <StatusMessage Message="@message" />
 <h1>Register</h1>

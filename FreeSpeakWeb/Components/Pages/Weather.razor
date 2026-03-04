@@ -1,7 +1,10 @@
 ﻿@page "/weather"
 @attribute [StreamRendering]
 
-<PageTitle>Weather</PageTitle>
+@using Microsoft.Extensions.Options
+@inject IOptions<SiteSettings> SiteSettings
+
+<PageTitle>@SiteSettings.Value.SiteName - Weather</PageTitle>
 
 <h1>Weather</h1>
 
