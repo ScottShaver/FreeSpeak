@@ -2,6 +2,7 @@
 @implements IDisposable
 
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JS
 
 <!-- Always visible header across the top -->
 <div class="top-row ps-3 navbar navbar-dark">
@@ -14,7 +15,7 @@
 </div>
 
 <!-- Collapsible navigation menu -->
-<div class="@NavMenuCssClass" @onclick="CloseNavMenu">
+<div class="@NavMenuCssClass" @onclick="HandleNavMenuClick">
     <nav class="nav flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -84,6 +85,9 @@
 @code {
     private bool collapseNavMenu = false;
     private string? currentUrl;
+    private IJSObjectReference? module;
+    private IJSObjectReference? resizeHandler;
+    private DotNetObjectReference<NavMenu>? dotNetReference;
 
     private string? NavMenuCssClass => collapseNavMenu ? "nav-scrollable" : "nav-scrollable show";
 
@@ -93,15 +97,48 @@
         StateHasChanged();
     }
 
-    private void CloseNavMenu()
+    private async Task HandleNavMenuClick()
+    {
+        // Only close the nav menu if we're on mobile or narrow window
+        if (module != null)
+        {
+            var shouldClose = await module.InvokeAsync<bool>("shouldAutoCloseNav");
+            if (shouldClose)
+            {
+                collapseNavMenu = true;
+                StateHasChanged();
+            }
+        }
+    }
+
+    [JSInvokable]
+    public void OnWindowResizedToNarrow()
     {
         collapseNavMenu = true;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void OnWindowResizedToWide()
+    {
+        collapseNavMenu = false;
+        StateHasChanged();
     }
 
     protected override void OnInitialized()
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/Layout/NavMenu.razor.js");
+            dotNetReference = DotNetObjectReference.Create(this);
+            resizeHandler = await module.InvokeAsync<IJSObjectReference>("setupResizeHandler", dotNetReference);
+        }
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
@@ -113,6 +150,10 @@
     public void Dispose()
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
+        resizeHandler?.InvokeVoidAsync("dispose");
+        dotNetReference?.Dispose();
+        module?.DisposeAsync();
     }
 }
+
 
