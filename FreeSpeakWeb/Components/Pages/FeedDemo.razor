@@ -1,0 +1,94 @@
+@page "/feed-demo"
+@rendermode InteractiveServer
+@using FreeSpeakWeb.Components.SocialFeed
+
+<PageTitle>Social Feed Demo</PageTitle>
+
+<h1>Social Feed Components Demo</h1>
+
+<div class="demo-container">
+    <h2>FeedArticle Component</h2>
+    <FeedArticle 
+        AuthorName="Scott Shaver"
+        AuthorImageUrl="/images/sample-avatar.jpg"
+        CreatedAt="@DateTime.Now.AddHours(-2)"
+        LikeCount="26"
+        CommentCount="4"
+        Comments="@sampleComments"
+        CurrentUserImageUrl="/images/sample-avatar.jpg">
+        <ArticleContent>
+            <p>More test carvings today. Again all cut on the same piece of curly maple. This time using 4 different tapered ball nose bits. Left to right for the bits are bottom to top for the carvings.</p>
+            <div class="article-images">
+                <img src="/images/sample-carving.jpg" alt="Carvings" style="width: 100%; border-radius: 8px; margin-top: 12px;" />
+            </div>
+        </ArticleContent>
+    </FeedArticle>
+
+    <h2>MultiLineCommentDisplay Component</h2>
+    <div style="background: white; padding: 16px; border-radius: 8px;">
+        <MultiLineCommentDisplay 
+            UserName="Bee Brizzle"
+            UserImageUrl="/images/sample-avatar.jpg"
+            CommentText="Dude you're crushing the projects and test!"
+            Timestamp="@DateTime.Now.AddDays(-3)" />
+    </div>
+
+    <h2>MultiLineCommentEditor Component</h2>
+    <div style="background: white; padding: 16px; border-radius: 8px;">
+        <MultiLineCommentEditor />
+    </div>
+</div>
+
+<style>
+    .demo-container {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .demo-container h2 {
+        margin-top: 32px;
+        margin-bottom: 16px;
+        font-size: 20px;
+        color: #050505;
+    }
+
+    .article-images {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 4px;
+    }
+</style>
+
+@code {
+    private List<CommentDisplayModel> sampleComments = new()
+    {
+        new CommentDisplayModel
+        {
+            UserName = "Bee Brizzle",
+            UserImageUrl = "/images/sample-avatar.jpg",
+            CommentText = "Dude you're crushing the projects and test!",
+            Timestamp = DateTime.Now.AddDays(-3),
+            Replies = new List<CommentDisplayModel>
+            {
+                new CommentDisplayModel
+                {
+                    UserName = "Scott Shaver",
+                    UserImageUrl = "/images/sample-avatar.jpg",
+                    CommentText = "Thanks! Really enjoying learning all this.",
+                    Timestamp = DateTime.Now.AddDays(-3).AddMinutes(30)
+                }
+            }
+        },
+        new CommentDisplayModel
+        {
+            UserName = "John Doe",
+            UserImageUrl = "/images/sample-avatar.jpg",
+            CommentText = @"This text area can handle multiple lines of text.
+See, this is another line of text.
+And here is a yet another line of text.",
+            Timestamp = DateTime.Now.AddMinutes(-10),
+            ImageUrl = "/images/sample-image.jpg"
+        }
+    };
+}

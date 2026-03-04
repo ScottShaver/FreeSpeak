@@ -1,0 +1,85 @@
+@inject IJSRuntime JS
+@using FreeSpeakWeb.Components.SocialFeed
+
+<div class="comment-display">
+    <div class="comment-avatar">
+        <img src="@(UserImageUrl ?? "/images/default-avatar.png")" alt="@UserName" class="avatar-img" />
+    </div>
+    
+    <div class="comment-content">
+        <div class="comment-bubble">
+            <div class="comment-author">@UserName</div>
+            <div class="comment-text">@CommentText</div>
+        </div>
+        
+        @if (!string.IsNullOrEmpty(ImageUrl))
+        {
+            <div class="comment-image-container">
+                <img src="@ImageUrl" alt="Comment image" class="comment-image" @onclick="OnImageClick" />
+            </div>
+        }
+        
+        <div class="comment-meta">
+            <span class="comment-timestamp">@FormattedTimestamp</span>
+        </div>
+        
+        @if (Replies != null && Replies.Any())
+        {
+            <div class="comment-replies">
+                @foreach (var reply in Replies)
+                {
+                    <MultiLineCommentDisplay 
+                        UserName="@reply.UserName"
+                        UserImageUrl="@reply.UserImageUrl"
+                        CommentText="@reply.CommentText"
+                        ImageUrl="@reply.ImageUrl"
+                        Timestamp="@reply.Timestamp"
+                        Replies="@reply.Replies" />
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string UserName { get; set; } = "Anonymous";
+
+    [Parameter]
+    public string? UserImageUrl { get; set; }
+
+    [Parameter]
+    public string CommentText { get; set; } = "";
+
+    [Parameter]
+    public string? ImageUrl { get; set; }
+
+    [Parameter]
+    public DateTime Timestamp { get; set; } = DateTime.Now;
+
+    [Parameter]
+    public List<CommentDisplayModel>? Replies { get; set; }
+
+    private string FormattedTimestamp => FormatTimestamp(Timestamp);
+
+    private string FormatTimestamp(DateTime timestamp)
+    {
+        var timeSpan = DateTime.Now - timestamp;
+        
+        if (timeSpan.TotalMinutes < 1)
+            return "Just now";
+        if (timeSpan.TotalMinutes < 60)
+            return $"{(int)timeSpan.TotalMinutes}m";
+        if (timeSpan.TotalHours < 24)
+            return $"{(int)timeSpan.TotalHours}h";
+        if (timeSpan.TotalDays < 7)
+            return $"{(int)timeSpan.TotalDays}d";
+
+        return timestamp.ToString("MMM d 'at' h:mm tt");
+    }
+
+    private async Task OnImageClick()
+    {
+        await JS.InvokeVoidAsync("alert", "Image Clicked");
+    }
+}
