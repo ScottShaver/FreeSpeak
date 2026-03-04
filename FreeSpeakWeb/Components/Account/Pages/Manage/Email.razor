@@ -17,6 +17,23 @@
 <h3>Manage email</h3>
 
 <StatusMessage Message="@message"/>
+
+@if (emailVerificationLink is not null)
+{
+    <p>
+        This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
+        Normally this would be emailed: <a href="@emailVerificationLink">Click here to confirm your current email</a>
+    </p>
+}
+
+@if (emailChangeLink is not null)
+{
+    <p>
+        This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
+        Normally this would be emailed: <a href="@emailChangeLink">Click here to confirm your email change</a>
+    </p>
+}
+
 <div class="row">
     <div class="col-xl-6">
         <form @onsubmit="OnSendEmailVerificationAsync" @formname="send-verification" id="send-verification-form" method="post">
@@ -58,6 +75,8 @@
     private ApplicationUser? user;
     private string? email;
     private bool isEmailConfirmed;
+    private string? emailVerificationLink;
+    private string? emailChangeLink;
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
@@ -103,9 +122,17 @@
             NavigationManager.ToAbsoluteUri("Account/ConfirmEmailChange").AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = userId, ["email"] = Input.NewEmail, ["code"] = code });
 
-        await EmailSender.SendConfirmationLinkAsync(user, Input.NewEmail, HtmlEncoder.Default.Encode(callbackUrl));
-
-        message = "Confirmation link to change email sent. Please check your email.";
+        if (EmailSender is IdentityNoOpEmailSender)
+        {
+            // Once you add a real email sender, you should remove this code that lets you confirm the email change
+            emailChangeLink = callbackUrl;
+            message = "Click the link above to confirm your email change.";
+        }
+        else
+        {
+            await EmailSender.SendConfirmationLinkAsync(user, Input.NewEmail, HtmlEncoder.Default.Encode(callbackUrl));
+            message = "Confirmation link to change email sent. Please check your email.";
+        }
     }
 
     private async Task OnSendEmailVerificationAsync()
@@ -128,9 +155,17 @@
             NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
 
-        await EmailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(callbackUrl));
-
-        message = "Verification email sent. Please check your email.";
+        if (EmailSender is IdentityNoOpEmailSender)
+        {
+            // Once you add a real email sender, you should remove this code that lets you confirm the account
+            emailVerificationLink = callbackUrl;
+            message = "Click the link above to verify your email.";
+        }
+        else
+        {
+            await EmailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(callbackUrl));
+            message = "Verification email sent. Please check your email.";
+        }
     }
 
     private sealed class InputModel
