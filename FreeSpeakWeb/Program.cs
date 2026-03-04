@@ -44,6 +44,16 @@ namespace FreeSpeakWeb
 
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
+            // Configure Kestrel to listen on all network interfaces for mobile testing
+            builder.WebHost.ConfigureKestrel(serverOptions =>
+            {
+                serverOptions.ListenAnyIP(5000); // HTTP
+                serverOptions.ListenAnyIP(7025, listenOptions =>
+                {
+                    listenOptions.UseHttps(); // HTTPS
+                });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
