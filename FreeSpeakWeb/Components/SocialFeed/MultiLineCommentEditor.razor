@@ -1,0 +1,82 @@
+@inject IJSRuntime JS
+
+@implements IAsyncDisposable
+
+<div class="comment-editor">
+    <textarea 
+        @bind="CommentText"
+        @bind:event="oninput"
+        @bind:after="HandleInputAfter"
+        @ref="textareaElement"
+        placeholder="Write a comment..."
+        rows="1"
+        class="comment-textarea"
+        onkeydown="if(event.key==='Enter'){setTimeout(()=>{this.style.height='auto';var fullHeight=this.scrollHeight;var newHeight=Math.min(fullHeight,200);this.style.height=newHeight+'px';this.style.overflowY=fullHeight>200?'auto':'hidden';},0)}"></textarea>
+    <button
+        type="button" 
+        class="submit-arrow @(CanSubmit ? "active" : "disabled")"
+        disabled="@(!CanSubmit)"
+        @onclick="OnSubmitComment">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+        </svg>
+    </button>
+</div>
+
+@code {
+    private ElementReference textareaElement;
+    private string commentText = "";
+    private IJSObjectReference? module;
+
+    [Parameter]
+    public string CommentText 
+    { 
+        get => commentText;
+        set => commentText = value;
+    }
+
+    [Parameter]
+    public EventCallback<string> OnCommentSubmitted { get; set; }
+
+    private bool CanSubmit => !string.IsNullOrWhiteSpace(CommentText);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/MultiLineCommentEditor.razor.js");
+        }
+    }
+
+    private async Task HandleInputAfter()
+    {
+        // This runs after @bind updates CommentText
+        // Resize the textarea
+        if (module is not null)
+        {
+            await module.InvokeVoidAsync("resizeTextarea", textareaElement);
+        }
+    }
+
+    private async Task OnSubmitComment()
+    {
+        if (CanSubmit)
+        {
+            await JS.InvokeVoidAsync("alert", "Post Comment");
+            if (OnCommentSubmitted.HasDelegate)
+            {
+                await OnCommentSubmitted.InvokeAsync(CommentText);
+            }
+            CommentText = "";
+            StateHasChanged();
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (module is not null)
+        {
+            await module.DisposeAsync();
+        }
+    }
+}

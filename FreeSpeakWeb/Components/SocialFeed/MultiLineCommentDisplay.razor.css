@@ -1,0 +1,88 @@
+.comment-display {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.comment-avatar {
+    flex-shrink: 0;
+}
+
+.avatar-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.comment-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.comment-bubble {
+    background-color: #f0f2f5;
+    border-radius: 18px;
+    padding: 8px 12px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.comment-author {
+    font-size: 13px;
+    font-weight: 600;
+    color: #050505;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+    display: block;
+}
+
+.comment-text {
+    font-size: 15px;
+    color: #050505;
+    line-height: 1.3333;
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+.comment-image-container {
+    margin-top: 4px;
+    max-width: 400px;
+}
+
+.comment-image {
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.comment-image:hover {
+    opacity: 0.95;
+}
+
+.comment-meta {
+    margin-top: 4px;
+    padding-left: 12px;
+}
+
+.comment-timestamp {
+    font-size: 12px;
+    color: #65676b;
+}
+
+.comment-replies {
+    margin-top: 8px;
+    padding-left: 0;
+}
+
+/* Nested comments have slightly smaller avatars */
+.comment-replies .comment-display .avatar-img {
+    width: 28px;
+    height: 28px;
+}
