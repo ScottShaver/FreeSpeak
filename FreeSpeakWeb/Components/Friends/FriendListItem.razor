@@ -1,0 +1,407 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject FriendsService FriendsService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<div class="friend-list-item text-center">
+    @if (!string.IsNullOrEmpty(User.ProfilePictureUrl))
+    {
+        <img src="@User.ProfilePictureUrl" 
+             alt="@GetDisplayName()" 
+             class="rounded-circle mb-2 profile-image-clickable" 
+             style="width: 168px; height: 168px; object-fit: cover; cursor: pointer;" 
+             @onclick="ShowProfilePreview" />
+    }
+    else
+    {
+        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-2 profile-image-clickable" 
+             style="width: 168px; height: 168px; cursor: pointer;" 
+             @onclick="ShowProfilePreview">
+            <span class="text-white fs-1">@GetDisplayName().Substring(0, 1).ToUpper()</span>
+        </div>
+    }
+
+    <h5 class="mb-1">@GetDisplayName()</h5>
+
+    @if (MutualFriendsCount > 0)
+    {
+        <p class="text-muted small mb-2">
+            <button class="btn btn-link p-0 text-muted small" @onclick="ShowMutualFriends" style="text-decoration: none;">
+                <i class="bi bi-people-fill"></i> @MutualFriendsCount mutual @(MutualFriendsCount == 1 ? "friend" : "friends")
+            </button>
+        </p>
+    }
+    
+    <div class="d-flex flex-column gap-2">
+        @if (ShowAccept)
+        {
+            <button class="btn btn-success" @onclick="HandleAccept" disabled="@IsProcessing">
+                @if (IsProcessing && actionType == "accept")
+                {
+                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                }
+                Accept
+            </button>
+        }
+
+        @if (ShowReject)
+        {
+            <button class="btn btn-outline-danger" @onclick="HandleReject" disabled="@IsProcessing">
+                @if (IsProcessing && actionType == "reject")
+                {
+                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                }
+                Decline
+            </button>
+        }
+
+        @if (ShowAddFriend)
+        {
+            <button class="btn btn-primary" @onclick="HandleAddFriend" disabled="@IsProcessing">
+                @if (IsProcessing && actionType == "add")
+                {
+                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                }
+                Add Friend
+            </button>
+        }
+
+        @if (ShowCancel)
+        {
+            <button class="btn btn-outline-warning" @onclick="HandleCancel" disabled="@IsProcessing">
+                @if (IsProcessing && actionType == "cancel")
+                {
+                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                }
+                Cancel Request
+            </button>
+        }
+
+        @if (ShowRemove)
+        {
+            <button class="btn btn-outline-secondary" @onclick="HandleRemove" disabled="@IsProcessing">
+                @if (IsProcessing && actionType == "remove")
+                {
+                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                }
+                Remove
+            </button>
+        }
+    </div>
+</div>
+
+<!-- Mutual Friends Modal -->
+@if (showMutualFriendsModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" @onclick="CloseMutualFriends">
+        <div class="modal-dialog modal-dialog-scrollable" @onclick:stopPropagation="true">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Mutual Friends with @GetDisplayName()</h5>
+                    <button type="button" class="btn-close" @onclick="CloseMutualFriends"></button>
+                </div>
+                <div class="modal-body">
+                    @if (isLoadingMutualFriends)
+                    {
+                        <div class="text-center py-3">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    }
+                    else if (mutualFriends.Count == 0)
+                    {
+                        <p class="text-muted text-center">No mutual friends found.</p>
+                    }
+                    else
+                    {
+                        <div class="list-group">
+                            @foreach (var friend in mutualFriends)
+                            {
+                                <div class="list-group-item">
+                                    <div class="d-flex align-items-center gap-3">
+                                        @if (!string.IsNullOrEmpty(friend.ProfilePictureUrl))
+                                        {
+                                            <img src="@friend.ProfilePictureUrl" alt="@GetFriendDisplayName(friend)" class="rounded-circle" style="width: 48px; height: 48px; object-fit: cover;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                                <span class="text-white">@GetFriendDisplayName(friend).Substring(0, 1).ToUpper()</span>
+                                            </div>
+                                        }
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-0">@GetFriendDisplayName(friend)</h6>
+                                            @if (!string.IsNullOrEmpty(friend.City) && !string.IsNullOrEmpty(friend.State))
+                                            {
+                                                <small class="text-muted">@friend.City, @friend.State</small>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseMutualFriends">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Profile Preview Modal -->
+@if (showProfilePreviewModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" @onclick="CloseProfilePreview">
+        <div class="modal-dialog modal-dialog-centered" @onclick:stopPropagation="true">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Profile Preview</h5>
+                    <button type="button" class="btn-close" @onclick="CloseProfilePreview"></button>
+                </div>
+                <div class="modal-body">
+                    @if (isLoadingProfilePreview)
+                    {
+                        <div class="text-center py-3">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center">
+                            @if (!string.IsNullOrEmpty(User.ProfilePictureUrl))
+                            {
+                                <img src="@User.ProfilePictureUrl" 
+                                     alt="@GetDisplayName()" 
+                                     class="rounded-circle mb-3" 
+                                     style="width: 120px; height: 120px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-3" 
+                                     style="width: 120px; height: 120px;">
+                                    <span class="text-white" style="font-size: 3rem;">@GetDisplayName().Substring(0, 1).ToUpper()</span>
+                                </div>
+                            }
+
+                            <h4 class="mb-2">@GetDisplayName()</h4>
+
+                            @if (!string.IsNullOrEmpty(User.UserName))
+                            {
+                                <p class="text-muted mb-3">@@@User.UserName</p>
+                            }
+
+                            @if (!string.IsNullOrEmpty(User.City) && !string.IsNullOrEmpty(User.State))
+                            {
+                                <p class="mb-2">
+                                    <i class="bi bi-geo-alt-fill"></i> @User.City, @User.State
+                                </p>
+                            }
+
+                            <div class="border-top pt-3 mt-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="mb-0">@userFriendCount</h5>
+                                        <small class="text-muted">@(userFriendCount == 1 ? "Friend" : "Friends")</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseProfilePreview">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public ApplicationUser User { get; set; } = default!;
+
+    [Parameter]
+    public int MutualFriendsCount { get; set; }
+
+    [Parameter]
+    public bool ShowAddFriend { get; set; }
+
+    [Parameter]
+    public bool ShowAccept { get; set; }
+
+    [Parameter]
+    public bool ShowReject { get; set; }
+
+    [Parameter]
+    public bool ShowCancel { get; set; }
+
+    [Parameter]
+    public bool ShowRemove { get; set; }
+
+    [Parameter]
+    public EventCallback<ApplicationUser> OnAddFriend { get; set; }
+
+    [Parameter]
+    public EventCallback<ApplicationUser> OnAccept { get; set; }
+
+    [Parameter]
+    public EventCallback<ApplicationUser> OnReject { get; set; }
+
+    [Parameter]
+    public EventCallback<ApplicationUser> OnCancel { get; set; }
+
+    [Parameter]
+    public EventCallback<ApplicationUser> OnRemove { get; set; }
+
+    private bool IsProcessing { get; set; }
+    private string actionType = "";
+    private bool showMutualFriendsModal = false;
+    private bool isLoadingMutualFriends = false;
+    private List<ApplicationUser> mutualFriends = new();
+
+    private bool showProfilePreviewModal = false;
+    private bool isLoadingProfilePreview = false;
+    private int userFriendCount = 0;
+
+    private string GetDisplayName()
+    {
+        if (!string.IsNullOrEmpty(User.FirstName) && !string.IsNullOrEmpty(User.LastName))
+        {
+            return $"{User.FirstName} {User.LastName}";
+        }
+        return User.UserName ?? "Unknown";
+    }
+
+    private string GetFriendDisplayName(ApplicationUser user)
+    {
+        if (!string.IsNullOrEmpty(user.FirstName) && !string.IsNullOrEmpty(user.LastName))
+        {
+            return $"{user.FirstName} {user.LastName}";
+        }
+        return user.UserName ?? "Unknown";
+    }
+
+    private async Task ShowMutualFriends()
+    {
+        if (MutualFriendsCount == 0) return;
+
+        showMutualFriendsModal = true;
+        isLoadingMutualFriends = true;
+        StateHasChanged();
+
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var currentUserId = authState.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(currentUserId))
+            {
+                mutualFriends = await FriendsService.GetMutualFriendsAsync(currentUserId, User.Id);
+            }
+        }
+        catch (Exception)
+        {
+            mutualFriends = new List<ApplicationUser>();
+        }
+        finally
+        {
+            isLoadingMutualFriends = false;
+            StateHasChanged();
+        }
+    }
+
+    private void CloseMutualFriends()
+    {
+        showMutualFriendsModal = false;
+        mutualFriends.Clear();
+    }
+
+    private async Task ShowProfilePreview()
+    {
+        showProfilePreviewModal = true;
+        isLoadingProfilePreview = true;
+        StateHasChanged();
+
+        try
+        {
+            userFriendCount = await FriendsService.GetFriendsCountAsync(User.Id);
+        }
+        catch (Exception)
+        {
+            userFriendCount = 0;
+        }
+        finally
+        {
+            isLoadingProfilePreview = false;
+            StateHasChanged();
+        }
+    }
+
+    private void CloseProfilePreview()
+    {
+        showProfilePreviewModal = false;
+        userFriendCount = 0;
+    }
+
+    private async Task HandleAccept()
+    {
+        if (!IsProcessing && OnAccept.HasDelegate)
+        {
+            IsProcessing = true;
+            actionType = "accept";
+            await OnAccept.InvokeAsync(User);
+            IsProcessing = false;
+        }
+    }
+
+    private async Task HandleReject()
+    {
+        if (!IsProcessing && OnReject.HasDelegate)
+        {
+            IsProcessing = true;
+            actionType = "reject";
+            await OnReject.InvokeAsync(User);
+            IsProcessing = false;
+        }
+    }
+
+    private async Task HandleAddFriend()
+    {
+        if (!IsProcessing && OnAddFriend.HasDelegate)
+        {
+            IsProcessing = true;
+            actionType = "add";
+            await OnAddFriend.InvokeAsync(User);
+            IsProcessing = false;
+        }
+    }
+
+    private async Task HandleCancel()
+    {
+        if (!IsProcessing && OnCancel.HasDelegate)
+        {
+            IsProcessing = true;
+            actionType = "cancel";
+            await OnCancel.InvokeAsync(User);
+            IsProcessing = false;
+        }
+    }
+
+    private async Task HandleRemove()
+    {
+        if (!IsProcessing && OnRemove.HasDelegate)
+        {
+            IsProcessing = true;
+            actionType = "remove";
+            await OnRemove.InvokeAsync(User);
+            IsProcessing = false;
+        }
+    }
+}

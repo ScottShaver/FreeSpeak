@@ -14,6 +14,7 @@
 @inject ProfilePictureService ProfilePictureService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+@inject ILogger<Index> Logger
 
 <PageTitle>@SiteSettings.Value.SiteName - Profile</PageTitle>
 
@@ -61,6 +62,39 @@
                 <label for="username" class="form-label">Username</label>
             </div>
             <div class="form-floating mb-3">
+                <input type="text" value="@user?.FirstName" id="firstName" class="form-control" placeholder="First name" disabled />
+                <label for="firstName" class="form-label">First Name</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" value="@user?.LastName" id="lastName" class="form-control" placeholder="Last name" disabled />
+                <label for="lastName" class="form-label">Last Name</label>
+            </div>
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.NameSuffix" id="Input.NameSuffix" class="form-control" placeholder="Jr., Sr., III, etc." />
+                <label for="Input.NameSuffix" class="form-label">Name Suffix</label>
+                <ValidationMessage For="() => Input.NameSuffix" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputDate @bind-Value="Input.DateOfBirth" id="Input.DateOfBirth" class="form-control" />
+                <label for="Input.DateOfBirth" class="form-label">Date of Birth</label>
+                <ValidationMessage For="() => Input.DateOfBirth" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.City" id="Input.City" class="form-control" placeholder="Enter your city" />
+                <label for="Input.City" class="form-label">City</label>
+                <ValidationMessage For="() => Input.City" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.State" id="Input.State" class="form-control" placeholder="Enter your state" />
+                <label for="Input.State" class="form-label">State</label>
+                <ValidationMessage For="() => Input.State" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.Occupation" id="Input.Occupation" class="form-control" placeholder="Enter your occupation" />
+                <label for="Input.Occupation" class="form-label">Occupation</label>
+                <ValidationMessage For="() => Input.Occupation" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
                 <InputText @bind-Value="Input.PhoneNumber" id="Input.PhoneNumber" class="form-control" placeholder="Enter your phone number" />
                 <label for="Input.PhoneNumber" class="form-label">Phone number</label>
                 <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
@@ -97,6 +131,11 @@
         phoneNumber = await UserManager.GetPhoneNumberAsync(user);
 
         Input.PhoneNumber ??= phoneNumber;
+        Input.NameSuffix ??= user.NameSuffix;
+        Input.DateOfBirth ??= user.DateOfBirth;
+        Input.City ??= user.City;
+        Input.State ??= user.State;
+        Input.Occupation ??= user.Occupation;
     }
 
     private void OnFileSelected(InputFileChangeEventArgs e)
@@ -137,8 +176,9 @@
                 profilePictureError = result.ErrorMessage;
             }
         }
-        catch (IOException)
+        catch (IOException ex)
         {
+            Logger.LogError(ex, "[{ExceptionType}] IOException while uploading profile picture for user {UserId}. File size may exceed limit. Exception: {ExceptionMessage}", ex.GetType().Name, user.Id, ex.Message);
             profilePictureError = "The file is too large. Maximum size is 5MB.";
         }
     }
@@ -151,6 +191,8 @@
             return;
         }
 
+        var hasChanges = false;
+
         // Handle phone number update
         if (Input.PhoneNumber != phoneNumber)
         {
@@ -160,7 +202,48 @@
                 statusMessage = "Error: Failed to set phone number.";
                 return;
             }
+            hasChanges = true;
+        }
 
+        // Update profile fields
+        if (Input.NameSuffix != user.NameSuffix)
+        {
+            user.NameSuffix = Input.NameSuffix;
+            hasChanges = true;
+        }
+
+        if (Input.DateOfBirth != user.DateOfBirth)
+        {
+            user.DateOfBirth = Input.DateOfBirth;
+            hasChanges = true;
+        }
+
+        if (Input.City != user.City)
+        {
+            user.City = Input.City;
+            hasChanges = true;
+        }
+
+        if (Input.State != user.State)
+        {
+            user.State = Input.State;
+            hasChanges = true;
+        }
+
+        if (Input.Occupation != user.Occupation)
+        {
+            user.Occupation = Input.Occupation;
+            hasChanges = true;
+        }
+
+        if (hasChanges)
+        {
+            var updateResult = await UserManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+            {
+                statusMessage = "Error: Failed to update profile.";
+                return;
+            }
             statusMessage = "Your profile has been updated";
         }
     }
@@ -170,5 +253,24 @@
         [Phone]
         [Display(Name = "Phone number")]
         public string? PhoneNumber { get; set; }
+
+        [StringLength(50, ErrorMessage = "The {0} must be at max {1} characters long.")]
+        [Display(Name = "Name Suffix")]
+        public string? NameSuffix { get; set; }
+
+        [Display(Name = "Date of Birth")]
+        public DateOnly? DateOfBirth { get; set; }
+
+        [StringLength(100, ErrorMessage = "The {0} must be at max {1} characters long.")]
+        [Display(Name = "City")]
+        public string? City { get; set; }
+
+        [StringLength(100, ErrorMessage = "The {0} must be at max {1} characters long.")]
+        [Display(Name = "State")]
+        public string? State { get; set; }
+
+        [StringLength(100, ErrorMessage = "The {0} must be at max {1} characters long.")]
+        [Display(Name = "Occupation")]
+        public string? Occupation { get; set; }
     }
 }

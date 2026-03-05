@@ -10,7 +10,7 @@ namespace FreeSpeakWeb
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -33,8 +33,13 @@ namespace FreeSpeakWeb
                 .AddIdentityCookies();
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            builder.Services.AddPooledDbContextFactory<ApplicationDbContext>(options =>
                 options.UseNpgsql(connectionString));
+
+            // Register DbContext as scoped service using the factory for Identity and middleware
+            builder.Services.AddScoped<ApplicationDbContext>(sp => 
+                sp.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
+
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddIdentityCore<ApplicationUser>(options =>
@@ -51,6 +56,9 @@ namespace FreeSpeakWeb
             // Add ProfilePictureService
             builder.Services.AddScoped<ProfilePictureService>();
 
+            // Add FriendsService
+            builder.Services.AddScoped<FriendsService>();
+
             // Configure Kestrel to listen on all network interfaces for mobile testing
             builder.WebHost.ConfigureKestrel(serverOptions =>
             {
@@ -62,6 +70,24 @@ namespace FreeSpeakWeb
             });
 
             var app = builder.Build();
+
+            // Seed test users in development environment
+            if (app.Environment.IsDevelopment())
+            {
+                using var scope = app.Services.CreateScope();
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    await DatabaseSeeder.SeedTestUsersAsync(userManager, logger);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "[{ExceptionType}] An error occurred while seeding the database. Exception: {ExceptionMessage}", ex.GetType().Name, ex.Message);
+                }
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

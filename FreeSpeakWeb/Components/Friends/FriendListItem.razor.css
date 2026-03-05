@@ -1,0 +1,49 @@
+.friend-list-item {
+    background-color: white;
+    border: 1px solid #e4e6eb;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    min-width: 200px;
+}
+
+.friend-list-item h5 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #050505;
+}
+
+.friend-list-item .text-muted {
+    color: #65676b;
+}
+
+.friend-list-item .btn {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.friend-list-item .btn-link {
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.friend-list-item .btn-link:hover {
+    text-decoration: underline;
+}
+
+/* Mutual friends link styling */
+.friend-list-item .text-muted button:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Profile image hover effect */
+.friend-list-item .profile-image-clickable {
+    transition: opacity 0.2s ease-in-out;
+}
+
+.friend-list-item .profile-image-clickable:hover {
+    opacity: 0.85;
+}
