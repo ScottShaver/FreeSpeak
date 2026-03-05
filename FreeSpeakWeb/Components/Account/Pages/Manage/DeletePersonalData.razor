@@ -11,15 +11,15 @@
 @inject ILogger<DeletePersonalData> Logger
 @inject IOptions<SiteSettings> SiteSettings
 
-<PageTitle>@SiteSettings.Value.SiteName - Delete Personal Data</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - Disable Account</PageTitle>
 
 <StatusMessage Message="@message" />
 
-<h3>Delete Personal Data</h3>
+<h3>Disable Account</h3>
 
 <div class="alert alert-warning" role="alert">
     <p>
-        <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+        <strong>Disabling your account will permanently lock you out, and this cannot be recovered.</strong>
     </p>
 </div>
 
@@ -35,7 +35,7 @@
                 <ValidationMessage For="() => Input.Password" class="text-danger" />
             </div>
         }
-        <button class="w-100 btn btn-lg btn-danger" type="submit">Delete data and close my account</button>
+        <button class="w-100 btn btn-lg btn-danger" type="submit">Disable my account</button>
     </EditForm>
 </div>
 
@@ -77,16 +77,20 @@
             return;
         }
 
-        var result = await UserManager.DeleteAsync(user);
+        // Disable the account instead of deleting it by setting a permanent lockout
+        user.LockoutEnabled = true;
+        user.LockoutEnd = DateTimeOffset.MaxValue; // Permanent lockout
+
+        var result = await UserManager.UpdateAsync(user);
         if (!result.Succeeded)
         {
-            throw new InvalidOperationException("Unexpected error occurred deleting user.");
+            throw new InvalidOperationException("Unexpected error occurred disabling user account.");
         }
 
         await SignInManager.SignOutAsync();
 
         var userId = await UserManager.GetUserIdAsync(user);
-        Logger.LogInformation("User with ID '{UserId}' deleted themselves.", userId);
+        Logger.LogInformation("User with ID '{UserId}' disabled their account.", userId);
 
         RedirectManager.RedirectToCurrentPage();
     }

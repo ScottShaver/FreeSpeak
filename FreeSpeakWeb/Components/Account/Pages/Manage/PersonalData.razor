@@ -15,16 +15,16 @@
 
 <div class="row">
     <div class="col-md-6">
-        <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
+        <p>Your account contains personal data that you have given us. This page allows you to download that data or permanently disable your account.</p>
         <p>
-            <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+            <strong>Disabling your account will PERMANENTLY disable your account, and this cannot be recovered.</strong>
         </p>
         <form action="Account/Manage/DownloadPersonalData" method="post">
             <AntiforgeryToken />
             <button class="btn btn-primary" type="submit">Download</button>
         </form>
         <p>
-            <a href="Account/Manage/DeletePersonalData" class="btn btn-danger">Delete</a>
+            <a href="Account/Manage/DeletePersonalData" class="btn btn-danger">Permanently Disable My Account</a>
         </p>
     </div>
 </div>

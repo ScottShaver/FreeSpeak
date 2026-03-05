@@ -1,10 +1,14 @@
-﻿@rendermode InteractiveServer
-@implements IDisposable
+﻿@implements IDisposable
 
+@using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
+@using FreeSpeakWeb.Data
+
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JS
 @inject IOptions<SiteSettings> SiteSettings
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IServiceScopeFactory ScopeFactory
 
 <!-- Always visible header across the top -->
 <div class="top-row ps-3 navbar navbar-dark">
@@ -52,8 +56,16 @@
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                    <NavLink class="nav-link d-flex align-items-center gap-2" href="Account/Manage">
+                        @if (!string.IsNullOrEmpty(currentUser?.ProfilePictureUrl))
+                        {
+                            <img src="@currentUser.ProfilePictureUrl" alt="Profile" class="rounded-circle" style="width: 32px; height: 32px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span>
+                        }
+                        <span>@context.User.Identity?.Name</span>
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
@@ -96,6 +108,7 @@
     private IJSObjectReference? module;
     private IJSObjectReference? resizeHandler;
     private DotNetObjectReference<NavMenu>? dotNetReference;
+    private ApplicationUser? currentUser;
 
     private string? NavMenuCssClass => collapseNavMenu ? "nav-scrollable" : "nav-scrollable show";
 
@@ -133,10 +146,18 @@
         StateHasChanged();
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            await using var scope = ScopeFactory.CreateAsyncScope();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            currentUser = await userManager.GetUserAsync(authState.User);
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
