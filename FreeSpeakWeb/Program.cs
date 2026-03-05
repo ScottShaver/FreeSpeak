@@ -1,6 +1,7 @@
 using FreeSpeakWeb.Components;
 using FreeSpeakWeb.Components.Account;
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,9 @@ namespace FreeSpeakWeb
 
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
+            // Add ProfilePictureService
+            builder.Services.AddScoped<ProfilePictureService>();
+
             // Configure Kestrel to listen on all network interfaces for mobile testing
             builder.WebHost.ConfigureKestrel(serverOptions =>
             {
@@ -82,6 +86,20 @@ namespace FreeSpeakWeb
 
             // Add additional endpoints required by the Identity /Account Razor components.
             app.MapAdditionalIdentityEndpoints();
+
+            // Profile picture endpoint - serves images by user ID without exposing file paths
+            app.MapGet("/api/profile-picture/{userId}", async (string userId, ProfilePictureService profilePictureService) =>
+            {
+                var imageBytes = await profilePictureService.GetProfilePictureAsync(userId);
+
+                if (imageBytes == null)
+                {
+                    return Results.NotFound();
+                }
+
+                return Results.File(imageBytes, "image/jpeg", enableRangeProcessing: true);
+            })
+            .RequireAuthorization();
 
             app.Run();
         }

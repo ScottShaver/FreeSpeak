@@ -1,11 +1,39 @@
 ﻿@page "/Account/Lockout"
 
+@using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
+@using FreeSpeakWeb.Data
+
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IOptions<SiteSettings> SiteSettings
 
 <PageTitle>@SiteSettings.Value.SiteName - Locked out</PageTitle>
 
 <header>
     <h1 class="text-danger">Locked out</h1>
-    <p class="text-danger" role="alert">This account has been locked out, please try again later.</p>
+    @if (isPermanentLockout)
+    {
+        <p class="text-danger" role="alert">Your account has been permanently disabled, this cannot be undone.</p>
+    }
+    else
+    {
+        <p class="text-danger" role="alert">This account has been locked out, please try again later.</p>
+    }
 </header>
+
+@code {
+    private bool isPermanentLockout;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await UserManager.GetUserAsync(authState.User);
+
+        if (user is not null && user.LockoutEnd.HasValue)
+        {
+            // Check if lockout is permanent (set to max value)
+            isPermanentLockout = user.LockoutEnd.Value >= DateTimeOffset.MaxValue.AddDays(-1);
+        }
+    }
+}
