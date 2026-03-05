@@ -1,0 +1,600 @@
+@page "/friends"
+@rendermode InteractiveServer
+@attribute [Authorize]
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.Friends
+
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject FriendsService FriendsService
+@inject IOptions<SiteSettings> SiteSettings
+@inject ILogger<FriendsList> Logger
+
+<PageTitle>@SiteSettings.Value.SiteName - Friends</PageTitle>
+
+<h3>Friends</h3>
+
+@if (!string.IsNullOrEmpty(statusMessage))
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        @statusMessage
+        <button type="button" class="btn-close" @onclick="() => statusMessage = null"></button>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @errorMessage
+        <button type="button" class="btn-close" @onclick="() => errorMessage = null"></button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-12">
+        @if (isLoading)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <!-- Tabs Navigation -->
+            <ul class="nav nav-tabs mb-4" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @(activeTab == "friends" ? "active" : "")" type="button" @onclick="HandleFriendsTabClick">
+                        Your Friends (@friendsCount)
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @(activeTab == "suggestions" ? "active" : "")" type="button" @onclick="HandleSuggestionsTabClick">
+                        People You May Know
+                        @if (peopleYouMayKnowCount > 0)
+                        {
+                            <span class="badge bg-primary ms-1">@peopleYouMayKnowCount</span>
+                        }
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @(activeTab == "requests" ? "active" : "")" type="button" @onclick="HandleRequestsTabClick">
+                        Friend Requests
+                        @if (pendingRequestsCount > 0)
+                        {
+                            <span class="badge bg-danger ms-1">@pendingRequestsCount</span>
+                        }
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @(activeTab == "sent" ? "active" : "")" type="button" @onclick="HandleSentTabClick">
+                        Sent Requests
+                        @if (sentRequestsCount > 0)
+                        {
+                            <span class="badge bg-warning ms-1">@sentRequestsCount</span>
+                        }
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @(activeTab == "search" ? "active" : "")" type="button" @onclick="HandleSearchTabClick">
+                        Find People
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Your Friends Tab -->
+                <div class="tab-pane fade @(activeTab == "friends" ? "show active" : "")" role="tabpanel">
+                    @if (friends.Count == 0)
+                    {
+                        <div class="alert alert-info" role="alert">
+                            <p class="mb-0">You don't have any friends yet. Start connecting with people!</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+                            @foreach (var friend in friends)
+                            {
+                                <div class="col">
+                                    <FriendListItem 
+                                        User="@friend" 
+                                        ShowRemove="true"
+                                        OnRemove="@HandleRemoveFriend" />
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <!-- People You May Know Tab -->
+                <div class="tab-pane fade @(activeTab == "suggestions" ? "show active" : "")" role="tabpanel">
+                    @if (peopleYouMayKnow.Count == 0)
+                    {
+                        <div class="alert alert-info" role="alert">
+                            <p class="mb-0">No suggestions available at this time.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+                            @foreach (var suggestion in peopleYouMayKnow)
+                            {
+                                @if (suggestion.User != null)
+                                {
+                                    <div class="col">
+                                        <FriendListItem 
+                                            User="@suggestion.User" 
+                                            MutualFriendsCount="@suggestion.MutualFriendsCount"
+                                            ShowAddFriend="true"
+                                            OnAddFriend="@HandleAddFriend" />
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+
+                <!-- Friend Requests Tab -->
+                <div class="tab-pane fade @(activeTab == "requests" ? "show active" : "")" role="tabpanel">
+                    @if (pendingRequests.Count == 0)
+                    {
+                        <div class="alert alert-info" role="alert">
+                            <p class="mb-0">You have no pending friend requests.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+                            @foreach (var request in pendingRequests)
+                            {
+                                @if (request.Requester != null)
+                                {
+                                    <div class="col">
+                                        <FriendListItem 
+                                            User="@request.Requester" 
+                                            ShowAccept="true"
+                                            ShowReject="true"
+                                            OnAccept="@HandleAcceptRequest"
+                                            OnReject="@HandleRejectRequest" />
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+
+                <!-- Sent Requests Tab -->
+                <div class="tab-pane fade @(activeTab == "sent" ? "show active" : "")" role="tabpanel">
+                    @if (sentRequests.Count == 0)
+                    {
+                        <div class="alert alert-info" role="alert">
+                            <p class="mb-0">You have no pending sent requests.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+                            @foreach (var request in sentRequests)
+                            {
+                                @if (request.Addressee != null)
+                                {
+                                    <div class="col">
+                                        <FriendListItem 
+                                            User="@request.Addressee" 
+                                            ShowCancel="true"
+                                            OnCancel="@HandleCancelRequest" />
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+
+                <!-- Find People Tab -->
+                <div class="tab-pane fade @(activeTab == "search" ? "show active" : "")" role="tabpanel">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input type="text" 
+                                       class="form-control" 
+                                       placeholder="Search by username..." 
+                                       @bind="searchTerm"
+                                       @bind:event="oninput"
+                                       @onkeyup="HandleSearchKeyUp" />
+                                <button class="btn btn-primary" type="button" @onclick="HandleSearch" disabled="@isSearching">
+                                    @if (isSearching)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                                    }
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (searchResults.Count > 0)
+                    {
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+                            @foreach (var user in searchResults)
+                            {
+                                <div class="col">
+                                    <FriendListItem 
+                                        User="@user" 
+                                        ShowAddFriend="true"
+                                        OnAddFriend="@HandleAddFriendFromSearch" />
+                                </div>
+                            }
+                        </div>
+                    }
+                    else if (hasSearched && !isSearching)
+                    {
+                        <div class="alert alert-info" role="alert">
+                            <p class="mb-0">No users found matching "@searchTerm".</p>
+                        </div>
+                    }
+                    else if (!hasSearched)
+                    {
+                        <div class="alert alert-info" role="alert">
+                            <p class="mb-0">Enter a username to search for people.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<ApplicationUser> friends = new();
+    private List<(ApplicationUser User, int MutualFriendsCount)> peopleYouMayKnow = new();
+    private List<(Friendship Friendship, ApplicationUser Requester)> pendingRequests = new();
+    private List<(Friendship Friendship, ApplicationUser Addressee)> sentRequests = new();
+    private List<ApplicationUser> searchResults = new();
+    private bool isLoading = true;
+    private bool isSearching = false;
+    private bool hasSearched = false;
+    private ApplicationUser? currentUser;
+    private string? statusMessage;
+    private string? errorMessage;
+    private string searchTerm = "";
+    private string activeTab = "friends"; // Default to "Your Friends" tab
+
+    // Count badges
+    private int friendsCount = 0;
+    private int pendingRequestsCount = 0;
+    private int sentRequestsCount = 0;
+    private int peopleYouMayKnowCount = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        currentUser = await UserManager.GetUserAsync(authState.User);
+
+        isLoading = false;
+
+        if (currentUser != null)
+        {
+            // Load counts for all tabs
+            await LoadAllCountsAsync();
+
+            // Load data for the default tab
+            await LoadFriendsAsync();
+        }
+    }
+
+    private async Task LoadAllCountsAsync()
+    {
+        if (currentUser?.Id == null) return;
+
+        try
+        {
+            // Load all counts in parallel for better performance
+            var friendsCountTask = FriendsService.GetFriendsCountAsync(currentUser.Id);
+            var pendingRequestsCountTask = FriendsService.GetPendingRequestsCountAsync(currentUser.Id);
+            var sentRequestsCountTask = FriendsService.GetSentRequestsCountAsync(currentUser.Id);
+            var peopleYouMayKnowCountTask = FriendsService.GetPeopleYouMayKnowCountAsync(currentUser.Id);
+
+            await Task.WhenAll(friendsCountTask, pendingRequestsCountTask, sentRequestsCountTask, peopleYouMayKnowCountTask);
+
+            friendsCount = await friendsCountTask;
+            pendingRequestsCount = await pendingRequestsCountTask;
+            sentRequestsCount = await sentRequestsCountTask;
+            peopleYouMayKnowCount = await peopleYouMayKnowCountTask;
+
+            Logger.LogInformation("Loaded counts - Friends: {FriendsCount}, Pending: {PendingCount}, Sent: {SentCount}, Suggestions: {SuggestionsCount}",
+                friendsCount, pendingRequestsCount, sentRequestsCount, peopleYouMayKnowCount);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading counts for user {UserId}", currentUser.Id);
+        }
+    }
+
+    private async Task LoadFriendsAsync()
+    {
+        if (currentUser?.Id == null) return;
+
+        try
+        {
+            friends = await FriendsService.GetFriendsAsync(currentUser.Id);
+            friendsCount = friends.Count;
+            Logger.LogInformation("Loaded {Count} friends", friends.Count);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading friends for user {UserId}", currentUser.Id);
+            errorMessage = "An error occurred while loading your friends.";
+        }
+    }
+
+    private async Task LoadPendingRequestsAsync()
+    {
+        if (currentUser?.Id == null) return;
+
+        try
+        {
+            pendingRequests = await FriendsService.GetPendingRequestsAsync(currentUser.Id);
+            pendingRequestsCount = pendingRequests.Count;
+            Logger.LogInformation("Loaded {Count} pending requests", pendingRequests.Count);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading pending requests for user {UserId}", currentUser.Id);
+            errorMessage = "An error occurred while loading friend requests.";
+        }
+    }
+
+    private async Task LoadSentRequestsAsync()
+    {
+        if (currentUser?.Id == null) return;
+
+        try
+        {
+            sentRequests = await FriendsService.GetSentRequestsAsync(currentUser.Id);
+            sentRequestsCount = sentRequests.Count;
+            Logger.LogInformation("Loaded {Count} sent requests", sentRequests.Count);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading sent requests for user {UserId}", currentUser.Id);
+            errorMessage = "An error occurred while loading sent requests.";
+        }
+    }
+
+    private async Task LoadPeopleYouMayKnowAsync()
+    {
+        if (currentUser?.Id == null) return;
+
+        try
+        {
+            peopleYouMayKnow = await FriendsService.GetPeopleYouMayKnowAsync(currentUser.Id);
+            peopleYouMayKnowCount = peopleYouMayKnow.Count;
+            Logger.LogInformation("Loaded {Count} people you may know", peopleYouMayKnow.Count);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading people you may know for user {UserId}", currentUser.Id);
+            errorMessage = "An error occurred while loading suggestions.";
+        }
+    }
+
+    private void SetActiveTab(string tab)
+    {
+        activeTab = tab;
+    }
+
+    private async Task HandleFriendsTabClick()
+    {
+        SetActiveTab("friends");
+        await LoadFriendsAsync();
+    }
+
+    private async Task HandleSuggestionsTabClick()
+    {
+        SetActiveTab("suggestions");
+        await LoadPeopleYouMayKnowAsync();
+    }
+
+    private async Task HandleRequestsTabClick()
+    {
+        SetActiveTab("requests");
+        await LoadPendingRequestsAsync();
+    }
+
+    private async Task HandleSentTabClick()
+    {
+        SetActiveTab("sent");
+        await LoadSentRequestsAsync();
+    }
+
+    private void HandleSearchTabClick()
+    {
+        SetActiveTab("search");
+        // Search tab doesn't need to load data, user initiates search manually
+    }
+
+    private async Task HandleSearch()
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm) || currentUser?.Id == null || isSearching)
+        {
+            return;
+        }
+
+        isSearching = true;
+        hasSearched = true;
+        errorMessage = null;
+
+        try
+        {
+            searchResults = await FriendsService.SearchUsersAsync(searchTerm, currentUser.Id);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "[{ExceptionType}] Error occurred while searching for users. Search term: {SearchTerm}. Exception: {ExceptionMessage}", ex.GetType().Name, searchTerm, ex.Message);
+            errorMessage = "An error occurred while searching. Please try again.";
+        }
+        finally
+        {
+            isSearching = false;
+        }
+    }
+
+    private async Task HandleSearchKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await HandleSearch();
+        }
+    }
+
+    private async Task HandleAddFriendFromSearch(ApplicationUser user)
+    {
+        if (currentUser?.Id == null) return;
+
+        var result = await FriendsService.SendFriendRequestAsync(currentUser.Id, user.Id);
+        if (result.Success)
+        {
+            statusMessage = $"Friend request sent to {GetDisplayName(user)}.";
+            // Remove from search results
+            searchResults = searchResults.Where(u => u.Id != user.Id).ToList();
+            // Update sent requests count
+            sentRequestsCount = await FriendsService.GetSentRequestsCountAsync(currentUser.Id);
+            StateHasChanged();
+        }
+        else
+        {
+            errorMessage = result.ErrorMessage ?? "Failed to send friend request.";
+        }
+    }
+
+    private async Task HandleRemoveFriend(ApplicationUser friend)
+    {
+        if (currentUser?.Id == null) return;
+
+        var friendship = await FriendsService.GetFriendshipAsync(currentUser.Id, friend.Id);
+        if (friendship != null)
+        {
+            var result = await FriendsService.RemoveFriendAsync(friendship.Id, currentUser.Id);
+            if (result.Success)
+            {
+                statusMessage = $"Removed {GetDisplayName(friend)} from your friends.";
+                await LoadFriendsAsync();
+                // Update suggestions count as it may change
+                peopleYouMayKnowCount = await FriendsService.GetPeopleYouMayKnowCountAsync(currentUser.Id);
+                StateHasChanged();
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage ?? "Failed to remove friend.";
+            }
+        }
+    }
+
+    private async Task HandleAddFriend(ApplicationUser user)
+    {
+        if (currentUser?.Id == null) return;
+
+        var result = await FriendsService.SendFriendRequestAsync(currentUser.Id, user.Id);
+        if (result.Success)
+        {
+            statusMessage = $"Friend request sent to {GetDisplayName(user)}.";
+            // Remove from suggestions
+            peopleYouMayKnow = peopleYouMayKnow.Where(p => p.User.Id != user.Id).ToList();
+            peopleYouMayKnowCount = peopleYouMayKnow.Count;
+            // Update sent requests count
+            sentRequestsCount = await FriendsService.GetSentRequestsCountAsync(currentUser.Id);
+            StateHasChanged();
+        }
+        else
+        {
+            errorMessage = result.ErrorMessage ?? "Failed to send friend request.";
+        }
+    }
+
+    private Task HandleRemoveSuggestion(ApplicationUser user)
+    {
+        // Just remove from the current suggestions list
+        peopleYouMayKnow = peopleYouMayKnow.Where(p => p.User.Id != user.Id).ToList();
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    private async Task HandleAcceptRequest(ApplicationUser requester)
+    {
+        if (currentUser?.Id == null) return;
+
+        var request = pendingRequests.FirstOrDefault(r => r.Requester.Id == requester.Id);
+        if (request.Friendship != null)
+        {
+            var result = await FriendsService.AcceptFriendRequestAsync(request.Friendship.Id, currentUser.Id);
+            if (result.Success)
+            {
+                statusMessage = $"You are now friends with {GetDisplayName(requester)}.";
+                await LoadPendingRequestsAsync();
+                // Update friends count and suggestions count as well
+                friendsCount = await FriendsService.GetFriendsCountAsync(currentUser.Id);
+                peopleYouMayKnowCount = await FriendsService.GetPeopleYouMayKnowCountAsync(currentUser.Id);
+                StateHasChanged();
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage ?? "Failed to accept friend request.";
+            }
+        }
+    }
+
+    private async Task HandleRejectRequest(ApplicationUser requester)
+    {
+        if (currentUser?.Id == null) return;
+
+        var request = pendingRequests.FirstOrDefault(r => r.Requester.Id == requester.Id);
+        if (request.Friendship != null)
+        {
+            var result = await FriendsService.RejectFriendRequestAsync(request.Friendship.Id, currentUser.Id);
+            if (result.Success)
+            {
+                statusMessage = $"Declined friend request from {GetDisplayName(requester)}.";
+                await LoadPendingRequestsAsync();
+                StateHasChanged();
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage ?? "Failed to decline friend request.";
+            }
+        }
+    }
+
+    private async Task HandleCancelRequest(ApplicationUser addressee)
+    {
+        if (currentUser?.Id == null) return;
+
+        var request = sentRequests.FirstOrDefault(r => r.Addressee.Id == addressee.Id);
+        if (request.Friendship != null)
+        {
+            var result = await FriendsService.RemoveFriendAsync(request.Friendship.Id, currentUser.Id);
+            if (result.Success)
+            {
+                statusMessage = $"Cancelled friend request to {GetDisplayName(addressee)}.";
+                await LoadSentRequestsAsync();
+                StateHasChanged();
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage ?? "Failed to cancel friend request.";
+            }
+        }
+    }
+
+    private string GetDisplayName(ApplicationUser user)
+    {
+        if (!string.IsNullOrEmpty(user.FirstName) && !string.IsNullOrEmpty(user.LastName))
+        {
+            return $"{user.FirstName} {user.LastName}";
+        }
+        return user.UserName ?? "Unknown";
+    }
+}
