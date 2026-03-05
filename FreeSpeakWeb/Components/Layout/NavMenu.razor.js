@@ -9,6 +9,11 @@ export function shouldAutoCloseNav() {
     return isMobile || isNarrowWindow;
 }
 
+export function isWideScreen() {
+    // Return true if we should show the menu by default (desktop/wide screen)
+    return window.innerWidth >= 992;
+}
+
 export function setupResizeHandler(dotnetHelper) {
     let wasNarrow = window.innerWidth < 992;
 

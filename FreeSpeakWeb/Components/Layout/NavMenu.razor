@@ -1,4 +1,5 @@
 ﻿@implements IDisposable
+@rendermode InteractiveServer
 
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
@@ -97,18 +98,20 @@
 </div>
 
 @code {
-    private bool collapseNavMenu = false;
+    private bool showNavMenu = true;  // Start visible, JavaScript will hide on mobile
     private string? currentUrl;
     private IJSObjectReference? module;
     private IJSObjectReference? resizeHandler;
     private DotNetObjectReference<NavMenu>? dotNetReference;
     private ApplicationUser? currentUser;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "nav-scrollable" : "nav-scrollable show";
+    private string? NavMenuCssClass => showNavMenu ? "nav-scrollable show" : "nav-scrollable";
 
     private void ToggleNavMenu()
     {
-        collapseNavMenu = !collapseNavMenu;
+        Console.WriteLine($"ToggleNavMenu called - Current state: {showNavMenu}");
+        showNavMenu = !showNavMenu;
+        Console.WriteLine($"ToggleNavMenu - New state: {showNavMenu}");
         StateHasChanged();
     }
 
@@ -120,7 +123,7 @@
             var shouldClose = await module.InvokeAsync<bool>("shouldAutoCloseNav");
             if (shouldClose)
             {
-                collapseNavMenu = true;
+                showNavMenu = false;
                 StateHasChanged();
             }
         }
@@ -129,14 +132,14 @@
     [JSInvokable]
     public void OnWindowResizedToNarrow()
     {
-        collapseNavMenu = true;
+        showNavMenu = false;
         StateHasChanged();
     }
 
     [JSInvokable]
     public void OnWindowResizedToWide()
     {
-        collapseNavMenu = false;
+        showNavMenu = true;
         StateHasChanged();
     }
 
@@ -161,6 +164,14 @@
             module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/Layout/NavMenu.razor.js");
             dotNetReference = DotNetObjectReference.Create(this);
             resizeHandler = await module.InvokeAsync<IJSObjectReference>("setupResizeHandler", dotNetReference);
+
+            // Check if we should hide the menu on mobile
+            var shouldHide = await module.InvokeAsync<bool>("shouldAutoCloseNav");
+            if (shouldHide)
+            {
+                showNavMenu = false;
+                StateHasChanged();
+            }
         }
     }
 
