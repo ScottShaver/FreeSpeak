@@ -17,6 +17,11 @@ namespace FreeSpeakWeb.Data
         public ApplicationUser User { get; set; } = null!;
 
         /// <summary>
+        /// The type of reaction/like (Like, Love, Care, etc.)
+        /// </summary>
+        public LikeType Type { get; set; } = LikeType.Like;
+
+        /// <summary>
         /// When the like was created
         /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

@@ -1,19 +1,129 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.SocialFeed
+@using System.Security.Claims
+@using Microsoft.JSInterop
+
+@implements IAsyncDisposable
 
 @inject IOptions<SiteSettings> SiteSettings
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject PostService PostService
+@inject IJSRuntime JSRuntime
+@inject UserManager<ApplicationUser> UserManager
 
 <PageTitle>@SiteSettings.Value.SiteName - Home</PageTitle>
 
 <AuthorizeView>
     <Authorized>
-        <h1>Hello, world!</h1>
-        Welcome to your new app.
+        <div class="home-container">
+            <!-- Reserved space for future content -->
+            <div class="top-section">
+                <PostCreator 
+                    CurrentUserImageUrl="@currentUserImageUrl"
+                    CurrentUserName="@currentUserName"
+                    OnPostCreated="HandlePostCreated" />
+            </div>
+
+            <!-- Feed section -->
+            <div class="feed-section" @ref="feedContainer">
+                @if (isLoading && !posts.Any())
+                {
+                    <div class="loading-indicator">
+                        <p>Loading your feed...</p>
+                    </div>
+                }
+                else if (!posts.Any() && !isLoading)
+                {
+                    <div class="empty-feed">
+                        <p>No posts to display. Start connecting with friends to see their posts!</p>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var post in posts)
+                    {
+                        var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
+                        var userReaction = userReactions.ContainsKey(post.Id) ? userReactions[post.Id] : null;
+                        var comments = postComments.ContainsKey(post.Id) ? postComments[post.Id] : new List<CommentDisplayModel>();
+
+                        <FeedArticle 
+                            PostId="@post.Id"
+                            AuthorId="@post.AuthorId"
+                            AuthorName="@GetAuthorName(post)"
+                            AuthorImageUrl="@post.Author?.ProfilePictureUrl"
+                            CreatedAt="@post.CreatedAt"
+                            LikeCount="@post.LikeCount"
+                            CommentCount="@post.CommentCount"
+                            CurrentUserId="@currentUserId"
+                            CurrentUserImageUrl="@currentUserImageUrl"
+                            CurrentUserName="@currentUserName"
+                            ReactionBreakdown="@postReactions"
+                            UserReaction="@userReaction"
+                            Comments="@comments"
+                            OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(post.Id, reactionType))"
+                            OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
+                            OnCommentAdded="@HandleCommentAdded"
+                            OnShowPostDetail="@(() => ShowPostDetail(post))"
+                            OnShowComments="@(() => ShowPostDetail(post))">
+                            <ArticleContent>
+                                @((MarkupString)FormatContentWithLineBreaks(post.Content))
+                            </ArticleContent>
+                        </FeedArticle>
+                    }
+
+                    @if (isLoadingMore)
+                    {
+                        <div class="loading-more">
+                            <p>Loading more posts...</p>
+                        </div>
+                    }
+
+                    @if (hasMorePosts == false && posts.Any())
+                    {
+                        <div class="no-more-posts">
+                            <p>No more posts at this time</p>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        @if (showPostDetail && selectedPost != null)
+        {
+            var postReactions = postReactionData.ContainsKey(selectedPost.Id) ? postReactionData[selectedPost.Id] : new Dictionary<LikeType, int>();
+            var userReaction = userReactions.ContainsKey(selectedPost.Id) ? userReactions[selectedPost.Id] : null;
+
+            <PostDetailModal
+                PostId="@selectedPost.Id"
+                AuthorId="@selectedPost.AuthorId"
+                AuthorName="@GetAuthorName(selectedPost)"
+                AuthorImageUrl="@selectedPost.Author?.ProfilePictureUrl"
+                CreatedAt="@selectedPost.CreatedAt"
+                LikeCount="@selectedPost.LikeCount"
+                CommentCount="@selectedPost.CommentCount"
+                CurrentUserId="@currentUserId"
+                CurrentUserImageUrl="@currentUserImageUrl"
+                CurrentUserName="@currentUserName"
+                ReactionBreakdown="@postReactions"
+                UserReaction="@userReaction"
+                OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(selectedPost.Id, reactionType))"
+                OnRemoveReaction="@(async () => await HandleRemoveReaction(selectedPost.Id))"
+                OnCommentAdded="@HandleCommentAdded"
+                OnClose="@ClosePostDetail">
+                <ArticleContent>
+                    @((MarkupString)FormatContentWithLineBreaks(selectedPost.Content))
+                </ArticleContent>
+            </PostDetailModal>
+        }
     </Authorized>
     <NotAuthorized>
         @* Redirect to login handled in code *@
@@ -21,6 +131,24 @@
 </AuthorizeView>
 
 @code {
+    private List<Post> posts = new();
+    private Dictionary<int, Dictionary<LikeType, int>> postReactionData = new();
+    private Dictionary<int, LikeType?> userReactions = new();
+    private Dictionary<int, List<CommentDisplayModel>> postComments = new();
+    private int currentPage = 1;
+    private const int pageSize = 20;
+    private bool isLoading = false;
+    private bool isLoadingMore = false;
+    private bool hasMorePosts = true;
+    private string? currentUserId;
+    private string? currentUserImageUrl;
+    private string? currentUserName;
+    private ElementReference feedContainer;
+    private IJSObjectReference? jsModule;
+    private DotNetObjectReference<Home>? dotNetHelper;
+    private bool showPostDetail = false;
+    private Post? selectedPost = null;
+
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -29,6 +157,366 @@
         if (authState.User.Identity?.IsAuthenticated != true)
         {
             NavigationManager.NavigateTo("Account/Login", forceLoad: false);
+            return;
         }
+
+        currentUserId = authState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (currentUserId != null)
+        {
+            // Load the actual user from the database to get accurate name and profile picture
+            var currentUser = await UserManager.FindByIdAsync(currentUserId);
+            if (currentUser != null)
+            {
+                currentUserImageUrl = currentUser.ProfilePictureUrl;
+
+                // Use FirstName + LastName if available, otherwise fall back to username
+                if (!string.IsNullOrWhiteSpace(currentUser.FirstName) && !string.IsNullOrWhiteSpace(currentUser.LastName))
+                {
+                    currentUserName = $"{currentUser.FirstName} {currentUser.LastName}";
+                }
+                else
+                {
+                    currentUserName = currentUser.UserName ?? "User";
+                }
+            }
+        }
+
+        await LoadInitialPosts();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && posts.Any())
+        {
+            try
+            {
+                jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/Home.razor.js");
+                dotNetHelper = DotNetObjectReference.Create(this);
+                await jsModule.InvokeVoidAsync("initializeInfiniteScroll", feedContainer, dotNetHelper);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error initializing infinite scroll: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task LoadInitialPosts()
+    {
+        if (currentUserId == null) return;
+
+        isLoading = true;
+        try
+        {
+            var loadedPosts = await PostService.GetFeedPostsAsync(currentUserId, pageSize, currentPage);
+            posts = loadedPosts;
+            hasMorePosts = loadedPosts.Count == pageSize;
+
+            // Load reaction data for all posts
+            await LoadReactionDataForPosts(loadedPosts);
+        }
+        catch (Exception ex)
+        {
+            // Log error (you might want to inject ILogger here)
+            Console.WriteLine($"Error loading posts: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    [JSInvokable]
+    public async Task LoadMorePostsAsync()
+    {
+        if (currentUserId == null || isLoadingMore || !hasMorePosts) return;
+
+        isLoadingMore = true;
+        StateHasChanged(); // Update UI to show loading indicator
+
+        try
+        {
+            currentPage++;
+            var loadedPosts = await PostService.GetFeedPostsAsync(currentUserId, pageSize, currentPage);
+
+            if (loadedPosts.Any())
+            {
+                posts.AddRange(loadedPosts);
+                hasMorePosts = loadedPosts.Count == pageSize;
+
+                // Load reaction data for new posts
+                await LoadReactionDataForPosts(loadedPosts);
+            }
+            else
+            {
+                hasMorePosts = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading more posts: {ex.Message}");
+            currentPage--; // Revert page increment on error
+        }
+        finally
+        {
+            isLoadingMore = false;
+            StateHasChanged(); // Update UI after loading
+        }
+    }
+
+    private string GetAuthorName(Post post)
+    {
+        if (post.Author == null) return "Unknown";
+
+        if (!string.IsNullOrWhiteSpace(post.Author.FirstName) && !string.IsNullOrWhiteSpace(post.Author.LastName))
+        {
+            return $"{post.Author.FirstName} {post.Author.LastName}";
+        }
+
+        return post.Author.UserName ?? "Unknown";
+    }
+
+    private string FormatContentWithLineBreaks(string content)
+    {
+        if (string.IsNullOrEmpty(content))
+            return string.Empty;
+
+        // Replace newlines with <br> tags
+        // Handle both \r\n (Windows) and \n (Unix) line endings
+        return content.Replace("\r\n", "<br>").Replace("\n", "<br>");
+    }
+
+    private async Task LoadReactionDataForPosts(List<Post> postsToLoad)
+    {
+        if (currentUserId == null) return;
+
+        foreach (var post in postsToLoad)
+        {
+            try
+            {
+                // Get reaction breakdown
+                var reactions = await PostService.GetReactionBreakdownAsync(post.Id);
+                postReactionData[post.Id] = reactions;
+
+                // Get user's reaction
+                var userReaction = await PostService.GetUserReactionAsync(post.Id, currentUserId);
+                userReactions[post.Id] = userReaction;
+
+                // Get last 3 comments for feed display
+                await LoadCommentsForPost(post.Id, 3);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading reactions for post {post.Id}: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task LoadCommentsForPost(int postId, int count)
+    {
+        try
+        {
+            var comments = await PostService.GetLastCommentsAsync(postId, count);
+            var commentModels = comments.Select(c => new CommentDisplayModel
+            {
+                UserName = GetCommentAuthorName(c),
+                UserImageUrl = c.Author?.ProfilePictureUrl,
+                CommentText = c.Content,
+                Timestamp = c.CreatedAt,
+                Replies = null // Don't load replies in feed view
+            }).ToList();
+
+            postComments[postId] = commentModels;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading comments for post {postId}: {ex.Message}");
+        }
+    }
+
+    private string GetCommentAuthorName(Comment comment)
+    {
+        if (comment.Author == null) return "Unknown";
+
+        if (!string.IsNullOrWhiteSpace(comment.Author.FirstName) && !string.IsNullOrWhiteSpace(comment.Author.LastName))
+        {
+            return $"{comment.Author.FirstName} {comment.Author.LastName}";
+        }
+
+        return comment.Author.UserName ?? "Unknown";
+    }
+
+    private async Task HandleReactionChanged(int postId, LikeType reactionType)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await PostService.AddOrUpdateReactionAsync(postId, currentUserId, reactionType);
+
+            if (result.Success)
+            {
+                // Update user's reaction
+                var previousReaction = userReactions.ContainsKey(postId) ? userReactions[postId] : null;
+                userReactions[postId] = reactionType;
+
+                // Reload reaction breakdown
+                var reactions = await PostService.GetReactionBreakdownAsync(postId);
+                postReactionData[postId] = reactions;
+
+                // Update like count if this is a new reaction
+                var post = posts.FirstOrDefault(p => p.Id == postId);
+                if (post != null && previousReaction == null)
+                {
+                    post.LikeCount++;
+                }
+
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error handling reaction: {ex.Message}");
+        }
+    }
+
+    private async Task HandleRemoveReaction(int postId)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await PostService.RemoveLikeAsync(postId, currentUserId);
+
+            if (result.Success)
+            {
+                // Remove user's reaction
+                userReactions[postId] = null;
+
+                // Reload reaction breakdown
+                var reactions = await PostService.GetReactionBreakdownAsync(postId);
+                postReactionData[postId] = reactions;
+
+                // Update like count
+                var post = posts.FirstOrDefault(p => p.Id == postId);
+                if (post != null)
+                {
+                    post.LikeCount = Math.Max(0, post.LikeCount - 1);
+                }
+
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error removing reaction: {ex.Message}");
+        }
+    }
+
+    private async Task HandleCommentAdded((int PostId, string Content) data)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            // Add the comment to the database
+            var result = await PostService.AddCommentAsync(data.PostId, currentUserId, data.Content);
+
+            if (result.Success)
+            {
+                // Update the post's comment count in the UI
+                var post = posts.FirstOrDefault(p => p.Id == data.PostId);
+                if (post != null)
+                {
+                    post.CommentCount++;
+                }
+
+                // TODO: Optionally reload comments for this post if displaying them
+                // var comments = await PostService.GetCommentsAsync(data.PostId);
+                // Update the Comments property of the FeedArticle
+
+                StateHasChanged();
+            }
+            else
+            {
+                Console.WriteLine($"Failed to add comment: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error adding comment: {ex.Message}");
+        }
+    }
+
+    private async Task HandlePostCreated(string content)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            // Create the post in the database
+            var result = await PostService.CreatePostAsync(currentUserId, content);
+
+            if (result.Success && result.Post != null)
+            {
+                // Reload the feed to include the new post
+                await LoadInitialPosts();
+
+                // Scroll to top to show the new post
+                if (jsModule != null)
+                {
+                    try
+                    {
+                        await jsModule.InvokeVoidAsync("scrollToTop", feedContainer);
+                    }
+                    catch
+                    {
+                        // Ignore scroll errors
+                    }
+                }
+
+                StateHasChanged();
+            }
+            else
+            {
+                Console.WriteLine($"Failed to create post: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating post: {ex.Message}");
+        }
+    }
+
+    private void ShowPostDetail(Post post)
+    {
+        selectedPost = post;
+        showPostDetail = true;
+        StateHasChanged();
+    }
+
+    private void ClosePostDetail()
+    {
+        showPostDetail = false;
+        selectedPost = null;
+        StateHasChanged();
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        if (jsModule != null)
+        {
+            try
+            {
+                await jsModule.DisposeAsync();
+            }
+            catch
+            {
+                // Ignore disposal errors
+            }
+        }
+
+        dotNetHelper?.Dispose();
     }
 }

@@ -3,13 +3,22 @@
 
 <div class="comment-display">
     <div class="comment-avatar">
-        <img src="@(UserImageUrl ?? "/images/default-avatar.png")" alt="@UserName" class="avatar-img" />
+        @if (!string.IsNullOrEmpty(UserImageUrl))
+        {
+            <img src="@UserImageUrl" alt="@UserName" class="avatar-img" />
+        }
+        else
+        {
+            <div class="avatar-img avatar-placeholder">
+                <span class="avatar-initial">@GetInitials(UserName)</span>
+            </div>
+        }
     </div>
     
     <div class="comment-content">
         <div class="comment-bubble">
             <div class="comment-author">@UserName</div>
-            <div class="comment-text">@CommentText</div>
+            <div class="comment-text">@((MarkupString)FormatContentWithLineBreaks(CommentText))</div>
         </div>
         
         @if (!string.IsNullOrEmpty(ImageUrl))
@@ -20,7 +29,7 @@
         }
         
         <div class="comment-meta">
-            <span class="comment-timestamp">@FormattedTimestamp</span>
+            <span class="comment-timestamp" title="@FullTimestamp">@FormattedTimestamp</span>
         </div>
         
         @if (Replies != null && Replies.Any())
@@ -62,10 +71,12 @@
 
     private string FormattedTimestamp => FormatTimestamp(Timestamp);
 
+    private string FullTimestamp => Timestamp.ToLocalTime().ToString("MMMM d, yyyy 'at' h:mm:ss tt");
+
     private string FormatTimestamp(DateTime timestamp)
     {
-        var timeSpan = DateTime.Now - timestamp;
-        
+        var timeSpan = DateTime.UtcNow - timestamp;
+
         if (timeSpan.TotalMinutes < 1)
             return "Just now";
         if (timeSpan.TotalMinutes < 60)
@@ -75,7 +86,41 @@
         if (timeSpan.TotalDays < 7)
             return $"{(int)timeSpan.TotalDays}d";
 
-        return timestamp.ToString("MMM d 'at' h:mm tt");
+        return timestamp.ToLocalTime().ToString("MMMM d 'at' h:mm tt");
+    }
+
+    private string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "U";
+
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 0)
+            return "U";
+
+        if (parts.Length == 1)
+        {
+            // For single word (username), try to get first 2 characters
+            var singleWord = parts[0];
+            if (singleWord.Length >= 2)
+                return singleWord.Substring(0, 2).ToUpper();
+            else
+                return singleWord.Substring(0, 1).ToUpper();
+        }
+
+        // Return first letter of first name + first letter of last name
+        return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
+    }
+
+    private string FormatContentWithLineBreaks(string content)
+    {
+        if (string.IsNullOrEmpty(content))
+            return string.Empty;
+
+        // Replace newlines with <br> tags
+        // Handle both \r\n (Windows) and \n (Unix) line endings
+        return content.Replace("\r\n", "<br>").Replace("\n", "<br>");
     }
 
     private async Task OnImageClick()

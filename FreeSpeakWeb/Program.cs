@@ -82,8 +82,9 @@ namespace FreeSpeakWeb
                 try
                 {
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                    var dbContext = services.GetRequiredService<ApplicationDbContext>();
                     var logger = services.GetRequiredService<ILogger<Program>>();
-                    await DatabaseSeeder.SeedTestUsersAsync(userManager, logger);
+                    await DatabaseSeeder.SeedTestUsersAsync(userManager, dbContext, logger);
                 }
                 catch (Exception ex)
                 {

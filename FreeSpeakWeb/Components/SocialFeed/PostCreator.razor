@@ -1,0 +1,152 @@
+@inject IJSRuntime JS
+
+@implements IAsyncDisposable
+
+<div class="post-creator">
+    <div class="post-creator-header">
+        @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
+        {
+            <img src="@CurrentUserImageUrl" alt="You" class="post-creator-avatar" />
+        }
+        else
+        {
+            <div class="post-creator-avatar post-avatar-placeholder">
+                <span class="post-avatar-initial">@GetInitials(CurrentUserName ?? "User")</span>
+            </div>
+        }
+        <textarea 
+            @bind="PostContent"
+            @bind:event="oninput"
+            @bind:after="HandleInputAfter"
+            @ref="textareaElement"
+            placeholder="What's on your mind?"
+            rows="1"
+            class="post-textarea"
+            @onfocus="OnFocus"
+            @onblur="OnBlur"></textarea>
+    </div>
+    
+    @if (isExpanded)
+    {
+        <div class="post-creator-actions">
+            <button type="button" class="cancel-button" @onclick="Cancel">Cancel</button>
+            <button 
+                type="button" 
+                class="submit-button @(CanSubmit ? "active" : "disabled")"
+                disabled="@(!CanSubmit)"
+                @onclick="OnSubmitPost">
+                Post
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+    private ElementReference textareaElement;
+    private string postContent = "";
+    private bool isExpanded = false;
+    private IJSObjectReference? module;
+
+    [Parameter]
+    public string? CurrentUserImageUrl { get; set; }
+
+    [Parameter]
+    public string? CurrentUserName { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnPostCreated { get; set; }
+
+    private string PostContent 
+    { 
+        get => postContent;
+        set => postContent = value;
+    }
+
+    private bool CanSubmit => !string.IsNullOrWhiteSpace(PostContent);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/MultiLineCommentEditor.razor.js");
+        }
+    }
+
+    private async Task HandleInputAfter()
+    {
+        // Resize the textarea
+        if (module is not null)
+        {
+            await module.InvokeVoidAsync("resizeTextarea", textareaElement);
+        }
+    }
+
+    private void OnFocus()
+    {
+        isExpanded = true;
+    }
+
+    private void OnBlur()
+    {
+        // Only collapse if there's no content
+        if (string.IsNullOrWhiteSpace(PostContent))
+        {
+            isExpanded = false;
+        }
+    }
+
+    private void Cancel()
+    {
+        PostContent = "";
+        isExpanded = false;
+        StateHasChanged();
+    }
+
+    private async Task OnSubmitPost()
+    {
+        if (CanSubmit && OnPostCreated.HasDelegate)
+        {
+            await OnPostCreated.InvokeAsync(PostContent);
+            PostContent = "";
+            isExpanded = false;
+            StateHasChanged();
+        }
+    }
+
+    private string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "U";
+
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 0)
+            return "U";
+
+        if (parts.Length == 1)
+        {
+            var singleWord = parts[0];
+            if (singleWord.Length >= 2)
+                return singleWord.Substring(0, 2).ToUpper();
+            else
+                return singleWord.Substring(0, 1).ToUpper();
+        }
+
+        return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (module is not null)
+        {
+            try
+            {
+                await module.DisposeAsync();
+            }
+            catch (JSDisconnectedException)
+            {
+                // The circuit is already disconnected, no action needed
+            }
+        }
+    }
+}

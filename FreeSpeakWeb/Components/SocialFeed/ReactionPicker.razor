@@ -1,0 +1,76 @@
+@using FreeSpeakWeb.Data
+
+<div class="reaction-picker" @onmouseenter="OnMouseEnter" @onmouseleave="OnMouseLeave">
+    @if (HasUserReaction)
+    {
+        <button class="reaction-button remove-button" @onclick="OnRemoveSelected" title="Remove reaction">
+            <span class="reaction-emoji">🚫</span>
+            <span class="reaction-label">Remove</span>
+        </button>
+    }
+    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Like)" title="Like">
+        <span class="reaction-emoji">👍</span>
+        <span class="reaction-label">Like</span>
+    </button>
+    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Love)" title="Love">
+        <span class="reaction-emoji">❤️</span>
+        <span class="reaction-label">Love</span>
+    </button>
+    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Care)" title="Care">
+        <span class="reaction-emoji">🤗</span>
+        <span class="reaction-label">Care</span>
+    </button>
+    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Haha)" title="Haha">
+        <span class="reaction-emoji">😂</span>
+        <span class="reaction-label">Haha</span>
+    </button>
+    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Wow)" title="Wow">
+        <span class="reaction-emoji">😮</span>
+        <span class="reaction-label">Wow</span>
+    </button>
+    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Sad)" title="Sad">
+        <span class="reaction-emoji">😢</span>
+        <span class="reaction-label">Sad</span>
+    </button>
+    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Angry)" title="Angry">
+        <span class="reaction-emoji">😠</span>
+        <span class="reaction-label">Angry</span>
+    </button>
+</div>
+
+@code {
+    [Parameter]
+    public bool HasUserReaction { get; set; }
+
+    [Parameter]
+    public EventCallback<LikeType> OnReactionPicked { get; set; }
+
+    [Parameter]
+    public EventCallback OnRemoveReaction { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    public EventCallback OnEnter { get; set; }
+
+    private async Task OnReactionSelected(LikeType reactionType)
+    {
+        await OnReactionPicked.InvokeAsync(reactionType);
+    }
+
+    private async Task OnRemoveSelected()
+    {
+        await OnRemoveReaction.InvokeAsync();
+    }
+
+    private async Task OnMouseEnter()
+    {
+        await OnEnter.InvokeAsync();
+    }
+
+    private async Task OnMouseLeave()
+    {
+        await OnClose.InvokeAsync();
+    }
+}

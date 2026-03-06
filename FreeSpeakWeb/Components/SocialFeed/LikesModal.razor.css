@@ -1,0 +1,72 @@
+.likes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.like-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.like-item:hover {
+    background-color: #f0f2f5;
+}
+
+.like-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.like-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.like-avatar-placeholder {
+    background-color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.like-avatar-initial {
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.like-user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.like-user-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #050505;
+}
+
+.like-timestamp {
+    font-size: 13px;
+    color: #65676b;
+}
+
+.like-reaction {
+    flex-shrink: 0;
+}
+
+.like-reaction-emoji {
+    font-size: 24px;
+    cursor: help;
+}

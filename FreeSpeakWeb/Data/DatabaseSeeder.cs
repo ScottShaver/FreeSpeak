@@ -8,6 +8,11 @@ namespace FreeSpeakWeb.Data
     {
         public static async Task SeedTestUsersAsync(UserManager<ApplicationUser> userManager, ILogger logger)
         {
+            await SeedTestUsersAsync(userManager, null, logger);
+        }
+
+        public static async Task SeedTestUsersAsync(UserManager<ApplicationUser> userManager, ApplicationDbContext? dbContext, ILogger logger)
+        {
             try
             {
                 // Check if we already have test users
@@ -72,11 +77,151 @@ namespace FreeSpeakWeb.Data
             }
 
             logger.LogInformation("Test user seeding completed!");
+
+            // Seed posts and friendships if DbContext is provided
+            if (dbContext != null)
+            {
+                await SeedPostsAndFriendshipsAsync(dbContext, logger);
+            }
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "[{ExceptionType}] Error occurred while seeding test users. Exception: {ExceptionMessage}", ex.GetType().Name, ex.Message);
                 throw;
+            }
+        }
+
+        private static async Task SeedPostsAndFriendshipsAsync(ApplicationDbContext dbContext, ILogger logger)
+        {
+            try
+            {
+                // Check if posts already exist
+                var existingPosts = await dbContext.Posts.AnyAsync();
+                if (existingPosts)
+                {
+                    logger.LogInformation("Posts already exist. Skipping post seeding.");
+                    return;
+                }
+
+                // Get all seeded users
+                var users = await dbContext.Users.ToListAsync();
+                if (users.Count == 0)
+                {
+                    logger.LogWarning("No users found for seeding posts.");
+                    return;
+                }
+
+                logger.LogInformation("Seeding friendships...");
+
+                // Create some friendships (first user is friends with users 2-6)
+                var firstUser = users[0];
+                for (int i = 1; i < Math.Min(6, users.Count); i++)
+                {
+                    var friendship = new Friendship
+                    {
+                        RequesterId = firstUser.Id,
+                        AddresseeId = users[i].Id,
+                        Status = FriendshipStatus.Accepted,
+                        RequestedAt = DateTime.UtcNow.AddDays(-Random.Shared.Next(30, 90)),
+                        RespondedAt = DateTime.UtcNow.AddDays(-Random.Shared.Next(1, 30))
+                    };
+                    dbContext.Friendships.Add(friendship);
+                }
+
+                // Create some cross-friendships among other users
+                for (int i = 1; i < Math.Min(10, users.Count); i += 2)
+                {
+                    if (i + 1 < users.Count)
+                    {
+                        var friendship = new Friendship
+                        {
+                            RequesterId = users[i].Id,
+                            AddresseeId = users[i + 1].Id,
+                            Status = FriendshipStatus.Accepted,
+                            RequestedAt = DateTime.UtcNow.AddDays(-Random.Shared.Next(30, 90)),
+                            RespondedAt = DateTime.UtcNow.AddDays(-Random.Shared.Next(1, 30))
+                        };
+                        dbContext.Friendships.Add(friendship);
+                    }
+                }
+
+                await dbContext.SaveChangesAsync();
+                logger.LogInformation("Friendships seeded successfully!");
+
+                logger.LogInformation("Seeding posts...");
+
+                // Sample post contents
+                var postContents = new[]
+                {
+                    "Just finished an amazing project! Feeling accomplished 🎉",
+                    "Beautiful sunset today. Nature never fails to amaze me.",
+                    "Coffee and coding - the perfect combination ☕💻",
+                    "Can't believe it's already Friday! This week flew by.",
+                    "Trying out a new recipe tonight. Wish me luck! 🍳",
+                    "Great workout this morning! Feeling energized for the day.",
+                    "Reading an amazing book right now. Highly recommend!",
+                    "Just watched an incredible movie. Still processing it!",
+                    "Weekend plans: relax and recharge. What about you?",
+                    "Learning something new every day. Growth mindset! 📚",
+                    "Grateful for good friends and good times.",
+                    "New adventures await! Excited for what's coming.",
+                    "Sometimes the simple things bring the most joy.",
+                    "Working on improving myself one day at a time.",
+                    "Music makes everything better 🎵",
+                    "Rainy days are perfect for staying cozy indoors.",
+                    "Challenging myself to step out of my comfort zone.",
+                    "The best is yet to come! Staying positive.",
+                    "Found a great new spot in the city today!",
+                    "Celebrating small wins. They all count!",
+                    "Late night thoughts: Life is beautiful.",
+                    "Morning motivation: You got this! 💪",
+                    "Trying to be more mindful and present.",
+                    "Good vibes only today and every day.",
+                    "Throwback to an amazing memory. Missing those times!",
+                    "New week, new opportunities. Let's make it count!",
+                    "Taking a break to appreciate the little things.",
+                    "Inspiration can come from anywhere. Stay open!",
+                    "Living my best life, one moment at a time.",
+                    "Remember to take care of yourself. You matter!"
+                };
+
+                var random = Random.Shared;
+                var posts = new List<Post>();
+
+                // Create 5-10 posts for each user
+                foreach (var user in users)
+                {
+                    var postCount = random.Next(5, 11); // 5-10 posts per user
+                    for (int i = 0; i < postCount; i++)
+                    {
+                        var daysAgo = random.Next(0, 60); // Posts from last 60 days
+                        var hoursAgo = random.Next(0, 24);
+                        var minutesAgo = random.Next(0, 60);
+
+                        var post = new Post
+                        {
+                            AuthorId = user.Id,
+                            Content = postContents[random.Next(postContents.Length)],
+                            CreatedAt = DateTime.UtcNow
+                                .AddDays(-daysAgo)
+                                .AddHours(-hoursAgo)
+                                .AddMinutes(-minutesAgo),
+                            LikeCount = random.Next(0, 50),
+                            CommentCount = random.Next(0, 20)
+                        };
+                        posts.Add(post);
+                    }
+                }
+
+                dbContext.Posts.AddRange(posts);
+                await dbContext.SaveChangesAsync();
+
+                logger.LogInformation("Seeded {PostCount} posts for {UserCount} users!", posts.Count, users.Count);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "[{ExceptionType}] Error occurred while seeding posts and friendships. Exception: {ExceptionMessage}", ex.GetType().Name, ex.Message);
+                // Don't throw - let the app continue even if post seeding fails
             }
         }
     }

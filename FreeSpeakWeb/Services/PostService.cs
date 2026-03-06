@@ -397,6 +397,80 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
+        /// Get paginated direct comments for a post (no nested replies)
+        /// </summary>
+        public async Task<List<Comment>> GetCommentsPagedAsync(int postId, int pageSize, int pageNumber)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var comments = await context.Comments
+                    .Include(c => c.Author)
+                    .Where(c => c.PostId == postId && c.ParentCommentId == null)
+                    .OrderBy(c => c.CreatedAt)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                return comments;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving paged comments for post {PostId}", postId);
+                return new List<Comment>();
+            }
+        }
+
+        /// <summary>
+        /// Get the last N direct comments for a post (for feed display)
+        /// </summary>
+        public async Task<List<Comment>> GetLastCommentsAsync(int postId, int count)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var comments = await context.Comments
+                    .Include(c => c.Author)
+                    .Where(c => c.PostId == postId && c.ParentCommentId == null)
+                    .OrderByDescending(c => c.CreatedAt)
+                    .Take(count)
+                    .ToListAsync();
+
+                // Reverse to show oldest first (ascending order)
+                comments.Reverse();
+
+                return comments;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving last comments for post {PostId}", postId);
+                return new List<Comment>();
+            }
+        }
+
+        /// <summary>
+        /// Get the total count of direct comments for a post (excluding replies)
+        /// </summary>
+        public async Task<int> GetDirectCommentCountAsync(int postId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.Comments
+                    .Where(c => c.PostId == postId && c.ParentCommentId == null)
+                    .CountAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving direct comment count for post {PostId}", postId);
+                return 0;
+            }
+        }
+
+        /// <summary>
         /// Get replies for a specific comment
         /// </summary>
         public async Task<List<Comment>> GetRepliesAsync(int commentId)
@@ -537,6 +611,164 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogError(ex, "Error getting like count for post {PostId}", postId);
                 return 0;
+            }
+        }
+
+        /// <summary>
+        /// Add or update a reaction to a post
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> AddOrUpdateReactionAsync(int postId, string userId, LikeType reactionType)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var post = await context.Posts.FindAsync(postId);
+                if (post == null)
+                {
+                    return (false, "Post not found.");
+                }
+
+                var existingLike = await context.Likes
+                    .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
+
+                if (existingLike != null)
+                {
+                    // Update existing reaction type
+                    existingLike.Type = reactionType;
+                    _logger.LogInformation("User {UserId} changed reaction on post {PostId} to {ReactionType}", userId, postId, reactionType);
+                }
+                else
+                {
+                    // Add new reaction
+                    var like = new Like
+                    {
+                        PostId = postId,
+                        UserId = userId,
+                        Type = reactionType,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    context.Likes.Add(like);
+                    post.LikeCount++;
+                    _logger.LogInformation("User {UserId} reacted to post {PostId} with {ReactionType}", userId, postId, reactionType);
+                }
+
+                await context.SaveChangesAsync();
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error adding/updating reaction on post {PostId} for user {UserId}", postId, userId);
+                return (false, "An error occurred while processing your reaction.");
+            }
+        }
+
+        /// <summary>
+        /// Get the breakdown of reaction types for a post
+        /// </summary>
+        public async Task<Dictionary<LikeType, int>> GetReactionBreakdownAsync(int postId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var reactionCounts = await context.Likes
+                    .Where(l => l.PostId == postId)
+                    .GroupBy(l => l.Type)
+                    .Select(g => new { Type = g.Key, Count = g.Count() })
+                    .ToDictionaryAsync(x => x.Type, x => x.Count);
+
+                return reactionCounts;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting reaction breakdown for post {PostId}", postId);
+                return new Dictionary<LikeType, int>();
+            }
+        }
+
+        /// <summary>
+        /// Get user's reaction type for a post (null if not reacted)
+        /// </summary>
+        public async Task<LikeType?> GetUserReactionAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var like = await context.Likes
+                    .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
+
+                return like?.Type;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting user reaction for post {PostId} and user {UserId}", postId, userId);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Remove a user's reaction from a post
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> RemoveLikeAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var post = await context.Posts.FindAsync(postId);
+                if (post == null)
+                {
+                    return (false, "Post not found.");
+                }
+
+                var existingLike = await context.Likes
+                    .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
+
+                if (existingLike != null)
+                {
+                    context.Likes.Remove(existingLike);
+                    post.LikeCount = Math.Max(0, post.LikeCount - 1); // Ensure count doesn't go negative
+                    await context.SaveChangesAsync();
+
+                    _logger.LogInformation("User {UserId} removed reaction from post {PostId}", userId, postId);
+                    return (true, null);
+                }
+
+                return (false, "No reaction to remove.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error removing reaction from post {PostId} for user {UserId}", postId, userId);
+                return (false, "An error occurred while removing your reaction.");
+            }
+        }
+
+        /// <summary>
+        /// Get detailed likes for a post including user info and reaction type
+        /// </summary>
+        public async Task<List<(ApplicationUser User, LikeType Type, DateTime CreatedAt)>> GetPostLikesWithDetailsAsync(int postId, int maxCount = 100)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var likes = await context.Likes
+                    .Include(l => l.User)
+                    .Where(l => l.PostId == postId)
+                    .OrderByDescending(l => l.CreatedAt)
+                    .Take(maxCount)
+                    .Select(l => new { l.User, l.Type, l.CreatedAt })
+                    .ToListAsync();
+
+                return likes.Select(l => (l.User, l.Type, l.CreatedAt)).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting detailed likes for post {PostId}", postId);
+                return new List<(ApplicationUser, LikeType, DateTime)>();
             }
         }
 
