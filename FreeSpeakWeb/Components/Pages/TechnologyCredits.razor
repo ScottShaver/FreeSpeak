@@ -7,38 +7,126 @@
 
 <h1>Technology Credits</h1>
 
-<p>This application is built using the following technologies and packages:</p>
+<p>This application is built using the following technologies and open-source packages. We are grateful to all contributors!</p>
 
 <div class="row">
     <div class="col-12">
         <h3>Frameworks & Platforms</h3>
         <ul>
-            <li>.NET 10</li>
-            <li>ASP.NET Core Blazor</li>
-            <li>ASP.NET Core Identity</li>
+            <li><strong>.NET 10</strong> - Modern cross-platform framework</li>
+            <li><strong>ASP.NET Core Blazor Server</strong> - Interactive web UI framework</li>
+            <li><strong>ASP.NET Core Identity</strong> - User authentication and authorization</li>
+            <li><strong>Entity Framework Core</strong> - Object-relational mapping (ORM)</li>
+            <li><strong>PostgreSQL</strong> - Open-source relational database</li>
         </ul>
 
-        <h3>NuGet Packages</h3>
+        <h3>Main Application Packages</h3>
         <ul>
-            <li>Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore (10.0.2) - <em>MIT License</em></li>
-            <li>Microsoft.AspNetCore.Identity.EntityFrameworkCore (10.0.2) - <em>MIT License</em></li>
-            <li>Microsoft.EntityFrameworkCore.Tools (10.0.2) - <em>MIT License</em></li>
-            <li>Net.Codecrete.QrCodeGenerator (2.1.0) - <em>MIT License</em></li>
-            <li>Npgsql.EntityFrameworkCore.PostgreSQL (10.0.0) - <em>PostgreSQL License</em></li>
-            <li>SixLabors.ImageSharp (3.1.12) - <em>Apache 2.0 License</em></li>
+            <li><strong>Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore</strong> (10.0.2) - <em>MIT License</em>
+                <br/><small>Database error page middleware for development</small>
+            </li>
+            <li><strong>Microsoft.AspNetCore.Identity.EntityFrameworkCore</strong> (10.0.2) - <em>MIT License</em>
+                <br/><small>Identity system with Entity Framework Core integration</small>
+            </li>
+            <li><strong>Microsoft.EntityFrameworkCore.Tools</strong> (10.0.2) - <em>MIT License</em>
+                <br/><small>EF Core tools for migrations and database management</small>
+            </li>
+            <li><strong>Npgsql.EntityFrameworkCore.PostgreSQL</strong> (10.0.0) - <em>PostgreSQL License</em>
+                <br/><small>PostgreSQL database provider for Entity Framework Core</small>
+            </li>
+            <li><strong>SixLabors.ImageSharp</strong> (3.1.12) - <em>Six Labors Split License</em>
+                <br/><small>Image processing library for profile pictures</small>
+            </li>
+            <li><strong>Net.Codecrete.QrCodeGenerator</strong> (2.1.0) - <em>MIT License</em>
+                <br/><small>QR code generation for two-factor authentication</small>
+            </li>
         </ul>
-        
+
+        <h3>Testing Packages</h3>
+        <h4>Unit Testing (FreeSpeakWeb.Tests)</h4>
+        <ul>
+            <li><strong>xUnit</strong> (2.9.3) - <em>Apache 2.0 License</em>
+                <br/><small>Unit testing framework</small>
+            </li>
+            <li><strong>bUnit</strong> (1.35.3) - <em>MIT License</em>
+                <br/><small>Testing library for Blazor components</small>
+            </li>
+            <li><strong>Moq</strong> (4.20.72) - <em>BSD 3-Clause License</em>
+                <br/><small>Mocking framework for unit tests</small>
+            </li>
+            <li><strong>FluentAssertions</strong> (7.0.0) - <em>Apache 2.0 License</em>
+                <br/><small>Fluent API for test assertions</small>
+            </li>
+            <li><strong>Microsoft.EntityFrameworkCore.InMemory</strong> (10.0.0) - <em>MIT License</em>
+                <br/><small>In-memory database provider for testing</small>
+            </li>
+            <li><strong>Microsoft.NET.Test.Sdk</strong> (17.14.1) - <em>MIT License</em>
+                <br/><small>MSBuild integration for test execution</small>
+            </li>
+            <li><strong>coverlet.collector</strong> (6.0.4) - <em>MIT License</em>
+                <br/><small>Code coverage collection for tests</small>
+            </li>
+        </ul>
+
+        <h4>Integration Testing (FreeSpeakWeb.IntegrationTests)</h4>
+        <ul>
+            <li><strong>Testcontainers.PostgreSql</strong> (4.1.0) - <em>MIT License</em>
+                <br/><small>Docker-based PostgreSQL containers for integration tests</small>
+            </li>
+        </ul>
+
+        <h4>Performance Testing (FreeSpeakWeb.PerformanceTests)</h4>
+        <ul>
+            <li><strong>BenchmarkDotNet</strong> (0.14.0) - <em>MIT License</em>
+                <br/><small>Performance benchmarking library</small>
+            </li>
+        </ul>
+
         <h3>Frontend Libraries</h3>
         <ul>
-            <li>Bootstrap 5</li>
-            <li>Bootstrap Icons</li>
+            <li><strong>Bootstrap 5</strong> - <em>MIT License</em>
+                <br/><small>CSS framework for responsive design</small>
+            </li>
+            <li><strong>Bootstrap Icons</strong> - <em>MIT License</em>
+                <br/><small>Icon library</small>
+            </li>
         </ul>
 
-        <h3>Additional Credits</h3>
-        <p>This project uses various open-source technologies and we are grateful to all contributors.</p>
+        <h3>Development Tools & CI/CD</h3>
+        <ul>
+            <li><strong>GitHub Actions</strong> - Continuous integration and deployment</li>
+            <li><strong>Azure DevOps</strong> - Build and release pipelines</li>
+            <li><strong>Docker</strong> - Containerization for integration testing</li>
+        </ul>
+
+        <h3>License Information</h3>
+        <p>
+            This application uses open-source software under various licenses. All dependencies are used in compliance 
+            with their respective licenses. For specific license details, please refer to each package's official documentation.
+        </p>
+
+        <h3>Special Thanks</h3>
+        <p>
+            We extend our gratitude to:
+        </p>
+        <ul>
+            <li>The <strong>.NET Foundation</strong> and Microsoft for the .NET platform</li>
+            <li>The <strong>PostgreSQL Global Development Group</strong> for the PostgreSQL database</li>
+            <li>All open-source contributors who make projects like this possible</li>
+            <li>The maintainers of every package listed above</li>
+        </ul>
+
+        <hr class="my-4" />
+
+        <p class="text-muted">
+            <small>
+                Last updated: March 2026<br/>
+                Technology stack: .NET 10, Blazor Server, PostgreSQL, xUnit, bUnit
+            </small>
+        </p>
     </div>
 </div>
 
 @code {
-    // You can add code here to dynamically list packages if needed
+    // Technology credits are maintained manually to ensure accuracy
 }

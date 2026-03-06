@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="FreeSpeakWeb.IntegrationTests/FreeSpeakWeb.IntegrationTests.csproj" />
+  <Project Path="FreeSpeakWeb.PerformanceTests/FreeSpeakWeb.PerformanceTests.csproj" />
+  <Project Path="FreeSpeakWeb.Tests/FreeSpeakWeb.Tests.csproj" />
   <Project Path="FreeSpeakWeb/FreeSpeakWeb.csproj" />
 </Solution>

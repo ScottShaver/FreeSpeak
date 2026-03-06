@@ -1,0 +1,199 @@
+using FluentAssertions;
+using FreeSpeakWeb.Data;
+using FreeSpeakWeb.IntegrationTests.Infrastructure;
+using FreeSpeakWeb.Services;
+using Microsoft.AspNetCore.Identity;
+using Xunit;
+
+namespace FreeSpeakWeb.IntegrationTests.Services
+{
+    public class FriendsServiceIntegrationTests : IntegrationTestBase
+    {
+        [Fact]
+        public async Task SearchUsersAsync_WithMatchingFirstName_ShouldReturnResults()
+        {
+            // Arrange
+            var factory = CreateDbContextFactory();
+            var service = new FriendsService(factory);
+
+            // Create test users
+            var currentUser = CreateTestUser("current", "CurrentUser", "Current", "User");
+            var john = CreateTestUser("john1", "john_doe", "John", "Doe");
+            var johnny = CreateTestUser("johnny1", "johnny_test", "Johnny", "Test");
+            var jane = CreateTestUser("jane1", "jane_smith", "Jane", "Smith");
+
+            await using (var context = CreateDbContext())
+            {
+                context.Users.AddRange(currentUser, john, johnny, jane);
+                await context.SaveChangesAsync();
+            }
+
+            // Act
+            var results = await service.SearchUsersAsync("john", "current");
+
+            // Assert
+            results.Should().HaveCount(2);
+            results.Should().Contain(u => u.Id == "john1");
+            results.Should().Contain(u => u.Id == "johnny1");
+            results.Should().NotContain(u => u.Id == "jane1");
+        }
+
+        [Fact]
+        public async Task SearchUsersAsync_WithMatchingLastName_ShouldReturnResults()
+        {
+            // Arrange
+            var factory = CreateDbContextFactory();
+            var service = new FriendsService(factory);
+
+            var currentUser = CreateTestUser("current", "current", "Current", "User");
+            var user1 = CreateTestUser("user1", "alice", "Alice", "Smith");
+            var user2 = CreateTestUser("user2", "bob", "Bob", "Smith");
+            var user3 = CreateTestUser("user3", "charlie", "Charlie", "Jones");
+
+            await using (var context = CreateDbContext())
+            {
+                context.Users.AddRange(currentUser, user1, user2, user3);
+                await context.SaveChangesAsync();
+            }
+
+            // Act
+            var results = await service.SearchUsersAsync("smith", "current");
+
+            // Assert
+            results.Should().HaveCount(2);
+            results.Should().Contain(u => u.Id == "user1");
+            results.Should().Contain(u => u.Id == "user2");
+        }
+
+        [Fact]
+        public async Task SearchUsersAsync_WithMatchingUsername_ShouldReturnResults()
+        {
+            // Arrange
+            var factory = CreateDbContextFactory();
+            var service = new FriendsService(factory);
+
+            var currentUser = CreateTestUser("current", "current", "Current", "User");
+            var user1 = CreateTestUser("user1", "developer123", "Alice", "Smith");
+            var user2 = CreateTestUser("user2", "dev_master", "Bob", "Jones");
+            var user3 = CreateTestUser("user3", "designer456", "Charlie", "Brown");
+
+            await using (var context = CreateDbContext())
+            {
+                context.Users.AddRange(currentUser, user1, user2, user3);
+                await context.SaveChangesAsync();
+            }
+
+            // Act
+            var results = await service.SearchUsersAsync("dev", "current");
+
+            // Assert
+            results.Should().HaveCount(2);
+            results.Should().Contain(u => u.Id == "user1");
+            results.Should().Contain(u => u.Id == "user2");
+        }
+
+        [Fact]
+        public async Task SearchUsersAsync_WithMultipleWords_ShouldMatchAnyWord()
+        {
+            // Arrange
+            var factory = CreateDbContextFactory();
+            var service = new FriendsService(factory);
+
+            var currentUser = CreateTestUser("current", "current", "Current", "User");
+            var user1 = CreateTestUser("user1", "alice", "Alice", "Johnson");
+            var user2 = CreateTestUser("user2", "bob", "Bob", "Smith");
+            var user3 = CreateTestUser("user3", "charlie", "Charlie", "Brown");
+
+            await using (var context = CreateDbContext())
+            {
+                context.Users.AddRange(currentUser, user1, user2, user3);
+                await context.SaveChangesAsync();
+            }
+
+            // Act - Search for "alice smith" should match both Alice and Bob Smith
+            var results = await service.SearchUsersAsync("alice smith", "current");
+
+            // Assert
+            results.Should().HaveCount(2);
+            results.Should().Contain(u => u.Id == "user1"); // Matches Alice
+            results.Should().Contain(u => u.Id == "user2"); // Matches Smith
+        }
+
+        [Fact]
+        public async Task SearchUsersAsync_ShouldExcludeExistingConnections()
+        {
+            // Arrange
+            var factory = CreateDbContextFactory();
+            var service = new FriendsService(factory);
+
+            var currentUser = CreateTestUser("current", "current", "Current", "User");
+            var friend = CreateTestUser("friend", "friend", "Friend", "User");
+            var stranger = CreateTestUser("stranger", "stranger", "Stranger", "User");
+
+            await using (var context = CreateDbContext())
+            {
+                context.Users.AddRange(currentUser, friend, stranger);
+                
+                // Create friendship
+                context.Friendships.Add(new Friendship
+                {
+                    RequesterId = "current",
+                    AddresseeId = "friend",
+                    Status = FriendshipStatus.Accepted,
+                    RequestedAt = DateTime.UtcNow
+                });
+                
+                await context.SaveChangesAsync();
+            }
+
+            // Act
+            var results = await service.SearchUsersAsync("user", "current");
+
+            // Assert
+            results.Should().HaveCount(1);
+            results.Should().Contain(u => u.Id == "stranger");
+            results.Should().NotContain(u => u.Id == "friend"); // Already connected
+            results.Should().NotContain(u => u.Id == "current"); // Exclude self
+        }
+
+        [Fact]
+        public async Task SearchUsersAsync_WithCaseInsensitive_ShouldReturnResults()
+        {
+            // Arrange
+            var factory = CreateDbContextFactory();
+            var service = new FriendsService(factory);
+
+            var currentUser = CreateTestUser("current", "current", "Current", "User");
+            var user1 = CreateTestUser("user1", "TechGuru", "Michael", "Johnson");
+
+            await using (var context = CreateDbContext())
+            {
+                context.Users.AddRange(currentUser, user1);
+                await context.SaveChangesAsync();
+            }
+
+            // Act - Search with different case
+            var results = await service.SearchUsersAsync("TECHGURU", "current");
+
+            // Assert
+            results.Should().HaveCount(1);
+            results.Should().Contain(u => u.Id == "user1");
+        }
+
+        private ApplicationUser CreateTestUser(string id, string userName, string firstName, string lastName)
+        {
+            return new ApplicationUser
+            {
+                Id = id,
+                UserName = userName,
+                NormalizedUserName = userName.ToUpper(),
+                Email = $"{userName}@example.com",
+                NormalizedEmail = $"{userName.ToUpper()}@EXAMPLE.COM",
+                EmailConfirmed = true,
+                FirstName = firstName,
+                LastName = lastName,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+        }
+    }
+}
