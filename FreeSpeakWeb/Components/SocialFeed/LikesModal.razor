@@ -1,0 +1,152 @@
+@using FreeSpeakWeb.Data
+
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" @onclick="Close">
+    <div class="modal-dialog modal-dialog-scrollable" @onclick:stopPropagation="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reactions</h5>
+                <button type="button" class="btn-close" @onclick="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (isLoading)
+                {
+                    <div class="text-center py-3">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                }
+                else if (Likes.Count == 0)
+                {
+                    <p class="text-muted text-center">No reactions yet.</p>
+                }
+                else
+                {
+                    <div class="likes-list">
+                        @foreach (var like in Likes)
+                        {
+                            <div class="like-item">
+                                <div class="like-user-info">
+                                    @if (!string.IsNullOrEmpty(like.User.ProfilePictureUrl))
+                                    {
+                                        <img src="@like.User.ProfilePictureUrl" alt="@GetDisplayName(like.User)" class="like-user-avatar" />
+                                    }
+                                    else
+                                    {
+                                        <div class="like-user-avatar like-avatar-placeholder">
+                                            <span class="like-avatar-initial">@GetInitials(GetDisplayName(like.User))</span>
+                                        </div>
+                                    }
+                                    <div class="like-user-details">
+                                        <div class="like-user-name">@GetDisplayName(like.User)</div>
+                                        <div class="like-timestamp">@FormatTimestamp(like.CreatedAt)</div>
+                                    </div>
+                                </div>
+                                <div class="like-reaction">
+                                    <span class="like-reaction-emoji" title="@GetReactionText(like.Type)">@GetReactionEmoji(like.Type)</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public List<(ApplicationUser User, LikeType Type, DateTime CreatedAt)> Likes { get; set; } = new();
+
+    [Parameter]
+    public bool isLoading { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private async Task Close()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+    private string GetDisplayName(ApplicationUser user)
+    {
+        if (!string.IsNullOrEmpty(user.FirstName) && !string.IsNullOrEmpty(user.LastName))
+        {
+            return $"{user.FirstName} {user.LastName}";
+        }
+        return user.UserName ?? "Unknown";
+    }
+
+    private string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "U";
+
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 0)
+            return "U";
+
+        if (parts.Length == 1)
+        {
+            // For single word (username), try to get first 2 characters
+            var singleWord = parts[0];
+            if (singleWord.Length >= 2)
+                return singleWord.Substring(0, 2).ToUpper();
+            else
+                return singleWord.Substring(0, 1).ToUpper();
+        }
+
+        return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
+    }
+
+    private string GetReactionEmoji(LikeType reactionType)
+    {
+        return reactionType switch
+        {
+            LikeType.Like => "👍",
+            LikeType.Love => "❤️",
+            LikeType.Care => "🤗",
+            LikeType.Haha => "😂",
+            LikeType.Wow => "😮",
+            LikeType.Sad => "😢",
+            LikeType.Angry => "😠",
+            _ => "👍"
+        };
+    }
+
+    private string GetReactionText(LikeType reactionType)
+    {
+        return reactionType switch
+        {
+            LikeType.Like => "Like",
+            LikeType.Love => "Love",
+            LikeType.Care => "Care",
+            LikeType.Haha => "Haha",
+            LikeType.Wow => "Wow",
+            LikeType.Sad => "Sad",
+            LikeType.Angry => "Angry",
+            _ => "Like"
+        };
+    }
+
+    private string FormatTimestamp(DateTime timestamp)
+    {
+        var timeSpan = DateTime.UtcNow - timestamp;
+
+        if (timeSpan.TotalMinutes < 1)
+            return "Just now";
+        if (timeSpan.TotalMinutes < 60)
+            return $"{(int)timeSpan.TotalMinutes}m ago";
+        if (timeSpan.TotalHours < 24)
+            return $"{(int)timeSpan.TotalHours}h ago";
+        if (timeSpan.TotalDays < 7)
+            return $"{(int)timeSpan.TotalDays}d ago";
+
+        return timestamp.ToString("MMM d, yyyy");
+    }
+}

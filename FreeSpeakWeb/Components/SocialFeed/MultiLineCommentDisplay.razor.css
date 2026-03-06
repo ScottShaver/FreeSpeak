@@ -15,6 +15,19 @@
     object-fit: cover;
 }
 
+.avatar-placeholder {
+    background-color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-initial {
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+}
+
 .comment-content {
     flex: 1;
     min-width: 0;
@@ -74,6 +87,14 @@
 .comment-timestamp {
     font-size: 12px;
     color: #65676b;
+    cursor: help;
+    text-decoration: underline dotted;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.2s;
+}
+
+.comment-timestamp:hover {
+    text-decoration-color: #65676b;
 }
 
 .comment-replies {
@@ -85,4 +106,9 @@
 .comment-replies .comment-display .avatar-img {
     width: 28px;
     height: 28px;
+}
+
+/* Nested comments placeholder initial font size */
+.comment-replies .comment-display .avatar-initial {
+    font-size: 11px;
 }

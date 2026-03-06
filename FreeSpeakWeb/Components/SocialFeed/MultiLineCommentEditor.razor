@@ -62,7 +62,6 @@
     {
         if (CanSubmit)
         {
-            await JS.InvokeVoidAsync("alert", "Post Comment");
             if (OnCommentSubmitted.HasDelegate)
             {
                 await OnCommentSubmitted.InvokeAsync(CommentText);
@@ -76,7 +75,14 @@
     {
         if (module is not null)
         {
-            await module.DisposeAsync();
+            try
+            {
+                await module.DisposeAsync();
+            }
+            catch (JSDisconnectedException)
+            {
+                // The circuit is already disconnected, no action needed
+            }
         }
     }
 }

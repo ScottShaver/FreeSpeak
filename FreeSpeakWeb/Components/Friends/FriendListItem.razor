@@ -17,7 +17,7 @@
     {
         <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-2 profile-image-clickable friend-profile-image" 
              @onclick="ShowProfilePreview">
-            <span class="text-white friend-profile-initial">@GetDisplayName().Substring(0, 1).ToUpper()</span>
+            <span class="text-white friend-profile-initial">@GetInitials(GetDisplayName())</span>
         </div>
     }
 
@@ -313,7 +313,7 @@
                             {
                                 <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-3" 
                                      style="width: 120px; height: 120px;">
-                                    <span class="text-white" style="font-size: 3rem;">@GetDisplayName().Substring(0, 1).ToUpper()</span>
+                                    <span class="text-white" style="font-size: 3rem;">@GetInitials(GetDisplayName())</span>
                                 </div>
                             }
 
@@ -413,6 +413,30 @@
             return $"{user.FirstName} {user.LastName}";
         }
         return user.UserName ?? "Unknown";
+    }
+
+    private string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "U";
+
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 0)
+            return "U";
+
+        if (parts.Length == 1)
+        {
+            // For single word (username), try to get first 2 characters
+            var singleWord = parts[0];
+            if (singleWord.Length >= 2)
+                return singleWord.Substring(0, 2).ToUpper();
+            else
+                return singleWord.Substring(0, 1).ToUpper();
+        }
+
+        // Return first letter of first name + first letter of last name
+        return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
     }
 
     private async Task ShowMutualFriends()

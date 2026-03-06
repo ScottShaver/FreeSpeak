@@ -1,0 +1,99 @@
+.home-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 16px;
+    min-height: 100vh;
+}
+
+.top-section {
+    min-height: 60px;
+    margin-bottom: 16px;
+    /* Reserved space for future content */
+}
+
+.feed-section {
+    width: 100%;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #f0f8ff;
+    padding-top: 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+}
+
+/* Custom scrollbar styling */
+.feed-section::-webkit-scrollbar {
+    width: 8px;
+}
+
+.feed-section::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.feed-section::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.feed-section::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.loading-indicator,
+.empty-feed,
+.loading-more,
+.no-more-posts {
+    text-align: center;
+    padding: 24px;
+    color: #65676b;
+    font-size: 15px;
+}
+
+.loading-indicator p,
+.loading-more p {
+    margin: 0;
+    font-weight: 500;
+}
+
+.empty-feed {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    padding: 48px 24px;
+}
+
+.empty-feed p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.no-more-posts {
+    margin-top: 16px;
+    margin-bottom: 24px;
+}
+
+.no-more-posts p {
+    margin: 0;
+    font-style: italic;
+    color: #8a8d91;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .home-container {
+        padding: 8px;
+        max-width: 100%;
+    }
+
+    .feed-section {
+        max-height: calc(100vh - 100px);
+    }
+
+    .top-section {
+        min-height: 40px;
+        margin-bottom: 8px;
+    }
+}
