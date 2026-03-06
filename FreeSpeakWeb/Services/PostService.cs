@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace FreeSpeakWeb.Services
 {
@@ -7,11 +8,13 @@ namespace FreeSpeakWeb.Services
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<PostService> _logger;
+        private readonly SiteSettings _siteSettings;
 
-        public PostService(IDbContextFactory<ApplicationDbContext> contextFactory, ILogger<PostService> logger)
+        public PostService(IDbContextFactory<ApplicationDbContext> contextFactory, ILogger<PostService> logger, IOptions<SiteSettings> siteSettings)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _siteSettings = siteSettings.Value;
         }
 
         #region Post Operations
@@ -296,6 +299,17 @@ namespace FreeSpeakWeb.Services
                     if (parentComment.PostId != postId)
                     {
                         return (false, "Parent comment does not belong to this post.", null);
+                    }
+                }
+                else
+                {
+                    // This is a direct comment - check if we've reached the limit
+                    var directCommentCount = await context.Comments
+                        .CountAsync(c => c.PostId == postId && c.ParentCommentId == null);
+
+                    if (directCommentCount >= _siteSettings.MaxFeedPostDirectCommentCount)
+                    {
+                        return (false, $"This post has reached the maximum of {_siteSettings.MaxFeedPostDirectCommentCount} direct comments.", null);
                     }
                 }
 
@@ -878,6 +892,159 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogError(ex, "Error retrieving images for post {PostId}", postId);
                 return new List<PostImage>();
+            }
+        }
+
+        #endregion
+
+        #region Comment Like Operations
+
+        /// <summary>
+        /// Add or update a reaction to a comment
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> AddOrUpdateCommentReactionAsync(int commentId, string userId, LikeType reactionType)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var comment = await context.Comments.FindAsync(commentId);
+                if (comment == null)
+                {
+                    return (false, "Comment not found.");
+                }
+
+                var existingLike = await context.CommentLikes
+                    .FirstOrDefaultAsync(cl => cl.CommentId == commentId && cl.UserId == userId);
+
+                if (existingLike != null)
+                {
+                    // Update existing reaction type
+                    existingLike.Type = reactionType;
+                    _logger.LogInformation("User {UserId} changed reaction on comment {CommentId} to {ReactionType}", userId, commentId, reactionType);
+                }
+                else
+                {
+                    // Add new reaction
+                    var commentLike = new CommentLike
+                    {
+                        CommentId = commentId,
+                        UserId = userId,
+                        Type = reactionType,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    context.CommentLikes.Add(commentLike);
+                    _logger.LogInformation("User {UserId} reacted to comment {CommentId} with {ReactionType}", userId, commentId, reactionType);
+                }
+
+                await context.SaveChangesAsync();
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error adding/updating reaction on comment {CommentId} for user {UserId}", commentId, userId);
+                return (false, "An error occurred while processing your reaction.");
+            }
+        }
+
+        /// <summary>
+        /// Remove a user's reaction from a comment
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> RemoveCommentReactionAsync(int commentId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var comment = await context.Comments.FindAsync(commentId);
+                if (comment == null)
+                {
+                    return (false, "Comment not found.");
+                }
+
+                var existingLike = await context.CommentLikes
+                    .FirstOrDefaultAsync(cl => cl.CommentId == commentId && cl.UserId == userId);
+
+                if (existingLike != null)
+                {
+                    context.CommentLikes.Remove(existingLike);
+                    await context.SaveChangesAsync();
+
+                    _logger.LogInformation("User {UserId} removed reaction from comment {CommentId}", userId, commentId);
+                    return (true, null);
+                }
+
+                return (false, "No reaction to remove.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error removing reaction from comment {CommentId} for user {UserId}", commentId, userId);
+                return (false, "An error occurred while removing your reaction.");
+            }
+        }
+
+        /// <summary>
+        /// Get the breakdown of reaction types for a comment
+        /// </summary>
+        public async Task<Dictionary<LikeType, int>> GetCommentReactionBreakdownAsync(int commentId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var reactionCounts = await context.CommentLikes
+                    .Where(cl => cl.CommentId == commentId)
+                    .GroupBy(cl => cl.Type)
+                    .Select(g => new { Type = g.Key, Count = g.Count() })
+                    .ToDictionaryAsync(x => x.Type, x => x.Count);
+
+                return reactionCounts;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting reaction breakdown for comment {CommentId}", commentId);
+                return new Dictionary<LikeType, int>();
+            }
+        }
+
+        /// <summary>
+        /// Get user's reaction type for a comment (null if not reacted)
+        /// </summary>
+        public async Task<LikeType?> GetUserCommentReactionAsync(int commentId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var like = await context.CommentLikes
+                    .FirstOrDefaultAsync(cl => cl.CommentId == commentId && cl.UserId == userId);
+
+                return like?.Type;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting user reaction for comment {CommentId} and user {UserId}", commentId, userId);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get like count for a comment
+        /// </summary>
+        public async Task<int> GetCommentLikeCountAsync(int commentId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.CommentLikes
+                    .CountAsync(cl => cl.CommentId == commentId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting like count for comment {CommentId}", commentId);
+                return 0;
             }
         }
 

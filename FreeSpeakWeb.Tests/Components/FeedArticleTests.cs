@@ -1,7 +1,14 @@
 using Bunit;
 using FluentAssertions;
 using FreeSpeakWeb.Components.SocialFeed;
+using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Moq;
 using Xunit;
 
 namespace FreeSpeakWeb.Tests.Components
@@ -12,6 +19,33 @@ namespace FreeSpeakWeb.Tests.Components
         {
             // Setup JSInterop for MultiLineCommentEditor module
             JSInterop.SetupModule("./Components/SocialFeed/MultiLineCommentEditor.razor.js");
+
+            // Register required services for FeedArticle component
+
+            // Mock IDbContextFactory for PostService
+            var mockDbContextFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
+
+            // Mock ILogger for PostService
+            var mockLogger = new Mock<ILogger<PostService>>();
+
+            // Create SiteSettings for PostService
+            var siteSettings = new SiteSettings
+            {
+                SiteName = "FreeSpeak Test",
+                MaxFeedPostCommentDepth = 4,
+                MaxFeedPostDirectCommentCount = 1000
+            };
+            var siteSettingsOptions = Options.Create(siteSettings);
+
+            // Create PostService with mocked dependencies
+            var postService = new PostService(
+                mockDbContextFactory.Object,
+                mockLogger.Object,
+                siteSettingsOptions
+            );
+
+            Services.AddSingleton(postService);
+            Services.AddSingleton(siteSettingsOptions);
         }
 
         [Fact]

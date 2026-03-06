@@ -3,6 +3,7 @@
 @using FreeSpeakWeb.Services
 @inject IJSRuntime JS
 @inject PostService PostService
+@inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
 @implements IAsyncDisposable
 
 <div class="feed-article">
@@ -130,12 +131,24 @@
             @foreach (var comment in Comments)
             {
                 <MultiLineCommentDisplay 
+                    CommentId="@comment.CommentId"
                     UserName="@comment.UserName"
                     UserImageUrl="@comment.UserImageUrl"
+                    CommentAuthorId="@comment.CommentAuthorId"
                     CommentText="@comment.CommentText"
                     ImageUrl="@comment.ImageUrl"
                     Timestamp="@comment.Timestamp"
-                    Replies="@comment.Replies" />
+                    Replies="@comment.Replies"
+                    LikeCount="@comment.LikeCount"
+                    UserReaction="@comment.UserReaction"
+                    ReactionBreakdown="@comment.ReactionBreakdown"
+                    CurrentUserId="@CurrentUserId"
+                    CurrentUserImageUrl="@CurrentUserImageUrl"
+                    CurrentUserName="@CurrentUserName"
+                    Depth="0"
+                    OnReactionChanged="@OnCommentReactionChanged"
+                    OnRemoveReaction="@OnRemoveCommentReaction"
+                    OnReplySubmitted="@OnReplySubmitted" />
             }
         </div>
     }
@@ -143,21 +156,30 @@
     <!-- 6. Comment Editor -->
     @if (!HideCommentEditor)
     {
-        <div class="article-comment-editor">
-            @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
-            {
-                <img src="@CurrentUserImageUrl" alt="You" class="comment-user-avatar" />
-            }
-            else
-            {
-                <div class="comment-user-avatar comment-avatar-placeholder">
-                    <span class="comment-avatar-initial">@GetInitials(CurrentUserName ?? "User")</span>
+        @if (!HasReachedCommentLimit)
+        {
+            <div class="article-comment-editor">
+                @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
+                {
+                    <img src="@CurrentUserImageUrl" alt="You" class="comment-user-avatar" />
+                }
+                else
+                {
+                    <div class="comment-user-avatar comment-avatar-placeholder">
+                        <span class="comment-avatar-initial">@GetInitials(CurrentUserName ?? "User")</span>
+                    </div>
+                }
+                <div class="editor-wrapper">
+                    <MultiLineCommentEditor OnCommentSubmitted="OnCommentSubmitted" />
                 </div>
-            }
-            <div class="editor-wrapper">
-                <MultiLineCommentEditor OnCommentSubmitted="OnCommentSubmitted" />
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="article-comment-limit-message">
+                <span>No more comments allowed</span>
+            </div>
+        }
     }
 </div>
 
@@ -195,6 +217,9 @@
     public int CommentCount { get; set; } = 0;
 
     [Parameter]
+    public int DirectCommentCount { get; set; } = 0;
+
+    [Parameter]
     public List<CommentDisplayModel>? Comments { get; set; }
 
     [Parameter]
@@ -217,6 +242,15 @@
 
     [Parameter]
     public EventCallback<(int PostId, string Content)> OnCommentAdded { get; set; }
+
+    [Parameter]
+    public EventCallback<(int ParentCommentId, string Content)> OnReplySubmitted { get; set; }
+
+    [Parameter]
+    public EventCallback<(int CommentId, LikeType ReactionType)> OnCommentReactionChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnRemoveCommentReaction { get; set; }
 
     [Parameter]
     public bool HideCommentEditor { get; set; } = false;
@@ -242,6 +276,11 @@
     private bool shouldShowExpandButton = false;
 
     private bool IsOwnPost => !string.IsNullOrEmpty(CurrentUserId) && !string.IsNullOrEmpty(AuthorId) && CurrentUserId == AuthorId;
+
+    // Check if we've reached the maximum number of direct comments
+    // Note: CommentCount in the Post entity includes ALL comments (direct + replies)
+    // So we need to get the actual direct comment count from the service
+    private bool HasReachedCommentLimit => DirectCommentCount >= SiteSettings.Value.MaxFeedPostDirectCommentCount;
 
     private string FormattedTimestamp => FormatTimestamp(CreatedAt);
 

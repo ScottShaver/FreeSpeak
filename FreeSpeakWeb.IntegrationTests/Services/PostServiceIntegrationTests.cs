@@ -3,19 +3,29 @@ using FreeSpeakWeb.Data;
 using FreeSpeakWeb.IntegrationTests.Infrastructure;
 using FreeSpeakWeb.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace FreeSpeakWeb.IntegrationTests.Services
 {
     public class PostServiceIntegrationTests : IntegrationTestBase
     {
+        private static IOptions<SiteSettings> CreateTestSiteSettings()
+        {
+            return Options.Create(new SiteSettings
+            {
+                SiteName = "TestSite",
+                MaxFeedPostCommentDepth = 4,
+                MaxFeedPostDirectCommentCount = 1000
+            });
+        }
         [Fact]
         public async Task GetPostByIdAsync_WithNestedComments_ShouldLoadAllData()
         {
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, logger);
+            var service = new PostService(factory, logger, CreateTestSiteSettings());
 
             var author = CreateTestUser("author1", "author", "Post", "Author");
             var commenter1 = CreateTestUser("commenter1", "commenter1", "First", "Commenter");
@@ -93,7 +103,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, logger);
+            var service = new PostService(factory, logger, CreateTestSiteSettings());
 
             var user1 = CreateTestUser("user1", "user1", "User", "One");
             var user2 = CreateTestUser("user2", "user2", "User", "Two");
@@ -150,7 +160,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, logger);
+            var service = new PostService(factory, logger, CreateTestSiteSettings());
 
             var author = CreateTestUser("author1", "author", "Post", "Author");
             var commenter = CreateTestUser("commenter1", "commenter", "Comment", "Author");
