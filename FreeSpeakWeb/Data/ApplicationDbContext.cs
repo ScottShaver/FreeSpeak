@@ -6,6 +6,10 @@ namespace FreeSpeakWeb.Data
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
         public DbSet<Friendship> Friendships { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Like> Likes { get; set; }
+        public DbSet<PostImage> PostImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,6 +36,95 @@ namespace FreeSpeakWeb.Data
                 entity.HasIndex(f => f.AddresseeId);
                 entity.HasIndex(f => f.Status);
                 entity.HasIndex(f => new { f.RequesterId, f.AddresseeId }).IsUnique();
+            });
+
+            // Configure Post entity
+            modelBuilder.Entity<Post>(entity =>
+            {
+                entity.HasKey(p => p.Id);
+
+                entity.HasOne(p => p.Author)
+                    .WithMany()
+                    .HasForeignKey(p => p.AuthorId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(p => p.Content)
+                    .IsRequired();
+
+                // Create indexes
+                entity.HasIndex(p => p.AuthorId);
+                entity.HasIndex(p => p.CreatedAt);
+            });
+
+            // Configure Comment entity
+            modelBuilder.Entity<Comment>(entity =>
+            {
+                entity.HasKey(c => c.Id);
+
+                entity.HasOne(c => c.Post)
+                    .WithMany(p => p.Comments)
+                    .HasForeignKey(c => c.PostId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(c => c.Author)
+                    .WithMany()
+                    .HasForeignKey(c => c.AuthorId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c => c.ParentComment)
+                    .WithMany(c => c.Replies)
+                    .HasForeignKey(c => c.ParentCommentId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(c => c.Content)
+                    .IsRequired();
+
+                // Create indexes
+                entity.HasIndex(c => c.PostId);
+                entity.HasIndex(c => c.AuthorId);
+                entity.HasIndex(c => c.ParentCommentId);
+                entity.HasIndex(c => c.CreatedAt);
+            });
+
+            // Configure Like entity
+            modelBuilder.Entity<Like>(entity =>
+            {
+                entity.HasKey(l => l.Id);
+
+                entity.HasOne(l => l.Post)
+                    .WithMany(p => p.Likes)
+                    .HasForeignKey(l => l.PostId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(l => l.User)
+                    .WithMany()
+                    .HasForeignKey(l => l.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Ensure a user can only like a post once
+                entity.HasIndex(l => new { l.PostId, l.UserId }).IsUnique();
+
+                // Create additional indexes
+                entity.HasIndex(l => l.PostId);
+                entity.HasIndex(l => l.UserId);
+            });
+
+            // Configure PostImage entity
+            modelBuilder.Entity<PostImage>(entity =>
+            {
+                entity.HasKey(pi => pi.Id);
+
+                entity.HasOne(pi => pi.Post)
+                    .WithMany(p => p.Images)
+                    .HasForeignKey(pi => pi.PostId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Property(pi => pi.ImageUrl)
+                    .IsRequired();
+
+                // Create indexes
+                entity.HasIndex(pi => pi.PostId);
+                entity.HasIndex(pi => new { pi.PostId, pi.DisplayOrder });
             });
         }
     }

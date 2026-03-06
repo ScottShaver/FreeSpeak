@@ -59,6 +59,9 @@ namespace FreeSpeakWeb
             // Add FriendsService
             builder.Services.AddScoped<FriendsService>();
 
+            // Add PostService
+            builder.Services.AddScoped<PostService>();
+
             // Configure Kestrel to listen on all network interfaces for mobile testing
             builder.WebHost.ConfigureKestrel(serverOptions =>
             {
