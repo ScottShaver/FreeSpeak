@@ -54,6 +54,7 @@
                         var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
                         var userReaction = userReactions.ContainsKey(post.Id) ? userReactions[post.Id] : null;
                         var comments = postComments.ContainsKey(post.Id) ? postComments[post.Id] : new List<CommentDisplayModel>();
+                        var directCommentCount = postDirectCommentCounts.ContainsKey(post.Id) ? postDirectCommentCounts[post.Id] : 0;
 
                         <FeedArticle 
                             PostId="@post.Id"
@@ -63,6 +64,7 @@
                             CreatedAt="@post.CreatedAt"
                             LikeCount="@post.LikeCount"
                             CommentCount="@post.CommentCount"
+                            DirectCommentCount="@directCommentCount"
                             CurrentUserId="@currentUserId"
                             CurrentUserImageUrl="@currentUserImageUrl"
                             CurrentUserName="@currentUserName"
@@ -72,6 +74,9 @@
                             OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(post.Id, reactionType))"
                             OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
                             OnCommentAdded="@HandleCommentAdded"
+                            OnReplySubmitted="@HandleReplySubmitted"
+                            OnCommentReactionChanged="@HandleCommentReactionChanged"
+                            OnRemoveCommentReaction="@HandleRemoveCommentReaction"
                             OnShowPostDetail="@(() => ShowPostDetail(post))"
                             OnShowComments="@(() => ShowPostDetail(post))">
                             <ArticleContent>
@@ -118,7 +123,9 @@
                 OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(selectedPost.Id, reactionType))"
                 OnRemoveReaction="@(async () => await HandleRemoveReaction(selectedPost.Id))"
                 OnCommentAdded="@HandleCommentAdded"
-                OnClose="@ClosePostDetail">
+                OnCommentReactionChanged="@HandleCommentReactionChanged"
+                OnRemoveCommentReaction="@HandleRemoveCommentReaction"
+                OnClose="@(async () => await ClosePostDetail())">
                 <ArticleContent>
                     @((MarkupString)FormatContentWithLineBreaks(selectedPost.Content))
                 </ArticleContent>
@@ -135,6 +142,7 @@
     private Dictionary<int, Dictionary<LikeType, int>> postReactionData = new();
     private Dictionary<int, LikeType?> userReactions = new();
     private Dictionary<int, List<CommentDisplayModel>> postComments = new();
+    private Dictionary<int, int> postDirectCommentCounts = new();
     private int currentPage = 1;
     private const int pageSize = 20;
     private bool isLoading = false;
@@ -303,6 +311,10 @@
                 var userReaction = await PostService.GetUserReactionAsync(post.Id, currentUserId);
                 userReactions[post.Id] = userReaction;
 
+                // Get direct comment count
+                var directCommentCount = await PostService.GetDirectCommentCountAsync(post.Id);
+                postDirectCommentCounts[post.Id] = directCommentCount;
+
                 // Get last 3 comments for feed display
                 await LoadCommentsForPost(post.Id, 3);
             }
@@ -318,14 +330,13 @@
         try
         {
             var comments = await PostService.GetLastCommentsAsync(postId, count);
-            var commentModels = comments.Select(c => new CommentDisplayModel
+            var commentModels = new List<CommentDisplayModel>();
+
+            foreach (var c in comments)
             {
-                UserName = GetCommentAuthorName(c),
-                UserImageUrl = c.Author?.ProfilePictureUrl,
-                CommentText = c.Content,
-                Timestamp = c.CreatedAt,
-                Replies = null // Don't load replies in feed view
-            }).ToList();
+                var commentModel = await BuildCommentDisplayModel(c);
+                commentModels.Add(commentModel);
+            }
 
             postComments[postId] = commentModels;
         }
@@ -333,6 +344,33 @@
         {
             Console.WriteLine($"Error loading comments for post {postId}: {ex.Message}");
         }
+    }
+
+    private async Task<CommentDisplayModel> BuildCommentDisplayModel(Comment comment)
+    {
+        // Load replies for this comment
+        var replies = await PostService.GetRepliesAsync(comment.Id);
+        var replyModels = new List<CommentDisplayModel>();
+
+        foreach (var reply in replies)
+        {
+            var replyModel = await BuildCommentDisplayModel(reply); // Recursive call for nested replies
+            replyModels.Add(replyModel);
+        }
+
+        return new CommentDisplayModel
+        {
+            CommentId = comment.Id,
+            UserName = GetCommentAuthorName(comment),
+            UserImageUrl = comment.Author?.ProfilePictureUrl,
+            CommentAuthorId = comment.AuthorId,
+            CommentText = comment.Content,
+            Timestamp = comment.CreatedAt,
+            Replies = replyModels.Any() ? replyModels : null,
+            LikeCount = await PostService.GetCommentLikeCountAsync(comment.Id),
+            UserReaction = currentUserId != null ? await PostService.GetUserCommentReactionAsync(comment.Id, currentUserId) : null,
+            ReactionBreakdown = await PostService.GetCommentReactionBreakdownAsync(comment.Id)
+        };
     }
 
     private string GetCommentAuthorName(Comment comment)
@@ -432,21 +470,155 @@
                     post.CommentCount++;
                 }
 
-                // TODO: Optionally reload comments for this post if displaying them
-                // var comments = await PostService.GetCommentsAsync(data.PostId);
-                // Update the Comments property of the FeedArticle
+                // Reload comments to show the new one
+                await LoadCommentsForPost(data.PostId, 3);
 
                 StateHasChanged();
             }
             else
             {
+                // Show error message to user
+                await JSRuntime.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to add comment");
                 Console.WriteLine($"Failed to add comment: {result.ErrorMessage}");
             }
         }
         catch (Exception ex)
         {
+            await JSRuntime.InvokeVoidAsync("alert", "An error occurred while adding your comment.");
             Console.WriteLine($"Error adding comment: {ex.Message}");
         }
+    }
+
+    private async Task HandleReplySubmitted((int ParentCommentId, string Content) data)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            // Get the parent comment's PostId by searching through postComments
+            int? postId = null;
+            foreach (var kvp in postComments)
+            {
+                if (FindCommentById(kvp.Value, data.ParentCommentId) != null)
+                {
+                    postId = kvp.Key;
+                    break;
+                }
+            }
+
+            if (postId == null)
+            {
+                Console.WriteLine($"Could not find post for parent comment {data.ParentCommentId}");
+                return;
+            }
+
+            // Add the reply to the database using AddCommentAsync with parentCommentId
+            var result = await PostService.AddCommentAsync(postId.Value, currentUserId, data.Content, null, data.ParentCommentId);
+
+            if (result.Success)
+            {
+                // Reload comments for this post to show the new reply
+                await LoadCommentsForPost(postId.Value, 3);
+
+                // Update comment count
+                var post = posts.FirstOrDefault(p => p.Id == postId.Value);
+                if (post != null)
+                {
+                    post.CommentCount++;
+                }
+
+                StateHasChanged();
+            }
+            else
+            {
+                // Show error message to user
+                await JSRuntime.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to add reply");
+                Console.WriteLine($"Failed to add reply: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "An error occurred while adding your reply.");
+            Console.WriteLine($"Error adding reply: {ex.Message}");
+        }
+    }
+
+    private async Task HandleCommentReactionChanged((int CommentId, LikeType ReactionType) data)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await PostService.AddOrUpdateCommentReactionAsync(data.CommentId, currentUserId, data.ReactionType);
+
+            if (result.Success)
+            {
+                // Update the comment's reaction data in the UI
+                await UpdateCommentReactionData(data.CommentId, data.ReactionType);
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error handling comment reaction: {ex.Message}");
+        }
+    }
+
+    private async Task HandleRemoveCommentReaction(int commentId)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await PostService.RemoveCommentReactionAsync(commentId, currentUserId);
+
+            if (result.Success)
+            {
+                // Update the comment's reaction data in the UI
+                await UpdateCommentReactionData(commentId, null);
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error removing comment reaction: {ex.Message}");
+        }
+    }
+
+    private async Task UpdateCommentReactionData(int commentId, LikeType? newReaction)
+    {
+        // Find the comment in the postComments dictionary and update its reaction data
+        foreach (var kvp in postComments)
+        {
+            var comment = FindCommentById(kvp.Value, commentId);
+            if (comment != null)
+            {
+                // Update user's reaction
+                comment.UserReaction = newReaction;
+
+                // Reload reaction breakdown and like count
+                comment.ReactionBreakdown = await PostService.GetCommentReactionBreakdownAsync(commentId);
+                comment.LikeCount = await PostService.GetCommentLikeCountAsync(commentId);
+                break;
+            }
+        }
+    }
+
+    private CommentDisplayModel? FindCommentById(List<CommentDisplayModel> comments, int commentId)
+    {
+        foreach (var comment in comments)
+        {
+            if (comment.CommentId == commentId)
+                return comment;
+
+            if (comment.Replies != null)
+            {
+                var found = FindCommentById(comment.Replies, commentId);
+                if (found != null)
+                    return found;
+            }
+        }
+        return null;
     }
 
     private async Task HandlePostCreated(string content)
@@ -496,8 +668,14 @@
         StateHasChanged();
     }
 
-    private void ClosePostDetail()
+    private async Task ClosePostDetail()
     {
+        // Reload comments for the post before closing, in case they were updated in the modal
+        if (selectedPost != null)
+        {
+            await LoadCommentsForPost(selectedPost.Id, 3);
+        }
+
         showPostDetail = false;
         selectedPost = null;
         StateHasChanged();

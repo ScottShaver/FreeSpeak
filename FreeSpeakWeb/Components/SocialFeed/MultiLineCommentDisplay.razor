@@ -1,5 +1,8 @@
 @inject IJSRuntime JS
+@inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
 @using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Data
+@implements IAsyncDisposable
 
 <div class="comment-display">
     <div class="comment-avatar">
@@ -27,23 +30,101 @@
                 <img src="@ImageUrl" alt="Comment image" class="comment-image" @onclick="OnImageClick" />
             </div>
         }
-        
+
         <div class="comment-meta">
             <span class="comment-timestamp" title="@FullTimestamp">@FormattedTimestamp</span>
+
+            @if (ShouldShowLikeButton)
+            {
+                <div class="like-button-container" @onmouseenter="ShowReactionPicker" @onmouseleave="StartHideTimer" @onmouseenter:stopPropagation="true">
+                    <button type="button" class="comment-like-button @(UserReaction != null ? "reacted" : "")" @onclick="OnLikeClick">
+                        @if (UserReaction != null)
+                        {
+                            <span class="user-reaction-emoji">@GetReactionEmoji(UserReaction.Value)</span>
+                            <span class="reaction-text">@GetReactionText(UserReaction.Value)</span>
+                        }
+                        else
+                        {
+                            <span>Like</span>
+                        }
+                    </button>
+                    @if (showReactionPicker)
+                    {
+                        <ReactionPicker HasUserReaction="@(UserReaction != null)" OnReactionPicked="HandleReaction" OnRemoveReaction="HandleRemoveReaction" OnClose="StartHideTimer" OnEnter="CancelHideTimer" />
+                    }
+                </div>
+            }
+            @if (ShouldShowReplyButton)
+            {
+                <button type="button" class="comment-reply-button" @onclick="ToggleReplyEditor">
+                    <span>Reply</span>
+                </button>
+            }
+            else if (!string.IsNullOrEmpty(CurrentUserId) && Depth >= SiteSettings.Value.MaxFeedPostCommentDepth)
+            {
+                <span class="comment-reply-disabled">No more replies allowed</span>
+            }
+
+            @if (LikeCount > 0)
+            {
+                <div class="comment-stats">
+                    @if (ReactionBreakdown != null && ReactionBreakdown.Any())
+                    {
+                        <div class="comment-reaction-icons">
+                            @foreach (var reactionType in ReactionBreakdown.Keys.OrderByDescending(k => ReactionBreakdown[k]).Take(3))
+                            {
+                                <span class="comment-reaction-icon">@GetReactionEmoji(reactionType)</span>
+                            }
+                        </div>
+                    }
+                    <span class="comment-like-count">@LikeCount</span>
+                </div>
+            }
         </div>
-        
+
+        @if (showReplyEditor)
+        {
+            <div class="comment-reply-editor">
+                @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
+                {
+                    <img src="@CurrentUserImageUrl" alt="You" class="reply-user-avatar" />
+                }
+                else
+                {
+                    <div class="reply-user-avatar reply-avatar-placeholder">
+                        <span class="reply-avatar-initial">@GetInitials(CurrentUserName ?? "User")</span>
+                    </div>
+                }
+                <div class="reply-editor-wrapper">
+                    <MultiLineCommentEditor OnCommentSubmitted="@HandleReplySubmitted" />
+                </div>
+            </div>
+        }
+
         @if (Replies != null && Replies.Any())
         {
             <div class="comment-replies">
                 @foreach (var reply in Replies)
                 {
                     <MultiLineCommentDisplay 
+                        CommentId="@reply.CommentId"
                         UserName="@reply.UserName"
                         UserImageUrl="@reply.UserImageUrl"
                         CommentText="@reply.CommentText"
                         ImageUrl="@reply.ImageUrl"
                         Timestamp="@reply.Timestamp"
-                        Replies="@reply.Replies" />
+                        Replies="@reply.Replies"
+                        LikeCount="@reply.LikeCount"
+                        UserReaction="@reply.UserReaction"
+                        ReactionBreakdown="@reply.ReactionBreakdown"
+                        CurrentUserId="@CurrentUserId"
+                        CurrentUserImageUrl="@CurrentUserImageUrl"
+                        CurrentUserName="@CurrentUserName"
+                        CommentAuthorId="@reply.CommentAuthorId"
+                        Depth="@(Depth + 1)"
+                        OnReactionChanged="@OnReactionChanged"
+                        OnRemoveReaction="@OnRemoveReaction"
+                        OnReplySubmitted="@OnReplySubmitted" />
                 }
             </div>
         }
@@ -51,6 +132,9 @@
 </div>
 
 @code {
+    [Parameter]
+    public int CommentId { get; set; }
+
     [Parameter]
     public string UserName { get; set; } = "Anonymous";
 
@@ -68,6 +152,170 @@
 
     [Parameter]
     public List<CommentDisplayModel>? Replies { get; set; }
+
+    [Parameter]
+    public int LikeCount { get; set; } = 0;
+
+    [Parameter]
+    public LikeType? UserReaction { get; set; }
+
+    [Parameter]
+    public Dictionary<LikeType, int>? ReactionBreakdown { get; set; }
+
+    [Parameter]
+    public string? CurrentUserId { get; set; }
+
+    [Parameter]
+    public string? CommentAuthorId { get; set; }
+
+    [Parameter]
+    public string? CurrentUserImageUrl { get; set; }
+
+    [Parameter]
+    public string? CurrentUserName { get; set; }
+
+    [Parameter]
+    public int Depth { get; set; } = 0;
+
+    [Parameter]
+    public EventCallback<(int CommentId, LikeType ReactionType)> OnReactionChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnRemoveReaction { get; set; }
+
+    [Parameter]
+    public EventCallback<(int ParentCommentId, string Content)> OnReplySubmitted { get; set; }
+
+    private bool showReactionPicker = false;
+    private bool showReplyEditor = false;
+    private System.Threading.Timer? hideTimer;
+
+    private bool IsOwnComment => !string.IsNullOrEmpty(CurrentUserId) && !string.IsNullOrEmpty(CommentAuthorId) && CurrentUserId == CommentAuthorId;
+
+    // Show like button if: user is logged in AND (either CommentAuthorId is missing OR it's not the user's own comment)
+    private bool ShouldShowLikeButton => !string.IsNullOrEmpty(CurrentUserId) && (string.IsNullOrEmpty(CommentAuthorId) || CurrentUserId != CommentAuthorId);
+
+    // Show reply button if: user is logged in AND depth hasn't reached the maximum
+    private bool ShouldShowReplyButton => !string.IsNullOrEmpty(CurrentUserId) && Depth < SiteSettings.Value.MaxFeedPostCommentDepth;
+
+    private void ShowReactionPicker()
+    {
+        if (IsOwnComment) return;
+
+        hideTimer?.Dispose();
+        showReactionPicker = true;
+        StateHasChanged();
+    }
+
+    private void CancelHideTimer()
+    {
+        if (IsOwnComment) return;
+
+        hideTimer?.Dispose();
+        showReactionPicker = true;
+        StateHasChanged();
+    }
+
+    private void StartHideTimer()
+    {
+        hideTimer?.Dispose();
+        hideTimer = new System.Threading.Timer(_ =>
+        {
+            InvokeAsync(() =>
+            {
+                showReactionPicker = false;
+                StateHasChanged();
+            });
+        }, null, 500, Timeout.Infinite);
+    }
+
+    private async Task HandleReaction(LikeType reactionType)
+    {
+        showReactionPicker = false;
+        await OnReactionChanged.InvokeAsync((CommentId, reactionType));
+    }
+
+    private async Task HandleRemoveReaction()
+    {
+        showReactionPicker = false;
+        if (OnRemoveReaction.HasDelegate)
+        {
+            await OnRemoveReaction.InvokeAsync(CommentId);
+        }
+    }
+
+    private async Task OnLikeClick()
+    {
+        await OnReactionChanged.InvokeAsync((CommentId, LikeType.Like));
+    }
+
+    private void ToggleReplyEditor()
+    {
+        showReplyEditor = !showReplyEditor;
+        StateHasChanged();
+    }
+
+    private async Task HandleReplySubmitted(string content)
+    {
+        if (OnReplySubmitted.HasDelegate && !string.IsNullOrWhiteSpace(content))
+        {
+            await OnReplySubmitted.InvokeAsync((CommentId, content));
+            showReplyEditor = false;
+            StateHasChanged();
+        }
+    }
+
+    private string GetInitials(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "U";
+
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 0)
+            return "U";
+
+        if (parts.Length == 1)
+        {
+            var singleWord = parts[0];
+            if (singleWord.Length >= 2)
+                return singleWord.Substring(0, 2).ToUpper();
+            else
+                return singleWord.Substring(0, 1).ToUpper();
+        }
+
+        return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
+    }
+
+    private string GetReactionEmoji(LikeType reactionType)
+    {
+        return reactionType switch
+        {
+            LikeType.Like => "👍",
+            LikeType.Love => "❤️",
+            LikeType.Care => "🤗",
+            LikeType.Haha => "😂",
+            LikeType.Wow => "😮",
+            LikeType.Sad => "😢",
+            LikeType.Angry => "😠",
+            _ => "👍"
+        };
+    }
+
+    private string GetReactionText(LikeType reactionType)
+    {
+        return reactionType switch
+        {
+            LikeType.Like => "Like",
+            LikeType.Love => "Love",
+            LikeType.Care => "Care",
+            LikeType.Haha => "Haha",
+            LikeType.Wow => "Wow",
+            LikeType.Sad => "Sad",
+            LikeType.Angry => "Angry",
+            _ => "Like"
+        };
+    }
 
     private string FormattedTimestamp => FormatTimestamp(Timestamp);
 
@@ -89,30 +337,6 @@
         return timestamp.ToLocalTime().ToString("MMMM d 'at' h:mm tt");
     }
 
-    private string GetInitials(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-            return "U";
-
-        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-        if (parts.Length == 0)
-            return "U";
-
-        if (parts.Length == 1)
-        {
-            // For single word (username), try to get first 2 characters
-            var singleWord = parts[0];
-            if (singleWord.Length >= 2)
-                return singleWord.Substring(0, 2).ToUpper();
-            else
-                return singleWord.Substring(0, 1).ToUpper();
-        }
-
-        // Return first letter of first name + first letter of last name
-        return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
-    }
-
     private string FormatContentWithLineBreaks(string content)
     {
         if (string.IsNullOrEmpty(content))
@@ -126,5 +350,11 @@
     private async Task OnImageClick()
     {
         await JS.InvokeVoidAsync("alert", "Image Clicked");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        hideTimer?.Dispose();
+        await Task.CompletedTask;
     }
 }

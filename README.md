@@ -1,1 +1,160 @@
 # FreeSpeak
+
+A modern social media platform built with Blazor Server and .NET 10, featuring real-time interactions, multi-level commenting, and reaction systems.
+
+## Project Overview
+
+FreeSpeak is a feature-rich social networking application that enables users to:
+- Create and share posts with image support
+- Engage with content through multiple reaction types (Like, Love, Care, Haha, Wow, Sad, Angry)
+- Participate in threaded conversations with nested comments
+- View detailed analytics for posts and interactions
+- Manage their profile with custom avatars
+
+### Technology Stack
+
+- **Framework**: .NET 10 / Blazor Server
+- **Database**: PostgreSQL with Entity Framework Core
+- **UI**: Razor Components with CSS isolation
+- **Testing**: xUnit, bUnit, Moq, FluentAssertions
+- **Authentication**: ASP.NET Core Identity
+
+## Configuration
+
+The application uses several custom settings in `appsettings.json` to control behavior and limits. These settings are bound to the `SiteSettings` class and injected throughout the application.
+
+### Application Settings
+
+#### Site Configuration
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `SiteName` | string | `"FreeSpeak"` | The display name of the site, used in titles and branding throughout the application |
+
+#### Comment System Limits
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `MaxFeedPostCommentDepth` | int | `4` | Maximum nesting depth for comment replies. Prevents infinite nesting by limiting how many levels deep users can reply to comments. After reaching this depth, users can still comment but without additional nesting. |
+| `MaxFeedPostDirectCommentCount` | int | `30` | Maximum number of direct (top-level) comments allowed per post. This limit helps manage database growth and UI performance. Does not include nested replies in the count. |
+
+### Example Configuration
+
+```json
+{
+  "SiteName": "FreeSpeak",
+  "MaxFeedPostCommentDepth": 4,
+  "MaxFeedPostDirectCommentCount": 30,
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=FreeSpeak;Username=youruser;Password=yourpassword"
+  }
+}
+```
+
+### Using Settings in Code
+
+Settings are accessed via dependency injection using `IOptions<SiteSettings>`:
+
+```csharp
+@inject IOptions<SiteSettings> SiteSettings
+
+<h1>Welcome to @SiteSettings.Value.SiteName</h1>
+
+@code {
+    private bool HasReachedCommentLimit => 
+        DirectCommentCount >= SiteSettings.Value.MaxFeedPostDirectCommentCount;
+}
+```
+
+### Environment-Specific Configuration
+
+You can override settings in environment-specific files:
+- `appsettings.Development.json` - Development environment
+- `appsettings.Production.json` - Production environment
+- `appsettings.Test.json` - Testing environment
+
+Example override for testing:
+```json
+{
+  "MaxFeedPostDirectCommentCount": 100,
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=FreeSpeak_Test;Username=testuser;Password=testpass"
+  }
+}
+```
+
+## Getting Started
+
+### Prerequisites
+
+- .NET 10 SDK
+- PostgreSQL 12 or higher
+- Visual Studio 2026 or VS Code with C# Dev Kit
+
+### Setup
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ScottShaver/FreeSpeak.git
+   cd FreeSpeak
+   ```
+
+2. Update the connection string in `appsettings.json`:
+   ```json
+   "ConnectionStrings": {
+     "DefaultConnection": "Host=localhost;Port=5432;Database=FreeSpeak;Username=youruser;Password=yourpassword"
+   }
+   ```
+
+3. Run database migrations:
+   ```bash
+   dotnet ef database update
+   ```
+
+4. Run the application:
+   ```bash
+   dotnet run --project FreeSpeakWeb
+   ```
+
+5. Navigate to `https://localhost:5001` in your browser
+
+## Testing
+
+The project includes comprehensive test coverage:
+
+- **Unit Tests**: `FreeSpeakWeb.Tests` - Service and component logic
+- **Integration Tests**: `FreeSpeakWeb.IntegrationTests` - Database and end-to-end scenarios
+
+Run all tests:
+```bash
+dotnet test
+```
+
+See [TESTING.md](TESTING.md) for detailed testing guidelines.
+
+## Project Structure
+
+```
+FreeSpeak/
+├── FreeSpeakWeb/                 # Main Blazor Server application
+│   ├── Components/
+│   │   ├── Pages/                # Routable pages
+│   │   └── SocialFeed/          # Feed components
+│   ├── Data/                     # Entity models and DbContext
+│   ├── Services/                 # Business logic services
+│   └── appsettings.json         # Configuration
+├── FreeSpeakWeb.Tests/          # Unit tests
+└── FreeSpeakWeb.IntegrationTests/ # Integration tests
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

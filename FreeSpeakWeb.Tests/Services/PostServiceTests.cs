@@ -2,12 +2,22 @@ using FluentAssertions;
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Services;
 using FreeSpeakWeb.Tests.Infrastructure;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace FreeSpeakWeb.Tests.Services
 {
     public class PostServiceTests : TestBase
     {
+        private static IOptions<SiteSettings> CreateTestSiteSettings()
+        {
+            return Options.Create(new SiteSettings
+            {
+                SiteName = "TestSite",
+                MaxFeedPostCommentDepth = 4,
+                MaxFeedPostDirectCommentCount = 1000
+            });
+        }
         #region Post Operations Tests
 
         [Fact]
@@ -16,7 +26,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("PostTest1");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger);
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             using (var context = await dbFactory.CreateDbContextAsync())
@@ -49,7 +59,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("PostTest2");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger);
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
 
             // Act
             var (success, errorMessage, post) = await service.CreatePostAsync("user1", "");
@@ -66,7 +76,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("PostTest3");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger);
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             using (var context = await dbFactory.CreateDbContextAsync())
@@ -99,7 +109,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("PostTest4");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger);
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1", "Original content");
@@ -138,7 +148,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("PostTest5");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger);
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -171,7 +181,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("PostTest6");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger);
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
@@ -209,7 +219,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("PostTest7");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger);
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -249,7 +259,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("PostTest8");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger);
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
@@ -289,7 +299,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("PostTest9");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger);
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
@@ -329,7 +339,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("PostTest10");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger);
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1", commentCount: 1);
@@ -379,7 +389,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("PostTest11");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger);
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
@@ -421,7 +431,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("PostTest12");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger);
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1", likeCount: 1);
@@ -467,7 +477,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("PostTest13");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger);
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
@@ -507,7 +517,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("PostTest14");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger);
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
@@ -542,7 +552,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("PostTest15");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger);
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -568,6 +578,224 @@ namespace FreeSpeakWeb.Tests.Services
             // Assert
             success.Should().BeFalse();
             errorMessage.Should().Contain("not authorized");
+        }
+
+        #endregion
+
+        #region Comment Limiting Tests
+
+        [Fact]
+        public async Task AddCommentAsync_WhenDirectCommentLimitReached_ShouldReturnError()
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory("CommentLimitTest1");
+            var logger = CreateMockLogger<PostService>();
+            var siteSettings = Options.Create(new SiteSettings
+            {
+                SiteName = "TestSite",
+                MaxFeedPostCommentDepth = 4,
+                MaxFeedPostDirectCommentCount = 3 // Set low limit for testing
+            });
+            var service = new PostService(dbFactory, logger, siteSettings);
+
+            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var post = TestDataFactory.CreateTestPost(authorId: "user1");
+
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(user);
+                context.Posts.Add(post);
+                await context.SaveChangesAsync();
+            }
+
+            int postId;
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                postId = context.Posts.First().Id;
+            }
+
+            // Add 3 direct comments (reaching the limit)
+            for (int i = 0; i < 3; i++)
+            {
+                await service.AddCommentAsync(postId, "user1", $"Comment {i}");
+            }
+
+            // Act - Try to add 4th direct comment
+            var (success, errorMessage, comment) = await service.AddCommentAsync(postId, "user1", "Comment 4");
+
+            // Assert
+            success.Should().BeFalse();
+            errorMessage.Should().Contain("maximum of 3 direct comments");
+            comment.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task AddCommentAsync_ReplyWhenDirectCommentLimitReached_ShouldSucceed()
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory("CommentLimitTest2");
+            var logger = CreateMockLogger<PostService>();
+            var siteSettings = Options.Create(new SiteSettings
+            {
+                SiteName = "TestSite",
+                MaxFeedPostCommentDepth = 4,
+                MaxFeedPostDirectCommentCount = 2 // Set low limit
+            });
+            var service = new PostService(dbFactory, logger, siteSettings);
+
+            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var post = TestDataFactory.CreateTestPost(authorId: "user1");
+
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(user);
+                context.Posts.Add(post);
+                await context.SaveChangesAsync();
+            }
+
+            int postId;
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                postId = context.Posts.First().Id;
+            }
+
+            // Add 2 direct comments (reaching the limit)
+            var (success1, _, comment1) = await service.AddCommentAsync(postId, "user1", "Comment 1");
+            var (success2, _, comment2) = await service.AddCommentAsync(postId, "user1", "Comment 2");
+
+            // Act - Try to add a reply (should succeed even though direct comment limit is reached)
+            var (success, errorMessage, replyComment) = await service.AddCommentAsync(
+                postId, "user1", "Reply to comment 1", null, comment1!.Id);
+
+            // Assert
+            success.Should().BeTrue();
+            errorMessage.Should().BeNull();
+            replyComment.Should().NotBeNull();
+            replyComment!.ParentCommentId.Should().Be(comment1.Id);
+        }
+
+        [Fact]
+        public async Task GetDirectCommentCountAsync_ShouldReturnOnlyDirectComments()
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory("DirectCommentCountTest1");
+            var logger = CreateMockLogger<PostService>();
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
+
+            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var post = TestDataFactory.CreateTestPost(authorId: "user1");
+
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(user);
+                context.Posts.Add(post);
+                await context.SaveChangesAsync();
+            }
+
+            int postId;
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                postId = context.Posts.First().Id;
+            }
+
+            // Add 3 direct comments
+            var (_, _, comment1) = await service.AddCommentAsync(postId, "user1", "Direct 1");
+            await service.AddCommentAsync(postId, "user1", "Direct 2");
+            await service.AddCommentAsync(postId, "user1", "Direct 3");
+
+            // Add 2 replies to the first comment
+            await service.AddCommentAsync(postId, "user1", "Reply 1", null, comment1!.Id);
+            await service.AddCommentAsync(postId, "user1", "Reply 2", null, comment1.Id);
+
+            // Act
+            var directCount = await service.GetDirectCommentCountAsync(postId);
+
+            // Assert
+            directCount.Should().Be(3); // Should only count direct comments, not replies
+        }
+
+        [Fact]
+        public async Task AddCommentAsync_WithParentCommentId_ShouldCreateReply()
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory("ReplyTest1");
+            var logger = CreateMockLogger<PostService>();
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
+
+            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var post = TestDataFactory.CreateTestPost(authorId: "user1");
+
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(user);
+                context.Posts.Add(post);
+                await context.SaveChangesAsync();
+            }
+
+            int postId;
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                postId = context.Posts.First().Id;
+            }
+
+            // Add a parent comment
+            var (_, _, parentComment) = await service.AddCommentAsync(postId, "user1", "Parent comment");
+
+            // Act - Add a reply
+            var (success, errorMessage, reply) = await service.AddCommentAsync(
+                postId, "user1", "Reply to parent", null, parentComment!.Id);
+
+            // Assert
+            success.Should().BeTrue();
+            errorMessage.Should().BeNull();
+            reply.Should().NotBeNull();
+            reply!.ParentCommentId.Should().Be(parentComment.Id);
+            reply.Content.Should().Be("Reply to parent");
+
+            // Verify in database
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                var savedReply = context.Comments.FirstOrDefault(c => c.ParentCommentId == parentComment.Id);
+                savedReply.Should().NotBeNull();
+                savedReply!.Content.Should().Be("Reply to parent");
+            }
+        }
+
+        [Fact]
+        public async Task GetRepliesAsync_ShouldReturnRepliesForComment()
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory("RepliesTest1");
+            var logger = CreateMockLogger<PostService>();
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings());
+
+            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var post = TestDataFactory.CreateTestPost(authorId: "user1");
+
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(user);
+                context.Posts.Add(post);
+                await context.SaveChangesAsync();
+            }
+
+            int postId;
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                postId = context.Posts.First().Id;
+            }
+
+            // Add parent comment and 2 replies
+            var (_, _, parentComment) = await service.AddCommentAsync(postId, "user1", "Parent");
+            await service.AddCommentAsync(postId, "user1", "Reply 1", null, parentComment!.Id);
+            await service.AddCommentAsync(postId, "user1", "Reply 2", null, parentComment.Id);
+
+            // Act
+            var replies = await service.GetRepliesAsync(parentComment.Id);
+
+            // Assert
+            replies.Should().HaveCount(2);
+            replies.Should().AllSatisfy(r => r.ParentCommentId.Should().Be(parentComment.Id));
         }
 
         #endregion

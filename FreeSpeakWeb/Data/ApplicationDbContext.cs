@@ -9,6 +9,7 @@ namespace FreeSpeakWeb.Data
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Like> Likes { get; set; }
+        public DbSet<CommentLike> CommentLikes { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -107,6 +108,29 @@ namespace FreeSpeakWeb.Data
                 // Create additional indexes
                 entity.HasIndex(l => l.PostId);
                 entity.HasIndex(l => l.UserId);
+            });
+
+            // Configure CommentLike entity
+            modelBuilder.Entity<CommentLike>(entity =>
+            {
+                entity.HasKey(cl => cl.Id);
+
+                entity.HasOne(cl => cl.Comment)
+                    .WithMany()
+                    .HasForeignKey(cl => cl.CommentId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(cl => cl.User)
+                    .WithMany()
+                    .HasForeignKey(cl => cl.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Ensure a user can only like a comment once
+                entity.HasIndex(cl => new { cl.CommentId, cl.UserId }).IsUnique();
+
+                // Create additional indexes
+                entity.HasIndex(cl => cl.CommentId);
+                entity.HasIndex(cl => cl.UserId);
             });
 
             // Configure PostImage entity

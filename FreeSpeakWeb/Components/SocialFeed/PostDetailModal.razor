@@ -4,6 +4,7 @@
 @using Microsoft.JSInterop
 @inject PostService PostService
 @inject IJSRuntime JS
+@inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
 @implements IAsyncDisposable
 
 <div class="post-detail-modal-backdrop" @onclick="OnClose">
@@ -27,6 +28,7 @@
                 ArticleContent="@ArticleContent"
                 LikeCount="@LikeCount"
                 CommentCount="@CommentCount"
+                DirectCommentCount="@directCommentCount"
                 Comments="@modalComments"
                 CurrentUserImageUrl="@CurrentUserImageUrl"
                 CurrentUserName="@CurrentUserName"
@@ -35,6 +37,9 @@
                 OnReactionChanged="@OnReactionChanged"
                 OnRemoveReaction="@OnRemoveReaction"
                 OnCommentAdded="@HandleCommentAdded"
+                OnReplySubmitted="@HandleReplySubmitted"
+                OnCommentReactionChanged="@HandleCommentReactionChanged"
+                OnRemoveCommentReaction="@HandleRemoveCommentReaction"
                 IsModalView="true"
                 HideCommentEditor="true" />
 
@@ -55,21 +60,30 @@
 
         <!-- Fixed Comment Editor at Bottom -->
         <div class="post-detail-modal-footer">
-            <div class="modal-comment-editor">
-                @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
-                {
-                    <img src="@CurrentUserImageUrl" alt="You" class="comment-user-avatar" />
-                }
-                else
-                {
-                    <div class="comment-user-avatar comment-avatar-placeholder">
-                        <span class="comment-avatar-initial">@GetInitials(CurrentUserName ?? "User")</span>
+            @if (directCommentCount < SiteSettings.Value.MaxFeedPostDirectCommentCount)
+            {
+                <div class="modal-comment-editor">
+                    @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
+                    {
+                        <img src="@CurrentUserImageUrl" alt="You" class="comment-user-avatar" />
+                    }
+                    else
+                    {
+                        <div class="comment-user-avatar comment-avatar-placeholder">
+                            <span class="comment-avatar-initial">@GetInitials(CurrentUserName ?? "User")</span>
+                        </div>
+                    }
+                    <div class="editor-wrapper">
+                        <MultiLineCommentEditor OnCommentSubmitted="HandleCommentSubmittedInModal" />
                     </div>
-                }
-                <div class="editor-wrapper">
-                    <MultiLineCommentEditor OnCommentSubmitted="HandleCommentSubmittedInModal" />
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="modal-comment-limit-message">
+                    <span>No more comments allowed</span>
+                </div>
+            }
         </div>
     </div>
 </div>
@@ -127,9 +141,16 @@
     public EventCallback<(int PostId, string Content)> OnCommentAdded { get; set; }
 
     [Parameter]
+    public EventCallback<(int CommentId, LikeType ReactionType)> OnCommentReactionChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnRemoveCommentReaction { get; set; }
+
+    [Parameter]
     public EventCallback OnClose { get; set; }
 
     private List<CommentDisplayModel> modalComments = new();
+    private int directCommentCount = 0;
     private int currentCommentPage = 1;
     private const int commentPageSize = 20;
     private bool isLoadingComments = false;
@@ -143,6 +164,9 @@
     {
         if (firstRender)
         {
+            // Load direct comment count
+            directCommentCount = await PostService.GetDirectCommentCountAsync(PostId);
+
             await LoadInitialComments();
 
             try
@@ -166,14 +190,13 @@
         try
         {
             var comments = await PostService.GetCommentsPagedAsync(PostId, commentPageSize, currentCommentPage);
-            modalComments = comments.Select(c => new CommentDisplayModel
+            modalComments = new List<CommentDisplayModel>();
+
+            foreach (var c in comments)
             {
-                UserName = GetCommentAuthorName(c),
-                UserImageUrl = c.Author?.ProfilePictureUrl,
-                CommentText = c.Content,
-                Timestamp = c.CreatedAt,
-                Replies = null
-            }).ToList();
+                var commentModel = await BuildCommentDisplayModel(c);
+                modalComments.Add(commentModel);
+            }
 
             hasMoreComments = comments.Count == commentPageSize;
         }
@@ -203,16 +226,12 @@
 
             if (comments.Any())
             {
-                var newComments = comments.Select(c => new CommentDisplayModel
+                foreach (var c in comments)
                 {
-                    UserName = GetCommentAuthorName(c),
-                    UserImageUrl = c.Author?.ProfilePictureUrl,
-                    CommentText = c.Content,
-                    Timestamp = c.CreatedAt,
-                    Replies = null
-                }).ToList();
+                    var commentModel = await BuildCommentDisplayModel(c);
+                    modalComments.Add(commentModel);
+                }
 
-                modalComments.AddRange(newComments);
                 hasMoreComments = comments.Count == commentPageSize;
             }
             else
@@ -244,6 +263,100 @@
         currentCommentPage = 1;
         hasMoreComments = true;
         await LoadInitialComments();
+    }
+
+    private async Task HandleCommentReactionChanged((int CommentId, LikeType ReactionType) data)
+    {
+        // Invoke parent callback
+        if (OnCommentReactionChanged.HasDelegate)
+        {
+            await OnCommentReactionChanged.InvokeAsync(data);
+        }
+
+        // Update the local comment's reaction data
+        await UpdateLocalCommentReaction(data.CommentId, data.ReactionType);
+    }
+
+    private async Task HandleRemoveCommentReaction(int commentId)
+    {
+        // Invoke parent callback
+        if (OnRemoveCommentReaction.HasDelegate)
+        {
+            await OnRemoveCommentReaction.InvokeAsync(commentId);
+        }
+
+        // Update the local comment's reaction data
+        await UpdateLocalCommentReaction(commentId, null);
+    }
+
+    private async Task UpdateLocalCommentReaction(int commentId, LikeType? newReaction)
+    {
+        // Find the comment in modalComments and update its reaction data
+        var comment = FindCommentById(modalComments, commentId);
+        if (comment != null)
+        {
+            // Update user's reaction
+            comment.UserReaction = newReaction;
+
+            // Reload reaction breakdown and like count
+            comment.ReactionBreakdown = await PostService.GetCommentReactionBreakdownAsync(commentId);
+            comment.LikeCount = await PostService.GetCommentLikeCountAsync(commentId);
+
+            StateHasChanged();
+        }
+    }
+
+    private CommentDisplayModel? FindCommentById(List<CommentDisplayModel> comments, int commentId)
+    {
+        foreach (var comment in comments)
+        {
+            if (comment.CommentId == commentId)
+                return comment;
+
+            if (comment.Replies != null)
+            {
+                var found = FindCommentById(comment.Replies, commentId);
+                if (found != null)
+                    return found;
+            }
+        }
+        return null;
+    }
+
+    private async Task HandleReplySubmitted((int ParentCommentId, string Content) data)
+    {
+        if (string.IsNullOrWhiteSpace(CurrentUserId)) return;
+
+        try
+        {
+            // Add the reply to the database using AddCommentAsync with parentCommentId
+            var result = await PostService.AddCommentAsync(PostId, CurrentUserId, data.Content, null, data.ParentCommentId);
+
+            if (result.Success)
+            {
+                // Reload comments to show the new reply
+                currentCommentPage = 1;
+                hasMoreComments = true;
+                await LoadInitialComments();
+
+                // Update direct comment count since we added a reply
+                directCommentCount = await PostService.GetDirectCommentCountAsync(PostId);
+                StateHasChanged();
+
+                // NOTE: Don't invoke OnCommentAdded for replies - that's only for direct comments
+            }
+            else
+            {
+                // Show error message to user
+                await JS.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to add reply");
+                Console.WriteLine($"Failed to add reply: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("alert", "An error occurred while adding your reply.");
+            Console.WriteLine($"Error adding reply: {ex.Message}");
+        }
     }
 
     private string GetCommentAuthorName(Comment comment)
@@ -278,6 +391,33 @@
         }
 
         return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
+    }
+
+    private async Task<CommentDisplayModel> BuildCommentDisplayModel(Comment comment)
+    {
+        // Load replies for this comment
+        var replies = await PostService.GetRepliesAsync(comment.Id);
+        var replyModels = new List<CommentDisplayModel>();
+
+        foreach (var reply in replies)
+        {
+            var replyModel = await BuildCommentDisplayModel(reply); // Recursive call for nested replies
+            replyModels.Add(replyModel);
+        }
+
+        return new CommentDisplayModel
+        {
+            CommentId = comment.Id,
+            UserName = GetCommentAuthorName(comment),
+            UserImageUrl = comment.Author?.ProfilePictureUrl,
+            CommentAuthorId = comment.AuthorId,
+            CommentText = comment.Content,
+            Timestamp = comment.CreatedAt,
+            Replies = replyModels.Any() ? replyModels : null,
+            LikeCount = await PostService.GetCommentLikeCountAsync(comment.Id),
+            UserReaction = CurrentUserId != null ? await PostService.GetUserCommentReactionAsync(comment.Id, CurrentUserId) : null,
+            ReactionBreakdown = await PostService.GetCommentReactionBreakdownAsync(comment.Id)
+        };
     }
 
     private async Task HandleCommentSubmittedInModal(string commentText)
