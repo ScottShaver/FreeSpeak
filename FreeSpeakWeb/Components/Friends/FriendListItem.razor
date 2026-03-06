@@ -10,34 +10,32 @@
     {
         <img src="@User.ProfilePictureUrl" 
              alt="@GetDisplayName()" 
-             class="rounded-circle mb-2 profile-image-clickable" 
-             style="width: 168px; height: 168px; object-fit: cover; cursor: pointer;" 
+             class="rounded-circle mb-2 profile-image-clickable friend-profile-image" 
              @onclick="ShowProfilePreview" />
     }
     else
     {
-        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-2 profile-image-clickable" 
-             style="width: 168px; height: 168px; cursor: pointer;" 
+        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-2 profile-image-clickable friend-profile-image" 
              @onclick="ShowProfilePreview">
-            <span class="text-white fs-1">@GetDisplayName().Substring(0, 1).ToUpper()</span>
+            <span class="text-white friend-profile-initial">@GetDisplayName().Substring(0, 1).ToUpper()</span>
         </div>
     }
 
-    <h5 class="mb-1">@GetDisplayName()</h5>
+    <h5 class="mb-1 friend-name">@GetDisplayName()</h5>
 
     @if (MutualFriendsCount > 0)
     {
-        <p class="text-muted small mb-2">
-            <button class="btn btn-link p-0 text-muted small" @onclick="ShowMutualFriends" style="text-decoration: none;">
+        <p class="text-muted mb-2 friend-mutual-text">
+            <button class="btn btn-link p-0 text-muted friend-mutual-btn" @onclick="ShowMutualFriends" style="text-decoration: none;">
                 <i class="bi bi-people-fill"></i> @MutualFriendsCount mutual @(MutualFriendsCount == 1 ? "friend" : "friends")
             </button>
         </p>
     }
-    
-    <div class="d-flex flex-column gap-2">
+
+    <div class="d-flex flex-column gap-1 gap-md-2">
         @if (ShowAccept)
         {
-            <button class="btn btn-success" @onclick="HandleAccept" disabled="@IsProcessing">
+            <button class="btn btn-success btn-sm btn-md-md friend-action-btn" @onclick="HandleAccept" disabled="@IsProcessing">
                 @if (IsProcessing && actionType == "accept")
                 {
                     <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
@@ -48,7 +46,7 @@
 
         @if (ShowReject)
         {
-            <button class="btn btn-outline-danger" @onclick="HandleReject" disabled="@IsProcessing">
+            <button class="btn btn-outline-danger btn-sm btn-md-md friend-action-btn" @onclick="HandleReject" disabled="@IsProcessing">
                 @if (IsProcessing && actionType == "reject")
                 {
                     <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
@@ -59,7 +57,7 @@
 
         @if (ShowAddFriend)
         {
-            <button class="btn btn-primary" @onclick="HandleAddFriend" disabled="@IsProcessing">
+            <button class="btn btn-primary btn-sm btn-md-md friend-action-btn" @onclick="HandleAddFriend" disabled="@IsProcessing">
                 @if (IsProcessing && actionType == "add")
                 {
                     <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
@@ -70,7 +68,7 @@
 
         @if (ShowCancel)
         {
-            <button class="btn btn-outline-warning" @onclick="HandleCancel" disabled="@IsProcessing">
+            <button class="btn btn-outline-warning btn-sm btn-md-md friend-action-btn" @onclick="HandleCancel" disabled="@IsProcessing">
                 @if (IsProcessing && actionType == "cancel")
                 {
                     <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
@@ -81,7 +79,7 @@
 
         @if (ShowRemove)
         {
-            <button class="btn btn-outline-secondary" @onclick="HandleRemove" disabled="@IsProcessing">
+            <button class="btn btn-outline-secondary btn-sm btn-md-md friend-action-btn" @onclick="HandleRemove" disabled="@IsProcessing">
                 @if (IsProcessing && actionType == "remove")
                 {
                     <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
@@ -91,6 +89,135 @@
         }
     </div>
 </div>
+
+<style>
+    /* Mobile-first responsive styles */
+    .friend-list-item {
+        max-width: 85px !important;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .friend-profile-image {
+        width: 45px !important;
+        height: 45px !important;
+        min-width: 45px !important;
+        min-height: 45px !important;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    .friend-profile-image img {
+        object-fit: cover;
+        width: 45px !important;
+        height: 45px !important;
+    }
+
+    .friend-profile-initial {
+        font-size: 0.9rem !important;
+    }
+
+    .friend-name {
+        font-size: 0.65rem !important;
+        line-height: 1;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    .friend-mutual-text {
+        font-size: 0.55rem !important;
+        line-height: 1.1;
+    }
+
+    .friend-mutual-btn {
+        font-size: 0.55rem !important;
+        line-height: 1.1;
+    }
+
+    .friend-action-btn {
+        font-size: 0.6rem !important;
+        padding: 0.1rem 0.2rem !important;
+        width: 100%;
+        white-space: normal;
+        line-height: 1.1;
+    }
+
+    /* Tablet and up */
+    @@media (min-width: 768px) {
+        .friend-list-item {
+            max-width: 100% !important;
+        }
+
+        .friend-profile-image {
+            width: 120px !important;
+            height: 120px !important;
+            min-width: 120px !important;
+            min-height: 120px !important;
+        }
+
+        .friend-profile-image img {
+            width: 120px !important;
+            height: 120px !important;
+        }
+
+        .friend-profile-initial {
+            font-size: 2.5rem !important;
+        }
+
+        .friend-name {
+            font-size: 1.1rem !important;
+        }
+
+        .friend-mutual-text {
+            font-size: 0.875rem !important;
+        }
+
+        .friend-mutual-btn {
+            font-size: 0.875rem !important;
+        }
+
+        .friend-action-btn {
+            font-size: 0.875rem !important;
+            padding: 0.375rem 0.75rem !important;
+        }
+    }
+
+    /* Desktop and up */
+    @@media (min-width: 992px) {
+        .friend-profile-image {
+            width: 168px !important;
+            height: 168px !important;
+            min-width: 168px !important;
+            min-height: 168px !important;
+        }
+
+        .friend-profile-image img {
+            width: 168px !important;
+            height: 168px !important;
+        }
+
+        .friend-profile-initial {
+            font-size: 3rem !important;
+        }
+
+        .friend-name {
+            font-size: 1.25rem !important;
+        }
+
+        .friend-mutual-text {
+            font-size: 0.875rem !important;
+        }
+
+        .friend-mutual-btn {
+            font-size: 0.875rem !important;
+        }
+
+        .friend-action-btn {
+            font-size: 1rem !important;
+            padding: 0.5rem 1rem !important;
+        }
+    }
+</style>
 
 <!-- Mutual Friends Modal -->
 @if (showMutualFriendsModal)

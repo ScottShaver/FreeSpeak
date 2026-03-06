@@ -96,7 +96,7 @@
                     }
                     else
                     {
-                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+                        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 g-md-3">
                             @foreach (var friend in friends)
                             {
                                 <div class="col">
@@ -120,7 +120,7 @@
                     }
                     else
                     {
-                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+                        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 g-md-3">
                             @foreach (var suggestion in peopleYouMayKnow)
                             {
                                 @if (suggestion.User != null)
@@ -148,7 +148,7 @@
                     }
                     else
                     {
-                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+                        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 g-md-3">
                             @foreach (var request in pendingRequests)
                             {
                                 @if (request.Requester != null)
@@ -177,7 +177,7 @@
                     }
                     else
                     {
-                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+                        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 g-md-3">
                             @foreach (var request in sentRequests)
                             {
                                 @if (request.Addressee != null)
@@ -218,7 +218,7 @@
 
                     @if (searchResults.Count > 0)
                     {
-                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+                        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 g-md-3">
                             @foreach (var user in searchResults)
                             {
                                 <div class="col">

@@ -287,7 +287,8 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Search for users by username (excluding current user and already connected users)
+        /// Search for users by username, first name, or last name (excluding current user and already connected users)
+        /// Multiple search terms are treated separately - each term can match different records
         /// </summary>
         public async Task<List<ApplicationUser>> SearchUsersAsync(string searchTerm, string currentUserId, int maxResults = 20)
         {
@@ -299,11 +300,24 @@ namespace FreeSpeakWeb.Services
                 .Select(f => f.RequesterId == currentUserId ? f.AddresseeId : f.RequesterId)
                 .ToListAsync();
 
+            // Split search term into individual words and normalize for case-insensitive comparison
+            var searchTerms = searchTerm.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                                       .Select(term => term.ToLower())
+                                       .ToList();
+
+            if (!searchTerms.Any())
+            {
+                return new List<ApplicationUser>();
+            }
+
             var users = await context.Users
                 .Where(u => u.Id != currentUserId &&
                            !existingFriendshipUserIds.Contains(u.Id) &&
                            u.UserName != null &&
-                           u.UserName.Contains(searchTerm))
+                           searchTerms.Any(term =>
+                               u.UserName.ToLower().Contains(term) ||
+                               u.FirstName.ToLower().Contains(term) ||
+                               u.LastName.ToLower().Contains(term)))
                 .Take(maxResults)
                 .ToListAsync();
 
