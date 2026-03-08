@@ -18,6 +18,9 @@ namespace FreeSpeakWeb
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
+            // Add controllers for API endpoints (including SecureFileController)
+            builder.Services.AddControllers();
+
             // Configure SiteSettings
             builder.Services.Configure<SiteSettings>(builder.Configuration);
 
@@ -71,6 +74,48 @@ namespace FreeSpeakWeb
             // Add NavigationGuardService to prevent logged-in users from accessing auth pages
             builder.Services.AddScoped<NavigationGuardService>();
 
+            // Add DataMigrationService for data migrations
+            builder.Services.AddScoped<DataMigrationService>();
+
+            // Add ImageResizingService for performance optimization
+            builder.Services.AddSingleton<ImageResizingService>();
+
+            // SECURITY: Add rate limiting to prevent abuse
+            builder.Services.AddRateLimiter(options =>
+            {
+                // File download rate limit: 100 requests per minute per user
+                options.AddPolicy("file-download", context =>
+                    System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: context.User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? context.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+                        factory: _ => new System.Threading.RateLimiting.FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = 100,
+                            Window = TimeSpan.FromMinutes(1),
+                            QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst,
+                            QueueLimit = 10
+                        }));
+
+                // Global rate limit: 500 requests per minute per user for all endpoints
+                options.GlobalLimiter = System.Threading.RateLimiting.PartitionedRateLimiter.Create<Microsoft.AspNetCore.Http.HttpContext, string>(context =>
+                {
+                    var userId = context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? context.Connection.RemoteIpAddress?.ToString() ?? "anonymous";
+
+                    return System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(userId, _ => new System.Threading.RateLimiting.FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 500,
+                        Window = TimeSpan.FromMinutes(1),
+                        QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 20
+                    });
+                });
+
+                options.OnRejected = async (context, cancellationToken) =>
+                {
+                    context.HttpContext.Response.StatusCode = 429;
+                    await context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.", cancellationToken);
+                };
+            });
+
             // Configure Kestrel to listen on all network interfaces for mobile testing
             builder.WebHost.ConfigureKestrel(serverOptions =>
             {
@@ -83,7 +128,7 @@ namespace FreeSpeakWeb
 
             var app = builder.Build();
 
-            // Seed test users in development environment
+            // Seed test users and migrate data in development environment
             if (app.Environment.IsDevelopment())
             {
                 using var scope = app.Services.CreateScope();
@@ -94,6 +139,22 @@ namespace FreeSpeakWeb
                     var dbContext = services.GetRequiredService<ApplicationDbContext>();
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     await DatabaseSeeder.SeedTestUsersAsync(userManager, dbContext, logger);
+
+                    // Migrate existing URLs to secure format
+                    logger.LogWarning("?? ========== STARTING URL MIGRATION ==========");
+                    var dataMigrationService = services.GetRequiredService<DataMigrationService>();
+
+                    logger.LogWarning("?? Step 1/3: Migrating profile picture URLs...");
+                    await dataMigrationService.MigrateProfilePictureUrlsAsync();
+
+                    logger.LogWarning("??? Step 2/3: Migrating post image URLs...");
+                    await dataMigrationService.MigratePostImageUrlsAsync();
+
+                    logger.LogWarning("?? Step 3/3: Moving files from wwwroot to AppData...");
+                    // Move files from wwwroot to AppData
+                    await dataMigrationService.MoveFilesOutOfWwwrootAsync();
+
+                    logger.LogWarning("? ========== URL MIGRATION COMPLETE ==========");
                 }
                 catch (Exception ex)
                 {
@@ -117,6 +178,9 @@ namespace FreeSpeakWeb
             app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
             app.UseHttpsRedirection();
 
+            // SECURITY: Enable rate limiting
+            app.UseRateLimiter();
+
             app.UseAntiforgery();
 
             app.MapStaticAssets();
@@ -126,19 +190,8 @@ namespace FreeSpeakWeb
             // Add additional endpoints required by the Identity /Account Razor components.
             app.MapAdditionalIdentityEndpoints();
 
-            // Profile picture endpoint - serves images by user ID without exposing file paths
-            app.MapGet("/api/profile-picture/{userId}", async (string userId, ProfilePictureService profilePictureService) =>
-            {
-                var imageBytes = await profilePictureService.GetProfilePictureAsync(userId);
-
-                if (imageBytes == null)
-                {
-                    return Results.NotFound();
-                }
-
-                return Results.File(imageBytes, "image/jpeg", enableRangeProcessing: true);
-            })
-            .RequireAuthorization();
+            // Map API controllers (including SecureFileController for authenticated file access)
+            app.MapControllers();
 
             app.Run();
         }

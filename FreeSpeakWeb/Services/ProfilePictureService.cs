@@ -30,7 +30,8 @@ public class ProfilePictureService
             }
 
             // Ensure the profiles directory exists
-            var profilesPath = Path.Combine(_environment.WebRootPath, "images", "profiles");
+            // SECURITY: Store outside wwwroot to prevent direct access
+            var profilesPath = Path.Combine(_environment.ContentRootPath, "AppData", "images", "profiles");
             Directory.CreateDirectory(profilesPath);
 
             // Buffer the stream to prevent Blazor Server SignalR timeout issues
@@ -58,7 +59,7 @@ public class ProfilePictureService
                 Quality = 85
             });
 
-            var relativeUrl = $"/api/profile-picture/{userId}";
+            var relativeUrl = $"/api/secure-files/profile-picture/{userId}";
             _logger.LogInformation("Profile picture saved for user {UserId}: {FilePath}", userId, relativeUrl);
 
             return (true, null, relativeUrl);
@@ -78,7 +79,8 @@ public class ProfilePictureService
     {
         try
         {
-            var profilesPath = Path.Combine(_environment.WebRootPath, "images", "profiles");
+            // SECURITY: Read from secure directory outside wwwroot
+            var profilesPath = Path.Combine(_environment.ContentRootPath, "AppData", "images", "profiles");
             var filePath = Path.Combine(profilesPath, $"{userId}.jpg");
 
             if (File.Exists(filePath))
@@ -99,7 +101,8 @@ public class ProfilePictureService
     {
         try
         {
-            var profilesPath = Path.Combine(_environment.WebRootPath, "images", "profiles");
+            // SECURITY: Check in secure directory outside wwwroot
+            var profilesPath = Path.Combine(_environment.ContentRootPath, "AppData", "images", "profiles");
             var filePath = Path.Combine(profilesPath, $"{userId}.jpg");
             return File.Exists(filePath);
         }
@@ -114,7 +117,8 @@ public class ProfilePictureService
     {
         try
         {
-            var profilesPath = Path.Combine(_environment.WebRootPath, "images", "profiles");
+            // SECURITY: Delete from secure directory outside wwwroot
+            var profilesPath = Path.Combine(_environment.ContentRootPath, "AppData", "images", "profiles");
             var filePath = Path.Combine(profilesPath, $"{userId}.jpg");
 
             if (File.Exists(filePath))

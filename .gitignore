@@ -362,11 +362,23 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# ignore the folder the profile images are save into
-/FreeSpeakWeb/wwwroot/images/profiles
+# ===== USER-UPLOADED CONTENT =====
+# SECURITY: Files moved outside wwwroot to AppData for secure access control
+# All user uploads are now served through authenticated API endpoints
 
-# Ignore uploaded post images (but keep directory structure)
+# Ignore all user-uploaded files in AppData (new secure location)
+/FreeSpeakWeb/AppData/images/profiles/**/*
+/FreeSpeakWeb/AppData/uploads/posts/**/*
 
-# Ignore all uploaded post media (images and videos)
-/FreeSpeakWeb/wwwroot/uploads/posts/**/*
-!/FreeSpeakWeb/wwwroot/uploads/posts/**/.gitkeep
+# Ignore cached resized images (generated thumbnails)
+/FreeSpeakWeb/AppData/cache/**/*
+
+# Keep directory structure with .gitkeep files
+!/FreeSpeakWeb/AppData/images/profiles/.gitkeep
+!/FreeSpeakWeb/AppData/uploads/posts/**/.gitkeep
+
+# OLD LOCATION (deprecated - kept for reference, remove after migration)
+# These were the old public locations before security improvements
+# /FreeSpeakWeb/wwwroot/images/profiles
+# /FreeSpeakWeb/wwwroot/uploads/posts/**/*
+# !/FreeSpeakWeb/wwwroot/uploads/posts/**/.gitkeep
