@@ -65,6 +65,9 @@ namespace FreeSpeakWeb
             // Add NavigationStateService
             builder.Services.AddScoped<NavigationStateService>();
 
+            // Add NavigationGuardService to prevent logged-in users from accessing auth pages
+            builder.Services.AddScoped<NavigationGuardService>();
+
             // Configure Kestrel to listen on all network interfaces for mobile testing
             builder.WebHost.ConfigureKestrel(serverOptions =>
             {

@@ -21,8 +21,40 @@
             </div>
         }
         <div class="author-info">
-            <div class="author-name">@AuthorName</div>
-            <div class="article-timestamp" title="@FullTimestamp">@FormattedTimestamp</div>
+            <div class="author-name-container">
+                <span class="author-name">@AuthorName</span>
+                @if (AudienceType == AudienceType.Public)
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="audience-icon" viewBox="0 0 16 16">
+                        <title>Public</title>
+                        <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0ZM2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484-.08.08-.162.158-.242.234-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"/>
+                    </svg>
+                }
+                else if (AudienceType == AudienceType.FriendsOnly)
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="audience-icon" viewBox="0 0 16 16">
+                        <title>Friends Only</title>
+                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+                    </svg>
+                }
+                else if (AudienceType == AudienceType.MeOnly)
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="audience-icon" viewBox="0 0 16 16">
+                        <title>Only Me</title>
+                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                    </svg>
+                }
+            </div>
+            <div class="article-timestamp-container">
+                <span class="article-timestamp" title="@FullTimestamp">@FormattedTimestamp</span>
+                @if (IsPinned)
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#0066cc" class="pinned-icon" viewBox="0 0 16 16">
+                        <title>Pinned post</title>
+                        <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.922 5.922 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146z"/>
+                    </svg>
+                }
+            </div>
         </div>
         <div style="position: relative;">
             <button type="button" class="menu-button" @onclick="ToggleMenu" @ref="menuButtonElement">
@@ -275,6 +307,18 @@
     [Parameter]
     public EventCallback OnShowComments { get; set; }
 
+    [Parameter]
+    public AudienceType AudienceType { get; set; } = AudienceType.Public;
+
+    [Parameter]
+    public bool IsPinned { get; set; } = false;
+
+    [Parameter]
+    public EventCallback<int> OnPinPost { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnUnpinPost { get; set; }
+
     private bool showReactionPicker = false;
     private bool showLikesModal = false;
     private bool isLoadingLikes = false;
@@ -291,6 +335,14 @@
     private string menuPositionStyle = string.Empty;
 
     private bool IsOwnPost => !string.IsNullOrEmpty(CurrentUserId) && !string.IsNullOrEmpty(AuthorId) && CurrentUserId == AuthorId;
+
+    protected override void OnParametersSet()
+    {
+        if (IsPinned)
+        {
+            Console.WriteLine($"FeedArticle for Post {PostId}: IsPinned = {IsPinned}");
+        }
+    }
 
     // Check if we've reached the maximum number of direct comments
     // Note: CommentCount in the Post entity includes ALL comments (direct + replies)
@@ -459,11 +511,12 @@
                 OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Edit Post"))
             });
 
+            // Pin/Unpin Post - changes based on current state
             menuItems.Add(new PopupMenu.PopupMenuItem
             {
-                Text = "Pin Post",
-                Icon = "bi bi-pin-angle",
-                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Pin Post"))
+                Text = IsPinned ? "Unpin Post" : "Pin Post",
+                Icon = IsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
+                OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
             });
 
             menuItems.Add(new PopupMenu.PopupMenuItem
@@ -511,6 +564,26 @@
     {
         showMenu = false;
         StateHasChanged();
+    }
+
+    private async Task HandlePinUnpinClick()
+    {
+        if (IsPinned)
+        {
+            // Unpin the post
+            if (OnUnpinPost.HasDelegate)
+            {
+                await OnUnpinPost.InvokeAsync(PostId);
+            }
+        }
+        else
+        {
+            // Pin the post
+            if (OnPinPost.HasDelegate)
+            {
+                await OnPinPost.InvokeAsync(PostId);
+            }
+        }
     }
 
     private async Task ShowMenu()

@@ -1049,5 +1049,125 @@ namespace FreeSpeakWeb.Services
         }
 
         #endregion
+
+        #region Pinned Posts Operations
+
+        /// <summary>
+        /// Check if a post is pinned by a user
+        /// </summary>
+        public async Task<bool> IsPostPinnedAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.PinnedPosts
+                    .AnyAsync(pp => pp.PostId == postId && pp.UserId == userId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking if post {PostId} is pinned by user {UserId}", postId, userId);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Pin a post for a user
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> PinPostAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Check if post exists
+                var postExists = await context.Posts.AnyAsync(p => p.Id == postId);
+                if (!postExists)
+                {
+                    return (false, "Post not found.");
+                }
+
+                // Check if already pinned
+                var alreadyPinned = await context.PinnedPosts
+                    .AnyAsync(pp => pp.PostId == postId && pp.UserId == userId);
+
+                if (alreadyPinned)
+                {
+                    return (true, null); // Already pinned, consider it successful
+                }
+
+                // Create pinned post entry
+                var pinnedPost = new PinnedPost
+                {
+                    PostId = postId,
+                    UserId = userId,
+                    PinnedAt = DateTime.UtcNow
+                };
+
+                context.PinnedPosts.Add(pinnedPost);
+                await context.SaveChangesAsync();
+
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error pinning post {PostId} for user {UserId}", postId, userId);
+                return (false, "An error occurred while pinning the post.");
+            }
+        }
+
+        /// <summary>
+        /// Unpin a post for a user
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> UnpinPostAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var pinnedPost = await context.PinnedPosts
+                    .FirstOrDefaultAsync(pp => pp.PostId == postId && pp.UserId == userId);
+
+                if (pinnedPost == null)
+                {
+                    return (true, null); // Not pinned, consider it successful
+                }
+
+                context.PinnedPosts.Remove(pinnedPost);
+                await context.SaveChangesAsync();
+
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error unpinning post {PostId} for user {UserId}", postId, userId);
+                return (false, "An error occurred while unpinning the post.");
+            }
+        }
+
+        /// <summary>
+        /// Get pinned status for multiple posts
+        /// </summary>
+        public async Task<Dictionary<int, bool>> GetPinnedStatusForPostsAsync(List<int> postIds, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var pinnedPostIds = await context.PinnedPosts
+                    .Where(pp => postIds.Contains(pp.PostId) && pp.UserId == userId)
+                    .Select(pp => pp.PostId)
+                    .ToListAsync();
+
+                return postIds.ToDictionary(id => id, id => pinnedPostIds.Contains(id));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting pinned status for posts for user {UserId}", userId);
+                return postIds.ToDictionary(id => id, id => false);
+            }
+        }
+
+        #endregion
     }
 }
