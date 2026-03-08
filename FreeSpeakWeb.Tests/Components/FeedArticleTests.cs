@@ -33,6 +33,10 @@ namespace FreeSpeakWeb.Tests.Components
             var mockEnvironment = new Mock<IWebHostEnvironment>();
             mockEnvironment.Setup(m => m.ContentRootPath).Returns(Path.GetTempPath());
 
+            // Mock NotificationService
+            var mockNotificationLogger = new Mock<ILogger<NotificationService>>();
+            var notificationService = new NotificationService(mockDbContextFactory.Object, mockNotificationLogger.Object);
+
             // Create SiteSettings for PostService
             var siteSettings = new SiteSettings
             {
@@ -47,7 +51,8 @@ namespace FreeSpeakWeb.Tests.Components
                 mockDbContextFactory.Object,
                 mockLogger.Object,
                 siteSettingsOptions,
-                mockEnvironment.Object
+                mockEnvironment.Object,
+                notificationService
             );
 
             Services.AddSingleton(postService);

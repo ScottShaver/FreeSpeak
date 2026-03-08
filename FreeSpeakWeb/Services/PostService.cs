@@ -10,17 +10,20 @@ namespace FreeSpeakWeb.Services
         private readonly ILogger<PostService> _logger;
         private readonly SiteSettings _siteSettings;
         private readonly IWebHostEnvironment _environment;
+        private readonly NotificationService _notificationService;
 
         public PostService(
             IDbContextFactory<ApplicationDbContext> contextFactory, 
             ILogger<PostService> logger, 
             IOptions<SiteSettings> siteSettings,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            NotificationService notificationService)
         {
             _contextFactory = contextFactory;
             _logger = logger;
             _siteSettings = siteSettings.Value;
             _environment = environment;
+            _notificationService = notificationService;
         }
 
         #region Post Operations
@@ -459,16 +462,21 @@ namespace FreeSpeakWeb.Services
                 using var context = await _contextFactory.CreateDbContextAsync();
 
                 // Verify post exists
-                var post = await context.Posts.FindAsync(postId);
+                var post = await context.Posts
+                    .Include(p => p.Author)
+                    .FirstOrDefaultAsync(p => p.Id == postId);
                 if (post == null)
                 {
                     return (false, "Post not found.", null);
                 }
 
+                Comment? parentComment = null;
                 // Verify parent comment exists if specified
                 if (parentCommentId.HasValue)
                 {
-                    var parentComment = await context.Comments.FindAsync(parentCommentId.Value);
+                    parentComment = await context.Comments
+                        .Include(c => c.Author)
+                        .FirstOrDefaultAsync(c => c.Id == parentCommentId.Value);
                     if (parentComment == null)
                     {
                         return (false, "Parent comment not found.", null);
@@ -508,6 +516,54 @@ namespace FreeSpeakWeb.Services
                 await context.SaveChangesAsync();
 
                 _logger.LogInformation("Comment added to post {PostId} by user {AuthorId}", postId, authorId);
+
+                // Create notification
+                // Don't notify if user is commenting on their own post/comment
+                var commenter = await context.Users.FindAsync(authorId);
+                if (commenter != null)
+                {
+                    if (parentCommentId.HasValue)
+                    {
+                        // Reply to a comment - notify the parent comment author
+                        if (parentComment != null && parentComment.AuthorId != authorId)
+                        {
+                            var message = $"{commenter.UserName} replied to your comment";
+                            await _notificationService.CreateNotificationAsync(
+                                parentComment.AuthorId,
+                                NotificationType.CommentReply,
+                                message,
+                                new { 
+                                    PostId = postId, 
+                                    CommentId = comment.Id, 
+                                    CommenterId = authorId,
+                                    CommenterName = commenter.UserName,
+                                    CommenterProfilePicture = commenter.ProfilePictureUrl
+                                }
+                            );
+                        }
+                    }
+                    else
+                    {
+                        // Direct comment on post - notify the post author
+                        if (post.AuthorId != authorId)
+                        {
+                            var message = $"{commenter.UserName} commented on your post";
+                            await _notificationService.CreateNotificationAsync(
+                                post.AuthorId,
+                                NotificationType.PostComment,
+                                message,
+                                new { 
+                                    PostId = postId, 
+                                    CommentId = comment.Id, 
+                                    CommenterId = authorId,
+                                    CommenterName = commenter.UserName,
+                                    CommenterProfilePicture = commenter.ProfilePictureUrl
+                                }
+                            );
+                        }
+                    }
+                }
+
                 return (true, null, comment);
             }
             catch (Exception ex)
@@ -814,7 +870,9 @@ namespace FreeSpeakWeb.Services
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
 
-                var post = await context.Posts.FindAsync(postId);
+                var post = await context.Posts
+                    .Include(p => p.Author)
+                    .FirstOrDefaultAsync(p => p.Id == postId);
                 if (post == null)
                 {
                     return (false, "Post not found.");
@@ -822,6 +880,8 @@ namespace FreeSpeakWeb.Services
 
                 var existingLike = await context.Likes
                     .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
+
+                bool isNewReaction = existingLike == null;
 
                 if (existingLike != null)
                 {
@@ -846,6 +906,32 @@ namespace FreeSpeakWeb.Services
                 }
 
                 await context.SaveChangesAsync();
+
+                // Create notification for new reactions only (not for changing reactions)
+                // Don't notify if user is reacting to their own post
+                if (isNewReaction && post.AuthorId != userId)
+                {
+                    var reactor = await context.Users.FindAsync(userId);
+                    if (reactor != null)
+                    {
+                        var reactionText = reactionType.ToString().ToLower();
+                        var message = $"{reactor.UserName} reacted to your post with {reactionText}";
+
+                        await _notificationService.CreateNotificationAsync(
+                            post.AuthorId,
+                            NotificationType.PostLiked,
+                            message,
+                            new { 
+                                PostId = postId, 
+                                ReactorId = userId, 
+                                ReactorName = reactor.UserName,
+                                ReactorProfilePicture = reactor.ProfilePictureUrl,
+                                ReactionType = reactionType.ToString() 
+                            }
+                        );
+                    }
+                }
+
                 return (true, null);
             }
             catch (Exception ex)
@@ -1085,7 +1171,10 @@ namespace FreeSpeakWeb.Services
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
 
-                var comment = await context.Comments.FindAsync(commentId);
+                var comment = await context.Comments
+                    .Include(c => c.Author)
+                    .Include(c => c.Post)
+                    .FirstOrDefaultAsync(c => c.Id == commentId);
                 if (comment == null)
                 {
                     return (false, "Comment not found.");
@@ -1093,6 +1182,8 @@ namespace FreeSpeakWeb.Services
 
                 var existingLike = await context.CommentLikes
                     .FirstOrDefaultAsync(cl => cl.CommentId == commentId && cl.UserId == userId);
+
+                bool isNewReaction = existingLike == null;
 
                 if (existingLike != null)
                 {
@@ -1116,6 +1207,33 @@ namespace FreeSpeakWeb.Services
                 }
 
                 await context.SaveChangesAsync();
+
+                // Create notification for new reactions only (not for changing reactions)
+                // Don't notify if user is reacting to their own comment
+                if (isNewReaction && comment.AuthorId != userId)
+                {
+                    var reactor = await context.Users.FindAsync(userId);
+                    if (reactor != null)
+                    {
+                        var reactionText = reactionType.ToString().ToLower();
+                        var message = $"{reactor.UserName} reacted to your comment with {reactionText}";
+
+                        await _notificationService.CreateNotificationAsync(
+                            comment.AuthorId,
+                            NotificationType.CommentLiked,
+                            message,
+                            new { 
+                                PostId = comment.PostId, 
+                                CommentId = commentId, 
+                                ReactorId = userId,
+                                ReactorName = reactor.UserName,
+                                ReactorProfilePicture = reactor.ProfilePictureUrl,
+                                ReactionType = reactionType.ToString() 
+                            }
+                        );
+                    }
+                }
+
                 return (true, null);
             }
             catch (Exception ex)

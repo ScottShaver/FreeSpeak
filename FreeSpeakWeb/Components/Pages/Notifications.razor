@@ -1,0 +1,321 @@
+@page "/notifications"
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.Shared
+@using FreeSpeakWeb.Components.SocialFeed
+@using System.Text.Json
+
+@attribute [Authorize]
+
+@inject UserManager<ApplicationUser> UserManager
+@inject NotificationService NotificationService
+@inject PostService PostService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<PageTitle>Notifications - FreeSpeak</PageTitle>
+
+<div class="notifications-container">
+    <div class="notifications-header">
+        <h3>Notifications</h3>
+        <div class="notifications-actions">
+            @if (unreadCount > 0)
+            {
+                <button class="btn btn-sm btn-primary" @onclick="MarkAllAsRead" disabled="@isMarkingAllRead">
+                    @if (isMarkingAllRead)
+                    {
+                        <span class="spinner-border spinner-border-sm me-1"></span>
+                    }
+                    Mark all as read
+                </button>
+            }
+            @if (notifications.Any(n => n.IsRead))
+            {
+                <button class="btn btn-sm btn-outline-danger" @onclick="DeleteAllRead" disabled="@isDeletingRead">
+                    @if (isDeletingRead)
+                    {
+                        <span class="spinner-border spinner-border-sm me-1"></span>
+                    }
+                    Clear read
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="notifications-tabs">
+        <button class="tab-button @(showOnlyUnread ? "" : "active")" @onclick="() => ShowAll()">
+            All (@totalCount)
+        </button>
+        <button class="tab-button @(showOnlyUnread ? "active" : "")" @onclick="() => ShowUnread()">
+            Unread (@unreadCount)
+        </button>
+    </div>
+
+    <div class="notifications-list">
+        @if (isLoading)
+        {
+            <div class="loading-container">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3">Loading notifications...</p>
+            </div>
+        }
+        else if (!notifications.Any())
+        {
+            <div class="empty-state">
+                <span class="bi bi-bell-slash" style="font-size: 48px; color: var(--bs-secondary-color);"></span>
+                <p class="mt-3">@(showOnlyUnread ? "No unread notifications" : "No notifications yet")</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var notification in notifications)
+            {
+                <NotificationComponent Notification="@notification" OnClick="HandleNotificationClick" />
+            }
+
+            @if (hasMore)
+            {
+                <div class="load-more-container">
+                    <button class="btn btn-outline-primary" @onclick="LoadMore" disabled="@isLoadingMore">
+                        @if (isLoadingMore)
+                        {
+                            <span class="spinner-border spinner-border-sm me-1"></span>
+                        }
+                        Load more
+                    </button>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@if (selectedPost != null)
+{
+    <PostDetailModal 
+        PostId="@selectedPost.Id"
+        AuthorId="@selectedPost.AuthorId"
+        AuthorName="@selectedPost.Author?.UserName"
+        AuthorImageUrl="@selectedPost.Author?.ProfilePictureUrl"
+        CurrentUserId="@currentUserId"
+        CreatedAt="@selectedPost.CreatedAt"
+        LikeCount="@selectedPost.LikeCount"
+        CommentCount="@selectedPost.CommentCount"
+        Images="@selectedPost.Images?.ToList()"
+        TargetCommentId="@targetCommentId"
+        ReactionBreakdown="@postReactionBreakdown"
+        UserReaction="@userReaction"
+        OnClose="@ClosePostDetail">
+        <ArticleContent>
+            @((MarkupString)selectedPost.Content)
+        </ArticleContent>
+    </PostDetailModal>
+}
+
+@code {
+    private List<UserNotification> notifications = new();
+    private string? currentUserId;
+    private bool isLoading = true;
+    private bool isLoadingMore = false;
+    private bool isMarkingAllRead = false;
+    private bool isDeletingRead = false;
+    private bool showOnlyUnread = false;
+    private int pageNumber = 1;
+    private int pageSize = 20;
+    private bool hasMore = false;
+    private int unreadCount = 0;
+    private int totalCount = 0;
+    private Post? selectedPost = null;
+    private int? targetCommentId = null;
+    private Dictionary<LikeType, int>? postReactionBreakdown = null;
+    private LikeType? userReaction = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await UserManager.GetUserAsync(authState.User);
+
+        if (user != null)
+        {
+            currentUserId = user.Id;
+            await LoadNotifications();
+        }
+    }
+
+    private async Task LoadNotifications()
+    {
+        if (currentUserId == null) return;
+
+        isLoading = true;
+        pageNumber = 1;
+        notifications.Clear();
+
+        notifications = await NotificationService.GetUserNotificationsAsync(
+            currentUserId,
+            pageSize,
+            pageNumber,
+            showOnlyUnread ? false : null
+        );
+
+        unreadCount = await NotificationService.GetUnreadCountAsync(currentUserId);
+
+        // Check if there are more notifications
+        var nextPageNotifications = await NotificationService.GetUserNotificationsAsync(
+            currentUserId,
+            1,
+            pageNumber + 1,
+            showOnlyUnread ? false : null
+        );
+        hasMore = nextPageNotifications.Any();
+
+        totalCount = notifications.Count + (hasMore ? 1 : 0);
+
+        isLoading = false;
+    }
+
+    private async Task LoadMore()
+    {
+        if (currentUserId == null || isLoadingMore) return;
+
+        isLoadingMore = true;
+        pageNumber++;
+
+        var moreNotifications = await NotificationService.GetUserNotificationsAsync(
+            currentUserId,
+            pageSize,
+            pageNumber,
+            showOnlyUnread ? false : null
+        );
+
+        notifications.AddRange(moreNotifications);
+
+        // Check if there are even more notifications
+        var nextPageNotifications = await NotificationService.GetUserNotificationsAsync(
+            currentUserId,
+            1,
+            pageNumber + 1,
+            showOnlyUnread ? false : null
+        );
+        hasMore = nextPageNotifications.Any();
+
+        isLoadingMore = false;
+    }
+
+    private async Task ShowAll()
+    {
+        showOnlyUnread = false;
+        await LoadNotifications();
+    }
+
+    private async Task ShowUnread()
+    {
+        showOnlyUnread = true;
+        await LoadNotifications();
+    }
+
+    private async Task HandleNotificationClick(UserNotification notification)
+    {
+        if (currentUserId == null) return;
+
+        // Mark as read if not already
+        if (!notification.IsRead)
+        {
+            await NotificationService.MarkAsReadAsync(notification.Id, currentUserId);
+            notification.IsRead = true;
+            unreadCount = Math.Max(0, unreadCount - 1);
+            StateHasChanged();
+        }
+
+        // Parse notification data and open post
+        if (!string.IsNullOrEmpty(notification.Data))
+        {
+            try
+            {
+                var data = JsonSerializer.Deserialize<NotificationData>(notification.Data);
+                if (data?.PostId != null)
+                {
+                    var post = await PostService.GetPostByIdAsync(data.PostId.Value);
+                    if (post != null)
+                    {
+                        selectedPost = post;
+                        targetCommentId = data.CommentId; // Set the target comment ID for scrolling
+
+                        // Load reaction data
+                        postReactionBreakdown = await PostService.GetReactionBreakdownAsync(post.Id);
+                        userReaction = await PostService.GetUserReactionAsync(post.Id, currentUserId);
+
+                        StateHasChanged();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error but don't crash
+                Console.WriteLine($"Error parsing notification data: {ex.Message}");
+            }
+        }
+    }
+
+    private void ClosePostDetail()
+    {
+        selectedPost = null;
+        targetCommentId = null; // Clear the target comment ID when closing
+        postReactionBreakdown = null;
+        userReaction = null;
+        StateHasChanged();
+    }
+
+    private async Task MarkAllAsRead()
+    {
+        if (currentUserId == null) return;
+
+        isMarkingAllRead = true;
+
+        var (success, errorMessage, updatedCount) = await NotificationService.MarkAllAsReadAsync(currentUserId);
+
+        if (success)
+        {
+            // Update all notifications in the current list
+            foreach (var notification in notifications)
+            {
+                notification.IsRead = true;
+            }
+            unreadCount = 0;
+        }
+
+        isMarkingAllRead = false;
+    }
+
+    private async Task DeleteAllRead()
+    {
+        if (currentUserId == null) return;
+
+        isDeletingRead = true;
+
+        var (success, errorMessage, deletedCount) = await NotificationService.DeleteReadNotificationsAsync(currentUserId);
+
+        if (success)
+        {
+            // Remove read notifications from the list
+            notifications.RemoveAll(n => n.IsRead);
+            totalCount = notifications.Count;
+        }
+
+        isDeletingRead = false;
+    }
+
+    // Helper class to deserialize notification data
+    private class NotificationData
+    {
+        public int? PostId { get; set; }
+        public int? CommentId { get; set; }
+        public string? CommenterId { get; set; }
+        public string? ReactorId { get; set; }
+        public string? ReactionType { get; set; }
+    }
+}

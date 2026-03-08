@@ -1,0 +1,177 @@
+@using FreeSpeakWeb.Data
+@using System.Text.Json
+
+<div class="notification-item @(Notification.IsRead ? "read" : "unread")" @onclick="HandleClick">
+    <div class="notification-avatar">
+        @if (!string.IsNullOrEmpty(UserProfilePicture))
+        {
+            <img src="@UserProfilePicture" alt="@UserName" class="avatar-img" />
+        }
+        else
+        {
+            <div class="avatar-placeholder">
+                <span class="avatar-initial">@GetInitial(UserName)</span>
+            </div>
+        }
+        <div class="notification-type-badge">
+            @{
+                var reactionEmoji = GetReactionEmoji();
+                if (!string.IsNullOrEmpty(reactionEmoji))
+                {
+                    <span class="reaction-emoji">@reactionEmoji</span>
+                }
+                else
+                {
+                    @switch (Notification.Type)
+                    {
+                        case NotificationType.FriendRequest:
+                            <span class="bi bi-person-plus-fill text-primary"></span>
+                            break;
+                        case NotificationType.FriendAccepted:
+                            <span class="bi bi-person-check-fill text-success"></span>
+                            break;
+                        case NotificationType.PostLiked:
+                            <span class="bi bi-heart-fill text-danger"></span>
+                            break;
+                        case NotificationType.PostComment:
+                            <span class="bi bi-chat-fill text-info"></span>
+                            break;
+                        case NotificationType.CommentReply:
+                            <span class="bi bi-reply-fill text-info"></span>
+                            break;
+                        case NotificationType.CommentLiked:
+                            <span class="bi bi-hand-thumbs-up-fill text-primary"></span>
+                            break;
+                        case NotificationType.Mention:
+                            <span class="bi bi-at text-warning"></span>
+                            break;
+                        case NotificationType.System:
+                        default:
+                            <span class="bi bi-info-circle-fill text-secondary"></span>
+                            break;
+                    }
+                }
+            }
+        </div>
+    </div>
+    <div class="notification-content">
+        <div class="notification-message">@Notification.Message</div>
+        <div class="notification-time">@FormatTimeAgo(Notification.CreatedAt)</div>
+    </div>
+    @if (!Notification.IsRead)
+    {
+        <div class="notification-unread-indicator"></div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public required UserNotification Notification { get; set; }
+
+    [Parameter]
+    public EventCallback<UserNotification> OnClick { get; set; }
+
+    private string UserProfilePicture => GetProfilePicture();
+    private string UserName => GetUserName();
+
+    private async Task HandleClick()
+    {
+        await OnClick.InvokeAsync(Notification);
+    }
+
+    private string GetProfilePicture()
+    {
+        if (string.IsNullOrEmpty(Notification.Data)) return string.Empty;
+
+        try
+        {
+            var data = JsonSerializer.Deserialize<NotificationData>(Notification.Data);
+            return data?.ReactorProfilePicture ?? data?.CommenterProfilePicture ?? string.Empty;
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
+
+    private string GetUserName()
+    {
+        if (string.IsNullOrEmpty(Notification.Data)) return "User";
+
+        try
+        {
+            var data = JsonSerializer.Deserialize<NotificationData>(Notification.Data);
+            return data?.ReactorName ?? data?.CommenterName ?? "User";
+        }
+        catch
+        {
+            return "User";
+        }
+    }
+
+    private string GetInitial(string name)
+    {
+        if (string.IsNullOrEmpty(name)) return "?";
+        return name[0].ToString().ToUpper();
+    }
+
+    private string GetReactionEmoji()
+    {
+        // For reaction notifications, show the actual reaction emoji instead of generic icon
+        if (Notification.Type != NotificationType.PostLiked && Notification.Type != NotificationType.CommentLiked)
+            return string.Empty;
+
+        if (string.IsNullOrEmpty(Notification.Data)) return string.Empty;
+
+        try
+        {
+            var data = JsonSerializer.Deserialize<NotificationData>(Notification.Data);
+            if (string.IsNullOrEmpty(data?.ReactionType)) return string.Empty;
+
+            return data.ReactionType switch
+            {
+                "Like" => "👍",
+                "Love" => "❤️",
+                "Haha" => "😂",
+                "Wow" => "😮",
+                "Sad" => "😢",
+                "Angry" => "😠",
+                _ => string.Empty
+            };
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
+
+    private string FormatTimeAgo(DateTime dateTime)
+    {
+        var timeSpan = DateTime.UtcNow - dateTime;
+
+        if (timeSpan.TotalMinutes < 1)
+            return "just now";
+        if (timeSpan.TotalMinutes < 60)
+            return $"{(int)timeSpan.TotalMinutes}m ago";
+        if (timeSpan.TotalHours < 24)
+            return $"{(int)timeSpan.TotalHours}h ago";
+        if (timeSpan.TotalDays < 7)
+            return $"{(int)timeSpan.TotalDays}d ago";
+        if (timeSpan.TotalDays < 30)
+            return $"{(int)(timeSpan.TotalDays / 7)}w ago";
+        if (timeSpan.TotalDays < 365)
+            return $"{(int)(timeSpan.TotalDays / 30)}mo ago";
+
+        return dateTime.ToString("MMM d, yyyy");
+    }
+
+    // Helper class to deserialize notification data
+    private class NotificationData
+    {
+        public string? ReactorName { get; set; }
+        public string? ReactorProfilePicture { get; set; }
+        public string? CommenterName { get; set; }
+        public string? CommenterProfilePicture { get; set; }
+        public string? ReactionType { get; set; }
+    }
+}

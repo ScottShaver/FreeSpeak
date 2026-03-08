@@ -12,6 +12,7 @@ namespace FreeSpeakWeb.Data
         public DbSet<CommentLike> CommentLikes { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<PinnedPost> PinnedPosts { get; set; }
+        public DbSet<UserNotification> UserNotifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -174,6 +175,28 @@ namespace FreeSpeakWeb.Data
                 entity.HasIndex(pp => pp.UserId);
                 entity.HasIndex(pp => pp.PostId);
                 entity.HasIndex(pp => pp.PinnedAt);
+            });
+
+            // Configure UserNotification entity
+            modelBuilder.Entity<UserNotification>(entity =>
+            {
+                entity.HasKey(n => n.Id);
+
+                entity.HasOne(n => n.User)
+                    .WithMany()
+                    .HasForeignKey(n => n.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Property(n => n.Message)
+                    .IsRequired();
+
+                // Create indexes for efficient querying
+                entity.HasIndex(n => n.UserId);
+                entity.HasIndex(n => n.CreatedAt);
+                entity.HasIndex(n => n.IsRead);
+                entity.HasIndex(n => n.Type);
+                entity.HasIndex(n => n.ExpiresAt);
+                entity.HasIndex(n => new { n.UserId, n.IsRead, n.CreatedAt });
             });
         }
     }

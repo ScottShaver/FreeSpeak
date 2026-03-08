@@ -80,6 +80,9 @@ namespace FreeSpeakWeb
             // Add ImageResizingService for performance optimization
             builder.Services.AddSingleton<ImageResizingService>();
 
+            // Add NotificationService
+            builder.Services.AddScoped<NotificationService>();
+
             // SECURITY: Add rate limiting to prevent abuse
             builder.Services.AddRateLimiter(options =>
             {
