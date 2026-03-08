@@ -22,11 +22,12 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Create a new post
         /// </summary>
-        public async Task<(bool Success, string? ErrorMessage, Post? Post)> CreatePostAsync(string authorId, string content, List<string>? imageUrls = null)
+        public async Task<(bool Success, string? ErrorMessage, Post? Post)> CreatePostAsync(string authorId, string content, AudienceType audienceType = AudienceType.Public, List<string>? imageUrls = null)
         {
-            if (string.IsNullOrWhiteSpace(content))
+            // Allow empty content if images are provided
+            if (string.IsNullOrWhiteSpace(content) && (imageUrls == null || !imageUrls.Any()))
             {
-                return (false, "Post content cannot be empty.", null);
+                return (false, "Post must contain either text or images.", null);
             }
 
             try
@@ -36,8 +37,9 @@ namespace FreeSpeakWeb.Services
                 var post = new Post
                 {
                     AuthorId = authorId,
-                    Content = content.Trim(),
-                    CreatedAt = DateTime.UtcNow
+                    Content = string.IsNullOrWhiteSpace(content) ? string.Empty : content.Trim(),
+                    CreatedAt = DateTime.UtcNow,
+                    AudienceType = audienceType
                 };
 
                 context.Posts.Add(post);
@@ -1165,6 +1167,83 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogError(ex, "Error getting pinned status for posts for user {UserId}", userId);
                 return postIds.ToDictionary(id => id, id => false);
+            }
+        }
+
+        #endregion
+
+        #region User Uploads
+
+        /// <summary>
+        /// Get paginated list of images uploaded by a user
+        /// </summary>
+        public async Task<(bool Success, List<PostImage>? Images, int TotalCount, string? ErrorMessage)> GetUserUploadedImagesAsync(string userId, int page = 1, int pageSize = 24)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Get all images from posts authored by this user
+                // Filter by image file extensions (.jpg, .png, .gif, .webp)
+                var query = context.PostImages
+                    .Include(pi => pi.Post)
+                    .Where(pi => pi.Post.AuthorId == userId && 
+                                 (pi.ImageUrl.EndsWith(".jpg") || 
+                                  pi.ImageUrl.EndsWith(".jpeg") || 
+                                  pi.ImageUrl.EndsWith(".png") || 
+                                  pi.ImageUrl.EndsWith(".gif") || 
+                                  pi.ImageUrl.EndsWith(".webp")))
+                    .OrderByDescending(pi => pi.UploadedAt);
+
+                var totalCount = await query.CountAsync();
+
+                var images = await query
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                return (true, images, totalCount, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting uploaded images for user {UserId}", userId);
+                return (false, null, 0, "An error occurred while retrieving your images.");
+            }
+        }
+
+        /// <summary>
+        /// Get paginated list of videos uploaded by a user
+        /// </summary>
+        public async Task<(bool Success, List<PostImage>? Videos, int TotalCount, string? ErrorMessage)> GetUserUploadedVideosAsync(string userId, int page = 1, int pageSize = 24)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Get all videos from posts authored by this user
+                // Filter by video file extensions (.mp4, .webm, .ogg, .mov)
+                var query = context.PostImages
+                    .Include(pi => pi.Post)
+                    .Where(pi => pi.Post.AuthorId == userId && 
+                                 (pi.ImageUrl.EndsWith(".mp4") || 
+                                  pi.ImageUrl.EndsWith(".webm") || 
+                                  pi.ImageUrl.EndsWith(".ogg") || 
+                                  pi.ImageUrl.EndsWith(".mov")))
+                    .OrderByDescending(pi => pi.UploadedAt);
+
+                var totalCount = await query.CountAsync();
+
+                var videos = await query
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                return (true, videos, totalCount, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting uploaded videos for user {UserId}", userId);
+                return (false, null, 0, "An error occurred while retrieving your videos.");
             }
         }
 

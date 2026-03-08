@@ -1,0 +1,446 @@
+@page "/my-uploads"
+@rendermode InteractiveServer
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject PostService PostService
+@inject IJSRuntime JS
+@attribute [Authorize]
+
+<PageTitle>My Uploads - FreeSpeak</PageTitle>
+
+<div class="my-uploads-container">
+    <div class="page-header">
+        <h2>My Uploads</h2>
+    </div>
+
+    <div class="tabs-container">
+        <div class="tabs-header">
+            <button class="tab-button @(activeTab == "pictures" ? "active" : "")" @onclick='() => SwitchTab("pictures")'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                </svg>
+                Pictures (@totalPictures)
+            </button>
+            <button class="tab-button @(activeTab == "videos" ? "active" : "")" @onclick='() => SwitchTab("videos")'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
+                </svg>
+                Videos (@totalVideos)
+            </button>
+            <button class="tab-button @(activeTab == "other" ? "active" : "")" @onclick='() => SwitchTab("other")'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                </svg>
+                Other
+            </button>
+        </div>
+
+        <div class="tab-content">
+            @if (activeTab == "pictures")
+            {
+                <div class="pictures-tab" @ref="picturesScrollElement">
+                    @if (isLoadingPictures && !pictures.Any())
+                    {
+                        <div class="loading-spinner">
+                            <div class="spinner"></div>
+                            <p>Loading your pictures...</p>
+                        </div>
+                    }
+                    else if (!pictures.Any() && !isLoadingPictures)
+                    {
+                        <div class="empty-state">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                            </svg>
+                            <h3>No pictures yet</h3>
+                            <p>Pictures you upload with your posts will appear here.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="media-grid">
+                            @for (int i = 0; i < pictures.Count; i++)
+                            {
+                                var index = i;
+                                var picture = pictures[index];
+                                <div class="media-item" @onclick="() => HandlePictureClick(picture, index)">
+                                    <img src="@picture.ImageUrl" alt="Uploaded @picture.UploadedAt.ToShortDateString()" loading="lazy" />
+                                    <div class="media-overlay">
+                                        <span class="upload-date">@GetRelativeTime(picture.UploadedAt)</span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        @if (isLoadingMorePictures)
+                        {
+                            <div class="loading-more">
+                                <div class="spinner-small"></div>
+                                <span>Loading more...</span>
+                            </div>
+                        }
+
+                        @if (!hasMorePictures && pictures.Any())
+                        {
+                            <div class="end-message">
+                                <p>You've reached the end of your pictures</p>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+            else if (activeTab == "videos")
+            {
+                <div class="videos-tab" @ref="videosScrollElement">
+                    @if (isLoadingVideos && !videos.Any())
+                    {
+                        <div class="loading-spinner">
+                            <div class="spinner"></div>
+                            <p>Loading your videos...</p>
+                        </div>
+                    }
+                    else if (!videos.Any() && !isLoadingVideos)
+                    {
+                        <div class="empty-state">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
+                            </svg>
+                            <h3>No videos yet</h3>
+                            <p>Videos you upload with your posts will appear here.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="media-grid">
+                            @for (int i = 0; i < videos.Count; i++)
+                            {
+                                var index = i;
+                                var video = videos[index];
+                                <div class="media-item video-item" @onclick="() => OpenVideoViewer(video)">
+                                    <div class="video-placeholder">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="white" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="media-overlay">
+                                        <span class="upload-date">@GetRelativeTime(video.UploadedAt)</span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        @if (isLoadingMoreVideos)
+                        {
+                            <div class="loading-more">
+                                <div class="spinner-small"></div>
+                                <span>Loading more...</span>
+                            </div>
+                        }
+
+                        @if (!hasMoreVideos && videos.Any())
+                        {
+                            <div class="end-message">
+                                <p>You've reached the end of your videos</p>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="other-tab">
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                        </svg>
+                        <h3>Coming Soon</h3>
+                        <p>Other file types will appear here in the future.</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<ImageViewerModal 
+    IsVisible="@showImageViewer"
+    ImageUrls="@viewerImages"
+    InitialIndex="@selectedImageIndex"
+    EnableNavigation="false"
+    OnClose="CloseImageViewer" />
+
+@code {
+    private string? currentUserId;
+    private string activeTab = "pictures";
+    
+    // Pictures
+    private List<PostImage> pictures = new();
+    private bool isLoadingPictures = false;
+    private bool isLoadingMorePictures = false;
+    private bool hasMorePictures = true;
+    private int picturesPage = 1;
+    private int totalPictures = 0;
+    private const int PicturesPageSize = 24;
+    private ElementReference picturesScrollElement;
+
+    // Videos
+    private List<PostImage> videos = new();
+    private bool isLoadingVideos = false;
+    private bool isLoadingMoreVideos = false;
+    private bool hasMoreVideos = true;
+    private int videosPage = 1;
+    private int totalVideos = 0;
+    private const int VideosPageSize = 24;
+    private ElementReference videosScrollElement;
+
+    // Image Viewer
+    private bool showImageViewer = false;
+    private List<string> viewerImages = new();
+    private int selectedImageIndex = 0;
+
+    private IJSObjectReference? module;
+    private DotNetObjectReference<MyUploads>? dotNetHelper;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            var appUser = await UserManager.GetUserAsync(user);
+            currentUserId = appUser?.Id;
+
+            if (currentUserId != null)
+            {
+                await LoadPictures();
+            }
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && currentUserId != null)
+        {
+            try
+            {
+                module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/MyUploads.razor.js");
+                dotNetHelper = DotNetObjectReference.Create(this);
+                await module.InvokeVoidAsync("initializeInfiniteScroll", picturesScrollElement, dotNetHelper, "pictures");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error initializing infinite scroll: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task SwitchTab(string tabName)
+    {
+        if (activeTab == tabName) return;
+
+        activeTab = tabName;
+        StateHasChanged();
+
+        // Load data for the tab if not already loaded
+        if (tabName == "pictures" && !pictures.Any() && currentUserId != null)
+        {
+            await LoadPictures();
+        }
+        else if (tabName == "videos" && !videos.Any() && currentUserId != null)
+        {
+            await LoadVideos();
+        }
+
+        // Reinitialize scroll listener for the active tab
+        if (module != null && dotNetHelper != null)
+        {
+            try
+            {
+                await module.InvokeVoidAsync("disposeInfiniteScroll");
+                
+                if (tabName == "pictures")
+                {
+                    await module.InvokeVoidAsync("initializeInfiniteScroll", picturesScrollElement, dotNetHelper, "pictures");
+                }
+                else if (tabName == "videos")
+                {
+                    await module.InvokeVoidAsync("initializeInfiniteScroll", videosScrollElement, dotNetHelper, "videos");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error switching tabs: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task LoadPictures()
+    {
+        if (isLoadingPictures || !hasMorePictures || currentUserId == null) return;
+
+        isLoadingPictures = true;
+        StateHasChanged();
+
+        try
+        {
+            var result = await PostService.GetUserUploadedImagesAsync(currentUserId, picturesPage, PicturesPageSize);
+            
+            if (result.Success && result.Images != null)
+            {
+                pictures.AddRange(result.Images);
+                totalPictures = result.TotalCount;
+                hasMorePictures = pictures.Count < result.TotalCount;
+                picturesPage++;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading pictures: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingPictures = false;
+            StateHasChanged();
+        }
+    }
+
+    [JSInvokable]
+    public async Task LoadMorePicturesAsync()
+    {
+        if (isLoadingMorePictures || !hasMorePictures) return;
+
+        isLoadingMorePictures = true;
+        StateHasChanged();
+
+        await LoadPictures();
+
+        isLoadingMorePictures = false;
+        StateHasChanged();
+    }
+
+    private async Task LoadVideos()
+    {
+        if (isLoadingVideos || !hasMoreVideos || currentUserId == null) return;
+
+        isLoadingVideos = true;
+        StateHasChanged();
+
+        try
+        {
+            var result = await PostService.GetUserUploadedVideosAsync(currentUserId, videosPage, VideosPageSize);
+            
+            if (result.Success && result.Videos != null)
+            {
+                videos.AddRange(result.Videos);
+                totalVideos = result.TotalCount;
+                hasMoreVideos = videos.Count < result.TotalCount;
+                videosPage++;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading videos: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingVideos = false;
+            StateHasChanged();
+        }
+    }
+
+    [JSInvokable]
+    public async Task LoadMoreVideosAsync()
+    {
+        if (isLoadingMoreVideos || !hasMoreVideos) return;
+
+        isLoadingMoreVideos = true;
+        StateHasChanged();
+
+        await LoadVideos();
+
+        isLoadingMoreVideos = false;
+        StateHasChanged();
+    }
+
+    private void HandlePictureClick(PostImage picture, int index)
+    {
+        OpenPictureViewer(picture);
+    }
+
+    private void OpenPictureViewer(PostImage picture)
+    {
+        if (picture == null || pictures == null || !pictures.Any())
+        {
+            return;
+        }
+
+        var pictureIndex = pictures.IndexOf(picture);
+        viewerImages = pictures.Select(p => p.ImageUrl).ToList();
+        selectedImageIndex = pictureIndex;
+        showImageViewer = true;
+
+        StateHasChanged();
+    }
+
+    private void OpenVideoViewer(PostImage video)
+    {
+        // For now, just open in new tab
+        // TODO: Create a video viewer modal
+        JS.InvokeVoidAsync("open", video.ImageUrl, "_blank");
+    }
+
+    private void CloseImageViewer()
+    {
+        showImageViewer = false;
+        StateHasChanged();
+    }
+
+    private string GetRelativeTime(DateTime uploadedAt)
+    {
+        var timeSpan = DateTime.UtcNow - uploadedAt;
+
+        if (timeSpan.TotalMinutes < 1)
+            return "Just now";
+        if (timeSpan.TotalMinutes < 60)
+            return $"{(int)timeSpan.TotalMinutes}m ago";
+        if (timeSpan.TotalHours < 24)
+            return $"{(int)timeSpan.TotalHours}h ago";
+        if (timeSpan.TotalDays < 7)
+            return $"{(int)timeSpan.TotalDays}d ago";
+        if (timeSpan.TotalDays < 30)
+            return $"{(int)(timeSpan.TotalDays / 7)}w ago";
+        if (timeSpan.TotalDays < 365)
+            return $"{(int)(timeSpan.TotalDays / 30)}mo ago";
+        
+        return $"{(int)(timeSpan.TotalDays / 365)}y ago";
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (module != null)
+        {
+            try
+            {
+                await module.InvokeVoidAsync("disposeInfiniteScroll");
+                await module.DisposeAsync();
+            }
+            catch
+            {
+                // Ignore disposal errors
+            }
+        }
+
+        dotNetHelper?.Dispose();
+    }
+}

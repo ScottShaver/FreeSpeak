@@ -1,27 +1,31 @@
 // Store the cleanup function
 let scrollCleanup = null;
+let currentTabType = null;
 
 // Scroll event handler for lazy loading
-export function initializeInfiniteScroll(element, dotNetHelper) {
-    // Element is no longer needed since we're using window scroll
+export function initializeInfiniteScroll(element, dotNetHelper, tabType) {
+    currentTabType = tabType;
 
     let isScrolling = false;
 
     const handleScroll = () => {
         if (isScrolling) return;
 
-        // Use window scroll position instead of element scroll
+        // Use window scroll position
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const scrollHeight = document.documentElement.scrollHeight;
         const clientHeight = window.innerHeight;
 
-        // Calculate if we're near the bottom (within 200px)
-        const scrollThreshold = 200;
+        // Calculate if we're near the bottom (within 300px)
+        const scrollThreshold = 300;
         const isNearBottom = scrollTop + clientHeight >= scrollHeight - scrollThreshold;
 
         if (isNearBottom) {
             isScrolling = true;
-            dotNetHelper.invokeMethodAsync('LoadMorePostsAsync')
+            
+            const methodName = tabType === 'pictures' ? 'LoadMorePicturesAsync' : 'LoadMoreVideosAsync';
+            
+            dotNetHelper.invokeMethodAsync(methodName)
                 .then(() => {
                     // Reset the flag after a short delay to prevent rapid firing
                     setTimeout(() => {
@@ -29,7 +33,7 @@ export function initializeInfiniteScroll(element, dotNetHelper) {
                     }, 1000);
                 })
                 .catch(err => {
-                    console.error('Error loading more posts:', err);
+                    console.error(`Error loading more ${tabType}:`, err);
                     isScrolling = false;
                 });
         }
@@ -40,7 +44,7 @@ export function initializeInfiniteScroll(element, dotNetHelper) {
         scrollCleanup();
     }
 
-    // Listen to window scroll instead of element scroll
+    // Listen to window scroll
     window.addEventListener('scroll', handleScroll);
 
     // Store cleanup function
@@ -54,12 +58,4 @@ export function disposeInfiniteScroll() {
     if (scrollCleanup) {
         scrollCleanup();
     }
-}
-
-export function scrollToTop(element) {
-    // Scroll the window to top instead of the element
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
 }

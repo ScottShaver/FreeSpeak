@@ -364,3 +364,9 @@ FodyWeavers.xsd
 
 # ignore the folder the profile images are save into
 /FreeSpeakWeb/wwwroot/images/profiles
+
+# Ignore uploaded post images (but keep directory structure)
+
+# Ignore all uploaded post media (images and videos)
+/FreeSpeakWeb/wwwroot/uploads/posts/**/*
+!/FreeSpeakWeb/wwwroot/uploads/posts/**/.gitkeep

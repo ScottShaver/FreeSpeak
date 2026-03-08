@@ -62,6 +62,9 @@ namespace FreeSpeakWeb
             // Add PostService
             builder.Services.AddScoped<PostService>();
 
+            // Add ImageUploadService
+            builder.Services.AddScoped<ImageUploadService>();
+
             // Add NavigationStateService
             builder.Services.AddScoped<NavigationStateService>();
 
@@ -117,7 +120,7 @@ namespace FreeSpeakWeb
             app.UseAntiforgery();
 
             app.MapStaticAssets();
-            app.MapRazorComponents<App>()
+            app.MapRazorComponents<FreeSpeakWeb.Components.App>()
                 .AddInteractiveServerRenderMode();
 
             // Add additional endpoints required by the Identity /Account Razor components.

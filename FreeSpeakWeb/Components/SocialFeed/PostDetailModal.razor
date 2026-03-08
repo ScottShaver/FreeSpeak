@@ -36,6 +36,7 @@
                 UserReaction="@UserReaction"
                 AudienceType="@AudienceType"
                 IsPinned="@IsPinned"
+                Images="@Images"
                 OnReactionChanged="@OnReactionChanged"
                 OnRemoveReaction="@OnRemoveReaction"
                 OnPinPost="@OnPinPost"
@@ -164,6 +165,9 @@
 
     [Parameter]
     public EventCallback<int> OnUnpinPost { get; set; }
+
+    [Parameter]
+    public List<PostImage>? Images { get; set; }
 
     private List<CommentDisplayModel> modalComments = new();
     private int directCommentCount = 0;

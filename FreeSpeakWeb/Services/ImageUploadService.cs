@@ -1,0 +1,217 @@
+using FreeSpeakWeb.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace FreeSpeakWeb.Services
+{
+    public class ImageUploadService
+    {
+        private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
+        private readonly ILogger<ImageUploadService> _logger;
+        private readonly string _uploadsBasePath;
+
+        public ImageUploadService(
+            IDbContextFactory<ApplicationDbContext> contextFactory,
+            ILogger<ImageUploadService> logger,
+            IWebHostEnvironment environment)
+        {
+            _contextFactory = contextFactory;
+            _logger = logger;
+            _uploadsBasePath = Path.Combine(environment.WebRootPath, "uploads", "posts");
+        }
+
+        /// <summary>
+        /// Upload images for a specific user and return their URLs
+        /// Images are organized by user: /uploads/posts/{userId}/images/{filename}
+        /// </summary>
+        public async Task<(bool Success, List<string> ImageUrls, string? ErrorMessage)> UploadImagesAsync(
+            string userId,
+            List<(string FileName, string Base64Data, string ContentType)> images,
+            IProgress<int>? progress = null)
+        {
+            var imageUrls = new List<string>();
+            var totalImages = images.Count;
+
+            try
+            {
+                // Create user-specific images directory
+                var userImagesPath = Path.Combine(_uploadsBasePath, userId, "images");
+                if (!Directory.Exists(userImagesPath))
+                {
+                    Directory.CreateDirectory(userImagesPath);
+                    _logger.LogInformation("Created images directory for user {UserId}", userId);
+                }
+
+                for (int i = 0; i < images.Count; i++)
+                {
+                    var image = images[i];
+
+                    // Generate unique filename
+                    var fileExtension = GetFileExtension(image.ContentType);
+                    var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+                    var filePath = Path.Combine(userImagesPath, uniqueFileName);
+
+                    // Convert base64 to bytes and save
+                    var base64Data = image.Base64Data;
+                    if (base64Data.Contains(","))
+                    {
+                        base64Data = base64Data.Split(',')[1];
+                    }
+
+                    var imageBytes = Convert.FromBase64String(base64Data);
+                    await File.WriteAllBytesAsync(filePath, imageBytes);
+
+                    // Return URL relative to wwwroot
+                    var imageUrl = $"/uploads/posts/{userId}/images/{uniqueFileName}";
+                    imageUrls.Add(imageUrl);
+
+                    // Report progress
+                    if (progress != null)
+                    {
+                        var percentComplete = (int)((i + 1) / (double)totalImages * 100);
+                        progress.Report(percentComplete);
+                    }
+
+                    _logger.LogInformation("Uploaded image {FileName} as {UniqueFileName} for user {UserId}", 
+                        image.FileName, uniqueFileName, userId);
+                }
+
+                return (true, imageUrls, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error uploading images for user {UserId}", userId);
+
+                // Cleanup any uploaded files on error
+                foreach (var url in imageUrls)
+                {
+                    try
+                    {
+                        var fileName = Path.GetFileName(url);
+                        var userImagesPath = Path.Combine(_uploadsBasePath, userId, "images");
+                        var filePath = Path.Combine(userImagesPath, fileName);
+                        if (File.Exists(filePath))
+                        {
+                            File.Delete(filePath);
+                        }
+                    }
+                    catch
+                    {
+                        // Ignore cleanup errors
+                    }
+                }
+
+                return (false, new List<string>(), ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Upload videos for a specific user and return their URLs
+        /// Videos are organized by user: /uploads/posts/{userId}/videos/{filename}
+        /// </summary>
+        public async Task<(bool Success, List<string> VideoUrls, string? ErrorMessage)> UploadVideosAsync(
+            string userId,
+            List<(string FileName, string Base64Data, string ContentType)> videos,
+            IProgress<int>? progress = null)
+        {
+            var videoUrls = new List<string>();
+            var totalVideos = videos.Count;
+
+            try
+            {
+                // Create user-specific videos directory
+                var userVideosPath = Path.Combine(_uploadsBasePath, userId, "videos");
+                if (!Directory.Exists(userVideosPath))
+                {
+                    Directory.CreateDirectory(userVideosPath);
+                    _logger.LogInformation("Created videos directory for user {UserId}", userId);
+                }
+
+                for (int i = 0; i < videos.Count; i++)
+                {
+                    var video = videos[i];
+
+                    // Generate unique filename
+                    var fileExtension = GetVideoFileExtension(video.ContentType);
+                    var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+                    var filePath = Path.Combine(userVideosPath, uniqueFileName);
+
+                    // Convert base64 to bytes and save
+                    var base64Data = video.Base64Data;
+                    if (base64Data.Contains(","))
+                    {
+                        base64Data = base64Data.Split(',')[1];
+                    }
+
+                    var videoBytes = Convert.FromBase64String(base64Data);
+                    await File.WriteAllBytesAsync(filePath, videoBytes);
+
+                    // Return URL relative to wwwroot
+                    var videoUrl = $"/uploads/posts/{userId}/videos/{uniqueFileName}";
+                    videoUrls.Add(videoUrl);
+
+                    // Report progress
+                    if (progress != null)
+                    {
+                        var percentComplete = (int)((i + 1) / (double)totalVideos * 100);
+                        progress.Report(percentComplete);
+                    }
+
+                    _logger.LogInformation("Uploaded video {FileName} as {UniqueFileName} for user {UserId}", 
+                        video.FileName, uniqueFileName, userId);
+                }
+
+                return (true, videoUrls, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error uploading videos for user {UserId}", userId);
+
+                // Cleanup any uploaded files on error
+                foreach (var url in videoUrls)
+                {
+                    try
+                    {
+                        var fileName = Path.GetFileName(url);
+                        var userVideosPath = Path.Combine(_uploadsBasePath, userId, "videos");
+                        var filePath = Path.Combine(userVideosPath, fileName);
+                        if (File.Exists(filePath))
+                        {
+                            File.Delete(filePath);
+                        }
+                    }
+                    catch
+                    {
+                        // Ignore cleanup errors
+                    }
+                }
+
+                return (false, new List<string>(), ex.Message);
+            }
+        }
+
+        private string GetFileExtension(string contentType)
+        {
+            return contentType.ToLower() switch
+            {
+                "image/jpeg" => ".jpg",
+                "image/jpg" => ".jpg",
+                "image/png" => ".png",
+                "image/gif" => ".gif",
+                "image/webp" => ".webp",
+                _ => ".jpg"
+            };
+        }
+
+        private string GetVideoFileExtension(string contentType)
+        {
+            return contentType.ToLower() switch
+            {
+                "video/mp4" => ".mp4",
+                "video/webm" => ".webm",
+                "video/ogg" => ".ogg",
+                "video/quicktime" => ".mov",
+                _ => ".mp4"
+            };
+        }
+    }
+}

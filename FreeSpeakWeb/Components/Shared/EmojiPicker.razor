@@ -1,0 +1,102 @@
+@if (IsVisible)
+{
+    <div class="emoji-picker-backdrop" @onclick="Close"></div>
+    <div class="emoji-picker" style="@PositionStyle">
+        <div class="emoji-categories">
+            @foreach (var category in emojiCategories)
+            {
+                <button type="button" 
+                        class="emoji-category-btn @(selectedCategory == category.Key ? "active" : "")"
+                        @onclick="() => SelectCategory(category.Key)"
+                        title="@category.Key">
+                    @category.Value.FirstOrDefault()
+                </button>
+            }
+        </div>
+        <div class="emoji-grid">
+            @if (selectedCategory != null && emojiCategories.ContainsKey(selectedCategory))
+            {
+                @foreach (var emoji in emojiCategories[selectedCategory])
+                {
+                    <button type="button" 
+                            class="emoji-btn" 
+                            @onclick="() => OnEmojiSelected(emoji)"
+                            title="@emoji">
+                        @emoji
+                    </button>
+                }
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnEmojiSelect { get; set; }
+
+    [Parameter]
+    public string PositionStyle { get; set; } = string.Empty;
+
+    private string? selectedCategory = "Smileys";
+
+    private readonly Dictionary<string, List<string>> emojiCategories = new()
+    {
+        ["Smileys"] = new List<string> 
+        { 
+            "😀", "😃", "😄", "😁", "😆", "😅", "🤣", "😂", "🙂", "🙃",
+            "😉", "😊", "😇", "🥰", "😍", "🤩", "😘", "😗", "😚", "😙",
+            "😋", "😛", "😜", "🤪", "😝", "🤑", "🤗", "🤭", "🤫", "🤔",
+            "🤐", "🤨", "😐", "😑", "😶", "😏", "😒", "🙄", "😬", "🤥",
+            "😌", "😔", "😪", "🤤", "😴", "😷", "🤒", "🤕", "🤢", "🤮"
+        },
+        ["Gestures"] = new List<string>
+        {
+            "👍", "👎", "👌", "✌️", "🤞", "🤟", "🤘", "🤙", "👈", "👉",
+            "👆", "👇", "☝️", "✋", "🤚", "🖐️", "🖖", "👋", "🤝", "🙏",
+            "✍️", "💪", "🦵", "🦶", "👂", "👃", "🧠", "🦷", "🦴", "👀"
+        },
+        ["Hearts"] = new List<string>
+        {
+            "❤️", "🧡", "💛", "💚", "💙", "💜", "🖤", "🤍", "🤎", "💔",
+            "❣️", "💕", "💞", "💓", "💗", "💖", "💘", "💝", "💟", "☮️"
+        },
+        ["Objects"] = new List<string>
+        {
+            "🎉", "🎊", "🎈", "🎁", "🏆", "🏅", "🥇", "🥈", "🥉", "⚽",
+            "🏀", "🏈", "⚾", "🎾", "🏐", "🏉", "🎱", "🏓", "🏸", "🥊",
+            "⭐", "🌟", "✨", "💫", "🔥", "💧", "🌈", "☀️", "🌙", "⚡"
+        },
+        ["Food"] = new List<string>
+        {
+            "🍎", "🍊", "🍋", "🍌", "🍉", "🍇", "🍓", "🍈", "🍒", "🍑",
+            "🥭", "🍍", "🥥", "🥝", "🍅", "🥑", "🍆", "🥔", "🥕", "🌽",
+            "🍕", "🍔", "🍟", "🌭", "🥪", "🌮", "🌯", "🥗", "🍝", "🍜"
+        }
+    };
+
+    private async Task OnEmojiSelected(string emoji)
+    {
+        if (OnEmojiSelect.HasDelegate)
+        {
+            await OnEmojiSelect.InvokeAsync(emoji);
+        }
+        await Close();
+    }
+
+    private async Task Close()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+    private void SelectCategory(string category)
+    {
+        selectedCategory = category;
+        StateHasChanged();
+    }
+}

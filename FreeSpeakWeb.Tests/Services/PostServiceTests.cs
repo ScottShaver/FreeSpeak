@@ -88,7 +88,7 @@ namespace FreeSpeakWeb.Tests.Services
             var imageUrls = new List<string> { "image1.jpg", "image2.jpg" };
 
             // Act
-            var (success, errorMessage, post) = await service.CreatePostAsync("user1", "Post with images", imageUrls);
+            var (success, errorMessage, post) = await service.CreatePostAsync("user1", "Post with images", AudienceType.Public, imageUrls);
 
             // Assert
             success.Should().BeTrue();
