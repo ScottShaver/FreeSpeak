@@ -41,11 +41,30 @@
     flex: 1;
 }
 
+.author-name-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
 .author-name {
     font-size: 15px;
     font-weight: 600;
     color: #000000;
     line-height: 1.3333;
+}
+
+.audience-icon {
+    display: inline-block;
+    vertical-align: middle;
+    color: rgba(0, 0, 0, 0.6);
+    cursor: help;
+}
+
+.article-timestamp-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .article-timestamp {
@@ -60,6 +79,12 @@
 
 .article-timestamp:hover {
     text-decoration-color: rgba(0, 0, 0, 0.7);
+}
+
+.pinned-icon {
+    display: inline-block;
+    vertical-align: middle;
+    cursor: help;
 }
 
 .menu-button {

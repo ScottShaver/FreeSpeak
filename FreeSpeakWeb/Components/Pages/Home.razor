@@ -55,6 +55,7 @@
                         var userReaction = userReactions.ContainsKey(post.Id) ? userReactions[post.Id] : null;
                         var comments = postComments.ContainsKey(post.Id) ? postComments[post.Id] : new List<CommentDisplayModel>();
                         var directCommentCount = postDirectCommentCounts.ContainsKey(post.Id) ? postDirectCommentCounts[post.Id] : 0;
+                        var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
 
                         <FeedArticle 
                             PostId="@post.Id"
@@ -71,8 +72,12 @@
                             ReactionBreakdown="@postReactions"
                             UserReaction="@userReaction"
                             Comments="@comments"
+                            AudienceType="@post.AudienceType"
+                            IsPinned="@isPinned"
                             OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(post.Id, reactionType))"
                             OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
+                            OnPinPost="@HandlePinPost"
+                            OnUnpinPost="@HandleUnpinPost"
                             OnCommentAdded="@HandleCommentAdded"
                             OnReplySubmitted="@HandleReplySubmitted"
                             OnCommentReactionChanged="@HandleCommentReactionChanged"
@@ -106,6 +111,7 @@
         {
             var postReactions = postReactionData.ContainsKey(selectedPost.Id) ? postReactionData[selectedPost.Id] : new Dictionary<LikeType, int>();
             var userReaction = userReactions.ContainsKey(selectedPost.Id) ? userReactions[selectedPost.Id] : null;
+            var isPinned = pinnedPosts.ContainsKey(selectedPost.Id) && pinnedPosts[selectedPost.Id];
 
             <PostDetailModal
                 PostId="@selectedPost.Id"
@@ -120,8 +126,12 @@
                 CurrentUserName="@currentUserName"
                 ReactionBreakdown="@postReactions"
                 UserReaction="@userReaction"
+                AudienceType="@selectedPost.AudienceType"
+                IsPinned="@isPinned"
                 OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(selectedPost.Id, reactionType))"
                 OnRemoveReaction="@(async () => await HandleRemoveReaction(selectedPost.Id))"
+                OnPinPost="@HandlePinPost"
+                OnUnpinPost="@HandleUnpinPost"
                 OnCommentAdded="@HandleCommentAdded"
                 OnCommentReactionChanged="@HandleCommentReactionChanged"
                 OnRemoveCommentReaction="@HandleRemoveCommentReaction"
@@ -138,6 +148,7 @@
     private Dictionary<int, LikeType?> userReactions = new();
     private Dictionary<int, List<CommentDisplayModel>> postComments = new();
     private Dictionary<int, int> postDirectCommentCounts = new();
+    private Dictionary<int, bool> pinnedPosts = new();
     private int currentPage = 1;
     private const int pageSize = 20;
     private bool isLoading = false;
@@ -213,6 +224,9 @@
 
             // Load reaction data for all posts
             await LoadReactionDataForPosts(loadedPosts);
+
+            // Load pinned status for all posts
+            await LoadPinnedStatusForPosts(loadedPosts);
         }
         catch (Exception ex)
         {
@@ -245,6 +259,9 @@
 
                 // Load reaction data for new posts
                 await LoadReactionDataForPosts(loadedPosts);
+
+                // Load pinned status for new posts
+                await LoadPinnedStatusForPosts(loadedPosts);
             }
             else
             {
@@ -312,6 +329,82 @@
             {
                 Console.WriteLine($"Error loading reactions for post {post.Id}: {ex.Message}");
             }
+        }
+    }
+
+    private async Task LoadPinnedStatusForPosts(List<Post> postsToLoad)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var postIds = postsToLoad.Select(p => p.Id).ToList();
+            Console.WriteLine($"Loading pinned status for {postIds.Count} posts for user {currentUserId}");
+
+            var pinnedStatus = await PostService.GetPinnedStatusForPostsAsync(postIds, currentUserId);
+
+            Console.WriteLine($"Received pinned status: {string.Join(", ", pinnedStatus.Select(kvp => $"Post {kvp.Key}: {kvp.Value}"))}");
+
+            foreach (var kvp in pinnedStatus)
+            {
+                pinnedPosts[kvp.Key] = kvp.Value;
+                if (kvp.Value)
+                {
+                    Console.WriteLine($"Post {kvp.Key} is PINNED");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading pinned status: {ex.Message}");
+        }
+    }
+
+    private async Task HandlePinPost(int postId)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await PostService.PinPostAsync(postId, currentUserId);
+
+            if (result.Success)
+            {
+                pinnedPosts[postId] = true;
+                StateHasChanged();
+            }
+            else
+            {
+                Console.WriteLine($"Error pinning post: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error pinning post {postId}: {ex.Message}");
+        }
+    }
+
+    private async Task HandleUnpinPost(int postId)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await PostService.UnpinPostAsync(postId, currentUserId);
+
+            if (result.Success)
+            {
+                pinnedPosts[postId] = false;
+                StateHasChanged();
+            }
+            else
+            {
+                Console.WriteLine($"Error unpinning post: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error unpinning post {postId}: {ex.Message}");
         }
     }
 

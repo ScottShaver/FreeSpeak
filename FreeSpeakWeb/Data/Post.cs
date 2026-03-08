@@ -49,5 +49,10 @@ namespace FreeSpeakWeb.Data
         /// Cached count of comments (updated via trigger or application logic)
         /// </summary>
         public int CommentCount { get; set; } = 0;
+
+        /// <summary>
+        /// Defines who can see this post
+        /// </summary>
+        public AudienceType AudienceType { get; set; } = AudienceType.Public;
     }
 }

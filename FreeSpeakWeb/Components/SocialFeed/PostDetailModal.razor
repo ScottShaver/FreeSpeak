@@ -34,8 +34,12 @@
                 CurrentUserName="@CurrentUserName"
                 ReactionBreakdown="@ReactionBreakdown"
                 UserReaction="@UserReaction"
+                AudienceType="@AudienceType"
+                IsPinned="@IsPinned"
                 OnReactionChanged="@OnReactionChanged"
                 OnRemoveReaction="@OnRemoveReaction"
+                OnPinPost="@OnPinPost"
+                OnUnpinPost="@OnUnpinPost"
                 OnCommentAdded="@HandleCommentAdded"
                 OnReplySubmitted="@HandleReplySubmitted"
                 OnCommentReactionChanged="@HandleCommentReactionChanged"
@@ -148,6 +152,18 @@
 
     [Parameter]
     public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    public AudienceType AudienceType { get; set; } = AudienceType.Public;
+
+    [Parameter]
+    public bool IsPinned { get; set; } = false;
+
+    [Parameter]
+    public EventCallback<int> OnPinPost { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnUnpinPost { get; set; }
 
     private List<CommentDisplayModel> modalComments = new();
     private int directCommentCount = 0;

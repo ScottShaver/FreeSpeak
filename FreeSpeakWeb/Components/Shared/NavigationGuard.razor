@@ -1,0 +1,19 @@
+@using FreeSpeakWeb.Services
+@inject NavigationGuardService NavigationGuardService
+@implements IDisposable
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        // Check if user should be redirected on initial load
+        if (await NavigationGuardService.ShouldRedirectAuthenticatedUserAsync())
+        {
+            NavigationGuardService.RedirectToHome();
+        }
+    }
+
+    public void Dispose()
+    {
+        // The service handles its own disposal
+    }
+}

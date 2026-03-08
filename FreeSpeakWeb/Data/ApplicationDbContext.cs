@@ -11,6 +11,7 @@ namespace FreeSpeakWeb.Data
         public DbSet<Like> Likes { get; set; }
         public DbSet<CommentLike> CommentLikes { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
+        public DbSet<PinnedPost> PinnedPosts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -149,6 +150,30 @@ namespace FreeSpeakWeb.Data
                 // Create indexes
                 entity.HasIndex(pi => pi.PostId);
                 entity.HasIndex(pi => new { pi.PostId, pi.DisplayOrder });
+            });
+
+            // Configure PinnedPost entity
+            modelBuilder.Entity<PinnedPost>(entity =>
+            {
+                entity.HasKey(pp => pp.Id);
+
+                entity.HasOne(pp => pp.User)
+                    .WithMany()
+                    .HasForeignKey(pp => pp.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(pp => pp.Post)
+                    .WithMany()
+                    .HasForeignKey(pp => pp.PostId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Ensure a user can only pin a post once
+                entity.HasIndex(pp => new { pp.UserId, pp.PostId }).IsUnique();
+
+                // Create additional indexes
+                entity.HasIndex(pp => pp.UserId);
+                entity.HasIndex(pp => pp.PostId);
+                entity.HasIndex(pp => pp.PinnedAt);
             });
         }
     }
