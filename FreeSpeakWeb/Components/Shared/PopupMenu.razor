@@ -1,0 +1,51 @@
+@if (IsVisible)
+{
+    <div class="popup-menu-backdrop" @onclick="Close"></div>
+    <div class="popup-menu" style="@PositionStyle">
+        @foreach (var item in MenuItems)
+        {
+            <button type="button" class="popup-menu-item" @onclick="@(() => HandleItemClick(item))">
+                @if (!string.IsNullOrEmpty(item.Icon))
+                {
+                    <span class="@item.Icon"></span>
+                }
+                <span>@item.Text</span>
+            </button>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public List<PopupMenuItem> MenuItems { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    public string PositionStyle { get; set; } = string.Empty;
+
+    private async Task HandleItemClick(PopupMenuItem item)
+    {
+        if (item.OnClick.HasDelegate)
+        {
+            await item.OnClick.InvokeAsync();
+        }
+        await Close();
+    }
+
+    private async Task Close()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+    public class PopupMenuItem
+    {
+        public string Text { get; set; } = string.Empty;
+        public string Icon { get; set; } = string.Empty;
+        public EventCallback OnClick { get; set; }
+    }
+}
