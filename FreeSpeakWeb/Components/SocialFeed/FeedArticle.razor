@@ -23,21 +23,21 @@
         <div class="author-info">
             <div class="author-name-container">
                 <span class="author-name">@AuthorName</span>
-                @if (AudienceType == AudienceType.Public)
+                @if (currentAudienceType == AudienceType.Public)
                 {
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="audience-icon" viewBox="0 0 16 16">
                         <title>Public</title>
                         <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0ZM2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484-.08.08-.162.158-.242.234-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"/>
                     </svg>
                 }
-                else if (AudienceType == AudienceType.FriendsOnly)
+                else if (currentAudienceType == AudienceType.FriendsOnly)
                 {
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="audience-icon" viewBox="0 0 16 16">
                         <title>Friends Only</title>
                         <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
                     </svg>
                 }
-                else if (AudienceType == AudienceType.MeOnly)
+                else if (currentAudienceType == AudienceType.MeOnly)
                 {
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="audience-icon" viewBox="0 0 16 16">
                         <title>Only Me</title>
@@ -47,7 +47,7 @@
             </div>
             <div class="article-timestamp-container">
                 <span class="article-timestamp" title="@FullTimestamp">@FormattedTimestamp</span>
-                @if (IsPinned)
+                @if (currentIsPinned)
                 {
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#0066cc" class="pinned-icon" viewBox="0 0 16 16">
                         <title>Pinned post</title>
@@ -311,9 +311,41 @@
 
 <ImageGalleryModal 
     IsVisible="@showImageGallery"
-    Images="@imageUrls"
+    Images="@thumbnailUrls"
     OnClose="CloseImageGallery"
     OnImageClick="OpenImageViewerFromGallery" />
+
+<!-- Audience Selection Menu -->
+@if (showAudienceMenu)
+{
+    <div class="modal-backdrop" @onclick="CloseAudienceMenu" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+        <div @onclick:stopPropagation="true" style="position: relative;">
+            <PopupMenu IsVisible="@showAudienceMenu" 
+                       MenuItems="@audienceMenuItems" 
+                       OnClose="@CloseAudienceMenu"
+                       PositionStyle="position: relative;" />
+        </div>
+    </div>
+}
+
+<!-- Delete Confirmation Modal -->
+@if (showDeleteConfirmation)
+{
+    <div class="modal-backdrop" @onclick="CancelDeletePost" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+        <div class="confirmation-modal" @onclick:stopPropagation="true" style="background: white; border-radius: 8px; padding: 24px; max-width: 400px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <h3 style="margin: 0 0 16px 0; font-size: 20px; font-weight: 600; color: #333;">Delete Post</h3>
+            <p style="margin: 0 0 24px 0; color: #666; line-height: 1.5;">Are you sure you want to delete this post? This action cannot be undone and will permanently remove the post, all comments, likes, and images.</p>
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" @onclick="CancelDeletePost" style="padding: 8px 16px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; color: #666;">
+                    Cancel
+                </button>
+                <button type="button" @onclick="ConfirmDeletePost" style="padding: 8px 16px; border: none; background: #dc3545; color: white; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500;">
+                    Delete Post
+                </button>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     [Parameter]
@@ -395,6 +427,9 @@
     public AudienceType AudienceType { get; set; } = AudienceType.Public;
 
     [Parameter]
+    public EventCallback<AudienceType> OnAudienceTypeChanged { get; set; }
+
+    [Parameter]
     public bool IsPinned { get; set; } = false;
 
     [Parameter]
@@ -404,7 +439,19 @@
     public EventCallback<int> OnUnpinPost { get; set; }
 
     [Parameter]
+    public EventCallback<int> OnPostDeleted { get; set; }
+
+    [Parameter]
     public List<PostImage>? Images { get; set; }
+
+    // Internal state for audience and pinned status (to properly handle re-renders)
+    // These are the source of truth for rendering
+    private AudienceType currentAudienceType = AudienceType.Public;
+    private bool currentIsPinned = false;
+
+    // Track if we've made local changes that parent hasn't reflected yet
+    private bool hasLocalAudienceChange = false;
+    private bool hasLocalPinnedChange = false;
 
     private bool showReactionPicker = false;
     private bool showLikesModal = false;
@@ -421,10 +468,19 @@
     private List<PopupMenu.PopupMenuItem> menuItems = new();
     private string menuPositionStyle = string.Empty;
 
+    // Audience selection state
+    private bool showAudienceMenu = false;
+    private List<PopupMenu.PopupMenuItem> audienceMenuItems = new();
+    private string audienceMenuPositionStyle = string.Empty;
+
+    // Delete confirmation state
+    private bool showDeleteConfirmation = false;
+
     // Image viewer state
     private bool showImageViewer = false;
     private bool showImageGallery = false;
     private List<string> imageUrls = new();
+    private List<string> thumbnailUrls = new();
     private int selectedImageIndex = 0;
 
     private bool IsOwnPost => !string.IsNullOrEmpty(CurrentUserId) && !string.IsNullOrEmpty(AuthorId) && CurrentUserId == AuthorId;
@@ -441,7 +497,7 @@
 
     private string GetAudienceHeaderClass()
     {
-        return AudienceType switch
+        return currentAudienceType switch
         {
             AudienceType.Public => "header-public",
             AudienceType.FriendsOnly => "header-friends",
@@ -611,8 +667,8 @@
             // Pin/Unpin Post - changes based on current state
             menuItems.Add(new PopupMenu.PopupMenuItem
             {
-                Text = IsPinned ? "Unpin Post" : "Pin Post",
-                Icon = IsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
+                Text = currentIsPinned ? "Unpin Post" : "Pin Post",
+                Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
                 OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
             });
 
@@ -620,7 +676,7 @@
             {
                 Text = "Change Post Audience",
                 Icon = "bi bi-globe",
-                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Change Post Audience"))
+                OnClick = EventCallback.Factory.Create(this, async () => await HandleChangeAudienceClick())
             });
 
             menuItems.Add(new PopupMenu.PopupMenuItem
@@ -634,7 +690,7 @@
             {
                 Text = "Delete Post",
                 Icon = "bi bi-trash",
-                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Delete Post"))
+                OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
             });
         }
         else
@@ -661,6 +717,139 @@
     {
         showMenu = false;
         StateHasChanged();
+    }
+
+    private void BuildAudienceMenuItems()
+    {
+        audienceMenuItems.Clear();
+
+        audienceMenuItems.Add(new PopupMenu.PopupMenuItem
+        {
+            Text = "Public",
+            Icon = "bi bi-globe",
+            OnClick = EventCallback.Factory.Create(this, () => SelectAudienceType(AudienceType.Public))
+        });
+
+        audienceMenuItems.Add(new PopupMenu.PopupMenuItem
+        {
+            Text = "Friends Only",
+            Icon = "bi bi-people",
+            OnClick = EventCallback.Factory.Create(this, () => SelectAudienceType(AudienceType.FriendsOnly))
+        });
+
+        audienceMenuItems.Add(new PopupMenu.PopupMenuItem
+        {
+            Text = "Only Me",
+            Icon = "bi bi-lock",
+            OnClick = EventCallback.Factory.Create(this, () => SelectAudienceType(AudienceType.MeOnly))
+        });
+    }
+
+    private async Task HandleChangeAudienceClick()
+    {
+        // Close the main menu
+        CloseMenu();
+
+        // Build and show the audience menu
+        BuildAudienceMenuItems();
+        showAudienceMenu = true;
+        audienceMenuPositionStyle = "right: 0; top: 40px;";
+        StateHasChanged();
+    }
+
+    private async Task SelectAudienceType(AudienceType newAudienceType)
+    {
+        // Close the audience menu
+        CloseAudienceMenu();
+
+        // Don't update if it's the same audience type
+        if (currentAudienceType == newAudienceType)
+        {
+            return;
+        }
+
+        // Update the post audience
+        var result = await PostService.UpdatePostAudienceAsync(PostId, AuthorId, newAudienceType);
+
+        if (result.Success)
+        {
+            // Update internal state and mark that we have a local change
+            currentAudienceType = newAudienceType;
+            hasLocalAudienceChange = true;
+
+            // Unpin the post since audience changed (pinned posts are removed from DB)
+            if (currentIsPinned)
+            {
+                currentIsPinned = false;
+                hasLocalPinnedChange = true;
+
+                // Notify parent component that the post was unpinned
+                if (OnUnpinPost.HasDelegate)
+                {
+                    await OnUnpinPost.InvokeAsync(PostId);
+                }
+            }
+
+            // Notify parent component of the audience change
+            if (OnAudienceTypeChanged.HasDelegate)
+            {
+                await OnAudienceTypeChanged.InvokeAsync(newAudienceType);
+            }
+
+            // Force an immediate re-render to show the new state
+            StateHasChanged();
+        }
+        else
+        {
+            // Show error message
+            await JS.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to update post audience.");
+        }
+    }
+
+    private void CloseAudienceMenu()
+    {
+        showAudienceMenu = false;
+        StateHasChanged();
+    }
+
+    private void ShowDeleteConfirmation()
+    {
+        // Close the main menu
+        CloseMenu();
+
+        // Show the delete confirmation modal
+        showDeleteConfirmation = true;
+        StateHasChanged();
+    }
+
+    private void CancelDeletePost()
+    {
+        showDeleteConfirmation = false;
+        StateHasChanged();
+    }
+
+    private async Task ConfirmDeletePost()
+    {
+        // Close the confirmation modal
+        showDeleteConfirmation = false;
+        StateHasChanged();
+
+        // Delete the post
+        var result = await PostService.DeletePostAsync(PostId, AuthorId);
+
+        if (result.Success)
+        {
+            // Notify parent component that the post was deleted
+            if (OnPostDeleted.HasDelegate)
+            {
+                await OnPostDeleted.InvokeAsync(PostId);
+            }
+        }
+        else
+        {
+            // Show error message
+            await JS.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to delete post.");
+        }
     }
 
     private async Task HandlePinUnpinClick()
@@ -734,7 +923,8 @@
     {
         if (Images == null || !Images.Any()) return;
 
-        imageUrls = Images.Select(img => img.ImageUrl).ToList();
+        // Request full-size images for the viewer by appending size=full query parameter
+        imageUrls = Images.Select(img => $"{img.ImageUrl}?size=full").ToList();
         selectedImageIndex = imageIndex;
         showImageViewer = true;
         StateHasChanged();
@@ -764,7 +954,10 @@
     {
         if (Images == null || !Images.Any()) return;
 
-        imageUrls = Images.Select(img => img.ImageUrl).ToList();
+        // Gallery shows medium-size thumbnails for better grid performance
+        thumbnailUrls = Images.Select(img => $"{img.ImageUrl}?size=medium").ToList();
+        // Prepare full-size URLs for when user clicks an image
+        imageUrls = Images.Select(img => $"{img.ImageUrl}?size=full").ToList();
         showImageGallery = true;
         StateHasChanged();
     }
@@ -788,6 +981,30 @@
         if (OnCommentAdded.HasDelegate && !string.IsNullOrWhiteSpace(commentText))
         {
             await OnCommentAdded.InvokeAsync((PostId, commentText));
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        // Only sync parameters to internal state if we don't have pending local changes
+        if (!hasLocalAudienceChange)
+        {
+            currentAudienceType = AudienceType;
+        }
+        else if (currentAudienceType == AudienceType)
+        {
+            // Parent has caught up with our local change
+            hasLocalAudienceChange = false;
+        }
+
+        if (!hasLocalPinnedChange)
+        {
+            currentIsPinned = IsPinned;
+        }
+        else if (currentIsPinned == IsPinned)
+        {
+            // Parent has caught up with our local change
+            hasLocalPinnedChange = false;
         }
     }
 

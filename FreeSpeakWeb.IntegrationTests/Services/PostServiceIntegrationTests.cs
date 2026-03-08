@@ -2,7 +2,9 @@ using FluentAssertions;
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.IntegrationTests.Infrastructure;
 using FreeSpeakWeb.Services;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Xunit;
 
@@ -19,13 +21,29 @@ namespace FreeSpeakWeb.IntegrationTests.Services
                 MaxFeedPostDirectCommentCount = 1000
             });
         }
+
+        private class TestWebHostEnvironment : IWebHostEnvironment
+        {
+            public string WebRootPath { get; set; } = Path.GetTempPath();
+            public IFileProvider WebRootFileProvider { get; set; } = null!;
+            public string ApplicationName { get; set; } = "TestApp";
+            public IFileProvider ContentRootFileProvider { get; set; } = null!;
+            public string ContentRootPath { get; set; } = Path.GetTempPath();
+            public string EnvironmentName { get; set; } = "Test";
+        }
+
+        private static IWebHostEnvironment CreateMockWebHostEnvironment()
+        {
+            return new TestWebHostEnvironment();
+        }
+
         [Fact]
         public async Task GetPostByIdAsync_WithNestedComments_ShouldLoadAllData()
         {
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, logger, CreateTestSiteSettings());
+            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment());
 
             var author = CreateTestUser("author1", "author", "Post", "Author");
             var commenter1 = CreateTestUser("commenter1", "commenter1", "First", "Commenter");
@@ -103,7 +121,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, logger, CreateTestSiteSettings());
+            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment());
 
             var user1 = CreateTestUser("user1", "user1", "User", "One");
             var user2 = CreateTestUser("user2", "user2", "User", "Two");
@@ -160,7 +178,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, logger, CreateTestSiteSettings());
+            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment());
 
             var author = CreateTestUser("author1", "author", "Post", "Author");
             var commenter = CreateTestUser("commenter1", "commenter", "Comment", "Author");

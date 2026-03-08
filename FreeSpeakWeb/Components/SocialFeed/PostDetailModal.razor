@@ -41,6 +41,7 @@
                 OnRemoveReaction="@OnRemoveReaction"
                 OnPinPost="@OnPinPost"
                 OnUnpinPost="@OnUnpinPost"
+                OnPostDeleted="@HandlePostDeleted"
                 OnCommentAdded="@HandleCommentAdded"
                 OnReplySubmitted="@HandleReplySubmitted"
                 OnCommentReactionChanged="@HandleCommentReactionChanged"
@@ -165,6 +166,9 @@
 
     [Parameter]
     public EventCallback<int> OnUnpinPost { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnPostDeleted { get; set; }
 
     [Parameter]
     public List<PostImage>? Images { get; set; }
@@ -307,6 +311,21 @@
 
         // Update the local comment's reaction data
         await UpdateLocalCommentReaction(commentId, null);
+    }
+
+    private async Task HandlePostDeleted(int postId)
+    {
+        // Invoke parent callback to handle post deletion
+        if (OnPostDeleted.HasDelegate)
+        {
+            await OnPostDeleted.InvokeAsync(postId);
+        }
+
+        // Close the modal since the post is being deleted
+        if (OnClose.HasDelegate)
+        {
+            await OnClose.InvokeAsync();
+        }
     }
 
     private async Task UpdateLocalCommentReaction(int commentId, LikeType? newReaction)

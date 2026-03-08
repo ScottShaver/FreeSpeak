@@ -10,7 +10,7 @@ namespace FreeSpeakWeb.Services;
 public enum ImageSize
 {
     /// <summary>
-    /// Thumbnail size - 150px max dimension (for feed, lists)
+    /// Thumbnail size - 300px max dimension (for feed, lists)
     /// </summary>
     Thumbnail,
     
@@ -35,7 +35,7 @@ public class ImageResizingService
     private readonly string _cacheBasePath;
 
     // Size configurations
-    private const int ThumbnailMaxSize = 150;
+    private const int ThumbnailMaxSize = 300;  // Increased from 150 to prevent pixelation when displayed
     private const int MediumMaxSize = 400;
     private const int JpegQuality = 85;
 

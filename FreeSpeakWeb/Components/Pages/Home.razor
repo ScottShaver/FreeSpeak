@@ -81,6 +81,7 @@
                             OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
                             OnPinPost="@HandlePinPost"
                             OnUnpinPost="@HandleUnpinPost"
+                            OnPostDeleted="@HandlePostDeleted"
                             OnCommentAdded="@HandleCommentAdded"
                             OnReplySubmitted="@HandleReplySubmitted"
                             OnCommentReactionChanged="@HandleCommentReactionChanged"
@@ -136,6 +137,7 @@
                 OnRemoveReaction="@(async () => await HandleRemoveReaction(selectedPost.Id))"
                 OnPinPost="@HandlePinPost"
                 OnUnpinPost="@HandleUnpinPost"
+                OnPostDeleted="@HandlePostDeleted"
                 OnCommentAdded="@HandleCommentAdded"
                 OnCommentReactionChanged="@HandleCommentReactionChanged"
                 OnRemoveCommentReaction="@HandleRemoveCommentReaction"
@@ -419,6 +421,32 @@
         {
             Console.WriteLine($"Error unpinning post {postId}: {ex.Message}");
         }
+    }
+
+    private void HandlePostDeleted(int postId)
+    {
+        // Remove the post from the list
+        var postToRemove = posts.FirstOrDefault(p => p.Id == postId);
+        if (postToRemove != null)
+        {
+            posts.Remove(postToRemove);
+        }
+
+        // Clean up related data
+        postReactionData.Remove(postId);
+        userReactions.Remove(postId);
+        postComments.Remove(postId);
+        postDirectCommentCounts.Remove(postId);
+        pinnedPosts.Remove(postId);
+
+        // If the deleted post was being viewed in detail, close the modal
+        if (selectedPost?.Id == postId)
+        {
+            selectedPost = null;
+            showPostDetail = false;
+        }
+
+        StateHasChanged();
     }
 
     private async Task LoadCommentsForPost(int postId, int count)
