@@ -16,12 +16,14 @@ namespace FreeSpeakWeb.Services
         {
             _contextFactory = contextFactory;
             _logger = logger;
-            _uploadsBasePath = Path.Combine(environment.WebRootPath, "uploads", "posts");
+            // SECURITY: Store uploads outside wwwroot to prevent direct access
+            _uploadsBasePath = Path.Combine(environment.ContentRootPath, "AppData", "uploads", "posts");
         }
 
         /// <summary>
         /// Upload images for a specific user and return their URLs
         /// Images are organized by user: /uploads/posts/{userId}/images/{filename}
+        /// Returns secure API URLs that require authentication
         /// </summary>
         public async Task<(bool Success, List<string> ImageUrls, string? ErrorMessage)> UploadImagesAsync(
             string userId,
@@ -45,9 +47,10 @@ namespace FreeSpeakWeb.Services
                 {
                     var image = images[i];
 
-                    // Generate unique filename
+                    // Generate unique filename and image ID
                     var fileExtension = GetFileExtension(image.ContentType);
-                    var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+                    var imageId = Guid.NewGuid().ToString();
+                    var uniqueFileName = $"{imageId}{fileExtension}";
                     var filePath = Path.Combine(userImagesPath, uniqueFileName);
 
                     // Convert base64 to bytes and save
@@ -60,8 +63,8 @@ namespace FreeSpeakWeb.Services
                     var imageBytes = Convert.FromBase64String(base64Data);
                     await File.WriteAllBytesAsync(filePath, imageBytes);
 
-                    // Return URL relative to wwwroot
-                    var imageUrl = $"/uploads/posts/{userId}/images/{uniqueFileName}";
+                    // Return secure API URL that requires authentication
+                    var imageUrl = $"/api/secure-files/post-image/{userId}/{imageId}/{uniqueFileName}";
                     imageUrls.Add(imageUrl);
 
                     // Report progress
@@ -107,6 +110,7 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Upload videos for a specific user and return their URLs
         /// Videos are organized by user: /uploads/posts/{userId}/videos/{filename}
+        /// Returns secure API URLs that require authentication
         /// </summary>
         public async Task<(bool Success, List<string> VideoUrls, string? ErrorMessage)> UploadVideosAsync(
             string userId,
@@ -130,9 +134,10 @@ namespace FreeSpeakWeb.Services
                 {
                     var video = videos[i];
 
-                    // Generate unique filename
+                    // Generate unique filename and video ID
                     var fileExtension = GetVideoFileExtension(video.ContentType);
-                    var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+                    var videoId = Guid.NewGuid().ToString();
+                    var uniqueFileName = $"{videoId}{fileExtension}";
                     var filePath = Path.Combine(userVideosPath, uniqueFileName);
 
                     // Convert base64 to bytes and save
@@ -145,8 +150,8 @@ namespace FreeSpeakWeb.Services
                     var videoBytes = Convert.FromBase64String(base64Data);
                     await File.WriteAllBytesAsync(filePath, videoBytes);
 
-                    // Return URL relative to wwwroot
-                    var videoUrl = $"/uploads/posts/{userId}/videos/{uniqueFileName}";
+                    // Return secure API URL that requires authentication
+                    var videoUrl = $"/api/secure-files/post-video/{userId}/{videoId}/{uniqueFileName}";
                     videoUrls.Add(videoUrl);
 
                     // Report progress
