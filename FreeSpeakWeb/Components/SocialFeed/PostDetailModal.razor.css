@@ -17,7 +17,7 @@
     background: var(--surface-color, #ffffff);
     border-radius: 8px;
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
     max-height: calc(100vh - 40px);
     display: flex;
     flex-direction: column;

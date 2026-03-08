@@ -14,7 +14,7 @@
     align-items: center;
     padding: 12px 16px;
     gap: 8px;
-    background: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    background: linear-gradient(180deg, #c5dff5 0%, #a8c8e6 70%);
 }
 
 .author-avatar {
@@ -44,13 +44,13 @@
 .author-name {
     font-size: 15px;
     font-weight: 600;
-    color: #ffffff;
+    color: #000000;
     line-height: 1.3333;
 }
 
 .article-timestamp {
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(0, 0, 0, 0.7);
     line-height: 1.3333;
     cursor: help;
     text-decoration: underline dotted;
@@ -59,7 +59,7 @@
 }
 
 .article-timestamp:hover {
-    text-decoration-color: rgba(255, 255, 255, 0.85);
+    text-decoration-color: rgba(0, 0, 0, 0.7);
 }
 
 .menu-button {
@@ -67,7 +67,7 @@
     height: 36px;
     border: none;
     background: transparent;
-    color: #65676b;
+    color: #000000;
     cursor: pointer;
     border-radius: 50%;
     display: flex;
@@ -77,12 +77,12 @@
 }
 
 .menu-button:hover {
-    background-color: #f0f2f5;
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 /* 2. Main Content Area */
 .article-content {
-    padding: 0 16px 12px;
+    padding: 12px 16px 12px;
     color: #050505;
     font-size: 15px;
     line-height: 1.3333;
@@ -186,7 +186,15 @@
     flex: 1;
 }
 
+.comment-button-container {
+    flex: 1;
+}
+
 .comment-button-placeholder {
+    flex: 1;
+}
+
+.share-button-container {
     flex: 1;
 }
 
