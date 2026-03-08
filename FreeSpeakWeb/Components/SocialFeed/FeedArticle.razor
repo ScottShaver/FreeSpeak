@@ -1,4 +1,5 @@
 @using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Components.Shared
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
 @inject IJSRuntime JS
@@ -23,11 +24,17 @@
             <div class="author-name">@AuthorName</div>
             <div class="article-timestamp" title="@FullTimestamp">@FormattedTimestamp</div>
         </div>
-        <button type="button" class="menu-button" @onclick="ShowMenu">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-            </svg>
-        </button>
+        <div style="position: relative;">
+            <button type="button" class="menu-button" @onclick="ToggleMenu" @ref="menuButtonElement">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                </svg>
+            </button>
+            <PopupMenu IsVisible="@showMenu" 
+                       MenuItems="@menuItems" 
+                       OnClose="@CloseMenu"
+                       PositionStyle="@menuPositionStyle" />
+        </div>
     </div>
 
     <!-- 2. Main Content Area -->
@@ -274,10 +281,14 @@
     private List<(ApplicationUser User, LikeType Type, DateTime CreatedAt)> likes = new();
     private System.Threading.Timer? hideTimer;
     private ElementReference contentElement;
+    private ElementReference menuButtonElement;
     private IJSObjectReference? module;
     private DotNetObjectReference<FeedArticle>? dotNetHelper;
     private bool isTruncated = false;
     private bool shouldShowExpandButton = false;
+    private bool showMenu = false;
+    private List<PopupMenu.PopupMenuItem> menuItems = new();
+    private string menuPositionStyle = string.Empty;
 
     private bool IsOwnPost => !string.IsNullOrEmpty(CurrentUserId) && !string.IsNullOrEmpty(AuthorId) && CurrentUserId == AuthorId;
 
@@ -417,6 +428,89 @@
     {
         // Default like action
         await OnReactionChanged.InvokeAsync(LikeType.Like);
+    }
+
+    private void ToggleMenu()
+    {
+        if (showMenu)
+        {
+            CloseMenu();
+        }
+        else
+        {
+            BuildMenuItems();
+            showMenu = true;
+            menuPositionStyle = "right: 0; top: 40px;";
+            StateHasChanged();
+        }
+    }
+
+    private void BuildMenuItems()
+    {
+        menuItems.Clear();
+
+        if (IsOwnPost)
+        {
+            // Menu items for user's own posts
+            menuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = "Edit Post",
+                Icon = "bi bi-pencil",
+                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Edit Post"))
+            });
+
+            menuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = "Pin Post",
+                Icon = "bi bi-pin-angle",
+                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Pin Post"))
+            });
+
+            menuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = "Change Post Audience",
+                Icon = "bi bi-globe",
+                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Change Post Audience"))
+            });
+
+            menuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = "Turn Off Notifications",
+                Icon = "bi bi-bell-slash",
+                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Turn Off Notifications"))
+            });
+
+            menuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = "Delete Post",
+                Icon = "bi bi-trash",
+                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Delete Post"))
+            });
+        }
+        else
+        {
+            // Menu items for other users' posts
+            menuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = "Report Post",
+                Icon = "bi bi-flag",
+                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Report Post"))
+            });
+        }
+
+        // Copy Link appears for all posts
+        menuItems.Add(new PopupMenu.PopupMenuItem
+        {
+            Text = "Copy Link",
+            Icon = "bi bi-link-45deg",
+            OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Copy Link"))
+        });
+    }
+
+    private void CloseMenu()
+    {
+        showMenu = false;
+        StateHasChanged();
     }
 
     private async Task ShowMenu()
