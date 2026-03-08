@@ -1,0 +1,231 @@
+@using Microsoft.AspNetCore.Components.Forms
+@inject IJSRuntime JS
+
+@if (IsVisible)
+{
+    <div class="image-upload-backdrop" @onclick="Close"></div>
+    <div class="image-upload-modal" @onclick:stopPropagation="true">
+        <div class="modal-header">
+            <h3>Add Images</h3>
+            <button type="button" class="close-button" @onclick="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="upload-area">
+                <label for="imageFileInput" class="upload-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                        <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                    </svg>
+                    <p>Click to select images or drag and drop</p>
+                    <p class="upload-hint">Up to @MaxImages images • PNG, JPG, GIF • Max @(MaxFileSizeMB)MB each</p>
+                    <InputFile OnChange="HandleFileSelected" multiple accept="image/*" class="file-input" id="imageFileInput" />
+                </label>
+            </div>
+
+            @if (selectedImages.Any())
+            {
+                <div class="images-list-container">
+                    <div class="images-list-header">
+                        <span>Selected Images (@selectedImages.Count/@MaxImages)</span>
+                        @if (selectedImages.Count > 0)
+                        {
+                            <button type="button" class="clear-all-button" @onclick="ClearAll">Clear All</button>
+                        }
+                    </div>
+                    <div class="images-list">
+                        @foreach (var image in selectedImages)
+                        {
+                            <div class="image-item">
+                                <img src="@image.DataUrl" alt="Selected image" />
+                                <button type="button" class="remove-image-button" @onclick="() => RemoveImage(image)" title="Remove image">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                                    </svg>
+                                </button>
+                                <div class="image-size">@FormatFileSize(image.Size)</div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="error-message">@errorMessage</div>
+            }
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="cancel-button" @onclick="Close">Cancel</button>
+            <button type="button" 
+                    class="submit-button @(selectedImages.Any() ? "active" : "disabled")"
+                    disabled="@(!selectedImages.Any())"
+                    @onclick="SubmitImages">
+                Add @selectedImages.Count @(selectedImages.Count == 1 ? "Image" : "Images")
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    public EventCallback<List<SelectedImage>> OnImagesSelected { get; set; }
+
+    [Parameter]
+    public List<SelectedImage>? ExistingImages { get; set; }
+
+    [Parameter]
+    public int MaxImages { get; set; } = 10;
+
+    [Parameter]
+    public int MaxFileSizeMB { get; set; } = 10;
+
+    private List<SelectedImage> selectedImages = new();
+    private string errorMessage = string.Empty;
+
+    protected override void OnParametersSet()
+    {
+        // Load existing images when modal opens
+        if (IsVisible && ExistingImages != null && ExistingImages.Any())
+        {
+            selectedImages = new List<SelectedImage>(ExistingImages);
+        }
+        else if (!IsVisible)
+        {
+            // Clear when modal closes
+            selectedImages.Clear();
+            errorMessage = string.Empty;
+        }
+    }
+
+    public class SelectedImage
+    {
+        public string FileName { get; set; } = string.Empty;
+        public string DataUrl { get; set; } = string.Empty;
+        public long Size { get; set; }
+        public string ContentType { get; set; } = string.Empty;
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        errorMessage = string.Empty;
+
+        var remainingSlots = MaxImages - selectedImages.Count;
+        if (remainingSlots <= 0)
+        {
+            errorMessage = $"Maximum of {MaxImages} images allowed.";
+            return;
+        }
+
+        var filesToProcess = e.GetMultipleFiles(remainingSlots);
+        var maxFileSizeBytes = MaxFileSizeMB * 1024 * 1024;
+
+        foreach (var file in filesToProcess)
+        {
+            // Validate file type
+            if (!file.ContentType.StartsWith("image/"))
+            {
+                errorMessage = $"File {file.Name} is not an image.";
+                continue;
+            }
+
+            // Validate file size
+            if (file.Size > maxFileSizeBytes)
+            {
+                errorMessage = $"File {file.Name} exceeds {MaxFileSizeMB}MB limit.";
+                continue;
+            }
+
+            try
+            {
+                // Read the file as a data URL for preview
+                var buffer = new byte[file.Size];
+                using var stream = file.OpenReadStream(maxFileSizeBytes);
+                var bytesRead = 0;
+                var totalBytesRead = 0;
+
+                while (totalBytesRead < file.Size)
+                {
+                    bytesRead = await stream.ReadAsync(buffer.AsMemory(totalBytesRead, (int)(file.Size - totalBytesRead)));
+                    if (bytesRead == 0) break;
+                    totalBytesRead += bytesRead;
+                }
+
+                var base64 = Convert.ToBase64String(buffer);
+                var dataUrl = $"data:{file.ContentType};base64,{base64}";
+
+                selectedImages.Add(new SelectedImage
+                {
+                    FileName = file.Name,
+                    DataUrl = dataUrl,
+                    Size = file.Size,
+                    ContentType = file.ContentType
+                });
+
+                // Force UI update after each image is loaded
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                errorMessage = $"Error loading {file.Name}: {ex.Message}";
+            }
+        }
+
+        StateHasChanged();
+    }
+
+    private void RemoveImage(SelectedImage image)
+    {
+        selectedImages.Remove(image);
+        errorMessage = string.Empty;
+        StateHasChanged();
+    }
+
+    private void ClearAll()
+    {
+        selectedImages.Clear();
+        errorMessage = string.Empty;
+        StateHasChanged();
+    }
+
+    private async Task SubmitImages()
+    {
+        if (selectedImages.Any() && OnImagesSelected.HasDelegate)
+        {
+            await OnImagesSelected.InvokeAsync(selectedImages.ToList());
+            selectedImages.Clear();
+            errorMessage = string.Empty;
+        }
+    }
+
+    private async Task Close()
+    {
+        selectedImages.Clear();
+        errorMessage = string.Empty;
+        await OnClose.InvokeAsync();
+    }
+
+    private string FormatFileSize(long bytes)
+    {
+        string[] sizes = { "B", "KB", "MB", "GB" };
+        double len = bytes;
+        int order = 0;
+        while (len >= 1024 && order < sizes.Length - 1)
+        {
+            order++;
+            len = len / 1024;
+        }
+        return $"{len:0.##} {sizes[order]}";
+    }
+}

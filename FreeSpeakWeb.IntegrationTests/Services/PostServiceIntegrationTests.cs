@@ -174,7 +174,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             var imageUrls = new List<string> { "image1.jpg", "image2.jpg", "image3.jpg" };
 
             // Act
-            var (success, errorMessage, post) = await service.CreatePostAsync("author1", "Post with images", imageUrls);
+            var (success, errorMessage, post) = await service.CreatePostAsync("author1", "Post with images", AudienceType.Public, imageUrls);
 
             // Assert - Post creation
             success.Should().BeTrue();

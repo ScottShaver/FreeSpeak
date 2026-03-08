@@ -9,6 +9,7 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Components.Shared
 @using System.Security.Claims
 @using Microsoft.JSInterop
 
@@ -18,6 +19,7 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject PostService PostService
+@inject ImageUploadService ImageUploadService
 @inject IJSRuntime JSRuntime
 @inject UserManager<ApplicationUser> UserManager
 @inject NavigationStateService NavigationState
@@ -74,6 +76,7 @@
                             Comments="@comments"
                             AudienceType="@post.AudienceType"
                             IsPinned="@isPinned"
+                            Images="@post.Images?.ToList()"
                             OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(post.Id, reactionType))"
                             OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
                             OnPinPost="@HandlePinPost"
@@ -128,6 +131,7 @@
                 UserReaction="@userReaction"
                 AudienceType="@selectedPost.AudienceType"
                 IsPinned="@isPinned"
+                Images="@selectedPost.Images?.ToList()"
                 OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(selectedPost.Id, reactionType))"
                 OnRemoveReaction="@(async () => await HandleRemoveReaction(selectedPost.Id))"
                 OnPinPost="@HandlePinPost"
@@ -141,6 +145,14 @@
                 </ArticleContent>
             </PostDetailModal>
         }
+
+        <UploadProgressModal 
+            IsVisible="@showUploadProgress"
+            Title="@uploadProgressTitle"
+            Message="@uploadProgressMessage"
+            Progress="@uploadProgress"
+            CurrentStep="@uploadCurrentStep"
+            TotalSteps="@uploadTotalSteps" />
 
 @code {
     private List<Post> posts = new();
@@ -161,6 +173,14 @@
     private DotNetObjectReference<Home>? dotNetHelper;
     private bool showPostDetail = false;
     private Post? selectedPost = null;
+
+    // Upload progress tracking
+    private bool showUploadProgress = false;
+    private string uploadProgressTitle = "Adding Your Post";
+    private string uploadProgressMessage = "Please wait...";
+    private int uploadProgress = 0;
+    private int uploadCurrentStep = 0;
+    private int uploadTotalSteps = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -339,19 +359,12 @@
         try
         {
             var postIds = postsToLoad.Select(p => p.Id).ToList();
-            Console.WriteLine($"Loading pinned status for {postIds.Count} posts for user {currentUserId}");
 
             var pinnedStatus = await PostService.GetPinnedStatusForPostsAsync(postIds, currentUserId);
-
-            Console.WriteLine($"Received pinned status: {string.Join(", ", pinnedStatus.Select(kvp => $"Post {kvp.Key}: {kvp.Value}"))}");
 
             foreach (var kvp in pinnedStatus)
             {
                 pinnedPosts[kvp.Key] = kvp.Value;
-                if (kvp.Value)
-                {
-                    Console.WriteLine($"Post {kvp.Key} is PINNED");
-                }
             }
         }
         catch (Exception ex)
@@ -704,17 +717,80 @@
         return null;
     }
 
-    private async Task HandlePostCreated(string content)
+    private async Task HandlePostCreated((string Content, AudienceType AudienceType, List<ImageUploadModal.SelectedImage> Images) postData)
     {
         if (currentUserId == null) return;
 
         try
         {
-            // Create the post in the database
-            var result = await PostService.CreatePostAsync(currentUserId, content);
+            var imageUrls = new List<string>();
+
+            // Calculate total steps
+            var hasImages = postData.Images != null && postData.Images.Any();
+            uploadTotalSteps = hasImages ? 2 : 1; // 1 for upload, 1 for creating post
+            uploadCurrentStep = 0;
+
+            // Show progress modal
+            showUploadProgress = true;
+            uploadProgress = 0;
+            StateHasChanged();
+
+            // Step 1: Upload images if any
+            if (hasImages)
+            {
+                uploadCurrentStep = 1;
+                uploadProgressMessage = $"Uploading {postData.Images.Count} {(postData.Images.Count == 1 ? "image" : "images")}...";
+                StateHasChanged();
+
+                // Convert selected images to upload format
+                var imagesToUpload = postData.Images.Select(img => (
+                    FileName: img.FileName,
+                    Base64Data: img.DataUrl,
+                    ContentType: img.ContentType
+                )).ToList();
+
+                // Create progress reporter
+                var progress = new Progress<int>(percent =>
+                {
+                    uploadProgress = percent / 2; // Images are first 50%
+                    InvokeAsync(StateHasChanged);
+                });
+
+                var uploadResult = await ImageUploadService.UploadImagesAsync(currentUserId, imagesToUpload, progress);
+
+                if (!uploadResult.Success)
+                {
+                    Console.WriteLine($"Failed to upload images: {uploadResult.ErrorMessage}");
+                    showUploadProgress = false;
+                    StateHasChanged();
+                    return;
+                }
+
+                imageUrls = uploadResult.ImageUrls;
+                uploadProgress = 50;
+                StateHasChanged();
+            }
+
+            // Step 2: Create the post
+            uploadCurrentStep = hasImages ? 2 : 1;
+            uploadProgressMessage = "Creating your post...";
+            uploadProgress = hasImages ? 50 : 0;
+            StateHasChanged();
+
+            var result = await PostService.CreatePostAsync(currentUserId, postData.Content, postData.AudienceType, imageUrls);
 
             if (result.Success && result.Post != null)
             {
+                uploadProgress = 100;
+                StateHasChanged();
+
+                // Small delay to show 100% completion
+                await Task.Delay(500);
+
+                // Hide progress modal
+                showUploadProgress = false;
+                StateHasChanged();
+
                 // Reload the feed to include the new post
                 await LoadInitialPosts();
 
@@ -736,11 +812,15 @@
             else
             {
                 Console.WriteLine($"Failed to create post: {result.ErrorMessage}");
+                showUploadProgress = false;
+                StateHasChanged();
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error creating post: {ex.Message}");
+            showUploadProgress = false;
+            StateHasChanged();
         }
     }
 

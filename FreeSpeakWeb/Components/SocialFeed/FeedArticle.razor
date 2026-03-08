@@ -9,7 +9,7 @@
 
 <div class="feed-article">
     <!-- 1. Header Area -->
-    <div class="article-header">
+    <div class="article-header @GetAudienceHeaderClass()">
         @if (!string.IsNullOrEmpty(AuthorImageUrl))
         {
             <img src="@AuthorImageUrl" alt="@AuthorName" class="author-avatar" />
@@ -73,6 +73,78 @@
     <div class="article-content @(isTruncated && !IsModalView ? "truncated" : "")" @ref="contentElement">
         @ArticleContent
     </div>
+
+    <!-- 2.5 Post Images -->
+    @if (Images != null && Images.Any())
+    {
+        <div class="article-images">
+            @if (Images.Count == 1)
+            {
+                <div class="image-single" @onclick="() => OpenImageViewer(0)">
+                    <img src="@Images[0].ImageUrl" alt="Post image" />
+                </div>
+            }
+            else if (Images.Count == 2)
+            {
+                <div class="image-grid-2">
+                    @for (int i = 0; i < Images.Count; i++)
+                    {
+                        var index = i;
+                        <div class="image-item" @onclick="() => OpenImageViewer(index)">
+                            <img src="@Images[index].ImageUrl" alt="Post image" />
+                        </div>
+                    }
+                </div>
+            }
+            else if (Images.Count == 3)
+            {
+                <div class="image-grid-3">
+                    <div class="image-item image-large" @onclick="() => OpenImageViewer(0)">
+                        <img src="@Images[0].ImageUrl" alt="Post image" />
+                    </div>
+                    <div class="image-column">
+                        <div class="image-item" @onclick="() => OpenImageViewer(1)">
+                            <img src="@Images[1].ImageUrl" alt="Post image" />
+                        </div>
+                        <div class="image-item" @onclick="() => OpenImageViewer(2)">
+                            <img src="@Images[2].ImageUrl" alt="Post image" />
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (Images.Count == 4)
+            {
+                <div class="image-grid-4">
+                    @for (int i = 0; i < Images.Count; i++)
+                    {
+                        var index = i;
+                        <div class="image-item" @onclick="() => OpenImageViewer(index)">
+                            <img src="@Images[index].ImageUrl" alt="Post image" />
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="image-grid-many">
+                    @for (int i = 0; i < Math.Min(4, Images.Count); i++)
+                    {
+                        var index = i;
+                        <div class="image-item" @onclick="() => HandleImageClick(index)">
+                            <img src="@Images[index].ImageUrl" alt="Post image" />
+                            @if (Images.Count > 4 && index == 3)
+                            {
+                                <div class="image-overlay">
+                                    <span>+@(Images.Count - 4)</span>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+
     @if (shouldShowExpandButton && !IsModalView)
     {
         <div class="expand-post-section">
@@ -231,6 +303,18 @@
     <LikesModal Likes="@likes" isLoading="@isLoadingLikes" OnClose="CloseLikesModal" />
 }
 
+<ImageViewerModal 
+    IsVisible="@showImageViewer"
+    ImageUrls="@imageUrls"
+    InitialIndex="@selectedImageIndex"
+    OnClose="CloseImageViewer" />
+
+<ImageGalleryModal 
+    IsVisible="@showImageGallery"
+    Images="@imageUrls"
+    OnClose="CloseImageGallery"
+    OnImageClick="OpenImageViewerFromGallery" />
+
 @code {
     [Parameter]
     public int PostId { get; set; }
@@ -319,6 +403,9 @@
     [Parameter]
     public EventCallback<int> OnUnpinPost { get; set; }
 
+    [Parameter]
+    public List<PostImage>? Images { get; set; }
+
     private bool showReactionPicker = false;
     private bool showLikesModal = false;
     private bool isLoadingLikes = false;
@@ -334,15 +421,14 @@
     private List<PopupMenu.PopupMenuItem> menuItems = new();
     private string menuPositionStyle = string.Empty;
 
+    // Image viewer state
+    private bool showImageViewer = false;
+    private bool showImageGallery = false;
+    private List<string> imageUrls = new();
+    private int selectedImageIndex = 0;
+
     private bool IsOwnPost => !string.IsNullOrEmpty(CurrentUserId) && !string.IsNullOrEmpty(AuthorId) && CurrentUserId == AuthorId;
 
-    protected override void OnParametersSet()
-    {
-        if (IsPinned)
-        {
-            Console.WriteLine($"FeedArticle for Post {PostId}: IsPinned = {IsPinned}");
-        }
-    }
 
     // Check if we've reached the maximum number of direct comments
     // Note: CommentCount in the Post entity includes ALL comments (direct + replies)
@@ -352,6 +438,17 @@
     private string FormattedTimestamp => FormatTimestamp(CreatedAt);
 
     private string FullTimestamp => CreatedAt.ToLocalTime().ToString("MMMM d, yyyy 'at' h:mm:ss tt");
+
+    private string GetAudienceHeaderClass()
+    {
+        return AudienceType switch
+        {
+            AudienceType.Public => "header-public",
+            AudienceType.FriendsOnly => "header-friends",
+            AudienceType.MeOnly => "header-private",
+            _ => "header-friends"
+        };
+    }
 
     private string FormatTimestamp(DateTime timestamp)
     {
@@ -631,6 +728,59 @@
     {
         showLikesModal = false;
         likes.Clear();
+    }
+
+    private void OpenImageViewer(int imageIndex)
+    {
+        if (Images == null || !Images.Any()) return;
+
+        imageUrls = Images.Select(img => img.ImageUrl).ToList();
+        selectedImageIndex = imageIndex;
+        showImageViewer = true;
+        StateHasChanged();
+    }
+
+    private void HandleImageClick(int imageIndex)
+    {
+        // If clicking the 4th image and there are more than 4 images, show gallery
+        // Otherwise, show the image viewer
+        if (imageIndex == 3 && Images != null && Images.Count > 4)
+        {
+            OpenImageGallery();
+        }
+        else
+        {
+            OpenImageViewer(imageIndex);
+        }
+    }
+
+    private void CloseImageViewer()
+    {
+        showImageViewer = false;
+        StateHasChanged();
+    }
+
+    private void OpenImageGallery()
+    {
+        if (Images == null || !Images.Any()) return;
+
+        imageUrls = Images.Select(img => img.ImageUrl).ToList();
+        showImageGallery = true;
+        StateHasChanged();
+    }
+
+    private void CloseImageGallery()
+    {
+        showImageGallery = false;
+        StateHasChanged();
+    }
+
+    private void OpenImageViewerFromGallery(int imageIndex)
+    {
+        showImageGallery = false;
+        selectedImageIndex = imageIndex;
+        showImageViewer = true;
+        StateHasChanged();
     }
 
     private async Task OnCommentSubmitted(string commentText)

@@ -1,0 +1,79 @@
+.upload-progress-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-progress-modal {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 450px;
+    padding: 0;
+    overflow: hidden;
+}
+
+.progress-header {
+    padding: 20px;
+    border-bottom: 1px solid #e4e6eb;
+    background-color: #f7f8fa;
+}
+
+.progress-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #050505;
+}
+
+.progress-body {
+    padding: 24px;
+}
+
+.progress-message {
+    margin: 0 0 20px 0;
+    color: #65676b;
+    font-size: 15px;
+    text-align: center;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 32px;
+    background-color: #e4e6eb;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #1877f2 0%, #0c5ecf 100%);
+    transition: width 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+}
+
+.progress-text {
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.progress-step {
+    margin: 12px 0 0 0;
+    color: #65676b;
+    font-size: 13px;
+    text-align: center;
+}

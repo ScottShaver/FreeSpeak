@@ -34,6 +34,10 @@
                         <span class="bi bi-people-fill-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
 
+                    <a href="my-uploads" title="My Uploads" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "my-uploads" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "my-uploads" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                        <span class="bi bi-images-nav-menu" style="margin: 0; top: 0;"></span>
+                    </a>
+
                     <a href="/Account/Manage" title="@context.User.Identity?.Name" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         @if (!string.IsNullOrEmpty(currentUser?.ProfilePictureUrl))
                         {
@@ -87,6 +91,12 @@
                 <div class="nav-item px-3">
                     <a class="nav-link @(GetActiveMenuItemFromUrl() == "friends" ? "active" : "")" href="friends">
                         <span class="bi bi-people-fill-nav-menu" aria-hidden="true"></span> Friends
+                    </a>
+                </div>
+
+                <div class="nav-item px-3">
+                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "my-uploads" ? "active" : "")" href="my-uploads">
+                        <span class="bi bi-images-nav-menu" aria-hidden="true"></span> My Uploads
                     </a>
                 </div>
 

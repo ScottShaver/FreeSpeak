@@ -1,0 +1,45 @@
+@if (IsVisible)
+{
+    <div class="upload-progress-backdrop">
+        <div class="upload-progress-modal">
+            <div class="progress-header">
+                <h3>@Title</h3>
+            </div>
+            
+            <div class="progress-body">
+                <p class="progress-message">@Message</p>
+                
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: @(Progress)%">
+                        <span class="progress-text">@Progress%</span>
+                    </div>
+                </div>
+                
+                @if (CurrentStep > 0 && TotalSteps > 0)
+                {
+                    <p class="progress-step">Step @CurrentStep of @TotalSteps</p>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public string Title { get; set; } = "Uploading...";
+
+    [Parameter]
+    public string Message { get; set; } = "Please wait while we process your request";
+
+    [Parameter]
+    public int Progress { get; set; } = 0;
+
+    [Parameter]
+    public int CurrentStep { get; set; } = 0;
+
+    [Parameter]
+    public int TotalSteps { get; set; } = 0;
+}

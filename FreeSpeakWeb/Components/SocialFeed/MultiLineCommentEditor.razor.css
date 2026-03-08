@@ -2,9 +2,10 @@
     position: relative;
     display: flex;
     align-items: flex-end;
+    gap: 8px;
     background-color: #f0f2f5;
     border-radius: 18px;
-    padding: 8px 40px 8px 12px;
+    padding: 8px 12px;
     min-height: 40px;
 }
 
@@ -21,6 +22,7 @@
     color: #050505;
     min-height: 24px;
     max-height: 200px;
+    padding: 0 8px;
 }
 
 .comment-textarea::placeholder {
@@ -28,9 +30,6 @@
 }
 
 .submit-arrow {
-    position: absolute;
-    right: 8px;
-    bottom: 8px;
     width: 32px;
     height: 32px;
     border: none;
@@ -41,6 +40,7 @@
     justify-content: center;
     border-radius: 50%;
     transition: background-color 0.2s;
+    flex-shrink: 0;
 }
 
 .submit-arrow.active {
@@ -54,4 +54,28 @@
 .submit-arrow.disabled {
     color: #bcc0c4;
     cursor: not-allowed;
+}
+
+.emoji-button-comment {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    color: #65676b;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.emoji-button-comment:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.emoji-button-comment:active {
+    background-color: rgba(0, 0, 0, 0.1);
 }
