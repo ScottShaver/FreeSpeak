@@ -9,12 +9,18 @@ namespace FreeSpeakWeb.Services
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<PostService> _logger;
         private readonly SiteSettings _siteSettings;
+        private readonly IWebHostEnvironment _environment;
 
-        public PostService(IDbContextFactory<ApplicationDbContext> contextFactory, ILogger<PostService> logger, IOptions<SiteSettings> siteSettings)
+        public PostService(
+            IDbContextFactory<ApplicationDbContext> contextFactory, 
+            ILogger<PostService> logger, 
+            IOptions<SiteSettings> siteSettings,
+            IWebHostEnvironment environment)
         {
             _contextFactory = contextFactory;
             _logger = logger;
             _siteSettings = siteSettings.Value;
+            _environment = environment;
         }
 
         #region Post Operations
@@ -114,9 +120,9 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Delete a post
+        /// Update the audience type of an existing post
         /// </summary>
-        public async Task<(bool Success, string? ErrorMessage)> DeletePostAsync(int postId, string userId)
+        public async Task<(bool Success, string? ErrorMessage)> UpdatePostAudienceAsync(int postId, string userId, AudienceType newAudienceType)
         {
             try
             {
@@ -131,13 +137,182 @@ namespace FreeSpeakWeb.Services
 
                 if (post.AuthorId != userId)
                 {
+                    return (false, "You are not authorized to modify this post.");
+                }
+
+                post.AudienceType = newAudienceType;
+                post.UpdatedAt = DateTime.UtcNow;
+
+                // Remove any pinned post records since the audience has changed
+                var pinnedPosts = await context.PinnedPosts
+                    .Where(pp => pp.PostId == postId)
+                    .ToListAsync();
+
+                if (pinnedPosts.Any())
+                {
+                    context.PinnedPosts.RemoveRange(pinnedPosts);
+                    _logger.LogInformation("Removed {Count} pinned post record(s) for post {PostId} due to audience change", pinnedPosts.Count, postId);
+                }
+
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("Post {PostId} audience updated to {AudienceType} by user {UserId}", postId, newAudienceType, userId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating post {PostId} audience for user {UserId}", postId, userId);
+                return (false, "An error occurred while updating the post audience.");
+            }
+        }
+
+        /// <summary>
+        /// Delete a post and all related data (comments, likes, images, pinned posts, etc.)
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> DeletePostAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Load the post with all related data
+                var post = await context.Posts
+                    .Include(p => p.Comments)
+                        .ThenInclude(c => c.Replies)
+                    .Include(p => p.Likes)
+                    .Include(p => p.Images)
+                    .FirstOrDefaultAsync(p => p.Id == postId);
+
+                if (post == null)
+                {
+                    return (false, "Post not found.");
+                }
+
+                if (post.AuthorId != userId)
+                {
                     return (false, "You are not authorized to delete this post.");
                 }
 
+                // Delete all pinned post records
+                var pinnedPosts = await context.PinnedPosts
+                    .Where(pp => pp.PostId == postId)
+                    .ToListAsync();
+
+                if (pinnedPosts.Any())
+                {
+                    context.PinnedPosts.RemoveRange(pinnedPosts);
+                    _logger.LogInformation("Deleted {Count} pinned post record(s) for post {PostId}", pinnedPosts.Count, postId);
+                }
+
+                // Delete all comment likes first (cascade from comments)
+                var commentIds = post.Comments.Select(c => c.Id).ToList();
+                if (commentIds.Any())
+                {
+                    var commentLikes = await context.CommentLikes
+                        .Where(cl => commentIds.Contains(cl.CommentId))
+                        .ToListAsync();
+
+                    if (commentLikes.Any())
+                    {
+                        context.CommentLikes.RemoveRange(commentLikes);
+                        _logger.LogInformation("Deleted {Count} comment like(s) for post {PostId}", commentLikes.Count, postId);
+                    }
+                }
+
+                // Delete all comments (including replies)
+                if (post.Comments.Any())
+                {
+                    var allComments = post.Comments.ToList();
+                    foreach (var comment in allComments)
+                    {
+                        if (comment.Replies != null && comment.Replies.Any())
+                        {
+                            context.Comments.RemoveRange(comment.Replies);
+                        }
+                    }
+                    context.Comments.RemoveRange(allComments);
+                    _logger.LogInformation("Deleted {Count} comment(s) and their replies for post {PostId}", allComments.Count, postId);
+                }
+
+                // Delete all post likes
+                if (post.Likes.Any())
+                {
+                    context.Likes.RemoveRange(post.Likes);
+                    _logger.LogInformation("Deleted {Count} like(s) for post {PostId}", post.Likes.Count, postId);
+                }
+
+                // Delete all post images and their cached thumbnails
+                if (post.Images.Any())
+                {
+                    var cacheBasePath = Path.Combine(_environment.ContentRootPath, "AppData", "cache", "resized-images");
+                    var deletedImageFiles = 0;
+                    var deletedThumbnails = 0;
+
+                    foreach (var postImage in post.Images)
+                    {
+                        // Extract the file path from the ImageUrl
+                        // ImageUrl format: /api/secure-files/post-image/{userId}/{imageId}/{filename}
+                        var urlParts = postImage.ImageUrl.Split('/');
+                        if (urlParts.Length >= 3)
+                        {
+                            var imageUserId = urlParts[^3];
+                            var filename = urlParts[^1];
+
+                            // Delete the original image file
+                            var originalImagePath = Path.Combine(
+                                _environment.ContentRootPath,
+                                "AppData",
+                                "uploads",
+                                "posts",
+                                imageUserId,
+                                "images",
+                                filename
+                            );
+
+                            if (File.Exists(originalImagePath))
+                            {
+                                try
+                                {
+                                    File.Delete(originalImagePath);
+                                    deletedImageFiles++;
+
+                                    // Delete cached thumbnails (thumbnail and medium sizes)
+                                    var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filename);
+                                    var thumbnailPath = Path.Combine(cacheBasePath, $"{fileNameWithoutExtension}_thumbnail.jpg");
+                                    var mediumPath = Path.Combine(cacheBasePath, $"{fileNameWithoutExtension}_medium.jpg");
+
+                                    if (File.Exists(thumbnailPath))
+                                    {
+                                        File.Delete(thumbnailPath);
+                                        deletedThumbnails++;
+                                    }
+
+                                    if (File.Exists(mediumPath))
+                                    {
+                                        File.Delete(mediumPath);
+                                        deletedThumbnails++;
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    _logger.LogWarning(ex, "Failed to delete image file: {FilePath}", originalImagePath);
+                                }
+                            }
+                        }
+                    }
+
+                    // Remove database records
+                    context.PostImages.RemoveRange(post.Images);
+                    _logger.LogInformation("Deleted {Count} image record(s), {FileCount} original file(s), and {ThumbCount} cached thumbnail(s) for post {PostId}", 
+                        post.Images.Count, deletedImageFiles, deletedThumbnails, postId);
+                }
+
+                // Finally, delete the post itself
                 context.Posts.Remove(post);
+
                 await context.SaveChangesAsync();
 
-                _logger.LogInformation("Post {PostId} deleted by user {UserId}", postId, userId);
+                _logger.LogInformation("Post {PostId} and all related data deleted by user {UserId}", postId, userId);
                 return (true, null);
             }
             catch (Exception ex)

@@ -4,6 +4,7 @@ using FreeSpeakWeb.Components.SocialFeed;
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -28,6 +29,10 @@ namespace FreeSpeakWeb.Tests.Components
             // Mock ILogger for PostService
             var mockLogger = new Mock<ILogger<PostService>>();
 
+            // Mock IWebHostEnvironment for PostService
+            var mockEnvironment = new Mock<IWebHostEnvironment>();
+            mockEnvironment.Setup(m => m.ContentRootPath).Returns(Path.GetTempPath());
+
             // Create SiteSettings for PostService
             var siteSettings = new SiteSettings
             {
@@ -41,7 +46,8 @@ namespace FreeSpeakWeb.Tests.Components
             var postService = new PostService(
                 mockDbContextFactory.Object,
                 mockLogger.Object,
-                siteSettingsOptions
+                siteSettingsOptions,
+                mockEnvironment.Object
             );
 
             Services.AddSingleton(postService);

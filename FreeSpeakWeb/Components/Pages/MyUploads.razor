@@ -386,7 +386,8 @@
         }
 
         var pictureIndex = pictures.IndexOf(picture);
-        viewerImages = pictures.Select(p => p.ImageUrl).ToList();
+        // Request full-size images for the viewer by appending size=full query parameter
+        viewerImages = pictures.Select(p => $"{p.ImageUrl}?size=full").ToList();
         selectedImageIndex = pictureIndex;
         showImageViewer = true;
 
