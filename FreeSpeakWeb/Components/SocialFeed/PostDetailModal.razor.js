@@ -22,3 +22,28 @@ export function cleanupCommentScroll() {
         scrollHandler = null;
     }
 }
+
+export function scrollToAndHighlightComment(commentId) {
+    // Find the comment element by data attribute or ID
+    // FeedArticle uses data-comment-id attribute for comments
+    const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+
+    if (commentElement) {
+        // Add highlight class
+        commentElement.classList.add('comment-highlight');
+
+        // Scroll into view with smooth behavior
+        commentElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'nearest'
+        });
+
+        // Remove the highlight class after the animation completes (2 seconds)
+        setTimeout(() => {
+            commentElement.classList.remove('comment-highlight');
+        }, 2000);
+    } else {
+        console.warn(`Comment with ID ${commentId} not found in DOM`);
+    }
+}

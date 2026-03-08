@@ -173,6 +173,9 @@
     [Parameter]
     public List<PostImage>? Images { get; set; }
 
+    [Parameter]
+    public int? TargetCommentId { get; set; }
+
     private List<CommentDisplayModel> modalComments = new();
     private int directCommentCount = 0;
     private int currentCommentPage = 1;
@@ -198,6 +201,13 @@
                 jsModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/PostDetailModal.razor.js");
                 dotNetHelper = DotNetObjectReference.Create(this);
                 await jsModule.InvokeVoidAsync("initializeCommentScroll", modalContentElement, dotNetHelper);
+
+                // If there's a target comment, scroll to it and highlight it
+                if (TargetCommentId.HasValue && jsModule != null)
+                {
+                    await Task.Delay(100); // Small delay to ensure DOM is ready
+                    await jsModule.InvokeVoidAsync("scrollToAndHighlightComment", TargetCommentId.Value);
+                }
             }
             catch (Exception ex)
             {

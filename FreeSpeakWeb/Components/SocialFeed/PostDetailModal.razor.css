@@ -131,3 +131,25 @@
     color: var(--text-secondary, #65676b);
     font-size: 14px;
 }
+
+/* Comment highlight animation */
+@keyframes highlightFlash {
+    0% {
+        background-color: transparent;
+    }
+    10% {
+        background-color: rgba(13, 110, 253, 0.2);
+    }
+    90% {
+        background-color: rgba(13, 110, 253, 0.2);
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+.post-detail-modal-content ::deep .comment-highlight {
+    animation: highlightFlash 2s ease-in-out;
+    border-radius: 8px;
+    scroll-margin-top: 20px;
+}

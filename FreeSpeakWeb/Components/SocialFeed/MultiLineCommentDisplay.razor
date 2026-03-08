@@ -4,7 +4,7 @@
 @using FreeSpeakWeb.Data
 @implements IAsyncDisposable
 
-<div class="comment-display">
+<div class="comment-display" data-comment-id="@CommentId">
     <div class="comment-avatar">
         @if (!string.IsNullOrEmpty(UserImageUrl))
         {

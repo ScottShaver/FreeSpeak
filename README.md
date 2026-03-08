@@ -10,6 +10,8 @@ FreeSpeak is a feature-rich social networking application that enables users to:
 - Participate in threaded conversations with nested comments
 - View detailed analytics for posts and interactions
 - Manage their profile with custom avatars
+- Receive real-time notifications for social interactions
+- Add friends and manage friend connections
 
 ### Technology Stack
 
@@ -139,13 +141,101 @@ FreeSpeak/
 ├── FreeSpeakWeb/                 # Main Blazor Server application
 │   ├── Components/
 │   │   ├── Pages/                # Routable pages
-│   │   └── SocialFeed/          # Feed components
+│   │   │   ├── Home.razor       # Main feed page
+│   │   │   ├── Notifications.razor # Notifications center
+│   │   │   └── FriendsList.razor # Friends management
+│   │   ├── SocialFeed/          # Feed components
+│   │   │   ├── FeedArticle.razor # Post display component
+│   │   │   ├── PostDetailModal.razor # Full post view with comments
+│   │   │   └── MultiLineCommentDisplay.razor # Comment component
+│   │   └── Shared/              # Shared components
+│   │       └── NotificationComponent.razor # Single notification display
 │   ├── Data/                     # Entity models and DbContext
+│   │   ├── ApplicationDbContext.cs
+│   │   ├── Post.cs
+│   │   ├── Comment.cs
+│   │   ├── UserNotification.cs
+│   │   └── NotificationType.cs
 │   ├── Services/                 # Business logic services
+│   │   ├── PostService.cs       # Post and comment operations
+│   │   ├── NotificationService.cs # Notification management
+│   │   ├── FriendsService.cs    # Friend relationships
+│   │   └── ImageUploadService.cs # Image handling
+│   ├── Migrations/              # EF Core database migrations
 │   └── appsettings.json         # Configuration
 ├── FreeSpeakWeb.Tests/          # Unit tests
 └── FreeSpeakWeb.IntegrationTests/ # Integration tests
 ```
+
+## Key Features
+
+### Notification System
+
+The application includes a comprehensive notification system that keeps users informed of social interactions:
+
+**Notification Types:**
+- **Post Reactions**: Notified when someone reacts to your post (shows actual reaction emoji: 👍 ❤️ 😂 😮 😢 😠)
+- **Post Comments**: Notified when someone comments on your post
+- **Comment Replies**: Notified when someone replies to your comment
+- **Comment Reactions**: Notified when someone reacts to your comment
+- **Friend Requests**: Notified when someone sends you a friend request
+- **Friend Accepted**: Notified when someone accepts your friend request
+
+**Features:**
+- Visual notification center with unread indicators
+- User avatars with notification type badges
+- Click notification to view related post in modal
+- Auto-scroll to target comment with highlight animation
+- Mark all as read / Clear read notifications
+- Relative time display (5m ago, 2h ago, etc.)
+- Smart notifications (doesn't notify for your own interactions)
+
+### Social Interactions
+
+**Reactions System:**
+- Multiple reaction types with emojis
+- Reaction breakdown display (shows top 3 reactions)
+- Hover-based reaction picker
+- Change or remove reactions
+
+**Comments & Replies:**
+- Nested comment threads (configurable depth)
+- Direct comment limits per post (configurable)
+- Comment reactions
+- Rich text support with line breaks
+- Auto-scroll to highlighted comments from notifications
+
+**Friend System:**
+- Send and accept friend requests
+- Friend-only post visibility
+- Friends list management
+
+### Image & Media
+
+**Upload Features:**
+- Drag-and-drop image upload
+- Multiple image support per post
+- Image gallery view
+- Profile picture management
+- My Uploads page (images and videos)
+
+**Performance Optimizations:**
+- Automatic thumbnail generation
+- Image resizing service
+- Cached thumbnails for better performance
+- Secure file serving via API controller
+
+### Security
+
+**Implemented Protections:**
+- Rate limiting (global and per-endpoint)
+- Secure file access (authentication required)
+- CSRF protection with antiforgery tokens
+- File path traversal prevention
+- Content type validation
+- Size limits on uploads
+
+See [SECURITY_IMPLEMENTATION_SUMMARY.md](SECURITY_IMPLEMENTATION_SUMMARY.md) for detailed security information.
 
 ## Contributing
 

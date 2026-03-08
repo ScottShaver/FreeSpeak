@@ -38,6 +38,10 @@
                         <span class="bi bi-images-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
 
+                    <a href="notifications" title="Notifications" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "notifications" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "notifications" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                        <span class="bi bi-bell-fill-nav-menu" style="margin: 0; top: 0;"></span>
+                    </a>
+
                     <a href="/Account/Manage" title="@context.User.Identity?.Name" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         @if (!string.IsNullOrEmpty(currentUser?.ProfilePictureUrl))
                         {
@@ -97,6 +101,12 @@
                 <div class="nav-item px-3">
                     <a class="nav-link @(GetActiveMenuItemFromUrl() == "my-uploads" ? "active" : "")" href="my-uploads">
                         <span class="bi bi-images-nav-menu" aria-hidden="true"></span> My Uploads
+                    </a>
+                </div>
+
+                <div class="nav-item px-3">
+                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "notifications" ? "active" : "")" href="notifications">
+                        <span class="bi bi-bell-fill-nav-menu" aria-hidden="true"></span> Notifications
                     </a>
                 </div>
 
@@ -236,6 +246,10 @@
             _activeMenuItem = "/Account/Manage";
         else if (path.Equals("friends", StringComparison.OrdinalIgnoreCase))
             _activeMenuItem = "friends";
+        else if (path.Equals("my-uploads", StringComparison.OrdinalIgnoreCase))
+            _activeMenuItem = "my-uploads";
+        else if (path.Equals("notifications", StringComparison.OrdinalIgnoreCase))
+            _activeMenuItem = "notifications";
         else if (path.Equals("technology-credits", StringComparison.OrdinalIgnoreCase))
             _activeMenuItem = "technology-credits";
         else
