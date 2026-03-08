@@ -15,6 +15,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 @inject ILogger<Index> Logger
+@inject NavigationStateService NavigationState
 
 <PageTitle>@SiteSettings.Value.SiteName - Profile</PageTitle>
 
@@ -117,6 +118,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        NavigationState.ActiveMenuItem = "/Account/Manage";
+
         Input ??= new();
 
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();

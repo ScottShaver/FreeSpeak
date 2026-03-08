@@ -7,6 +7,7 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
@@ -15,6 +16,7 @@
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject NavigationStateService NavigationState
 @inject IOptions<SiteSettings> SiteSettings
 
 <PageTitle>@SiteSettings.Value.SiteName - Register</PageTitle>
@@ -84,6 +86,7 @@
 
     protected override void OnInitialized()
     {
+        NavigationState.ActiveMenuItem = "/Account/Register";
         Input ??= new();
     }
 

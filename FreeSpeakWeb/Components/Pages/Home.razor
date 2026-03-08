@@ -1,5 +1,6 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+@attribute [Authorize]
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
@@ -19,12 +20,11 @@
 @inject PostService PostService
 @inject IJSRuntime JSRuntime
 @inject UserManager<ApplicationUser> UserManager
+@inject NavigationStateService NavigationState
 
 <PageTitle>@SiteSettings.Value.SiteName - Home</PageTitle>
 
-<AuthorizeView>
-    <Authorized>
-        <div class="home-container">
+<div class="home-container">
             <!-- Reserved space for future content -->
             <div class="top-section">
                 <PostCreator 
@@ -34,7 +34,7 @@
             </div>
 
             <!-- Feed section -->
-            <div class="feed-section" @ref="feedContainer">
+            <div class="feed-section">
                 @if (isLoading && !posts.Any())
                 {
                     <div class="loading-indicator">
@@ -131,11 +131,6 @@
                 </ArticleContent>
             </PostDetailModal>
         }
-    </Authorized>
-    <NotAuthorized>
-        @* Redirect to login handled in code *@
-    </NotAuthorized>
-</AuthorizeView>
 
 @code {
     private List<Post> posts = new();
@@ -151,7 +146,6 @@
     private string? currentUserId;
     private string? currentUserImageUrl;
     private string? currentUserName;
-    private ElementReference feedContainer;
     private IJSObjectReference? jsModule;
     private DotNetObjectReference<Home>? dotNetHelper;
     private bool showPostDetail = false;
@@ -159,15 +153,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        NavigationState.ActiveMenuItem = "/";
+
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
-        // If user is not authenticated, redirect to login
-        if (authState.User.Identity?.IsAuthenticated != true)
-        {
-            NavigationManager.NavigateTo("Account/Login", forceLoad: false);
-            return;
-        }
-
         currentUserId = authState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         if (currentUserId != null)
@@ -195,13 +183,15 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && posts.Any())
+        if (firstRender)
         {
             try
             {
                 jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/Home.razor.js");
                 dotNetHelper = DotNetObjectReference.Create(this);
-                await jsModule.InvokeVoidAsync("initializeInfiniteScroll", feedContainer, dotNetHelper);
+                // Pass null for element since we're using window scroll now
+                await jsModule.InvokeVoidAsync("initializeInfiniteScroll", (object?)null, dotNetHelper);
+                Console.WriteLine("Infinite scroll initialized from Home.razor");
             }
             catch (Exception ex)
             {
@@ -640,7 +630,7 @@
                 {
                     try
                     {
-                        await jsModule.InvokeVoidAsync("scrollToTop", feedContainer);
+                        await jsModule.InvokeVoidAsync("scrollToTop");
                     }
                     catch
                     {
@@ -687,6 +677,8 @@
         {
             try
             {
+                // Dispose the infinite scroll listener
+                await jsModule.InvokeVoidAsync("disposeInfiniteScroll");
                 await jsModule.DisposeAsync();
             }
             catch

@@ -14,6 +14,7 @@
 @inject FriendsService FriendsService
 @inject IOptions<SiteSettings> SiteSettings
 @inject ILogger<FriendsList> Logger
+@inject NavigationStateService NavigationState
 
 <PageTitle>@SiteSettings.Value.SiteName - Friends</PageTitle>
 
@@ -271,6 +272,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        NavigationState.ActiveMenuItem = "friends";
+
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         currentUser = await UserManager.GetUserAsync(authState.User);
 

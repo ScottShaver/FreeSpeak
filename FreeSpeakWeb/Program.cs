@@ -62,6 +62,9 @@ namespace FreeSpeakWeb
             // Add PostService
             builder.Services.AddScoped<PostService>();
 
+            // Add NavigationStateService
+            builder.Services.AddScoped<NavigationStateService>();
+
             // Configure Kestrel to listen on all network interfaces for mobile testing
             builder.WebHost.ConfigureKestrel(serverOptions =>
             {

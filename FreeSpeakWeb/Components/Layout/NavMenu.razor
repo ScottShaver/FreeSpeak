@@ -3,7 +3,9 @@
 
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
+@using Microsoft.JSInterop
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
 
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JS
@@ -13,45 +15,83 @@
 
 <!-- Always visible header across the top -->
 <div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <button class="navbar-toggler" @onclick="ToggleNavMenu" type="button" title="Toggle navigation menu" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand" href="">@SiteSettings.Value.SiteName</a>
+    <div class="container-fluid d-flex align-items-center" style="width: 100%;">
+        <div class="d-flex align-items-center" style="flex: 1;">
+            <button class="navbar-toggler" @onclick="ToggleNavMenu" type="button" title="Toggle navigation menu" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="">@SiteSettings.Value.SiteName</a>
+        </div>
+
+        <div class="d-flex align-items-center gap-3 justify-content-center" style="flex: 1;">
+            <AuthorizeView>
+                <Authorized>
+                    <a href="/" title="Home" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                        <span class="bi bi-house-door-fill-nav-menu" style="margin: 0; top: 0;"></span>
+                    </a>
+
+                    <a href="friends" title="Friends" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "friends" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "friends" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                        <span class="bi bi-people-fill-nav-menu" style="margin: 0; top: 0;"></span>
+                    </a>
+
+                    <a href="/Account/Manage" title="@context.User.Identity?.Name" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                        @if (!string.IsNullOrEmpty(currentUser?.ProfilePictureUrl))
+                        {
+                            <img src="@currentUser.ProfilePictureUrl" alt="Profile" class="rounded-circle" style="width: 24px; height: 24px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <span class="bi bi-person-fill-nav-menu" style="margin: 0; top: 0;"></span>
+                        }
+                    </a>
+
+                    <form action="Account/Logout" method="post" style="display: inline-flex; align-items: center; margin: 0; padding: 0; line-height: 1;">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                        <button type="submit" class="nav-icon-link btn-link" title="Logout" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; margin: 0; border: none; background-color: transparent;">
+                            <span class="bi bi-arrow-bar-left-nav-menu" style="margin: 0; top: 0;"></span>
+                        </button>
+                    </form>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="/Account/Register" title="Register" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Register" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Register" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                        <span class="bi bi-person-nav-menu" style="margin: 0; top: 0;"></span>
+                    </a>
+
+                    <a href="/Account/Login" title="Login" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Login" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Login" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                        <span class="bi bi-person-badge-nav-menu" style="margin: 0; top: 0;"></span>
+                    </a>
+                </NotAuthorized>
+            </AuthorizeView>
+
+            <a href="technology-credits" title="Technology Credits" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "technology-credits" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "technology-credits" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                <span class="bi bi-info-circle-nav-menu" style="margin: 0; top: 0;"></span>
+            </a>
+        </div>
+
+        <div style="flex: 1;"></div>
     </div>
 </div>
 
 <!-- Collapsible navigation menu -->
 <div class="@NavMenuCssClass" @onclick="HandleNavMenuClick">
     <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="friends">
-                <span class="bi bi-people-fill-nav-menu" aria-hidden="true"></span> Friends
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="feed-demo">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Feed Demo
-            </NavLink>
-        </div>
-
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link d-flex align-items-center gap-2" href="Account/Manage">
+                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "/" ? "active" : "")" href="/">
+                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                    </a>
+                </div>
+
+                <div class="nav-item px-3">
+                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "friends" ? "active" : "")" href="friends">
+                        <span class="bi bi-people-fill-nav-menu" aria-hidden="true"></span> Friends
+                    </a>
+                </div>
+
+                <div class="nav-item px-3">
+                    <a class="nav-link d-flex align-items-center gap-2 @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "active" : "")" href="/Account/Manage">
                         @if (!string.IsNullOrEmpty(currentUser?.ProfilePictureUrl))
                         {
                             <img src="@currentUser.ProfilePictureUrl" alt="Profile" class="rounded-circle" style="width: 32px; height: 32px; object-fit: cover;" />
@@ -61,7 +101,7 @@
                             <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span>
                         }
                         <span>@context.User.Identity?.Name</span>
-                    </NavLink>
+                    </a>
                 </div>
                 <div class="nav-item px-3">
                     <form action="Account/Logout" method="post">
@@ -75,14 +115,14 @@
             </Authorized>
             <NotAuthorized>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Register">
+                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "/Account/Register" ? "active" : "")" href="/Account/Register">
                         <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
-                    </NavLink>
+                    </a>
                 </div>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Login">
+                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "/Account/Login" ? "active" : "")" href="/Account/Login">
                         <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
-                    </NavLink>
+                    </a>
                 </div>
             </NotAuthorized>
         </AuthorizeView>
@@ -90,9 +130,9 @@
         <hr class="nav-divider" />
 
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="technology-credits">
+            <a class="nav-link @(GetActiveMenuItemFromUrl() == "technology-credits" ? "active" : "")" href="technology-credits">
                 <span class="bi bi-info-circle-nav-menu" aria-hidden="true"></span> Technology Credits
-            </NavLink>
+            </a>
         </div>
     </nav>
 </div>
@@ -100,6 +140,7 @@
 @code {
     private bool showNavMenu = true;  // Start visible, JavaScript will hide on mobile
     private string? currentUrl;
+    private string _activeMenuItem = "";
     private IJSObjectReference? module;
     private IJSObjectReference? resizeHandler;
     private DotNetObjectReference<NavMenu>? dotNetReference;
@@ -109,9 +150,7 @@
 
     private void ToggleNavMenu()
     {
-        Console.WriteLine($"ToggleNavMenu called - Current state: {showNavMenu}");
         showNavMenu = !showNavMenu;
-        Console.WriteLine($"ToggleNavMenu - New state: {showNavMenu}");
         StateHasChanged();
     }
 
@@ -120,11 +159,18 @@
         // Only close the nav menu if we're on mobile or narrow window
         if (module != null)
         {
-            var shouldClose = await module.InvokeAsync<bool>("shouldAutoCloseNav");
-            if (shouldClose)
+            try
             {
-                showNavMenu = false;
-                StateHasChanged();
+                var shouldClose = await module.InvokeAsync<bool>("shouldAutoCloseNav");
+                if (shouldClose)
+                {
+                    showNavMenu = false;
+                    StateHasChanged();
+                }
+            }
+            catch (JSDisconnectedException)
+            {
+                // Page is being unloaded, ignore
             }
         }
     }
@@ -146,6 +192,7 @@
     protected override async Task OnInitializedAsync()
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        UpdateActiveMenuItem();
         NavigationManager.LocationChanged += OnLocationChanged;
 
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -157,20 +204,60 @@
         }
     }
 
+    protected override void OnParametersSet()
+    {
+        // Update active menu item whenever component state changes
+        // This handles server-side redirects that don't trigger LocationChanged
+        UpdateActiveMenuItem();
+    }
+
+    private void UpdateActiveMenuItem()
+    {
+        var uri = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        var path = uri.Split('?')[0].TrimStart('/');
+
+        if (string.IsNullOrEmpty(path))
+            _activeMenuItem = "/";
+        else if (path.Equals("Account/Login", StringComparison.OrdinalIgnoreCase))
+            _activeMenuItem = "/Account/Login";
+        else if (path.Equals("Account/Register", StringComparison.OrdinalIgnoreCase))
+            _activeMenuItem = "/Account/Register";
+        else if (path.Equals("Account/Manage", StringComparison.OrdinalIgnoreCase))
+            _activeMenuItem = "/Account/Manage";
+        else if (path.Equals("friends", StringComparison.OrdinalIgnoreCase))
+            _activeMenuItem = "friends";
+        else if (path.Equals("technology-credits", StringComparison.OrdinalIgnoreCase))
+            _activeMenuItem = "technology-credits";
+        else
+            _activeMenuItem = "/" + path;
+    }
+
+    private string GetActiveMenuItemFromUrl()
+    {
+        return _activeMenuItem;
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/Layout/NavMenu.razor.js");
-            dotNetReference = DotNetObjectReference.Create(this);
-            resizeHandler = await module.InvokeAsync<IJSObjectReference>("setupResizeHandler", dotNetReference);
-
-            // Check if we should hide the menu on mobile
-            var shouldHide = await module.InvokeAsync<bool>("shouldAutoCloseNav");
-            if (shouldHide)
+            try
             {
-                showNavMenu = false;
-                StateHasChanged();
+                module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/Layout/NavMenu.razor.js");
+                dotNetReference = DotNetObjectReference.Create(this);
+                resizeHandler = await module.InvokeAsync<IJSObjectReference>("setupResizeHandler", dotNetReference);
+
+                // Check if we should hide the menu on mobile
+                var shouldHide = await module.InvokeAsync<bool>("shouldAutoCloseNav");
+                if (shouldHide)
+                {
+                    showNavMenu = false;
+                    StateHasChanged();
+                }
+            }
+            catch (JSDisconnectedException)
+            {
+                // Page is being unloaded, ignore
             }
         }
     }
@@ -178,15 +265,19 @@
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
         currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
-        StateHasChanged();
+        UpdateActiveMenuItem();
+        InvokeAsync(StateHasChanged);
     }
 
     public void Dispose()
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
-        resizeHandler?.InvokeVoidAsync("dispose");
         dotNetReference?.Dispose();
-        module?.DisposeAsync();
+
+        // Note: We intentionally don't dispose JavaScript resources here
+        // When the page is being unloaded (e.g., logout), the browser automatically
+        // cleans up all JavaScript. Attempting to call JS interop during disposal
+        // causes JSDisconnectedException which is harmless but creates noise in logs.
     }
 }
 

@@ -1,5 +1,8 @@
 @page "/technology-credits"
 
+@using FreeSpeakWeb.Services
+@inject NavigationStateService NavigationState
+
 @using Microsoft.Extensions.Options
 @inject IOptions<SiteSettings> SiteSettings
 
@@ -128,5 +131,10 @@
 </div>
 
 @code {
+    protected override void OnInitialized()
+    {
+        NavigationState.ActiveMenuItem = "technology-credits";
+    }
+
     // Technology credits are maintained manually to ensure accuracy
 }
