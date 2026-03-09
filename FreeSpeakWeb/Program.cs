@@ -83,6 +83,12 @@ namespace FreeSpeakWeb
             // Add NotificationService
             builder.Services.AddScoped<NotificationService>();
 
+            // Add ThemeService for color scheme management
+            builder.Services.AddScoped<ThemeService>();
+
+            // Add UserPreferenceService for managing user preferences
+            builder.Services.AddScoped<UserPreferenceService>();
+
             // SECURITY: Add rate limiting to prevent abuse
             builder.Services.AddRateLimiter(options =>
             {

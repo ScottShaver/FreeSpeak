@@ -1,0 +1,268 @@
+/* Theme System - Color Schemes */
+
+/* Default Theme (Existing blue gradient) */
+:root,
+[data-theme="default"] {
+    --primary-color: #0d6efd;
+    --primary-hover: #0b5ed7;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+    
+    --surface-color: #ffffff;
+    --surface-secondary: #f8f9fa;
+    --surface-hover: #f2f2f2;
+    
+    --text-primary: #050505;
+    --text-secondary: #65676b;
+    --text-muted: #8a8d91;
+    
+    --border-color: #e4e6eb;
+    --hover-overlay: rgba(0, 0, 0, 0.05);
+    
+    --nav-gradient-start: rgb(5, 39, 103);
+    --nav-gradient-end: #3a0647;
+    
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Mode Theme */
+[data-theme="dark"] {
+    --primary-color: #4a9eff;
+    --primary-hover: #3a8eef;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    
+    --surface-color: #1a1a1a;
+    --surface-secondary: #2d2d2d;
+    --surface-hover: #3a3a3a;
+    
+    --text-primary: #e4e6eb;
+    --text-secondary: #b0b3b8;
+    --text-muted: #8a8d91;
+    
+    --border-color: #3a3b3c;
+    --hover-overlay: rgba(255, 255, 255, 0.1);
+
+    --nav-gradient-start: #1a2332;
+    --nav-gradient-end: #0d1621;
+    
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.7);
+}
+
+/* Light Mode Theme */
+[data-theme="light"] {
+    --primary-color: #0066cc;
+    --primary-hover: #0052a3;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffa500;
+    --info-color: #0dcaf0;
+    
+    --surface-color: #ffffff;
+    --surface-secondary: #f5f5f5;
+    --surface-hover: #eeeeee;
+    
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --text-muted: #adb5bd;
+    
+    --border-color: #dee2e6;
+    --hover-overlay: rgba(0, 0, 0, 0.04);
+
+    --nav-gradient-start: #e3f2fd;
+    --nav-gradient-end: #bbdefb;
+    
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Ocean Blue Theme */
+[data-theme="ocean"] {
+    --primary-color: #00bcd4;
+    --primary-hover: #00acc1;
+    --secondary-color: #607d8b;
+    --success-color: #4caf50;
+    --danger-color: #ff5252;
+    --warning-color: #ffa726;
+    --info-color: #29b6f6;
+    
+    --surface-color: #e0f7fa;
+    --surface-secondary: #b2ebf2;
+    --surface-hover: #80deea;
+    
+    --text-primary: #004d40;
+    --text-secondary: #00695c;
+    --text-muted: #00897b;
+    
+    --border-color: #4dd0e1;
+    --hover-overlay: rgba(0, 188, 212, 0.1);
+
+    --nav-gradient-start: #006064;
+    --nav-gradient-end: #00acc1;
+    
+    --shadow-sm: 0 1px 3px rgba(0, 151, 167, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 151, 167, 0.3);
+    --shadow-lg: 0 10px 15px rgba(0, 151, 167, 0.3);
+}
+
+/* Forest Green Theme */
+[data-theme="forest"] {
+    --primary-color: #4caf50;
+    --primary-hover: #43a047;
+    --secondary-color: #8d6e63;
+    --success-color: #66bb6a;
+    --danger-color: #ef5350;
+    --warning-color: #ffa726;
+    --info-color: #26a69a;
+    
+    --surface-color: #e8f5e9;
+    --surface-secondary: #c8e6c9;
+    --surface-hover: #a5d6a7;
+    
+    --text-primary: #1b5e20;
+    --text-secondary: #2e7d32;
+    --text-muted: #43a047;
+    
+    --border-color: #81c784;
+    --hover-overlay: rgba(76, 175, 80, 0.1);
+
+    --nav-gradient-start: #1b5e20;
+    --nav-gradient-end: #2e7d32;
+    
+    --shadow-sm: 0 1px 3px rgba(46, 125, 50, 0.3);
+    --shadow-md: 0 4px 6px rgba(46, 125, 50, 0.3);
+    --shadow-lg: 0 10px 15px rgba(46, 125, 50, 0.3);
+}
+
+/* Sunset Orange Theme */
+[data-theme="sunset"] {
+    --primary-color: #ff6f00;
+    --primary-hover: #f57c00;
+    --secondary-color: #795548;
+    --success-color: #66bb6a;
+    --danger-color: #d32f2f;
+    --warning-color: #ffa000;
+    --info-color: #0288d1;
+    
+    --surface-color: #fff3e0;
+    --surface-secondary: #ffe0b2;
+    --surface-hover: #ffcc80;
+    
+    --text-primary: #e65100;
+    --text-secondary: #f57c00;
+    --text-muted: #ff9800;
+    
+    --border-color: #ffab40;
+    --hover-overlay: rgba(255, 111, 0, 0.1);
+
+    --nav-gradient-start: #bf360c;
+    --nav-gradient-end: #e65100;
+    
+    --shadow-sm: 0 1px 3px rgba(230, 81, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(230, 81, 0, 0.3);
+    --shadow-lg: 0 10px 15px rgba(230, 81, 0, 0.3);
+}
+
+/* Purple Dream Theme */
+[data-theme="purple"] {
+    --primary-color: #9c27b0;
+    --primary-hover: #8e24aa;
+    --secondary-color: #7e57c2;
+    --success-color: #66bb6a;
+    --danger-color: #ef5350;
+    --warning-color: #ffa726;
+    --info-color: #29b6f6;
+    
+    --surface-color: #f3e5f5;
+    --surface-secondary: #e1bee7;
+    --surface-hover: #ce93d8;
+    
+    --text-primary: #4a148c;
+    --text-secondary: #6a1b9a;
+    --text-muted: #8e24aa;
+    
+    --border-color: #ba68c8;
+    --hover-overlay: rgba(156, 39, 176, 0.1);
+
+    --nav-gradient-start: #311b92;
+    --nav-gradient-end: #4a148c;
+    
+    --shadow-sm: 0 1px 3px rgba(74, 20, 140, 0.3);
+    --shadow-md: 0 4px 6px rgba(74, 20, 140, 0.3);
+    --shadow-lg: 0 10px 15px rgba(74, 20, 140, 0.3);
+}
+
+/* High Contrast Theme */
+[data-theme="high-contrast"] {
+    --primary-color: #0000ff;
+    --primary-hover: #0000cc;
+    --secondary-color: #666666;
+    --success-color: #00ff00;
+    --danger-color: #ff0000;
+    --warning-color: #ffff00;
+    --info-color: #00ffff;
+    
+    --surface-color: #ffffff;
+    --surface-secondary: #f0f0f0;
+    --surface-hover: #e0e0e0;
+    
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --text-muted: #666666;
+    
+    --border-color: #000000;
+    --hover-overlay: rgba(0, 0, 0, 0.1);
+
+    --nav-gradient-start: #000000;
+    --nav-gradient-end: #1a1a1a;
+    
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.9);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.9);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.9);
+}
+
+/* Apply theme colors to common elements */
+body {
+    background-color: var(--surface-secondary);
+    color: var(--text-primary);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+/* Ensure smooth theme transitions */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Prevent transition on page load */
+.preload * {
+    transition: none !important;
+}

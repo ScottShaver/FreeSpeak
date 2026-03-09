@@ -13,6 +13,7 @@ namespace FreeSpeakWeb.Data
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<PinnedPost> PinnedPosts { get; set; }
         public DbSet<UserNotification> UserNotifications { get; set; }
+        public DbSet<UserPreference> UserPreferences { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -197,6 +198,22 @@ namespace FreeSpeakWeb.Data
                 entity.HasIndex(n => n.Type);
                 entity.HasIndex(n => n.ExpiresAt);
                 entity.HasIndex(n => new { n.UserId, n.IsRead, n.CreatedAt });
+            });
+
+            // Configure UserPreference entity
+            modelBuilder.Entity<UserPreference>(entity =>
+            {
+                entity.HasKey(p => p.Id);
+
+                entity.HasOne(p => p.User)
+                    .WithMany()
+                    .HasForeignKey(p => p.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Create indexes for better query performance
+                entity.HasIndex(p => p.UserId);
+                entity.HasIndex(p => p.PreferenceType);
+                entity.HasIndex(p => new { p.UserId, p.PreferenceType }).IsUnique();
             });
         }
     }

@@ -238,3 +238,146 @@
 .audience-selector-button:active {
     background-color: rgba(0, 0, 0, 0.1);
 }
+
+/* Public Audience Confirmation Modal */
+.confirmation-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding: 20px;
+}
+
+.confirmation-modal {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.2s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.confirmation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e4e6eb;
+}
+
+.confirmation-header h5 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1c1e21;
+}
+
+.confirmation-header .close-button {
+    background: none;
+    border: none;
+    font-size: 32px;
+    line-height: 1;
+    color: #65676b;
+    cursor: pointer;
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.confirmation-header .close-button:hover {
+    background-color: #f2f2f2;
+}
+
+.confirmation-body {
+    padding: 24px;
+    text-align: center;
+}
+
+.warning-icon {
+    color: #f59e0b;
+    margin-bottom: 16px;
+}
+
+.warning-icon svg {
+    width: 48px;
+    height: 48px;
+}
+
+.confirmation-message {
+    font-size: 15px;
+    color: #1c1e21;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.confirmation-message strong {
+    color: #f59e0b;
+}
+
+.confirmation-question {
+    font-size: 15px;
+    color: #65676b;
+    margin: 0;
+}
+
+.confirmation-footer {
+    display: flex;
+    gap: 12px;
+    padding: 16px 24px;
+    border-top: 1px solid #e4e6eb;
+    justify-content: flex-end;
+}
+
+.confirmation-footer .btn-secondary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #e4e6eb;
+    color: #1c1e21;
+    transition: background-color 0.2s;
+}
+
+.confirmation-footer .btn-secondary:hover {
+    background-color: #d8dadf;
+}
+
+.confirmation-footer .btn-warning {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #f59e0b;
+    color: white;
+    transition: background-color 0.2s;
+}
+
+.confirmation-footer .btn-warning:hover {
+    background-color: #d97706;
+}

@@ -8,8 +8,10 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.Friends
+@using Microsoft.EntityFrameworkCore
+@using System.Security.Claims
 
-@inject UserManager<ApplicationUser> UserManager
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject FriendsService FriendsService
 @inject IOptions<SiteSettings> SiteSettings
@@ -259,6 +261,7 @@
     private bool isSearching = false;
     private bool hasSearched = false;
     private ApplicationUser? currentUser;
+    private string? currentUserId;
     private string? statusMessage;
     private string? errorMessage;
     private string searchTerm = "";
@@ -275,31 +278,38 @@
         NavigationState.ActiveMenuItem = "friends";
 
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        currentUser = await UserManager.GetUserAsync(authState.User);
+        currentUserId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         isLoading = false;
 
-        if (currentUser != null)
+        if (!string.IsNullOrEmpty(currentUserId))
         {
-            // Load counts for all tabs
-            await LoadAllCountsAsync();
+            // Load the current user entity using a separate DbContext instance
+            await using var context = await DbContextFactory.CreateDbContextAsync();
+            currentUser = await context.Users.FindAsync(currentUserId);
 
-            // Load data for the default tab
-            await LoadFriendsAsync();
+            if (currentUser != null)
+            {
+                // Load counts for all tabs
+                await LoadAllCountsAsync();
+
+                // Load data for the default tab
+                await LoadFriendsAsync();
+            }
         }
     }
 
     private async Task LoadAllCountsAsync()
     {
-        if (currentUser?.Id == null) return;
+        if (string.IsNullOrEmpty(currentUserId)) return;
 
         try
         {
             // Load all counts in parallel for better performance
-            var friendsCountTask = FriendsService.GetFriendsCountAsync(currentUser.Id);
-            var pendingRequestsCountTask = FriendsService.GetPendingRequestsCountAsync(currentUser.Id);
-            var sentRequestsCountTask = FriendsService.GetSentRequestsCountAsync(currentUser.Id);
-            var peopleYouMayKnowCountTask = FriendsService.GetPeopleYouMayKnowCountAsync(currentUser.Id);
+            var friendsCountTask = FriendsService.GetFriendsCountAsync(currentUserId);
+            var pendingRequestsCountTask = FriendsService.GetPendingRequestsCountAsync(currentUserId);
+            var sentRequestsCountTask = FriendsService.GetSentRequestsCountAsync(currentUserId);
+            var peopleYouMayKnowCountTask = FriendsService.GetPeopleYouMayKnowCountAsync(currentUserId);
 
             await Task.WhenAll(friendsCountTask, pendingRequestsCountTask, sentRequestsCountTask, peopleYouMayKnowCountTask);
 
@@ -313,74 +323,74 @@
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Error loading counts for user {UserId}", currentUser.Id);
+            Logger.LogError(ex, "Error loading counts for user {UserId}", currentUserId);
         }
     }
 
     private async Task LoadFriendsAsync()
     {
-        if (currentUser?.Id == null) return;
+        if (string.IsNullOrEmpty(currentUserId)) return;
 
         try
         {
-            friends = await FriendsService.GetFriendsAsync(currentUser.Id);
+            friends = await FriendsService.GetFriendsAsync(currentUserId);
             friendsCount = friends.Count;
             Logger.LogInformation("Loaded {Count} friends", friends.Count);
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Error loading friends for user {UserId}", currentUser.Id);
+            Logger.LogError(ex, "Error loading friends for user {UserId}", currentUserId);
             errorMessage = "An error occurred while loading your friends.";
         }
     }
 
     private async Task LoadPendingRequestsAsync()
     {
-        if (currentUser?.Id == null) return;
+        if (string.IsNullOrEmpty(currentUserId)) return;
 
         try
         {
-            pendingRequests = await FriendsService.GetPendingRequestsAsync(currentUser.Id);
+            pendingRequests = await FriendsService.GetPendingRequestsAsync(currentUserId);
             pendingRequestsCount = pendingRequests.Count;
             Logger.LogInformation("Loaded {Count} pending requests", pendingRequests.Count);
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Error loading pending requests for user {UserId}", currentUser.Id);
+            Logger.LogError(ex, "Error loading pending requests for user {UserId}", currentUserId);
             errorMessage = "An error occurred while loading friend requests.";
         }
     }
 
     private async Task LoadSentRequestsAsync()
     {
-        if (currentUser?.Id == null) return;
+        if (string.IsNullOrEmpty(currentUserId)) return;
 
         try
         {
-            sentRequests = await FriendsService.GetSentRequestsAsync(currentUser.Id);
+            sentRequests = await FriendsService.GetSentRequestsAsync(currentUserId);
             sentRequestsCount = sentRequests.Count;
             Logger.LogInformation("Loaded {Count} sent requests", sentRequests.Count);
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Error loading sent requests for user {UserId}", currentUser.Id);
+            Logger.LogError(ex, "Error loading sent requests for user {UserId}", currentUserId);
             errorMessage = "An error occurred while loading sent requests.";
         }
     }
 
     private async Task LoadPeopleYouMayKnowAsync()
     {
-        if (currentUser?.Id == null) return;
+        if (string.IsNullOrEmpty(currentUserId)) return;
 
         try
         {
-            peopleYouMayKnow = await FriendsService.GetPeopleYouMayKnowAsync(currentUser.Id);
+            peopleYouMayKnow = await FriendsService.GetPeopleYouMayKnowAsync(currentUserId);
             peopleYouMayKnowCount = peopleYouMayKnow.Count;
             Logger.LogInformation("Loaded {Count} people you may know", peopleYouMayKnow.Count);
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Error loading people you may know for user {UserId}", currentUser.Id);
+            Logger.LogError(ex, "Error loading people you may know for user {UserId}", currentUserId);
             errorMessage = "An error occurred while loading suggestions.";
         }
     }
@@ -422,7 +432,7 @@
 
     private async Task HandleSearch()
     {
-        if (string.IsNullOrWhiteSpace(searchTerm) || currentUser?.Id == null || isSearching)
+        if (string.IsNullOrWhiteSpace(searchTerm) || string.IsNullOrEmpty(currentUserId) || isSearching)
         {
             return;
         }
@@ -433,7 +443,7 @@
 
         try
         {
-            searchResults = await FriendsService.SearchUsersAsync(searchTerm, currentUser.Id);
+            searchResults = await FriendsService.SearchUsersAsync(searchTerm, currentUserId);
         }
         catch (Exception ex)
         {
@@ -456,16 +466,16 @@
 
     private async Task HandleAddFriendFromSearch(ApplicationUser user)
     {
-        if (currentUser?.Id == null) return;
+        if (string.IsNullOrEmpty(currentUserId)) return;
 
-        var result = await FriendsService.SendFriendRequestAsync(currentUser.Id, user.Id);
+        var result = await FriendsService.SendFriendRequestAsync(currentUserId, user.Id);
         if (result.Success)
         {
             statusMessage = $"Friend request sent to {GetDisplayName(user)}.";
             // Remove from search results
             searchResults = searchResults.Where(u => u.Id != user.Id).ToList();
             // Update sent requests count
-            sentRequestsCount = await FriendsService.GetSentRequestsCountAsync(currentUser.Id);
+            sentRequestsCount = await FriendsService.GetSentRequestsCountAsync(currentUserId);
             StateHasChanged();
         }
         else
@@ -476,18 +486,18 @@
 
     private async Task HandleRemoveFriend(ApplicationUser friend)
     {
-        if (currentUser?.Id == null) return;
+        if (string.IsNullOrEmpty(currentUserId)) return;
 
-        var friendship = await FriendsService.GetFriendshipAsync(currentUser.Id, friend.Id);
+        var friendship = await FriendsService.GetFriendshipAsync(currentUserId, friend.Id);
         if (friendship != null)
         {
-            var result = await FriendsService.RemoveFriendAsync(friendship.Id, currentUser.Id);
+            var result = await FriendsService.RemoveFriendAsync(friendship.Id, currentUserId);
             if (result.Success)
             {
                 statusMessage = $"Removed {GetDisplayName(friend)} from your friends.";
                 await LoadFriendsAsync();
                 // Update suggestions count as it may change
-                peopleYouMayKnowCount = await FriendsService.GetPeopleYouMayKnowCountAsync(currentUser.Id);
+                peopleYouMayKnowCount = await FriendsService.GetPeopleYouMayKnowCountAsync(currentUserId);
                 StateHasChanged();
             }
             else
@@ -499,9 +509,9 @@
 
     private async Task HandleAddFriend(ApplicationUser user)
     {
-        if (currentUser?.Id == null) return;
+        if (string.IsNullOrEmpty(currentUserId)) return;
 
-        var result = await FriendsService.SendFriendRequestAsync(currentUser.Id, user.Id);
+        var result = await FriendsService.SendFriendRequestAsync(currentUserId, user.Id);
         if (result.Success)
         {
             statusMessage = $"Friend request sent to {GetDisplayName(user)}.";
@@ -509,7 +519,7 @@
             peopleYouMayKnow = peopleYouMayKnow.Where(p => p.User.Id != user.Id).ToList();
             peopleYouMayKnowCount = peopleYouMayKnow.Count;
             // Update sent requests count
-            sentRequestsCount = await FriendsService.GetSentRequestsCountAsync(currentUser.Id);
+            sentRequestsCount = await FriendsService.GetSentRequestsCountAsync(currentUserId);
             StateHasChanged();
         }
         else
@@ -528,19 +538,19 @@
 
     private async Task HandleAcceptRequest(ApplicationUser requester)
     {
-        if (currentUser?.Id == null) return;
+        if (string.IsNullOrEmpty(currentUserId)) return;
 
         var request = pendingRequests.FirstOrDefault(r => r.Requester.Id == requester.Id);
         if (request.Friendship != null)
         {
-            var result = await FriendsService.AcceptFriendRequestAsync(request.Friendship.Id, currentUser.Id);
+            var result = await FriendsService.AcceptFriendRequestAsync(request.Friendship.Id, currentUserId);
             if (result.Success)
             {
                 statusMessage = $"You are now friends with {GetDisplayName(requester)}.";
                 await LoadPendingRequestsAsync();
                 // Update friends count and suggestions count as well
-                friendsCount = await FriendsService.GetFriendsCountAsync(currentUser.Id);
-                peopleYouMayKnowCount = await FriendsService.GetPeopleYouMayKnowCountAsync(currentUser.Id);
+                friendsCount = await FriendsService.GetFriendsCountAsync(currentUserId);
+                peopleYouMayKnowCount = await FriendsService.GetPeopleYouMayKnowCountAsync(currentUserId);
                 StateHasChanged();
             }
             else
@@ -552,12 +562,12 @@
 
     private async Task HandleRejectRequest(ApplicationUser requester)
     {
-        if (currentUser?.Id == null) return;
+        if (string.IsNullOrEmpty(currentUserId)) return;
 
         var request = pendingRequests.FirstOrDefault(r => r.Requester.Id == requester.Id);
         if (request.Friendship != null)
         {
-            var result = await FriendsService.RejectFriendRequestAsync(request.Friendship.Id, currentUser.Id);
+            var result = await FriendsService.RejectFriendRequestAsync(request.Friendship.Id, currentUserId);
             if (result.Success)
             {
                 statusMessage = $"Declined friend request from {GetDisplayName(requester)}.";
@@ -573,12 +583,12 @@
 
     private async Task HandleCancelRequest(ApplicationUser addressee)
     {
-        if (currentUser?.Id == null) return;
+        if (string.IsNullOrEmpty(currentUserId)) return;
 
         var request = sentRequests.FirstOrDefault(r => r.Addressee.Id == addressee.Id);
         if (request.Friendship != null)
         {
-            var result = await FriendsService.RemoveFriendAsync(request.Friendship.Id, currentUser.Id);
+            var result = await FriendsService.RemoveFriendAsync(request.Friendship.Id, currentUserId);
             if (result.Success)
             {
                 statusMessage = $"Cancelled friend request to {GetDisplayName(addressee)}.";

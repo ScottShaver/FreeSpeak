@@ -1,0 +1,212 @@
+.theme-selector {
+    position: relative;
+    z-index: 1050;
+}
+
+.theme-button {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.theme-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(45deg);
+}
+
+.theme-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.theme-menu {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    min-width: 280px;
+    max-height: 600px;
+    overflow: hidden;
+    z-index: 1051;
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.theme-menu-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--surface-secondary);
+}
+
+.theme-menu-header span {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text-primary);
+}
+
+.close-menu {
+    background: none;
+    border: none;
+    font-size: 28px;
+    line-height: 1;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.close-menu:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+}
+
+.theme-options {
+    padding: 12px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.theme-option {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background: var(--surface-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 8px;
+}
+
+.theme-option:last-child {
+    margin-bottom: 0;
+}
+
+.theme-option:hover {
+    background: var(--surface-hover);
+    border-color: var(--primary-color);
+}
+
+.theme-option.active {
+    background: var(--surface-secondary);
+    border-color: var(--primary-color);
+}
+
+.theme-color-preview {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Theme color previews */
+[data-theme-preview="default"] {
+    background: linear-gradient(135deg, rgb(5, 39, 103) 0%, #3a0647 100%);
+}
+
+[data-theme-preview="dark"] {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+[data-theme-preview="light"] {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-color: #666;
+}
+
+[data-theme-preview="ocean"] {
+    background: linear-gradient(135deg, #006064 0%, #00bcd4 100%);
+}
+
+[data-theme-preview="forest"] {
+    background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+}
+
+[data-theme-preview="sunset"] {
+    background: linear-gradient(135deg, #e65100 0%, #ff6f00 100%);
+}
+
+[data-theme-preview="purple"] {
+    background: linear-gradient(135deg, #4a148c 0%, #9c27b0 100%);
+}
+
+[data-theme-preview="high-contrast"] {
+    background: linear-gradient(135deg, #000000 0%, #ffffff 100%);
+}
+
+.theme-name {
+    flex: 1;
+    text-align: left;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.check-icon {
+    color: var(--primary-color);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Scrollbar styling for theme options */
+.theme-options::-webkit-scrollbar {
+    width: 8px;
+}
+
+.theme-options::-webkit-scrollbar-track {
+    background: var(--surface-secondary);
+    border-radius: 4px;
+}
+
+.theme-options::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+.theme-options::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .theme-menu {
+        right: 0;
+        left: auto;
+        min-width: 260px;
+    }
+}
