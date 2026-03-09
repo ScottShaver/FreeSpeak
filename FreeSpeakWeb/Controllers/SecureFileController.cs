@@ -43,48 +43,37 @@ public class SecureFileController : ControllerBase
     /// </summary>
     /// <param name="userId">The user ID</param>
     /// <param name="size">Image size: thumbnail (150px), medium (400px), or full (default: thumbnail)</param>
+    [AllowAnonymous] // Profile pictures are public - needed for public home page
     [HttpGet("profile-picture/{userId}")]
     public async Task<IActionResult> GetProfilePicture(string userId, [FromQuery] string? size = null)
     {
-        _logger.LogInformation("🌐 GetProfilePicture called - UserId: {UserId}, Size: {Size}", userId, size ?? "default(thumbnail)");
-
         try
         {
             // SECURITY: Validate userId is a valid GUID
             if (!IsValidUserId(userId))
             {
-                _logger.LogWarning("❌ Invalid userId format: {UserId}", userId);
                 return BadRequest("Invalid user ID format");
             }
 
             // Parse size parameter (default to thumbnail for performance)
             var imageSize = ParseImageSize(size, ImageSize.Thumbnail);
-            _logger.LogInformation("📏 Parsed size parameter: {ImageSize}", imageSize);
 
             // Get the original profile picture path
             var profilesPath = Path.Combine(_environment.ContentRootPath, "AppData", "images", "profiles");
             var originalPath = Path.Combine(profilesPath, $"{userId}.jpg");
 
-            _logger.LogInformation("📂 Looking for profile picture at: {Path}", originalPath);
-
             if (!System.IO.File.Exists(originalPath))
             {
-                _logger.LogWarning("❌ Profile picture not found: {Path}", originalPath);
                 return NotFound();
             }
-
-            _logger.LogInformation("✅ Profile picture found, requesting resize from ImageResizingService...");
 
             // Get resized image (or full if requested)
             var imageBytes = await _imageResizingService.GetResizedImageAsync(originalPath, imageSize);
 
             if (imageBytes == null)
             {
-                _logger.LogError("❌ ImageResizingService returned null");
                 return NotFound();
             }
-
-            _logger.LogInformation("✅ Returning image - Size: {Bytes} bytes, ImageSize: {ImageSize}", imageBytes.Length, imageSize);
 
             // Set secure headers with longer cache for thumbnails
             var maxAge = imageSize == ImageSize.Thumbnail ? 7200 : 3600; // 2 hours for thumbnails, 1 hour for others
@@ -95,123 +84,26 @@ public class SecureFileController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "❌ ERROR in GetProfilePicture for user {UserId}: {Message}", userId, ex.Message);
+            _logger.LogError(ex, "Error in GetProfilePicture for user {UserId}: {Message}", userId, ex.Message);
             return StatusCode(500, "An error occurred while retrieving the profile picture");
         }
     }
 
-    /// <summary>
-    /// DIAGNOSTIC: Test endpoint to verify image resizing is working
-    /// </summary>
-    [HttpGet("test-resize")]
-    public async Task<IActionResult> TestResize()
-    {
-        _logger.LogInformation("🧪 TEST ENDPOINT CALLED - Verifying resize service");
-
-        var diagnostics = new System.Text.StringBuilder();
-        diagnostics.AppendLine("=== IMAGE RESIZE SERVICE DIAGNOSTIC ===");
-        diagnostics.AppendLine();
-
-        try
-        {
-            // Check if service is injected
-            if (_imageResizingService == null)
-            {
-                diagnostics.AppendLine("❌ CRITICAL: ImageResizingService is NULL!");
-                diagnostics.AppendLine("   The service was not properly injected.");
-                return Ok(diagnostics.ToString());
-            }
-            diagnostics.AppendLine("✅ ImageResizingService is injected");
-
-            // Check cache directory
-            var cacheDir = Path.Combine(_environment.ContentRootPath, "AppData", "cache", "resized-images");
-            diagnostics.AppendLine($"📂 Cache directory: {cacheDir}");
-            diagnostics.AppendLine($"   Exists: {Directory.Exists(cacheDir)}");
-
-            if (Directory.Exists(cacheDir))
-            {
-                var files = Directory.GetFiles(cacheDir);
-                diagnostics.AppendLine($"   Files in cache: {files.Length}");
-                foreach (var file in files.Take(5))
-                {
-                    var info = new FileInfo(file);
-                    diagnostics.AppendLine($"     - {info.Name} ({info.Length} bytes, {info.LastWriteTime:HH:mm:ss})");
-                }
-            }
-
-            diagnostics.AppendLine();
-
-            // Find a test image
-            var profilesPath = Path.Combine(_environment.ContentRootPath, "AppData", "images", "profiles");
-            diagnostics.AppendLine($"📂 Profiles directory: {profilesPath}");
-            diagnostics.AppendLine($"   Exists: {Directory.Exists(profilesPath)}");
-
-            if (Directory.Exists(profilesPath))
-            {
-                var profileImages = Directory.GetFiles(profilesPath, "*.jpg");
-                diagnostics.AppendLine($"   Profile images found: {profileImages.Length}");
-
-                if (profileImages.Length > 0)
-                {
-                    var testImage = profileImages[0];
-                    diagnostics.AppendLine($"   Test image: {Path.GetFileName(testImage)}");
-
-                    diagnostics.AppendLine();
-                    diagnostics.AppendLine("🧪 Testing thumbnail generation...");
-
-                    var sw = System.Diagnostics.Stopwatch.StartNew();
-                    var result = await _imageResizingService.GetResizedImageAsync(testImage, ImageSize.Thumbnail);
-                    sw.Stop();
-
-                    if (result != null)
-                    {
-                        diagnostics.AppendLine($"✅ SUCCESS! Thumbnail generated in {sw.ElapsedMilliseconds}ms");
-                        diagnostics.AppendLine($"   Original: {new FileInfo(testImage).Length} bytes");
-                        diagnostics.AppendLine($"   Thumbnail: {result.Length} bytes");
-                        diagnostics.AppendLine($"   Reduction: {100 - (result.Length * 100 / new FileInfo(testImage).Length)}%");
-                    }
-                    else
-                    {
-                        diagnostics.AppendLine($"❌ FAILED! GetResizedImageAsync returned null");
-                    }
-                }
-                else
-                {
-                    diagnostics.AppendLine("⚠️ No profile images found to test with");
-                }
-            }
-
-            diagnostics.AppendLine();
-            diagnostics.AppendLine("=== END DIAGNOSTIC ===");
-
-            return Ok(diagnostics.ToString());
-        }
-        catch (Exception ex)
-        {
-            diagnostics.AppendLine();
-            diagnostics.AppendLine($"❌ ERROR during diagnostic: {ex.Message}");
-            diagnostics.AppendLine($"   Stack trace: {ex.StackTrace}");
-            return Ok(diagnostics.ToString());
-        }
-    }
 
     /// <summary>
     /// Serves post images with authentication and authorization
+    /// Public posts can be accessed without authentication
     /// Path format: /api/secure-files/post-image/{userId}/{imageId}/{filename}
     /// </summary>
     /// <param name="size">Image size: thumbnail (150px), medium (400px), or full (default: thumbnail)</param>
+    [AllowAnonymous] // Allow access to public post images
     [HttpGet("post-image/{userId}/{imageId}/{filename}")]
     public async Task<IActionResult> GetPostImage(string userId, string imageId, string filename, [FromQuery] string? size = null)
     {
         try
         {
-            // SECURITY: Get requesting user ID
+            // SECURITY: Get requesting user ID (may be null for anonymous users)
             var requestingUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(requestingUserId))
-            {
-                _logger.LogWarning("Unauthorized access attempt to post image");
-                return Unauthorized();
-            }
 
             // SECURITY: Validate all inputs
             if (!IsValidUserId(userId))
@@ -249,10 +141,12 @@ public class SecureFileController : ControllerBase
             }
 
             // SECURITY: Check if user has permission to view this post
+            // Public posts can be viewed by anyone (including anonymous users)
+            // Other posts require authentication and appropriate permissions
             if (!await CanUserViewPostAsync(postImage.Post, requestingUserId))
             {
-                _logger.LogWarning("User {RequestingUserId} denied access to post {PostId} image {ImageId}", 
-                    requestingUserId, postImage.PostId, imageId);
+                _logger.LogWarning("User {RequestingUserId} denied access to post {PostId} (AudienceType: {AudienceType}) image {ImageId}", 
+                    requestingUserId ?? "anonymous", postImage.PostId, postImage.Post.AudienceType, imageId);
                 return Forbid();
             }
 
@@ -453,16 +347,16 @@ public class SecureFileController : ControllerBase
     /// </summary>
     private async Task<bool> CanUserViewPostAsync(Post post, string? requestingUserId)
     {
-        // No requesting user means unauthorized
+        // Public posts - always allowed for everyone (including anonymous users)
+        if (post.AudienceType == AudienceType.Public)
+            return true;
+
+        // No requesting user means unauthorized for non-public posts
         if (string.IsNullOrEmpty(requestingUserId))
             return false;
 
         // Post is by the requesting user - always allowed
         if (post.AuthorId == requestingUserId)
-            return true;
-
-        // Public posts - always allowed for authenticated users
-        if (post.AudienceType == AudienceType.Public)
             return true;
 
         // MeOnly posts - only the author

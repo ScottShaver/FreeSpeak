@@ -38,7 +38,9 @@ namespace FreeSpeakWeb.Tests.Infrastructure
             string authorId,
             string content = "Test post content",
             int likeCount = 0,
-            int commentCount = 0)
+            int commentCount = 0,
+            int shareCount = 0,
+            AudienceType audienceType = AudienceType.FriendsOnly)
         {
             return new Post
             {
@@ -46,7 +48,9 @@ namespace FreeSpeakWeb.Tests.Infrastructure
                 Content = content,
                 CreatedAt = DateTime.UtcNow,
                 LikeCount = likeCount,
-                CommentCount = commentCount
+                CommentCount = commentCount,
+                ShareCount = shareCount,
+                AudienceType = audienceType
             };
         }
 

@@ -111,7 +111,7 @@
         }
     }
 
-    private void ToggleEmojiPicker()
+    private async Task ToggleEmojiPicker()
     {
         if (showEmojiPicker)
         {
@@ -120,7 +120,17 @@
         else
         {
             showEmojiPicker = true;
-            emojiPickerPositionStyle = "left: 0; bottom: 40px;";
+
+            // Calculate position using JavaScript
+            if (module is not null)
+            {
+                emojiPickerPositionStyle = await module.InvokeAsync<string>("calculateEmojiPickerPosition", emojiButtonElement);
+            }
+            else
+            {
+                emojiPickerPositionStyle = "left: 0; bottom: 40px;";
+            }
+
             StateHasChanged();
         }
     }

@@ -8,6 +8,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Per-component interactivity for ThemeSelector and UserPreferencesComponent
+- Dynamic emoji picker positioning with JavaScript calculation
+- Minimum height (600px) for Post Details modal
+- Full page reload navigation for Account/Manage pages to ensure theme consistency
+
+### Changed
+- Account/Manage pages now use static SSR instead of InteractiveServer render mode
+- Emoji picker now uses `position: fixed` with z-index 10001 for proper layering
+- ManageNavMenu links now include `data-enhance-nav="false"` for full page reloads
+- Removed debug logging from App.razor theme loading script
+- Removed debug logging from Program.cs migration steps
+- Removed debug logging from ImageResizingService
+- Removed debug logging from SecureFileController
+- Removed debug logging from DataMigrationService
+- Removed ThemeSelector from PublicHome.razor center display
+
+### Fixed
+- HttpContext NullReferenceException in Account/Manage pages
+- Theme not applying correctly when navigating between Account/Manage pages
+- Emoji picker being cut off or hidden behind other elements in feed
+- Emoji picker being clipped in Post Details modal
+- z-index stacking context issues in FeedArticle preventing emoji picker display
+
+### Removed
+- `@rendermode InteractiveServer` from 13 Account/Manage pages
+- `z-index: 2` from `.article-actions`, `.article-comments`, and `.article-comment-editor` CSS
+- SecureFileController diagnostic test endpoint
+- ~140+ lines of emoji-decorated debug logging across the codebase
+
+## [Previous Versions]
+
+### Added - Notification System
 - Comprehensive notification system with 8 notification types
 - Notification center UI with All/Unread tabs
 - Real-time unread notification count

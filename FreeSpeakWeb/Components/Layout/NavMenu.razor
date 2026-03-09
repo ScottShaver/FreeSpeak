@@ -23,29 +23,29 @@
             <button class="navbar-toggler" @onclick="ToggleNavMenu" type="button" title="Toggle navigation menu" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand" href="">@SiteSettings.Value.SiteName</a>
+            <a class="navbar-brand" href="" data-enhance-nav="false">@SiteSettings.Value.SiteName</a>
         </div>
 
         <div class="d-flex align-items-center gap-3 justify-content-center" style="flex: 1;">
             <AuthorizeView>
                 <Authorized>
-                    <a href="/" title="Home" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="/" title="Home" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-house-door-fill-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
 
-                    <a href="friends" title="Friends" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "friends" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "friends" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="friends" title="Friends" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "friends" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "friends" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-people-fill-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
 
-                    <a href="my-uploads" title="My Uploads" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "my-uploads" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "my-uploads" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="my-uploads" title="My Uploads" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "my-uploads" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "my-uploads" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-images-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
 
-                    <a href="notifications" title="Notifications" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "notifications" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "notifications" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="notifications" title="Notifications" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "notifications" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "notifications" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-bell-fill-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
 
-                    <a href="/Account/Manage" title="@context.User.Identity?.Name" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="/Account/Manage" title="@context.User.Identity?.Name" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         @if (!string.IsNullOrEmpty(currentUser?.ProfilePictureUrl))
                         {
                             <img src="@currentUser.ProfilePictureUrl" alt="Profile" class="rounded-circle" style="width: 24px; height: 24px; object-fit: cover;" />
@@ -65,17 +65,17 @@
                     </form>
                 </Authorized>
                 <NotAuthorized>
-                    <a href="/Account/Register" title="Register" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Register" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Register" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="/Account/Register" title="Register" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Register" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Register" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-person-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
 
-                    <a href="/Account/Login" title="Login" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Login" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Login" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="/Account/Login" title="Login" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Login" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Login" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-person-badge-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
                 </NotAuthorized>
             </AuthorizeView>
 
-            <a href="technology-credits" title="Technology Credits" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "technology-credits" ? "active" : "")" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "technology-credits" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+            <a href="technology-credits" title="Technology Credits" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "technology-credits" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "technology-credits" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                 <span class="bi bi-info-circle-nav-menu" style="margin: 0; top: 0;"></span>
             </a>
         </div>
@@ -90,31 +90,31 @@
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
-                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "/" ? "active" : "")" href="/">
+                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "/" ? "active" : "")" href="/" data-enhance-nav="false">
                         <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
                     </a>
                 </div>
 
                 <div class="nav-item px-3">
-                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "friends" ? "active" : "")" href="friends">
+                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "friends" ? "active" : "")" href="friends" data-enhance-nav="false">
                         <span class="bi bi-people-fill-nav-menu" aria-hidden="true"></span> Friends
                     </a>
                 </div>
 
                 <div class="nav-item px-3">
-                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "my-uploads" ? "active" : "")" href="my-uploads">
+                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "my-uploads" ? "active" : "")" href="my-uploads" data-enhance-nav="false">
                         <span class="bi bi-images-nav-menu" aria-hidden="true"></span> My Uploads
                     </a>
                 </div>
 
                 <div class="nav-item px-3">
-                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "notifications" ? "active" : "")" href="notifications">
+                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "notifications" ? "active" : "")" href="notifications" data-enhance-nav="false">
                         <span class="bi bi-bell-fill-nav-menu" aria-hidden="true"></span> Notifications
                     </a>
                 </div>
 
                 <div class="nav-item px-3">
-                    <a class="nav-link d-flex align-items-center gap-2 @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "active" : "")" href="/Account/Manage">
+                    <a class="nav-link d-flex align-items-center gap-2 @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "active" : "")" href="/Account/Manage" data-enhance-nav="false">
                         @if (!string.IsNullOrEmpty(currentUser?.ProfilePictureUrl))
                         {
                             <img src="@currentUser.ProfilePictureUrl" alt="Profile" class="rounded-circle" style="width: 32px; height: 32px; object-fit: cover;" />
@@ -138,12 +138,12 @@
             </Authorized>
             <NotAuthorized>
                 <div class="nav-item px-3">
-                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "/Account/Register" ? "active" : "")" href="/Account/Register">
+                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "/Account/Register" ? "active" : "")" href="/Account/Register" data-enhance-nav="false">
                         <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
                     </a>
                 </div>
                 <div class="nav-item px-3">
-                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "/Account/Login" ? "active" : "")" href="/Account/Login">
+                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "/Account/Login" ? "active" : "")" href="/Account/Login" data-enhance-nav="false">
                         <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
                     </a>
                 </div>
@@ -153,7 +153,7 @@
         <hr class="nav-divider" />
 
         <div class="nav-item px-3">
-            <a class="nav-link @(GetActiveMenuItemFromUrl() == "technology-credits" ? "active" : "")" href="technology-credits">
+            <a class="nav-link @(GetActiveMenuItemFromUrl() == "technology-credits" ? "active" : "")" href="technology-credits" data-enhance-nav="false">
                 <span class="bi bi-info-circle-nav-menu" aria-hidden="true"></span> Technology Credits
             </a>
         </div>

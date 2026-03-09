@@ -47,8 +47,15 @@ namespace FreeSpeakWeb.Data
 
         /// <summary>
         /// Cached count of comments (updated via trigger or application logic)
+        /// <summary>
+        /// Cached count of comments (updated via trigger or application logic)
         /// </summary>
         public int CommentCount { get; set; } = 0;
+
+        /// <summary>
+        /// Cached count of shares (updated when post is shared)
+        /// </summary>
+        public int ShareCount { get; set; } = 0;
 
         /// <summary>
         /// Defines who can see this post

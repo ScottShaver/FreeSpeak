@@ -59,27 +59,21 @@ public class ImageResizingService
     /// <returns>Byte array of the resized image</returns>
     public async Task<byte[]?> GetResizedImageAsync(string originalImagePath, ImageSize size)
     {
-        _logger.LogInformation("🖼️ GetResizedImageAsync called - Path: {Path}, Size: {Size}", originalImagePath, size);
-
         try
         {
             // If requesting full size, just return the original
             if (size == ImageSize.Full)
             {
-                _logger.LogInformation("⚡ Returning full-size image (no resize needed)");
                 if (File.Exists(originalImagePath))
                 {
                     return await File.ReadAllBytesAsync(originalImagePath);
                 }
-                _logger.LogWarning("❌ Original file not found: {Path}", originalImagePath);
                 return null;
             }
 
             // Check if we have a cached version
             var cacheKey = GenerateCacheKey(originalImagePath, size);
             var cachedPath = Path.Combine(_cacheBasePath, cacheKey);
-
-            _logger.LogInformation("🔍 Cache lookup - Key: {CacheKey}, Path: {CachePath}", cacheKey, cachedPath);
 
             if (File.Exists(cachedPath))
             {
@@ -89,35 +83,27 @@ public class ImageResizingService
 
                 if (cachedModified >= originalModified)
                 {
-                    _logger.LogInformation("✅ Cache HIT - Returning cached resized image: {CacheKey}", cacheKey);
                     return await File.ReadAllBytesAsync(cachedPath);
                 }
                 else
                 {
-                    _logger.LogInformation("🔄 Cache STALE - Original modified, deleting old cache: {CacheKey}", cacheKey);
                     // Original was updated, delete old cache
                     File.Delete(cachedPath);
                 }
             }
-            else
-            {
-                _logger.LogInformation("❌ Cache MISS - No cached version exists for: {CacheKey}", cacheKey);
-            }
 
             // No valid cache, resize the image
-            _logger.LogInformation("🎨 RESIZING IMAGE - Creating new thumbnail...");
             return await ResizeAndCacheImageAsync(originalImagePath, size, cachedPath);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "❌ ERROR in GetResizedImageAsync: {Message}", ex.Message);
+            _logger.LogError(ex, "Error in GetResizedImageAsync: {Message}", ex.Message);
 
             // Fallback to original image on error
             try
             {
                 if (File.Exists(originalImagePath))
                 {
-                    _logger.LogWarning("⚠️ Falling back to original image due to error");
                     return await File.ReadAllBytesAsync(originalImagePath);
                 }
             }
@@ -135,19 +121,13 @@ public class ImageResizingService
     /// </summary>
     private async Task<byte[]?> ResizeAndCacheImageAsync(string originalImagePath, ImageSize size, string cachePath)
     {
-        _logger.LogInformation("🔧 ResizeAndCacheImageAsync - Original: {Original}, Cache: {Cache}", 
-            Path.GetFileName(originalImagePath), Path.GetFileName(cachePath));
-
         if (!File.Exists(originalImagePath))
         {
-            _logger.LogError("❌ Original image file not found: {Path}", originalImagePath);
+            _logger.LogError("Original image file not found: {Path}", originalImagePath);
             return null;
         }
 
-        _logger.LogInformation("📂 Loading image from: {Path}", originalImagePath);
         using var image = await Image.LoadAsync(originalImagePath);
-
-        _logger.LogInformation("📐 Original dimensions: {Width}x{Height}", image.Width, image.Height);
 
         // Determine target size based on size variant
         var maxDimension = size switch
@@ -163,8 +143,6 @@ public class ImageResizingService
             image.Height, 
             maxDimension);
 
-        _logger.LogInformation("🎯 Target dimensions: {Width}x{Height} (max: {Max}px)", newWidth, newHeight, maxDimension);
-
         // Resize the image
         image.Mutate(x => x.Resize(new ResizeOptions
         {
@@ -173,17 +151,11 @@ public class ImageResizingService
             Sampler = KnownResamplers.Lanczos3 // High quality resampling
         }));
 
-        _logger.LogInformation("💾 Saving resized image to cache: {Path}", cachePath);
-
         // Save to cache
         await image.SaveAsJpegAsync(cachePath, new JpegEncoder
         {
             Quality = JpegQuality
         });
-
-        var fileInfo = new FileInfo(cachePath);
-        _logger.LogInformation("✅ THUMBNAIL CREATED! Size: {Size}, Saved: {Bytes} bytes at {Path}", 
-            size, fileInfo.Length, cachePath);
 
         // Return the cached version
         return await File.ReadAllBytesAsync(cachePath);

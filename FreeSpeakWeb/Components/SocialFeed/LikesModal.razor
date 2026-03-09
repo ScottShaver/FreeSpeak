@@ -1,4 +1,6 @@
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@inject UserPreferenceService UserPreferenceService
 
 <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" @onclick="Close">
     <div class="modal-dialog modal-dialog-scrollable" @onclick:stopPropagation="true">
@@ -25,20 +27,21 @@
                     <div class="likes-list">
                         @foreach (var like in Likes)
                         {
+                            var displayName = GetCachedDisplayName(like.User.Id);
                             <div class="like-item">
                                 <div class="like-user-info">
                                     @if (!string.IsNullOrEmpty(like.User.ProfilePictureUrl))
                                     {
-                                        <img src="@like.User.ProfilePictureUrl" alt="@GetDisplayName(like.User)" class="like-user-avatar" />
+                                        <img src="@like.User.ProfilePictureUrl" alt="@displayName" class="like-user-avatar" />
                                     }
                                     else
                                     {
                                         <div class="like-user-avatar like-avatar-placeholder">
-                                            <span class="like-avatar-initial">@GetInitials(GetDisplayName(like.User))</span>
+                                            <span class="like-avatar-initial">@GetInitials(displayName)</span>
                                         </div>
                                     }
                                     <div class="like-user-details">
-                                        <div class="like-user-name">@GetDisplayName(like.User)</div>
+                                        <div class="like-user-name">@displayName</div>
                                         <div class="like-timestamp">@FormatTimestamp(like.CreatedAt)</div>
                                     </div>
                                 </div>
@@ -67,18 +70,35 @@
     [Parameter]
     public EventCallback OnClose { get; set; }
 
+    private Dictionary<string, string> displayNameCache = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // Pre-load all display names when likes are loaded
+        if (Likes.Any())
+        {
+            displayNameCache.Clear();
+            foreach (var like in Likes)
+            {
+                var displayName = await UserPreferenceService.FormatUserDisplayNameAsync(
+                    like.User.Id,
+                    like.User.FirstName,
+                    like.User.LastName,
+                    like.User.UserName ?? "Unknown"
+                );
+                displayNameCache[like.User.Id] = displayName;
+            }
+        }
+    }
+
+    private string GetCachedDisplayName(string userId)
+    {
+        return displayNameCache.TryGetValue(userId, out var name) ? name : "Unknown";
+    }
+
     private async Task Close()
     {
         await OnClose.InvokeAsync();
-    }
-
-    private string GetDisplayName(ApplicationUser user)
-    {
-        if (!string.IsNullOrEmpty(user.FirstName) && !string.IsNullOrEmpty(user.LastName))
-        {
-            return $"{user.FirstName} {user.LastName}";
-        }
-        return user.UserName ?? "Unknown";
     }
 
     private string GetInitials(string name)

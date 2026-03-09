@@ -6,13 +6,52 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <!DOCTYPE html>
-<html lang="en" data-theme="@initialTheme">
+<html lang="en">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
     <ResourcePreloader />
+    <!-- Load theme from localStorage FIRST, before any CSS loads -->
+    <script>
+        // Function to apply theme
+        function applyTheme() {
+            // ALWAYS check localStorage first (for both authenticated and unauthenticated users)
+            var savedTheme = localStorage.getItem('selectedTheme');
+            var serverTheme = '@(initialTheme ?? "")';
+            var theme;
+
+            if (savedTheme) {
+                // Use localStorage theme (most recent selection)
+                theme = savedTheme;
+            } else if (serverTheme) {
+                // Fallback to server theme (from database for authenticated users)
+                theme = serverTheme;
+            } else {
+                // Final fallback to default
+                theme = 'default';
+            }
+
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+
+        // Apply theme immediately
+        applyTheme();
+
+        // Also apply theme on Blazor enhanced navigation
+        window.addEventListener('popstate', function() {
+            applyTheme();
+        });
+
+        // Listen for Blazor enhanced navigation events (if they exist)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Blazor enhanced nav callback
+            Blazor?.addEventListener?.('enhancednavigationcompleted', function() {
+                applyTheme();
+            });
+        });
+    </script>
     <link rel="stylesheet" href="@Assets["lib/bootstrap/dist/css/bootstrap.min.css"]" />
     <link rel="stylesheet" href="@Assets["css/themes.css"]" />
     <link rel="stylesheet" href="@Assets["css/theme-bootstrap.css"]" />
@@ -33,11 +72,11 @@
 </html>
 
 @code {
-    private string initialTheme = "default";
+    private string? initialTheme = null;
 
     protected override async Task OnInitializedAsync()
     {
-        // Load theme preference during SSR
+        // Load theme preference during SSR - ONLY for authenticated users
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var userId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -45,5 +84,7 @@
         {
             initialTheme = await PreferenceService.GetColorSchemeAsync(userId);
         }
+        // For unauthenticated users, leave initialTheme as null
+        // The client-side JavaScript will load from localStorage
     }
 }

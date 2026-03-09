@@ -1,0 +1,93 @@
+.public-home-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.welcome-section {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border-radius: 12px;
+    color: white;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-section h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.welcome-section .lead {
+    font-size: 1.25rem;
+    margin-bottom: 30px;
+    opacity: 0.95;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.theme-selector-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.action-buttons .btn {
+    min-width: 120px;
+}
+
+.public-feed-section {
+    margin-top: 30px;
+}
+
+.public-feed-section h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+}
+
+.loading-indicator,
+.empty-feed,
+.loading-more {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+}
+
+.load-more-section {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.load-more-section .btn {
+    min-width: 150px;
+}
+
+@media (max-width: 768px) {
+    .welcome-section h1 {
+        font-size: 2rem;
+    }
+
+    .welcome-section .lead {
+        font-size: 1.1rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .action-buttons .btn {
+        width: 100%;
+        max-width: 250px;
+    }
+}

@@ -1,3 +1,8 @@
+/* Add 2px border to match other popups */
+.modal-content {
+    border: 2px solid var(--border-color) !important;
+}
+
 .likes-list {
     display: flex;
     flex-direction: column;
@@ -14,7 +19,7 @@
 }
 
 .like-item:hover {
-    background-color: #f0f2f5;
+    background-color: var(--surface-hover);
 }
 
 .like-user-info {
@@ -54,12 +59,12 @@
 .like-user-name {
     font-size: 15px;
     font-weight: 600;
-    color: #050505;
+    color: var(--text-primary);
 }
 
 .like-timestamp {
     font-size: 13px;
-    color: #65676b;
+    color: var(--text-secondary);
 }
 
 .like-reaction {

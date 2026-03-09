@@ -1,0 +1,292 @@
+@page "/"
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Extensions.Options
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Components.Shared
+@using Microsoft.JSInterop
+
+@inject IOptions<SiteSettings> SiteSettings
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject PostService PostService
+@inject UserPreferenceService UserPreferenceService
+@inject IJSRuntime JSRuntime
+
+<PageTitle>@SiteSettings.Value.SiteName - Discover</PageTitle>
+
+<div class="public-home-container">
+    <div class="welcome-section">
+        <h1>Welcome to @SiteSettings.Value.SiteName</h1>
+        <p class="lead">Connect with friends and share your thoughts</p>
+        <div class="action-buttons">
+            <button class="btn btn-primary btn-lg" @onclick="@(() => NavigateToPage("/Account/Register"))">Sign Up</button>
+            <button class="btn btn-outline-primary btn-lg" @onclick="@(() => NavigateToPage("/Account/Login"))">Log In</button>
+        </div>
+    </div>
+
+    <div class="public-feed-section">
+        <h2>Recent Public Posts</h2>
+        
+        @if (isLoading && !posts.Any())
+        {
+            <div class="loading-indicator">
+                <p>Loading posts...</p>
+            </div>
+        }
+        else if (!posts.Any() && !isLoading)
+        {
+            <div class="empty-feed">
+                <p>No public posts to display yet. Be the first to share something!</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var post in posts)
+            {
+                var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
+                var comments = postComments.ContainsKey(post.Id) ? postComments[post.Id] : new List<CommentDisplayModel>();
+                var directCommentCount = postDirectCommentCounts.ContainsKey(post.Id) ? postDirectCommentCounts[post.Id] : 0;
+                var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
+
+                <FeedArticle 
+                    PostId="@post.Id"
+                    AuthorId="@post.AuthorId"
+                    AuthorName="@authorName"
+                    AuthorImageUrl="@post.Author?.ProfilePictureUrl"
+                    CreatedAt="@post.CreatedAt"
+                    LikeCount="@post.LikeCount"
+                    CommentCount="@post.CommentCount"
+                    ShareCount="@post.ShareCount"
+                    DirectCommentCount="@directCommentCount"
+                    CurrentUserId="@null"
+                    CurrentUserImageUrl="@null"
+                    CurrentUserName="@null"
+                    ReactionBreakdown="@postReactions"
+                    UserReaction="@null"
+                    Comments="@comments"
+                    AudienceType="@post.AudienceType"
+                    IsPinned="false"
+                    Images="@post.Images?.ToList()"
+                    IsReadOnly="true"
+                    OnShowPostDetail="@(() => ShowPostDetail(post))"
+                    OnShowComments="@(() => ShowPostDetail(post))">
+                    <ArticleContent>
+                        @((MarkupString)FormatContentWithLineBreaks(post.Content))
+                    </ArticleContent>
+                </FeedArticle>
+            }
+
+            @if (hasMore && !isLoadingMore)
+            {
+                <div class="load-more-section">
+                    <button class="btn btn-outline-primary" @onclick="LoadMorePosts">Load More</button>
+                </div>
+            }
+
+            @if (isLoadingMore)
+            {
+                <div class="loading-more">
+                    <p>Loading more posts...</p>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@if (showPostDetail && selectedPost != null)
+{
+    var selectedPostAuthorName = postAuthorNames.ContainsKey(selectedPost.Id) ? postAuthorNames[selectedPost.Id] : "Unknown";
+    var selectedPostReactions = postReactionData.ContainsKey(selectedPost.Id) ? postReactionData[selectedPost.Id] : new Dictionary<LikeType, int>();
+
+    <PostDetailModal 
+        PostId="@selectedPost.Id"
+        AuthorId="@selectedPost.AuthorId"
+        AuthorName="@selectedPostAuthorName"
+        AuthorImageUrl="@selectedPost.Author?.ProfilePictureUrl"
+        CurrentUserId="@null"
+        CurrentUserImageUrl="@null"
+        CurrentUserName="@null"
+        CreatedAt="@selectedPost.CreatedAt"
+        LikeCount="@selectedPost.LikeCount"
+        CommentCount="@selectedPost.CommentCount"
+        ShareCount="@selectedPost.ShareCount"
+        Images="@selectedPost.Images?.ToList()"
+        ReactionBreakdown="@selectedPostReactions"
+        UserReaction="@null"
+        AudienceType="@selectedPost.AudienceType"
+        IsPinned="false"
+        IsReadOnly="true"
+        OnClose="@ClosePostDetail">
+        <ArticleContent>
+            @((MarkupString)FormatContentWithLineBreaks(selectedPost.Content))
+        </ArticleContent>
+    </PostDetailModal>
+}
+
+@code {
+    private List<Post> posts = new();
+    private Dictionary<int, Dictionary<LikeType, int>> postReactionData = new();
+    private Dictionary<int, List<CommentDisplayModel>> postComments = new();
+    private Dictionary<int, int> postDirectCommentCounts = new();
+    private Dictionary<int, string> postAuthorNames = new();
+
+    private bool isLoading = true;
+    private bool isLoadingMore = false;
+    private bool hasMore = false;
+    private int pageNumber = 1;
+    private int pageSize = 10;
+
+    private bool showPostDetail = false;
+    private Post? selectedPost = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Check if user is authenticated and redirect to authenticated home
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            NavigationManager.NavigateTo("/home");
+            return;
+        }
+
+        await LoadPublicPosts();
+    }
+
+    private async Task LoadPublicPosts()
+    {
+        isLoading = true;
+
+        try
+        {
+            // Get only public posts
+            var result = await PostService.GetPublicPostsAsync(pageNumber, pageSize);
+            
+            if (result.Posts.Any())
+            {
+                posts.AddRange(result.Posts);
+                hasMore = result.HasMore;
+
+                // Load reactions and comments for each post
+                foreach (var post in result.Posts)
+                {
+                    // Load reaction breakdown
+                    var reactions = await PostService.GetReactionBreakdownAsync(post.Id);
+                    postReactionData[post.Id] = reactions;
+
+                    // Load recent comments (last 3, page 1)
+                    var commentsRaw = await PostService.GetCommentsPagedAsync(post.Id, 3, 1);
+                    var comments = new List<CommentDisplayModel>();
+                    foreach (var c in commentsRaw)
+                    {
+                        comments.Add(await BuildCommentDisplayModel(c));
+                    }
+                    postComments[post.Id] = comments;
+
+                    // Get direct comment count
+                    var directCount = await PostService.GetDirectCommentCountAsync(post.Id);
+                    postDirectCommentCounts[post.Id] = directCount;
+
+                    // Format author name
+                    if (post.Author != null)
+                    {
+                        var displayName = await UserPreferenceService.FormatUserDisplayNameAsync(
+                            post.AuthorId,
+                            post.Author.FirstName,
+                            post.Author.LastName,
+                            post.Author.UserName ?? "Unknown"
+                        );
+                        postAuthorNames[post.Id] = displayName;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading public posts: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task LoadMorePosts()
+    {
+        isLoadingMore = true;
+        pageNumber++;
+        await LoadPublicPosts();
+        isLoadingMore = false;
+    }
+
+    private string FormatContentWithLineBreaks(string content)
+    {
+        if (string.IsNullOrEmpty(content))
+            return string.Empty;
+
+        return content.Replace("\n", "<br />");
+    }
+
+    private async Task<CommentDisplayModel> BuildCommentDisplayModel(Comment comment)
+    {
+        // Load replies for this comment
+        var replies = await PostService.GetRepliesAsync(comment.Id);
+        var replyModels = new List<CommentDisplayModel>();
+
+        foreach (var reply in replies)
+        {
+            var replyModel = await BuildCommentDisplayModel(reply); // Recursive call for nested replies
+            replyModels.Add(replyModel);
+        }
+
+        return new CommentDisplayModel
+        {
+            CommentId = comment.Id,
+            UserName = await GetCommentAuthorName(comment),
+            UserImageUrl = comment.Author?.ProfilePictureUrl,
+            CommentAuthorId = comment.AuthorId,
+            CommentText = comment.Content,
+            Timestamp = comment.CreatedAt,
+            Replies = replyModels.Any() ? replyModels : null,
+            LikeCount = await PostService.GetCommentLikeCountAsync(comment.Id),
+            UserReaction = null, // No user reactions for unauthenticated users
+            ReactionBreakdown = await PostService.GetCommentReactionBreakdownAsync(comment.Id)
+        };
+    }
+
+    private async Task<string> GetCommentAuthorName(Comment comment)
+    {
+        if (comment.Author == null) return "Unknown";
+
+        // Use the author's display name preference
+        return await UserPreferenceService.FormatUserDisplayNameAsync(
+            comment.Author.Id,
+            comment.Author.FirstName,
+            comment.Author.LastName,
+            comment.Author.UserName ?? "Unknown"
+        );
+    }
+
+    private void ShowPostDetail(Post post)
+    {
+        selectedPost = post;
+        showPostDetail = true;
+        StateHasChanged();
+    }
+
+    private void ClosePostDetail()
+    {
+        selectedPost = null;
+        showPostDetail = false;
+        StateHasChanged();
+    }
+
+    private async Task NavigateToPage(string url)
+    {
+        // Force full page reload to ensure theme script runs
+        await JSRuntime.InvokeVoidAsync("eval", $"window.location.href = '{url}'");
+    }
+}
