@@ -373,7 +373,10 @@ namespace FreeSpeakWeb.Services
                 var posts = await context.Posts
                     .Include(p => p.Author)
                     .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
-                    .Where(p => authorIds.Contains(p.AuthorId))
+                    .Where(p => authorIds.Contains(p.AuthorId) &&
+                               (p.AuthorId == userId || // User's own posts (all audience types)
+                                p.AudienceType == AudienceType.Public || // Friends' public posts
+                                p.AudienceType == AudienceType.FriendsOnly)) // Friends' friends-only posts
                     .OrderByDescending(p => p.CreatedAt)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
@@ -416,6 +419,40 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
+        /// Get public posts for unauthenticated users
+        /// </summary>
+        public async Task<(List<Post> Posts, bool HasMore)> GetPublicPostsAsync(int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Get public posts only, ordered by creation date (most recent first)
+                var posts = await context.Posts
+                    .Include(p => p.Author)
+                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
+                    .Where(p => p.AudienceType == AudienceType.Public)
+                    .OrderByDescending(p => p.CreatedAt)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize + 1) // Take one extra to check if there are more
+                    .ToListAsync();
+
+                var hasMore = posts.Count > pageSize;
+                if (hasMore)
+                {
+                    posts = posts.Take(pageSize).ToList();
+                }
+
+                return (posts, hasMore);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving public posts");
+                return (new List<Post>(), false);
+            }
+        }
+
+        /// <summary>
         /// Get total count of posts in user's feed
         /// </summary>
         public async Task<int> GetFeedPostsCountAsync(string userId)
@@ -433,7 +470,10 @@ namespace FreeSpeakWeb.Services
                 var authorIds = friendIds.Append(userId).ToList();
 
                 return await context.Posts
-                    .Where(p => authorIds.Contains(p.AuthorId))
+                    .Where(p => authorIds.Contains(p.AuthorId) &&
+                               (p.AuthorId == userId || // User's own posts (all audience types)
+                                p.AudienceType == AudienceType.Public || // Friends' public posts
+                                p.AudienceType == AudienceType.FriendsOnly)) // Friends' friends-only posts
                     .CountAsync();
             }
             catch (Exception ex)

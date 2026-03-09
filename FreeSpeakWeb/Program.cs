@@ -150,20 +150,10 @@ namespace FreeSpeakWeb
                     await DatabaseSeeder.SeedTestUsersAsync(userManager, dbContext, logger);
 
                     // Migrate existing URLs to secure format
-                    logger.LogWarning("?? ========== STARTING URL MIGRATION ==========");
                     var dataMigrationService = services.GetRequiredService<DataMigrationService>();
-
-                    logger.LogWarning("?? Step 1/3: Migrating profile picture URLs...");
                     await dataMigrationService.MigrateProfilePictureUrlsAsync();
-
-                    logger.LogWarning("??? Step 2/3: Migrating post image URLs...");
                     await dataMigrationService.MigratePostImageUrlsAsync();
-
-                    logger.LogWarning("?? Step 3/3: Moving files from wwwroot to AppData...");
-                    // Move files from wwwroot to AppData
                     await dataMigrationService.MoveFilesOutOfWwwrootAsync();
-
-                    logger.LogWarning("? ========== URL MIGRATION COMPLETE ==========");
                 }
                 catch (Exception ex)
                 {

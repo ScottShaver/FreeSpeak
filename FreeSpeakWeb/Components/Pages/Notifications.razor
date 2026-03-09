@@ -16,6 +16,7 @@
 @inject PostService PostService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+@inject UserPreferenceService UserPreferenceService
 
 <PageTitle>Notifications - FreeSpeak</PageTitle>
 
@@ -100,19 +101,32 @@
     <PostDetailModal 
         PostId="@selectedPost.Id"
         AuthorId="@selectedPost.AuthorId"
-        AuthorName="@selectedPost.Author?.UserName"
+        AuthorName="@selectedPostAuthorName"
         AuthorImageUrl="@selectedPost.Author?.ProfilePictureUrl"
         CurrentUserId="@currentUserId"
+        CurrentUserImageUrl="@currentUserImageUrl"
+        CurrentUserName="@currentUserName"
         CreatedAt="@selectedPost.CreatedAt"
         LikeCount="@selectedPost.LikeCount"
         CommentCount="@selectedPost.CommentCount"
+        ShareCount="@selectedPost.ShareCount"
         Images="@selectedPost.Images?.ToList()"
         TargetCommentId="@targetCommentId"
         ReactionBreakdown="@postReactionBreakdown"
         UserReaction="@userReaction"
+        AudienceType="@selectedPost.AudienceType"
+        IsPinned="@selectedPostIsPinned"
+        OnReactionChanged="@HandleReactionChanged"
+        OnRemoveReaction="@HandleRemoveReaction"
+        OnPinPost="@HandlePinPost"
+        OnUnpinPost="@HandleUnpinPost"
+        OnPostDeleted="@HandlePostDeleted"
+        OnCommentAdded="@HandleCommentAdded"
+        OnCommentReactionChanged="@HandleCommentReactionChanged"
+        OnRemoveCommentReaction="@HandleRemoveCommentReaction"
         OnClose="@ClosePostDetail">
         <ArticleContent>
-            @((MarkupString)selectedPost.Content)
+            @((MarkupString)FormatContentWithLineBreaks(selectedPost.Content))
         </ArticleContent>
     </PostDetailModal>
 }
@@ -120,6 +134,8 @@
 @code {
     private List<UserNotification> notifications = new();
     private string? currentUserId;
+    private string? currentUserImageUrl;
+    private string? currentUserName;
     private bool isLoading = true;
     private bool isLoadingMore = false;
     private bool isMarkingAllRead = false;
@@ -131,6 +147,8 @@
     private int unreadCount = 0;
     private int totalCount = 0;
     private Post? selectedPost = null;
+    private string selectedPostAuthorName = "Unknown";
+    private bool selectedPostIsPinned = false;
     private int? targetCommentId = null;
     private Dictionary<LikeType, int>? postReactionBreakdown = null;
     private LikeType? userReaction = null;
@@ -143,6 +161,16 @@
         if (user != null)
         {
             currentUserId = user.Id;
+            currentUserImageUrl = user.ProfilePictureUrl;
+
+            // Use the user's display name preference
+            currentUserName = await UserPreferenceService.FormatUserDisplayNameAsync(
+                user.Id,
+                user.FirstName,
+                user.LastName,
+                user.UserName ?? "User"
+            );
+
             await LoadNotifications();
         }
     }
@@ -245,6 +273,20 @@
                         selectedPost = post;
                         targetCommentId = data.CommentId; // Set the target comment ID for scrolling
 
+                        // Load author's display name using their preference
+                        if (post.Author != null)
+                        {
+                            selectedPostAuthorName = await UserPreferenceService.FormatUserDisplayNameAsync(
+                                post.Author.Id,
+                                post.Author.FirstName,
+                                post.Author.LastName,
+                                post.Author.UserName ?? "Unknown"
+                            );
+                        }
+
+                        // Load pinned status
+                        selectedPostIsPinned = await PostService.IsPostPinnedAsync(post.Id, post.AuthorId);
+
                         // Load reaction data
                         postReactionBreakdown = await PostService.GetReactionBreakdownAsync(post.Id);
                         userReaction = await PostService.GetUserReactionAsync(post.Id, currentUserId);
@@ -259,6 +301,157 @@
                 Console.WriteLine($"Error parsing notification data: {ex.Message}");
             }
         }
+    }
+
+    private async Task HandleReactionChanged(LikeType reactionType)
+    {
+        if (currentUserId == null || selectedPost == null) return;
+
+        try
+        {
+            var result = await PostService.AddOrUpdateReactionAsync(selectedPost.Id, currentUserId, reactionType);
+
+            if (result.Success)
+            {
+                // Update user's reaction
+                userReaction = reactionType;
+
+                // Reload reaction breakdown
+                postReactionBreakdown = await PostService.GetReactionBreakdownAsync(selectedPost.Id);
+
+                // Update like count
+                var post = await PostService.GetPostByIdAsync(selectedPost.Id);
+                if (post != null)
+                {
+                    selectedPost.LikeCount = post.LikeCount;
+                }
+
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error handling reaction: {ex.Message}");
+        }
+    }
+
+    private async Task HandleRemoveReaction()
+    {
+        if (currentUserId == null || selectedPost == null) return;
+
+        try
+        {
+            var result = await PostService.RemoveLikeAsync(selectedPost.Id, currentUserId);
+
+            if (result.Success)
+            {
+                // Update user's reaction
+                userReaction = null;
+
+                // Reload reaction breakdown
+                postReactionBreakdown = await PostService.GetReactionBreakdownAsync(selectedPost.Id);
+
+                // Update like count
+                var post = await PostService.GetPostByIdAsync(selectedPost.Id);
+                if (post != null)
+                {
+                    selectedPost.LikeCount = post.LikeCount;
+                }
+
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error removing reaction: {ex.Message}");
+        }
+    }
+
+    private async Task HandlePinPost(int postId)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await PostService.PinPostAsync(postId, currentUserId);
+
+            if (result.Success)
+            {
+                selectedPostIsPinned = true;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error pinning post: {ex.Message}");
+        }
+    }
+
+    private async Task HandleUnpinPost(int postId)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await PostService.UnpinPostAsync(postId, currentUserId);
+
+            if (result.Success)
+            {
+                selectedPostIsPinned = false;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error unpinning post: {ex.Message}");
+        }
+    }
+
+    private void HandlePostDeleted(int postId)
+    {
+        // Close the modal since the post is deleted
+        ClosePostDetail();
+    }
+
+    private async Task HandleCommentAdded((int PostId, string Content) data)
+    {
+        if (currentUserId == null || selectedPost == null) return;
+
+        try
+        {
+            var result = await PostService.AddCommentAsync(data.PostId, currentUserId, data.Content);
+
+            if (result.Success && selectedPost != null)
+            {
+                selectedPost.CommentCount++;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error adding comment: {ex.Message}");
+        }
+    }
+
+    private async Task HandleCommentReactionChanged((int CommentId, LikeType ReactionType) data)
+    {
+        // This is handled by the modal itself
+        await Task.CompletedTask;
+    }
+
+    private async Task HandleRemoveCommentReaction(int commentId)
+    {
+        // This is handled by the modal itself
+        await Task.CompletedTask;
+    }
+
+    private string FormatContentWithLineBreaks(string content)
+    {
+        if (string.IsNullOrEmpty(content))
+            return string.Empty;
+
+        // Replace newlines with <br> tags
+        return content.Replace("\r\n", "<br>").Replace("\n", "<br>");
     }
 
     private void ClosePostDetail()

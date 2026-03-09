@@ -88,10 +88,11 @@ namespace FreeSpeakWeb.Tests.Components
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, likeCount)
-                .Add(p => p.CommentCount, 0));
+                .Add(p => p.CommentCount, 0)
+                .Add(p => p.ShareCount, 0));
 
             // Assert
-            cut.Markup.Should().Contain($"{likeCount} likes");
+            cut.Find(".header-stat-count").TextContent.Should().Contain(likeCount.ToString());
         }
 
         [Fact]
@@ -105,10 +106,31 @@ namespace FreeSpeakWeb.Tests.Components
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
-                .Add(p => p.CommentCount, commentCount));
+                .Add(p => p.CommentCount, commentCount)
+                .Add(p => p.ShareCount, 0));
 
             // Assert
-            cut.Markup.Should().Contain($"{commentCount} comments");
+            var statCounts = cut.FindAll(".header-stat-count");
+            statCounts[1].TextContent.Should().Contain(commentCount.ToString());
+        }
+
+        [Fact]
+        public void FeedArticle_RendersShareCount()
+        {
+            // Arrange
+            var shareCount = 7;
+
+            // Act
+            var cut = RenderComponent<FeedArticle>(parameters => parameters
+                .Add(p => p.AuthorName, "Test User")
+                .Add(p => p.CreatedAt, DateTime.Now)
+                .Add(p => p.LikeCount, 0)
+                .Add(p => p.CommentCount, 0)
+                .Add(p => p.ShareCount, shareCount));
+
+            // Assert
+            var statCounts = cut.FindAll(".header-stat-count");
+            statCounts[2].TextContent.Should().Contain(shareCount.ToString());
         }
 
         [Fact]

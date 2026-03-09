@@ -270,6 +270,57 @@ namespace FreeSpeakWeb.Tests.Services
             feedPosts.Should().NotContain(p => p.AuthorId == "user3");
         }
 
+        [Fact]
+        public async Task GetFeedPostsAsync_ShouldRespectAudienceSettings()
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory("PostTest_AudienceFilter");
+            var logger = CreateMockLogger<PostService>();
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService());
+
+            var user1 = TestDataFactory.CreateTestUser(id: "user1");
+            var user2 = TestDataFactory.CreateTestUser(id: "user2");
+
+            var friendship = TestDataFactory.CreateTestFriendship("user1", "user2", FriendshipStatus.Accepted);
+
+            // User1's own posts with different audience types
+            var user1PublicPost = TestDataFactory.CreateTestPost("user1", "User1 public", audienceType: AudienceType.Public);
+            var user1FriendsPost = TestDataFactory.CreateTestPost("user1", "User1 friends", audienceType: AudienceType.FriendsOnly);
+            var user1PrivatePost = TestDataFactory.CreateTestPost("user1", "User1 private", audienceType: AudienceType.MeOnly);
+
+            // User2's posts with different audience types (user1 should only see public and friends-only)
+            var user2PublicPost = TestDataFactory.CreateTestPost("user2", "User2 public", audienceType: AudienceType.Public);
+            var user2FriendsPost = TestDataFactory.CreateTestPost("user2", "User2 friends", audienceType: AudienceType.FriendsOnly);
+            var user2PrivatePost = TestDataFactory.CreateTestPost("user2", "User2 private", audienceType: AudienceType.MeOnly);
+
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.AddRange(user1, user2);
+                context.Friendships.Add(friendship);
+                context.Posts.AddRange(user1PublicPost, user1FriendsPost, user1PrivatePost, 
+                                      user2PublicPost, user2FriendsPost, user2PrivatePost);
+                await context.SaveChangesAsync();
+            }
+
+            // Act
+            var feedPosts = await service.GetFeedPostsAsync("user1");
+
+            // Assert
+            feedPosts.Should().HaveCount(5); // All 3 of user1's posts + 2 visible posts from user2
+
+            // User1 should see ALL their own posts
+            feedPosts.Should().Contain(p => p.Id == user1PublicPost.Id);
+            feedPosts.Should().Contain(p => p.Id == user1FriendsPost.Id);
+            feedPosts.Should().Contain(p => p.Id == user1PrivatePost.Id);
+
+            // User1 should see user2's public and friends-only posts
+            feedPosts.Should().Contain(p => p.Id == user2PublicPost.Id);
+            feedPosts.Should().Contain(p => p.Id == user2FriendsPost.Id);
+
+            // User1 should NOT see user2's private posts
+            feedPosts.Should().NotContain(p => p.Id == user2PrivatePost.Id);
+        }
+
         #endregion
 
         #region Comment Operations Tests

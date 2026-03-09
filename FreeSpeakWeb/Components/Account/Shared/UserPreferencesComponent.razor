@@ -1,3 +1,5 @@
+@rendermode InteractiveServer
+
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
 @using Microsoft.AspNetCore.Identity
@@ -240,7 +242,7 @@
     {
         colorScheme = "default";
         nameDisplay = NameDisplayType.FullName;
-        defaultAudienceType = AudienceType.Public;
+        defaultAudienceType = AudienceType.FriendsOnly;
         expirationPostLiked = 15;
         expirationPostComment = 15;
         expirationCommentReply = 15;

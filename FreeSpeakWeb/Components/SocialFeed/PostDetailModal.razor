@@ -5,6 +5,7 @@
 @inject PostService PostService
 @inject IJSRuntime JS
 @inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
+@inject UserPreferenceService UserPreferenceService
 @implements IAsyncDisposable
 
 <div class="post-detail-modal-backdrop" @onclick="OnClose">
@@ -28,6 +29,7 @@
                 ArticleContent="@ArticleContent"
                 LikeCount="@LikeCount"
                 CommentCount="@CommentCount"
+                ShareCount="@ShareCount"
                 DirectCommentCount="@directCommentCount"
                 Comments="@modalComments"
                 CurrentUserImageUrl="@CurrentUserImageUrl"
@@ -47,6 +49,7 @@
                 OnCommentReactionChanged="@HandleCommentReactionChanged"
                 OnRemoveCommentReaction="@HandleRemoveCommentReaction"
                 IsModalView="true"
+                IsReadOnly="@IsReadOnly"
                 HideCommentEditor="true" />
 
             @if (isLoadingComments && !modalComments.Any())
@@ -65,32 +68,35 @@
         </div>
 
         <!-- Fixed Comment Editor at Bottom -->
-        <div class="post-detail-modal-footer">
-            @if (directCommentCount < SiteSettings.Value.MaxFeedPostDirectCommentCount)
-            {
-                <div class="modal-comment-editor">
-                    @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
-                    {
-                        <img src="@CurrentUserImageUrl" alt="You" class="comment-user-avatar" />
-                    }
-                    else
-                    {
-                        <div class="comment-user-avatar comment-avatar-placeholder">
-                            <span class="comment-avatar-initial">@GetInitials(CurrentUserName ?? "User")</span>
+        @if (!IsReadOnly)
+        {
+            <div class="post-detail-modal-footer">
+                @if (directCommentCount < SiteSettings.Value.MaxFeedPostDirectCommentCount)
+                {
+                    <div class="modal-comment-editor">
+                        @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
+                        {
+                            <img src="@CurrentUserImageUrl" alt="You" class="comment-user-avatar" />
+                        }
+                        else
+                        {
+                            <div class="comment-user-avatar comment-avatar-placeholder">
+                                <span class="comment-avatar-initial">@GetInitials(CurrentUserName ?? "User")</span>
+                            </div>
+                        }
+                        <div class="editor-wrapper">
+                            <MultiLineCommentEditor OnCommentSubmitted="HandleCommentSubmittedInModal" />
                         </div>
-                    }
-                    <div class="editor-wrapper">
-                        <MultiLineCommentEditor OnCommentSubmitted="HandleCommentSubmittedInModal" />
                     </div>
-                </div>
-            }
-            else
-            {
-                <div class="modal-comment-limit-message">
-                    <span>No more comments allowed</span>
-                </div>
-            }
-        </div>
+                }
+                else
+                {
+                    <div class="modal-comment-limit-message">
+                        <span>No more comments allowed</span>
+                    </div>
+                }
+            </div>
+        }
     </div>
 </div>
 
@@ -121,6 +127,9 @@
 
     [Parameter]
     public int CommentCount { get; set; }
+
+    [Parameter]
+    public int ShareCount { get; set; }
 
     [Parameter]
     public List<CommentDisplayModel>? Comments { get; set; }
@@ -175,6 +184,9 @@
 
     [Parameter]
     public int? TargetCommentId { get; set; }
+
+    [Parameter]
+    public bool IsReadOnly { get; set; } = false;
 
     private List<CommentDisplayModel> modalComments = new();
     private int directCommentCount = 0;
@@ -408,16 +420,17 @@
         }
     }
 
-    private string GetCommentAuthorName(Comment comment)
+    private async Task<string> GetCommentAuthorName(Comment comment)
     {
         if (comment.Author == null) return "Unknown";
 
-        if (!string.IsNullOrWhiteSpace(comment.Author.FirstName) && !string.IsNullOrWhiteSpace(comment.Author.LastName))
-        {
-            return $"{comment.Author.FirstName} {comment.Author.LastName}";
-        }
-
-        return comment.Author.UserName ?? "Unknown";
+        // Use the author's display name preference
+        return await UserPreferenceService.FormatUserDisplayNameAsync(
+            comment.Author.Id,
+            comment.Author.FirstName,
+            comment.Author.LastName,
+            comment.Author.UserName ?? "Unknown"
+        );
     }
 
     private string GetInitials(string? name)
@@ -457,7 +470,7 @@
         return new CommentDisplayModel
         {
             CommentId = comment.Id,
-            UserName = GetCommentAuthorName(comment),
+            UserName = await GetCommentAuthorName(comment),
             UserImageUrl = comment.Author?.ProfilePictureUrl,
             CommentAuthorId = comment.AuthorId,
             CommentText = comment.Content,

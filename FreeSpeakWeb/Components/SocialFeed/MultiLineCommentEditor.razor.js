@@ -37,3 +37,41 @@ export function resizeTextarea(textarea) {
     textarea.style.height = newHeight + 'px';
     textarea.style.overflowY = fullHeight > 200 ? 'auto' : 'hidden';
 }
+
+export function calculateEmojiPickerPosition(buttonElement) {
+    if (!buttonElement) return "left: 0; bottom: 40px;";
+
+    const rect = buttonElement.getBoundingClientRect();
+    const pickerWidth = 320;
+    const pickerHeight = 300; // Approximate height
+
+    // Calculate if there's space above or below
+    const spaceAbove = rect.top;
+    const spaceBelow = window.innerHeight - rect.bottom;
+
+    // Position above the button if there's not enough space below
+    let top, left;
+
+    if (spaceBelow < pickerHeight && spaceAbove > pickerHeight) {
+        // Position above
+        top = rect.top - pickerHeight - 8;
+    } else {
+        // Position below
+        top = rect.bottom + 8;
+    }
+
+    // Position horizontally (align with button, but keep on screen)
+    left = rect.left;
+
+    // Make sure it doesn't go off the right edge
+    if (left + pickerWidth > window.innerWidth) {
+        left = window.innerWidth - pickerWidth - 16;
+    }
+
+    // Make sure it doesn't go off the left edge
+    if (left < 16) {
+        left = 16;
+    }
+
+    return `left: ${left}px; top: ${top}px;`;
+}

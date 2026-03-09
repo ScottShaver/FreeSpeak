@@ -38,8 +38,14 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Get a preference value for a user, returning default if not set
         /// </summary>
-        public async Task<string> GetPreferenceAsync(string userId, PreferenceType preferenceType)
+        public async Task<string> GetPreferenceAsync(string? userId, PreferenceType preferenceType)
         {
+            // Return default if userId is null
+            if (string.IsNullOrEmpty(userId))
+            {
+                return GetDefaultPreference(preferenceType);
+            }
+
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -65,8 +71,14 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Get all preferences for a user
         /// </summary>
-        public async Task<Dictionary<PreferenceType, string>> GetAllPreferencesAsync(string userId)
+        public async Task<Dictionary<PreferenceType, string>> GetAllPreferencesAsync(string? userId)
         {
+            // Return all defaults if userId is null
+            if (string.IsNullOrEmpty(userId))
+            {
+                return new Dictionary<PreferenceType, string>(DefaultPreferences);
+            }
+
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -96,8 +108,15 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Set a preference value for a user
         /// </summary>
-        public async Task<bool> SetPreferenceAsync(string userId, PreferenceType preferenceType, string value)
+        public async Task<bool> SetPreferenceAsync(string? userId, PreferenceType preferenceType, string value)
         {
+            // Cannot set preference without valid userId
+            if (string.IsNullOrEmpty(userId))
+            {
+                _logger.LogWarning("Cannot set preference {PreferenceType} - userId is null or empty", preferenceType);
+                return false;
+            }
+
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -141,8 +160,15 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Set multiple preferences at once
         /// </summary>
-        public async Task<bool> SetPreferencesAsync(string userId, Dictionary<PreferenceType, string> preferences)
+        public async Task<bool> SetPreferencesAsync(string? userId, Dictionary<PreferenceType, string> preferences)
         {
+            // Cannot set preferences without valid userId
+            if (string.IsNullOrEmpty(userId))
+            {
+                _logger.LogWarning("Cannot set preferences - userId is null or empty");
+                return false;
+            }
+
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -193,7 +219,7 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Get notification expiration days for a specific notification type
         /// </summary>
-        public async Task<int> GetNotificationExpirationDaysAsync(string userId, NotificationType notificationType)
+        public async Task<int> GetNotificationExpirationDaysAsync(string? userId, NotificationType notificationType)
         {
             var preferenceType = notificationType switch
             {
@@ -223,7 +249,7 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Get color scheme preference
         /// </summary>
-        public async Task<string> GetColorSchemeAsync(string userId)
+        public async Task<string> GetColorSchemeAsync(string? userId)
         {
             return await GetPreferenceAsync(userId, PreferenceType.ColorScheme);
         }
@@ -231,7 +257,7 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Set color scheme preference
         /// </summary>
-        public async Task<bool> SetColorSchemeAsync(string userId, string colorScheme)
+        public async Task<bool> SetColorSchemeAsync(string? userId, string colorScheme)
         {
             return await SetPreferenceAsync(userId, PreferenceType.ColorScheme, colorScheme);
         }
@@ -239,7 +265,7 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Get name display preference
         /// </summary>
-        public async Task<NameDisplayType> GetNameDisplayTypeAsync(string userId)
+        public async Task<NameDisplayType> GetNameDisplayTypeAsync(string? userId)
         {
             var value = await GetPreferenceAsync(userId, PreferenceType.NameDisplay);
             
@@ -254,22 +280,22 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Get default audience type preference
         /// </summary>
-        public async Task<AudienceType> GetDefaultAudienceTypeAsync(string userId)
+        public async Task<AudienceType> GetDefaultAudienceTypeAsync(string? userId)
         {
             var value = await GetPreferenceAsync(userId, PreferenceType.DefaultAudienceType);
-            
+
             if (Enum.TryParse<AudienceType>(value, out var audienceType))
             {
                 return audienceType;
             }
 
-            return AudienceType.Public;
+            return AudienceType.FriendsOnly;
         }
 
         /// <summary>
         /// Format a user's display name based on their preference
         /// </summary>
-        public async Task<string> FormatUserDisplayNameAsync(string userId, string firstName, string lastName, string username)
+        public async Task<string> FormatUserDisplayNameAsync(string? userId, string firstName, string lastName, string username)
         {
             var nameDisplay = await GetNameDisplayTypeAsync(userId);
 

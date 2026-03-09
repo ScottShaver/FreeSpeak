@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/home"
 @rendermode InteractiveServer
 @attribute [Authorize]
 
@@ -23,6 +23,7 @@
 @inject IJSRuntime JSRuntime
 @inject UserManager<ApplicationUser> UserManager
 @inject NavigationStateService NavigationState
+@inject UserPreferenceService UserPreferenceService
 
 <PageTitle>@SiteSettings.Value.SiteName - Home</PageTitle>
 
@@ -58,15 +59,17 @@
                         var comments = postComments.ContainsKey(post.Id) ? postComments[post.Id] : new List<CommentDisplayModel>();
                         var directCommentCount = postDirectCommentCounts.ContainsKey(post.Id) ? postDirectCommentCounts[post.Id] : 0;
                         var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
+                        var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
 
                         <FeedArticle 
                             PostId="@post.Id"
                             AuthorId="@post.AuthorId"
-                            AuthorName="@GetAuthorName(post)"
+                            AuthorName="@authorName"
                             AuthorImageUrl="@post.Author?.ProfilePictureUrl"
                             CreatedAt="@post.CreatedAt"
                             LikeCount="@post.LikeCount"
                             CommentCount="@post.CommentCount"
+                            ShareCount="@post.ShareCount"
                             DirectCommentCount="@directCommentCount"
                             CurrentUserId="@currentUserId"
                             CurrentUserImageUrl="@currentUserImageUrl"
@@ -116,11 +119,12 @@
             var postReactions = postReactionData.ContainsKey(selectedPost.Id) ? postReactionData[selectedPost.Id] : new Dictionary<LikeType, int>();
             var userReaction = userReactions.ContainsKey(selectedPost.Id) ? userReactions[selectedPost.Id] : null;
             var isPinned = pinnedPosts.ContainsKey(selectedPost.Id) && pinnedPosts[selectedPost.Id];
+            var authorName = postAuthorNames.ContainsKey(selectedPost.Id) ? postAuthorNames[selectedPost.Id] : "Unknown";
 
             <PostDetailModal
                 PostId="@selectedPost.Id"
                 AuthorId="@selectedPost.AuthorId"
-                AuthorName="@GetAuthorName(selectedPost)"
+                AuthorName="@authorName"
                 AuthorImageUrl="@selectedPost.Author?.ProfilePictureUrl"
                 CreatedAt="@selectedPost.CreatedAt"
                 LikeCount="@selectedPost.LikeCount"
@@ -163,6 +167,7 @@
     private Dictionary<int, List<CommentDisplayModel>> postComments = new();
     private Dictionary<int, int> postDirectCommentCounts = new();
     private Dictionary<int, bool> pinnedPosts = new();
+    private Dictionary<int, string> postAuthorNames = new(); // Cache for author display names
     private int currentPage = 1;
     private const int pageSize = 20;
     private bool isLoading = false;
@@ -197,17 +202,15 @@
             var currentUser = await UserManager.FindByIdAsync(currentUserId);
             if (currentUser != null)
             {
-                currentUserImageUrl = currentUser.ProfilePictureUrl;
+                currentUserImageUrl = currentUser.ProfilePictureUrl ?? null;
 
-                // Use FirstName + LastName if available, otherwise fall back to username
-                if (!string.IsNullOrWhiteSpace(currentUser.FirstName) && !string.IsNullOrWhiteSpace(currentUser.LastName))
-                {
-                    currentUserName = $"{currentUser.FirstName} {currentUser.LastName}";
-                }
-                else
-                {
-                    currentUserName = currentUser.UserName ?? "User";
-                }
+                // Use the user's display name preference
+                currentUserName = await UserPreferenceService.FormatUserDisplayNameAsync(
+                    currentUser.Id,
+                    currentUser.FirstName,
+                    currentUser.LastName,
+                    currentUser.UserName ?? "User"
+                );
             }
         }
 
@@ -249,6 +252,9 @@
 
             // Load pinned status for all posts
             await LoadPinnedStatusForPosts(loadedPosts);
+
+            // Load author names for all posts
+            await LoadAuthorNamesForPosts(loadedPosts);
         }
         catch (Exception ex)
         {
@@ -284,6 +290,9 @@
 
                 // Load pinned status for new posts
                 await LoadPinnedStatusForPosts(loadedPosts);
+
+                // Load author names for new posts
+                await LoadAuthorNamesForPosts(loadedPosts);
             }
             else
             {
@@ -302,16 +311,17 @@
         }
     }
 
-    private string GetAuthorName(Post post)
+    private async Task<string> GetAuthorName(Post post)
     {
         if (post.Author == null) return "Unknown";
 
-        if (!string.IsNullOrWhiteSpace(post.Author.FirstName) && !string.IsNullOrWhiteSpace(post.Author.LastName))
-        {
-            return $"{post.Author.FirstName} {post.Author.LastName}";
-        }
-
-        return post.Author.UserName ?? "Unknown";
+        // Use the author's display name preference
+        return await UserPreferenceService.FormatUserDisplayNameAsync(
+            post.Author.Id,
+            post.Author.FirstName,
+            post.Author.LastName,
+            post.Author.UserName ?? "Unknown"
+        );
     }
 
     private string FormatContentWithLineBreaks(string content)
@@ -372,6 +382,30 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading pinned status: {ex.Message}");
+        }
+    }
+
+    private async Task LoadAuthorNamesForPosts(List<Post> postsToLoad)
+    {
+        try
+        {
+            foreach (var post in postsToLoad)
+            {
+                if (post.Author != null)
+                {
+                    var displayName = await UserPreferenceService.FormatUserDisplayNameAsync(
+                        post.Author.Id,
+                        post.Author.FirstName,
+                        post.Author.LastName,
+                        post.Author.UserName ?? "Unknown"
+                    );
+                    postAuthorNames[post.Id] = displayName;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading author names: {ex.Message}");
         }
     }
 
@@ -485,7 +519,7 @@
         return new CommentDisplayModel
         {
             CommentId = comment.Id,
-            UserName = GetCommentAuthorName(comment),
+            UserName = await GetCommentAuthorName(comment),
             UserImageUrl = comment.Author?.ProfilePictureUrl,
             CommentAuthorId = comment.AuthorId,
             CommentText = comment.Content,
@@ -497,16 +531,17 @@
         };
     }
 
-    private string GetCommentAuthorName(Comment comment)
+    private async Task<string> GetCommentAuthorName(Comment comment)
     {
         if (comment.Author == null) return "Unknown";
 
-        if (!string.IsNullOrWhiteSpace(comment.Author.FirstName) && !string.IsNullOrWhiteSpace(comment.Author.LastName))
-        {
-            return $"{comment.Author.FirstName} {comment.Author.LastName}";
-        }
-
-        return comment.Author.UserName ?? "Unknown";
+        // Use the author's display name preference
+        return await UserPreferenceService.FormatUserDisplayNameAsync(
+            comment.Author.Id,
+            comment.Author.FirstName,
+            comment.Author.LastName,
+            comment.Author.UserName ?? "Unknown"
+        );
     }
 
     private async Task HandleReactionChanged(int postId, LikeType reactionType)

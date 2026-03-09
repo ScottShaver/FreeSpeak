@@ -31,35 +31,20 @@ public class DataMigrationService
         {
             using var context = await _contextFactory.CreateDbContextAsync();
 
-            // First, check what URLs we have
-            var allUrls = await context.Users
-                .Where(u => u.ProfilePictureUrl != null)
-                .Select(u => new { u.UserName, u.ProfilePictureUrl })
-                .Take(5)
-                .ToListAsync();
-
-            _logger.LogWarning("📊 Sample profile picture URLs before migration:");
-            foreach (var u in allUrls)
-            {
-                _logger.LogWarning("   {UserName}: {Url}", u.UserName, u.ProfilePictureUrl);
-            }
-
             // Update all profile picture URLs from /api/profile-picture/ to /api/secure-files/profile-picture/
             var updateCount = await context.Database.ExecuteSqlRawAsync(
                 @"UPDATE ""AspNetUsers"" 
                   SET ""ProfilePictureUrl"" = REPLACE(""ProfilePictureUrl"", '/api/profile-picture/', '/api/secure-files/profile-picture/')
                   WHERE ""ProfilePictureUrl"" LIKE '/api/profile-picture/%'");
 
-            _logger.LogInformation("✅ Migrated {Count} profile picture URLs to secure format", updateCount);
-
-            if (updateCount == 0)
+            if (updateCount > 0)
             {
-                _logger.LogWarning("⚠️ No URLs needed migration - they may already be in the correct format");
+                _logger.LogInformation("Migrated {Count} profile picture URLs to secure format", updateCount);
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "❌ Error migrating profile picture URLs");
+            _logger.LogError(ex, "Error migrating profile picture URLs");
             throw;
         }
     }

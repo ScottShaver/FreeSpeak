@@ -15,9 +15,11 @@
 
 .post-detail-modal-container {
     background: var(--surface-color, #ffffff);
+    border: 2px solid var(--border-color, #e4e6eb);
     border-radius: 8px;
     width: 100%;
     max-width: 1000px;
+    min-height: 600px;
     max-height: calc(100vh - 40px);
     display: flex;
     flex-direction: column;

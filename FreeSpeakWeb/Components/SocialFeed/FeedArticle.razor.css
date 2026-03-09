@@ -16,7 +16,7 @@
 .article-header {
     display: flex;
     align-items: center;
-    padding: 12px 16px;
+    padding: 8px 12px;
     gap: 8px;
     background: var(--surface-secondary);
 }
@@ -43,8 +43,8 @@
 }
 
 .author-avatar {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -58,7 +58,7 @@
 
 .author-avatar-initial {
     color: white;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
 }
 
@@ -73,10 +73,10 @@
 }
 
 .author-name {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     color: var(--text-primary);
-    line-height: 1.3333;
+    line-height: 1.2;
 }
 
 .audience-icon {
@@ -93,9 +93,9 @@
 }
 
 .article-timestamp {
-    font-size: 13px;
-    color: rgba(0, 0, 0, 0.7);
-    line-height: 1.3333;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+    line-height: 1.2;
     cursor: help;
     text-decoration: underline dotted;
     text-decoration-color: transparent;
@@ -103,7 +103,7 @@
 }
 
 .article-timestamp:hover {
-    text-decoration-color: rgba(0, 0, 0, 0.7);
+    text-decoration-color: rgba(0, 0, 0, 0.6);
 }
 
 .pinned-icon {
@@ -113,8 +113,8 @@
 }
 
 .menu-button {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border: none;
     background: transparent;
     color: #000000;
@@ -128,6 +128,75 @@
 
 .menu-button:hover {
     background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Header Stats */
+.header-stats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    margin-right: 8px;
+}
+
+.header-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    background: rgba(0, 0, 0, 0.08);
+    padding: 4px 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.header-stat-item.header-stat-clickable {
+    cursor: pointer;
+}
+
+.header-reaction-icons {
+    display: flex;
+    gap: -2px;
+}
+
+.header-reaction-icon {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.header-stat-count {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 12px;
+}
+
+.header-stat-item.header-stat-clickable:hover {
+    background: rgba(0, 0, 0, 0.12);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+.header-stat-item.header-stat-clickable:hover .header-stat-count {
+    color: var(--primary-color);
+}
+
+.header-comment-icon {
+    width: 14px;
+    height: 14px;
+    color: var(--text-secondary);
+}
+
+.header-share-icon {
+    width: 14px;
+    height: 14px;
+    color: var(--text-secondary);
+}
+
+.header-like-icon {
+    width: 14px;
+    height: 14px;
+    color: var(--text-secondary);
 }
 
 /* 2. Main Content Area */
@@ -232,7 +301,6 @@
     border-bottom: 1px solid #e4e6eb;
     clear: both;
     position: relative;
-    z-index: 2;
     background-color: #f8f9fa;
 }
 
@@ -300,8 +368,33 @@
     padding: 12px 16px;
     clear: both;
     position: relative;
-    z-index: 2;
     background-color: #f8f9fa;
+}
+
+/* More Comments Indicator */
+.more-comments-indicator {
+    padding: 8px 16px;
+    display: flex;
+    justify-content: center;
+    background-color: var(--surface-color);
+    border-top: 1px solid var(--border-color);
+}
+
+.more-comments-button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.more-comments-button:hover {
+    background-color: var(--surface-hover);
+    text-decoration: underline;
 }
 
 /* 6. Comment Editor */
@@ -312,7 +405,6 @@
     align-items: flex-start;
     clear: both;
     position: relative;
-    z-index: 2;
     background-color: #f8f9fa;
 }
 

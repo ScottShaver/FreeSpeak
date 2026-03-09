@@ -1,7 +1,7 @@
 @if (IsVisible)
 {
     <div class="emoji-picker-backdrop" @onclick="Close"></div>
-    <div class="emoji-picker" style="@PositionStyle">
+    <div class="emoji-picker" style="@PositionStyle" @ref="pickerElement">
         <div class="emoji-categories">
             @foreach (var category in emojiCategories)
             {
@@ -44,6 +44,7 @@
     public string PositionStyle { get; set; } = string.Empty;
 
     private string? selectedCategory = "Smileys";
+    private ElementReference pickerElement;
 
     private readonly Dictionary<string, List<string>> emojiCategories = new()
     {
