@@ -8,19 +8,22 @@ namespace FreeSpeakWeb.Services
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<NotificationService> _logger;
+        private readonly IServiceScopeFactory _scopeFactory;
 
         public NotificationService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<NotificationService> logger)
+            ILogger<NotificationService> logger,
+            IServiceScopeFactory scopeFactory)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _scopeFactory = scopeFactory;
         }
 
         #region Create Notifications
 
         /// <summary>
-        /// Create a new notification for a user
+        /// Create a new notification for a user with automatic expiration based on user preferences
         /// </summary>
         public async Task<(bool Success, string? ErrorMessage, UserNotification? Notification)> CreateNotificationAsync(
             string userId,
@@ -50,6 +53,15 @@ namespace FreeSpeakWeb.Services
                     return (false, "User not found.", null);
                 }
 
+                // If no expiration provided, calculate from user preferences
+                if (expiresAt == null)
+                {
+                    using var scope = _scopeFactory.CreateScope();
+                    var preferenceService = scope.ServiceProvider.GetRequiredService<UserPreferenceService>();
+                    var expirationDays = await preferenceService.GetNotificationExpirationDaysAsync(userId, type);
+                    expiresAt = DateTime.UtcNow.AddDays(expirationDays);
+                }
+
                 var notification = new UserNotification
                 {
                     UserId = userId,
@@ -64,7 +76,8 @@ namespace FreeSpeakWeb.Services
                 context.UserNotifications.Add(notification);
                 await context.SaveChangesAsync();
 
-                _logger.LogInformation("Notification created for user {UserId}: Type {Type}", userId, type);
+                _logger.LogInformation("Notification created for user {UserId}: Type {Type}, Expires {ExpiresAt}", 
+                    userId, type, expiresAt);
                 return (true, null, notification);
             }
             catch (Exception ex)

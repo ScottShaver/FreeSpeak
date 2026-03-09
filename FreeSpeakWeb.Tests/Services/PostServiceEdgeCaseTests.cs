@@ -4,6 +4,7 @@ using FreeSpeakWeb.Services;
 using FreeSpeakWeb.Tests.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -34,7 +35,8 @@ namespace FreeSpeakWeb.Tests.Services
         {
             var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
             var logger = new Mock<ILogger<NotificationService>>();
-            return new NotificationService(dbFactory.Object, logger.Object);
+            var scopeFactory = new Mock<IServiceScopeFactory>();
+            return new NotificationService(dbFactory.Object, logger.Object, scopeFactory.Object);
         }
 
         [Fact]

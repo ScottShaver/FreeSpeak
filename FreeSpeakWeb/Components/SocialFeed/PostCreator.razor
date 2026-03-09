@@ -124,6 +124,38 @@
                      ExistingImages="@selectedImages"
                      MaxImages="10"
                      MaxFileSizeMB="10" />
+
+    @* Public Audience Confirmation Modal *@
+    @if (showPublicConfirmation)
+    {
+        <div class="confirmation-backdrop" @onclick="CancelPublicConfirmation">
+            <div class="confirmation-modal" @onclick:stopPropagation="true">
+                <div class="confirmation-header">
+                    <h5>Change Post to Public?</h5>
+                    <button type="button" class="close-button" @onclick="CancelPublicConfirmation">×</button>
+                </div>
+                <div class="confirmation-body">
+                    <div class="warning-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                        </svg>
+                    </div>
+                    <p class="confirmation-message">
+                        <strong>Public posts are visible to everyone</strong> — not just your friends. 
+                        Anyone on the internet can see, share, and comment on your public post.
+                    </p>
+                    <p class="confirmation-question">
+                        Are you sure you want to make this post public?
+                    </p>
+                </div>
+                <div class="confirmation-footer">
+                    <button type="button" class="btn-secondary" @onclick="CancelPublicConfirmation">Cancel</button>
+                    <button type="button" class="btn-warning" @onclick="ConfirmPublicAudience">Yes, Make it Public</button>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 @code {
@@ -136,6 +168,8 @@
     private bool showAudienceMenu = false;
     private bool showEmojiPicker = false;
     private bool showImageUpload = false;
+    private bool showPublicConfirmation = false;
+    private AudienceType pendingAudienceType = AudienceType.FriendsOnly;
     private List<PopupMenu.PopupMenuItem> audienceMenuItems = new();
     private string audienceMenuPositionStyle = string.Empty;
     private string emojiPickerPositionStyle = string.Empty;
@@ -353,8 +387,34 @@
 
     private void SelectAudienceType(AudienceType audienceType)
     {
-        SelectedAudienceType = audienceType;
         CloseAudienceMenu();
+
+        // If selecting Public, show confirmation dialog
+        if (audienceType == AudienceType.Public)
+        {
+            pendingAudienceType = audienceType;
+            showPublicConfirmation = true;
+            StateHasChanged();
+        }
+        else
+        {
+            // For Friends Only and Only Me, apply immediately
+            SelectedAudienceType = audienceType;
+        }
+    }
+
+    private void ConfirmPublicAudience()
+    {
+        SelectedAudienceType = pendingAudienceType;
+        showPublicConfirmation = false;
+        StateHasChanged();
+    }
+
+    private void CancelPublicConfirmation()
+    {
+        showPublicConfirmation = false;
+        pendingAudienceType = SelectedAudienceType; // Reset to current
+        StateHasChanged();
     }
 
     private void CloseAudienceMenu()

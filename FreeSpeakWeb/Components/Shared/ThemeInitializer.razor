@@ -1,0 +1,62 @@
+@rendermode InteractiveServer
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Data
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.Extensions.Logging
+@using System.Security.Claims
+@inject ThemeService ThemeService
+@inject UserPreferenceService PreferenceService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILogger<ThemeInitializer> Logger
+
+@code {
+    private string? _savedThemeToApply;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load theme preference from database if user is logged in
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        Logger.LogInformation("ThemeInitializer OnInitializedAsync - UserId: {UserId}", userId ?? "null");
+
+        if (!string.IsNullOrEmpty(userId))
+        {
+            // Load from database
+            _savedThemeToApply = await PreferenceService.GetColorSchemeAsync(userId);
+            Logger.LogInformation("ThemeInitializer - Loaded theme from database: {Theme}", _savedThemeToApply ?? "null");
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Logger.LogInformation("ThemeInitializer OnAfterRenderAsync - Theme to apply: {Theme}", _savedThemeToApply ?? "null");
+
+            // Initialize the ThemeService with the current theme (syncs internal state with what's already rendered)
+            if (!string.IsNullOrEmpty(_savedThemeToApply))
+            {
+                // User is logged in - ensure ThemeService knows about the current theme
+                // Only call SetThemeAsync if theme is different to avoid unnecessary re-render
+                if (ThemeService.CurrentTheme != _savedThemeToApply)
+                {
+                    Logger.LogInformation("ThemeInitializer - Syncing theme in ThemeService: {Theme}", _savedThemeToApply);
+                    await ThemeService.SetThemeAsync(_savedThemeToApply);
+                    Logger.LogInformation("ThemeInitializer - Theme synced successfully");
+                }
+                else
+                {
+                    Logger.LogInformation("ThemeInitializer - Theme already correct, no update needed");
+                }
+            }
+            else
+            {
+                // Not logged in - initialize from localStorage
+                Logger.LogInformation("ThemeInitializer - Initializing theme from localStorage");
+                await ThemeService.InitializeAsync();
+                Logger.LogInformation("ThemeInitializer - Theme initialized: {Theme}", ThemeService.CurrentTheme);
+            }
+        }
+    }
+}

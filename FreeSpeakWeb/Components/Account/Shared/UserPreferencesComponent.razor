@@ -1,0 +1,255 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using Microsoft.AspNetCore.Identity
+@inject UserPreferenceService PreferenceService
+@inject UserManager<ApplicationUser> UserManager
+@inject ThemeService ThemeService
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Preferences</h5>
+    </div>
+    <div class="card-body">
+        @if (isLoading)
+        {
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <EditForm Model="@this" OnValidSubmit="SavePreferences">
+                <!-- Color Scheme -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Color Scheme</label>
+                    <select class="form-select" @bind="colorScheme">
+                        @foreach (var theme in ThemeService.AvailableThemes)
+                        {
+                            <option value="@theme.Key">@theme.Value</option>
+                        }
+                    </select>
+                    <div class="form-text">Choose your preferred color theme for the site.</div>
+                </div>
+
+                <!-- Name Display -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Name Display</label>
+                    <select class="form-select" @bind="nameDisplay">
+                        <option value="@NameDisplayType.FullName">Full Name (John Smith)</option>
+                        <option value="@NameDisplayType.FirstName">First Name Only (John)</option>
+                        <option value="@NameDisplayType.Username">Username (johnsmith)</option>
+                        <option value="@NameDisplayType.FirstNameLastInitial">First Name + Last Initial (John S.)</option>
+                    </select>
+                    <div class="form-text">How your name appears to other users across the site.</div>
+                </div>
+
+                <!-- Default Audience Type -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Default Post Visibility</label>
+                    <select class="form-select" @bind="defaultAudienceType">
+                        <option value="@AudienceType.Public">Public (Everyone can see)</option>
+                        <option value="@AudienceType.FriendsOnly">Friends Only</option>
+                        <option value="@AudienceType.MeOnly">Only Me (Private)</option>
+                    </select>
+                    <div class="form-text">Default visibility for new posts. You can change this when creating a post.</div>
+                </div>
+
+                <!-- Notification Expiration -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold mb-3">Notification Auto-Expiration (in days)</label>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Post Reactions</label>
+                            <input type="number" class="form-control" @bind="expirationPostLiked" min="1" max="365" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Post Comments</label>
+                            <input type="number" class="form-control" @bind="expirationPostComment" min="1" max="365" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Comment Replies</label>
+                            <input type="number" class="form-control" @bind="expirationCommentReply" min="1" max="365" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Comment Reactions</label>
+                            <input type="number" class="form-control" @bind="expirationCommentLiked" min="1" max="365" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Friend Requests</label>
+                            <input type="number" class="form-control" @bind="expirationFriendRequest" min="1" max="365" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Friend Accepted</label>
+                            <input type="number" class="form-control" @bind="expirationFriendAccepted" min="1" max="365" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Mentions</label>
+                            <input type="number" class="form-control" @bind="expirationMention" min="1" max="365" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">System Notifications</label>
+                            <input type="number" class="form-control" @bind="expirationSystem" min="1" max="365" />
+                        </div>
+                    </div>
+                    <div class="form-text mt-2">
+                        Notifications older than this will automatically expire and can be cleaned up. 
+                        Set to 365 days to keep them for a year.
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(statusMessage))
+                {
+                    <div class="alert @(statusMessage.Contains("success") ? "alert-success" : "alert-danger")" role="alert">
+                        @statusMessage
+                    </div>
+                }
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary" disabled="@isSaving">
+                        @if (isSaving)
+                        {
+                            <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                        }
+                        Save Preferences
+                    </button>
+                    <button type="button" class="btn btn-secondary" @onclick="ResetToDefaults" disabled="@isSaving">
+                        Reset to Defaults
+                    </button>
+                </div>
+            </EditForm>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? UserId { get; set; }
+
+    private bool isLoading = true;
+    private bool isSaving = false;
+    private string? statusMessage;
+
+    // Preference values
+    private string colorScheme = "default";
+    private NameDisplayType nameDisplay = NameDisplayType.FullName;
+    private AudienceType defaultAudienceType = AudienceType.Public;
+    private int expirationPostLiked = 15;
+    private int expirationPostComment = 15;
+    private int expirationCommentReply = 15;
+    private int expirationCommentLiked = 15;
+    private int expirationFriendRequest = 30;
+    private int expirationFriendAccepted = 15;
+    private int expirationMention = 30;
+    private int expirationSystem = 30;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(UserId))
+        {
+            return;
+        }
+
+        await LoadPreferences();
+    }
+
+    private async Task LoadPreferences()
+    {
+        isLoading = true;
+        statusMessage = null;
+
+        try
+        {
+            var preferences = await PreferenceService.GetAllPreferencesAsync(UserId!);
+
+            colorScheme = preferences.GetValueOrDefault(PreferenceType.ColorScheme, "default");
+            
+            if (Enum.TryParse<NameDisplayType>(preferences.GetValueOrDefault(PreferenceType.NameDisplay), out var nd))
+                nameDisplay = nd;
+            
+            if (Enum.TryParse<AudienceType>(preferences.GetValueOrDefault(PreferenceType.DefaultAudienceType), out var at))
+                defaultAudienceType = at;
+
+            expirationPostLiked = int.Parse(preferences.GetValueOrDefault(PreferenceType.NotificationExpiration_PostLiked, "15"));
+            expirationPostComment = int.Parse(preferences.GetValueOrDefault(PreferenceType.NotificationExpiration_PostComment, "15"));
+            expirationCommentReply = int.Parse(preferences.GetValueOrDefault(PreferenceType.NotificationExpiration_CommentReply, "15"));
+            expirationCommentLiked = int.Parse(preferences.GetValueOrDefault(PreferenceType.NotificationExpiration_CommentLiked, "15"));
+            expirationFriendRequest = int.Parse(preferences.GetValueOrDefault(PreferenceType.NotificationExpiration_FriendRequest, "30"));
+            expirationFriendAccepted = int.Parse(preferences.GetValueOrDefault(PreferenceType.NotificationExpiration_FriendAccepted, "15"));
+            expirationMention = int.Parse(preferences.GetValueOrDefault(PreferenceType.NotificationExpiration_Mention, "30"));
+            expirationSystem = int.Parse(preferences.GetValueOrDefault(PreferenceType.NotificationExpiration_System, "30"));
+        }
+        catch (Exception ex)
+        {
+            statusMessage = $"Error loading preferences: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task SavePreferences()
+    {
+        isSaving = true;
+        statusMessage = null;
+
+        try
+        {
+            var preferences = new Dictionary<PreferenceType, string>
+            {
+                { PreferenceType.ColorScheme, colorScheme },
+                { PreferenceType.NameDisplay, nameDisplay.ToString() },
+                { PreferenceType.DefaultAudienceType, defaultAudienceType.ToString() },
+                { PreferenceType.NotificationExpiration_PostLiked, expirationPostLiked.ToString() },
+                { PreferenceType.NotificationExpiration_PostComment, expirationPostComment.ToString() },
+                { PreferenceType.NotificationExpiration_CommentReply, expirationCommentReply.ToString() },
+                { PreferenceType.NotificationExpiration_CommentLiked, expirationCommentLiked.ToString() },
+                { PreferenceType.NotificationExpiration_FriendRequest, expirationFriendRequest.ToString() },
+                { PreferenceType.NotificationExpiration_FriendAccepted, expirationFriendAccepted.ToString() },
+                { PreferenceType.NotificationExpiration_Mention, expirationMention.ToString() },
+                { PreferenceType.NotificationExpiration_System, expirationSystem.ToString() }
+            };
+
+            var success = await PreferenceService.SetPreferencesAsync(UserId!, preferences);
+
+            if (success)
+            {
+                // Apply theme immediately
+                await ThemeService.SetThemeAsync(colorScheme);
+                statusMessage = "✓ Preferences saved successfully!";
+            }
+            else
+            {
+                statusMessage = "Error saving preferences. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            statusMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private async Task ResetToDefaults()
+    {
+        colorScheme = "default";
+        nameDisplay = NameDisplayType.FullName;
+        defaultAudienceType = AudienceType.Public;
+        expirationPostLiked = 15;
+        expirationPostComment = 15;
+        expirationCommentReply = 15;
+        expirationCommentLiked = 15;
+        expirationFriendRequest = 30;
+        expirationFriendAccepted = 15;
+        expirationMention = 30;
+        expirationSystem = 30;
+
+        await SavePreferences();
+    }
+}

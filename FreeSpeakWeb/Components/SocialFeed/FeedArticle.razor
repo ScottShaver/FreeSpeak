@@ -347,6 +347,42 @@
     </div>
 }
 
+<!-- Public Audience Confirmation Modal -->
+@if (showPublicConfirmation)
+{
+    <div class="modal-backdrop" @onclick="CancelPublicConfirmation" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: flex; align-items: center; justify-content: center;">
+        <div class="public-confirmation-modal" @onclick:stopPropagation="true" style="background: white; border-radius: 12px; max-width: 500px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid #e4e6eb;">
+                <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: #1c1e21;">Change Post to Public?</h3>
+                <button type="button" @onclick="CancelPublicConfirmation" style="background: none; border: none; font-size: 32px; line-height: 1; color: #65676b; cursor: pointer; padding: 0; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: background-color 0.2s;">×</button>
+            </div>
+            <div style="padding: 24px; text-align: center;">
+                <div style="color: #f59e0b; margin-bottom: 16px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                    </svg>
+                </div>
+                <p style="font-size: 15px; color: #1c1e21; margin-bottom: 12px; line-height: 1.5;">
+                    <strong style="color: #f59e0b;">Public posts are visible to everyone</strong> — not just your friends. 
+                    Anyone on the internet can see, share, and comment on your public post.
+                </p>
+                <p style="font-size: 15px; color: #65676b; margin: 0;">
+                    Are you sure you want to make this post public?
+                </p>
+            </div>
+            <div style="display: flex; gap: 12px; padding: 16px 24px; border-top: 1px solid #e4e6eb; justify-content: flex-end;">
+                <button type="button" @onclick="CancelPublicConfirmation" style="padding: 10px 20px; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; background-color: #e4e6eb; color: #1c1e21; transition: background-color 0.2s;">
+                    Cancel
+                </button>
+                <button type="button" @onclick="ConfirmPublicAudience" style="padding: 10px 20px; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; background-color: #f59e0b; color: white; transition: background-color 0.2s;">
+                    Yes, Make it Public
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     [Parameter]
     public int PostId { get; set; }
@@ -470,6 +506,8 @@
 
     // Audience selection state
     private bool showAudienceMenu = false;
+    private bool showPublicConfirmation = false;
+    private AudienceType pendingAudienceType = AudienceType.FriendsOnly;
     private List<PopupMenu.PopupMenuItem> audienceMenuItems = new();
     private string audienceMenuPositionStyle = string.Empty;
 
@@ -768,6 +806,35 @@
             return;
         }
 
+        // If selecting Public, show confirmation dialog
+        if (newAudienceType == AudienceType.Public)
+        {
+            pendingAudienceType = newAudienceType;
+            showPublicConfirmation = true;
+            StateHasChanged();
+            return;
+        }
+
+        // For Friends Only and Only Me, apply immediately
+        await ApplyAudienceChange(newAudienceType);
+    }
+
+    private async Task ConfirmPublicAudience()
+    {
+        showPublicConfirmation = false;
+        StateHasChanged();
+        await ApplyAudienceChange(pendingAudienceType);
+    }
+
+    private void CancelPublicConfirmation()
+    {
+        showPublicConfirmation = false;
+        pendingAudienceType = currentAudienceType; // Reset to current
+        StateHasChanged();
+    }
+
+    private async Task ApplyAudienceChange(AudienceType newAudienceType)
+    {
         // Update the post audience
         var result = await PostService.UpdatePostAudienceAsync(PostId, AuthorId, newAudienceType);
 

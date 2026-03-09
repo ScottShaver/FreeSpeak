@@ -4,6 +4,7 @@ using FreeSpeakWeb.IntegrationTests.Infrastructure;
 using FreeSpeakWeb.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -49,13 +50,24 @@ namespace FreeSpeakWeb.IntegrationTests.Services
         private class NullNotificationService : NotificationService
         {
             public NullNotificationService() 
-                : base(new NullDbContextFactory(), new NullLogger())
+                : base(new NullDbContextFactory(), new NullLogger(), new NullServiceScopeFactory())
             {
             }
 
             private class NullDbContextFactory : IDbContextFactory<ApplicationDbContext>
             {
                 public ApplicationDbContext CreateDbContext() => null!;
+            }
+
+            private class NullServiceScopeFactory : IServiceScopeFactory
+            {
+                public IServiceScope CreateScope() => new NullServiceScope();
+            }
+
+            private class NullServiceScope : IServiceScope
+            {
+                public IServiceProvider ServiceProvider => null!;
+                public void Dispose() { }
             }
 
             private class NullLogger : ILogger<NotificationService>

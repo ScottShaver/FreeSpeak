@@ -1,0 +1,40 @@
+@page "/Account/Manage/Preferences"
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Identity
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Components.Account.Shared
+
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<PageTitle>Preferences</PageTitle>
+
+<h3>Preferences</h3>
+
+<StatusMessage />
+
+@if (user != null)
+{
+    <UserPreferencesComponent UserId="@user.Id" />
+}
+else
+{
+    <p>Loading...</p>
+}
+
+@code {
+    private ApplicationUser? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = await UserManager.GetUserAsync(authState.User);
+
+        if (user is null)
+        {
+            NavigationManager.NavigateTo("Account/InvalidUser");
+        }
+    }
+}

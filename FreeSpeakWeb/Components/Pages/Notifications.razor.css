@@ -38,7 +38,7 @@
     padding: 12px 20px;
     border: none;
     background: transparent;
-    color: var(--bs-secondary-color);
+    color: var(--text-secondary);
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -47,12 +47,12 @@
 }
 
 .tab-button:hover {
-    background-color: var(--bs-secondary-bg);
+    background-color: var(--hover-bg);
 }
 
 .tab-button.active {
-    color: var(--bs-primary);
-    border-bottom-color: var(--bs-primary);
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
     background-color: transparent;
 }
 

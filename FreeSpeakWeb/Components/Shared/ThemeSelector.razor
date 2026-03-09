@@ -1,0 +1,146 @@
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Data
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.JSInterop
+@using System.Security.Claims
+@inject ThemeService ThemeService
+@inject IJSRuntime JS
+@inject UserPreferenceService PreferenceService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+@implements IAsyncDisposable
+
+<div class="theme-selector" @ref="themeSelectorRef">
+    <button type="button" class="theme-button" @onclick="ToggleThemeMenu" title="Change Theme">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+        </svg>
+    </button>
+
+    @if (showMenu)
+    {
+        <div class="theme-menu">
+            <div class="theme-menu-header">
+                <span>Choose Theme</span>
+                <button type="button" class="close-menu" @onclick="ToggleThemeMenu">×</button>
+            </div>
+            <div class="theme-options">
+                @foreach (var theme in ThemeService.AvailableThemes)
+                {
+                    <button type="button" 
+                            class="theme-option @(theme.Key == ThemeService.CurrentTheme ? "active" : "")"
+                            @onclick="() => SelectTheme(theme.Key)">
+                        <span class="theme-color-preview" data-theme-preview="@theme.Key"></span>
+                        <span class="theme-name">@theme.Value</span>
+                        @if (theme.Key == ThemeService.CurrentTheme)
+                        {
+                            <span class="check-icon">✓</span>
+                        }
+                    </button>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private bool showMenu = false;
+    private ElementReference themeSelectorRef;
+    private IJSObjectReference? jsModule;
+    private DotNetObjectReference<ThemeSelector>? dotNetRef;
+
+    protected override void OnInitialized()
+    {
+        ThemeService.OnThemeChanged += StateHasChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                jsModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/Shared/ThemeSelector.razor.js");
+                dotNetRef = DotNetObjectReference.Create(this);
+            }
+            catch
+            {
+                // Ignore if module fails to load
+            }
+        }
+
+        // Setup or remove click outside listener based on menu state
+        if (jsModule != null && dotNetRef != null)
+        {
+            if (showMenu)
+            {
+                await jsModule.InvokeVoidAsync("setupClickOutside", themeSelectorRef, dotNetRef);
+            }
+            else
+            {
+                await jsModule.InvokeVoidAsync("cleanupClickOutside");
+            }
+        }
+    }
+
+    private void ToggleThemeMenu()
+    {
+        showMenu = !showMenu;
+    }
+
+    [JSInvokable]
+    public void CloseMenu()
+    {
+        if (showMenu)
+        {
+            showMenu = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task SelectTheme(string themeName)
+    {
+        // Apply theme immediately (saves to localStorage)
+        await ThemeService.SetThemeAsync(themeName);
+        showMenu = false;
+
+        // Also save to database if user is logged in
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var userId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                // Save to database so it persists across sessions
+                await PreferenceService.SetColorSchemeAsync(userId, themeName);
+            }
+        }
+        catch
+        {
+            // If database save fails, theme is still applied via localStorage
+            // User can manually save via Preferences page if needed
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        ThemeService.OnThemeChanged -= StateHasChanged;
+
+        if (jsModule != null)
+        {
+            try
+            {
+                await jsModule.InvokeVoidAsync("cleanupClickOutside");
+                await jsModule.DisposeAsync();
+            }
+            catch
+            {
+                // Ignore disposal errors
+            }
+        }
+
+        dotNetRef?.Dispose();
+    }
+}
