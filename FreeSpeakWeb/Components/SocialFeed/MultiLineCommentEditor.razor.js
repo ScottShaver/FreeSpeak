@@ -75,3 +75,58 @@ export function calculateEmojiPickerPosition(buttonElement) {
 
     return `left: ${left}px; top: ${top}px;`;
 }
+
+export function insertTextAtCursor(textarea, text) {
+    if (!textarea) {
+        console.error('Textarea element not found');
+        return;
+    }
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const currentValue = textarea.value;
+
+    // Insert text at cursor position
+    const newValue = currentValue.substring(0, start) + text + currentValue.substring(end);
+    textarea.value = newValue;
+
+    // Set cursor position after inserted text
+    const newCursorPos = start + text.length;
+    textarea.setSelectionRange(newCursorPos, newCursorPos);
+
+    // Focus the textarea
+    textarea.focus();
+
+    // Trigger input event so Blazor binding updates
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+
+    return newValue;
+}
+
+export function replaceTextPreserveCursor(textarea, newText) {
+    if (!textarea) return newText;
+
+    // Save cursor position
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const oldText = textarea.value;
+
+    // Update the value
+    textarea.value = newText;
+
+    // Calculate new cursor position
+    // If text was replaced (emoji conversion), try to maintain relative position
+    const lengthDiff = newText.length - oldText.length;
+    let newCursorPos = start + lengthDiff;
+
+    // Make sure cursor position is valid
+    newCursorPos = Math.max(0, Math.min(newCursorPos, newText.length));
+
+    // Restore cursor position
+    textarea.setSelectionRange(newCursorPos, newCursorPos);
+
+    // Trigger input event so Blazor binding updates
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+
+    return newText;
+}

@@ -65,7 +65,7 @@ namespace FreeSpeakWeb.Tests.Services
             var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService());
 
             // Act
-            var (success, errorMessage) = await service.UpdatePostAsync(99999, "user1", "Updated content");
+            var (success, errorMessage, _) = await service.UpdatePostAsync(99999, "user1", "Updated content");
 
             // Assert
             success.Should().BeFalse();

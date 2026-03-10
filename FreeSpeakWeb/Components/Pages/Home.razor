@@ -28,89 +28,175 @@
 <PageTitle>@SiteSettings.Value.SiteName - Home</PageTitle>
 
 <div class="home-container">
-            <!-- Reserved space for future content -->
-            <div class="top-section">
-                <PostCreator 
-                    CurrentUserImageUrl="@currentUserImageUrl"
-                    CurrentUserName="@currentUserName"
-                    OnPostCreated="HandlePostCreated" />
-            </div>
+            <!-- Tabbed Interface -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="feed-tab" data-bs-toggle="tab" data-bs-target="#feed-content" type="button" role="tab" aria-controls="feed-content" aria-selected="true">
+                        My Feed
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pinned-tab" data-bs-toggle="tab" data-bs-target="#pinned-content" type="button" role="tab" aria-controls="pinned-content" aria-selected="false">
+                        Pinned Posts
+                    </button>
+                </li>
+            </ul>
 
-            <!-- Feed section -->
-            <div class="feed-section">
-                @if (isLoading && !posts.Any())
-                {
-                    <div class="loading-indicator">
-                        <p>Loading your feed...</p>
-                    </div>
-                }
-                else if (!posts.Any() && !isLoading)
-                {
-                    <div class="empty-feed">
-                        <p>No posts to display. Start connecting with friends to see their posts!</p>
-                    </div>
-                }
-                else
-                {
-                    @foreach (var post in posts)
-                    {
-                        var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
-                        var userReaction = userReactions.ContainsKey(post.Id) ? userReactions[post.Id] : null;
-                        var comments = postComments.ContainsKey(post.Id) ? postComments[post.Id] : new List<CommentDisplayModel>();
-                        var directCommentCount = postDirectCommentCounts.ContainsKey(post.Id) ? postDirectCommentCounts[post.Id] : 0;
-                        var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
-                        var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
-
-                        <FeedArticle 
-                            PostId="@post.Id"
-                            AuthorId="@post.AuthorId"
-                            AuthorName="@authorName"
-                            AuthorImageUrl="@post.Author?.ProfilePictureUrl"
-                            CreatedAt="@post.CreatedAt"
-                            LikeCount="@post.LikeCount"
-                            CommentCount="@post.CommentCount"
-                            ShareCount="@post.ShareCount"
-                            DirectCommentCount="@directCommentCount"
-                            CurrentUserId="@currentUserId"
+            <div class="tab-content">
+                <!-- My Feed Tab -->
+                <div class="tab-pane fade show active" id="feed-content" role="tabpanel" aria-labelledby="feed-tab">
+                    <!-- Reserved space for future content -->
+                    <div class="top-section">
+                        <PostCreator 
                             CurrentUserImageUrl="@currentUserImageUrl"
                             CurrentUserName="@currentUserName"
-                            ReactionBreakdown="@postReactions"
-                            UserReaction="@userReaction"
-                            Comments="@comments"
-                            AudienceType="@post.AudienceType"
-                            IsPinned="@isPinned"
-                            Images="@post.Images?.ToList()"
-                            OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(post.Id, reactionType))"
-                            OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
-                            OnPinPost="@HandlePinPost"
-                            OnUnpinPost="@HandleUnpinPost"
-                            OnPostDeleted="@HandlePostDeleted"
-                            OnCommentAdded="@HandleCommentAdded"
-                            OnReplySubmitted="@HandleReplySubmitted"
-                            OnCommentReactionChanged="@HandleCommentReactionChanged"
-                            OnRemoveCommentReaction="@HandleRemoveCommentReaction"
-                            OnShowPostDetail="@(() => ShowPostDetail(post))"
-                            OnShowComments="@(() => ShowPostDetail(post))">
-                            <ArticleContent>
-                                @((MarkupString)FormatContentWithLineBreaks(post.Content))
-                            </ArticleContent>
-                        </FeedArticle>
-                    }
+                            OnPostCreated="HandlePostCreated" />
+                    </div>
 
-                    @if (isLoadingMore)
-                    {
-                        <div class="loading-more">
-                            <p>Loading more posts...</p>
-                        </div>
-                    }
+                    <!-- Feed section -->
+                    <div class="feed-section">
+                        @if (isLoading && !posts.Any())
+                        {
+                            <div class="loading-indicator">
+                                <p>Loading your feed...</p>
+                            </div>
+                        }
+                        else if (!posts.Any() && !isLoading)
+                        {
+                            <div class="empty-feed">
+                                <p>No posts to display. Start connecting with friends to see their posts!</p>
+                            </div>
+                        }
+                        else
+                        {
+                            @foreach (var post in posts)
+                            {
+                                var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
+                                var userReaction = userReactions.ContainsKey(post.Id) ? userReactions[post.Id] : null;
+                                var comments = postComments.ContainsKey(post.Id) ? postComments[post.Id] : new List<CommentDisplayModel>();
+                                var directCommentCount = postDirectCommentCounts.ContainsKey(post.Id) ? postDirectCommentCounts[post.Id] : 0;
+                                var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
+                                var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
 
-                    @if (hasMorePosts == false && posts.Any())
-                    {
-                        <div class="no-more-posts">
-                            <p>No more posts at this time</p>
-                        </div>
-                    }
-                }
+                                <FeedArticle 
+                                    PostId="@post.Id"
+                                    AuthorId="@post.AuthorId"
+                                    AuthorName="@authorName"
+                                    AuthorImageUrl="@post.Author?.ProfilePictureUrl"
+                                    CreatedAt="@post.CreatedAt"
+                                    LikeCount="@post.LikeCount"
+                                    CommentCount="@post.CommentCount"
+                                    ShareCount="@post.ShareCount"
+                                    DirectCommentCount="@directCommentCount"
+                                    CurrentUserId="@currentUserId"
+                                    CurrentUserImageUrl="@currentUserImageUrl"
+                                    CurrentUserName="@currentUserName"
+                                    ReactionBreakdown="@postReactions"
+                                    UserReaction="@userReaction"
+                                    Comments="@comments"
+                                    AudienceType="@post.AudienceType"
+                                    IsPinned="@isPinned"
+                                    Images="@post.Images?.ToList()"
+                                    OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(post.Id, reactionType))"
+                                    OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
+                                    OnPinPost="@HandlePinPost"
+                                    OnUnpinPost="@HandleUnpinPost"
+                                    OnPostDeleted="@HandlePostDeleted"
+                                    OnEditPost="@HandleEditPost"
+                                    OnCommentAdded="@HandleCommentAdded"
+                                    OnReplySubmitted="@HandleReplySubmitted"
+                                    OnCommentReactionChanged="@HandleCommentReactionChanged"
+                                    OnRemoveCommentReaction="@HandleRemoveCommentReaction"
+                                    OnShowPostDetail="@(() => ShowPostDetail(post))"
+                                    OnShowComments="@(() => ShowPostDetail(post))">
+                                    <ArticleContent>
+                                        @((MarkupString)FormatContentWithLineBreaks(post.Content))
+                                    </ArticleContent>
+                                </FeedArticle>
+                            }
+
+                            @if (isLoadingMore)
+                            {
+                                <div class="loading-more">
+                                    <p>Loading more posts...</p>
+                                </div>
+                            }
+
+                            @if (hasMorePosts == false && posts.Any())
+                            {
+                                <div class="no-more-posts">
+                                    <p>No more posts at this time</p>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <!-- Pinned Posts Tab -->
+                <div class="tab-pane fade" id="pinned-content" role="tabpanel" aria-labelledby="pinned-tab">
+                    <div class="feed-section">
+                        @if (isLoadingPinnedPosts && !pinnedPostsList.Any())
+                        {
+                            <div class="loading-indicator">
+                                <p>Loading your pinned posts...</p>
+                            </div>
+                        }
+                        else if (!pinnedPostsList.Any() && !isLoadingPinnedPosts)
+                        {
+                            <div class="empty-feed">
+                                <p>You haven't pinned any posts yet. Pin posts from your feed to see them here!</p>
+                            </div>
+                        }
+                        else
+                        {
+                            @foreach (var post in pinnedPostsList)
+                            {
+                                var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
+                                var userReaction = userReactions.ContainsKey(post.Id) ? userReactions[post.Id] : null;
+                                var comments = postComments.ContainsKey(post.Id) ? postComments[post.Id] : new List<CommentDisplayModel>();
+                                var directCommentCount = postDirectCommentCounts.ContainsKey(post.Id) ? postDirectCommentCounts[post.Id] : 0;
+                                var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
+                                var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
+
+                                <FeedArticle 
+                                    PostId="@post.Id"
+                                    AuthorId="@post.AuthorId"
+                                    AuthorName="@authorName"
+                                    AuthorImageUrl="@post.Author?.ProfilePictureUrl"
+                                    CreatedAt="@post.CreatedAt"
+                                    LikeCount="@post.LikeCount"
+                                    CommentCount="@post.CommentCount"
+                                    ShareCount="@post.ShareCount"
+                                    DirectCommentCount="@directCommentCount"
+                                    CurrentUserId="@currentUserId"
+                                    CurrentUserImageUrl="@currentUserImageUrl"
+                                    CurrentUserName="@currentUserName"
+                                    ReactionBreakdown="@postReactions"
+                                    UserReaction="@userReaction"
+                                    Comments="@comments"
+                                    AudienceType="@post.AudienceType"
+                                    IsPinned="@isPinned"
+                                    Images="@post.Images?.ToList()"
+                                    OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(post.Id, reactionType))"
+                                    OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
+                                    OnPinPost="@HandlePinPost"
+                                    OnUnpinPost="@HandleUnpinPost"
+                                    OnPostDeleted="@HandlePostDeleted"
+                                    OnEditPost="@HandleEditPost"
+                                    OnCommentAdded="@HandleCommentAdded"
+                                    OnReplySubmitted="@HandleReplySubmitted"
+                                    OnCommentReactionChanged="@HandleCommentReactionChanged"
+                                    OnRemoveCommentReaction="@HandleRemoveCommentReaction"
+                                    OnShowPostDetail="@(() => ShowPostDetail(post))"
+                                    OnShowComments="@(() => ShowPostDetail(post))">
+                                    <ArticleContent>
+                                        @((MarkupString)FormatContentWithLineBreaks(post.Content))
+                                    </ArticleContent>
+                                </FeedArticle>
+                            }
+                        }
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -160,19 +246,48 @@
             CurrentStep="@uploadCurrentStep"
             TotalSteps="@uploadTotalSteps" />
 
+        @if (showEditPost && editPost != null)
+        {
+            <PostEditModal 
+                @ref="postEditModalRef"
+                PostId="@editPost.Id"
+                AuthorName="@(postAuthorNames.ContainsKey(editPost.Id) ? postAuthorNames[editPost.Id] : "Unknown")"
+                AuthorImageUrl="@editPost.Author?.ProfilePictureUrl"
+                CreatedAt="@editPost.CreatedAt"
+                InitialContent="@editPost.Content"
+                InitialImages="@editPost.Images?.ToList()"
+                AudienceType="@editPost.AudienceType"
+                CurrentUserId="@currentUserId"
+                OnSave="@HandleSaveEdit"
+                OnCancel="@CloseEditModal"
+                OnImageUploadStateChanged="@HandleImageUploadStateChanged"
+                OnImagesSelected="@HandleEditPostImagesSelected" />
+        }
+
+        @if (showEditPostImageUpload)
+        {
+            <ImageUploadModal 
+                IsVisible="true"
+                OnImagesSelected="@HandleEditPostImagesSelected"
+                OnClose="@(() => showEditPostImageUpload = false)"
+                MaxImages="10" />
+        }
+
 @code {
     private List<Post> posts = new();
+    private List<Post> pinnedPostsList = new();
     private Dictionary<int, Dictionary<LikeType, int>> postReactionData = new();
     private Dictionary<int, LikeType?> userReactions = new();
     private Dictionary<int, List<CommentDisplayModel>> postComments = new();
     private Dictionary<int, int> postDirectCommentCounts = new();
     private Dictionary<int, bool> pinnedPosts = new();
-    private Dictionary<int, string> postAuthorNames = new(); // Cache for author display names
+    private Dictionary<int, string> postAuthorNames = new();
     private int currentPage = 1;
     private const int pageSize = 20;
     private bool isLoading = false;
     private bool isLoadingMore = false;
     private bool hasMorePosts = true;
+    private bool isLoadingPinnedPosts = false;
     private string? currentUserId;
     private string? currentUserImageUrl;
     private string? currentUserName;
@@ -180,6 +295,10 @@
     private DotNetObjectReference<Home>? dotNetHelper;
     private bool showPostDetail = false;
     private Post? selectedPost = null;
+    private bool showEditPost = false;
+    private Post? editPost = null;
+    private bool showEditPostImageUpload = false;
+    private PostEditModal? postEditModalRef;
 
     // Upload progress tracking
     private bool showUploadProgress = false;
@@ -215,6 +334,7 @@
         }
 
         await LoadInitialPosts();
+        await LoadPinnedPosts();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -264,6 +384,35 @@
         finally
         {
             isLoading = false;
+        }
+    }
+
+    private async Task LoadPinnedPosts()
+    {
+        if (currentUserId == null) return;
+
+        isLoadingPinnedPosts = true;
+        try
+        {
+            var loadedPosts = await PostService.GetPinnedPostsAsync(currentUserId);
+            pinnedPostsList = loadedPosts;
+
+            // Load reaction data for pinned posts
+            await LoadReactionDataForPosts(loadedPosts);
+
+            // Load pinned status for pinned posts (should all be true, but for consistency)
+            await LoadPinnedStatusForPosts(loadedPosts);
+
+            // Load author names for pinned posts
+            await LoadAuthorNamesForPosts(loadedPosts);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading pinned posts: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingPinnedPosts = false;
         }
     }
 
@@ -420,6 +569,10 @@
             if (result.Success)
             {
                 pinnedPosts[postId] = true;
+
+                // Reload pinned posts list to include the newly pinned post
+                await LoadPinnedPosts();
+
                 StateHasChanged();
             }
             else
@@ -444,6 +597,10 @@
             if (result.Success)
             {
                 pinnedPosts[postId] = false;
+
+                // Reload pinned posts list to remove the unpinned post
+                await LoadPinnedPosts();
+
                 StateHasChanged();
             }
             else
@@ -904,6 +1061,98 @@
 
         showPostDetail = false;
         selectedPost = null;
+        StateHasChanged();
+    }
+
+    private void HandleEditPost(int postId)
+    {
+        Console.WriteLine($"HandleEditPost called with postId: {postId}");
+
+        var post = posts.FirstOrDefault(p => p.Id == postId);
+        if (post == null)
+        {
+            Console.WriteLine($"Post not found in posts list, checking pinned posts");
+            post = pinnedPostsList.FirstOrDefault(p => p.Id == postId);
+        }
+
+        if (post != null)
+        {
+            Console.WriteLine($"Post found, opening edit modal");
+            editPost = post;
+            showEditPost = true;
+            StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine($"ERROR: Post {postId} not found in any list");
+        }
+    }
+
+    private async Task HandleSaveEdit((int PostId, string Content, List<string> NewImageUrls, List<int> RemovedImageIds) data)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await PostService.UpdatePostAsync(data.PostId, currentUserId, data.Content, data.NewImageUrls, data.RemovedImageIds);
+
+            if (result.Success)
+            {
+                // Update the post in the lists
+                var post = posts.FirstOrDefault(p => p.Id == data.PostId);
+                if (post != null)
+                {
+                    post.Content = data.Content;
+                    if (result.UpdatedImages != null)
+                    {
+                        post.Images = result.UpdatedImages;
+                    }
+                }
+
+                var pinnedPost = pinnedPostsList.FirstOrDefault(p => p.Id == data.PostId);
+                if (pinnedPost != null)
+                {
+                    pinnedPost.Content = data.Content;
+                    if (result.UpdatedImages != null)
+                    {
+                        pinnedPost.Images = result.UpdatedImages;
+                    }
+                }
+
+                CloseEditModal();
+                StateHasChanged();
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to update post");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating post: {ex.Message}");
+            await JSRuntime.InvokeVoidAsync("alert", "An error occurred while updating the post.");
+        }
+    }
+
+    private void CloseEditModal()
+    {
+        showEditPost = false;
+        editPost = null;
+        showEditPostImageUpload = false;
+        StateHasChanged();
+    }
+
+    private void HandleImageUploadStateChanged(bool isOpen)
+    {
+        showEditPostImageUpload = isOpen;
+        StateHasChanged();
+    }
+
+    private void HandleEditPostImagesSelected(List<ImageUploadModal.SelectedImage> images)
+    {
+        // Pass the images to PostEditModal
+        postEditModalRef?.AddNewImages(images);
+        showEditPostImageUpload = false;
         StateHasChanged();
     }
 

@@ -84,41 +84,92 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Update an existing post
         /// </summary>
-        public async Task<(bool Success, string? ErrorMessage)> UpdatePostAsync(int postId, string userId, string newContent)
+        public async Task<(bool Success, string? ErrorMessage, List<PostImage>? UpdatedImages)> UpdatePostAsync(
+            int postId, 
+            string userId, 
+            string newContent, 
+            List<string>? newImageUrls = null, 
+            List<int>? removedImageIds = null)
         {
-            if (string.IsNullOrWhiteSpace(newContent))
+            // Allow empty content if images exist or are being added
+            var hasImages = newImageUrls != null && newImageUrls.Any();
+
+            if (string.IsNullOrWhiteSpace(newContent) && !hasImages && (removedImageIds == null || !removedImageIds.Any()))
             {
-                return (false, "Post content cannot be empty.");
+                return (false, "Post must contain either text or images.", null);
             }
 
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
 
-                var post = await context.Posts.FindAsync(postId);
+                var post = await context.Posts
+                    .Include(p => p.Images)
+                    .FirstOrDefaultAsync(p => p.Id == postId);
 
                 if (post == null)
                 {
-                    return (false, "Post not found.");
+                    return (false, "Post not found.", null);
                 }
 
                 if (post.AuthorId != userId)
                 {
-                    return (false, "You are not authorized to edit this post.");
+                    return (false, "You are not authorized to edit this post.", null);
                 }
 
-                post.Content = newContent.Trim();
+                // Update content
+                post.Content = string.IsNullOrWhiteSpace(newContent) ? string.Empty : newContent.Trim();
                 post.UpdatedAt = DateTime.UtcNow;
+
+                // Remove specified images
+                if (removedImageIds != null && removedImageIds.Any())
+                {
+                    var imagesToRemove = post.Images
+                        .Where(img => removedImageIds.Contains(img.Id))
+                        .ToList();
+
+                    foreach (var image in imagesToRemove)
+                    {
+                        context.PostImages.Remove(image);
+                    }
+                }
+
+                // Add new images
+                if (newImageUrls != null && newImageUrls.Any())
+                {
+                    var currentMaxOrder = post.Images.Any() ? post.Images.Max(img => img.DisplayOrder) : -1;
+
+                    for (int i = 0; i < newImageUrls.Count; i++)
+                    {
+                        var postImage = new PostImage
+                        {
+                            PostId = post.Id,
+                            ImageUrl = newImageUrls[i],
+                            DisplayOrder = currentMaxOrder + 1 + i,
+                            UploadedAt = DateTime.UtcNow
+                        };
+                        context.PostImages.Add(postImage);
+                    }
+                }
 
                 await context.SaveChangesAsync();
 
+                // Reload images to get the updated collection
+                await context.Entry(post).Collection(p => p.Images).LoadAsync();
+
+                // Verify post still has content or images
+                if (string.IsNullOrWhiteSpace(post.Content) && !post.Images.Any())
+                {
+                    return (false, "Post must contain either text or images.", null);
+                }
+
                 _logger.LogInformation("Post {PostId} updated by user {UserId}", postId, userId);
-                return (true, null);
+                return (true, null, post.Images.OrderBy(i => i.DisplayOrder).ToList());
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while updating the post.");
+                return (false, "An error occurred while updating the post.", null);
             }
         }
 
@@ -1500,6 +1551,34 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogError(ex, "Error getting pinned status for posts for user {UserId}", userId);
                 return postIds.ToDictionary(id => id, id => false);
+            }
+        }
+
+        /// <summary>
+        /// Get all pinned posts for a user
+        /// </summary>
+        public async Task<List<Post>> GetPinnedPostsAsync(string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var pinnedPosts = await context.PinnedPosts
+                    .Where(pp => pp.UserId == userId)
+                    .Include(pp => pp.Post)
+                        .ThenInclude(p => p.Author)
+                    .Include(pp => pp.Post)
+                        .ThenInclude(p => p.Images)
+                    .OrderByDescending(pp => pp.PinnedAt)
+                    .Select(pp => pp.Post)
+                    .ToListAsync();
+
+                return pinnedPosts;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting pinned posts for user {UserId}", userId);
+                return new List<Post>();
             }
         }
 
