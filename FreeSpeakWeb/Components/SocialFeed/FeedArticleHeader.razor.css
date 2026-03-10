@@ -1,0 +1,186 @@
+/* 1. Header Area */
+.article-header {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    gap: 8px;
+    background: var(--surface-secondary);
+}
+
+/* Public posts - theme-aware gradient */
+.article-header.header-public {
+    background: linear-gradient(180deg, 
+        color-mix(in srgb, var(--primary-color) 20%, var(--surface-secondary)), 
+        color-mix(in srgb, var(--primary-color) 40%, var(--surface-secondary)) 70%);
+}
+
+/* Friends Only posts - Green tint */
+.article-header.header-friends {
+    background: linear-gradient(180deg, 
+        color-mix(in srgb, var(--success-color) 20%, var(--surface-secondary)), 
+        color-mix(in srgb, var(--success-color) 40%, var(--surface-secondary)) 70%);
+}
+
+/* Only Me posts - Warning tint */
+.article-header.header-private {
+    background: linear-gradient(180deg, 
+        color-mix(in srgb, var(--warning-color) 20%, var(--surface-secondary)), 
+        color-mix(in srgb, var(--warning-color) 40%, var(--surface-secondary)) 70%);
+}
+
+.author-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.author-avatar-placeholder {
+    background-color: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.author-avatar-initial {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.author-info {
+    flex: 1;
+}
+
+.author-name-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.author-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.audience-icon {
+    display: inline-block;
+    vertical-align: middle;
+    color: var(--text-secondary);
+    cursor: help;
+}
+
+.article-timestamp-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.article-timestamp {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+    line-height: 1.2;
+    cursor: help;
+    text-decoration: underline dotted;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.2s;
+}
+
+.article-timestamp:hover {
+    text-decoration-color: rgba(0, 0, 0, 0.6);
+}
+
+.pinned-icon {
+    display: inline-block;
+    vertical-align: middle;
+    cursor: help;
+}
+
+.menu-button {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: #000000;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.menu-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Header Stats */
+.header-stats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    margin-right: 8px;
+}
+
+.header-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    background: rgba(0, 0, 0, 0.08);
+    padding: 4px 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.header-stat-item.header-stat-clickable {
+    cursor: pointer;
+}
+
+.header-reaction-icons {
+    display: flex;
+    gap: -2px;
+}
+
+.header-reaction-icon {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.header-stat-count {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 12px;
+}
+
+.header-stat-item.header-stat-clickable:hover {
+    background: rgba(0, 0, 0, 0.12);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+.header-stat-item.header-stat-clickable:hover .header-stat-count {
+    color: var(--primary-color);
+}
+
+.header-comment-icon {
+    width: 14px;
+    height: 14px;
+    color: var(--text-secondary);
+}
+
+.header-share-icon {
+    width: 14px;
+    height: 14px;
+    color: var(--text-secondary);
+}
+
+.header-like-icon {
+    width: 14px;
+    height: 14px;
+    color: var(--text-secondary);
+}

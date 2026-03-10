@@ -1,0 +1,154 @@
+/* Post Images Container */
+.article-images {
+    margin: 0;
+    border-top: 1px solid #e4e6eb;
+    border-bottom: 1px solid #e4e6eb;
+    width: 100%;
+    background-color: #000;
+    position: relative;
+}
+
+/* Image Counter */
+.image-counter {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 10;
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+}
+
+.image-counter svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.9;
+}
+
+.image-counter span {
+    line-height: 1;
+}
+
+/* Horizontal Scroll Container */
+.image-scroll-container {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+    scroll-snap-type: x proximity;
+    cursor: grab;
+}
+
+.image-scroll-container:active {
+    cursor: grabbing;
+}
+
+/* Webkit scrollbar styling */
+.image-scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.image-scroll-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.image-scroll-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.image-scroll-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Image Item */
+.image-item {
+    flex-shrink: 0;
+    width: auto;
+    max-width: 600px;
+    min-width: 300px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    background-color: #000;
+    scroll-snap-align: start;
+}
+
+.image-item:hover {
+    opacity: 0.9;
+}
+
+.image-item img {
+    height: 100%;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+}
+
+/* Scroll Buttons */
+.scroll-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(4px);
+}
+
+.scroll-button:hover {
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-50%) scale(1.05);
+}
+
+.scroll-button:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.scroll-left {
+    left: 16px;
+}
+
+.scroll-right {
+    right: 16px;
+}
+
+.scroll-button svg {
+    color: #333;
+    width: 24px;
+    height: 24px;
+}
+
+/* Hide scroll buttons on mobile */
+@media (max-width: 768px) {
+    .scroll-button {
+        display: none;
+    }
+}

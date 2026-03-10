@@ -22,7 +22,6 @@ main {
     flex: 1;
     background-color: var(--surface-secondary);
     max-width: calc(1000px + 300px + 1rem);
-    margin-left: 10px;
 }
 
 .content-left {
@@ -31,6 +30,9 @@ main {
     min-width: 0;
     background-color: var(--surface-color);
     box-shadow: var(--shadow-sm);
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-right: 5px;
 }
 
 .content-right {
@@ -57,33 +59,33 @@ main {
 }
 
 @media (max-width: 640.98px) {
-    .content-left {
+    /*.content-left {
         padding-top: 1rem;
-    }
+    }*/
 }
 
 @media (min-width: 641px) {
-    .page {
+    /*.page {
         flex-direction: row;
     }
 
-    .sidebar {
+    .sidebar {*/
         /* NavMenu handles its own positioning */
-        width: 0;
+        /*width: 0;
         height: 0;
         overflow: visible;
-    }
+    }*/
 
     /* Push content to the right when menu is shown */
     .sidebar:has(.nav-scrollable.show) ~ main {
         margin-left: 250px;
     }
 
-    .content-left {
+    /*.content-left {
         padding-left: 0.25rem !important;
         padding-right: 0.5rem !important;
         padding-top: 1rem;
-    }
+    }*/
 }
 
 #blazor-error-ui {

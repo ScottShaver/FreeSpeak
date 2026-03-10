@@ -1,6 +1,5 @@
 .home-container {
     margin: 0;
-    padding: 8px;
     min-height: 100vh;
 }
 
@@ -61,7 +60,6 @@
 /* Responsive design */
 @media (max-width: 768px) {
     .home-container {
-        padding: 8px;
         max-width: 100%;
     }
 

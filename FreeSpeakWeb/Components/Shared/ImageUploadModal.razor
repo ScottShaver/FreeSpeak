@@ -23,7 +23,7 @@
                     </svg>
                     <p>Click to select images or drag and drop</p>
                     <p class="upload-hint">Up to @MaxImages images • PNG, JPG, GIF • Max @(MaxFileSizeMB)MB each</p>
-                    <InputFile OnChange="HandleFileSelected" multiple accept="image/*" class="file-input" id="imageFileInput" />
+                    <InputFile OnChange="HandleFileSelected" multiple accept="image/*" MaxFileCount="@MaxImages" class="file-input" id="imageFileInput" />
                 </label>
             </div>
 
@@ -128,7 +128,17 @@
             return;
         }
 
-        var filesToProcess = e.GetMultipleFiles(remainingSlots);
+        IReadOnlyList<IBrowserFile> filesToProcess;
+        try
+        {
+            filesToProcess = e.GetMultipleFiles(remainingSlots);
+        }
+        catch (InvalidOperationException)
+        {
+            errorMessage = $"You selected too many files. Please select up to {remainingSlots} image{(remainingSlots == 1 ? "" : "s")}.";
+            return;
+        }
+
         var maxFileSizeBytes = MaxFileSizeMB * 1024 * 1024;
 
         foreach (var file in filesToProcess)

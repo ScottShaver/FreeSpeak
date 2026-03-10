@@ -32,8 +32,6 @@
     {
         if (firstRender)
         {
-            Logger.LogInformation("ThemeInitializer OnAfterRenderAsync - Theme to apply: {Theme}", _savedThemeToApply ?? "null");
-
             // Initialize the ThemeService with the current theme (syncs internal state with what's already rendered)
             if (!string.IsNullOrEmpty(_savedThemeToApply))
             {

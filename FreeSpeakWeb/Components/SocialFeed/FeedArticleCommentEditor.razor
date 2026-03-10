@@ -1,0 +1,71 @@
+@using FreeSpeakWeb.Components.SocialFeed
+
+@if (!HideCommentEditor && !IsReadOnly)
+{
+    @if (!HasReachedCommentLimit)
+    {
+        <div class="article-comment-editor">
+            @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
+            {
+                <img src="@CurrentUserImageUrl" alt="You" class="comment-user-avatar" />
+            }
+            else
+            {
+                <div class="comment-user-avatar comment-avatar-placeholder">
+                    <span class="comment-avatar-initial">@GetInitials(CurrentUserName ?? "User")</span>
+                </div>
+            }
+            <div class="editor-wrapper">
+                <MultiLineCommentEditor OnCommentSubmitted="OnCommentSubmitted" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="article-comment-limit-message">
+            <span>No more comments allowed</span>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public bool HideCommentEditor { get; set; } = false;
+
+    [Parameter]
+    public bool IsReadOnly { get; set; } = false;
+
+    [Parameter]
+    public bool HasReachedCommentLimit { get; set; } = false;
+
+    [Parameter]
+    public string? CurrentUserImageUrl { get; set; }
+
+    [Parameter]
+    public string? CurrentUserName { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnCommentSubmitted { get; set; }
+
+    private string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "U";
+
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 0)
+            return "U";
+
+        if (parts.Length == 1)
+        {
+            var singleWord = parts[0];
+            if (singleWord.Length >= 2)
+                return singleWord.Substring(0, 2).ToUpper();
+            else
+                return singleWord.Substring(0, 1).ToUpper();
+        }
+
+        return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
+    }
+}

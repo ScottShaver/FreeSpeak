@@ -325,7 +325,16 @@
         else
         {
             showEmojiPicker = true;
-            emojiPickerPositionStyle = "right: 50px; top: 40px;";
+            // Calculate position dynamically using JavaScript
+            _ = CalculateEmojiPickerPositionAsync();
+        }
+    }
+
+    private async Task CalculateEmojiPickerPositionAsync()
+    {
+        if (module != null)
+        {
+            emojiPickerPositionStyle = await module.InvokeAsync<string>("calculateEmojiPickerPosition", emojiButtonElement);
             StateHasChanged();
         }
     }
