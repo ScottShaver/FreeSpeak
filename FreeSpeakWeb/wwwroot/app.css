@@ -2,6 +2,40 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background-color: var(--surface-secondary);
     color: var(--text-primary);
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Constrain and center main content on narrow screens */
+@media (max-width: 640px) {
+    body {
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+
+    main, .page {
+        max-width: 100vw;
+        overflow-x: hidden;
+        box-sizing: border-box;
+    }
+
+    /* Ensure input fields don't overflow */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    input[type="url"],
+    textarea,
+    select,
+    .form-control {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .form-floating {
+        max-width: 100%;
+    }
 }
 
 a, .btn-link {

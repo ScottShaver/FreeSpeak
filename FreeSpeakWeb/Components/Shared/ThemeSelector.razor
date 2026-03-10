@@ -22,7 +22,7 @@
 
     @if (showMenu)
     {
-        <div class="theme-menu">
+        <div class="theme-menu" style="@menuPositionStyle">
             <div class="theme-menu-header">
                 <span>Choose Theme</span>
                 <button type="button" class="close-menu" @onclick="ToggleThemeMenu">×</button>
@@ -51,6 +51,7 @@
     private ElementReference themeSelectorRef;
     private IJSObjectReference? jsModule;
     private DotNetObjectReference<ThemeSelector>? dotNetRef;
+    private string menuPositionStyle = "right: 0; top: 50px;";
 
     protected override void OnInitialized()
     {

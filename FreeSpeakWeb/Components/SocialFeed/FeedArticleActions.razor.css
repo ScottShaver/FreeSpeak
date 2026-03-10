@@ -1,0 +1,69 @@
+/* 4. Action Links */
+.article-actions {
+    display: flex;
+    padding: 4px;
+    gap: 4px;
+    border-bottom: 1px solid #e4e6eb;
+    clear: both;
+    position: relative;
+    background-color: #f8f9fa;
+}
+
+.like-button-container {
+    position: relative;
+    flex: 1;
+}
+
+.like-button-placeholder {
+    flex: 1;
+}
+
+.comment-button-container {
+    flex: 1;
+}
+
+.comment-button-placeholder {
+    flex: 1;
+}
+
+.share-button-container {
+    flex: 1;
+}
+
+.action-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    color: #65676b;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.action-button:hover {
+    background-color: #f0f2f5;
+}
+
+.action-button.reacted {
+    color: #1877f2;
+}
+
+.action-button.reacted.love {
+    color: #f33e58;
+}
+
+.user-reaction-emoji {
+    font-size: 18px;
+}
+
+.reaction-text {
+    font-size: 15px;
+    font-weight: 600;
+}

@@ -11,6 +11,13 @@
     transition: background-color 0.15s ease-in-out;
 }
 
+/* Hide menu toggle on narrow screens */
+@media (max-width: 640px) {
+    .navbar-toggler {
+        display: none;
+    }
+}
+
 .navbar-toggler:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
@@ -36,17 +43,41 @@
     right: 0;
     width: 100%;
     z-index: 1001;
-    justify-content: flex-start;
+    /*justify-content: flex-start;*/
 }
 
 .top-row .container-fluid {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    width: auto;
-    max-width: none;
-    padding-left: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
     margin-left: 0;
+}
+
+/* Ensure middle nav section can scroll on very narrow screens */
+.top-row .container-fluid > div:nth-child(2) {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    white-space: nowrap;
+}
+
+.top-row .container-fluid > div:nth-child(2)::-webkit-scrollbar {
+    display: none;
+}
+
+/* On narrow screens, adjust spacing */
+@media (max-width: 640px) {
+    .top-row .container-fluid {
+        gap: 0.25rem;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+    }
 }
 
 .navbar-brand {
@@ -228,3 +259,4 @@
         left: 0;
     }
 }
+

@@ -17,7 +17,7 @@
 
 <!-- Always visible header across the top -->
 <div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid d-flex align-items-center" style="width: 100%;">
+    <div class="container-fluid d-flex align-items-center" style="width: 100%; flex-wrap: nowrap;">
         <div class="d-flex align-items-center gap-2" style="flex: 1;">
             <ThemeSelector />
             <button class="navbar-toggler" @onclick="ToggleNavMenu" type="button" title="Toggle navigation menu" aria-label="Toggle navigation">
@@ -26,7 +26,7 @@
             <a class="navbar-brand" href="" data-enhance-nav="false">@SiteSettings.Value.SiteName</a>
         </div>
 
-        <div class="d-flex align-items-center gap-3 justify-content-center" style="flex: 1;">
+        <div class="d-flex align-items-center gap-3 justify-content-center" style="">
             <AuthorizeView>
                 <Authorized>
                     <a href="/" title="Home" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
