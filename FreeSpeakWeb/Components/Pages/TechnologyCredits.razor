@@ -17,10 +17,17 @@
         <h3>Frameworks & Platforms</h3>
         <ul>
             <li><strong>.NET 10</strong> - Modern cross-platform framework</li>
-            <li><strong>ASP.NET Core Blazor Server</strong> - Interactive web UI framework</li>
+            <li><strong>ASP.NET Core Blazor</strong> - Interactive web UI framework with hybrid rendering
+                <ul>
+                    <li><em>Static SSR</em> - Server-side rendering for optimal performance</li>
+                    <li><em>Interactive Server</em> - Real-time SignalR-based interactivity</li>
+                    <li><em>Per-Component Interactivity</em> - Granular control over render modes</li>
+                </ul>
+            </li>
             <li><strong>ASP.NET Core Identity</strong> - User authentication and authorization</li>
             <li><strong>Entity Framework Core</strong> - Object-relational mapping (ORM)</li>
             <li><strong>PostgreSQL</strong> - Open-source relational database</li>
+            <li><strong>SignalR</strong> - Real-time web functionality for interactive components</li>
         </ul>
 
         <h3>Main Application Packages</h3>
@@ -38,10 +45,29 @@
                 <br/><small>PostgreSQL database provider for Entity Framework Core</small>
             </li>
             <li><strong>SixLabors.ImageSharp</strong> (3.1.12) - <em>Six Labors Split License</em>
-                <br/><small>Image processing library for profile pictures</small>
+                <br/><small>Image processing library with caching and resizing for profile pictures and post images</small>
             </li>
             <li><strong>Net.Codecrete.QrCodeGenerator</strong> (2.1.0) - <em>MIT License</em>
                 <br/><small>QR code generation for two-factor authentication</small>
+            </li>
+        </ul>
+
+        <h3>Custom Features & Services</h3>
+        <ul>
+            <li><strong>Theme System</strong> - 8 customizable color schemes with CSS custom properties
+                <br/><small>Default, Dark Mode, Light Mode, Ocean Blue, Forest Green, Sunset Orange, Purple Dream, High Contrast</small>
+            </li>
+            <li><strong>Image Optimization</strong> - Smart resizing and caching with ImageSharp
+                <br/><small>Thumbnail (300px), Medium (400px), and Full-size variants for optimal performance</small>
+            </li>
+            <li><strong>Notification System</strong> - Real-time notifications for social interactions
+                <br/><small>8 notification types with intelligent filtering and auto-expiration</small>
+            </li>
+            <li><strong>Security Features</strong> - Secure file serving with authenticated endpoints
+                <br/><small>Files stored outside wwwroot with rate limiting and authorization checks</small>
+            </li>
+            <li><strong>Rate Limiting</strong> - Built-in ASP.NET Core rate limiting
+                <br/><small>Global and per-endpoint limits to prevent abuse</small>
             </li>
         </ul>
 
@@ -123,8 +149,9 @@
 
         <p class="text-muted">
             <small>
-                Last updated: March 2026<br/>
-                Technology stack: .NET 10, Blazor Server, PostgreSQL, xUnit, bUnit
+                Last updated: January 2025<br/>
+                Technology stack: .NET 10, Blazor (Hybrid SSR + Interactive Server), PostgreSQL, xUnit, bUnit<br/>
+                Recent improvements: Per-component interactivity, image optimization with caching, enhanced theme system
             </small>
         </p>
     </div>

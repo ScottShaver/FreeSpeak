@@ -78,7 +78,7 @@ namespace FreeSpeakWeb.Data
                 entity.HasOne(c => c.ParentComment)
                     .WithMany(c => c.Replies)
                     .HasForeignKey(c => c.ParentCommentId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.Cascade); // Added cascade delete for nested comments
 
                 entity.Property(c => c.Content)
                     .IsRequired();

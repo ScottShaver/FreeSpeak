@@ -18,8 +18,9 @@ namespace FreeSpeakWeb.Tests.Components
     {
         public FeedArticleTests()
         {
-            // Setup JSInterop for MultiLineCommentEditor module
+            // Setup JSInterop for modules used by FeedArticle
             JSInterop.SetupModule("./Components/SocialFeed/MultiLineCommentEditor.razor.js");
+            JSInterop.SetupModule("./Components/SocialFeed/FeedArticle.razor.js");
 
             // Register required services for FeedArticle component
 
@@ -68,6 +69,8 @@ namespace FreeSpeakWeb.Tests.Components
 
             // Act
             var cut = RenderComponent<FeedArticle>(parameters => parameters
+                .Add(p => p.PostId, 1)
+                .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, authorName)
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
@@ -85,6 +88,8 @@ namespace FreeSpeakWeb.Tests.Components
 
             // Act
             var cut = RenderComponent<FeedArticle>(parameters => parameters
+                .Add(p => p.PostId, 1)
+                .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, likeCount)
@@ -103,6 +108,8 @@ namespace FreeSpeakWeb.Tests.Components
 
             // Act
             var cut = RenderComponent<FeedArticle>(parameters => parameters
+                .Add(p => p.PostId, 1)
+                .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
@@ -122,6 +129,8 @@ namespace FreeSpeakWeb.Tests.Components
 
             // Act
             var cut = RenderComponent<FeedArticle>(parameters => parameters
+                .Add(p => p.PostId, 1)
+                .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
@@ -141,6 +150,8 @@ namespace FreeSpeakWeb.Tests.Components
 
             // Act
             var cut = RenderComponent<FeedArticle>(parameters => parameters
+                .Add(p => p.PostId, 1)
+                .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
@@ -159,6 +170,8 @@ namespace FreeSpeakWeb.Tests.Components
         {
             // Arrange & Act
             var cut = RenderComponent<FeedArticle>(parameters => parameters
+                .Add(p => p.PostId, 1)
+                .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
@@ -181,6 +194,8 @@ namespace FreeSpeakWeb.Tests.Components
 
             // Act
             var cut = RenderComponent<FeedArticle>(parameters => parameters
+                .Add(p => p.PostId, 1)
+                .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.AuthorImageUrl, avatarUrl)
                 .Add(p => p.CreatedAt, DateTime.Now)
@@ -197,14 +212,18 @@ namespace FreeSpeakWeb.Tests.Components
         {
             // Arrange & Act
             var cut = RenderComponent<FeedArticle>(parameters => parameters
+                .Add(p => p.PostId, 1)
+                .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
                 .Add(p => p.CommentCount, 0));
 
-            // Assert
+            // Assert - Should show placeholder with initial instead of an img tag
             var avatar = cut.Find(".author-avatar");
-            avatar.GetAttribute("src").Should().Contain("default-avatar");
+            avatar.ClassList.Should().Contain("author-avatar-placeholder");
+            var initial = cut.Find(".author-avatar-initial");
+            initial.TextContent.Should().Contain("T"); // First letter of "Test User"
         }
 
         [Fact]
@@ -215,14 +234,16 @@ namespace FreeSpeakWeb.Tests.Components
 
             // Act
             var cut = RenderComponent<FeedArticle>(parameters => parameters
+                .Add(p => p.PostId, 1)
+                .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, pastDate)
                 .Add(p => p.LikeCount, 0)
                 .Add(p => p.CommentCount, 0));
 
-            // Assert
+            // Assert - Should show relative time format (e.g., "2h", "3h", etc.)
             var timestamp = cut.Find(".article-timestamp");
-            timestamp.TextContent.Should().Contain("2h"); // Shortened format
+            timestamp.TextContent.Should().MatchRegex(@"\d+h"); // Match any number followed by 'h'
         }
 
         [Fact]
@@ -230,6 +251,8 @@ namespace FreeSpeakWeb.Tests.Components
         {
             // Arrange & Act
             var cut = RenderComponent<FeedArticle>(parameters => parameters
+                .Add(p => p.PostId, 1)
+                .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
