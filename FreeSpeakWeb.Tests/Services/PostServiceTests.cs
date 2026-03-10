@@ -149,7 +149,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             // Act
-            var (success, errorMessage) = await service.UpdatePostAsync(postId, "user1", "Updated content");
+            var (success, errorMessage, updatedImages) = await service.UpdatePostAsync(postId, "user1", "Updated content");
 
             // Assert
             success.Should().BeTrue();
@@ -189,7 +189,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             // Act
-            var (success, errorMessage) = await service.UpdatePostAsync(postId, "user2", "Hacked content");
+            var (success, errorMessage, _) = await service.UpdatePostAsync(postId, "user2", "Hacked content");
 
             // Assert
             success.Should().BeFalse();

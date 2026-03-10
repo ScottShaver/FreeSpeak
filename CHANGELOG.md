@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Full page reload navigation for Account/Manage pages to ensure theme consistency
 - Cascade delete behavior for nested comment replies
 - TEST_FIXES_SUMMARY.md documentation
+- JavaScript cursor position preservation during emoji text replacement
+- `insertTextAtCursor()` function for emoji picker in MultiLineCommentEditor
+- `AddNewImages()` public method in PostEditModal for parent-child image data flow
+- Preview display for newly selected images in PostEditModal
+- `RemoveNewImage()` method for removing new images before save
+- Component tests for PostEditModal (PostEditModalTests.cs)
 
 ### Changed
 - Account/Manage pages now use static SSR instead of InteractiveServer render mode
@@ -28,6 +34,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated FeedArticleTests to include required PostId and AuthorId parameters
 - Updated PostService validation test expectations to match actual error messages
 - Updated timestamp tests to use flexible regex patterns instead of exact matches
+- Standardized emoji button position to lower left corner across all components (PostCreator, PostEditModal, MultiLineCommentEditor)
+- Emoji picker positioning updated to use absolute pixel positioning instead of relative
+- ImageUploadModal z-index increased to 1100/1101 (from 1000/1001) to appear above PostEditModal
+- ImageUploadModal now rendered at Home.razor level instead of inside PostEditModal
 
 ### Fixed
 - HttpContext NullReferenceException in Account/Manage pages
@@ -38,12 +48,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comment cascade delete - nested replies are now properly deleted when parent is deleted
 - 19 unit test failures (FeedArticle, PostService validation, comment delete, timestamp, ProfilePictureService)
 - JSInterop configuration for FeedArticle component tests
+- Cursor jumping to end when typing emoji codes like `:smile:` in all text editors
+- Emoji picker inserting at end instead of cursor position in MultiLineCommentEditor
+- Emoji picker popup appearing in wrong location (top-right corner)
+- "Add More Images" button not working in PostEditModal
+- Images selected via "Add More Images" not displaying in edit modal preview
+- Images selected via "Add More Images" not being uploaded when saving post edits
 
 ### Removed
 - `@rendermode InteractiveServer` from 13 Account/Manage pages
 - `z-index: 2` from `.article-actions`, `.article-comments`, and `.article-comment-editor` CSS
 - SecureFileController diagnostic test endpoint
 - ~140+ lines of emoji-decorated debug logging across the codebase
+- Duplicate console.WriteLine statements from PostEditModal initialization
 
 ## [Previous Versions]
 

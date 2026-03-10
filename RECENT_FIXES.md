@@ -211,6 +211,89 @@ When a stacking context is created:
 ### Solution: Avoid Creating Stacking Contexts
 In feed articles, we removed unnecessary `z-index` values to prevent creating stacking contexts that would trap the emoji picker.
 
+## Emoji Features Improvements (Latest)
+
+### Problem 1: Cursor Position Lost During Emoji Text Replacement
+When typing emoji codes like `:smile:`, the auto-replacement feature would move the cursor to the end of the text, disrupting the user's typing flow.
+
+### Solution: JavaScript Cursor Preservation
+Added `replaceTextPreserveCursor()` function to all text input components:
+- Saves cursor position before replacement
+- Updates text value
+- Restores cursor position
+- Triggers Blazor binding update
+
+**Affected Components:**
+- PostCreator.razor.js
+- PostEditModal.razor.js
+- MultiLineCommentEditor.razor.js
+
+### Problem 2: Emoji Picker Insertion Point
+When clicking an emoji from the picker, it would insert at the end of the text instead of at the cursor position.
+
+### Solution: Insert at Cursor Position
+Added `insertTextAtCursor()` JavaScript function:
+- Gets current cursor position
+- Inserts emoji at cursor
+- Moves cursor after inserted emoji
+- Maintains typing flow
+
+**Applied to:** MultiLineCommentEditor.razor.js
+
+### Problem 3: Inconsistent Emoji Button Positioning
+Emoji buttons appeared in different positions across components (top-right, bottom-right, etc.).
+
+### Solution: Standardized Positioning
+Moved all emoji buttons to **lower left corner inside textarea**:
+- Position: absolute, bottom 4px, left 8px
+- Button size: 32×32px
+- Icon size: 18×18px
+- Consistent across all components
+
+**Affected Components:**
+- PostCreator.razor
+- PostEditModal.razor
+- MultiLineCommentEditor.razor
+
+### Problem 4: Emoji Picker Wrong Popup Location
+Emoji picker was appearing in the top-right corner of the browser instead of near the button.
+
+### Solution: Absolute Pixel Positioning
+Updated `calculateEmojiPickerPosition()` to use `getBoundingClientRect()`:
+- Returns `left: Xpx; top: Ypx;` instead of relative positioning
+- Positions below button (or above if no space)
+- Ensures picker stays on screen
+- Matches approach used in MultiLineCommentEditor
+
+**Affected Files:**
+- PostCreator.razor.js
+- PostEditModal.razor.js
+
+### Problem 5: "Add More Images" Button Not Working in PostEditModal
+Clicking the button had no effect.
+
+### Root Causes & Solutions:
+1. **Missing StateHasChanged()** - Added to OpenImageUpload/CloseImageUpload
+2. **Z-Index Stacking** - ImageUploadModal (z:1000) was behind PostEditModal (z:1050)
+   - Increased ImageUploadModal z-index to 1100/1101
+3. **Missing IsVisible Parameter** - Added `IsVisible="true"` when rendering modal
+4. **Modal in Modal Issue** - Moved ImageUploadModal to Home.razor level
+5. **Broken Data Flow** - Added `@ref` and `AddNewImages()` public method to pass images from Home → PostEditModal
+6. **No Preview Display** - Added rendering section for new images using base64 DataUrl
+
+**Complete Fix:**
+- Moved ImageUploadModal rendering to Home.razor (same level as PostEditModal)
+- Added event callbacks for state communication
+- Created public `AddNewImages()` method on PostEditModal
+- Added preview display for newly selected images
+- Added `RemoveNewImage()` method for removing new images before save
+
+**Result:**
+- Button opens modal correctly
+- Images display in preview
+- Images save and upload successfully
+- No z-index conflicts
+
 ## Best Practices Applied
 
 1. **Use Static SSR by Default**

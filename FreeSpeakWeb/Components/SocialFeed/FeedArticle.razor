@@ -285,6 +285,9 @@
     public EventCallback<int> OnPostDeleted { get; set; }
 
     [Parameter]
+    public EventCallback<int> OnEditPost { get; set; }
+
+    [Parameter]
     public List<PostImage>? Images { get; set; }
 
     [Parameter]
@@ -400,6 +403,7 @@
 
     private void ToggleMenu()
     {
+        Console.WriteLine($"ToggleMenu called, showMenu={showMenu}, PostId={PostId}");
         if (showMenu)
         {
             CloseMenu();
@@ -409,23 +413,27 @@
             BuildMenuItems();
             showMenu = true;
             menuPositionStyle = "right: 0; top: 40px;";
+            Console.WriteLine($"Menu opened, menuItems count: {menuItems.Count}");
             StateHasChanged();
         }
     }
 
     private void BuildMenuItems()
     {
+        Console.WriteLine($"BuildMenuItems called for PostId {PostId}, IsOwnPost={IsOwnPost}");
         menuItems.Clear();
 
         if (IsOwnPost)
         {
+            Console.WriteLine("Building menu items for own post");
             // Menu items for user's own posts
             menuItems.Add(new PopupMenu.PopupMenuItem
             {
                 Text = "Edit Post",
                 Icon = "bi bi-pencil",
-                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Edit Post"))
+                OnClick = EventCallback.Factory.Create(this, async () => await HandleEditPostClick())
             });
+            Console.WriteLine("Edit Post menu item added");
 
             // Pin/Unpin Post - changes based on current state
             menuItems.Add(new PopupMenu.PopupMenuItem
@@ -459,6 +467,15 @@
         else if (!string.IsNullOrEmpty(CurrentUserId))
         {
             // Menu items for other users' posts (only if user is logged in)
+
+            // Pin/Unpin Post - available for all posts
+            menuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = currentIsPinned ? "Unpin Post" : "Pin Post",
+                Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
+                OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
+            });
+
             menuItems.Add(new PopupMenu.PopupMenuItem
             {
                 Text = "Report Post",
@@ -641,6 +658,22 @@
         {
             // Show error message
             await JS.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to delete post.");
+        }
+    }
+
+    private async Task HandleEditPostClick()
+    {
+        Console.WriteLine($"FeedArticle.HandleEditPostClick called for PostId: {PostId}");
+        CloseMenu();
+
+        if (OnEditPost.HasDelegate)
+        {
+            Console.WriteLine("OnEditPost has delegate, invoking...");
+            await OnEditPost.InvokeAsync(PostId);
+        }
+        else
+        {
+            Console.WriteLine("ERROR: OnEditPost has no delegate!");
         }
     }
 

@@ -1,0 +1,407 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Components.Shared
+@using FreeSpeakWeb.Services
+@using Microsoft.JSInterop
+@inject ImageUploadService ImageUploadService
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+<div class="post-detail-modal-backdrop" @onclick="HandleCancelClick">
+    <div class="post-detail-modal-container" @onclick:stopPropagation="true">
+        <div class="post-detail-modal-header">
+            <h2>Edit Post</h2>
+            <button type="button" class="close-button" @onclick="HandleCancelClick">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="post-detail-modal-content">
+            <!-- Post Author Header (without menu) -->
+            <div class="feed-article-header">
+                <div class="header-left">
+                    @if (!string.IsNullOrEmpty(AuthorImageUrl))
+                    {
+                        <img src="@AuthorImageUrl" alt="@AuthorName" class="author-avatar" />
+                    }
+                    else
+                    {
+                        <div class="author-avatar avatar-placeholder">
+                            <span class="avatar-initial">@GetInitials(AuthorName)</span>
+                        </div>
+                    }
+                    <div class="author-info">
+                        <span class="author-name">@AuthorName</span>
+                        <div class="post-metadata">
+                            <span class="post-time">@GetTimeAgo(CreatedAt)</span>
+                            <span class="metadata-separator">·</span>
+                            <span class="audience-icon">@GetAudienceIcon(AudienceType)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Editable Content Area -->
+            <div class="edit-content-area">
+                <div class="edit-textarea-container">
+                    <textarea 
+                        class="edit-post-textarea" 
+                        @bind="editedContent"
+                        @bind:event="oninput"
+                        @bind:after="HandleInputAfter"
+                        @ref="textareaElement"
+                        placeholder="What's on your mind?"
+                        rows="6"></textarea>
+
+                    <div class="emoji-button-container">
+                        <button type="button" class="emoji-button" @onclick="ToggleEmojiPicker" @ref="emojiButtonElement" title="Add emoji">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M4.285 9.567a.5.5 0 0 1 .683.183A3.498 3.498 0 0 0 8 11.5a3.498 3.498 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.498 4.498 0 0 1 8 12.5a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z"/>
+                            </svg>
+                        </button>
+                        <EmojiPicker IsVisible="@showEmojiPicker"
+                                    OnClose="@CloseEmojiPicker"
+                                    OnEmojiSelect="@HandleEmojiSelected"
+                                    PositionStyle="@emojiPickerPositionStyle" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Management -->
+            <div class="edit-images-section">
+                @if (currentImages.Any())
+                {
+                    <div class="current-images-grid">
+                        @foreach (var image in currentImages)
+                        {
+                            <div class="image-preview-container">
+                                <img src="@image.ImageUrl" alt="Post image" class="image-preview" />
+                                <button type="button" class="remove-image-btn" @onclick="() => RemoveImage(image)">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                }
+
+                @if (newImages.Any())
+                {
+                    <div class="current-images-grid">
+                        @foreach (var image in newImages)
+                        {
+                            <div class="image-preview-container">
+                                <img src="@image.DataUrl" alt="New image" class="image-preview" />
+                                <button type="button" class="remove-image-btn" @onclick="() => RemoveNewImage(image)">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                }
+
+                <div class="add-images-section">
+                    <button type="button" class="btn-add-images" @onclick="OpenImageUpload">
+                        <i class="bi bi-image"></i> @((currentImages.Any() || newImages.Any()) ? "Add More Images" : "Add Images")
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer with Action Buttons -->
+        <div class="post-edit-modal-footer">
+            <button type="button" class="btn btn-secondary" @onclick="HandleCancelClick">Cancel Changes</button>
+            <button type="button" class="btn btn-primary" @onclick="SaveChanges" disabled="@isSaving">
+                @if (isSaving)
+                {
+                    <span>Saving...</span>
+                }
+                else
+                {
+                    <span>Save Changes</span>
+                }
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int PostId { get; set; }
+    [Parameter] public string AuthorName { get; set; } = string.Empty;
+    [Parameter] public string? AuthorImageUrl { get; set; }
+    [Parameter] public DateTime CreatedAt { get; set; }
+    [Parameter] public string InitialContent { get; set; } = string.Empty;
+    [Parameter] public List<PostImage>? InitialImages { get; set; }
+    [Parameter] public AudienceType AudienceType { get; set; }
+    [Parameter] public string CurrentUserId { get; set; } = string.Empty;
+    [Parameter] public EventCallback<(int PostId, string Content, List<string> ImageUrls, List<int> RemovedImageIds)> OnSave { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public EventCallback<bool> OnImageUploadStateChanged { get; set; }
+    [Parameter] public EventCallback<List<ImageUploadModal.SelectedImage>> OnImagesSelected { get; set; }
+
+    private string editedContent = string.Empty;
+    private List<PostImage> currentImages = new();
+    private List<ImageUploadModal.SelectedImage> newImages = new();
+    private List<int> removedImageIds = new();
+    private bool showImageUpload = false;
+    private bool isSaving = false;
+    private bool showEmojiPicker = false;
+    private string emojiPickerPositionStyle = string.Empty;
+    private ElementReference textareaElement;
+    private ElementReference emojiButtonElement;
+    private IJSObjectReference? module;
+
+    protected override void OnInitialized()
+    {
+        editedContent = InitialContent;
+        if (InitialImages != null)
+        {
+            currentImages = new List<PostImage>(InitialImages);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/PostEditModal.razor.js");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading PostEditModal JS module: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task HandleInputAfter()
+    {
+        // Auto-replace text emojis with cursor preservation
+        var originalContent = editedContent;
+        var newContent = EmojiService.ReplaceTextEmojis(editedContent);
+
+        if (originalContent != newContent && module is not null)
+        {
+            // Use JavaScript to update text while preserving cursor position
+            try
+            {
+                await module.InvokeVoidAsync("replaceTextPreserveCursor", textareaElement, newContent);
+                editedContent = newContent;
+            }
+            catch
+            {
+                // Fallback to normal assignment
+                editedContent = newContent;
+            }
+        }
+
+        // If content changed due to emoji replacement, update the UI
+        if (originalContent != editedContent)
+        {
+            StateHasChanged();
+        }
+    }
+
+    private void ToggleEmojiPicker()
+    {
+        if (showEmojiPicker)
+        {
+            CloseEmojiPicker();
+        }
+        else
+        {
+            showEmojiPicker = true;
+            _ = CalculateEmojiPickerPositionAsync();
+        }
+    }
+
+    private async Task CalculateEmojiPickerPositionAsync()
+    {
+        if (module != null)
+        {
+            try
+            {
+                emojiPickerPositionStyle = await module.InvokeAsync<string>("calculateEmojiPickerPosition", emojiButtonElement);
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error calculating emoji picker position: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task HandleEmojiSelected(string emoji)
+    {
+        if (module != null)
+        {
+            try
+            {
+                // Insert emoji at cursor position using JavaScript
+                var newContent = await module.InvokeAsync<string>("insertTextAtCursor", textareaElement, emoji);
+                editedContent = newContent;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error inserting emoji: {ex.Message}");
+                // Fallback to appending
+                editedContent += emoji;
+            }
+        }
+        else
+        {
+            // Fallback if module not loaded
+            editedContent += emoji;
+        }
+        StateHasChanged();
+    }
+
+    private void CloseEmojiPicker()
+    {
+        showEmojiPicker = false;
+        StateHasChanged();
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        if (module != null)
+        {
+            try
+            {
+                await module.DisposeAsync();
+            }
+            catch
+            {
+                // Ignore disposal errors
+            }
+        }
+    }
+
+    private async Task HandleCancelClick()
+    {
+        Console.WriteLine("PostEditModal.HandleCancelClick called");
+        await OnCancel.InvokeAsync();
+    }
+
+    private void RemoveImage(PostImage image)
+    {
+        currentImages.Remove(image);
+        removedImageIds.Add(image.Id);
+    }
+
+    private void RemoveNewImage(ImageUploadModal.SelectedImage image)
+    {
+        newImages.Remove(image);
+        StateHasChanged();
+    }
+
+    private async Task OpenImageUpload()
+    {
+        showImageUpload = true;
+        await OnImageUploadStateChanged.InvokeAsync(true);
+        StateHasChanged();
+    }
+
+    private async Task CloseImageUpload()
+    {
+        showImageUpload = false;
+        await OnImageUploadStateChanged.InvokeAsync(false);
+        StateHasChanged();
+    }
+
+    private async Task HandleImagesSelected(List<ImageUploadModal.SelectedImage> images)
+    {
+        newImages.AddRange(images);
+        await OnImagesSelected.InvokeAsync(images);
+        await CloseImageUpload();
+        StateHasChanged();
+    }
+
+    public void AddNewImages(List<ImageUploadModal.SelectedImage> images)
+    {
+        if (images != null && images.Any())
+        {
+            newImages.AddRange(images);
+            StateHasChanged();
+        }
+    }
+
+    private async Task SaveChanges()
+    {
+        if (string.IsNullOrWhiteSpace(editedContent))
+        {
+            return;
+        }
+
+        isSaving = true;
+        StateHasChanged();
+
+        try
+        {
+            // Upload new images
+            var newImageUrls = new List<string>();
+            if (newImages.Any())
+            {
+                var imagesToUpload = newImages.Select(img => (
+                    FileName: img.FileName,
+                    Base64Data: img.DataUrl,
+                    ContentType: img.ContentType
+                )).ToList();
+
+                var uploadResult = await ImageUploadService.UploadImagesAsync(CurrentUserId, imagesToUpload);
+                if (uploadResult.Success)
+                {
+                    newImageUrls = uploadResult.ImageUrls;
+                }
+            }
+
+            await OnSave.InvokeAsync((PostId, editedContent, newImageUrls, removedImageIds));
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private string GetInitials(string? name)
+    {
+        if (string.IsNullOrEmpty(name))
+            return "?";
+
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length >= 2)
+            return $"{parts[0][0]}{parts[1][0]}".ToUpper();
+        return parts[0][0].ToString().ToUpper();
+    }
+
+    private string GetTimeAgo(DateTime dateTime)
+    {
+        var timeSpan = DateTime.UtcNow - dateTime;
+
+        if (timeSpan.TotalMinutes < 1)
+            return "just now";
+        if (timeSpan.TotalMinutes < 60)
+            return $"{(int)timeSpan.TotalMinutes}m";
+        if (timeSpan.TotalHours < 24)
+            return $"{(int)timeSpan.TotalHours}h";
+        if (timeSpan.TotalDays < 7)
+            return $"{(int)timeSpan.TotalDays}d";
+        if (timeSpan.TotalDays < 30)
+            return $"{(int)(timeSpan.TotalDays / 7)}w";
+        if (timeSpan.TotalDays < 365)
+            return $"{(int)(timeSpan.TotalDays / 30)}mo";
+        return $"{(int)(timeSpan.TotalDays / 365)}y";
+    }
+
+    private string GetAudienceIcon(AudienceType audienceType)
+    {
+        return audienceType switch
+        {
+            AudienceType.Public => "🌐",
+            AudienceType.FriendsOnly => "👥",
+            AudienceType.MeOnly => "🔒",
+            _ => "🌐"
+        };
+    }
+}

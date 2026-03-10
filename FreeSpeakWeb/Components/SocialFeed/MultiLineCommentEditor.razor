@@ -69,11 +69,25 @@
 
     private async Task HandleInputAfter()
     {
-        // Auto-replace text emojis
+        // Auto-replace text emojis with cursor preservation
         var originalContent = CommentText;
-        CommentText = EmojiService.ReplaceTextEmojis(CommentText);
+        var newContent = EmojiService.ReplaceTextEmojis(CommentText);
 
-        // This runs after @bind updates CommentText
+        if (originalContent != newContent && module is not null)
+        {
+            // Use JavaScript to update text while preserving cursor position
+            try
+            {
+                await module.InvokeVoidAsync("replaceTextPreserveCursor", textareaElement, newContent);
+                CommentText = newContent;
+            }
+            catch
+            {
+                // Fallback to normal assignment
+                CommentText = newContent;
+            }
+        }
+
         // Resize the textarea
         if (module is not null)
         {
@@ -137,10 +151,32 @@
 
     private async Task HandleEmojiSelected(string emoji)
     {
-        CommentText += emoji;
-        if (module is not null)
+        if (module != null)
         {
-            await module.InvokeVoidAsync("resizeTextarea", textareaElement);
+            try
+            {
+                // Insert emoji at cursor position using JavaScript
+                var newContent = await module.InvokeAsync<string>("insertTextAtCursor", textareaElement, emoji);
+                CommentText = newContent;
+
+                // Resize the textarea
+                await module.InvokeVoidAsync("resizeTextarea", textareaElement);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error inserting emoji: {ex.Message}");
+                // Fallback to appending
+                CommentText += emoji;
+                if (module is not null)
+                {
+                    await module.InvokeVoidAsync("resizeTextarea", textareaElement);
+                }
+            }
+        }
+        else
+        {
+            // Fallback if module not loaded
+            CommentText += emoji;
         }
         StateHasChanged();
     }
