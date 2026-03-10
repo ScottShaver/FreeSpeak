@@ -87,7 +87,7 @@ namespace FreeSpeakWeb.Tests.Services
 
             // Assert
             success.Should().BeFalse();
-            errorMessage.Should().Contain("cannot be empty");
+            errorMessage.Should().Contain("Post must contain either text or images");
             post.Should().BeNull();
         }
 

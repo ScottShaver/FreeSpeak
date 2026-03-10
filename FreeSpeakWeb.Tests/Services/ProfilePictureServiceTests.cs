@@ -14,7 +14,7 @@ namespace FreeSpeakWeb.Tests.Services
             var mockEnv = new Mock<IWebHostEnvironment>();
             var tempPath = Path.Combine(Path.GetTempPath(), "ProfilePictureTests", Guid.NewGuid().ToString());
             Directory.CreateDirectory(tempPath);
-            mockEnv.Setup(e => e.WebRootPath).Returns(tempPath);
+            mockEnv.Setup(e => e.ContentRootPath).Returns(tempPath); // Changed from WebRootPath to ContentRootPath
             return mockEnv;
         }
 
@@ -38,18 +38,18 @@ namespace FreeSpeakWeb.Tests.Services
                 // Assert
                 success.Should().BeTrue();
                 errorMessage.Should().BeNull();
-                relativeUrl.Should().Be("/api/profile-picture/testuser");
+                relativeUrl.Should().Be("/api/secure-files/profile-picture/testuser"); // Updated to match actual URL format
 
                 // Verify file was created
-                var expectedPath = Path.Combine(mockEnv.Object.WebRootPath, "images", "profiles", "testuser.jpg");
+                var expectedPath = Path.Combine(mockEnv.Object.ContentRootPath, "AppData", "images", "profiles", "testuser.jpg"); // Updated path
                 File.Exists(expectedPath).Should().BeTrue();
             }
             finally
             {
                 // Cleanup
-                if (Directory.Exists(mockEnv.Object.WebRootPath))
+                if (Directory.Exists(mockEnv.Object.ContentRootPath))
                 {
-                    Directory.Delete(mockEnv.Object.WebRootPath, true);
+                    Directory.Delete(mockEnv.Object.ContentRootPath, true);
                 }
             }
         }
@@ -79,9 +79,9 @@ namespace FreeSpeakWeb.Tests.Services
             finally
             {
                 // Cleanup
-                if (Directory.Exists(mockEnv.Object.WebRootPath))
+                if (Directory.Exists(mockEnv.Object.ContentRootPath))
                 {
-                    Directory.Delete(mockEnv.Object.WebRootPath, true);
+                    Directory.Delete(mockEnv.Object.ContentRootPath, true);
                 }
             }
         }
@@ -94,7 +94,7 @@ namespace FreeSpeakWeb.Tests.Services
             var logger = CreateMockLogger<ProfilePictureService>();
             var service = new ProfilePictureService(mockEnv.Object, logger);
 
-            var profilesPath = Path.Combine(mockEnv.Object.WebRootPath, "images", "profiles");
+            var profilesPath = Path.Combine(mockEnv.Object.ContentRootPath, "AppData", "images", "profiles");
             Directory.CreateDirectory(profilesPath);
             var filePath = Path.Combine(profilesPath, "testuser.jpg");
             File.WriteAllText(filePath, "test content");
@@ -110,9 +110,9 @@ namespace FreeSpeakWeb.Tests.Services
             finally
             {
                 // Cleanup
-                if (Directory.Exists(mockEnv.Object.WebRootPath))
+                if (Directory.Exists(mockEnv.Object.ContentRootPath))
                 {
-                    Directory.Delete(mockEnv.Object.WebRootPath, true);
+                    Directory.Delete(mockEnv.Object.ContentRootPath, true);
                 }
             }
         }
@@ -136,9 +136,9 @@ namespace FreeSpeakWeb.Tests.Services
             finally
             {
                 // Cleanup
-                if (Directory.Exists(mockEnv.Object.WebRootPath))
+                if (Directory.Exists(mockEnv.Object.ContentRootPath))
                 {
-                    Directory.Delete(mockEnv.Object.WebRootPath, true);
+                    Directory.Delete(mockEnv.Object.ContentRootPath, true);
                 }
             }
         }
@@ -151,7 +151,7 @@ namespace FreeSpeakWeb.Tests.Services
             var logger = CreateMockLogger<ProfilePictureService>();
             var service = new ProfilePictureService(mockEnv.Object, logger);
 
-            var profilesPath = Path.Combine(mockEnv.Object.WebRootPath, "images", "profiles");
+            var profilesPath = Path.Combine(mockEnv.Object.ContentRootPath, "AppData", "images", "profiles");
             Directory.CreateDirectory(profilesPath);
             var filePath = Path.Combine(profilesPath, "testuser.jpg");
             File.WriteAllText(filePath, "test content");
@@ -167,9 +167,9 @@ namespace FreeSpeakWeb.Tests.Services
             finally
             {
                 // Cleanup
-                if (Directory.Exists(mockEnv.Object.WebRootPath))
+                if (Directory.Exists(mockEnv.Object.ContentRootPath))
                 {
-                    Directory.Delete(mockEnv.Object.WebRootPath, true);
+                    Directory.Delete(mockEnv.Object.ContentRootPath, true);
                 }
             }
         }
@@ -182,7 +182,7 @@ namespace FreeSpeakWeb.Tests.Services
             var logger = CreateMockLogger<ProfilePictureService>();
             var service = new ProfilePictureService(mockEnv.Object, logger);
 
-            var profilesPath = Path.Combine(mockEnv.Object.WebRootPath, "images", "profiles");
+            var profilesPath = Path.Combine(mockEnv.Object.ContentRootPath, "AppData", "images", "profiles");
             Directory.CreateDirectory(profilesPath);
             var filePath = Path.Combine(profilesPath, "testuser.jpg");
             var testData = new byte[] { 1, 2, 3, 4, 5 };
@@ -200,9 +200,9 @@ namespace FreeSpeakWeb.Tests.Services
             finally
             {
                 // Cleanup
-                if (Directory.Exists(mockEnv.Object.WebRootPath))
+                if (Directory.Exists(mockEnv.Object.ContentRootPath))
                 {
-                    Directory.Delete(mockEnv.Object.WebRootPath, true);
+                    Directory.Delete(mockEnv.Object.ContentRootPath, true);
                 }
             }
         }
@@ -226,9 +226,9 @@ namespace FreeSpeakWeb.Tests.Services
             finally
             {
                 // Cleanup
-                if (Directory.Exists(mockEnv.Object.WebRootPath))
+                if (Directory.Exists(mockEnv.Object.ContentRootPath))
                 {
-                    Directory.Delete(mockEnv.Object.WebRootPath, true);
+                    Directory.Delete(mockEnv.Object.ContentRootPath, true);
                 }
             }
         }
