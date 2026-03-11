@@ -193,6 +193,35 @@
             return;
         }
 
+        // Trim all string inputs
+        Input.PhoneNumber = Input.PhoneNumber?.Trim();
+        Input.NameSuffix = Input.NameSuffix?.Trim();
+        Input.City = Input.City?.Trim();
+        Input.State = Input.State?.Trim();
+        Input.Occupation = Input.Occupation?.Trim();
+
+        // Additional server-side validation for field lengths
+        if (Input.NameSuffix?.Length > 75)
+        {
+            statusMessage = "Error: Name Suffix cannot exceed 75 characters.";
+            return;
+        }
+        if (Input.City?.Length > 75)
+        {
+            statusMessage = "Error: City cannot exceed 75 characters.";
+            return;
+        }
+        if (Input.State?.Length > 75)
+        {
+            statusMessage = "Error: State cannot exceed 75 characters.";
+            return;
+        }
+        if (Input.Occupation?.Length > 75)
+        {
+            statusMessage = "Error: Occupation cannot exceed 75 characters.";
+            return;
+        }
+
         var hasChanges = false;
 
         // Handle phone number update
@@ -254,24 +283,25 @@
     {
         [Phone]
         [Display(Name = "Phone number")]
+        [StringLength(256, ErrorMessage = "The {0} must be at max {1} characters long.")]
         public string? PhoneNumber { get; set; }
 
-        [StringLength(50, ErrorMessage = "The {0} must be at max {1} characters long.")]
+        [StringLength(75, ErrorMessage = "The {0} must be at max {1} characters long.")]
         [Display(Name = "Name Suffix")]
         public string? NameSuffix { get; set; }
 
         [Display(Name = "Date of Birth")]
         public DateOnly? DateOfBirth { get; set; }
 
-        [StringLength(100, ErrorMessage = "The {0} must be at max {1} characters long.")]
+        [StringLength(75, ErrorMessage = "The {0} must be at max {1} characters long.")]
         [Display(Name = "City")]
         public string? City { get; set; }
 
-        [StringLength(100, ErrorMessage = "The {0} must be at max {1} characters long.")]
+        [StringLength(75, ErrorMessage = "The {0} must be at max {1} characters long.")]
         [Display(Name = "State")]
         public string? State { get; set; }
 
-        [StringLength(100, ErrorMessage = "The {0} must be at max {1} characters long.")]
+        [StringLength(75, ErrorMessage = "The {0} must be at max {1} characters long.")]
         [Display(Name = "Occupation")]
         public string? Occupation { get; set; }
     }

@@ -31,15 +31,25 @@ public class DataMigrationService
         {
             using var context = await _contextFactory.CreateDbContextAsync();
 
-            // Update all profile picture URLs from /api/profile-picture/ to /api/secure-files/profile-picture/
-            var updateCount = await context.Database.ExecuteSqlRawAsync(
-                @"UPDATE ""AspNetUsers"" 
-                  SET ""ProfilePictureUrl"" = REPLACE(""ProfilePictureUrl"", '/api/profile-picture/', '/api/secure-files/profile-picture/')
-                  WHERE ""ProfilePictureUrl"" LIKE '/api/profile-picture/%'");
+            // SECURITY: Use LINQ instead of raw SQL to prevent potential SQL injection
+            // Find all users with old format profile picture URLs
+            var usersToUpdate = await context.Users
+                .Where(u => u.ProfilePictureUrl != null && 
+                           u.ProfilePictureUrl.StartsWith("/api/profile-picture/"))
+                .ToListAsync();
 
-            if (updateCount > 0)
+            if (usersToUpdate.Any())
             {
-                _logger.LogInformation("Migrated {Count} profile picture URLs to secure format", updateCount);
+                // Update each user's profile picture URL
+                foreach (var user in usersToUpdate)
+                {
+                    user.ProfilePictureUrl = user.ProfilePictureUrl!.Replace(
+                        "/api/profile-picture/", 
+                        "/api/secure-files/profile-picture/");
+                }
+
+                await context.SaveChangesAsync();
+                _logger.LogInformation("Migrated {Count} profile picture URLs to secure format", usersToUpdate.Count);
             }
         }
         catch (Exception ex)

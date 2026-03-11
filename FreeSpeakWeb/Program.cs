@@ -83,11 +83,17 @@ namespace FreeSpeakWeb
             // Add NotificationService
             builder.Services.AddScoped<NotificationService>();
 
+            // Add NotificationBadgeService for badge polling and management
+            builder.Services.AddScoped<NotificationBadgeService>();
+
             // Add ThemeService for color scheme management
             builder.Services.AddScoped<ThemeService>();
 
             // Add UserPreferenceService for managing user preferences
             builder.Services.AddScoped<UserPreferenceService>();
+
+            // Add HtmlSanitizationService for XSS protection
+            builder.Services.AddSingleton<HtmlSanitizationService>();
 
             // SECURITY: Add rate limiting to prevent abuse
             builder.Services.AddRateLimiter(options =>
@@ -176,6 +182,29 @@ namespace FreeSpeakWeb
 
             app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
             app.UseHttpsRedirection();
+
+            // SECURITY: Add Content Security Policy headers for defense-in-depth XSS protection
+            app.Use(async (context, next) =>
+            {
+                // CSP header to restrict resource loading and prevent XSS attacks
+                context.Response.Headers.Append("Content-Security-Policy", 
+                    "default-src 'self'; " +
+                    "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +  // Blazor requires unsafe-inline and unsafe-eval
+                    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +  // Allow Bootstrap Icons from CDN
+                    "img-src 'self' data: blob:; " +  // Allow data URIs for inline images
+                    "font-src 'self' https://cdn.jsdelivr.net; " +  // Allow fonts from CDN
+                    "connect-src 'self'; " +  // Allow connections to same origin
+                    "frame-ancestors 'none'; " +  // Prevent clickjacking
+                    "base-uri 'self'; " +  // Restrict base tag
+                    "form-action 'self';");  // Restrict form submissions
+
+                // Additional security headers
+                context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+                context.Response.Headers.Append("X-Frame-Options", "DENY");
+                context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
+
+                await next();
+            });
 
             // SECURITY: Enable rate limiting
             app.UseRateLimiter();

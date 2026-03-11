@@ -1,4 +1,322 @@
-# Recent Fixes and Improvements
+# Recent Fixes
+
+## Fixed Notification Tab Counts (2025-01-XX)
+
+### Issue
+In the notifications page, when switching between the "All" and "Unread" tabs, the count displayed next to the tab name would change incorrectly. The counts were being recalculated based on the current page's loaded notifications rather than the actual total.
+
+### Root Cause
+The `totalCount` variable was calculated as `notifications.Count + (hasMore ? 1 : 0)` in the `LoadNotifications()` method, which only represented the current page count. When switching tabs, this would recalculate and show different values.
+
+### Solution
+**1. Added `GetTotalCountAsync()` to NotificationService**
+- New method to get the total count of all notifications for a user
+- Mirrors the existing `GetUnreadCountAsync()` pattern
+- Ensures consistent count retrieval from database
+
+**2. Updated Notifications Page**
+- Replaced `totalCount` with `allNotificationsCount` field
+- Load both counts in `LoadNotifications()` regardless of active tab
+- "All" tab now always shows `allNotificationsCount`
+- "Unread" tab now always shows `unreadCount`
+- Updated `DeleteAllRead()` to refresh both counts
+- Updated `HandleDeleteNotification()` to decrement both counts appropriately
+
+### Benefits
+- Tab counts remain stable when switching between tabs
+- More accurate representation of notification totals
+- Better user experience with consistent UI
+
+### Files Modified
+- `FreeSpeakWeb\Services\NotificationService.cs`
+- `FreeSpeakWeb\Components\Pages\Notifications.razor`
+
+---
+
+## Added Profile Field Length Validation (2025-01-XX)
+
+### Issue
+Profile UI fields and services didn't enforce the varchar(75) database column length limits, potentially allowing data truncation or database errors.
+
+### Solution
+Added comprehensive validation at both UI and service layers to enforce database constraints.
+
+**UI Changes (Index.razor - Profile Management):**
+- Updated `StringLength` validation from 50/100 to 75 for:
+  - NameSuffix (50 → 75)
+  - City (100 → 75)
+  - State (100 → 75)
+  - Occupation (100 → 75)
+- Added PhoneNumber maxlength of 256 to match database
+- Added server-side validation with trimming before save
+- Added explicit length checks with user-friendly error messages
+
+**UI Changes (Register.razor):**
+- Updated `StringLength` validation from 100 to 75 for:
+  - FirstName (100 → 75)
+  - LastName (100 → 75)
+- Added input trimming before processing
+- Added server-side validation with specific error messages
+
+**Service Changes (ProfilePictureService):**
+- Added validation to ensure userId is not empty
+- Added check to ensure generated URL doesn't exceed 75 characters
+- Moved URL generation to beginning of method for early validation
+- Added detailed logging for URL length violations
+
+### Benefits
+- Prevents data truncation at database level
+- Provides clear error messages to users before submission
+- Validates at multiple layers (client-side, server-side, service-side)
+- Trims whitespace automatically to maximize usable space
+- Ensures consistency between UI constraints and database schema
+
+### Files Modified
+- `FreeSpeakWeb\Components\Account\Pages\Manage\Index.razor`
+- `FreeSpeakWeb\Components\Account\Pages\Register.razor`
+- `FreeSpeakWeb\Services\ProfilePictureService.cs`
+
+---
+
+## Converted Profile Fields to varchar(75) (2025-01-XX)
+
+### Issue
+User profile fields (FirstName, LastName, NameSuffix, City, State, Occupation, ProfilePictureUrl) were created as `text` columns in PostgreSQL instead of sized `varchar` columns.
+
+### Solution
+Created migration `ConvertProfileFieldsToVarchar` to alter the column types from `text` to `character varying(75)`.
+
+**Changes Made:**
+- Updated `ApplicationUser.cs` to include `[MaxLength(75)]` attributes on all profile fields
+- Created migration to alter columns:
+  - `FirstName`: text → varchar(75)
+  - `LastName`: text → varchar(75)
+  - `NameSuffix`: text → varchar(75)
+  - `City`: text → varchar(75)
+  - `State`: text → varchar(75)
+  - `Occupation`: text → varchar(75)
+  - `ProfilePictureUrl`: text → varchar(75)
+- Applied migration successfully
+
+**Note:** `PhoneNumber` was already correctly sized as varchar(256) from the initial Identity schema.
+
+### Benefits
+- Schema now documents expected maximum field lengths
+- Better database consistency
+- Validation enforced at database level
+- Improved clarity for developers
+
+### Files Modified
+- `FreeSpeakWeb\Data\ApplicationUser.cs`
+- `FreeSpeakWeb\Migrations\20260311162811_ConvertProfileFieldsToVarchar.cs` (new)
+
+---
+
+## Fixed Navigation to Respect User Display Name Preference (2025-01-XX)
+
+### Issue
+The top navigation and left sidebar navigation menus were displaying the raw username instead of respecting the user's display name preference setting.
+
+### Root Cause
+The NavMenu component was using `@context.User.Identity?.Name` which always returns the username, instead of using `UserPreferenceService.FormatUserDisplayNameAsync()` to format the display name according to the user's preference.
+
+### Solution
+Updated NavMenu.razor to:
+- Inject `UserPreferenceService`
+- Add `currentUserDisplayName` field to store formatted name
+- Call `UserPreferenceService.FormatUserDisplayNameAsync()` during initialization
+- Replace all instances of `@context.User.Identity?.Name` with `@currentUserDisplayName`
+
+**Changes Made:**
+- Top navigation tooltip now shows formatted display name
+- Sidebar navigation link now shows formatted display name
+- Display name respects user preference (FirstName LastName, Username, etc.)
+
+### Files Modified
+- `FreeSpeakWeb\Components\Layout\NavMenu.razor`
+
+### User Experience
+Users now see their preferred name format consistently across:
+- Top navigation bar
+- Left sidebar menu
+- All other parts of the application
+
+---
+
+## Fixed Login Redirect to Always Go to Home Page (2025-01-XX)
+
+### Change
+All login methods now redirect users to `/home` instead of using ReturnUrl or defaulting to the public home page.
+
+### Implementation Details
+
+**Login Pages Updated:**
+- `Login.razor` - Standard username/password login
+- `ExternalLogin.razor` - OAuth/external provider login (2 locations)
+- `LoginWith2fa.razor` - Two-factor authentication login
+- `LoginWithRecoveryCode.razor` - Recovery code login
+- `Register.razor` - New user registration with immediate sign-in
+
+**Previous Behavior:**
+- Used `ReturnUrl` query parameter to determine redirect destination
+- Could redirect to any page user was trying to access
+- Default fallback was "/" (public home page)
+
+**New Behavior:**
+- All successful logins redirect to `/home`
+- Consistent user experience across all login methods
+- Works with PublicHome.razor which already redirects authenticated users to `/home`
+
+### Files Modified
+- `FreeSpeakWeb\Components\Account\Pages\Login.razor`
+- `FreeSpeakWeb\Components\Account\Pages\ExternalLogin.razor`
+- `FreeSpeakWeb\Components\Account\Pages\LoginWith2fa.razor`
+- `FreeSpeakWeb\Components\Account\Pages\LoginWithRecoveryCode.razor`
+- `FreeSpeakWeb\Components\Account\Pages\Register.razor`
+
+---
+
+## Added Individual Notification Deletion (2025-01-XX)
+
+### Feature
+Users can now delete individual notifications and all read notifications, with automatic badge count updates.
+
+### Implementation Details
+
+**NotificationComponent:**
+- Added delete button with trash icon
+- Delete button appears on hover with smooth transition
+- Includes `@onclick:stopPropagation` to prevent triggering notification click
+- Visual feedback: button turns red on hover and scales on click
+
+**Notifications Page:**
+- Added `HandleDeleteNotification` method for individual deletion
+- Updated `DeleteAllRead` to refresh badge service
+- Updated `MarkAllAsRead` to refresh badge service
+- All operations update the badge count in navigation menus
+
+**User Experience:**
+- Hover over notification: delete button fades in on the right
+- Click delete button: removes notification from list and updates badges
+- "Clear read" button: removes all read notifications and updates badges
+- Smooth transitions and immediate UI updates
+
+**Badge Integration:**
+- All delete operations call `NotificationBadgeService.RefreshUnreadCountAsync()`
+- Navigation badges update in real-time when notifications are deleted
+- Unread count decreases when unread notifications are deleted
+
+### Files Modified
+- `FreeSpeakWeb\Components\Shared\NotificationComponent.razor`
+- `FreeSpeakWeb\Components\Shared\NotificationComponent.razor.css`
+- `FreeSpeakWeb\Components\Pages\Notifications.razor`
+
+---
+
+## Enhanced Notification Badge System (2025-01-XX)
+
+### Feature Enhancement
+Users can now mark notifications as read without navigating to the associated post by clicking the blue unread indicator dot.
+
+### Implementation Details
+
+**NotificationComponent:**
+- Added `OnMarkAsReadOnly` event callback parameter
+- Unread indicator now has its own click handler with `@onclick:stopPropagation`
+- Visual feedback on hover: dot scales up and changes to green
+- Added title attribute for accessibility
+
+**Notifications Page:**
+- Added `HandleMarkAsReadOnly` method to handle indicator clicks
+- Both click methods now refresh `NotificationBadgeService` to update navigation badges
+- Clicking the indicator marks as read without opening the post modal
+
+**User Experience:**
+- Hover over blue dot: scales to 1.5x and turns green
+- Click blue dot: marks notification as read, updates badge count
+- Click notification body: marks as read AND opens the post
+- Smooth transitions and visual feedback
+
+### Files Modified
+- `FreeSpeakWeb\Components\Shared\NotificationComponent.razor`
+- `FreeSpeakWeb\Components\Shared\NotificationComponent.razor.css`
+- `FreeSpeakWeb\Components\Pages\Notifications.razor`
+
+---
+
+## Implemented Notification Badge System (2025-01-XX)
+
+### Feature
+Added real-time notification badges to the navigation menu that display the count of unread notifications.
+
+### Implementation Details
+
+**NotificationBadgeService:**
+- Created a scoped service to manage notification badge state
+- Implements auto-polling every 5 minutes (300,000ms)
+- Provides event-based notifications when unread count changes
+- Includes `ResetTimerAsync()` method to restart the polling cycle
+
+**NavMenu Component:**
+- Integrated NotificationBadgeService with event subscription
+- Added notification badges to both top navigation and sidebar
+- Displays count up to 99 (shows "99+" for higher counts)
+- Badges update automatically without page reload
+
+**Styling:**
+- Red circular badges (#ff4444 background)
+- Positioned on top-right of bell icon in top nav
+- Positioned on right side of link in sidebar
+- Includes shadow and border for visibility
+
+**Timer Reset:**
+- Notifications page resets the 5-minute timer when visited
+- Immediately refreshes the count when timer is reset
+- Ensures badge stays current after user reviews notifications
+
+### Files Created/Modified
+- `FreeSpeakWeb\Services\NotificationBadgeService.cs` (new)
+- `FreeSpeakWeb\Components\Layout\NavMenu.razor`
+- `FreeSpeakWeb\Components\Layout\NavMenu.razor.css`
+- `FreeSpeakWeb\Components\Pages\Notifications.razor`
+- `FreeSpeakWeb\Program.cs`
+
+---
+
+## Fixed Double-Render Flash on Public Home Page (2025-01-XX)
+
+### Issue
+When users visited the welcome/public home page, posts appeared to load twice. Long posts were initially displayed fully expanded and then re-rendered with the "Click to see full post" message, creating a visual flash.
+
+### Root Cause
+The `FeedArticle` component had a race condition in its content truncation logic:
+1. Component initially rendered with `isTruncated = false` (no CSS truncation applied)
+2. After first render, JavaScript measured the content height
+3. JavaScript called back to set `shouldShowExpandButton = true` 
+4. This triggered `StateHasChanged()` causing a second render with CSS truncation applied
+
+### Solution
+Changed `FeedArticleContent.razor` to always apply the CSS truncation class for non-modal views, regardless of the `IsTruncated` flag:
+
+```razor
+<!-- Before -->
+<div class="article-content @(IsTruncated && !IsModalView ? "truncated" : "")" @ref="contentElementRef">
+
+<!-- After -->
+<div class="article-content @(!IsModalView ? "truncated" : "")" @ref="contentElementRef">
+```
+
+This ensures:
+- CSS truncation is applied from the first render
+- JavaScript still measures to determine if "Click to see full post" button should show
+- No visual flash as content is consistently truncated from initial render
+
+### Files Modified
+- `FreeSpeakWeb\Components\SocialFeed\FeedArticleContent.razor`
+
+---
+
+# Recent Fixes
 
 ## Summary
 This document details the recent bug fixes and improvements made to address HttpContext issues, theme consistency, emoji picker positioning, and code cleanup.
@@ -293,6 +611,112 @@ Clicking the button had no effect.
 - Images display in preview
 - Images save and upload successfully
 - No z-index conflicts
+
+### Problem 6: PostCreator Button Visibility & UX Issues
+After previous fixes, two new UX issues appeared:
+
+**Issue 6a: Buttons Disappear When Clicking Emoji/Audience Buttons**
+- Clicking emoji or audience selector caused textarea `onblur` event
+- `OnBlur()` immediately collapsed component, hiding Post/Cancel buttons
+- Users lost access to buttons after clicking UI controls
+
+**Solution:**
+- Added `@onmousedown:preventDefault="true"` to emoji button
+- Added `@onmousedown:preventDefault="true"` to audience selector button
+- Added 150ms delay to `OnBlur()` to allow button clicks to register
+- Made `OnBlur()` async to support delay
+
+**Issue 6b: Scrollbar Showing Too Early**
+- Scrollbar appeared even with minimal text (1-2 lines)
+- Should only show when content exceeds ~10 lines (200px max-height)
+
+**Solution:**
+- Changed scrollbar color to `transparent` by default
+- Only shows on hover/focus: `scrollbar-color: #d0d0d0 transparent`
+- Webkit browsers: thumb transparent by default, colored on hover/focus
+- Clean appearance until actually needed
+
+**Issue 6c: Textarea Regains Focus After Posting**
+- After clicking "Post" button, textarea would immediately gain focus
+- This re-expanded the component, hiding the buttons that were just used
+- Confusing UX - buttons appear then disappear
+
+**Solution:**
+- Added `blurTextarea()` JavaScript function
+- Called after posting to explicitly blur the textarea
+- Prevents automatic refocus
+- Component stays collapsed until user clicks textarea again
+
+**Affected Files:**
+- PostCreator.razor
+- PostCreator.razor.css
+- PostCreator.razor.js
+
+## CRITICAL SECURITY FIX: XSS Vulnerability (Latest)
+
+### Problem: Cross-Site Scripting (XSS) Vulnerability
+User-generated content was being rendered as raw HTML without sanitization, allowing malicious script injection.
+
+**Attack Vector:**
+- User types `<script>alert('XSS')</script>` in post or comment
+- Content stored in database as-is
+- `FormatContentWithLineBreaks()` adds `<br>` tags but doesn't encode HTML
+- `@((MarkupString)content)` renders raw HTML without escaping
+- Malicious scripts execute in other users' browsers
+
+**Vulnerable Locations:**
+- Post content in Home.razor
+- Post content in PublicHome.razor
+- Comment text in MultiLineCommentDisplay.razor
+- Post content in Notifications.razor
+
+### Solution: Multi-Layer HTML Sanitization
+
+**1. Installed HtmlSanitizer NuGet Package**
+- Industry-standard HTML sanitization library
+- Used by major applications for XSS protection
+
+**2. Created HtmlSanitizationService**
+- Strict whitelist: only allows `<br>`, `<p>`, `<b>`, `<i>`, `<u>`, `<em>`, `<strong>`
+- **Zero attributes allowed** (prevents onclick, onload, style, etc.)
+- **Zero CSS properties allowed**
+- **Zero URL schemes allowed** (prevents javascript:, data:, etc.)
+
+**3. Sanitization Process:**
+```csharp
+public string SanitizeAndFormatContent(string content)
+{
+    // 1. HTML encode entire content (escapes <, >, &, etc.)
+    var encoded = System.Net.WebUtility.HtmlEncode(content);
+
+    // 2. Replace newlines with <br> tags
+    var formatted = encoded.Replace("\r\n", "<br>").Replace("\n", "<br>");
+
+    // 3. Sanitize result (validates only safe tags remain)
+    return _sanitizer.Sanitize(formatted);
+}
+```
+
+**4. Updated All Content Rendering:**
+- Home.razor - Post content
+- PublicHome.razor - Post content
+- MultiLineCommentDisplay.razor - Comment text
+- Notifications.razor - Post content in detail modal
+
+### Security Impact:
+✅ **XSS attacks blocked** - Scripts cannot execute
+✅ **HTML injection blocked** - Malicious markup removed
+✅ **Event handlers blocked** - onclick, onload, etc. stripped
+✅ **External content blocked** - javascript:, data: URLs prevented
+✅ **Safe formatting preserved** - Line breaks still work
+
+**Affected Files:**
+- HtmlSanitizationService.cs (new)
+- Program.cs
+- Home.razor
+- PublicHome.razor
+- MultiLineCommentDisplay.razor
+- Notifications.razor
 
 ## Best Practices Applied
 

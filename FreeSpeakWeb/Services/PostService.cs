@@ -11,19 +11,22 @@ namespace FreeSpeakWeb.Services
         private readonly SiteSettings _siteSettings;
         private readonly IWebHostEnvironment _environment;
         private readonly NotificationService _notificationService;
+        private readonly UserPreferenceService _userPreferenceService;
 
         public PostService(
             IDbContextFactory<ApplicationDbContext> contextFactory, 
             ILogger<PostService> logger, 
             IOptions<SiteSettings> siteSettings,
             IWebHostEnvironment environment,
-            NotificationService notificationService)
+            NotificationService notificationService,
+            UserPreferenceService userPreferenceService)
         {
             _contextFactory = contextFactory;
             _logger = logger;
             _siteSettings = siteSettings.Value;
             _environment = environment;
             _notificationService = notificationService;
+            _userPreferenceService = userPreferenceService;
         }
 
         #region Post Operations
@@ -608,7 +611,7 @@ namespace FreeSpeakWeb.Services
 
                 _logger.LogInformation("Comment added to post {PostId} by user {AuthorId}", postId, authorId);
 
-                // Create notification
+                // Create notification for new reactions only (not for changing reactions)
                 // Don't notify if user is commenting on their own post/comment
                 var commenter = await context.Users.FindAsync(authorId);
                 if (commenter != null)
@@ -618,7 +621,13 @@ namespace FreeSpeakWeb.Services
                         // Reply to a comment - notify the parent comment author
                         if (parentComment != null && parentComment.AuthorId != authorId)
                         {
-                            var message = $"{commenter.UserName} replied to your comment";
+                            var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                                commenter.Id,
+                                commenter.FirstName ?? string.Empty,
+                                commenter.LastName ?? string.Empty,
+                                commenter.UserName ?? "User"
+                            );
+                            var message = $"<strong>{formattedName}</strong> replied to your comment";
                             await _notificationService.CreateNotificationAsync(
                                 parentComment.AuthorId,
                                 NotificationType.CommentReply,
@@ -627,7 +636,7 @@ namespace FreeSpeakWeb.Services
                                     PostId = postId, 
                                     CommentId = comment.Id, 
                                     CommenterId = authorId,
-                                    CommenterName = commenter.UserName,
+                                    CommenterName = formattedName,
                                     CommenterProfilePicture = commenter.ProfilePictureUrl
                                 }
                             );
@@ -638,7 +647,13 @@ namespace FreeSpeakWeb.Services
                         // Direct comment on post - notify the post author
                         if (post.AuthorId != authorId)
                         {
-                            var message = $"{commenter.UserName} commented on your post";
+                            var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                                commenter.Id,
+                                commenter.FirstName ?? string.Empty,
+                                commenter.LastName ?? string.Empty,
+                                commenter.UserName ?? "User"
+                            );
+                            var message = $"<strong>{formattedName}</strong> commented on your post";
                             await _notificationService.CreateNotificationAsync(
                                 post.AuthorId,
                                 NotificationType.PostComment,
@@ -647,7 +662,7 @@ namespace FreeSpeakWeb.Services
                                     PostId = postId, 
                                     CommentId = comment.Id, 
                                     CommenterId = authorId,
-                                    CommenterName = commenter.UserName,
+                                    CommenterName = formattedName,
                                     CommenterProfilePicture = commenter.ProfilePictureUrl
                                 }
                             );
@@ -1005,8 +1020,14 @@ namespace FreeSpeakWeb.Services
                     var reactor = await context.Users.FindAsync(userId);
                     if (reactor != null)
                     {
+                        var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                            reactor.Id,
+                            reactor.FirstName ?? string.Empty,
+                            reactor.LastName ?? string.Empty,
+                            reactor.UserName ?? "User"
+                        );
                         var reactionText = reactionType.ToString().ToLower();
-                        var message = $"{reactor.UserName} reacted to your post with {reactionText}";
+                        var message = $"<strong>{formattedName}</strong> reacted to your post with {reactionText}";
 
                         await _notificationService.CreateNotificationAsync(
                             post.AuthorId,
@@ -1015,7 +1036,7 @@ namespace FreeSpeakWeb.Services
                             new { 
                                 PostId = postId, 
                                 ReactorId = userId, 
-                                ReactorName = reactor.UserName,
+                                ReactorName = formattedName,
                                 ReactorProfilePicture = reactor.ProfilePictureUrl,
                                 ReactionType = reactionType.ToString() 
                             }
@@ -1306,8 +1327,14 @@ namespace FreeSpeakWeb.Services
                     var reactor = await context.Users.FindAsync(userId);
                     if (reactor != null)
                     {
+                        var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                            reactor.Id,
+                            reactor.FirstName ?? string.Empty,
+                            reactor.LastName ?? string.Empty,
+                            reactor.UserName ?? "User"
+                        );
                         var reactionText = reactionType.ToString().ToLower();
-                        var message = $"{reactor.UserName} reacted to your comment with {reactionText}";
+                        var message = $"<strong>{formattedName}</strong> reacted to your comment with {reactionText}";
 
                         await _notificationService.CreateNotificationAsync(
                             comment.AuthorId,
@@ -1317,7 +1344,7 @@ namespace FreeSpeakWeb.Services
                                 PostId = comment.PostId, 
                                 CommentId = commentId, 
                                 ReactorId = userId,
-                                ReactorName = reactor.UserName,
+                                ReactorName = formattedName,
                                 ReactorProfilePicture = reactor.ProfilePictureUrl,
                                 ReactionType = reactionType.ToString() 
                             }

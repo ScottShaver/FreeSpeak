@@ -1,5 +1,8 @@
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
 @using System.Text.Json
+
+@inject HtmlSanitizationService HtmlSanitizationService
 
 <div class="notification-item @(Notification.IsRead ? "read" : "unread")" @onclick="HandleClick">
     <div class="notification-avatar">
@@ -55,13 +58,16 @@
         </div>
     </div>
     <div class="notification-content">
-        <div class="notification-message">@Notification.Message</div>
+        <div class="notification-message">@((MarkupString)HtmlSanitizationService.Sanitize(Notification.Message))</div>
         <div class="notification-time">@FormatTimeAgo(Notification.CreatedAt)</div>
     </div>
     @if (!Notification.IsRead)
     {
-        <div class="notification-unread-indicator"></div>
+        <div class="notification-unread-indicator" @onclick="HandleMarkAsReadClick" @onclick:stopPropagation="true" title="Mark as read"></div>
     }
+    <button class="notification-delete-btn" @onclick="HandleDeleteClick" @onclick:stopPropagation="true" title="Delete notification">
+        <span class="bi bi-trash"></span>
+    </button>
 </div>
 
 @code {
@@ -71,12 +77,34 @@
     [Parameter]
     public EventCallback<UserNotification> OnClick { get; set; }
 
+    [Parameter]
+    public EventCallback<UserNotification> OnMarkAsReadOnly { get; set; }
+
+    [Parameter]
+    public EventCallback<UserNotification> OnDelete { get; set; }
+
     private string UserProfilePicture => GetProfilePicture();
     private string UserName => GetUserName();
 
     private async Task HandleClick()
     {
         await OnClick.InvokeAsync(Notification);
+    }
+
+    private async Task HandleMarkAsReadClick()
+    {
+        if (OnMarkAsReadOnly.HasDelegate)
+        {
+            await OnMarkAsReadOnly.InvokeAsync(Notification);
+        }
+    }
+
+    private async Task HandleDeleteClick()
+    {
+        if (OnDelete.HasDelegate)
+        {
+            await OnDelete.InvokeAsync(Notification);
+        }
     }
 
     private string GetProfilePicture()

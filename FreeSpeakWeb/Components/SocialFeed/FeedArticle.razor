@@ -420,49 +420,80 @@
 
     private void BuildMenuItems()
     {
-        Console.WriteLine($"BuildMenuItems called for PostId {PostId}, IsOwnPost={IsOwnPost}");
+        Console.WriteLine($"BuildMenuItems called for PostId {PostId}, IsOwnPost={IsOwnPost}, IsModalView={IsModalView}");
         menuItems.Clear();
 
         if (IsOwnPost)
         {
             Console.WriteLine("Building menu items for own post");
-            // Menu items for user's own posts
-            menuItems.Add(new PopupMenu.PopupMenuItem
-            {
-                Text = "Edit Post",
-                Icon = "bi bi-pencil",
-                OnClick = EventCallback.Factory.Create(this, async () => await HandleEditPostClick())
-            });
-            Console.WriteLine("Edit Post menu item added");
 
-            // Pin/Unpin Post - changes based on current state
-            menuItems.Add(new PopupMenu.PopupMenuItem
+            // In modal view, only show Pin and Copy Link for own posts
+            if (IsModalView)
             {
-                Text = currentIsPinned ? "Unpin Post" : "Pin Post",
-                Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
-                OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
-            });
+                // Pin/Unpin Post
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = currentIsPinned ? "Unpin Post" : "Pin Post",
+                    Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
+                });
 
-            menuItems.Add(new PopupMenu.PopupMenuItem
+                // Copy Link
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = "Copy Link",
+                    Icon = "bi bi-link-45deg",
+                    OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Copy Link"))
+                });
+            }
+            else
             {
-                Text = "Change Post Audience",
-                Icon = "bi bi-globe",
-                OnClick = EventCallback.Factory.Create(this, async () => await HandleChangeAudienceClick())
-            });
+                // Menu items for user's own posts in regular feed view
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = "Edit Post",
+                    Icon = "bi bi-pencil",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandleEditPostClick())
+                });
+                Console.WriteLine("Edit Post menu item added");
 
-            menuItems.Add(new PopupMenu.PopupMenuItem
-            {
-                Text = "Turn Off Notifications",
-                Icon = "bi bi-bell-slash",
-                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Turn Off Notifications"))
-            });
+                // Pin/Unpin Post - changes based on current state
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = currentIsPinned ? "Unpin Post" : "Pin Post",
+                    Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
+                });
 
-            menuItems.Add(new PopupMenu.PopupMenuItem
-            {
-                Text = "Delete Post",
-                Icon = "bi bi-trash",
-                OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
-            });
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = "Change Post Audience",
+                    Icon = "bi bi-globe",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandleChangeAudienceClick())
+                });
+
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = "Turn Off Notifications",
+                    Icon = "bi bi-bell-slash",
+                    OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Turn Off Notifications"))
+                });
+
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = "Delete Post",
+                    Icon = "bi bi-trash",
+                    OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
+                });
+
+                // Copy Link appears for all posts
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = "Copy Link",
+                    Icon = "bi bi-link-45deg",
+                    OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Copy Link"))
+                });
+            }
         }
         else if (!string.IsNullOrEmpty(CurrentUserId))
         {
@@ -482,15 +513,25 @@
                 Icon = "bi bi-flag",
                 OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Report Post"))
             });
-        }
 
-        // Copy Link appears for all posts
-        menuItems.Add(new PopupMenu.PopupMenuItem
+            // Copy Link appears for all posts
+            menuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = "Copy Link",
+                Icon = "bi bi-link-45deg",
+                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Copy Link"))
+            });
+        }
+        else
         {
-            Text = "Copy Link",
-            Icon = "bi bi-link-45deg",
-            OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Copy Link"))
-        });
+            // Copy Link appears for all posts (even when not logged in)
+            menuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = "Copy Link",
+                Icon = "bi bi-link-45deg",
+                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Copy Link"))
+            });
+        }
     }
 
     private void CloseMenu()

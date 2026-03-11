@@ -196,6 +196,13 @@
                 await OnCommentSubmitted.InvokeAsync(CommentText);
             }
             CommentText = "";
+
+            // Reset textarea to single-line collapsed state
+            if (module is not null)
+            {
+                await module.InvokeVoidAsync("resetTextarea", textareaElement);
+            }
+
             StateHasChanged();
         }
     }

@@ -119,11 +119,40 @@
     font-style: italic;
 }
 
-/* Ensure the FeedArticle inside modal has no extra margins */
+/* Wrapper around FeedArticle to enable flex layout */
 .post-detail-modal-content ::deep .feed-article {
     margin: 0;
     border: none;
     border-radius: 0;
+}
+
+/* When no images, use flex layout to position actions at bottom */
+.post-detail-modal-content ::deep .feed-article.no-images {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 200px); /* Ensure minimum height for sticky positioning */
+}
+
+/* Make article content not grow when no images */
+.post-detail-modal-content ::deep .feed-article.no-images .article-header,
+.post-detail-modal-content ::deep .feed-article.no-images .article-content {
+    flex-shrink: 0;
+}
+
+/* Make actions sticky at bottom when no images */
+.post-detail-modal-content ::deep .feed-article.no-images .article-actions {
+    margin-top: auto;
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    background-color: #f8f9fa;
+    border-top: 1px solid var(--border-color, #e4e6eb);
+}
+
+/* Ensure comments section doesn't interfere with sticky actions */
+.post-detail-modal-content ::deep .feed-article.no-images .article-comments {
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
 .loading-comments,

@@ -46,6 +46,33 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             return new NullNotificationService();
         }
 
+        private static UserPreferenceService CreateMockUserPreferenceService()
+        {
+            // Create a no-op user preference service for testing
+            return new NullUserPreferenceService();
+        }
+
+        // Null implementation of UserPreferenceService for testing
+        private class NullUserPreferenceService : UserPreferenceService
+        {
+            public NullUserPreferenceService()
+                : base(new NullDbContextFactory(), new NullLogger<UserPreferenceService>())
+            {
+            }
+
+            private class NullDbContextFactory : IDbContextFactory<ApplicationDbContext>
+            {
+                public ApplicationDbContext CreateDbContext() => null!;
+            }
+
+            private class NullLogger<T> : ILogger<T>
+            {
+                public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+                public bool IsEnabled(LogLevel logLevel) => false;
+                public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) { }
+            }
+        }
+
         // Null implementation of NotificationService for testing
         private class NullNotificationService : NotificationService
         {
@@ -84,7 +111,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService());
+            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
 
             var author = CreateTestUser("author1", "author", "Post", "Author");
             var commenter1 = CreateTestUser("commenter1", "commenter1", "First", "Commenter");
@@ -162,7 +189,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService());
+            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
 
             var user1 = CreateTestUser("user1", "user1", "User", "One");
             var user2 = CreateTestUser("user2", "user2", "User", "Two");
@@ -219,7 +246,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService());
+            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
 
             var author = CreateTestUser("author1", "author", "Post", "Author");
             var commenter = CreateTestUser("commenter1", "commenter", "Comment", "Author");
@@ -282,3 +309,4 @@ namespace FreeSpeakWeb.IntegrationTests.Services
         }
     }
 }
+

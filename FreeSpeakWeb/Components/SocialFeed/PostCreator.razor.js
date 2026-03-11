@@ -73,9 +73,25 @@ export function resizeTextarea(textarea) {
     // Reset height to auto to get the correct scrollHeight
     textarea.style.height = 'auto';
 
-    // Set the height to match the content
-    const newHeight = Math.max(textarea.scrollHeight, 40); // Minimum 40px height
+    // Get the full content height
+    const fullHeight = textarea.scrollHeight;
+
+    // Set the height to match the content, capped at 200px
+    const newHeight = Math.min(fullHeight, 200);
     textarea.style.height = newHeight + 'px';
+
+    // Only show scrollbar when content exceeds max-height
+    textarea.style.overflowY = fullHeight > 200 ? 'auto' : 'hidden';
+}
+
+export function resetTextarea(textarea) {
+    if (!textarea) return;
+
+    // Reset to single-line height
+    textarea.style.height = 'auto';
+    // Force a minimum height that corresponds to a single line
+    textarea.style.height = '';
+    textarea.style.overflowY = 'hidden';
 }
 
 export function replaceTextPreserveCursor(textarea, newText) {
@@ -104,4 +120,10 @@ export function replaceTextPreserveCursor(textarea, newText) {
     textarea.dispatchEvent(new Event('input', { bubbles: true }));
 
     return newText;
+}
+
+export function blurTextarea(textarea) {
+    if (textarea) {
+        textarea.blur();
+    }
 }

@@ -1,7 +1,9 @@
 @inject IJSRuntime JS
 @inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
+@inject HtmlSanitizationService HtmlSanitizationService
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
 @implements IAsyncDisposable
 
 <div class="comment-display" data-comment-id="@CommentId">
@@ -342,9 +344,8 @@
         if (string.IsNullOrEmpty(content))
             return string.Empty;
 
-        // Replace newlines with <br> tags
-        // Handle both \r\n (Windows) and \n (Unix) line endings
-        return content.Replace("\r\n", "<br>").Replace("\n", "<br>");
+        // SECURITY: Sanitize user content to prevent XSS attacks
+        return HtmlSanitizationService.SanitizeAndFormatContent(content);
     }
 
     private async Task OnImageClick()

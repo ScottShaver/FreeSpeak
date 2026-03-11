@@ -14,6 +14,8 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IServiceScopeFactory ScopeFactory
 @inject ThemeService ThemeService
+@inject NotificationBadgeService NotificationBadgeService
+@inject UserPreferenceService UserPreferenceService
 
 <!-- Always visible header across the top -->
 <div class="top-row ps-3 navbar navbar-dark">
@@ -41,11 +43,15 @@
                         <span class="bi bi-images-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
 
-                    <a href="notifications" title="Notifications" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "notifications" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "notifications" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="notifications" title="Notifications" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "notifications" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; position: relative; @(GetActiveMenuItemFromUrl() == "notifications" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-bell-fill-nav-menu" style="margin: 0; top: 0;"></span>
+                        @if (unreadNotificationCount > 0)
+                        {
+                            <span class="notification-badge">@(unreadNotificationCount > 99 ? "99+" : unreadNotificationCount.ToString())</span>
+                        }
                     </a>
 
-                    <a href="/Account/Manage" title="@context.User.Identity?.Name" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="/Account/Manage" title="@currentUserDisplayName" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Manage" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         @if (!string.IsNullOrEmpty(currentUser?.ProfilePictureUrl))
                         {
                             <img src="@currentUser.ProfilePictureUrl" alt="Profile" class="rounded-circle" style="width: 24px; height: 24px; object-fit: cover;" />
@@ -108,8 +114,12 @@
                 </div>
 
                 <div class="nav-item px-3">
-                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "notifications" ? "active" : "")" href="notifications" data-enhance-nav="false">
+                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "notifications" ? "active" : "")" href="notifications" data-enhance-nav="false" style="position: relative;">
                         <span class="bi bi-bell-fill-nav-menu" aria-hidden="true"></span> Notifications
+                        @if (unreadNotificationCount > 0)
+                        {
+                            <span class="notification-badge-sidebar">@(unreadNotificationCount > 99 ? "99+" : unreadNotificationCount.ToString())</span>
+                        }
                     </a>
                 </div>
 
@@ -123,7 +133,7 @@
                         {
                             <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span>
                         }
-                        <span>@context.User.Identity?.Name</span>
+                        <span>@currentUserDisplayName</span>
                     </a>
                 </div>
                 <div class="nav-item px-3">
@@ -168,6 +178,8 @@
     private IJSObjectReference? resizeHandler;
     private DotNetObjectReference<NavMenu>? dotNetReference;
     private ApplicationUser? currentUser;
+    private string? currentUserDisplayName;
+    private int unreadNotificationCount = 0;
 
     private string? NavMenuCssClass => showNavMenu ? "nav-scrollable show" : "nav-scrollable";
 
@@ -224,6 +236,22 @@
             await using var scope = ScopeFactory.CreateAsyncScope();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             currentUser = await userManager.GetUserAsync(authState.User);
+
+            // Initialize notification badge service
+            if (currentUser != null)
+            {
+                // Format user display name according to their preference
+                currentUserDisplayName = await UserPreferenceService.FormatUserDisplayNameAsync(
+                    currentUser.Id,
+                    currentUser.FirstName,
+                    currentUser.LastName,
+                    currentUser.UserName ?? "User"
+                );
+
+                NotificationBadgeService.OnUnreadCountChanged += HandleUnreadCountChanged;
+                await NotificationBadgeService.InitializeAsync(currentUser.Id);
+                unreadNotificationCount = NotificationBadgeService.UnreadCount;
+            }
         }
     }
 
@@ -296,9 +324,16 @@
         InvokeAsync(StateHasChanged);
     }
 
+    private void HandleUnreadCountChanged(int count)
+    {
+        unreadNotificationCount = count;
+        InvokeAsync(StateHasChanged);
+    }
+
     public void Dispose()
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
+        NotificationBadgeService.OnUnreadCountChanged -= HandleUnreadCountChanged;
         dotNetReference?.Dispose();
 
         // Note: We intentionally don't dispose JavaScript resources here

@@ -38,6 +38,16 @@ export function resizeTextarea(textarea) {
     textarea.style.overflowY = fullHeight > 200 ? 'auto' : 'hidden';
 }
 
+export function resetTextarea(textarea) {
+    if (!textarea) return;
+
+    // Reset to single-line height
+    textarea.style.height = 'auto';
+    // Force a minimum height that corresponds to a single line
+    textarea.style.height = '';
+    textarea.style.overflowY = 'hidden';
+}
+
 export function calculateEmojiPickerPosition(buttonElement) {
     if (!buttonElement) return "left: 0; bottom: 40px;";
 

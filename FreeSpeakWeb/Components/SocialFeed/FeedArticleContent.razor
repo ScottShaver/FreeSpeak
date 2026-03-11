@@ -1,6 +1,6 @@
 @inject IJSRuntime JS
 
-<div class="article-content @(IsTruncated && !IsModalView ? "truncated" : "")" @ref="contentElementRef">
+<div class="article-content @(!IsModalView ? "truncated" : "")" @ref="contentElementRef">
     @ArticleContent
 </div>
 

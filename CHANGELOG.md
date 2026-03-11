@@ -8,6 +8,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Individual notification deletion with trash icon button
+- Delete button appears on notification hover with smooth transitions
+- Automatic badge count refresh on all notification operations
+- Click-to-mark-read functionality on notification unread indicator dots
+- MaxLength(75) data annotations to ApplicationUser profile fields
+- Server-side validation for profile field lengths in Index.razor
+- Server-side validation for FirstName/LastName in Register.razor
+- ProfilePictureService validation for generated URL length
+- Input trimming for all profile fields before save
+
+### Changed
+- All login methods now redirect to /home instead of using ReturnUrl
+- Standard login, external login, 2FA, recovery code, and registration all redirect to /home
+- Profile fields converted from text to varchar(75) in database schema
+- ApplicationUser profile fields now have explicit size constraints
+
+### Fixed
+- Navigation menus now respect user display name preference setting
+- Top navigation and sidebar now show formatted display name instead of raw username
+- Database schema inconsistency with profile field types
+- Notification tab counts now remain stable when switching between All and Unread tabs
+- Visual feedback on notification indicator hover (scales and turns green)
+- Automatic badge count refresh when marking notifications as read
+- Notification badge system with real-time unread count display
+- NotificationBadgeService for managing notification polling and state
+- Auto-refresh of notification badges every 5 minutes
+- Red notification badges on bell icon in top navigation and sidebar
+- Timer reset functionality when user visits notifications page
 - Per-component interactivity for ThemeSelector and UserPreferencesComponent
 - Dynamic emoji picker positioning with JavaScript calculation
 - Minimum height (600px) for Post Details modal
@@ -20,6 +48,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Preview display for newly selected images in PostEditModal
 - `RemoveNewImage()` method for removing new images before save
 - Component tests for PostEditModal (PostEditModalTests.cs)
+- HtmlSanitizationService for XSS protection
+- HtmlSanitizer NuGet package
+- Comprehensive HTML sanitization for all user-generated content
 
 ### Changed
 - Account/Manage pages now use static SSR instead of InteractiveServer render mode
@@ -54,6 +85,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - "Add More Images" button not working in PostEditModal
 - Images selected via "Add More Images" not displaying in edit modal preview
 - Images selected via "Add More Images" not being uploaded when saving post edits
+- PostCreator buttons (Post/Cancel) disappearing when clicking emoji or audience selector
+- PostCreator scrollbar showing prematurely before content exceeds 10 lines
+- PostCreator textarea regaining focus after posting, re-expanding the component
+- **CRITICAL XSS VULNERABILITY**: User content rendered as raw HTML without sanitization
+- Script injection possible via post content, comments, and user profiles
 
 ### Removed
 - `@rendermode InteractiveServer` from 13 Account/Manage pages
