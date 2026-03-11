@@ -162,9 +162,6 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                // Clean up expired notifications before retrieving the list
-                await DeleteExpiredNotificationsAsync();
-
                 using var context = await _contextFactory.CreateDbContextAsync();
 
                 var query = context.UserNotifications
@@ -197,9 +194,6 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                // Clean up expired notifications before counting
-                await DeleteExpiredNotificationsAsync();
-
                 using var context = await _contextFactory.CreateDbContextAsync();
 
                 return await context.UserNotifications
@@ -220,9 +214,6 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                // Clean up expired notifications before counting
-                await DeleteExpiredNotificationsAsync();
-
                 using var context = await _contextFactory.CreateDbContextAsync();
 
                 return await context.UserNotifications

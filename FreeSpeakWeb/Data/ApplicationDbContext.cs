@@ -14,6 +14,7 @@ namespace FreeSpeakWeb.Data
         public DbSet<PinnedPost> PinnedPosts { get; set; }
         public DbSet<UserNotification> UserNotifications { get; set; }
         public DbSet<UserPreference> UserPreferences { get; set; }
+        public DbSet<PostNotificationMute> PostNotificationMutes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -214,6 +215,28 @@ namespace FreeSpeakWeb.Data
                 entity.HasIndex(p => p.UserId);
                 entity.HasIndex(p => p.PreferenceType);
                 entity.HasIndex(p => new { p.UserId, p.PreferenceType }).IsUnique();
+            });
+
+            // Configure PostNotificationMute entity
+            modelBuilder.Entity<PostNotificationMute>(entity =>
+            {
+                entity.HasKey(m => m.Id);
+
+                entity.HasOne(m => m.Post)
+                    .WithMany()
+                    .HasForeignKey(m => m.PostId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(m => m.User)
+                    .WithMany()
+                    .HasForeignKey(m => m.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Create indexes for better query performance
+                entity.HasIndex(m => m.PostId);
+                entity.HasIndex(m => m.UserId);
+                // Unique constraint: a user can only mute a post once
+                entity.HasIndex(m => new { m.PostId, m.UserId }).IsUnique();
             });
         }
     }

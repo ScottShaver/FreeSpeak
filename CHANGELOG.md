@@ -8,6 +8,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Background notification cleanup service
+  - NotificationCleanupService runs every 5 minutes automatically
+  - Intelligent throttling (minimum 1 minute between cleanups)
+  - Thread-safe with semaphore locking
+  - Removes expired notifications for all users
+  - Detailed logging for monitoring
+- Post notification muting system
+  - New "Turn Off Notifications" menu item for posts
+  - Mute/unmute toggle persists across sessions
+  - Prevents all post-related notifications (comments, reactions, comment replies, comment reactions)
+  - PostNotificationMute database table with unique constraint on PostId + UserId
+  - Menu dynamically shows "Turn Off" or "Turn On" based on current mute state
+- Comprehensive post deletion cleanup
+  - Automatically removes related notifications (checks JSON Data field)
+  - Deletes notification mute records
+  - Removes all cached thumbnail files (thumbnail and medium sizes)
+  - Cascade deletes configured for all related tables
+  - Detailed logging for all cleanup operations
 - Individual notification deletion with trash icon button
 - Delete button appears on notification hover with smooth transitions
 - Automatic badge count refresh on all notification operations
@@ -20,6 +38,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shared JavaScript modules for text editor and emoji picker utilities
   - `text-editor-utils.js` - Common textarea manipulation functions
   - `emoji-picker-utils.js` - Emoji picker positioning logic
+- Copy Link functionality for public posts
+  - New "Copy Link" menu item for public posts
+  - SinglePost.razor page for viewing individual posts at /post/{postId}
+  - Direct link sharing with validation (public posts only)
+  - Proper error handling for deleted or private posts
 
 ### Changed
 - All login methods now redirect to /home instead of using ReturnUrl
@@ -38,6 +61,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - All 94 unit tests now passing (1 skipped by design for InMemory database limitations)
 
 ### Performance
+- Removed per-call notification cleanup overhead
+  - Cleanup removed from GetUserNotificationsAsync()
+  - Cleanup removed from GetUnreadCountAsync()
+  - Cleanup removed from GetTotalCountAsync()
+  - Cleanup now handled by background service (5-minute intervals)
+  - Reduced database calls from 3+ per page load to 1 per 5 minutes
 - Reduced JavaScript bundle size by consolidating duplicate functions
 - Shared modules are loaded once and cached by browser across page updates
 - Text editor components now reuse common utilities instead of loading separate copies
