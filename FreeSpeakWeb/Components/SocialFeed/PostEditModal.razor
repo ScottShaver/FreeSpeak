@@ -143,7 +143,6 @@
     private List<PostImage> currentImages = new();
     private List<ImageUploadModal.SelectedImage> newImages = new();
     private List<int> removedImageIds = new();
-    private bool showImageUpload = false;
     private bool isSaving = false;
     private bool showEmojiPicker = false;
     private string emojiPickerPositionStyle = string.Empty;
@@ -298,14 +297,12 @@
 
     private async Task OpenImageUpload()
     {
-        showImageUpload = true;
         await OnImageUploadStateChanged.InvokeAsync(true);
         StateHasChanged();
     }
 
     private async Task CloseImageUpload()
     {
-        showImageUpload = false;
         await OnImageUploadStateChanged.InvokeAsync(false);
         StateHasChanged();
     }

@@ -956,7 +956,7 @@
             StateHasChanged();
 
             // Step 1: Upload images if any
-            if (hasImages)
+            if (hasImages && postData.Images != null)
             {
                 uploadCurrentStep = 1;
                 uploadProgressMessage = $"Uploading {postData.Images.Count} {(postData.Images.Count == 1 ? "image" : "images")}...";

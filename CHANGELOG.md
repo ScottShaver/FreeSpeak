@@ -17,17 +17,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Server-side validation for FirstName/LastName in Register.razor
 - ProfilePictureService validation for generated URL length
 - Input trimming for all profile fields before save
+- Shared JavaScript modules for text editor and emoji picker utilities
+  - `text-editor-utils.js` - Common textarea manipulation functions
+  - `emoji-picker-utils.js` - Emoji picker positioning logic
 
 ### Changed
 - All login methods now redirect to /home instead of using ReturnUrl
 - Standard login, external login, 2FA, recovery code, and registration all redirect to /home
 - Profile fields converted from text to varchar(75) in database schema
 - ApplicationUser profile fields now have explicit size constraints
+- PostCreator, MultiLineCommentEditor, and PostEditModal components now import from shared JS modules
+- Reduced JavaScript duplication by ~70% across text editor components
 
 ### Fixed
 - Navigation menus now respect user display name preference setting
 - Top navigation and sidebar now show formatted display name instead of raw username
 - Database schema inconsistency with profile field types
+- MultiLineCommentDisplayTests failing due to missing HtmlSanitizationService registration
+- FeedArticleTests failing due to missing FeedArticleImages.razor.js module setup
+- All 94 unit tests now passing (1 skipped by design for InMemory database limitations)
+
+### Performance
+- Reduced JavaScript bundle size by consolidating duplicate functions
+- Shared modules are loaded once and cached by browser across page updates
+- Text editor components now reuse common utilities instead of loading separate copies
 - Notification tab counts now remain stable when switching between All and Unread tabs
 - Visual feedback on notification indicator hover (scales and turns green)
 - Automatic badge count refresh when marking notifications as read

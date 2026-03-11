@@ -300,6 +300,8 @@
 
     private async Task HandleNotificationClick(UserNotification notification)
     {
+        Console.WriteLine($"[DEBUG] Notification clicked: Type={notification.Type}, Data={notification.Data}");
+
         if (currentUserId == null) return;
 
         // Mark as read if not already
@@ -315,12 +317,28 @@
             StateHasChanged();
         }
 
-        // Parse notification data and open post
+        // Parse notification data
         if (!string.IsNullOrEmpty(notification.Data))
         {
             try
             {
-                var data = JsonSerializer.Deserialize<NotificationData>(notification.Data);
+                // Use case-insensitive deserialization to handle both old (camelCase) and new (PascalCase) data
+                var options = new JsonSerializerOptions 
+                { 
+                    PropertyNameCaseInsensitive = true 
+                };
+                var data = JsonSerializer.Deserialize<NotificationData>(notification.Data, options);
+                Console.WriteLine($"[DEBUG] Deserialized data: NavigationUrl={data?.NavigationUrl}, PostId={data?.PostId}");
+
+                // Handle navigation URL (for friend requests, etc.)
+                if (!string.IsNullOrEmpty(data?.NavigationUrl))
+                {
+                    Console.WriteLine($"[DEBUG] Navigating to: {data.NavigationUrl}");
+                    NavigationManager.NavigateTo(data.NavigationUrl, forceLoad: true);
+                    return;
+                }
+
+                // Handle post notifications
                 if (data?.PostId != null)
                 {
                     var post = await PostService.GetPostByIdAsync(data.PostId.Value);
@@ -354,8 +372,13 @@
             catch (Exception ex)
             {
                 // Log error but don't crash
-                Console.WriteLine($"Error parsing notification data: {ex.Message}");
+                Console.WriteLine($"[DEBUG] Error parsing notification data: {ex.Message}");
+                Console.WriteLine($"[DEBUG] Exception details: {ex}");
             }
+        }
+        else
+        {
+            Console.WriteLine("[DEBUG] Notification.Data is null or empty");
         }
     }
 
@@ -575,5 +598,6 @@
         public string? CommenterId { get; set; }
         public string? ReactorId { get; set; }
         public string? ReactionType { get; set; }
+        public string? NavigationUrl { get; set; }
     }
 }

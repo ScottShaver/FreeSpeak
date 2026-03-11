@@ -6,10 +6,17 @@ namespace FreeSpeakWeb.Services
     public class FriendsService
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
+        private readonly NotificationService _notificationService;
+        private readonly UserPreferenceService _userPreferenceService;
 
-        public FriendsService(IDbContextFactory<ApplicationDbContext> contextFactory)
+        public FriendsService(
+            IDbContextFactory<ApplicationDbContext> contextFactory,
+            NotificationService notificationService,
+            UserPreferenceService userPreferenceService)
         {
             _contextFactory = contextFactory;
+            _notificationService = notificationService;
+            _userPreferenceService = userPreferenceService;
         }
 
         /// <summary>
@@ -53,6 +60,34 @@ namespace FreeSpeakWeb.Services
             context.Friendships.Add(friendship);
             await context.SaveChangesAsync();
 
+            // Get requester info for notification
+            var requester = await context.Users.FindAsync(requesterId);
+            if (requester != null)
+            {
+                var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                    requester.Id,
+                    requester.FirstName ?? string.Empty,
+                    requester.LastName ?? string.Empty,
+                    requester.UserName ?? "User"
+                );
+                var message = $"<strong>{formattedName}</strong> sent you a friend request";
+
+                // Create notification for the addressee
+                await _notificationService.CreateNotificationAsync(
+                    userId: addresseeId,
+                    type: NotificationType.FriendRequest,
+                    message: message,
+                    data: new
+                    {
+                        NavigationUrl = "/friends?tab=requests",
+                        FriendshipId = friendship.Id,
+                        RequesterId = requesterId,
+                        RequesterName = formattedName,
+                        RequesterProfilePicture = requester.ProfilePictureUrl
+                    }
+                );
+            }
+
             return (true, null);
         }
 
@@ -84,6 +119,33 @@ namespace FreeSpeakWeb.Services
             friendship.RespondedAt = DateTime.UtcNow;
 
             await context.SaveChangesAsync();
+
+            // Send notification to the original requester
+            var acceptor = await context.Users.FindAsync(currentUserId);
+            if (acceptor != null)
+            {
+                var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                    acceptor.Id,
+                    acceptor.FirstName ?? string.Empty,
+                    acceptor.LastName ?? string.Empty,
+                    acceptor.UserName ?? "User"
+                );
+                var message = $"<strong>{formattedName}</strong> accepted your friend request";
+
+                await _notificationService.CreateNotificationAsync(
+                    userId: friendship.RequesterId,
+                    type: NotificationType.FriendAccepted,
+                    message: message,
+                    data: new
+                    {
+                        NavigationUrl = "/friends",
+                        FriendshipId = friendship.Id,
+                        AcceptorId = currentUserId,
+                        RequesterName = formattedName,
+                        RequesterProfilePicture = acceptor.ProfilePictureUrl
+                    }
+                );
+            }
 
             return (true, null);
         }

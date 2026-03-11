@@ -36,7 +36,7 @@ public class HtmlSanitizationService
     /// <summary>
     /// Sanitizes user content and formats it for display with line breaks
     /// </summary>
-    public string SanitizeAndFormatContent(string content)
+    public string SanitizeAndFormatContent(string? content)
     {
         if (string.IsNullOrEmpty(content))
             return string.Empty;

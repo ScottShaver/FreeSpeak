@@ -186,6 +186,14 @@ namespace FreeSpeakWeb
             // SECURITY: Add Content Security Policy headers for defense-in-depth XSS protection
             app.Use(async (context, next) =>
             {
+                // Build CSP connect-src directive based on environment
+                var connectSrc = "connect-src 'self' ws: wss:";
+                if (app.Environment.IsDevelopment())
+                {
+                    // In development, allow Browser Link and other localhost debugging tools
+                    connectSrc += " http://localhost:* https://localhost:*";
+                }
+
                 // CSP header to restrict resource loading and prevent XSS attacks
                 context.Response.Headers.Append("Content-Security-Policy", 
                     "default-src 'self'; " +
@@ -193,7 +201,7 @@ namespace FreeSpeakWeb
                     "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +  // Allow Bootstrap Icons from CDN
                     "img-src 'self' data: blob:; " +  // Allow data URIs for inline images
                     "font-src 'self' https://cdn.jsdelivr.net; " +  // Allow fonts from CDN
-                    "connect-src 'self'; " +  // Allow connections to same origin
+                    $"{connectSrc}; " +  // Allow WebSocket connections for Blazor Server SignalR (and localhost in dev)
                     "frame-ancestors 'none'; " +  // Prevent clickjacking
                     "base-uri 'self'; " +  // Restrict base tag
                     "form-action 'self';");  // Restrict form submissions

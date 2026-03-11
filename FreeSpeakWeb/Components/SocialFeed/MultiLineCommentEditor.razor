@@ -46,6 +46,7 @@
     private IJSObjectReference? module;
     private bool showEmojiPicker = false;
     private string emojiPickerPositionStyle = string.Empty;
+    private bool _disposed = false;
 
     [Parameter]
     public string CommentText 
@@ -191,24 +192,45 @@
     {
         if (CanSubmit)
         {
-            if (OnCommentSubmitted.HasDelegate)
-            {
-                await OnCommentSubmitted.InvokeAsync(CommentText);
-            }
+            var textToSubmit = CommentText;
             CommentText = "";
 
-            // Reset textarea to single-line collapsed state
-            if (module is not null)
+            // Reset textarea to single-line collapsed state BEFORE invoking callback
+            // This prevents accessing a disposed module if the callback causes re-rendering
+            if (module is not null && !_disposed)
             {
-                await module.InvokeVoidAsync("resetTextarea", textareaElement);
+                try
+                {
+                    await module.InvokeVoidAsync("resetTextarea", textareaElement);
+                }
+                catch (ObjectDisposedException)
+                {
+                    // Component was disposed during the operation, ignore
+                }
+                catch (JSDisconnectedException)
+                {
+                    // Circuit disconnected, ignore
+                }
             }
 
-            StateHasChanged();
+            // Invoke the parent callback last, as it may cause this component to be disposed/recreated
+            if (OnCommentSubmitted.HasDelegate)
+            {
+                await OnCommentSubmitted.InvokeAsync(textToSubmit);
+            }
+
+            // Only call StateHasChanged if we haven't been disposed
+            if (!_disposed)
+            {
+                StateHasChanged();
+            }
         }
     }
 
     public async ValueTask DisposeAsync()
     {
+        _disposed = true;
+
         if (module is not null)
         {
             try

@@ -21,6 +21,7 @@ namespace FreeSpeakWeb.Tests.Components
             // Setup JSInterop for modules used by FeedArticle
             JSInterop.SetupModule("./Components/SocialFeed/MultiLineCommentEditor.razor.js");
             JSInterop.SetupModule("./Components/SocialFeed/FeedArticle.razor.js");
+            JSInterop.SetupModule("./Components/SocialFeed/FeedArticleImages.razor.js");
 
             // Register required services for FeedArticle component
 

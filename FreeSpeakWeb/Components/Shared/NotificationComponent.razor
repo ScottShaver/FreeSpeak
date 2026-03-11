@@ -114,7 +114,7 @@
         try
         {
             var data = JsonSerializer.Deserialize<NotificationData>(Notification.Data);
-            return data?.ReactorProfilePicture ?? data?.CommenterProfilePicture ?? string.Empty;
+            return data?.ReactorProfilePicture ?? data?.CommenterProfilePicture ?? data?.RequesterProfilePicture ?? string.Empty;
         }
         catch
         {
@@ -129,7 +129,7 @@
         try
         {
             var data = JsonSerializer.Deserialize<NotificationData>(Notification.Data);
-            return data?.ReactorName ?? data?.CommenterName ?? "User";
+            return data?.ReactorName ?? data?.CommenterName ?? data?.RequesterName ?? "User";
         }
         catch
         {
@@ -200,6 +200,8 @@
         public string? ReactorProfilePicture { get; set; }
         public string? CommenterName { get; set; }
         public string? CommenterProfilePicture { get; set; }
+        public string? RequesterName { get; set; }
+        public string? RequesterProfilePicture { get; set; }
         public string? ReactionType { get; set; }
     }
 }

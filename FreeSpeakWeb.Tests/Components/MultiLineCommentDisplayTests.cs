@@ -1,12 +1,20 @@
 using Bunit;
 using FluentAssertions;
 using FreeSpeakWeb.Components.SocialFeed;
+using FreeSpeakWeb.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace FreeSpeakWeb.Tests.Components
 {
     public class MultiLineCommentDisplayTests : TestContext
     {
+        public MultiLineCommentDisplayTests()
+        {
+            // Register HtmlSanitizationService required by MultiLineCommentDisplay
+            Services.AddSingleton<HtmlSanitizationService>();
+        }
+
         [Fact]
         public void MultiLineCommentDisplay_RendersUserName()
         {
