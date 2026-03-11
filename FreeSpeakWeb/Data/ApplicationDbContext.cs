@@ -15,6 +15,10 @@ namespace FreeSpeakWeb.Data
         public DbSet<UserNotification> UserNotifications { get; set; }
         public DbSet<UserPreference> UserPreferences { get; set; }
         public DbSet<PostNotificationMute> PostNotificationMutes { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<GroupRule> GroupRules { get; set; }
+        public DbSet<GroupJoinRequest> GroupJoinRequests { get; set; }
+        public DbSet<GroupUser> GroupUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -237,6 +241,118 @@ namespace FreeSpeakWeb.Data
                 entity.HasIndex(m => m.UserId);
                 // Unique constraint: a user can only mute a post once
                 entity.HasIndex(m => new { m.PostId, m.UserId }).IsUnique();
+            });
+
+            // Configure Group entity
+            modelBuilder.Entity<Group>(entity =>
+            {
+                entity.HasKey(g => g.Id);
+
+                entity.HasOne(g => g.Creator)
+                    .WithMany()
+                    .HasForeignKey(g => g.CreatorId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(g => g.Name)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(g => g.Description)
+                    .IsRequired()
+                    .HasMaxLength(2000);
+
+                entity.Property(g => g.HeaderImageUrl)
+                    .HasMaxLength(500);
+
+                entity.Property(g => g.VerticalHeaderImageUrl)
+                    .HasMaxLength(500);
+
+                entity.Property(g => g.WebsiteUrl)
+                    .HasMaxLength(500);
+
+                // Create indexes for better query performance
+                entity.HasIndex(g => g.CreatorId);
+                entity.HasIndex(g => g.CreatedAt);
+                entity.HasIndex(g => g.LastActiveAt);
+                entity.HasIndex(g => g.IsPublic);
+                entity.HasIndex(g => g.IsHidden);
+                entity.HasIndex(g => g.Name);
+                // Composite index for discovering active public groups
+                entity.HasIndex(g => new { g.IsPublic, g.IsHidden, g.LastActiveAt });
+            });
+
+            // Configure GroupRule entity
+            modelBuilder.Entity<GroupRule>(entity =>
+            {
+                entity.HasKey(gr => gr.Id);
+
+                entity.HasOne(gr => gr.Group)
+                    .WithMany()
+                    .HasForeignKey(gr => gr.GroupId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Property(gr => gr.Title)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(gr => gr.Description)
+                    .IsRequired()
+                    .HasMaxLength(1000);
+
+                // Create indexes for better query performance
+                entity.HasIndex(gr => gr.GroupId);
+                entity.HasIndex(gr => new { gr.GroupId, gr.Order });
+            });
+
+            // Configure GroupJoinRequest entity
+            modelBuilder.Entity<GroupJoinRequest>(entity =>
+            {
+                entity.HasKey(gjr => gjr.Id);
+
+                entity.HasOne(gjr => gjr.Group)
+                    .WithMany()
+                    .HasForeignKey(gjr => gjr.GroupId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(gjr => gjr.User)
+                    .WithMany()
+                    .HasForeignKey(gjr => gjr.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Create indexes for better query performance
+                entity.HasIndex(gjr => gjr.GroupId);
+                entity.HasIndex(gjr => gjr.UserId);
+                entity.HasIndex(gjr => gjr.RequestedAt);
+                // Unique constraint: a user can only have one pending request per group
+                entity.HasIndex(gjr => new { gjr.GroupId, gjr.UserId }).IsUnique();
+            });
+
+            // Configure GroupUser entity
+            modelBuilder.Entity<GroupUser>(entity =>
+            {
+                entity.HasKey(gu => gu.Id);
+
+                entity.HasOne(gu => gu.Group)
+                    .WithMany()
+                    .HasForeignKey(gu => gu.GroupId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(gu => gu.User)
+                    .WithMany()
+                    .HasForeignKey(gu => gu.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Create indexes for better query performance
+                entity.HasIndex(gu => gu.GroupId);
+                entity.HasIndex(gu => gu.UserId);
+                entity.HasIndex(gu => gu.JoinedAt);
+                entity.HasIndex(gu => gu.LastActiveAt);
+                entity.HasIndex(gu => gu.IsAdmin);
+                entity.HasIndex(gu => gu.IsModerator);
+                // Unique constraint: a user can only be a member of a group once
+                entity.HasIndex(gu => new { gu.GroupId, gu.UserId }).IsUnique();
+                // Composite index for finding group admins/moderators
+                entity.HasIndex(gu => new { gu.GroupId, gu.IsAdmin, gu.IsModerator });
             });
         }
     }

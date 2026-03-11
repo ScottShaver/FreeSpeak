@@ -98,6 +98,11 @@ namespace FreeSpeakWeb
             // Add HtmlSanitizationService for XSS protection
             builder.Services.AddSingleton<HtmlSanitizationService>();
 
+            // Add Group services
+            builder.Services.AddScoped<GroupService>();
+            builder.Services.AddScoped<GroupRuleService>();
+            builder.Services.AddScoped<GroupMemberService>();
+
             // SECURITY: Add rate limiting to prevent abuse
             builder.Services.AddRateLimiter(options =>
             {
