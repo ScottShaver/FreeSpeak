@@ -23,6 +23,21 @@ public class ProfilePictureService
     {
         try
         {
+            // Validate userId length to ensure generated URL won't exceed database limit
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return (false, "User ID is required.", null);
+            }
+
+            // The generated URL format is: /api/secure-files/profile-picture/{userId}
+            // Ensure total URL length doesn't exceed 75 characters (database constraint)
+            var relativeUrl = $"/api/secure-files/profile-picture/{userId}";
+            if (relativeUrl.Length > 75)
+            {
+                _logger.LogError("Generated profile picture URL exceeds 75 character limit for user {UserId}. URL: {Url}", userId, relativeUrl);
+                return (false, "Unable to generate profile picture URL. User ID is too long.", null);
+            }
+
             // Check file size
             if (imageStream.Length > MaxFileSizeBytes)
             {
@@ -41,7 +56,7 @@ public class ProfilePictureService
 
             // Load and process the image
             using var image = await Image.LoadAsync(memoryStream);
-            
+
             // Resize to 168x168
             image.Mutate(x => x.Resize(new ResizeOptions
             {
@@ -53,13 +68,12 @@ public class ProfilePictureService
             // Save as JPEG
             var fileName = $"{userId}.jpg";
             var filePath = Path.Combine(profilesPath, fileName);
-            
+
             await image.SaveAsJpegAsync(filePath, new JpegEncoder
             {
                 Quality = 85
             });
 
-            var relativeUrl = $"/api/secure-files/profile-picture/{userId}";
             _logger.LogInformation("Profile picture saved for user {UserId}: {FilePath}", userId, relativeUrl);
 
             return (true, null, relativeUrl);

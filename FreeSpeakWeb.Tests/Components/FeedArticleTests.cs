@@ -21,6 +21,7 @@ namespace FreeSpeakWeb.Tests.Components
             // Setup JSInterop for modules used by FeedArticle
             JSInterop.SetupModule("./Components/SocialFeed/MultiLineCommentEditor.razor.js");
             JSInterop.SetupModule("./Components/SocialFeed/FeedArticle.razor.js");
+            JSInterop.SetupModule("./Components/SocialFeed/FeedArticleImages.razor.js");
 
             // Register required services for FeedArticle component
 
@@ -39,6 +40,10 @@ namespace FreeSpeakWeb.Tests.Components
             var mockScopeFactory = new Mock<IServiceScopeFactory>();
             var notificationService = new NotificationService(mockDbContextFactory.Object, mockNotificationLogger.Object, mockScopeFactory.Object);
 
+            // Mock UserPreferenceService
+            var mockUserPreferenceLogger = new Mock<ILogger<UserPreferenceService>>();
+            var userPreferenceService = new UserPreferenceService(mockDbContextFactory.Object, mockUserPreferenceLogger.Object);
+
             // Create SiteSettings for PostService
             var siteSettings = new SiteSettings
             {
@@ -54,7 +59,8 @@ namespace FreeSpeakWeb.Tests.Components
                 mockLogger.Object,
                 siteSettingsOptions,
                 mockEnvironment.Object,
-                notificationService
+                notificationService,
+                userPreferenceService
             );
 
             Services.AddSingleton(postService);

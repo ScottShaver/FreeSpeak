@@ -39,13 +39,20 @@ namespace FreeSpeakWeb.Tests.Services
             return new NotificationService(dbFactory.Object, logger.Object, scopeFactory.Object);
         }
 
+        private static UserPreferenceService CreateMockUserPreferenceService()
+        {
+            var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
+            var logger = new Mock<ILogger<UserPreferenceService>>();
+            return new UserPreferenceService(dbFactory.Object, logger.Object);
+        }
+
         [Fact]
         public async Task CreatePostAsync_WithWhitespaceOnly_ShouldReturnError()
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("EdgeCase1");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService());
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
 
             // Act
             var (success, errorMessage, post) = await service.CreatePostAsync("user1", "   ");
@@ -62,7 +69,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("EdgeCase2");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService());
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
 
             // Act
             var (success, errorMessage, _) = await service.UpdatePostAsync(99999, "user1", "Updated content");
@@ -78,7 +85,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("EdgeCase3");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService());
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
 
             // Act
             var (success, errorMessage) = await service.DeletePostAsync(99999, "user1");
@@ -94,7 +101,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("EdgeCase4");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService());
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
 
             // Act
             var (success, errorMessage, comment) = await service.AddCommentAsync(99999, "user1", "Comment");
@@ -111,7 +118,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("EdgeCase5");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService());
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
@@ -144,7 +151,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("EdgeCase6");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService());
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
 
             // Act
             var (success, errorMessage, isLiked) = await service.ToggleLikeAsync(99999, "user1");
@@ -160,7 +167,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("EdgeCase7");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService());
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
 
@@ -189,7 +196,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("EdgeCase8");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService());
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1", commentCount: 3);
@@ -259,7 +266,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("EdgeCase9");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService());
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
@@ -299,7 +306,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("EdgeCase10");
             var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService());
+            var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
@@ -348,3 +355,4 @@ namespace FreeSpeakWeb.Tests.Services
         }
     }
 }
+

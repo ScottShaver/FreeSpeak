@@ -92,6 +92,24 @@
 
     public async Task RegisterUser(EditContext editContext)
     {
+        // Trim inputs
+        Input.FirstName = Input.FirstName?.Trim() ?? string.Empty;
+        Input.LastName = Input.LastName?.Trim() ?? string.Empty;
+        Input.UserName = Input.UserName?.Trim() ?? string.Empty;
+        Input.Email = Input.Email?.Trim() ?? string.Empty;
+
+        // Additional server-side validation
+        if (Input.FirstName.Length > 75)
+        {
+            identityErrors = new[] { new IdentityError { Description = "First Name cannot exceed 75 characters." } };
+            return;
+        }
+        if (Input.LastName.Length > 75)
+        {
+            identityErrors = new[] { new IdentityError { Description = "Last Name cannot exceed 75 characters." } };
+            return;
+        }
+
         var user = CreateUser();
 
         user.FirstName = Input.FirstName;
@@ -128,7 +146,7 @@
         else
         {
             await SignInManager.SignInAsync(user, isPersistent: false);
-            RedirectManager.RedirectTo(ReturnUrl);
+            RedirectManager.RedirectTo("/home");
         }
     }
 
@@ -157,12 +175,12 @@
     private sealed class InputModel
     {
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
+        [StringLength(75, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
         [Display(Name = "First Name")]
         public string FirstName { get; set; } = "";
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
+        [StringLength(75, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
         [Display(Name = "Last Name")]
         public string LastName { get; set; } = "";
 

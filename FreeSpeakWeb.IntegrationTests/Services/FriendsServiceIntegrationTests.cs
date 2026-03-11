@@ -3,18 +3,94 @@ using FreeSpeakWeb.Data;
 using FreeSpeakWeb.IntegrationTests.Infrastructure;
 using FreeSpeakWeb.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace FreeSpeakWeb.IntegrationTests.Services
 {
     public class FriendsServiceIntegrationTests : IntegrationTestBase
     {
+        private static NotificationService CreateMockNotificationService()
+        {
+            // Create a no-op notification service for testing
+            // We're testing FriendsService, not notifications
+            return new NullNotificationService();
+        }
+
+        private static UserPreferenceService CreateMockUserPreferenceService()
+        {
+            // Create a no-op user preference service for testing
+            return new NullUserPreferenceService();
+        }
+
+        // Null implementation of NotificationService for testing
+        private class NullNotificationService : NotificationService
+        {
+            public NullNotificationService()
+                : base(new NullDbContextFactory(), new NullLogger(), new NullServiceScopeFactory())
+            {
+            }
+
+            private class NullDbContextFactory : IDbContextFactory<ApplicationDbContext>
+            {
+                public ApplicationDbContext CreateDbContext() => null!;
+            }
+
+            private class NullLogger : ILogger<NotificationService>
+            {
+                public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+                public bool IsEnabled(LogLevel logLevel) => false;
+                public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) { }
+            }
+
+            private class NullServiceScopeFactory : IServiceScopeFactory
+            {
+                public IServiceScope CreateScope() => new NullServiceScope();
+
+                private class NullServiceScope : IServiceScope
+                {
+                    public IServiceProvider ServiceProvider => new NullServiceProvider();
+                    public void Dispose() { }
+
+                    private class NullServiceProvider : IServiceProvider
+                    {
+                        public object? GetService(Type serviceType) => null;
+                    }
+                }
+            }
+        }
+
+        // Null implementation of UserPreferenceService for testing
+        private class NullUserPreferenceService : UserPreferenceService
+        {
+            public NullUserPreferenceService()
+                : base(new NullDbContextFactory(), new NullLogger())
+            {
+            }
+
+            private class NullDbContextFactory : IDbContextFactory<ApplicationDbContext>
+            {
+                public ApplicationDbContext CreateDbContext() => null!;
+            }
+
+            private class NullLogger : ILogger<UserPreferenceService>
+            {
+                public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+                public bool IsEnabled(LogLevel logLevel) => false;
+                public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) { }
+            }
+        }
+
         [Fact]
         public async Task SearchUsersAsync_WithMatchingFirstName_ShouldReturnResults()
         {
             // Arrange
             var factory = CreateDbContextFactory();
-            var service = new FriendsService(factory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(factory, notificationService, userPreferenceService);
 
             // Create test users
             var currentUser = CreateTestUser("current", "CurrentUser", "Current", "User");
@@ -43,7 +119,9 @@ namespace FreeSpeakWeb.IntegrationTests.Services
         {
             // Arrange
             var factory = CreateDbContextFactory();
-            var service = new FriendsService(factory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(factory, notificationService, userPreferenceService);
 
             var currentUser = CreateTestUser("current", "current", "Current", "User");
             var user1 = CreateTestUser("user1", "alice", "Alice", "Smith");
@@ -70,7 +148,9 @@ namespace FreeSpeakWeb.IntegrationTests.Services
         {
             // Arrange
             var factory = CreateDbContextFactory();
-            var service = new FriendsService(factory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(factory, notificationService, userPreferenceService);
 
             var currentUser = CreateTestUser("current", "current", "Current", "User");
             var user1 = CreateTestUser("user1", "developer123", "Alice", "Smith");
@@ -97,7 +177,9 @@ namespace FreeSpeakWeb.IntegrationTests.Services
         {
             // Arrange
             var factory = CreateDbContextFactory();
-            var service = new FriendsService(factory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(factory, notificationService, userPreferenceService);
 
             var currentUser = CreateTestUser("current", "current", "Current", "User");
             var user1 = CreateTestUser("user1", "alice", "Alice", "Johnson");
@@ -124,7 +206,9 @@ namespace FreeSpeakWeb.IntegrationTests.Services
         {
             // Arrange
             var factory = CreateDbContextFactory();
-            var service = new FriendsService(factory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(factory, notificationService, userPreferenceService);
 
             var currentUser = CreateTestUser("current", "current", "Current", "User");
             var friend = CreateTestUser("friend", "friend", "Friend", "User");
@@ -161,7 +245,9 @@ namespace FreeSpeakWeb.IntegrationTests.Services
         {
             // Arrange
             var factory = CreateDbContextFactory();
-            var service = new FriendsService(factory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(factory, notificationService, userPreferenceService);
 
             var currentUser = CreateTestUser("current", "current", "Current", "User");
             var user1 = CreateTestUser("user1", "TechGuru", "Michael", "Johnson");

@@ -15,6 +15,25 @@ export function initializeCommentScroll(contentElement, dotNetHelper) {
     };
 
     contentElement.addEventListener('scroll', scrollHandler);
+
+    // Add class to modal container based on whether post has images
+    applyNoImagesClass(contentElement);
+}
+
+export function applyNoImagesClass(contentElement) {
+    if (!contentElement) return;
+
+    const feedArticle = contentElement.querySelector('.feed-article');
+    if (!feedArticle) return;
+
+    const articleImages = feedArticle.querySelector('.article-images');
+    const hasImages = articleImages && articleImages.children.length > 0;
+
+    if (!hasImages) {
+        feedArticle.classList.add('no-images');
+    } else {
+        feedArticle.classList.remove('no-images');
+    }
 }
 
 export function cleanupCommentScroll() {

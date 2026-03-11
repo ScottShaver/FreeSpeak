@@ -17,6 +17,8 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 @inject UserPreferenceService UserPreferenceService
+@inject HtmlSanitizationService HtmlSanitizationService
+@inject NotificationBadgeService NotificationBadgeService
 
 <PageTitle>Notifications - FreeSpeak</PageTitle>
 
@@ -49,7 +51,7 @@
 
     <div class="notifications-tabs">
         <button class="tab-button @(showOnlyUnread ? "" : "active")" @onclick="() => ShowAll()">
-            All (@totalCount)
+            All (@allNotificationsCount)
         </button>
         <button class="tab-button @(showOnlyUnread ? "active" : "")" @onclick="() => ShowUnread()">
             Unread (@unreadCount)
@@ -77,7 +79,11 @@
         {
             @foreach (var notification in notifications)
             {
-                <NotificationComponent Notification="@notification" OnClick="HandleNotificationClick" />
+                <NotificationComponent 
+                    Notification="@notification" 
+                    OnClick="HandleNotificationClick"
+                    OnMarkAsReadOnly="HandleMarkAsReadOnly"
+                    OnDelete="HandleDeleteNotification" />
             }
 
             @if (hasMore)
@@ -145,7 +151,7 @@
     private int pageSize = 20;
     private bool hasMore = false;
     private int unreadCount = 0;
-    private int totalCount = 0;
+    private int allNotificationsCount = 0;
     private Post? selectedPost = null;
     private string selectedPostAuthorName = "Unknown";
     private bool selectedPostIsPinned = false;
@@ -171,6 +177,9 @@
                 user.UserName ?? "User"
             );
 
+            // Reset the notification badge timer
+            await NotificationBadgeService.ResetTimerAsync();
+
             await LoadNotifications();
         }
     }
@@ -190,7 +199,9 @@
             showOnlyUnread ? false : null
         );
 
+        // Always fetch both counts so tabs display correct values
         unreadCount = await NotificationService.GetUnreadCountAsync(currentUserId);
+        allNotificationsCount = await NotificationService.GetTotalCountAsync(currentUserId);
 
         // Check if there are more notifications
         var nextPageNotifications = await NotificationService.GetUserNotificationsAsync(
@@ -200,8 +211,6 @@
             showOnlyUnread ? false : null
         );
         hasMore = nextPageNotifications.Any();
-
-        totalCount = notifications.Count + (hasMore ? 1 : 0);
 
         isLoading = false;
     }
@@ -246,8 +255,53 @@
         await LoadNotifications();
     }
 
+    private async Task HandleMarkAsReadOnly(UserNotification notification)
+    {
+        if (currentUserId == null) return;
+
+        // Mark as read without navigating to the post
+        if (!notification.IsRead)
+        {
+            await NotificationService.MarkAsReadAsync(notification.Id, currentUserId);
+            notification.IsRead = true;
+            unreadCount = Math.Max(0, unreadCount - 1);
+
+            // Refresh the badge service to update navigation badges
+            await NotificationBadgeService.RefreshUnreadCountAsync();
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleDeleteNotification(UserNotification notification)
+    {
+        if (currentUserId == null) return;
+
+        var (success, errorMessage) = await NotificationService.DeleteNotificationAsync(notification.Id, currentUserId);
+
+        if (success)
+        {
+            // Remove from the list
+            notifications.Remove(notification);
+
+            // Update both counts
+            allNotificationsCount = Math.Max(0, allNotificationsCount - 1);
+            if (!notification.IsRead)
+            {
+                unreadCount = Math.Max(0, unreadCount - 1);
+            }
+
+            // Refresh the badge service to update navigation badges
+            await NotificationBadgeService.RefreshUnreadCountAsync();
+
+            StateHasChanged();
+        }
+    }
+
     private async Task HandleNotificationClick(UserNotification notification)
     {
+        Console.WriteLine($"[DEBUG] Notification clicked: Type={notification.Type}, Data={notification.Data}");
+
         if (currentUserId == null) return;
 
         // Mark as read if not already
@@ -256,15 +310,35 @@
             await NotificationService.MarkAsReadAsync(notification.Id, currentUserId);
             notification.IsRead = true;
             unreadCount = Math.Max(0, unreadCount - 1);
+
+            // Refresh the badge service to update navigation badges
+            await NotificationBadgeService.RefreshUnreadCountAsync();
+
             StateHasChanged();
         }
 
-        // Parse notification data and open post
+        // Parse notification data
         if (!string.IsNullOrEmpty(notification.Data))
         {
             try
             {
-                var data = JsonSerializer.Deserialize<NotificationData>(notification.Data);
+                // Use case-insensitive deserialization to handle both old (camelCase) and new (PascalCase) data
+                var options = new JsonSerializerOptions 
+                { 
+                    PropertyNameCaseInsensitive = true 
+                };
+                var data = JsonSerializer.Deserialize<NotificationData>(notification.Data, options);
+                Console.WriteLine($"[DEBUG] Deserialized data: NavigationUrl={data?.NavigationUrl}, PostId={data?.PostId}");
+
+                // Handle navigation URL (for friend requests, etc.)
+                if (!string.IsNullOrEmpty(data?.NavigationUrl))
+                {
+                    Console.WriteLine($"[DEBUG] Navigating to: {data.NavigationUrl}");
+                    NavigationManager.NavigateTo(data.NavigationUrl, forceLoad: true);
+                    return;
+                }
+
+                // Handle post notifications
                 if (data?.PostId != null)
                 {
                     var post = await PostService.GetPostByIdAsync(data.PostId.Value);
@@ -298,8 +372,13 @@
             catch (Exception ex)
             {
                 // Log error but don't crash
-                Console.WriteLine($"Error parsing notification data: {ex.Message}");
+                Console.WriteLine($"[DEBUG] Error parsing notification data: {ex.Message}");
+                Console.WriteLine($"[DEBUG] Exception details: {ex}");
             }
+        }
+        else
+        {
+            Console.WriteLine("[DEBUG] Notification.Data is null or empty");
         }
     }
 
@@ -450,8 +529,8 @@
         if (string.IsNullOrEmpty(content))
             return string.Empty;
 
-        // Replace newlines with <br> tags
-        return content.Replace("\r\n", "<br>").Replace("\n", "<br>");
+        // SECURITY: Sanitize user content to prevent XSS attacks
+        return HtmlSanitizationService.SanitizeAndFormatContent(content);
     }
 
     private void ClosePostDetail()
@@ -479,6 +558,9 @@
                 notification.IsRead = true;
             }
             unreadCount = 0;
+
+            // Refresh the badge service to update navigation badges
+            await NotificationBadgeService.RefreshUnreadCountAsync();
         }
 
         isMarkingAllRead = false;
@@ -496,7 +578,13 @@
         {
             // Remove read notifications from the list
             notifications.RemoveAll(n => n.IsRead);
-            totalCount = notifications.Count;
+
+            // Refresh both counts
+            unreadCount = await NotificationService.GetUnreadCountAsync(currentUserId);
+            allNotificationsCount = await NotificationService.GetTotalCountAsync(currentUserId);
+
+            // Refresh the badge service to update navigation badges
+            await NotificationBadgeService.RefreshUnreadCountAsync();
         }
 
         isDeletingRead = false;
@@ -510,5 +598,6 @@
         public string? CommenterId { get; set; }
         public string? ReactorId { get; set; }
         public string? ReactionType { get; set; }
+        public string? NavigationUrl { get; set; }
     }
 }

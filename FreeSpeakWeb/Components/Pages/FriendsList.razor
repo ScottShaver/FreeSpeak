@@ -17,6 +17,7 @@
 @inject IOptions<SiteSettings> SiteSettings
 @inject ILogger<FriendsList> Logger
 @inject NavigationStateService NavigationState
+@inject NavigationManager NavigationManager
 
 <PageTitle>@SiteSettings.Value.SiteName - Friends</PageTitle>
 
@@ -280,6 +281,18 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         currentUserId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+        // Check for tab query parameter
+        var uri = new Uri(NavigationManager.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        var tabParam = query["tab"];
+
+        // Set active tab from query parameter if valid
+        if (!string.IsNullOrEmpty(tabParam) && 
+            (tabParam == "friends" || tabParam == "requests" || tabParam == "sent" || tabParam == "suggestions" || tabParam == "search"))
+        {
+            activeTab = tabParam;
+        }
+
         isLoading = false;
 
         if (!string.IsNullOrEmpty(currentUserId))
@@ -293,8 +306,25 @@
                 // Load counts for all tabs
                 await LoadAllCountsAsync();
 
-                // Load data for the default tab
-                await LoadFriendsAsync();
+                // Load data for the active tab
+                switch (activeTab)
+                {
+                    case "requests":
+                        await LoadPendingRequestsAsync();
+                        break;
+                    case "sent":
+                        await LoadSentRequestsAsync();
+                        break;
+                    case "suggestions":
+                        await LoadPeopleYouMayKnowAsync();
+                        break;
+                    case "search":
+                        // Don't load anything for search tab
+                        break;
+                    default: // "friends"
+                        await LoadFriendsAsync();
+                        break;
+                }
             }
         }
     }

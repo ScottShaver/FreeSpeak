@@ -14,6 +14,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject PostService PostService
 @inject UserPreferenceService UserPreferenceService
+@inject HtmlSanitizationService HtmlSanitizationService
 @inject IJSRuntime JSRuntime
 
 <PageTitle>@SiteSettings.Value.SiteName - Discover</PageTitle>
@@ -227,7 +228,8 @@
         if (string.IsNullOrEmpty(content))
             return string.Empty;
 
-        return content.Replace("\n", "<br />");
+        // SECURITY: Sanitize user content to prevent XSS attacks
+        return HtmlSanitizationService.SanitizeAndFormatContent(content);
     }
 
     private async Task<CommentDisplayModel> BuildCommentDisplayModel(Comment comment)

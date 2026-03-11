@@ -162,6 +162,9 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
+                // Clean up expired notifications before retrieving the list
+                await DeleteExpiredNotificationsAsync();
+
                 using var context = await _contextFactory.CreateDbContextAsync();
 
                 var query = context.UserNotifications
@@ -194,6 +197,9 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
+                // Clean up expired notifications before counting
+                await DeleteExpiredNotificationsAsync();
+
                 using var context = await _contextFactory.CreateDbContextAsync();
 
                 return await context.UserNotifications
@@ -203,6 +209,29 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting unread count for user {UserId}", userId);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Get total notification count for a user
+        /// </summary>
+        public async Task<int> GetTotalCountAsync(string userId)
+        {
+            try
+            {
+                // Clean up expired notifications before counting
+                await DeleteExpiredNotificationsAsync();
+
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.UserNotifications
+                    .Where(n => n.UserId == userId)
+                    .CountAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting total count for user {UserId}", userId);
                 return 0;
             }
         }

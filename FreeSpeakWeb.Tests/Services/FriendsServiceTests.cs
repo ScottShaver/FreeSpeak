@@ -2,18 +2,39 @@ using FluentAssertions;
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Services;
 using FreeSpeakWeb.Tests.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
 namespace FreeSpeakWeb.Tests.Services
 {
     public class FriendsServiceTests : TestBase
     {
+        private static NotificationService CreateMockNotificationService()
+        {
+            var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
+            var logger = new Mock<ILogger<NotificationService>>();
+            var scopeFactory = new Mock<IServiceScopeFactory>();
+            return new NotificationService(dbFactory.Object, logger.Object, scopeFactory.Object);
+        }
+
+        private static UserPreferenceService CreateMockUserPreferenceService()
+        {
+            var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
+            var logger = new Mock<ILogger<UserPreferenceService>>();
+            return new UserPreferenceService(dbFactory.Object, logger.Object);
+        }
+
         [Fact]
         public async Task SendFriendRequestAsync_WithValidUsers_ShouldCreatePendingFriendship()
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("FriendsTest1");
-            var service = new FriendsService(dbFactory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(dbFactory, notificationService, userPreferenceService);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1", userName: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2", userName: "user2");
@@ -46,7 +67,9 @@ namespace FreeSpeakWeb.Tests.Services
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("FriendsTest2");
-            var service = new FriendsService(dbFactory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(dbFactory, notificationService, userPreferenceService);
 
             // Act
             var (success, errorMessage) = await service.SendFriendRequestAsync("user1", "user1");
@@ -61,7 +84,9 @@ namespace FreeSpeakWeb.Tests.Services
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("FriendsTest3");
-            var service = new FriendsService(dbFactory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(dbFactory, notificationService, userPreferenceService);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -87,7 +112,9 @@ namespace FreeSpeakWeb.Tests.Services
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("FriendsTest4");
-            var service = new FriendsService(dbFactory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(dbFactory, notificationService, userPreferenceService);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -127,7 +154,9 @@ namespace FreeSpeakWeb.Tests.Services
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("FriendsTest5");
-            var service = new FriendsService(dbFactory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(dbFactory, notificationService, userPreferenceService);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -160,7 +189,9 @@ namespace FreeSpeakWeb.Tests.Services
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("FriendsTest6");
-            var service = new FriendsService(dbFactory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(dbFactory, notificationService, userPreferenceService);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1", userName: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2", userName: "user2");
@@ -191,7 +222,9 @@ namespace FreeSpeakWeb.Tests.Services
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("FriendsTest7");
-            var service = new FriendsService(dbFactory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(dbFactory, notificationService, userPreferenceService);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -216,7 +249,9 @@ namespace FreeSpeakWeb.Tests.Services
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("FriendsTest8");
-            var service = new FriendsService(dbFactory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(dbFactory, notificationService, userPreferenceService);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -241,7 +276,9 @@ namespace FreeSpeakWeb.Tests.Services
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("FriendsTest9");
-            var service = new FriendsService(dbFactory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(dbFactory, notificationService, userPreferenceService);
 
             var currentUser = TestDataFactory.CreateTestUser(id: "current", userName: "current");
             var user1 = TestDataFactory.CreateTestUser(id: "user1", userName: "john", firstName: "John", lastName: "Doe");
@@ -268,7 +305,9 @@ namespace FreeSpeakWeb.Tests.Services
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("FriendsTest10");
-            var service = new FriendsService(dbFactory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(dbFactory, notificationService, userPreferenceService);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -297,7 +336,9 @@ namespace FreeSpeakWeb.Tests.Services
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("FriendsTest11");
-            var service = new FriendsService(dbFactory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(dbFactory, notificationService, userPreferenceService);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -328,7 +369,9 @@ namespace FreeSpeakWeb.Tests.Services
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("FriendsTest12");
-            var service = new FriendsService(dbFactory);
+            var notificationService = CreateMockNotificationService();
+            var userPreferenceService = CreateMockUserPreferenceService();
+            var service = new FriendsService(dbFactory, notificationService, userPreferenceService);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
