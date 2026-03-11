@@ -86,6 +86,9 @@ namespace FreeSpeakWeb
             // Add NotificationBadgeService for badge polling and management
             builder.Services.AddScoped<NotificationBadgeService>();
 
+            // Add NotificationCleanupService as a background service for periodic cleanup
+            builder.Services.AddHostedService<NotificationCleanupService>();
+
             // Add ThemeService for color scheme management
             builder.Services.AddScoped<ThemeService>();
 

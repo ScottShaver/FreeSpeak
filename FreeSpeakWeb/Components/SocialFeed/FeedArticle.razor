@@ -4,6 +4,7 @@
 @using FreeSpeakWeb.Services
 @inject IJSRuntime JS
 @inject PostService PostService
+@inject NavigationManager NavigationManager
 @inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
 @implements IAsyncDisposable
 
@@ -302,6 +303,9 @@
     private bool hasLocalAudienceChange = false;
     private bool hasLocalPinnedChange = false;
 
+    // Notification mute state
+    private bool isNotificationMuted = false;
+
     private bool showReactionPicker = false;
     private bool showLikesModal = false;
     private bool isLoadingLikes = false;
@@ -403,7 +407,6 @@
 
     private void ToggleMenu()
     {
-        Console.WriteLine($"ToggleMenu called, showMenu={showMenu}, PostId={PostId}");
         if (showMenu)
         {
             CloseMenu();
@@ -413,20 +416,16 @@
             BuildMenuItems();
             showMenu = true;
             menuPositionStyle = "right: 0; top: 40px;";
-            Console.WriteLine($"Menu opened, menuItems count: {menuItems.Count}");
             StateHasChanged();
         }
     }
 
     private void BuildMenuItems()
     {
-        Console.WriteLine($"BuildMenuItems called for PostId {PostId}, IsOwnPost={IsOwnPost}, IsModalView={IsModalView}");
         menuItems.Clear();
 
         if (IsOwnPost)
         {
-            Console.WriteLine("Building menu items for own post");
-
             // In modal view, only show Pin and Copy Link for own posts
             if (IsModalView)
             {
@@ -438,13 +437,16 @@
                     OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
                 });
 
-                // Copy Link
-                menuItems.Add(new PopupMenu.PopupMenuItem
+                // Copy Link - only for public posts
+                if (currentAudienceType == AudienceType.Public)
                 {
-                    Text = "Copy Link",
-                    Icon = "bi bi-link-45deg",
-                    OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Copy Link"))
-                });
+                    menuItems.Add(new PopupMenu.PopupMenuItem
+                    {
+                        Text = "Copy Link",
+                        Icon = "bi bi-link-45deg",
+                        OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
+                    });
+                }
             }
             else
             {
@@ -455,7 +457,6 @@
                     Icon = "bi bi-pencil",
                     OnClick = EventCallback.Factory.Create(this, async () => await HandleEditPostClick())
                 });
-                Console.WriteLine("Edit Post menu item added");
 
                 // Pin/Unpin Post - changes based on current state
                 menuItems.Add(new PopupMenu.PopupMenuItem
@@ -474,9 +475,9 @@
 
                 menuItems.Add(new PopupMenu.PopupMenuItem
                 {
-                    Text = "Turn Off Notifications",
-                    Icon = "bi bi-bell-slash",
-                    OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Turn Off Notifications"))
+                    Text = isNotificationMuted ? "Turn On Notifications" : "Turn Off Notifications",
+                    Icon = isNotificationMuted ? "bi bi-bell" : "bi bi-bell-slash",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandleToggleNotificationsClick())
                 });
 
                 menuItems.Add(new PopupMenu.PopupMenuItem
@@ -486,13 +487,16 @@
                     OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
                 });
 
-                // Copy Link appears for all posts
-                menuItems.Add(new PopupMenu.PopupMenuItem
+                // Copy Link - only for public posts
+                if (currentAudienceType == AudienceType.Public)
                 {
-                    Text = "Copy Link",
-                    Icon = "bi bi-link-45deg",
-                    OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Copy Link"))
-                });
+                    menuItems.Add(new PopupMenu.PopupMenuItem
+                    {
+                        Text = "Copy Link",
+                        Icon = "bi bi-link-45deg",
+                        OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
+                    });
+                }
             }
         }
         else if (!string.IsNullOrEmpty(CurrentUserId))
@@ -514,23 +518,29 @@
                 OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Report Post"))
             });
 
-            // Copy Link appears for all posts
-            menuItems.Add(new PopupMenu.PopupMenuItem
+            // Copy Link - only for public posts
+            if (currentAudienceType == AudienceType.Public)
             {
-                Text = "Copy Link",
-                Icon = "bi bi-link-45deg",
-                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Copy Link"))
-            });
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = "Copy Link",
+                    Icon = "bi bi-link-45deg",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
+                });
+            }
         }
         else
         {
-            // Copy Link appears for all posts (even when not logged in)
-            menuItems.Add(new PopupMenu.PopupMenuItem
+            // Copy Link - only for public posts (even when not logged in)
+            if (currentAudienceType == AudienceType.Public)
             {
-                Text = "Copy Link",
-                Icon = "bi bi-link-45deg",
-                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Copy Link"))
-            });
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = "Copy Link",
+                    Icon = "bi bi-link-45deg",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
+                });
+            }
         }
     }
 
@@ -704,17 +714,11 @@
 
     private async Task HandleEditPostClick()
     {
-        Console.WriteLine($"FeedArticle.HandleEditPostClick called for PostId: {PostId}");
         CloseMenu();
 
         if (OnEditPost.HasDelegate)
         {
-            Console.WriteLine("OnEditPost has delegate, invoking...");
             await OnEditPost.InvokeAsync(PostId);
-        }
-        else
-        {
-            Console.WriteLine("ERROR: OnEditPost has no delegate!");
         }
     }
 
@@ -735,6 +739,63 @@
             {
                 await OnPinPost.InvokeAsync(PostId);
             }
+        }
+    }
+
+    private async Task HandleCopyLink()
+    {
+        CloseMenu();
+
+        try
+        {
+            // Build the URL for the single post page
+            var baseUri = NavigationManager.BaseUri.TrimEnd('/');
+            var postUrl = $"{baseUri}/post/{PostId}";
+
+            // Copy to clipboard using JavaScript
+            await JS.InvokeVoidAsync("navigator.clipboard.writeText", postUrl);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error copying link: {ex.Message}");
+        }
+    }
+
+    private async Task HandleToggleNotificationsClick()
+    {
+        CloseMenu();
+
+        if (string.IsNullOrEmpty(CurrentUserId))
+        {
+            return; // User must be logged in to mute/unmute notifications
+        }
+
+        try
+        {
+            if (isNotificationMuted)
+            {
+                // Unmute notifications
+                var result = await PostService.UnmutePostNotificationsAsync(PostId, CurrentUserId);
+                if (result.Success)
+                {
+                    isNotificationMuted = false;
+                    StateHasChanged();
+                }
+            }
+            else
+            {
+                // Mute notifications
+                var result = await PostService.MutePostNotificationsAsync(PostId, CurrentUserId);
+                if (result.Success)
+                {
+                    isNotificationMuted = true;
+                    StateHasChanged();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error toggling notifications: {ex.Message}");
         }
     }
 
@@ -836,17 +897,34 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && !IsModalView)
+        if (firstRender)
         {
-            try
+            // Check if notifications are muted for this post
+            if (!string.IsNullOrEmpty(CurrentUserId))
             {
-                module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/FeedArticle.razor.js");
-                dotNetHelper = DotNetObjectReference.Create(this);
-                await module.InvokeVoidAsync("initializeContentMeasurement", contentElement, dotNetHelper);
+                try
+                {
+                    isNotificationMuted = await PostService.IsPostNotificationMutedAsync(PostId, CurrentUserId);
+                    StateHasChanged();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error checking notification mute status: {ex.Message}");
+                }
             }
-            catch (Exception ex)
+
+            if (!IsModalView)
             {
-                Console.WriteLine($"Error initializing content measurement: {ex.Message}");
+                try
+                {
+                    module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/FeedArticle.razor.js");
+                    dotNetHelper = DotNetObjectReference.Create(this);
+                    await module.InvokeVoidAsync("initializeContentMeasurement", contentElement, dotNetHelper);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error initializing content measurement: {ex.Message}");
+                }
             }
         }
     }

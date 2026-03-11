@@ -30,16 +30,9 @@
 
     private async Task HandleItemClick(PopupMenuItem item)
     {
-        Console.WriteLine($"PopupMenu.HandleItemClick called for item: {item.Text}, HasDelegate: {item.OnClick.HasDelegate}");
         if (item.OnClick.HasDelegate)
         {
-            Console.WriteLine($"Invoking OnClick for item: {item.Text}");
             await item.OnClick.InvokeAsync();
-            Console.WriteLine($"OnClick completed for item: {item.Text}");
-        }
-        else
-        {
-            Console.WriteLine($"ERROR: No delegate for item: {item.Text}");
         }
         await Close();
     }

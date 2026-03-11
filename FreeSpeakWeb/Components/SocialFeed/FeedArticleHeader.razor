@@ -116,8 +116,10 @@
             <span class="header-stat-count">@ShareCount</span>
         </div>
     </div>
-    <div style="position: relative;">
-        <button type="button" class="menu-button" @onclick="ToggleMenu">
+    <div style="position: relative; z-index: 10;">
+        <button type="button" 
+                class="menu-button" 
+                @onclick="ToggleMenu">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
             </svg>

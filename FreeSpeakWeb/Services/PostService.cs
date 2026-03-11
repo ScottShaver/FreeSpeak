@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Components.SocialFeed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -259,6 +260,28 @@ namespace FreeSpeakWeb.Services
                 {
                     context.PinnedPosts.RemoveRange(pinnedPosts);
                     _logger.LogInformation("Deleted {Count} pinned post record(s) for post {PostId}", pinnedPosts.Count, postId);
+                }
+
+                // Delete all post notification mute records
+                var mutedNotifications = await context.PostNotificationMutes
+                    .Where(m => m.PostId == postId)
+                    .ToListAsync();
+
+                if (mutedNotifications.Any())
+                {
+                    context.PostNotificationMutes.RemoveRange(mutedNotifications);
+                    _logger.LogInformation("Deleted {Count} notification mute record(s) for post {PostId}", mutedNotifications.Count, postId);
+                }
+
+                // Delete all notifications related to this post (check Data field for PostId)
+                var relatedNotifications = await context.UserNotifications
+                    .Where(n => n.Data != null && n.Data.Contains($"\"PostId\":{postId}"))
+                    .ToListAsync();
+
+                if (relatedNotifications.Any())
+                {
+                    context.UserNotifications.RemoveRange(relatedNotifications);
+                    _logger.LogInformation("Deleted {Count} notification(s) related to post {PostId}", relatedNotifications.Count, postId);
                 }
 
                 // Delete all comment likes first (cascade from comments)
@@ -537,6 +560,124 @@ namespace FreeSpeakWeb.Services
             }
         }
 
+        /// <summary>
+        /// Get a single public post by ID with all its details (for direct links)
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage, PostViewModel? Data)> GetPublicPostByIdAsync(int postId, string? currentUserId = null)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Get the post with all its includes
+                var post = await context.Posts
+                    .Include(p => p.Author)
+                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
+                    .FirstOrDefaultAsync(p => p.Id == postId);
+
+                // Check if post exists
+                if (post == null)
+                {
+                    return (false, "Sorry, this post is no longer available.", null);
+                }
+
+                // Check if post is public
+                if (post.AudienceType != AudienceType.Public)
+                {
+                    return (false, "Sorry, this post is no longer available.", null);
+                }
+
+                // Build the PostViewModel
+                var postViewModel = new PostViewModel
+                {
+                    PostId = post.Id,
+                    AuthorId = post.AuthorId,
+                    AuthorName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                        post.Author.Id,
+                        post.Author.FirstName ?? string.Empty,
+                        post.Author.LastName ?? string.Empty,
+                        post.Author.UserName ?? "Unknown"
+                    ),
+                    AuthorImageUrl = post.Author.ProfilePictureUrl,
+                    CreatedAt = post.CreatedAt,
+                    Content = post.Content,
+                    LikeCount = post.LikeCount,
+                    CommentCount = post.CommentCount,
+                    ShareCount = post.ShareCount,
+                    AudienceType = post.AudienceType,
+                    Images = post.Images?.ToList() ?? new List<PostImage>()
+                };
+
+                // Get reaction breakdown
+                postViewModel.ReactionBreakdown = await GetReactionBreakdownAsync(postId);
+
+                // Get user's reaction if logged in
+                if (!string.IsNullOrEmpty(currentUserId))
+                {
+                    postViewModel.UserReaction = await GetUserReactionAsync(postId, currentUserId);
+                    postViewModel.IsPinned = await IsPostPinnedAsync(postId, currentUserId);
+                }
+
+                // Get direct comment count
+                postViewModel.DirectCommentCount = await GetDirectCommentCountAsync(postId);
+
+                // Get comments
+                var comments = await GetCommentsAsync(postId);
+                var commentModels = new List<CommentDisplayModel>();
+
+                foreach (var comment in comments)
+                {
+                    var commentModel = await BuildCommentDisplayModelAsync(comment, currentUserId);
+                    commentModels.Add(commentModel);
+                }
+
+                postViewModel.Comments = commentModels;
+
+                return (true, null, postViewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving public post {PostId}", postId);
+                return (false, "An error occurred while loading this post.", null);
+            }
+        }
+
+        /// <summary>
+        /// Helper method to build CommentDisplayModel from Comment entity
+        /// </summary>
+        private async Task<CommentDisplayModel> BuildCommentDisplayModelAsync(Comment comment, string? currentUserId)
+        {
+            // Load replies for this comment
+            var replies = await GetRepliesAsync(comment.Id);
+            var replyModels = new List<CommentDisplayModel>();
+
+            foreach (var reply in replies)
+            {
+                var replyModel = await BuildCommentDisplayModelAsync(reply, currentUserId);
+                replyModels.Add(replyModel);
+            }
+
+            return new CommentDisplayModel
+            {
+                CommentId = comment.Id,
+                UserName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                    comment.Author.Id,
+                    comment.Author.FirstName ?? string.Empty,
+                    comment.Author.LastName ?? string.Empty,
+                    comment.Author.UserName ?? "Unknown"
+                ),
+                UserImageUrl = comment.Author?.ProfilePictureUrl,
+                CommentAuthorId = comment.AuthorId,
+                CommentText = comment.Content,
+                ImageUrl = comment.ImageUrl,
+                Timestamp = comment.CreatedAt,
+                Replies = replyModels.Any() ? replyModels : null,
+                LikeCount = await GetCommentLikeCountAsync(comment.Id),
+                UserReaction = !string.IsNullOrEmpty(currentUserId) ? await GetUserCommentReactionAsync(comment.Id, currentUserId) : null,
+                ReactionBreakdown = await GetCommentReactionBreakdownAsync(comment.Id)
+            };
+        }
+
         #endregion
 
         #region Comment Operations
@@ -621,25 +762,32 @@ namespace FreeSpeakWeb.Services
                         // Reply to a comment - notify the parent comment author
                         if (parentComment != null && parentComment.AuthorId != authorId)
                         {
-                            var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
-                                commenter.Id,
-                                commenter.FirstName ?? string.Empty,
-                                commenter.LastName ?? string.Empty,
-                                commenter.UserName ?? "User"
-                            );
-                            var message = $"<strong>{formattedName}</strong> replied to your comment";
-                            await _notificationService.CreateNotificationAsync(
-                                parentComment.AuthorId,
-                                NotificationType.CommentReply,
-                                message,
-                                new { 
-                                    PostId = postId, 
-                                    CommentId = comment.Id, 
-                                    CommenterId = authorId,
-                                    CommenterName = formattedName,
-                                    CommenterProfilePicture = commenter.ProfilePictureUrl
-                                }
-                            );
+                            // Check if the parent comment author has muted notifications for this post
+                            var isMuted = await context.PostNotificationMutes
+                                .AnyAsync(m => m.PostId == postId && m.UserId == parentComment.AuthorId);
+
+                            if (!isMuted)
+                            {
+                                var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                                    commenter.Id,
+                                    commenter.FirstName ?? string.Empty,
+                                    commenter.LastName ?? string.Empty,
+                                    commenter.UserName ?? "User"
+                                );
+                                var message = $"<strong>{formattedName}</strong> replied to your comment";
+                                await _notificationService.CreateNotificationAsync(
+                                    parentComment.AuthorId,
+                                    NotificationType.CommentReply,
+                                    message,
+                                    new { 
+                                        PostId = postId, 
+                                        CommentId = comment.Id, 
+                                        CommenterId = authorId,
+                                        CommenterName = formattedName,
+                                        CommenterProfilePicture = commenter.ProfilePictureUrl
+                                    }
+                                );
+                            }
                         }
                     }
                     else
@@ -647,25 +795,32 @@ namespace FreeSpeakWeb.Services
                         // Direct comment on post - notify the post author
                         if (post.AuthorId != authorId)
                         {
-                            var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
-                                commenter.Id,
-                                commenter.FirstName ?? string.Empty,
-                                commenter.LastName ?? string.Empty,
-                                commenter.UserName ?? "User"
-                            );
-                            var message = $"<strong>{formattedName}</strong> commented on your post";
-                            await _notificationService.CreateNotificationAsync(
-                                post.AuthorId,
-                                NotificationType.PostComment,
-                                message,
-                                new { 
-                                    PostId = postId, 
-                                    CommentId = comment.Id, 
-                                    CommenterId = authorId,
-                                    CommenterName = formattedName,
-                                    CommenterProfilePicture = commenter.ProfilePictureUrl
-                                }
-                            );
+                            // Check if the post author has muted notifications for this post
+                            var isMuted = await context.PostNotificationMutes
+                                .AnyAsync(m => m.PostId == postId && m.UserId == post.AuthorId);
+
+                            if (!isMuted)
+                            {
+                                var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                                    commenter.Id,
+                                    commenter.FirstName ?? string.Empty,
+                                    commenter.LastName ?? string.Empty,
+                                    commenter.UserName ?? "User"
+                                );
+                                var message = $"<strong>{formattedName}</strong> commented on your post";
+                                await _notificationService.CreateNotificationAsync(
+                                    post.AuthorId,
+                                    NotificationType.PostComment,
+                                    message,
+                                    new { 
+                                        PostId = postId, 
+                                        CommentId = comment.Id, 
+                                        CommenterId = authorId,
+                                        CommenterName = formattedName,
+                                        CommenterProfilePicture = commenter.ProfilePictureUrl
+                                    }
+                                );
+                            }
                         }
                     }
                 }
@@ -1017,30 +1172,37 @@ namespace FreeSpeakWeb.Services
                 // Don't notify if user is reacting to their own post
                 if (isNewReaction && post.AuthorId != userId)
                 {
-                    var reactor = await context.Users.FindAsync(userId);
-                    if (reactor != null)
-                    {
-                        var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
-                            reactor.Id,
-                            reactor.FirstName ?? string.Empty,
-                            reactor.LastName ?? string.Empty,
-                            reactor.UserName ?? "User"
-                        );
-                        var reactionText = reactionType.ToString().ToLower();
-                        var message = $"<strong>{formattedName}</strong> reacted to your post with {reactionText}";
+                    // Check if the post author has muted notifications for this post
+                    var isMuted = await context.PostNotificationMutes
+                        .AnyAsync(m => m.PostId == postId && m.UserId == post.AuthorId);
 
-                        await _notificationService.CreateNotificationAsync(
-                            post.AuthorId,
-                            NotificationType.PostLiked,
-                            message,
-                            new { 
-                                PostId = postId, 
-                                ReactorId = userId, 
-                                ReactorName = formattedName,
-                                ReactorProfilePicture = reactor.ProfilePictureUrl,
-                                ReactionType = reactionType.ToString() 
-                            }
-                        );
+                    if (!isMuted)
+                    {
+                        var reactor = await context.Users.FindAsync(userId);
+                        if (reactor != null)
+                        {
+                            var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                                reactor.Id,
+                                reactor.FirstName ?? string.Empty,
+                                reactor.LastName ?? string.Empty,
+                                reactor.UserName ?? "User"
+                            );
+                            var reactionText = reactionType.ToString().ToLower();
+                            var message = $"<strong>{formattedName}</strong> reacted to your post with {reactionText}";
+
+                            await _notificationService.CreateNotificationAsync(
+                                post.AuthorId,
+                                NotificationType.PostLiked,
+                                message,
+                                new { 
+                                    PostId = postId, 
+                                    ReactorId = userId, 
+                                    ReactorName = formattedName,
+                                    ReactorProfilePicture = reactor.ProfilePictureUrl,
+                                    ReactionType = reactionType.ToString() 
+                                }
+                            );
+                        }
                     }
                 }
 
@@ -1324,31 +1486,38 @@ namespace FreeSpeakWeb.Services
                 // Don't notify if user is reacting to their own comment
                 if (isNewReaction && comment.AuthorId != userId)
                 {
-                    var reactor = await context.Users.FindAsync(userId);
-                    if (reactor != null)
-                    {
-                        var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
-                            reactor.Id,
-                            reactor.FirstName ?? string.Empty,
-                            reactor.LastName ?? string.Empty,
-                            reactor.UserName ?? "User"
-                        );
-                        var reactionText = reactionType.ToString().ToLower();
-                        var message = $"<strong>{formattedName}</strong> reacted to your comment with {reactionText}";
+                    // Check if the comment author has muted notifications for this post
+                    var isMuted = await context.PostNotificationMutes
+                        .AnyAsync(m => m.PostId == comment.PostId && m.UserId == comment.AuthorId);
 
-                        await _notificationService.CreateNotificationAsync(
-                            comment.AuthorId,
-                            NotificationType.CommentLiked,
-                            message,
-                            new { 
-                                PostId = comment.PostId, 
-                                CommentId = commentId, 
-                                ReactorId = userId,
-                                ReactorName = formattedName,
-                                ReactorProfilePicture = reactor.ProfilePictureUrl,
-                                ReactionType = reactionType.ToString() 
-                            }
-                        );
+                    if (!isMuted)
+                    {
+                        var reactor = await context.Users.FindAsync(userId);
+                        if (reactor != null)
+                        {
+                            var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                                reactor.Id,
+                                reactor.FirstName ?? string.Empty,
+                                reactor.LastName ?? string.Empty,
+                                reactor.UserName ?? "User"
+                            );
+                            var reactionText = reactionType.ToString().ToLower();
+                            var message = $"<strong>{formattedName}</strong> reacted to your comment with {reactionText}";
+
+                            await _notificationService.CreateNotificationAsync(
+                                comment.AuthorId,
+                                NotificationType.CommentLiked,
+                                message,
+                                new { 
+                                    PostId = comment.PostId, 
+                                    CommentId = commentId, 
+                                    ReactorId = userId,
+                                    ReactorName = formattedName,
+                                    ReactorProfilePicture = reactor.ProfilePictureUrl,
+                                    ReactionType = reactionType.ToString() 
+                                }
+                            );
+                        }
                     }
                 }
 
@@ -1606,6 +1775,105 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogError(ex, "Error getting pinned posts for user {UserId}", userId);
                 return new List<Post>();
+            }
+        }
+
+        #endregion
+
+        #region Post Notification Muting
+
+        /// <summary>
+        /// Mute notifications for a specific post
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> MutePostNotificationsAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Check if post exists
+                var postExists = await context.Posts.AnyAsync(p => p.Id == postId);
+                if (!postExists)
+                {
+                    return (false, "Post not found.");
+                }
+
+                // Check if already muted
+                var alreadyMuted = await context.PostNotificationMutes
+                    .AnyAsync(m => m.PostId == postId && m.UserId == userId);
+
+                if (alreadyMuted)
+                {
+                    return (true, null); // Already muted, consider it successful
+                }
+
+                // Create mute entry
+                var mute = new PostNotificationMute
+                {
+                    PostId = postId,
+                    UserId = userId,
+                    MutedAt = DateTime.UtcNow
+                };
+
+                context.PostNotificationMutes.Add(mute);
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("User {UserId} muted notifications for post {PostId}", userId, postId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error muting notifications for post {PostId} for user {UserId}", postId, userId);
+                return (false, "An error occurred while muting notifications.");
+            }
+        }
+
+        /// <summary>
+        /// Unmute notifications for a specific post
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> UnmutePostNotificationsAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var mute = await context.PostNotificationMutes
+                    .FirstOrDefaultAsync(m => m.PostId == postId && m.UserId == userId);
+
+                if (mute == null)
+                {
+                    return (true, null); // Not muted, consider it successful
+                }
+
+                context.PostNotificationMutes.Remove(mute);
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("User {UserId} unmuted notifications for post {PostId}", userId, postId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error unmuting notifications for post {PostId} for user {UserId}", postId, userId);
+                return (false, "An error occurred while unmuting notifications.");
+            }
+        }
+
+        /// <summary>
+        /// Check if a user has muted notifications for a specific post
+        /// </summary>
+        public async Task<bool> IsPostNotificationMutedAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.PostNotificationMutes
+                    .AnyAsync(m => m.PostId == postId && m.UserId == userId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking if post {PostId} notifications are muted for user {UserId}", postId, userId);
+                return false;
             }
         }
 

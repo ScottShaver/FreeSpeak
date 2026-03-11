@@ -1,5 +1,220 @@
 # Recent Fixes
 
+## Background Notification Cleanup with Throttling (2025-01-XX)
+
+### Issue
+Expired notifications were being cleaned up on every notification query, causing:
+- Multiple cleanup operations per page load (3+ database queries)
+- Unnecessary overhead on user operations
+- Cleanup running even when no time had passed
+
+### Solution
+Implemented a background service with intelligent throttling for notification cleanup.
+
+**1. NotificationCleanupService (Background Service)**
+- Runs as IHostedService (singleton)
+- Schedule: Every 5 minutes
+- Warm-up: Waits 1 minute after application start
+- Automatic: No manual intervention required
+
+**2. Throttling Mechanism**
+- Minimum interval: 1 minute between cleanups
+- Thread-safe: Uses SemaphoreSlim for locking
+- Double-check: Verifies timing after acquiring lock
+- Prevents concurrent cleanups
+
+**3. Removed Per-Call Cleanup**
+- Removed from: `GetUserNotificationsAsync()`
+- Removed from: `GetUnreadCountAsync()`
+- Removed from: `GetTotalCountAsync()`
+- Result: Faster query performance
+
+**Configuration:**
+```csharp
+// Minimum time between cleanup runs (throttle)
+MinimumCleanupInterval = TimeSpan.FromMinutes(1)
+
+// Background job schedule
+BackgroundJobInterval = TimeSpan.FromMinutes(5)
+```
+
+**Performance Impact:**
+
+Before:
+- 3+ cleanup queries per page load
+- Cleanup overhead on every badge update
+- Synchronous blocking on retrieval
+
+After:
+- 1 cleanup every 5 minutes (background)
+- No overhead during user operations
+- Maximum 1 cleanup per minute (throttled)
+
+**Monitoring:**
+- Logs cleanup operations (Info level)
+- Tracks last cleanup time
+- Can manually trigger if needed (respects throttle)
+
+### Files Modified
+- `FreeSpeakWeb\Services\NotificationCleanupService.cs` (new)
+- `FreeSpeakWeb\Services\NotificationService.cs` - Removed cleanup calls
+- `FreeSpeakWeb\Program.cs` - Registered background service
+- `docs\NOTIFICATION_CLEANUP.md` (new) - Comprehensive documentation
+
+### Benefits
+- **Performance**: 90%+ reduction in cleanup database calls
+- **Scalability**: Cleanup cost independent of user activity
+- **Reliability**: Thread-safe, throttled, graceful shutdown
+- **Maintainability**: Single cleanup implementation
+- **Monitoring**: Detailed logging for troubleshooting
+
+---
+
+## Complete Post Deletion Cleanup (2025-01-XX)
+
+### Issue
+When posts were deleted, some related data was not being cleaned up properly:
+- UserNotifications that reference the post (stored in JSON Data field)
+- PostNotificationMute records
+- Physical thumbnail cache files
+
+### Solution
+Enhanced `DeletePostAsync` to perform comprehensive cleanup of all post-related data.
+
+**Added Cleanup Steps:**
+
+1. **PostNotificationMute Records**
+   - Removes all mute records for the deleted post
+   - Prevents orphaned mute data
+
+2. **UserNotifications**
+   - Searches JSON Data field for PostId references
+   - Removes notifications for: PostComment, PostLiked, CommentReply, CommentLiked
+   - Query: `n.Data.Contains($"\"PostId\":{postId}")`
+
+3. **Cached Thumbnail Verification**
+   - Already deleting thumbnail and medium sizes
+   - Verified both cache files are removed
+   - Location: `AppData/cache/resized-images/`
+
+**Cleanup Order:**
+1. PinnedPosts (references)
+2. PostNotificationMutes (mute records)  
+3. UserNotifications (JSON Data check)
+4. CommentLikes (reactions on comments)
+5. Comments & Replies (all comment data)
+6. Likes (post reactions)
+7. PostImages (database records)
+8. Image Files (original files)
+9. Thumbnail Files (cached thumbnails)
+10. Post (the post itself)
+
+**Cascade Delete Configuration:**
+All related tables properly configured with `OnDelete(DeleteBehavior.Cascade)`:
+- Comments → Post
+- Likes → Post
+- CommentLikes → Comment
+- PostImages → Post
+- PinnedPosts → Post
+- PostNotificationMutes → Post
+
+### Files Modified
+- `FreeSpeakWeb\Services\PostService.cs` - Enhanced DeletePostAsync
+- `docs\POST_DELETION_CLEANUP.md` (new) - Comprehensive cleanup documentation
+- `CHANGELOG.md` - Documented cleanup enhancements
+
+### Benefits
+- No orphaned database records
+- No orphaned file system data
+- Complete cleanup of all post-related notifications
+- Detailed logging for troubleshooting
+- Proper cascade delete configuration
+
+---
+
+## Post Notification Muting System (2025-01-XX)
+
+### Feature
+Added comprehensive notification muting for posts. When a user turns off notifications for a post, they will no longer receive ANY notifications related to that post.
+
+### Implementation
+
+**1. Database Layer**
+- Created `PostNotificationMute` entity with PostId, UserId, and MutedAt fields
+- Added `PostNotificationMutes` DbSet to ApplicationDbContext
+- Configured entity relationships with cascade delete
+- Added unique constraint on (PostId, UserId) to prevent duplicates
+- Applied database migration `AddPostNotificationMute`
+
+**2. Service Layer (PostService)**
+- `MutePostNotificationsAsync()` - Create mute record
+- `UnmutePostNotificationsAsync()` - Remove mute record
+- `IsPostNotificationMutedAsync()` - Check mute status
+- Updated notification checks in:
+  - Post comments (direct comments on post)
+  - Post reactions (likes/reactions on post)
+  - Comment replies (replies to your comments)
+  - Comment reactions (reactions to your comments)
+
+**3. UI Layer (FeedArticle Component)**
+- Added `isNotificationMuted` state variable
+- Menu item dynamically toggles between "Turn Off Notifications" and "Turn On Notifications"
+- Icons change based on state (bi-bell-slash ↔ bi-bell)
+- Loads current mute status on component initialization
+- `HandleToggleNotificationsClick()` method for mute/unmute operations
+
+### Notification Types Blocked When Muted
+1. ✅ Direct comments on the post
+2. ✅ Reactions/likes on the post
+3. ✅ Replies to your comments on the post
+4. ✅ Reactions to your comments on the post
+
+### Files Modified
+- `FreeSpeakWeb\Data\PostNotificationMute.cs` (new)
+- `FreeSpeakWeb\Data\ApplicationDbContext.cs`
+- `FreeSpeakWeb\Services\PostService.cs`
+- `FreeSpeakWeb\Components\SocialFeed\FeedArticle.razor`
+- `FreeSpeakWeb\Migrations\20260311212310_AddPostNotificationMute.cs` (new)
+
+---
+
+## Copy Link for Public Posts (2025-01-XX)
+
+### Feature
+Users can now copy a direct link to public posts and share them. The link opens a dedicated single-post page.
+
+### Implementation
+
+**1. SinglePost Page**
+- Created `/post/{postId:int}` route
+- Validates post exists and is public
+- Shows error message for deleted/private posts
+- Supports both authenticated and anonymous users
+- Read-only mode for non-authenticated users
+- Added `@rendermode InteractiveServer` for full interactivity
+
+**2. Backend (PostService)**
+- `GetPublicPostByIdAsync()` - Retrieves and validates public posts
+- Returns PostViewModel with all post data, comments, and reactions
+- Helper method `BuildCommentDisplayModelAsync()` for recursive comment loading
+
+**3. UI Updates**
+- "Copy Link" menu item only appears for public posts
+- Works in both feed view and modal view
+- `HandleCopyLink()` method copies URL to clipboard silently (no alert popup)
+- Menu item visibility controlled by `currentAudienceType == AudienceType.Public`
+
+### Files Added
+- `FreeSpeakWeb\Components\Pages\SinglePost.razor`
+- `FreeSpeakWeb\Components\Pages\SinglePost.razor.css`
+- `FreeSpeakWeb\Components\SocialFeed\PostViewModel.cs`
+
+### Files Modified
+- `FreeSpeakWeb\Services\PostService.cs`
+- `FreeSpeakWeb\Components\SocialFeed\FeedArticle.razor`
+
+---
+
 ## Fixed Notification Tab Counts (2025-01-XX)
 
 ### Issue

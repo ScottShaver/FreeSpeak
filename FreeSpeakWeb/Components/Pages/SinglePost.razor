@@ -1,0 +1,270 @@
+@page "/post/{postId:int}"
+@rendermode InteractiveServer
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.SocialFeed
+@using Microsoft.AspNetCore.Authorization
+@inject PostService PostService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HtmlSanitizationService HtmlSanitizationService
+@attribute [AllowAnonymous]
+
+<PageTitle>@pageTitle</PageTitle>
+
+<div class="single-post-container">
+    @if (isLoading)
+    {
+        <div class="loading-container">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p>Loading post...</p>
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error-container">
+            <div class="alert alert-warning" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <h4>Post Not Available</h4>
+                <p>@errorMessage</p>
+                <button type="button" class="btn btn-primary mt-3" @onclick="NavigateHome">
+                    <i class="bi bi-house-door"></i> Go to Home
+                </button>
+            </div>
+        </div>
+    }
+    else if (post != null)
+    {
+        <div class="single-post-wrapper">
+            <FeedArticle 
+                PostId="@post.PostId"
+                AuthorId="@post.AuthorId"
+                AuthorName="@post.AuthorName"
+                AuthorImageUrl="@post.AuthorImageUrl"
+                CurrentUserId="@currentUserId"
+                CreatedAt="@post.CreatedAt"
+                LikeCount="@post.LikeCount"
+                CommentCount="@post.CommentCount"
+                ShareCount="@post.ShareCount"
+                DirectCommentCount="@post.DirectCommentCount"
+                Comments="@post.Comments"
+                CurrentUserImageUrl="@currentUserImageUrl"
+                CurrentUserName="@currentUserName"
+                ReactionBreakdown="@post.ReactionBreakdown"
+                UserReaction="@post.UserReaction"
+                AudienceType="@post.AudienceType"
+                IsPinned="@post.IsPinned"
+                Images="@post.Images"
+                IsModalView="true"
+                IsReadOnly="@(string.IsNullOrEmpty(currentUserId))"
+                OnReactionChanged="@HandleReactionChanged"
+                OnRemoveReaction="@HandleRemoveReaction"
+                OnCommentAdded="@HandleCommentAdded"
+                OnReplySubmitted="@HandleReplySubmitted"
+                OnCommentReactionChanged="@HandleCommentReactionChanged"
+                OnRemoveCommentReaction="@HandleRemoveCommentReaction"
+                OnPinPost="@HandlePinPost"
+                OnUnpinPost="@HandleUnpinPost">
+                <ArticleContent>
+                    @((MarkupString)HtmlSanitizationService.SanitizeAndFormatContent(post.Content))
+                </ArticleContent>
+            </FeedArticle>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int PostId { get; set; }
+
+    private PostViewModel? post;
+    private string? currentUserId;
+    private string? currentUserImageUrl;
+    private string? currentUserName;
+    private bool isLoading = true;
+    private string? errorMessage;
+    private string pageTitle = "Post";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Get current user information
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated == true)
+            {
+                currentUserId = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                currentUserName = user.Identity.Name;
+                // Note: You may need to add logic to get the user's image URL
+            }
+
+            // Attempt to load the post
+            var result = await PostService.GetPublicPostByIdAsync(PostId, currentUserId);
+
+            if (result.Success && result.Data != null)
+            {
+                post = result.Data;
+                pageTitle = $"Post by {post.AuthorName}";
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage ?? "Sorry, this post is no longer available.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading post: {ex.Message}");
+            errorMessage = "An error occurred while loading this post.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void NavigateHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+    private async Task HandleReactionChanged(LikeType reactionType)
+    {
+        if (post == null || string.IsNullOrEmpty(currentUserId)) return;
+
+        var result = await PostService.AddOrUpdateReactionAsync(post.PostId, currentUserId, reactionType);
+
+        if (result.Success)
+        {
+            // Reload the post to get updated reactions
+            var updatedPost = await PostService.GetPublicPostByIdAsync(PostId, currentUserId);
+            if (updatedPost.Success && updatedPost.Data != null)
+            {
+                post = updatedPost.Data;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task HandleRemoveReaction()
+    {
+        if (post == null || string.IsNullOrEmpty(currentUserId)) return;
+
+        var result = await PostService.RemoveLikeAsync(post.PostId, currentUserId);
+
+        if (result.Success)
+        {
+            // Reload the post to get updated reactions
+            var updatedPost = await PostService.GetPublicPostByIdAsync(PostId, currentUserId);
+            if (updatedPost.Success && updatedPost.Data != null)
+            {
+                post = updatedPost.Data;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task HandleCommentAdded((int PostId, string Content) commentData)
+    {
+        if (string.IsNullOrEmpty(currentUserId) || post == null) return;
+
+        var result = await PostService.AddCommentAsync(commentData.PostId, currentUserId, commentData.Content);
+
+        if (result.Success)
+        {
+            // Reload the post to get updated comments
+            var updatedPost = await PostService.GetPublicPostByIdAsync(PostId, currentUserId);
+            if (updatedPost.Success && updatedPost.Data != null)
+            {
+                post = updatedPost.Data;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task HandleReplySubmitted((int ParentCommentId, string Content) replyData)
+    {
+        if (string.IsNullOrEmpty(currentUserId) || post == null) return;
+
+        // AddCommentAsync handles both direct comments and replies via the parentCommentId parameter
+        var result = await PostService.AddCommentAsync(post.PostId, currentUserId, replyData.Content, null, replyData.ParentCommentId);
+
+        if (result.Success)
+        {
+            // Reload the post to get updated comments
+            var updatedPost = await PostService.GetPublicPostByIdAsync(PostId, currentUserId);
+            if (updatedPost.Success && updatedPost.Data != null)
+            {
+                post = updatedPost.Data;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task HandleCommentReactionChanged((int CommentId, LikeType ReactionType) reactionData)
+    {
+        if (string.IsNullOrEmpty(currentUserId) || post == null) return;
+
+        var result = await PostService.AddOrUpdateCommentReactionAsync(reactionData.CommentId, currentUserId, reactionData.ReactionType);
+
+        if (result.Success)
+        {
+            // Reload the post to get updated comment reactions
+            var updatedPost = await PostService.GetPublicPostByIdAsync(PostId, currentUserId);
+            if (updatedPost.Success && updatedPost.Data != null)
+            {
+                post = updatedPost.Data;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task HandleRemoveCommentReaction(int commentId)
+    {
+        if (string.IsNullOrEmpty(currentUserId) || post == null) return;
+
+        var result = await PostService.RemoveCommentReactionAsync(commentId, currentUserId);
+
+        if (result.Success)
+        {
+            // Reload the post to get updated comment reactions
+            var updatedPost = await PostService.GetPublicPostByIdAsync(PostId, currentUserId);
+            if (updatedPost.Success && updatedPost.Data != null)
+            {
+                post = updatedPost.Data;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task HandlePinPost(int postId)
+    {
+        if (string.IsNullOrEmpty(currentUserId) || post == null) return;
+
+        var result = await PostService.PinPostAsync(postId, currentUserId);
+
+        if (result.Success)
+        {
+            // Update the local pinned state
+            post.IsPinned = true;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleUnpinPost(int postId)
+    {
+        if (string.IsNullOrEmpty(currentUserId) || post == null) return;
+
+        var result = await PostService.UnpinPostAsync(postId, currentUserId);
+
+        if (result.Success)
+        {
+            // Update the local pinned state
+            post.IsPinned = false;
+            StateHasChanged();
+        }
+    }
+}
