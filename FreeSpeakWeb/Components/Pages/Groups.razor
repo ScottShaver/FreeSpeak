@@ -1,0 +1,1474 @@
+@page "/groups"
+@rendermode InteractiveServer
+@attribute [Authorize]
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Components.Shared
+@using System.Security.Claims
+@using Microsoft.JSInterop
+
+@implements IAsyncDisposable
+
+@inject IOptions<SiteSettings> SiteSettings
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject GroupPostService GroupPostService
+@inject PinnedGroupPostService PinnedGroupPostService
+@inject GroupService GroupService
+@inject GroupMemberService GroupMemberService
+@inject IJSRuntime JSRuntime
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationStateService NavigationState
+@inject UserPreferenceService UserPreferenceService
+@inject HtmlSanitizationService HtmlSanitizationService
+
+<PageTitle>@SiteSettings.Value.SiteName - Groups</PageTitle>
+
+<div class="home-container">
+    <!-- Tabbed Interface -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="group-feed-tab" data-bs-toggle="tab" data-bs-target="#group-feed-content" type="button" role="tab" aria-controls="group-feed-content" aria-selected="true" @onclick="OnGroupFeedTabClick">
+                My Group Feed
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pinned-group-tab" data-bs-toggle="tab" data-bs-target="#pinned-group-content" type="button" role="tab" aria-controls="pinned-group-content" aria-selected="false" @onclick="OnPinnedTabClick">
+                Pinned Group Posts
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="join-requests-tab" data-bs-toggle="tab" data-bs-target="#join-requests-content" type="button" role="tab" aria-controls="join-requests-content" aria-selected="false" @onclick="OnJoinRequestsTabClick">
+                Group Join Requests
+                @if (groupJoinRequests.Count > 0)
+                {
+                    <span class="badge bg-warning ms-1">@groupJoinRequests.Count</span>
+                }
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="find-groups-tab" data-bs-toggle="tab" data-bs-target="#find-groups-content" type="button" role="tab" aria-controls="find-groups-content" aria-selected="false">
+                Find Groups
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="suggested-groups-tab" data-bs-toggle="tab" data-bs-target="#suggested-groups-content" type="button" role="tab" aria-controls="suggested-groups-content" aria-selected="false" @onclick="OnSuggestedGroupsTabClick">
+                Groups You Might Like
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <!-- My Group Feed Tab -->
+        <div class="tab-pane fade show active" id="group-feed-content" role="tabpanel" aria-labelledby="group-feed-tab">
+            <div class="feed-section">
+                <!-- Group Filter Dropdown -->
+                <div class="group-filter-section">
+                    <label for="groupFilter" class="form-label">Show posts from:</label>
+                    <select id="groupFilter" class="form-select" @onchange="OnGroupFilterChanged">
+                        <option value="">All Groups</option>
+                        @foreach (var group in userGroups)
+                        {
+                            <option value="@group.Id" selected="@(selectedGroupId == group.Id)">@group.Name</option>
+                        }
+                    </select>
+                </div>
+
+                @if (isLoadingGroupFeed && !groupPosts.Any())
+                {
+                    <div class="loading-indicator">
+                        <p>Loading your group feed...</p>
+                    </div>
+                }
+                else if (!groupPosts.Any() && !isLoadingGroupFeed)
+                {
+                    <div class="empty-feed">
+                        <p>No group posts to display. Join groups to see their posts here!</p>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var post in groupPosts)
+                    {
+                        var postReactions = groupPostReactionData.ContainsKey(post.Id) ? groupPostReactionData[post.Id] : new Dictionary<LikeType, int>();
+                        var userReaction = groupPostUserReactions.ContainsKey(post.Id) ? groupPostUserReactions[post.Id] : null;
+                        var comments = groupPostComments.ContainsKey(post.Id) ? groupPostComments[post.Id] : new List<CommentDisplayModel>();
+                        var directCommentCount = groupPostDirectCommentCounts.ContainsKey(post.Id) ? groupPostDirectCommentCounts[post.Id] : 0;
+                        var isPinned = pinnedGroupPosts.ContainsKey(post.Id) && pinnedGroupPosts[post.Id];
+                        var authorName = groupPostAuthorNames.ContainsKey(post.Id) ? groupPostAuthorNames[post.Id] : "Unknown";
+                        var groupName = groupNames.ContainsKey(post.GroupId) ? groupNames[post.GroupId] : "Unknown Group";
+
+                        <GroupPostArticle 
+                            PostId="@post.Id"
+                            GroupId="@post.GroupId"
+                            GroupName="@groupName"
+                            AuthorId="@post.AuthorId"
+                            AuthorName="@authorName"
+                            AuthorImageUrl="@post.Author?.ProfilePictureUrl"
+                            CreatedAt="@post.CreatedAt"
+                            LikeCount="@post.LikeCount"
+                            CommentCount="@post.CommentCount"
+                            ShareCount="@post.ShareCount"
+                            DirectCommentCount="@directCommentCount"
+                            CurrentUserId="@currentUserId"
+                            CurrentUserImageUrl="@currentUserImageUrl"
+                            CurrentUserName="@currentUserName"
+                            ReactionBreakdown="@postReactions"
+                            UserReaction="@userReaction"
+                            Comments="@comments"
+                            IsPinned="@isPinned"
+                            Images="@ConvertGroupPostImagesToPostImages(post.Images)"
+                            OnReactionChanged="@(async (reactionType) => await HandleGroupPostReactionChanged(post.Id, reactionType))"
+                            OnRemoveReaction="@(async () => await HandleRemoveGroupPostReaction(post.Id))"
+                            OnPinPost="@HandlePinGroupPost"
+                            OnUnpinPost="@HandleUnpinGroupPost"
+                            OnPostDeleted="@HandleGroupPostDeleted"
+                            OnEditPost="@HandleEditGroupPost"
+                            OnCommentAdded="@HandleGroupPostCommentAdded"
+                            OnReplySubmitted="@HandleGroupPostReplySubmitted"
+                            OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
+                            OnRemoveCommentReaction="@HandleRemoveGroupPostCommentReaction"
+                            OnShowPostDetail="@(() => ShowGroupPostDetail(post))"
+                            OnShowComments="@(() => ShowGroupPostDetail(post))">
+                            <ArticleContent>
+                                @((MarkupString)FormatContentWithLineBreaks(post.Content))
+                            </ArticleContent>
+                        </GroupPostArticle>
+                    }
+
+                    @if (isLoadingMoreGroupPosts)
+                    {
+                        <div class="loading-more">
+                            <p>Loading more posts...</p>
+                        </div>
+                    }
+
+                    @if (hasMoreGroupPosts == false && groupPosts.Any())
+                    {
+                        <div class="no-more-posts">
+                            <p>No more posts at this time</p>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Pinned Group Posts Tab -->
+        <div class="tab-pane fade" id="pinned-group-content" role="tabpanel" aria-labelledby="pinned-group-tab">
+            <div class="feed-section">
+                <!-- Group Filter Dropdown for Pinned Posts -->
+                <div class="group-filter-section">
+                    <label for="pinnedGroupFilter" class="form-label">Show pinned posts from:</label>
+                    <select id="pinnedGroupFilter" class="form-select" @onchange="OnPinnedGroupFilterChanged">
+                        <option value="">All Groups</option>
+                        @foreach (var group in userGroups)
+                        {
+                            <option value="@group.Id" selected="@(selectedPinnedGroupId == group.Id)">@group.Name</option>
+                        }
+                    </select>
+                </div>
+
+                @if (isLoadingPinnedGroupPosts && !pinnedGroupPostsList.Any())
+                {
+                    <div class="loading-indicator">
+                        <p>Loading your pinned group posts...</p>
+                    </div>
+                }
+                else if (!pinnedGroupPostsList.Any() && !isLoadingPinnedGroupPosts)
+                {
+                    <div class="empty-feed">
+                        <p>You haven't pinned any group posts yet. Pin posts from groups to see them here!</p>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var post in pinnedGroupPostsList)
+                    {
+                        var postReactions = groupPostReactionData.ContainsKey(post.Id) ? groupPostReactionData[post.Id] : new Dictionary<LikeType, int>();
+                        var userReaction = groupPostUserReactions.ContainsKey(post.Id) ? groupPostUserReactions[post.Id] : null;
+                        var comments = groupPostComments.ContainsKey(post.Id) ? groupPostComments[post.Id] : new List<CommentDisplayModel>();
+                        var directCommentCount = groupPostDirectCommentCounts.ContainsKey(post.Id) ? groupPostDirectCommentCounts[post.Id] : 0;
+                        var isPinned = pinnedGroupPosts.ContainsKey(post.Id) && pinnedGroupPosts[post.Id];
+                        var authorName = groupPostAuthorNames.ContainsKey(post.Id) ? groupPostAuthorNames[post.Id] : "Unknown";
+                        var groupName = groupNames.ContainsKey(post.GroupId) ? groupNames[post.GroupId] : "Unknown Group";
+
+                        <GroupPostArticle 
+                            PostId="@post.Id"
+                            GroupId="@post.GroupId"
+                            GroupName="@groupName"
+                            AuthorId="@post.AuthorId"
+                            AuthorName="@authorName"
+                            AuthorImageUrl="@post.Author?.ProfilePictureUrl"
+                            CreatedAt="@post.CreatedAt"
+                            LikeCount="@post.LikeCount"
+                            CommentCount="@post.CommentCount"
+                            ShareCount="@post.ShareCount"
+                            DirectCommentCount="@directCommentCount"
+                            CurrentUserId="@currentUserId"
+                            CurrentUserImageUrl="@currentUserImageUrl"
+                            CurrentUserName="@currentUserName"
+                            ReactionBreakdown="@postReactions"
+                            UserReaction="@userReaction"
+                            Comments="@comments"
+                            IsPinned="@isPinned"
+                            Images="@ConvertGroupPostImagesToPostImages(post.Images)"
+                            OnReactionChanged="@(async (reactionType) => await HandleGroupPostReactionChanged(post.Id, reactionType))"
+                            OnRemoveReaction="@(async () => await HandleRemoveGroupPostReaction(post.Id))"
+                            OnPinPost="@HandlePinGroupPost"
+                            OnUnpinPost="@HandleUnpinGroupPost"
+                            OnPostDeleted="@HandleGroupPostDeleted"
+                            OnEditPost="@HandleEditGroupPost"
+                            OnCommentAdded="@HandleGroupPostCommentAdded"
+                            OnReplySubmitted="@HandleGroupPostReplySubmitted"
+                            OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
+                            OnRemoveCommentReaction="@HandleRemoveGroupPostCommentReaction"
+                            OnShowPostDetail="@(() => ShowGroupPostDetail(post))"
+                            OnShowComments="@(() => ShowGroupPostDetail(post))">
+                            <ArticleContent>
+                                @((MarkupString)FormatContentWithLineBreaks(post.Content))
+                            </ArticleContent>
+                        </GroupPostArticle>
+                    }
+
+                    @if (isLoadingMorePinnedPosts)
+                    {
+                        <div class="loading-more">
+                            <p>Loading more posts...</p>
+                        </div>
+                    }
+
+                    @if (hasMorePinnedPosts == false && pinnedGroupPostsList.Any())
+                    {
+                        <div class="no-more-posts">
+                            <p>No more pinned posts at this time</p>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Group Join Requests Tab -->
+        <div class="tab-pane fade" id="join-requests-content" role="tabpanel" aria-labelledby="join-requests-tab">
+            <div class="feed-section">
+                @if (isLoadingJoinRequests && !groupJoinRequests.Any())
+                {
+                    <div class="loading-indicator">
+                        <p>Loading your join requests...</p>
+                    </div>
+                }
+                else if (!groupJoinRequests.Any() && !isLoadingJoinRequests)
+                {
+                    <div class="empty-feed">
+                        <p>You have no pending group join requests.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="join-requests-list">
+                        @foreach (var request in groupJoinRequests)
+                        {
+                            var groupName = groupNames.ContainsKey(request.GroupId) ? groupNames[request.GroupId] : "Unknown Group";
+                            <div class="join-request-card">
+                                <div class="request-info">
+                                    <strong>@groupName</strong>
+                                    <span class="request-date">Requested @GetRelativeTime(request.RequestedAt)</span>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-danger" @onclick="() => CancelJoinRequest(request.Id)">
+                                    Cancel Request
+                                </button>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Find Groups Tab -->
+        <div class="tab-pane fade" id="find-groups-content" role="tabpanel" aria-labelledby="find-groups-tab">
+            <div class="feed-section">
+                <div class="search-section">
+                    <input type="text" 
+                           class="form-control" 
+                           placeholder="Search for groups..." 
+                           @bind="groupSearchQuery" 
+                           @bind:event="oninput" 
+                           @onkeyup="OnGroupSearchKeyUp" />
+                </div>
+
+                @if (isSearchingGroups)
+                {
+                    <div class="loading-indicator">
+                        <p>Searching groups...</p>
+                    </div>
+                }
+                else if (!string.IsNullOrWhiteSpace(groupSearchQuery) && !searchedGroups.Any())
+                {
+                    <div class="empty-feed">
+                        <p>No groups found matching "@groupSearchQuery"</p>
+                    </div>
+                }
+                else if (searchedGroups.Any())
+                {
+                    <div class="groups-list">
+                        @foreach (var group in searchedGroups)
+                        {
+                            <div class="group-card">
+                                <div class="group-info">
+                                    <h4>@group.Name</h4>
+                                    <p>@group.Description</p>
+                                    <div class="group-meta">
+                                        <span><i class="bi bi-people-fill"></i> @group.MemberCount members</span>
+                                        @if (group.IsPublic)
+                                        {
+                                            <span class="badge bg-success">Public</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">Private</span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="group-actions">
+                                    <button type="button" class="btn btn-primary" @onclick="() => JoinGroup(group.Id)">
+                                        Join Group
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-feed">
+                        <p>Search for groups to join!</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Groups You Might Like Tab -->
+        <div class="tab-pane fade" id="suggested-groups-content" role="tabpanel" aria-labelledby="suggested-groups-tab">
+            <div class="feed-section">
+                @if (isLoadingSuggestedGroups && !suggestedGroups.Any())
+                {
+                    <div class="loading-indicator">
+                        <p>Loading group suggestions...</p>
+                    </div>
+                }
+                else if (!suggestedGroups.Any() && !isLoadingSuggestedGroups)
+                {
+                    <div class="empty-feed">
+                        <p>No group suggestions available at this time.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="groups-list">
+                        @foreach (var group in suggestedGroups)
+                        {
+                            <div class="group-card">
+                                <div class="group-info">
+                                    <h4>@group.Name</h4>
+                                    <p>@group.Description</p>
+                                    <div class="group-meta">
+                                        <span><i class="bi bi-people-fill"></i> @group.MemberCount members</span>
+                                        @if (group.IsPublic)
+                                        {
+                                            <span class="badge bg-success">Public</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">Private</span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="group-actions">
+                                    <button type="button" class="btn btn-primary" @onclick="() => JoinGroup(group.Id)">
+                                        Join Group
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? currentUserId;
+    private string? currentUserImageUrl;
+    private string? currentUserName;
+
+    // Group Feed state
+    private List<GroupPost> groupPosts = new();
+    private bool isLoadingGroupFeed = false;
+    private bool isLoadingMoreGroupPosts = false;
+    private bool? hasMoreGroupPosts = null;
+    private int currentGroupPage = 1;
+    private const int groupPageSize = 20;
+
+    // Group filter state
+    private int? selectedGroupId = null; // null means "All Groups"
+    private List<Group> userGroups = new();
+
+    // Pinned posts state
+    private int? selectedPinnedGroupId = null;
+    private bool isLoadingMorePinnedPosts = false;
+    private bool? hasMorePinnedPosts = null;
+    private int currentPinnedPage = 1;
+    private const int pinnedPageSize = 20;
+
+    // JavaScript interop
+    private IJSObjectReference? jsModule;
+    private DotNetObjectReference<Groups>? dotNetHelper;
+
+    // Pinned Group Posts state
+    private List<GroupPost> pinnedGroupPostsList = new();
+    private bool isLoadingPinnedGroupPosts = false;
+
+    // Group Join Requests state
+    private List<GroupJoinRequest> groupJoinRequests = new();
+    private bool isLoadingJoinRequests = false;
+
+    // Find Groups state
+    private string groupSearchQuery = string.Empty;
+    private List<Group> searchedGroups = new();
+    private bool isSearchingGroups = false;
+    private System.Threading.Timer? searchDebounceTimer;
+
+    // Suggested Groups state
+    private List<Group> suggestedGroups = new();
+    private bool isLoadingSuggestedGroups = false;
+
+    // Shared data dictionaries
+    private Dictionary<int, Dictionary<LikeType, int>> groupPostReactionData = new();
+    private Dictionary<int, LikeType?> groupPostUserReactions = new();
+    private Dictionary<int, List<CommentDisplayModel>> groupPostComments = new();
+    private Dictionary<int, int> groupPostDirectCommentCounts = new();
+    private Dictionary<int, bool> pinnedGroupPosts = new();
+    private Dictionary<int, string> groupPostAuthorNames = new();
+    private Dictionary<int, string> groupNames = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            currentUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(currentUserId))
+            {
+                var appUser = await UserManager.FindByIdAsync(currentUserId);
+                if (appUser != null)
+                {
+                    currentUserImageUrl = appUser.ProfilePictureUrl;
+                    currentUserName = $"{appUser.FirstName} {appUser.LastName}";
+                }
+
+                // Load user's groups for the filter dropdown
+                await LoadUserGroups();
+
+                // Load initial group feed
+                await LoadGroupFeed();
+
+                // Load join requests count for badge
+                await LoadJoinRequestsCount();
+            }
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !string.IsNullOrEmpty(currentUserId))
+        {
+            try
+            {
+                jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/Groups.razor.js");
+                dotNetHelper = DotNetObjectReference.Create(this);
+                await jsModule.InvokeVoidAsync("initializeInfiniteScroll", (object?)null, dotNetHelper);
+                Console.WriteLine("Infinite scroll initialized for Groups page");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error initializing infinite scroll: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task LoadUserGroups()
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        try
+        {
+            // Load all posts to extract unique groups
+            var allPosts = await GroupPostService.GetAllGroupPostsForUserAsync(currentUserId, 0, 1000);
+
+            // Extract unique groups from posts
+            var uniqueGroups = allPosts
+                .Where(p => p.Group != null)
+                .GroupBy(p => p.GroupId)
+                .Select(g => g.First().Group!)
+                .OrderBy(g => g.Name)
+                .ToList();
+
+            userGroups = uniqueGroups;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading user groups: {ex.Message}");
+        }
+    }
+
+    private async Task LoadGroupFeed()
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        isLoadingGroupFeed = true;
+        StateHasChanged();
+
+        try
+        {
+            currentGroupPage = 1;
+            List<GroupPost> loadedPosts;
+
+            if (selectedGroupId.HasValue)
+            {
+                // Load posts from specific group
+                loadedPosts = await GroupPostService.GetGroupPostsAsync(selectedGroupId.Value, 0, groupPageSize);
+            }
+            else
+            {
+                // Load posts from all user's groups
+                loadedPosts = await GroupPostService.GetAllGroupPostsForUserAsync(currentUserId, 0, groupPageSize);
+            }
+
+            groupPosts = loadedPosts;
+            hasMoreGroupPosts = loadedPosts.Count >= groupPageSize;
+
+            // Load additional data for posts
+            await LoadGroupPostDataAsync(loadedPosts);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading group feed: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingGroupFeed = false;
+            StateHasChanged();
+        }
+    }
+
+    [JSInvokable]
+    public async Task LoadMoreGroupPostsAsync()
+    {
+        if (string.IsNullOrEmpty(currentUserId) || isLoadingMoreGroupPosts || hasMoreGroupPosts == false) return;
+
+        isLoadingMoreGroupPosts = true;
+        StateHasChanged();
+
+        try
+        {
+            currentGroupPage++;
+            var skip = (currentGroupPage - 1) * groupPageSize;
+            List<GroupPost> loadedPosts;
+
+            if (selectedGroupId.HasValue)
+            {
+                // Load more posts from specific group
+                loadedPosts = await GroupPostService.GetGroupPostsAsync(selectedGroupId.Value, skip, groupPageSize);
+            }
+            else
+            {
+                // Load more posts from all user's groups
+                loadedPosts = await GroupPostService.GetAllGroupPostsForUserAsync(currentUserId, skip, groupPageSize);
+            }
+
+            if (loadedPosts.Any())
+            {
+                groupPosts.AddRange(loadedPosts);
+                hasMoreGroupPosts = loadedPosts.Count >= groupPageSize;
+
+                // Load additional data for new posts
+                await LoadGroupPostDataAsync(loadedPosts);
+            }
+            else
+            {
+                hasMoreGroupPosts = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading more group posts: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingMoreGroupPosts = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadGroupPostDataAsync(List<GroupPost> posts)
+    {
+        // Populate group names and author names
+        foreach (var post in posts)
+        {
+            if (!groupNames.ContainsKey(post.GroupId) && post.Group != null)
+            {
+                groupNames[post.GroupId] = post.Group.Name;
+            }
+
+            if (!groupPostAuthorNames.ContainsKey(post.Id) && post.Author != null)
+            {
+                groupPostAuthorNames[post.Id] = $"{post.Author.FirstName} {post.Author.LastName}";
+            }
+
+            // Load reaction data
+            if (!groupPostReactionData.ContainsKey(post.Id))
+            {
+                var reactions = await GroupPostService.GetReactionBreakdownAsync(post.Id);
+                groupPostReactionData[post.Id] = reactions;
+            }
+
+            // Load user reaction
+            if (!groupPostUserReactions.ContainsKey(post.Id))
+            {
+                var userReaction = await GroupPostService.GetUserReactionAsync(post.Id, currentUserId!);
+                groupPostUserReactions[post.Id] = userReaction;
+            }
+
+            // Load pinned status
+            if (!pinnedGroupPosts.ContainsKey(post.Id))
+            {
+                var isPinned = await PinnedGroupPostService.IsGroupPostPinnedAsync(currentUserId!, post.Id);
+                pinnedGroupPosts[post.Id] = isPinned;
+            }
+        }
+    }
+
+    private async Task OnGroupFilterChanged(ChangeEventArgs e)
+    {
+        var value = e.Value?.ToString();
+
+        if (string.IsNullOrEmpty(value))
+        {
+            selectedGroupId = null;
+        }
+        else if (int.TryParse(value, out int groupId))
+        {
+            selectedGroupId = groupId;
+        }
+
+        // Reset and reload the feed
+        await LoadGroupFeed();
+    }
+
+    private async Task LoadPinnedGroupPosts()
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        isLoadingPinnedGroupPosts = true;
+        StateHasChanged();
+
+        try
+        {
+            currentPinnedPage = 1;
+
+            // Get all pinned posts (PinnedGroupPostService doesn't support pagination yet)
+            var allPinnedPosts = await PinnedGroupPostService.GetPinnedGroupPostsAsync(currentUserId);
+
+            // Apply group filter if selected
+            if (selectedPinnedGroupId.HasValue)
+            {
+                allPinnedPosts = allPinnedPosts.Where(p => p.GroupId == selectedPinnedGroupId.Value).ToList();
+            }
+
+            // Take first page
+            pinnedGroupPostsList = allPinnedPosts.Take(pinnedPageSize).ToList();
+            hasMorePinnedPosts = allPinnedPosts.Count > pinnedPageSize;
+
+            // Load additional data for pinned posts
+            await LoadGroupPostDataAsync(pinnedGroupPostsList);
+
+            // Mark as pinned
+            foreach (var post in pinnedGroupPostsList)
+            {
+                pinnedGroupPosts[post.Id] = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading pinned group posts: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingPinnedGroupPosts = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnPinnedGroupFilterChanged(ChangeEventArgs e)
+    {
+        var value = e.Value?.ToString();
+
+        if (string.IsNullOrEmpty(value))
+        {
+            selectedPinnedGroupId = null;
+        }
+        else if (int.TryParse(value, out int groupId))
+        {
+            selectedPinnedGroupId = groupId;
+        }
+
+        // Reset and reload the pinned feed
+        await LoadPinnedGroupPosts();
+    }
+
+    [JSInvokable]
+    public async Task LoadMorePinnedGroupPostsAsync()
+    {
+        if (string.IsNullOrEmpty(currentUserId) || isLoadingMorePinnedPosts || hasMorePinnedPosts == false) return;
+
+        isLoadingMorePinnedPosts = true;
+        StateHasChanged();
+
+        try
+        {
+            currentPinnedPage++;
+
+            // Get all pinned posts
+            var allPinnedPosts = await PinnedGroupPostService.GetPinnedGroupPostsAsync(currentUserId);
+
+            // Apply group filter if selected
+            if (selectedPinnedGroupId.HasValue)
+            {
+                allPinnedPosts = allPinnedPosts.Where(p => p.GroupId == selectedPinnedGroupId.Value).ToList();
+            }
+
+            // Calculate pagination
+            var skip = (currentPinnedPage - 1) * pinnedPageSize;
+            var loadedPosts = allPinnedPosts.Skip(skip).Take(pinnedPageSize).ToList();
+
+            if (loadedPosts.Any())
+            {
+                pinnedGroupPostsList.AddRange(loadedPosts);
+                hasMorePinnedPosts = allPinnedPosts.Count > (currentPinnedPage * pinnedPageSize);
+
+                // Load additional data for new posts
+                await LoadGroupPostDataAsync(loadedPosts);
+
+                // Mark as pinned
+                foreach (var post in loadedPosts)
+                {
+                    pinnedGroupPosts[post.Id] = true;
+                }
+            }
+            else
+            {
+                hasMorePinnedPosts = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading more pinned group posts: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingMorePinnedPosts = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadJoinRequests()
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        isLoadingJoinRequests = true;
+        StateHasChanged();
+
+        try
+        {
+            groupJoinRequests = await GroupMemberService.GetUserJoinRequestsAsync(currentUserId);
+
+            // Populate group names
+            foreach (var request in groupJoinRequests)
+            {
+                if (!groupNames.ContainsKey(request.GroupId) && request.Group != null)
+                {
+                    groupNames[request.GroupId] = request.Group.Name;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading join requests: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingJoinRequests = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadJoinRequestsCount()
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        try
+        {
+            // Load just the count for the badge
+            groupJoinRequests = await GroupMemberService.GetUserJoinRequestsAsync(currentUserId);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading join requests count: {ex.Message}");
+        }
+    }
+
+    private async Task OnGroupFeedTabClick()
+    {
+        // Data already loaded on page init
+    }
+
+    private async Task OnPinnedTabClick()
+    {
+        // Load pinned posts if not already loaded
+        if (!pinnedGroupPostsList.Any() && !isLoadingPinnedGroupPosts)
+        {
+            await LoadPinnedGroupPosts();
+        }
+    }
+
+    private async Task OnJoinRequestsTabClick()
+    {
+        // Load full join request details if not already loaded (only count was loaded initially)
+        if (isLoadingJoinRequests) return;
+
+        // Reload to ensure group names are populated
+        if (groupJoinRequests.Any() && !groupNames.Any())
+        {
+            await LoadJoinRequests();
+        }
+    }
+
+    private async Task OnSuggestedGroupsTabClick()
+    {
+        // Load suggested groups if not already loaded
+        if (!suggestedGroups.Any() && !isLoadingSuggestedGroups)
+        {
+            await LoadSuggestedGroups();
+        }
+    }
+
+    private async Task LoadSuggestedGroups()
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        isLoadingSuggestedGroups = true;
+        StateHasChanged();
+
+        try
+        {
+            suggestedGroups = await GroupService.GetSuggestedGroupsAsync(currentUserId, 20);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading suggested groups: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingSuggestedGroups = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnGroupSearchKeyUp(KeyboardEventArgs e)
+    {
+        searchDebounceTimer?.Dispose();
+        searchDebounceTimer = new System.Threading.Timer(async _ =>
+        {
+            await InvokeAsync(async () => await SearchGroups());
+        }, null, 300, Timeout.Infinite);
+    }
+
+    private async Task SearchGroups()
+    {
+        if (string.IsNullOrWhiteSpace(groupSearchQuery))
+        {
+            searchedGroups.Clear();
+            StateHasChanged();
+            return;
+        }
+
+        isSearchingGroups = true;
+        StateHasChanged();
+
+        try
+        {
+            searchedGroups = await GroupService.SearchGroupsAsync(groupSearchQuery, 0, 20);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error searching groups: {ex.Message}");
+        }
+        finally
+        {
+            isSearchingGroups = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task JoinGroup(int groupId)
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        try
+        {
+            var (success, errorMessage, request) = await GroupMemberService.CreateJoinRequestAsync(groupId, currentUserId);
+
+            if (success)
+            {
+                await JSRuntime.InvokeVoidAsync("alert", "Join request sent successfully!");
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("alert", errorMessage ?? "Failed to send join request.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error joining group: {ex.Message}");
+            await JSRuntime.InvokeVoidAsync("alert", "An error occurred while sending the join request.");
+        }
+    }
+
+    private async Task CancelJoinRequest(int requestId)
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        try
+        {
+            var (success, errorMessage) = await GroupMemberService.CancelJoinRequestAsync(requestId, currentUserId);
+
+            if (success)
+            {
+                // Remove from the list
+                groupJoinRequests.RemoveAll(r => r.Id == requestId);
+                StateHasChanged();
+                await JSRuntime.InvokeVoidAsync("alert", "Join request cancelled successfully.");
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("alert", errorMessage ?? "Failed to cancel join request.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error cancelling join request: {ex.Message}");
+            await JSRuntime.InvokeVoidAsync("alert", "An error occurred while cancelling the join request.");
+        }
+    }
+
+    private async Task HandleGroupPostReactionChanged(int postId, LikeType reactionType)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await GroupPostService.LikePostAsync(postId, currentUserId, reactionType);
+
+            if (result.Success)
+            {
+                // Update user's reaction
+                var previousReaction = groupPostUserReactions.ContainsKey(postId) ? groupPostUserReactions[postId] : null;
+                groupPostUserReactions[postId] = reactionType;
+
+                // Reload reaction breakdown
+                var reactions = await GroupPostService.GetReactionBreakdownAsync(postId);
+                groupPostReactionData[postId] = reactions;
+
+                // Update like count if this is a new reaction
+                var post = groupPosts.FirstOrDefault(p => p.Id == postId);
+                if (post != null && previousReaction == null)
+                {
+                    post.LikeCount++;
+                }
+
+                // Also check pinnedGroupPostsList
+                var pinnedPost = pinnedGroupPostsList.FirstOrDefault(p => p.Id == postId);
+                if (pinnedPost != null && previousReaction == null)
+                {
+                    pinnedPost.LikeCount++;
+                }
+
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error handling group post reaction: {ex.Message}");
+        }
+    }
+
+    private async Task HandleRemoveGroupPostReaction(int postId)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await GroupPostService.UnlikePostAsync(postId, currentUserId);
+
+            if (result.Success)
+            {
+                // Remove user's reaction
+                groupPostUserReactions[postId] = null;
+
+                // Reload reaction breakdown
+                var reactions = await GroupPostService.GetReactionBreakdownAsync(postId);
+                groupPostReactionData[postId] = reactions;
+
+                // Update like count
+                var post = groupPosts.FirstOrDefault(p => p.Id == postId);
+                if (post != null)
+                {
+                    post.LikeCount = Math.Max(0, post.LikeCount - 1);
+                }
+
+                // Also check pinnedGroupPostsList
+                var pinnedPost = pinnedGroupPostsList.FirstOrDefault(p => p.Id == postId);
+                if (pinnedPost != null)
+                {
+                    pinnedPost.LikeCount = Math.Max(0, pinnedPost.LikeCount - 1);
+                }
+
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error removing group post reaction: {ex.Message}");
+        }
+    }
+
+    private async Task HandlePinGroupPost(int postId)
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        var (success, errorMessage) = await PinnedGroupPostService.PinGroupPostAsync(currentUserId, postId);
+
+        if (success)
+        {
+            pinnedGroupPosts[postId] = true;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleUnpinGroupPost(int postId)
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        var (success, errorMessage) = await PinnedGroupPostService.UnpinGroupPostAsync(currentUserId, postId);
+
+        if (success)
+        {
+            pinnedGroupPosts[postId] = false;
+            pinnedGroupPostsList.RemoveAll(p => p.Id == postId);
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleGroupPostDeleted(int postId)
+    {
+        groupPosts.RemoveAll(p => p.Id == postId);
+        pinnedGroupPostsList.RemoveAll(p => p.Id == postId);
+        StateHasChanged();
+    }
+
+    private async Task HandleEditGroupPost(int postId)
+    {
+        Console.WriteLine($"HandleEditGroupPost called with postId: {postId}");
+
+        var post = groupPosts.FirstOrDefault(p => p.Id == postId);
+        if (post == null)
+        {
+            Console.WriteLine($"Post not found in groupPosts list, checking pinned posts");
+            post = pinnedGroupPostsList.FirstOrDefault(p => p.Id == postId);
+        }
+
+        if (post != null)
+        {
+            Console.WriteLine($"Group post found, editing functionality not yet implemented");
+            await JSRuntime.InvokeVoidAsync("alert", "Group post editing will be implemented soon.");
+            // TODO: Create GroupPostEditModal component similar to PostEditModal
+        }
+        else
+        {
+            Console.WriteLine($"ERROR: Group post {postId} not found in any list");
+        }
+    }
+
+    private async Task HandleGroupPostCommentAdded((int PostId, string Content) args)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await GroupPostService.AddCommentAsync(args.PostId, currentUserId, args.Content);
+
+            if (result.Success)
+            {
+                // Update the post's comment count in the UI
+                var post = groupPosts.FirstOrDefault(p => p.Id == args.PostId);
+                if (post != null)
+                {
+                    post.CommentCount++;
+                }
+
+                // Also check pinnedGroupPostsList
+                var pinnedPost = pinnedGroupPostsList.FirstOrDefault(p => p.Id == args.PostId);
+                if (pinnedPost != null)
+                {
+                    pinnedPost.CommentCount++;
+                }
+
+                // Reload comments to show the new one
+                await LoadCommentsForGroupPost(args.PostId, 3);
+
+                StateHasChanged();
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to add comment");
+                Console.WriteLine($"Failed to add comment: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "An error occurred while adding your comment.");
+            Console.WriteLine($"Error adding comment: {ex.Message}");
+        }
+    }
+
+    private async Task HandleGroupPostReplySubmitted((int ParentCommentId, string Content) args)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            // Get the parent comment's PostId by searching through groupPostComments
+            int? postId = null;
+            foreach (var kvp in groupPostComments)
+            {
+                if (FindCommentById(kvp.Value, args.ParentCommentId) != null)
+                {
+                    postId = kvp.Key;
+                    break;
+                }
+            }
+
+            if (postId == null)
+            {
+                Console.WriteLine($"Could not find post for parent comment {args.ParentCommentId}");
+                return;
+            }
+
+            // Add the reply to the database
+            var result = await GroupPostService.AddCommentAsync(postId.Value, currentUserId, args.Content, null, args.ParentCommentId);
+
+            if (result.Success)
+            {
+                // Reload comments for this post to show the new reply
+                await LoadCommentsForGroupPost(postId.Value, 3);
+
+                // Update comment count
+                var post = groupPosts.FirstOrDefault(p => p.Id == postId.Value);
+                if (post != null)
+                {
+                    post.CommentCount++;
+                }
+
+                // Also check pinnedGroupPostsList
+                var pinnedPost = pinnedGroupPostsList.FirstOrDefault(p => p.Id == postId.Value);
+                if (pinnedPost != null)
+                {
+                    pinnedPost.CommentCount++;
+                }
+
+                StateHasChanged();
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to add reply");
+                Console.WriteLine($"Failed to add reply: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "An error occurred while adding your reply.");
+            Console.WriteLine($"Error adding reply: {ex.Message}");
+        }
+    }
+
+    private async Task HandleGroupPostCommentReactionChanged((int CommentId, LikeType ReactionType) args)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await GroupPostService.LikeCommentAsync(args.CommentId, currentUserId, args.ReactionType);
+
+            if (result.Success)
+            {
+                // Update the comment's reaction data in the UI
+                await UpdateGroupCommentReactionData(args.CommentId, args.ReactionType);
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error handling group comment reaction: {ex.Message}");
+        }
+    }
+
+    private async Task HandleRemoveGroupPostCommentReaction(int commentId)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await GroupPostService.UnlikeCommentAsync(commentId, currentUserId);
+
+            if (result.Success)
+            {
+                // Update the comment's reaction data in the UI
+                await UpdateGroupCommentReactionData(commentId, null);
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error removing group comment reaction: {ex.Message}");
+        }
+    }
+
+    private async Task ShowGroupPostDetail(GroupPost post)
+    {
+        Console.WriteLine($"ShowGroupPostDetail called for post {post.Id}");
+        await JSRuntime.InvokeVoidAsync("alert", "Group post detail modal will be implemented soon.");
+        // TODO: Create GroupPostDetailModal component similar to PostDetailModal
+    }
+
+    private async Task LoadCommentsForGroupPost(int postId, int count)
+    {
+        try
+        {
+            var comments = await GroupPostService.GetCommentsAsync(postId);
+            var topComments = comments.OrderByDescending(c => c.CreatedAt).Take(count).ToList();
+            var commentModels = new List<CommentDisplayModel>();
+
+            foreach (var c in topComments)
+            {
+                var commentModel = await BuildGroupCommentDisplayModel(c);
+                commentModels.Add(commentModel);
+            }
+
+            groupPostComments[postId] = commentModels;
+
+            // Get direct comment count (comments without parent)
+            groupPostDirectCommentCounts[postId] = comments.Count(c => c.ParentCommentId == null);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading comments for group post {postId}: {ex.Message}");
+        }
+    }
+
+    private async Task<CommentDisplayModel> BuildGroupCommentDisplayModel(GroupPostComment comment)
+    {
+        // Load replies for this comment
+        var replies = comment.Replies?.ToList() ?? new List<GroupPostComment>();
+        var replyModels = new List<CommentDisplayModel>();
+
+        foreach (var reply in replies)
+        {
+            replyModels.Add(await BuildGroupCommentDisplayModel(reply));
+        }
+
+        // Get reaction breakdown for this comment
+        var reactionBreakdown = new Dictionary<LikeType, int>();
+        int likeCount = 0;
+        try
+        {
+            // TODO: Add GetCommentReactionBreakdownAsync to GroupPostService if needed
+            // For now, use empty breakdown
+        }
+        catch { }
+
+        // Get user's reaction
+        LikeType? userReaction = null;
+        if (!string.IsNullOrEmpty(currentUserId))
+        {
+            try
+            {
+                var userLike = await GroupPostService.GetUserCommentLikeAsync(comment.Id, currentUserId);
+                userReaction = userLike?.Type;
+            }
+            catch { }
+        }
+
+        var userName = await FormatUserDisplayName(comment.Author);
+
+        return new CommentDisplayModel
+        {
+            CommentId = comment.Id,
+            UserName = userName,
+            UserImageUrl = comment.Author?.ProfilePictureUrl,
+            CommentAuthorId = comment.AuthorId,
+            CommentText = comment.Content,
+            ImageUrl = comment.ImageUrl,
+            Timestamp = comment.CreatedAt,
+            Replies = replyModels,
+            LikeCount = likeCount,
+            UserReaction = userReaction,
+            ReactionBreakdown = reactionBreakdown
+        };
+    }
+
+    private async Task UpdateGroupCommentReactionData(int commentId, LikeType? reactionType)
+    {
+        // Find the comment in all posts and update its reaction data
+        foreach (var kvp in groupPostComments)
+        {
+            var comment = FindCommentById(kvp.Value, commentId);
+            if (comment != null)
+            {
+                // Update user reaction
+                comment.UserReaction = reactionType;
+
+                // Update reaction breakdown
+                // TODO: Fetch from service if available
+                if (reactionType.HasValue)
+                {
+                    if (comment.ReactionBreakdown == null)
+                    {
+                        comment.ReactionBreakdown = new Dictionary<LikeType, int>();
+                    }
+                    
+                    if (!comment.ReactionBreakdown.ContainsKey(reactionType.Value))
+                    {
+                        comment.ReactionBreakdown[reactionType.Value] = 0;
+                    }
+                    comment.ReactionBreakdown[reactionType.Value]++;
+                    comment.LikeCount++;
+                }
+                else
+                {
+                    comment.LikeCount = Math.Max(0, comment.LikeCount - 1);
+                }
+                break;
+            }
+        }
+    }
+
+    private CommentDisplayModel? FindCommentById(List<CommentDisplayModel> comments, int commentId)
+    {
+        foreach (var comment in comments)
+        {
+            if (comment.CommentId == commentId)
+            {
+                return comment;
+            }
+
+            if (comment.Replies != null && comment.Replies.Any())
+            {
+                var found = FindCommentById(comment.Replies, commentId);
+                if (found != null)
+                {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
+    private async Task<string> FormatUserDisplayName(ApplicationUser? user)
+    {
+        if (user == null)
+            return "Unknown";
+
+        return await UserPreferenceService.FormatUserDisplayNameAsync(
+            user.Id,
+            user.FirstName,
+            user.LastName,
+            user.UserName ?? "Unknown"
+        );
+    }
+
+    private List<PostImage>? ConvertGroupPostImagesToPostImages(ICollection<GroupPostImage>? groupImages)
+    {
+        if (groupImages == null || !groupImages.Any())
+            return null;
+
+        return groupImages.Select(gi => new PostImage
+        {
+            Id = gi.Id,
+            PostId = gi.PostId,
+            ImageUrl = gi.ImageUrl,
+            DisplayOrder = gi.DisplayOrder,
+            UploadedAt = gi.UploadedAt
+        }).ToList();
+    }
+
+    private string FormatContentWithLineBreaks(string content)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+            return string.Empty;
+
+        return HtmlSanitizationService.SanitizeAndFormatContent(content);
+    }
+
+    private string GetRelativeTime(DateTime dateTime)
+    {
+        var timeSpan = DateTime.UtcNow - dateTime;
+
+        if (timeSpan.TotalMinutes < 1)
+            return "just now";
+        if (timeSpan.TotalMinutes < 60)
+            return $"{(int)timeSpan.TotalMinutes}m ago";
+        if (timeSpan.TotalHours < 24)
+            return $"{(int)timeSpan.TotalHours}h ago";
+        if (timeSpan.TotalDays < 30)
+            return $"{(int)timeSpan.TotalDays}d ago";
+
+        return dateTime.ToString("MMM dd, yyyy");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        searchDebounceTimer?.Dispose();
+
+        if (jsModule != null)
+        {
+            try
+            {
+                await jsModule.InvokeVoidAsync("cleanupInfiniteScroll");
+                await jsModule.DisposeAsync();
+            }
+            catch { }
+        }
+
+        dotNetHelper?.Dispose();
+    }
+}

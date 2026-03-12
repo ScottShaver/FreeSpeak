@@ -138,9 +138,10 @@ namespace FreeSpeakWeb.Services
 
                 if (!string.IsNullOrWhiteSpace(searchTerm))
                 {
+                    var lowerSearchTerm = searchTerm.ToLower();
                     query = query.Where(g => 
-                        g.Name.Contains(searchTerm) || 
-                        g.Description.Contains(searchTerm));
+                        g.Name.ToLower().Contains(lowerSearchTerm) || 
+                        g.Description.ToLower().Contains(lowerSearchTerm));
                 }
 
                 return await query
@@ -191,9 +192,10 @@ namespace FreeSpeakWeb.Services
 
                 if (!string.IsNullOrWhiteSpace(searchTerm))
                 {
+                    var lowerSearchTerm = searchTerm.ToLower();
                     query = query.Where(g => 
-                        g.Name.Contains(searchTerm) || 
-                        g.Description.Contains(searchTerm));
+                        g.Name.ToLower().Contains(lowerSearchTerm) || 
+                        g.Description.ToLower().Contains(lowerSearchTerm));
                 }
 
                 return await query.CountAsync();
@@ -202,6 +204,71 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogError(ex, "Error getting public group count");
                 return 0;
+            }
+        }
+
+        /// <summary>
+        /// Search for groups by partial name match
+        /// </summary>
+        public async Task<List<Group>> SearchGroupsAsync(string searchQuery, int skip = 0, int take = 20)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                if (string.IsNullOrWhiteSpace(searchQuery))
+                {
+                    return new List<Group>();
+                }
+
+                // Convert to lowercase for case-insensitive search
+                var lowerSearchQuery = searchQuery.ToLower();
+
+                return await context.Groups
+                    .Include(g => g.Creator)
+                    .Where(g => g.IsPublic && !g.IsHidden && 
+                        (g.Name.ToLower().Contains(lowerSearchQuery) || g.Description.ToLower().Contains(lowerSearchQuery)))
+                    .OrderByDescending(g => g.MemberCount)
+                    .ThenByDescending(g => g.LastActiveAt)
+                    .Skip(skip)
+                    .Take(take)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error searching groups with query: {SearchQuery}", searchQuery);
+                return new List<Group>();
+            }
+        }
+
+        /// <summary>
+        /// Get suggested groups for a user based on activity and membership
+        /// </summary>
+        public async Task<List<Group>> GetSuggestedGroupsAsync(string userId, int take = 10)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Get groups the user is already a member of
+                var userGroupIds = await context.GroupUsers
+                    .Where(gu => gu.UserId == userId)
+                    .Select(gu => gu.GroupId)
+                    .ToListAsync();
+
+                // Get public groups the user is NOT a member of, ordered by member count and activity
+                return await context.Groups
+                    .Include(g => g.Creator)
+                    .Where(g => g.IsPublic && !g.IsHidden && !userGroupIds.Contains(g.Id))
+                    .OrderByDescending(g => g.MemberCount)
+                    .ThenByDescending(g => g.LastActiveAt)
+                    .Take(take)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting suggested groups for user {UserId}", userId);
+                return new List<Group>();
             }
         }
 

@@ -1,0 +1,679 @@
+@using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Components.Shared
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@inject IJSRuntime JS
+@inject GroupPostService GroupPostService
+@inject NavigationManager NavigationManager
+@inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
+@implements IAsyncDisposable
+
+<div class="feed-article">
+    <!-- 1. Header Area -->
+    <FeedArticleHeader 
+        AuthorName="@GetFormattedAuthorName()"
+        AuthorImageUrl="@AuthorImageUrl"
+        CreatedAt="@CreatedAt"
+        AudienceType="@AudienceType.Public"
+        IsPinned="@currentIsPinned"
+        LikeCount="@LikeCount"
+        CommentCount="@CommentCount"
+        ShareCount="@ShareCount"
+        ReactionBreakdown="@ReactionBreakdown"
+        IsModalView="@IsModalView"
+        IsReadOnly="@IsReadOnly"
+        OnShowLikesModal="@ShowLikesModal"
+        OnCommentCountClick="@OnCommentCountClick"
+        ShowMenu="@showMenu"
+        MenuItems="@menuItems"
+        MenuPositionStyle="@menuPositionStyle"
+        OnToggleMenu="@ToggleMenu"
+        OnCloseMenu="@CloseMenu" />
+
+    <!-- 2. Main Content Area -->
+    <FeedArticleContent 
+        ArticleContent="@ArticleContent"
+        IsModalView="@IsModalView"
+        IsTruncated="@isTruncated"
+        ShouldShowExpandButton="@shouldShowExpandButton"
+        OnShowPostDetail="@ShowPostDetail"
+        OnContentElementRendered="@HandleContentElementRendered" />
+
+    <!-- 2.5 Post Images -->
+    <FeedArticleImages 
+        Images="@Images"
+        OnOpenImageViewer="@OpenImageViewer" />
+
+    <!-- 4. Action Links -->
+    <FeedArticleActions 
+        IsReadOnly="@IsReadOnly"
+        IsOwnPost="@IsOwnPost"
+        IsModalView="@IsModalView"
+        UserReaction="@UserReaction"
+        ShowReactionPicker="@showReactionPicker"
+        OnShowReactionPicker="@ShowReactionPicker"
+        OnStartHideTimer="@StartHideTimer"
+        OnCancelHideTimer="@CancelHideTimer"
+        OnLikeClick="@OnLikeClick"
+        OnReactionPicked="@HandleReaction"
+        OnRemoveReaction="@HandleRemoveReaction"
+        OnCommentClick="@OnCommentClick"
+        OnShareClick="@OnShareClick" />
+
+    <!-- More Comments Indicator -->
+    @if (!IsModalView && DirectCommentCount > 0 && Comments != null && DirectCommentCount > Comments.Count)
+    {
+        <div class="more-comments-indicator">
+            <button type="button" class="more-comments-button" @onclick="OnCommentClick">
+                View more comments
+            </button>
+        </div>
+    }
+
+    <!-- 5. Display Existing Comments -->
+    @if (Comments != null && Comments.Any())
+    {
+        <div class="article-comments">
+            @foreach (var comment in Comments)
+            {
+                <MultiLineCommentDisplay 
+                    CommentId="@comment.CommentId"
+                    UserName="@comment.UserName"
+                    UserImageUrl="@comment.UserImageUrl"
+                    CommentAuthorId="@comment.CommentAuthorId"
+                    CommentText="@comment.CommentText"
+                    ImageUrl="@comment.ImageUrl"
+                    Timestamp="@comment.Timestamp"
+                    Replies="@comment.Replies"
+                    LikeCount="@comment.LikeCount"
+                    UserReaction="@comment.UserReaction"
+                    ReactionBreakdown="@comment.ReactionBreakdown"
+                    CurrentUserId="@CurrentUserId"
+                    CurrentUserImageUrl="@CurrentUserImageUrl"
+                    CurrentUserName="@CurrentUserName"
+                    Depth="0"
+                    OnReactionChanged="@OnCommentReactionChanged"
+                    OnRemoveReaction="@OnRemoveCommentReaction"
+                    OnReplySubmitted="@OnReplySubmitted" />
+            }
+        </div>
+    }
+
+    <!-- 6. Comment Editor -->
+    <FeedArticleCommentEditor 
+        HideCommentEditor="@HideCommentEditor"
+        IsReadOnly="@IsReadOnly"
+        HasReachedCommentLimit="@HasReachedCommentLimit"
+        CurrentUserImageUrl="@CurrentUserImageUrl"
+        CurrentUserName="@CurrentUserName"
+        OnCommentSubmitted="@OnCommentSubmitted" />
+</div>
+
+@if (showLikesModal)
+{
+    <LikesModal Likes="@likes" isLoading="@isLoadingLikes" OnClose="CloseLikesModal" />
+}
+
+<ImageViewerModal 
+    IsVisible="@showImageViewer"
+    ImageUrls="@imageUrls"
+    InitialIndex="@selectedImageIndex"
+    OnClose="CloseImageViewer" />
+
+<!-- Delete Confirmation Modal -->
+@if (showDeleteConfirmation)
+{
+    <div class="modal-backdrop" @onclick="CancelDeletePost" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+        <div class="confirmation-modal" @onclick:stopPropagation="true" style="background: var(--surface-color); border: 2px solid var(--border-color); border-radius: 8px; padding: 24px; max-width: 400px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <h3 style="margin: 0 0 16px 0; font-size: 20px; font-weight: 600; color: var(--text-primary);">Delete Post</h3>
+            <p style="margin: 0 0 24px 0; color: var(--text-secondary); line-height: 1.5;">Are you sure you want to delete this group post? This action cannot be undone and will permanently remove the post, all comments, likes, and images.</p>
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" @onclick="CancelDeletePost" style="padding: 8px 16px; border: 1px solid var(--border-color); background: var(--surface-color); border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; color: var(--text-secondary);">
+                    Cancel
+                </button>
+                <button type="button" @onclick="ConfirmDeletePost" style="padding: 8px 16px; border: none; background: var(--danger-color); color: white; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500;">
+                    Delete Post
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int PostId { get; set; }
+
+    [Parameter]
+    public int GroupId { get; set; }
+
+    [Parameter]
+    public string GroupName { get; set; } = string.Empty;
+
+    [Parameter]
+    public string AuthorId { get; set; } = string.Empty;
+
+    [Parameter]
+    public string AuthorName { get; set; } = "Anonymous";
+
+    [Parameter]
+    public string? AuthorImageUrl { get; set; }
+
+    [Parameter]
+    public string? CurrentUserId { get; set; }
+
+    [Parameter]
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+    [Parameter]
+    public RenderFragment? ArticleContent { get; set; }
+
+    [Parameter]
+    public int LikeCount { get; set; } = 0;
+
+    [Parameter]
+    public int CommentCount { get; set; } = 0;
+
+    [Parameter]
+    public int ShareCount { get; set; } = 0;
+
+    [Parameter]
+    public int DirectCommentCount { get; set; } = 0;
+
+    [Parameter]
+    public List<CommentDisplayModel>? Comments { get; set; }
+
+    [Parameter]
+    public string? CurrentUserImageUrl { get; set; }
+
+    [Parameter]
+    public string? CurrentUserName { get; set; }
+
+    [Parameter]
+    public Dictionary<LikeType, int>? ReactionBreakdown { get; set; }
+
+    [Parameter]
+    public LikeType? UserReaction { get; set; }
+
+    [Parameter]
+    public EventCallback<LikeType> OnReactionChanged { get; set; }
+
+    [Parameter]
+    public EventCallback OnRemoveReaction { get; set; }
+
+    [Parameter]
+    public EventCallback<(int PostId, string Content)> OnCommentAdded { get; set; }
+
+    [Parameter]
+    public EventCallback<(int ParentCommentId, string Content)> OnReplySubmitted { get; set; }
+
+    [Parameter]
+    public EventCallback<(int CommentId, LikeType ReactionType)> OnCommentReactionChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnRemoveCommentReaction { get; set; }
+
+    [Parameter]
+    public bool HideCommentEditor { get; set; } = false;
+
+    [Parameter]
+    public bool IsModalView { get; set; } = false;
+
+    [Parameter]
+    public EventCallback OnShowPostDetail { get; set; }
+
+    [Parameter]
+    public EventCallback OnShowComments { get; set; }
+
+    [Parameter]
+    public bool IsPinned { get; set; } = false;
+
+    [Parameter]
+    public EventCallback<int> OnPinPost { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnUnpinPost { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnPostDeleted { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnEditPost { get; set; }
+
+    [Parameter]
+    public List<PostImage>? Images { get; set; }
+
+    [Parameter]
+    public bool IsReadOnly { get; set; } = false;
+
+    // Internal state for pinned status
+    private bool currentIsPinned = false;
+    private bool hasLocalPinnedChange = false;
+
+    private bool showReactionPicker = false;
+    private bool showLikesModal = false;
+    private bool isLoadingLikes = false;
+    private List<(ApplicationUser User, LikeType Type, DateTime CreatedAt)> likes = new();
+    private System.Threading.Timer? hideTimer;
+    private ElementReference contentElement;
+    private IJSObjectReference? module;
+    private DotNetObjectReference<GroupPostArticle>? dotNetHelper;
+    private bool isTruncated = false;
+    private bool shouldShowExpandButton = false;
+    private bool showMenu = false;
+    private List<PopupMenu.PopupMenuItem> menuItems = new();
+    private string menuPositionStyle = string.Empty;
+
+    // Delete confirmation state
+    private bool showDeleteConfirmation = false;
+
+    // Image viewer state
+    private bool showImageViewer = false;
+    private List<string> imageUrls = new();
+    private int selectedImageIndex = 0;
+
+    private bool IsOwnPost => !string.IsNullOrEmpty(CurrentUserId) && !string.IsNullOrEmpty(AuthorId) && CurrentUserId == AuthorId;
+
+    private bool HasReachedCommentLimit => DirectCommentCount >= SiteSettings.Value.MaxFeedPostDirectCommentCount;
+
+    private async Task HandleContentElementRendered(ElementReference elementRef)
+    {
+        contentElement = elementRef;
+    }
+
+    private void ShowReactionPicker()
+    {
+        if (IsOwnPost) return;
+
+        hideTimer?.Dispose();
+        showReactionPicker = true;
+        StateHasChanged();
+    }
+
+    private void CancelHideTimer()
+    {
+        if (IsOwnPost) return;
+
+        hideTimer?.Dispose();
+        showReactionPicker = true;
+        StateHasChanged();
+    }
+
+    private void StartHideTimer()
+    {
+        hideTimer?.Dispose();
+        hideTimer = new System.Threading.Timer(_ =>
+        {
+            InvokeAsync(() =>
+            {
+                showReactionPicker = false;
+                StateHasChanged();
+            });
+        }, null, 500, Timeout.Infinite);
+    }
+
+    private void HideReactionPicker()
+    {
+        showReactionPicker = false;
+    }
+
+    private async Task HandleReaction(LikeType reactionType)
+    {
+        showReactionPicker = false;
+        await OnReactionChanged.InvokeAsync(reactionType);
+    }
+
+    private async Task HandleRemoveReaction()
+    {
+        showReactionPicker = false;
+        if (OnRemoveReaction.HasDelegate)
+        {
+            await OnRemoveReaction.InvokeAsync();
+        }
+    }
+
+    private async Task OnLikeClick()
+    {
+        await OnReactionChanged.InvokeAsync(LikeType.Like);
+    }
+
+    private void ToggleMenu()
+    {
+        if (showMenu)
+        {
+            CloseMenu();
+        }
+        else
+        {
+            BuildMenuItems();
+            showMenu = true;
+            menuPositionStyle = "right: 0; top: 40px;";
+            StateHasChanged();
+        }
+    }
+
+    private void BuildMenuItems()
+    {
+        menuItems.Clear();
+
+        if (IsOwnPost)
+        {
+            if (IsModalView)
+            {
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = currentIsPinned ? "Unpin Post" : "Pin Post",
+                    Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
+                });
+
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = "Copy Link",
+                    Icon = "bi bi-link-45deg",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
+                });
+            }
+            else
+            {
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = "Edit Post",
+                    Icon = "bi bi-pencil",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandleEditPostClick())
+                });
+
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = currentIsPinned ? "Unpin Post" : "Pin Post",
+                    Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
+                });
+
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = "Delete Post",
+                    Icon = "bi bi-trash",
+                    OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
+                });
+
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = "Copy Link",
+                    Icon = "bi bi-link-45deg",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
+                });
+            }
+        }
+        else if (!string.IsNullOrEmpty(CurrentUserId))
+        {
+            menuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = currentIsPinned ? "Unpin Post" : "Pin Post",
+                Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
+                OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
+            });
+
+            menuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = "Report Post",
+                Icon = "bi bi-flag",
+                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Report Post"))
+            });
+
+            menuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = "Copy Link",
+                Icon = "bi bi-link-45deg",
+                OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
+            });
+        }
+        else
+        {
+            menuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = "Copy Link",
+                Icon = "bi bi-link-45deg",
+                OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
+            });
+        }
+    }
+
+    private void CloseMenu()
+    {
+        showMenu = false;
+        StateHasChanged();
+    }
+
+    private void ShowDeleteConfirmation()
+    {
+        CloseMenu();
+        showDeleteConfirmation = true;
+        StateHasChanged();
+    }
+
+    private void CancelDeletePost()
+    {
+        showDeleteConfirmation = false;
+        StateHasChanged();
+    }
+
+    private async Task ConfirmDeletePost()
+    {
+        showDeleteConfirmation = false;
+        StateHasChanged();
+
+        var result = await GroupPostService.DeleteGroupPostAsync(PostId, AuthorId);
+
+        if (result.Success)
+        {
+            if (OnPostDeleted.HasDelegate)
+            {
+                await OnPostDeleted.InvokeAsync(PostId);
+            }
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to delete post.");
+        }
+    }
+
+    private async Task HandleEditPostClick()
+    {
+        CloseMenu();
+
+        if (OnEditPost.HasDelegate)
+        {
+            await OnEditPost.InvokeAsync(PostId);
+        }
+    }
+
+    private async Task HandlePinUnpinClick()
+    {
+        if (IsPinned)
+        {
+            if (OnUnpinPost.HasDelegate)
+            {
+                await OnUnpinPost.InvokeAsync(PostId);
+            }
+        }
+        else
+        {
+            if (OnPinPost.HasDelegate)
+            {
+                await OnPinPost.InvokeAsync(PostId);
+            }
+        }
+    }
+
+    private async Task HandleCopyLink()
+    {
+        CloseMenu();
+
+        try
+        {
+            var baseUri = NavigationManager.BaseUri.TrimEnd('/');
+            var postUrl = $"{baseUri}/group/{GroupId}/post/{PostId}";
+
+            await JS.InvokeVoidAsync("navigator.clipboard.writeText", postUrl);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error copying link: {ex.Message}");
+        }
+    }
+
+    private async Task ShowMenu()
+    {
+        await JS.InvokeVoidAsync("alert", "Article Menu");
+    }
+
+    private async Task OnCommentClick()
+    {
+        if (OnShowComments.HasDelegate)
+        {
+            await OnShowComments.InvokeAsync();
+        }
+    }
+
+    private async Task OnShareClick()
+    {
+        await JS.InvokeVoidAsync("alert", "Share");
+    }
+
+    private async Task ShowLikesModal()
+    {
+        if (LikeCount == 0) return;
+
+        showLikesModal = true;
+        isLoadingLikes = true;
+        StateHasChanged();
+
+        try
+        {
+            likes = await GroupPostService.GetGroupPostLikesWithDetailsAsync(PostId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading likes: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingLikes = false;
+            StateHasChanged();
+        }
+    }
+
+    private void CloseLikesModal()
+    {
+        showLikesModal = false;
+        likes.Clear();
+    }
+
+    private void OpenImageViewer(int imageIndex)
+    {
+        if (Images == null || !Images.Any()) return;
+
+        imageUrls = Images.Select(img => $"{img.ImageUrl}?size=full").ToList();
+        selectedImageIndex = imageIndex;
+        showImageViewer = true;
+        StateHasChanged();
+    }
+
+    private void CloseImageViewer()
+    {
+        showImageViewer = false;
+        StateHasChanged();
+    }
+
+    private async Task OnCommentSubmitted(string commentText)
+    {
+        if (OnCommentAdded.HasDelegate && !string.IsNullOrWhiteSpace(commentText))
+        {
+            await OnCommentAdded.InvokeAsync((PostId, commentText));
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (!hasLocalPinnedChange)
+        {
+            currentIsPinned = IsPinned;
+        }
+        else if (currentIsPinned == IsPinned)
+        {
+            hasLocalPinnedChange = false;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (!IsModalView)
+            {
+                try
+                {
+                    module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/FeedArticle.razor.js");
+                    dotNetHelper = DotNetObjectReference.Create(this);
+                    await module.InvokeVoidAsync("initializeContentMeasurement", contentElement, dotNetHelper);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error initializing content measurement: {ex.Message}");
+                }
+            }
+        }
+    }
+
+    [JSInvokable]
+    public void SetContentOverflow(bool isOverflowing)
+    {
+        shouldShowExpandButton = isOverflowing;
+        isTruncated = isOverflowing;
+        StateHasChanged();
+    }
+
+    private async Task ShowPostDetail()
+    {
+        if (OnShowPostDetail.HasDelegate)
+        {
+            await OnShowPostDetail.InvokeAsync();
+        }
+    }
+
+    private async Task OnCommentCountClick()
+    {
+        if (CommentCount == 0) return;
+
+        if (OnShowComments.HasDelegate)
+        {
+            await OnShowComments.InvokeAsync();
+        }
+    }
+
+    private string GetFormattedAuthorName()
+    {
+        if (!string.IsNullOrEmpty(GroupName))
+        {
+            return $"{GroupName} > {AuthorName}";
+        }
+        return AuthorName;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        hideTimer?.Dispose();
+
+        if (module != null)
+        {
+            try
+            {
+                await module.InvokeVoidAsync("cleanupContentMeasurement");
+                await module.DisposeAsync();
+            }
+            catch { }
+        }
+
+        dotNetHelper?.Dispose();
+    }
+}

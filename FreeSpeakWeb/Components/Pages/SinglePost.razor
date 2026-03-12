@@ -4,10 +4,12 @@
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.SocialFeed
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
 @inject PostService PostService
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject HtmlSanitizationService HtmlSanitizationService
+@inject UserManager<ApplicationUser> UserManager
 @attribute [AllowAnonymous]
 
 <PageTitle>@pageTitle</PageTitle>
@@ -99,7 +101,16 @@
             {
                 currentUserId = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                 currentUserName = user.Identity.Name;
-                // Note: You may need to add logic to get the user's image URL
+                
+                // Load the actual user from the database to get accurate profile picture
+                if (currentUserId != null)
+                {
+                    var currentUser = await UserManager.FindByIdAsync(currentUserId);
+                    if (currentUser != null)
+                    {
+                        currentUserImageUrl = currentUser.ProfilePictureUrl;
+                    }
+                }
             }
 
             // Attempt to load the post

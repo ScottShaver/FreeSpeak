@@ -14,6 +14,8 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject NotificationService NotificationService
 @inject PostService PostService
+@inject GroupPostService GroupPostService
+@inject PinnedGroupPostService PinnedGroupPostService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 @inject UserPreferenceService UserPreferenceService
@@ -137,6 +139,43 @@
     </PostDetailModal>
 }
 
+@if (selectedGroupPost != null)
+{
+    <GroupPostDetailModal 
+        PostId="@selectedGroupPost.Id"
+        GroupId="@selectedGroupPost.GroupId"
+        GroupName="@selectedGroupPost.Group?.Name"
+        AuthorId="@selectedGroupPost.AuthorId"
+        AuthorName="@selectedGroupPostAuthorName"
+        AuthorImageUrl="@selectedGroupPost.Author?.ProfilePictureUrl"
+        CurrentUserId="@currentUserId"
+        CurrentUserImageUrl="@currentUserImageUrl"
+        CurrentUserName="@currentUserName"
+        CreatedAt="@selectedGroupPost.CreatedAt"
+        LikeCount="@selectedGroupPost.LikeCount"
+        CommentCount="@selectedGroupPost.CommentCount"
+        ShareCount="@selectedGroupPost.ShareCount"
+        Images="@ConvertGroupPostImagesToPostImages(selectedGroupPost.Images)"
+        TargetCommentId="@targetGroupCommentId"
+        ReactionBreakdown="@groupPostReactionBreakdown"
+        UserReaction="@groupPostUserReaction"
+        IsPinned="@selectedGroupPostIsPinned"
+        OnReactionChanged="@HandleGroupPostReactionChanged"
+        OnRemoveReaction="@HandleGroupPostRemoveReaction"
+        OnPinPost="@HandleGroupPostPin"
+        OnUnpinPost="@HandleGroupPostUnpin"
+        OnPostDeleted="@HandleGroupPostDeleted"
+        OnEditPost="@HandleGroupPostEdit"
+        OnCommentAdded="@HandleGroupPostCommentAdded"
+        OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
+        OnRemoveCommentReaction="@HandleGroupPostRemoveCommentReaction"
+        OnClose="@CloseGroupPostDetail">
+        <ArticleContent>
+            @((MarkupString)FormatContentWithLineBreaks(selectedGroupPost.Content))
+        </ArticleContent>
+    </GroupPostDetailModal>
+}
+
 @code {
     private List<UserNotification> notifications = new();
     private string? currentUserId;
@@ -152,12 +191,22 @@
     private bool hasMore = false;
     private int unreadCount = 0;
     private int allNotificationsCount = 0;
+
+    // Regular post modal state
     private Post? selectedPost = null;
     private string selectedPostAuthorName = "Unknown";
     private bool selectedPostIsPinned = false;
     private int? targetCommentId = null;
     private Dictionary<LikeType, int>? postReactionBreakdown = null;
     private LikeType? userReaction = null;
+
+    // Group post modal state
+    private GroupPost? selectedGroupPost = null;
+    private string selectedGroupPostAuthorName = "Unknown";
+    private bool selectedGroupPostIsPinned = false;
+    private int? targetGroupCommentId = null;
+    private Dictionary<LikeType, int>? groupPostReactionBreakdown = null;
+    private LikeType? groupPostUserReaction = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -328,7 +377,7 @@
                     PropertyNameCaseInsensitive = true 
                 };
                 var data = JsonSerializer.Deserialize<NotificationData>(notification.Data, options);
-                Console.WriteLine($"[DEBUG] Deserialized data: NavigationUrl={data?.NavigationUrl}, PostId={data?.PostId}");
+                Console.WriteLine($"[DEBUG] Deserialized data: NavigationUrl={data?.NavigationUrl}, PostId={data?.PostId}, GroupPostId={data?.GroupPostId}, GroupId={data?.GroupId}");
 
                 // Handle navigation URL (for friend requests, etc.)
                 if (!string.IsNullOrEmpty(data?.NavigationUrl))
@@ -338,7 +387,41 @@
                     return;
                 }
 
-                // Handle post notifications
+                // Handle group post notifications
+                if (data?.GroupPostId != null && data?.GroupId != null)
+                {
+                    var groupPost = await GroupPostService.GetGroupPostByIdAsync(data.GroupPostId.Value);
+                    if (groupPost != null)
+                    {
+                        selectedGroupPost = groupPost;
+                        targetGroupCommentId = data.CommentId; // Set the target comment ID for scrolling
+
+                        // Load author's display name using their preference
+                        if (groupPost.Author != null)
+                        {
+                            selectedGroupPostAuthorName = await UserPreferenceService.FormatUserDisplayNameAsync(
+                                groupPost.Author.Id,
+                                groupPost.Author.FirstName,
+                                groupPost.Author.LastName,
+                                groupPost.Author.UserName ?? "Unknown"
+                            );
+                        }
+
+                        // Load pinned status
+                        selectedGroupPostIsPinned = currentUserId != null && await PinnedGroupPostService.IsGroupPostPinnedAsync(currentUserId, groupPost.Id);
+
+                        // Load reaction data
+                        groupPostReactionBreakdown = await GroupPostService.GetReactionBreakdownAsync(groupPost.Id);
+                        groupPostUserReaction = currentUserId != null 
+                            ? await GroupPostService.GetUserReactionAsync(groupPost.Id, currentUserId)
+                            : null;
+
+                        StateHasChanged();
+                        return;
+                    }
+                }
+
+                // Handle regular post notifications
                 if (data?.PostId != null)
                 {
                     var post = await PostService.GetPostByIdAsync(data.PostId.Value);
@@ -444,6 +527,165 @@
         {
             Console.WriteLine($"Error removing reaction: {ex.Message}");
         }
+    }
+
+    // Group post event handlers
+    private async Task HandleGroupPostReactionChanged(LikeType reactionType)
+    {
+        if (currentUserId == null || selectedGroupPost == null) return;
+
+        try
+        {
+            var result = await GroupPostService.LikePostAsync(selectedGroupPost.Id, currentUserId, reactionType);
+
+            if (result.Success)
+            {
+                // Update user's reaction
+                groupPostUserReaction = reactionType;
+
+                // Reload reaction breakdown
+                groupPostReactionBreakdown = await GroupPostService.GetReactionBreakdownAsync(selectedGroupPost.Id);
+
+                // Update like count
+                var post = await GroupPostService.GetGroupPostByIdAsync(selectedGroupPost.Id);
+                if (post != null)
+                {
+                    selectedGroupPost.LikeCount = post.LikeCount;
+                }
+
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error handling group post reaction: {ex.Message}");
+        }
+    }
+
+    private async Task HandleGroupPostRemoveReaction()
+    {
+        if (currentUserId == null || selectedGroupPost == null) return;
+
+        try
+        {
+            var result = await GroupPostService.UnlikePostAsync(selectedGroupPost.Id, currentUserId);
+
+            if (result.Success)
+            {
+                // Update user's reaction
+                groupPostUserReaction = null;
+
+                // Reload reaction breakdown
+                groupPostReactionBreakdown = await GroupPostService.GetReactionBreakdownAsync(selectedGroupPost.Id);
+
+                // Update like count
+                var post = await GroupPostService.GetGroupPostByIdAsync(selectedGroupPost.Id);
+                if (post != null)
+                {
+                    selectedGroupPost.LikeCount = post.LikeCount;
+                }
+
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error removing group post reaction: {ex.Message}");
+        }
+    }
+
+    private async Task HandleGroupPostPin(int postId)
+    {
+        if (currentUserId == null || selectedGroupPost == null) return;
+
+        try
+        {
+            var result = await PinnedGroupPostService.PinGroupPostAsync(currentUserId, postId);
+
+            if (result.Success)
+            {
+                selectedGroupPostIsPinned = true;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error pinning group post: {ex.Message}");
+        }
+    }
+
+    private async Task HandleGroupPostUnpin(int postId)
+    {
+        if (currentUserId == null || selectedGroupPost == null) return;
+
+        try
+        {
+            var result = await PinnedGroupPostService.UnpinGroupPostAsync(currentUserId, postId);
+
+            if (result.Success)
+            {
+                selectedGroupPostIsPinned = false;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error unpinning group post: {ex.Message}");
+        }
+    }
+
+    private void HandleGroupPostDeleted(int postId)
+    {
+        // Close the modal since the post is deleted
+        CloseGroupPostDetail();
+    }
+
+    private async Task HandleGroupPostCommentAdded((int PostId, string Content) data)
+    {
+        if (currentUserId == null || selectedGroupPost == null) return;
+
+        try
+        {
+            var result = await GroupPostService.AddCommentAsync(data.PostId, currentUserId, data.Content, null, null);
+
+            if (result.Success && selectedGroupPost != null)
+            {
+                selectedGroupPost.CommentCount++;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error adding group post comment: {ex.Message}");
+        }
+    }
+
+    private async Task HandleGroupPostCommentReactionChanged((int CommentId, LikeType ReactionType) data)
+    {
+        // This is handled by the modal itself
+        await Task.CompletedTask;
+    }
+
+    private async Task HandleGroupPostRemoveCommentReaction(int commentId)
+    {
+        // This is handled by the modal itself
+        await Task.CompletedTask;
+    }
+
+    private void CloseGroupPostDetail()
+    {
+        selectedGroupPost = null;
+        targetGroupCommentId = null;
+        groupPostReactionBreakdown = null;
+        groupPostUserReaction = null;
+        StateHasChanged();
+    }
+
+    private async Task HandleGroupPostEdit(int postId)
+    {
+        // Group post editing is not currently supported from notifications
+        // This would require opening the Groups page with the edit modal
+        await Task.CompletedTask;
     }
 
     private async Task HandlePinPost(int postId)
@@ -594,10 +836,27 @@
     private class NotificationData
     {
         public int? PostId { get; set; }
+        public int? GroupPostId { get; set; }
+        public int? GroupId { get; set; }
         public int? CommentId { get; set; }
         public string? CommenterId { get; set; }
         public string? ReactorId { get; set; }
         public string? ReactionType { get; set; }
         public string? NavigationUrl { get; set; }
+    }
+
+    private List<PostImage>? ConvertGroupPostImagesToPostImages(ICollection<GroupPostImage>? groupPostImages)
+    {
+        if (groupPostImages == null || !groupPostImages.Any())
+            return null;
+
+        return groupPostImages.Select(gpi => new PostImage
+        {
+            Id = gpi.Id,
+            PostId = 0, // Not used for group posts displayed in modal
+            ImageUrl = gpi.ImageUrl,
+            DisplayOrder = gpi.DisplayOrder,
+            UploadedAt = gpi.UploadedAt
+        }).ToList();
     }
 }
