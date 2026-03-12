@@ -10,6 +10,9 @@ namespace FreeSpeakWeb.Services
         private readonly ILogger<NotificationService> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
 
+        // DOS PROTECTION: Limit bulk operations to prevent resource exhaustion
+        private const int MaxBulkNotificationRecipients = 1000; // Max 1000 recipients per bulk operation
+
         public NotificationService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<NotificationService> logger,
@@ -100,6 +103,14 @@ namespace FreeSpeakWeb.Services
             if (userIds == null || !userIds.Any())
             {
                 return (false, "At least one user ID is required.", 0);
+            }
+
+            // DOS PROTECTION: Limit number of recipients to prevent resource exhaustion
+            if (userIds.Count > MaxBulkNotificationRecipients)
+            {
+                _logger.LogWarning("Bulk notification attempt with {Count} recipients exceeds limit of {Limit}", 
+                    userIds.Count, MaxBulkNotificationRecipients);
+                return (false, $"Maximum {MaxBulkNotificationRecipients} recipients allowed per bulk operation.", 0);
             }
 
             if (string.IsNullOrWhiteSpace(message))

@@ -9,6 +9,12 @@ namespace FreeSpeakWeb.Services
         private readonly ILogger<ImageUploadService> _logger;
         private readonly string _uploadsBasePath;
 
+        // DOS PROTECTION: Limit file sizes and counts to prevent memory exhaustion
+        private const long MaxImageSizeBytes = 10 * 1024 * 1024; // 10MB per image
+        private const long MaxVideoSizeBytes = 100 * 1024 * 1024; // 100MB per video
+        private const int MaxImagesPerUpload = 10; // Max 10 images per upload
+        private const int MaxVideosPerUpload = 5; // Max 5 videos per upload
+
         public ImageUploadService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<ImageUploadService> logger,
@@ -30,6 +36,23 @@ namespace FreeSpeakWeb.Services
             List<(string FileName, string Base64Data, string ContentType)> images,
             IProgress<int>? progress = null)
         {
+            // SECURITY: Validate userId is a valid GUID to prevent path traversal attacks
+            if (!Guid.TryParse(userId, out _))
+            {
+                return (false, new List<string>(), "Invalid user ID format");
+            }
+
+            // DOS PROTECTION: Limit number of images to prevent resource exhaustion
+            if (images == null || !images.Any())
+            {
+                return (false, new List<string>(), "No images provided");
+            }
+
+            if (images.Count > MaxImagesPerUpload)
+            {
+                return (false, new List<string>(), $"Maximum {MaxImagesPerUpload} images allowed per upload");
+            }
+
             var imageUrls = new List<string>();
             var totalImages = images.Count;
 
@@ -61,6 +84,14 @@ namespace FreeSpeakWeb.Services
                     }
 
                     var imageBytes = Convert.FromBase64String(base64Data);
+
+                    // DOS PROTECTION: Validate file size after decoding
+                    if (imageBytes.Length > MaxImageSizeBytes)
+                    {
+                        _logger.LogWarning("Image {FileName} exceeds size limit for user {UserId}", image.FileName, userId);
+                        return (false, new List<string>(), $"Image {image.FileName} exceeds {MaxImageSizeBytes / 1024 / 1024}MB size limit");
+                    }
+
                     await File.WriteAllBytesAsync(filePath, imageBytes);
 
                     // Return secure API URL that requires authentication
@@ -117,6 +148,23 @@ namespace FreeSpeakWeb.Services
             List<(string FileName, string Base64Data, string ContentType)> videos,
             IProgress<int>? progress = null)
         {
+            // SECURITY: Validate userId is a valid GUID to prevent path traversal attacks
+            if (!Guid.TryParse(userId, out _))
+            {
+                return (false, new List<string>(), "Invalid user ID format");
+            }
+
+            // DOS PROTECTION: Limit number of videos to prevent resource exhaustion
+            if (videos == null || !videos.Any())
+            {
+                return (false, new List<string>(), "No videos provided");
+            }
+
+            if (videos.Count > MaxVideosPerUpload)
+            {
+                return (false, new List<string>(), $"Maximum {MaxVideosPerUpload} videos allowed per upload");
+            }
+
             var videoUrls = new List<string>();
             var totalVideos = videos.Count;
 
@@ -148,6 +196,14 @@ namespace FreeSpeakWeb.Services
                     }
 
                     var videoBytes = Convert.FromBase64String(base64Data);
+
+                    // DOS PROTECTION: Validate file size after decoding
+                    if (videoBytes.Length > MaxVideoSizeBytes)
+                    {
+                        _logger.LogWarning("Video {FileName} exceeds size limit for user {UserId}", video.FileName, userId);
+                        return (false, new List<string>(), $"Video {video.FileName} exceeds {MaxVideoSizeBytes / 1024 / 1024}MB size limit");
+                    }
+
                     await File.WriteAllBytesAsync(filePath, videoBytes);
 
                     // Return secure API URL that requires authentication

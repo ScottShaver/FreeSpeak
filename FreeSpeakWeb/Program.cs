@@ -18,6 +18,34 @@ namespace FreeSpeakWeb
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
+            // DOS PROTECTION: Configure Blazor Server Circuit options
+            builder.Services.Configure<Microsoft.AspNetCore.Components.Server.CircuitOptions>(options =>
+            {
+                // Limit the number of unacknowledged render batches
+                options.MaxBufferedUnacknowledgedRenderBatches = 10;
+
+                // Disconnect circuits after 3 minutes of inactivity
+                options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(3);
+
+                // Max number of JavaScript interop calls in the queue
+                options.JSInteropDefaultCallTimeout = TimeSpan.FromMinutes(1);
+            });
+
+            // DOS PROTECTION: Configure SignalR Hub options
+            builder.Services.AddSignalR(options =>
+            {
+                // Limit maximum message size to 1MB
+                options.MaximumReceiveMessageSize = 1 * 1024 * 1024; // 1MB
+
+                // Limit parallel invocations per connection
+                options.MaximumParallelInvocationsPerClient = 1;
+
+                // Client timeout settings
+                options.ClientTimeoutInterval = TimeSpan.FromSeconds(60);
+                options.HandshakeTimeout = TimeSpan.FromSeconds(15);
+                options.KeepAliveInterval = TimeSpan.FromSeconds(15);
+            });
+
             // Add controllers for API endpoints (including SecureFileController)
             builder.Services.AddControllers();
 
@@ -145,6 +173,21 @@ namespace FreeSpeakWeb
             // Configure Kestrel to listen on all network interfaces for mobile testing
             builder.WebHost.ConfigureKestrel(serverOptions =>
             {
+                // DOS PROTECTION: Limit maximum request body size to 100MB
+                serverOptions.Limits.MaxRequestBodySize = 100 * 1024 * 1024; // 100MB
+
+                // DOS PROTECTION: Limit max concurrent connections
+                serverOptions.Limits.MaxConcurrentConnections = 1000;
+                serverOptions.Limits.MaxConcurrentUpgradedConnections = 1000;
+
+                // DOS PROTECTION: Request header limits
+                serverOptions.Limits.MaxRequestHeaderCount = 100;
+                serverOptions.Limits.MaxRequestHeadersTotalSize = 32 * 1024; // 32KB
+
+                // DOS PROTECTION: Connection timeout settings
+                serverOptions.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(2);
+                serverOptions.Limits.RequestHeadersTimeout = TimeSpan.FromSeconds(30);
+
                 serverOptions.ListenAnyIP(5000); // HTTP
                 serverOptions.ListenAnyIP(7025, listenOptions =>
                 {
