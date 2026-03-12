@@ -102,6 +102,9 @@ namespace FreeSpeakWeb
             builder.Services.AddScoped<GroupService>();
             builder.Services.AddScoped<GroupRuleService>();
             builder.Services.AddScoped<GroupMemberService>();
+            builder.Services.AddScoped<GroupPostService>();
+            builder.Services.AddScoped<PinnedGroupPostService>();
+            builder.Services.AddScoped<GroupBannedMemberService>();
 
             // SECURITY: Add rate limiting to prevent abuse
             builder.Services.AddRateLimiter(options =>

@@ -19,6 +19,14 @@ namespace FreeSpeakWeb.Data
         public DbSet<GroupRule> GroupRules { get; set; }
         public DbSet<GroupJoinRequest> GroupJoinRequests { get; set; }
         public DbSet<GroupUser> GroupUsers { get; set; }
+        public DbSet<GroupPost> GroupPosts { get; set; }
+        public DbSet<GroupPostImage> GroupPostImages { get; set; }
+        public DbSet<PinnedGroupPost> PinnedGroupPosts { get; set; }
+        public DbSet<GroupBannedMember> GroupBannedMembers { get; set; }
+        public DbSet<GroupPostComment> GroupPostComments { get; set; }
+        public DbSet<GroupPostLike> GroupPostLikes { get; set; }
+        public DbSet<GroupPostCommentLike> GroupPostCommentLikes { get; set; }
+        public DbSet<GroupPostNotificationMute> GroupPostNotificationMutes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -353,6 +361,196 @@ namespace FreeSpeakWeb.Data
                 entity.HasIndex(gu => new { gu.GroupId, gu.UserId }).IsUnique();
                 // Composite index for finding group admins/moderators
                 entity.HasIndex(gu => new { gu.GroupId, gu.IsAdmin, gu.IsModerator });
+            });
+
+            // Configure GroupPost entity
+            modelBuilder.Entity<GroupPost>(entity =>
+            {
+                entity.HasKey(gp => gp.Id);
+
+                entity.HasOne(gp => gp.Group)
+                    .WithMany()
+                    .HasForeignKey(gp => gp.GroupId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(gp => gp.Author)
+                    .WithMany()
+                    .HasForeignKey(gp => gp.AuthorId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(gp => gp.Content)
+                    .IsRequired();
+
+                // Create indexes
+                entity.HasIndex(gp => gp.GroupId);
+                entity.HasIndex(gp => gp.AuthorId);
+                entity.HasIndex(gp => gp.CreatedAt);
+                // Composite index for finding group posts
+                entity.HasIndex(gp => new { gp.GroupId, gp.CreatedAt });
+            });
+
+            // Configure GroupPostImage entity
+            modelBuilder.Entity<GroupPostImage>(entity =>
+            {
+                entity.HasKey(gpi => gpi.Id);
+
+                entity.HasOne(gpi => gpi.Post)
+                    .WithMany(gp => gp.Images)
+                    .HasForeignKey(gpi => gpi.PostId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Property(gpi => gpi.ImageUrl)
+                    .IsRequired();
+
+                // Create indexes
+                entity.HasIndex(gpi => gpi.PostId);
+                entity.HasIndex(gpi => new { gpi.PostId, gpi.DisplayOrder });
+            });
+
+            // Configure PinnedGroupPost entity
+            modelBuilder.Entity<PinnedGroupPost>(entity =>
+            {
+                entity.HasKey(pgp => pgp.Id);
+
+                entity.HasOne(pgp => pgp.User)
+                    .WithMany()
+                    .HasForeignKey(pgp => pgp.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(pgp => pgp.Post)
+                    .WithMany()
+                    .HasForeignKey(pgp => pgp.PostId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Ensure a user can only pin a group post once
+                entity.HasIndex(pgp => new { pgp.UserId, pgp.PostId }).IsUnique();
+
+                // Create additional indexes
+                entity.HasIndex(pgp => pgp.UserId);
+                entity.HasIndex(pgp => pgp.PostId);
+                entity.HasIndex(pgp => pgp.PinnedAt);
+            });
+
+            // Configure GroupBannedMember entity
+            modelBuilder.Entity<GroupBannedMember>(entity =>
+            {
+                entity.HasKey(gbm => gbm.Id);
+
+                entity.HasOne(gbm => gbm.Group)
+                    .WithMany()
+                    .HasForeignKey(gbm => gbm.GroupId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(gbm => gbm.User)
+                    .WithMany()
+                    .HasForeignKey(gbm => gbm.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Ensure a user can only be banned once per group
+                entity.HasIndex(gbm => new { gbm.GroupId, gbm.UserId }).IsUnique();
+
+                // Create additional indexes
+                entity.HasIndex(gbm => gbm.GroupId);
+                entity.HasIndex(gbm => gbm.UserId);
+                entity.HasIndex(gbm => gbm.BannedAt);
+            });
+
+            // Configure GroupPostComment entity
+            modelBuilder.Entity<GroupPostComment>(entity =>
+            {
+                entity.HasKey(gpc => gpc.Id);
+
+                entity.HasOne(gpc => gpc.Post)
+                    .WithMany(gp => gp.Comments)
+                    .HasForeignKey(gpc => gpc.PostId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(gpc => gpc.Author)
+                    .WithMany()
+                    .HasForeignKey(gpc => gpc.AuthorId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(gpc => gpc.ParentComment)
+                    .WithMany(c => c.Replies)
+                    .HasForeignKey(gpc => gpc.ParentCommentId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Property(gpc => gpc.Content)
+                    .IsRequired();
+
+                // Create indexes
+                entity.HasIndex(gpc => gpc.PostId);
+                entity.HasIndex(gpc => gpc.AuthorId);
+                entity.HasIndex(gpc => gpc.ParentCommentId);
+                entity.HasIndex(gpc => gpc.CreatedAt);
+            });
+
+            // Configure GroupPostLike entity
+            modelBuilder.Entity<GroupPostLike>(entity =>
+            {
+                entity.HasKey(gpl => gpl.Id);
+
+                entity.HasOne(gpl => gpl.Post)
+                    .WithMany(gp => gp.Likes)
+                    .HasForeignKey(gpl => gpl.PostId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(gpl => gpl.User)
+                    .WithMany()
+                    .HasForeignKey(gpl => gpl.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Ensure a user can only like a group post once
+                entity.HasIndex(gpl => new { gpl.PostId, gpl.UserId }).IsUnique();
+
+                // Create additional indexes
+                entity.HasIndex(gpl => gpl.PostId);
+                entity.HasIndex(gpl => gpl.UserId);
+            });
+
+            // Configure GroupPostCommentLike entity
+            modelBuilder.Entity<GroupPostCommentLike>(entity =>
+            {
+                entity.HasKey(gpcl => gpcl.Id);
+
+                entity.HasOne(gpcl => gpcl.Comment)
+                    .WithMany()
+                    .HasForeignKey(gpcl => gpcl.CommentId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(gpcl => gpcl.User)
+                    .WithMany()
+                    .HasForeignKey(gpcl => gpcl.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Ensure a user can only like a group post comment once
+                entity.HasIndex(gpcl => new { gpcl.CommentId, gpcl.UserId }).IsUnique();
+
+                // Create additional indexes
+                entity.HasIndex(gpcl => gpcl.CommentId);
+                entity.HasIndex(gpcl => gpcl.UserId);
+            });
+
+            // Configure GroupPostNotificationMute entity
+            modelBuilder.Entity<GroupPostNotificationMute>(entity =>
+            {
+                entity.HasKey(m => m.Id);
+
+                entity.HasOne(m => m.Post)
+                    .WithMany()
+                    .HasForeignKey(m => m.PostId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(m => m.User)
+                    .WithMany()
+                    .HasForeignKey(m => m.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Create indexes for better query performance
+                entity.HasIndex(m => m.PostId);
+                entity.HasIndex(m => m.UserId);
+                // Unique constraint: a user can only mute a group post once
+                entity.HasIndex(m => new { m.PostId, m.UserId }).IsUnique();
             });
         }
     }
