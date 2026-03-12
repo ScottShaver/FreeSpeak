@@ -8,6 +8,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Group Post System** (Complete posting system for groups)
+  - Database Tables:
+    - `GroupPosts` - Posts made within groups
+    - `GroupPostImages` - Images attached to group posts
+    - `GroupPostComments` - Comments with nested reply support
+    - `GroupPostLikes` - Likes/reactions on group posts
+    - `GroupPostCommentLikes` - Likes/reactions on comments
+    - `PinnedGroupPosts` - User-pinned group posts
+    - `GroupPostNotificationMutes` - Notification muting for group posts
+    - `GroupBannedMembers` - Banned users tracking
+  - Services:
+    - `GroupPostService` - Full CRUD for posts, comments, likes, and notification mutes
+    - `PinnedGroupPostService` - Pin/unpin functionality with group filtering
+    - `GroupBannedMemberService` - Ban management with permission hierarchies
+  - Business Rules:
+    - Group membership required for all interactions
+    - Banned users prevented from posting/commenting/liking
+    - Admins and moderators can delete any content
+    - Moderators cannot ban admins
+    - Group creator cannot be banned
+    - Cached like/comment counts for performance
+  - Comprehensive unit test coverage (40 tests, 100% pass rate)
+  - Documentation in `docs/GROUP_POST_SYSTEM.md`
 - Background notification cleanup service
   - NotificationCleanupService runs every 5 minutes automatically
   - Intelligent throttling (minimum 1 minute between cleanups)

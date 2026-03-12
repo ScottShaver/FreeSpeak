@@ -344,5 +344,529 @@ namespace FreeSpeakWeb.Services
         }
 
         #endregion
+
+        #region Comment Operations
+
+        /// <summary>
+        /// Add a comment to a group post
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage, GroupPostComment? Comment)> AddCommentAsync(
+            int postId,
+            string authorId,
+            string content,
+            string? imageUrl = null,
+            int? parentCommentId = null)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return (false, "Comment content cannot be empty.", null);
+            }
+
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Verify post exists and get group info
+                var post = await context.GroupPosts
+                    .Include(p => p.Author)
+                    .Include(p => p.Group)
+                    .FirstOrDefaultAsync(p => p.Id == postId);
+                if (post == null)
+                {
+                    return (false, "Post not found.", null);
+                }
+
+                // Verify user is a member of the group
+                var isMember = await context.GroupUsers
+                    .AnyAsync(gu => gu.GroupId == post.GroupId && gu.UserId == authorId);
+
+                if (!isMember)
+                {
+                    return (false, "You must be a member of the group to comment.", null);
+                }
+
+                // Check if user is banned
+                var isBanned = await context.GroupBannedMembers
+                    .AnyAsync(gbm => gbm.GroupId == post.GroupId && gbm.UserId == authorId);
+
+                if (isBanned)
+                {
+                    return (false, "You are banned from this group.", null);
+                }
+
+                GroupPostComment? parentComment = null;
+                // Verify parent comment exists if specified
+                if (parentCommentId.HasValue)
+                {
+                    parentComment = await context.GroupPostComments
+                        .Include(c => c.Author)
+                        .FirstOrDefaultAsync(c => c.Id == parentCommentId.Value);
+                    if (parentComment == null)
+                    {
+                        return (false, "Parent comment not found.", null);
+                    }
+                    if (parentComment.PostId != postId)
+                    {
+                        return (false, "Parent comment does not belong to this post.", null);
+                    }
+                }
+
+                var comment = new GroupPostComment
+                {
+                    PostId = postId,
+                    AuthorId = authorId,
+                    Content = content.Trim(),
+                    ImageUrl = imageUrl,
+                    ParentCommentId = parentCommentId,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                context.GroupPostComments.Add(comment);
+
+                // Update post comment count
+                post.CommentCount++;
+
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("Comment added to group post {PostId} by user {AuthorId}", postId, authorId);
+                return (true, null, comment);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error adding comment to group post {PostId} for user {AuthorId}", postId, authorId);
+                return (false, "An error occurred while adding the comment.", null);
+            }
+        }
+
+        /// <summary>
+        /// Delete a comment from a group post
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> DeleteCommentAsync(int commentId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var comment = await context.GroupPostComments
+                    .Include(c => c.Post)
+                    .Include(c => c.Replies)
+                    .FirstOrDefaultAsync(c => c.Id == commentId);
+
+                if (comment == null)
+                {
+                    return (false, "Comment not found.");
+                }
+
+                // Check if user is the author or a group admin/moderator
+                var isAuthor = comment.AuthorId == userId;
+                var isAdminOrModerator = await context.GroupUsers
+                    .AnyAsync(gu => gu.GroupId == comment.Post.GroupId && 
+                                   gu.UserId == userId && 
+                                   (gu.IsAdmin || gu.IsModerator));
+
+                if (!isAuthor && !isAdminOrModerator)
+                {
+                    return (false, "You are not authorized to delete this comment.");
+                }
+
+                var post = comment.Post;
+                var commentCount = 1 + comment.Replies.Count;
+
+                context.GroupPostComments.Remove(comment);
+
+                // Update post comment count
+                post.CommentCount -= commentCount;
+
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("Group post comment {CommentId} deleted by user {UserId}", commentId, userId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting group post comment {CommentId} for user {UserId}", commentId, userId);
+                return (false, "An error occurred while deleting the comment.");
+            }
+        }
+
+        /// <summary>
+        /// Get comments for a group post
+        /// </summary>
+        public async Task<List<GroupPostComment>> GetCommentsAsync(int postId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var comments = await context.GroupPostComments
+                    .Include(c => c.Author)
+                    .Include(c => c.Replies)
+                        .ThenInclude(r => r.Author)
+                    .Where(c => c.PostId == postId && c.ParentCommentId == null)
+                    .OrderBy(c => c.CreatedAt)
+                    .ToListAsync();
+
+                return comments;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving comments for group post {PostId}", postId);
+                return new List<GroupPostComment>();
+            }
+        }
+
+        #endregion
+
+        #region Like Operations
+
+        /// <summary>
+        /// Add or update a like on a group post
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> LikePostAsync(int postId, string userId, LikeType type = LikeType.Like)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Verify post exists
+                var post = await context.GroupPosts
+                    .Include(p => p.Author)
+                    .FirstOrDefaultAsync(p => p.Id == postId);
+                if (post == null)
+                {
+                    return (false, "Post not found.");
+                }
+
+                // Verify user is a member of the group
+                var isMember = await context.GroupUsers
+                    .AnyAsync(gu => gu.GroupId == post.GroupId && gu.UserId == userId);
+
+                if (!isMember)
+                {
+                    return (false, "You must be a member of the group to like posts.");
+                }
+
+                // Check if user is banned
+                var isBanned = await context.GroupBannedMembers
+                    .AnyAsync(gbm => gbm.GroupId == post.GroupId && gbm.UserId == userId);
+
+                if (isBanned)
+                {
+                    return (false, "You are banned from this group.");
+                }
+
+                // Check if like already exists
+                var existingLike = await context.GroupPostLikes
+                    .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
+
+                if (existingLike != null)
+                {
+                    // Update existing like type
+                    existingLike.Type = type;
+                }
+                else
+                {
+                    // Create new like
+                    var like = new GroupPostLike
+                    {
+                        PostId = postId,
+                        UserId = userId,
+                        Type = type,
+                        CreatedAt = DateTime.UtcNow
+                    };
+                    context.GroupPostLikes.Add(like);
+
+                    // Update post like count
+                    post.LikeCount++;
+                }
+
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("User {UserId} liked group post {PostId}", userId, postId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error liking group post {PostId} for user {UserId}", postId, userId);
+                return (false, "An error occurred while liking the post.");
+            }
+        }
+
+        /// <summary>
+        /// Remove a like from a group post
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> UnlikePostAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var like = await context.GroupPostLikes
+                    .Include(l => l.Post)
+                    .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
+
+                if (like == null)
+                {
+                    return (false, "Like not found.");
+                }
+
+                var post = like.Post;
+                context.GroupPostLikes.Remove(like);
+
+                // Update post like count
+                post.LikeCount--;
+
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("User {UserId} unliked group post {PostId}", userId, postId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error unliking group post {PostId} for user {UserId}", postId, userId);
+                return (false, "An error occurred while unliking the post.");
+            }
+        }
+
+        /// <summary>
+        /// Check if a user has liked a group post
+        /// </summary>
+        public async Task<GroupPostLike?> GetUserLikeAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                return await context.GroupPostLikes
+                    .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking like for group post {PostId} and user {UserId}", postId, userId);
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region Comment Like Operations
+
+        /// <summary>
+        /// Add or update a like on a group post comment
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> LikeCommentAsync(int commentId, string userId, LikeType type = LikeType.Like)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Verify comment exists
+                var comment = await context.GroupPostComments
+                    .Include(c => c.Post)
+                    .FirstOrDefaultAsync(c => c.Id == commentId);
+                if (comment == null)
+                {
+                    return (false, "Comment not found.");
+                }
+
+                // Verify user is a member of the group
+                var isMember = await context.GroupUsers
+                    .AnyAsync(gu => gu.GroupId == comment.Post.GroupId && gu.UserId == userId);
+
+                if (!isMember)
+                {
+                    return (false, "You must be a member of the group to like comments.");
+                }
+
+                // Check if user is banned
+                var isBanned = await context.GroupBannedMembers
+                    .AnyAsync(gbm => gbm.GroupId == comment.Post.GroupId && gbm.UserId == userId);
+
+                if (isBanned)
+                {
+                    return (false, "You are banned from this group.");
+                }
+
+                // Check if like already exists
+                var existingLike = await context.GroupPostCommentLikes
+                    .FirstOrDefaultAsync(l => l.CommentId == commentId && l.UserId == userId);
+
+                if (existingLike != null)
+                {
+                    // Update existing like type
+                    existingLike.Type = type;
+                }
+                else
+                {
+                    // Create new like
+                    var like = new GroupPostCommentLike
+                    {
+                        CommentId = commentId,
+                        UserId = userId,
+                        Type = type,
+                        CreatedAt = DateTime.UtcNow
+                    };
+                    context.GroupPostCommentLikes.Add(like);
+                }
+
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("User {UserId} liked group post comment {CommentId}", userId, commentId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error liking group post comment {CommentId} for user {UserId}", commentId, userId);
+                return (false, "An error occurred while liking the comment.");
+            }
+        }
+
+        /// <summary>
+        /// Remove a like from a group post comment
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> UnlikeCommentAsync(int commentId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var like = await context.GroupPostCommentLikes
+                    .FirstOrDefaultAsync(l => l.CommentId == commentId && l.UserId == userId);
+
+                if (like == null)
+                {
+                    return (false, "Like not found.");
+                }
+
+                context.GroupPostCommentLikes.Remove(like);
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("User {UserId} unliked group post comment {CommentId}", userId, commentId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error unliking group post comment {CommentId} for user {UserId}", commentId, userId);
+                return (false, "An error occurred while unliking the comment.");
+            }
+        }
+
+        /// <summary>
+        /// Check if a user has liked a group post comment
+        /// </summary>
+        public async Task<GroupPostCommentLike?> GetUserCommentLikeAsync(int commentId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                return await context.GroupPostCommentLikes
+                    .FirstOrDefaultAsync(l => l.CommentId == commentId && l.UserId == userId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking like for group post comment {CommentId} and user {UserId}", commentId, userId);
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region Notification Mute Operations
+
+        /// <summary>
+        /// Mute notifications for a specific group post
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> MutePostNotificationsAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Verify post exists
+                var post = await context.GroupPosts.FindAsync(postId);
+                if (post == null)
+                {
+                    return (false, "Post not found.");
+                }
+
+                // Check if already muted
+                var alreadyMuted = await context.GroupPostNotificationMutes
+                    .AnyAsync(m => m.PostId == postId && m.UserId == userId);
+
+                if (alreadyMuted)
+                {
+                    return (true, null);
+                }
+
+                // Create mute entry
+                var mute = new GroupPostNotificationMute
+                {
+                    PostId = postId,
+                    UserId = userId,
+                    MutedAt = DateTime.UtcNow
+                };
+
+                context.GroupPostNotificationMutes.Add(mute);
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("User {UserId} muted notifications for group post {PostId}", userId, postId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error muting notifications for group post {PostId} for user {UserId}", postId, userId);
+                return (false, "An error occurred while muting notifications.");
+            }
+        }
+
+        /// <summary>
+        /// Unmute notifications for a specific group post
+        /// </summary>
+        public async Task<(bool Success, string? ErrorMessage)> UnmutePostNotificationsAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var mute = await context.GroupPostNotificationMutes
+                    .FirstOrDefaultAsync(m => m.PostId == postId && m.UserId == userId);
+
+                if (mute == null)
+                {
+                    return (true, null);
+                }
+
+                context.GroupPostNotificationMutes.Remove(mute);
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("User {UserId} unmuted notifications for group post {PostId}", userId, postId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error unmuting notifications for group post {PostId} for user {UserId}", postId, userId);
+                return (false, "An error occurred while unmuting notifications.");
+            }
+        }
+
+        /// <summary>
+        /// Check if a user has muted notifications for a specific group post
+        /// </summary>
+        public async Task<bool> IsPostNotificationMutedAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.GroupPostNotificationMutes
+                    .AnyAsync(m => m.PostId == postId && m.UserId == userId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking if group post {PostId} notifications are muted for user {UserId}", postId, userId);
+                return false;
+            }
+        }
+
+        #endregion
     }
 }
