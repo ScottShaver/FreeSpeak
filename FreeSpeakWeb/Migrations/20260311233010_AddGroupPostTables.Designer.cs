@@ -3,6 +3,7 @@ using System;
 using FreeSpeakWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FreeSpeakWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260311233010_AddGroupPostTables")]
+    partial class AddGroupPostTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,6 +141,9 @@ namespace FreeSpeakWeb.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int?>("GroupPostId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
@@ -152,6 +158,8 @@ namespace FreeSpeakWeb.Migrations
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("CreatedAt");
+
+                    b.HasIndex("GroupPostId");
 
                     b.HasIndex("ParentCommentId");
 
@@ -414,80 +422,6 @@ namespace FreeSpeakWeb.Migrations
                     b.ToTable("GroupPosts");
                 });
 
-            modelBuilder.Entity("FreeSpeakWeb.Data.GroupPostComment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("ParentCommentId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("ParentCommentId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("GroupPostComments");
-                });
-
-            modelBuilder.Entity("FreeSpeakWeb.Data.GroupPostCommentLike", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CommentId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommentId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("CommentId", "UserId")
-                        .IsUnique();
-
-                    b.ToTable("GroupPostCommentLikes");
-                });
-
             modelBuilder.Entity("FreeSpeakWeb.Data.GroupPostImage", b =>
                 {
                     b.Property<int>("Id")
@@ -516,69 +450,6 @@ namespace FreeSpeakWeb.Migrations
                     b.HasIndex("PostId", "DisplayOrder");
 
                     b.ToTable("GroupPostImages");
-                });
-
-            modelBuilder.Entity("FreeSpeakWeb.Data.GroupPostLike", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("PostId", "UserId")
-                        .IsUnique();
-
-                    b.ToTable("GroupPostLikes");
-                });
-
-            modelBuilder.Entity("FreeSpeakWeb.Data.GroupPostNotificationMute", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("MutedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("PostId", "UserId")
-                        .IsUnique();
-
-                    b.ToTable("GroupPostNotificationMutes");
                 });
 
             modelBuilder.Entity("FreeSpeakWeb.Data.GroupRule", b =>
@@ -683,6 +554,9 @@ namespace FreeSpeakWeb.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int?>("GroupPostId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("PostId")
                         .HasColumnType("integer");
 
@@ -694,6 +568,8 @@ namespace FreeSpeakWeb.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GroupPostId");
 
                     b.HasIndex("PostId");
 
@@ -1098,6 +974,10 @@ namespace FreeSpeakWeb.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("FreeSpeakWeb.Data.GroupPost", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("GroupPostId");
+
                     b.HasOne("FreeSpeakWeb.Data.Comment", "ParentComment")
                         .WithMany("Replies")
                         .HasForeignKey("ParentCommentId")
@@ -1222,51 +1102,6 @@ namespace FreeSpeakWeb.Migrations
                     b.Navigation("Group");
                 });
 
-            modelBuilder.Entity("FreeSpeakWeb.Data.GroupPostComment", b =>
-                {
-                    b.HasOne("FreeSpeakWeb.Data.ApplicationUser", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("FreeSpeakWeb.Data.GroupPostComment", "ParentComment")
-                        .WithMany("Replies")
-                        .HasForeignKey("ParentCommentId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("FreeSpeakWeb.Data.GroupPost", "Post")
-                        .WithMany("Comments")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-
-                    b.Navigation("ParentComment");
-
-                    b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("FreeSpeakWeb.Data.GroupPostCommentLike", b =>
-                {
-                    b.HasOne("FreeSpeakWeb.Data.GroupPostComment", "Comment")
-                        .WithMany()
-                        .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FreeSpeakWeb.Data.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Comment");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("FreeSpeakWeb.Data.GroupPostImage", b =>
                 {
                     b.HasOne("FreeSpeakWeb.Data.GroupPost", "Post")
@@ -1276,44 +1111,6 @@ namespace FreeSpeakWeb.Migrations
                         .IsRequired();
 
                     b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("FreeSpeakWeb.Data.GroupPostLike", b =>
-                {
-                    b.HasOne("FreeSpeakWeb.Data.GroupPost", "Post")
-                        .WithMany("Likes")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FreeSpeakWeb.Data.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FreeSpeakWeb.Data.GroupPostNotificationMute", b =>
-                {
-                    b.HasOne("FreeSpeakWeb.Data.GroupPost", "Post")
-                        .WithMany()
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FreeSpeakWeb.Data.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("FreeSpeakWeb.Data.GroupRule", b =>
@@ -1348,6 +1145,10 @@ namespace FreeSpeakWeb.Migrations
 
             modelBuilder.Entity("FreeSpeakWeb.Data.Like", b =>
                 {
+                    b.HasOne("FreeSpeakWeb.Data.GroupPost", null)
+                        .WithMany("Likes")
+                        .HasForeignKey("GroupPostId");
+
                     b.HasOne("FreeSpeakWeb.Data.Post", "Post")
                         .WithMany("Likes")
                         .HasForeignKey("PostId")
@@ -1529,11 +1330,6 @@ namespace FreeSpeakWeb.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("Likes");
-                });
-
-            modelBuilder.Entity("FreeSpeakWeb.Data.GroupPostComment", b =>
-                {
-                    b.Navigation("Replies");
                 });
 
             modelBuilder.Entity("FreeSpeakWeb.Data.Post", b =>

@@ -3,6 +3,7 @@ using System;
 using FreeSpeakWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FreeSpeakWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260311235829_AddGroupPostCommentAndLikeTables")]
+    partial class AddGroupPostCommentAndLikeTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -549,36 +552,6 @@ namespace FreeSpeakWeb.Migrations
                         .IsUnique();
 
                     b.ToTable("GroupPostLikes");
-                });
-
-            modelBuilder.Entity("FreeSpeakWeb.Data.GroupPostNotificationMute", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("MutedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("PostId", "UserId")
-                        .IsUnique();
-
-                    b.ToTable("GroupPostNotificationMutes");
                 });
 
             modelBuilder.Entity("FreeSpeakWeb.Data.GroupRule", b =>
@@ -1282,25 +1255,6 @@ namespace FreeSpeakWeb.Migrations
                 {
                     b.HasOne("FreeSpeakWeb.Data.GroupPost", "Post")
                         .WithMany("Likes")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FreeSpeakWeb.Data.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FreeSpeakWeb.Data.GroupPostNotificationMute", b =>
-                {
-                    b.HasOne("FreeSpeakWeb.Data.GroupPost", "Post")
-                        .WithMany()
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
