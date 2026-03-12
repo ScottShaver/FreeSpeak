@@ -126,6 +126,9 @@ namespace FreeSpeakWeb
             // Add HtmlSanitizationService for XSS protection
             builder.Services.AddSingleton<HtmlSanitizationService>();
 
+            // Add AlertService for user notifications
+            builder.Services.AddScoped<AlertService>();
+
             // Add Group services
             builder.Services.AddScoped<GroupService>();
             builder.Services.AddScoped<GroupRuleService>();
@@ -133,6 +136,7 @@ namespace FreeSpeakWeb
             builder.Services.AddScoped<GroupPostService>();
             builder.Services.AddScoped<PinnedGroupPostService>();
             builder.Services.AddScoped<GroupBannedMemberService>();
+            builder.Services.AddScoped<GroupPostEventHandlers>();
 
             // SECURITY: Add rate limiting to prevent abuse
             builder.Services.AddRateLimiter(options =>

@@ -74,10 +74,9 @@
                             {
                                 var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
                                 var userReaction = userReactions.ContainsKey(post.Id) ? userReactions[post.Id] : null;
-                                var comments = postComments.ContainsKey(post.Id) ? postComments[post.Id] : new List<CommentDisplayModel>();
-                                var directCommentCount = postDirectCommentCounts.ContainsKey(post.Id) ? postDirectCommentCounts[post.Id] : 0;
                                 var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
                                 var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
+                                var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
 
                                 <FeedArticle 
                                     PostId="@post.Id"
@@ -88,13 +87,14 @@
                                     LikeCount="@post.LikeCount"
                                     CommentCount="@post.CommentCount"
                                     ShareCount="@post.ShareCount"
-                                    DirectCommentCount="@directCommentCount"
+                                    LoadCommentsInternally="true"
+                                    CommentsToShow="3"
+                                    RefreshTrigger="@refreshTrigger"
                                     CurrentUserId="@currentUserId"
                                     CurrentUserImageUrl="@currentUserImageUrl"
                                     CurrentUserName="@currentUserName"
                                     ReactionBreakdown="@postReactions"
                                     UserReaction="@userReaction"
-                                    Comments="@comments"
                                     AudienceType="@post.AudienceType"
                                     IsPinned="@isPinned"
                                     Images="@post.Images?.ToList()"
@@ -154,10 +154,9 @@
                             {
                                 var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
                                 var userReaction = userReactions.ContainsKey(post.Id) ? userReactions[post.Id] : null;
-                                var comments = postComments.ContainsKey(post.Id) ? postComments[post.Id] : new List<CommentDisplayModel>();
-                                var directCommentCount = postDirectCommentCounts.ContainsKey(post.Id) ? postDirectCommentCounts[post.Id] : 0;
                                 var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
                                 var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
+                                var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
 
                                 <FeedArticle 
                                     PostId="@post.Id"
@@ -168,13 +167,14 @@
                                     LikeCount="@post.LikeCount"
                                     CommentCount="@post.CommentCount"
                                     ShareCount="@post.ShareCount"
-                                    DirectCommentCount="@directCommentCount"
+                                    LoadCommentsInternally="true"
+                                    CommentsToShow="3"
+                                    RefreshTrigger="@refreshTrigger"
                                     CurrentUserId="@currentUserId"
                                     CurrentUserImageUrl="@currentUserImageUrl"
                                     CurrentUserName="@currentUserName"
                                     ReactionBreakdown="@postReactions"
                                     UserReaction="@userReaction"
-                                    Comments="@comments"
                                     AudienceType="@post.AudienceType"
                                     IsPinned="@isPinned"
                                     Images="@post.Images?.ToList()"
@@ -230,6 +230,7 @@
                 OnUnpinPost="@HandleUnpinPost"
                 OnPostDeleted="@HandlePostDeleted"
                 OnCommentAdded="@HandleCommentAdded"
+                OnReplySubmitted="@HandleReplySubmitted"
                 OnCommentReactionChanged="@HandleCommentReactionChanged"
                 OnRemoveCommentReaction="@HandleRemoveCommentReaction"
                 OnClose="@(async () => await ClosePostDetail())">
@@ -283,6 +284,10 @@
     private Dictionary<int, int> postDirectCommentCounts = new();
     private Dictionary<int, bool> pinnedPosts = new();
     private Dictionary<int, string> postAuthorNames = new();
+
+    // Comment refresh trigger - increment to force FeedArticle to reload comments
+    private Dictionary<int, int> postRefreshTriggers = new();
+
     private int currentPage = 1;
     private const int pageSize = 20;
     private bool isLoading = false;
@@ -786,8 +791,12 @@
                     post.CommentCount++;
                 }
 
-                // Reload comments to show the new one
-                await LoadCommentsForPost(data.PostId, 3);
+                // Increment refresh trigger to force FeedArticle to reload comments
+                if (!postRefreshTriggers.ContainsKey(data.PostId))
+                {
+                    postRefreshTriggers[data.PostId] = 0;
+                }
+                postRefreshTriggers[data.PostId]++;
 
                 StateHasChanged();
             }
@@ -809,54 +818,41 @@
     {
         if (currentUserId == null) return;
 
-        try
+        // Get the parent comment's PostId by searching through postComments
+        int? postId = null;
+        foreach (var kvp in postComments)
         {
-            // Get the parent comment's PostId by searching through postComments
-            int? postId = null;
-            foreach (var kvp in postComments)
+            if (FindCommentById(kvp.Value, data.ParentCommentId) != null)
             {
-                if (FindCommentById(kvp.Value, data.ParentCommentId) != null)
-                {
-                    postId = kvp.Key;
-                    break;
-                }
-            }
-
-            if (postId == null)
-            {
-                Console.WriteLine($"Could not find post for parent comment {data.ParentCommentId}");
-                return;
-            }
-
-            // Add the reply to the database using AddCommentAsync with parentCommentId
-            var result = await PostService.AddCommentAsync(postId.Value, currentUserId, data.Content, null, data.ParentCommentId);
-
-            if (result.Success)
-            {
-                // Reload comments for this post to show the new reply
-                await LoadCommentsForPost(postId.Value, 3);
-
-                // Update comment count
-                var post = posts.FirstOrDefault(p => p.Id == postId.Value);
-                if (post != null)
-                {
-                    post.CommentCount++;
-                }
-
-                StateHasChanged();
-            }
-            else
-            {
-                // Show error message to user
-                await JSRuntime.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to add reply");
-                Console.WriteLine($"Failed to add reply: {result.ErrorMessage}");
+                postId = kvp.Key;
+                break;
             }
         }
-        catch (Exception ex)
+
+        if (postId == null)
         {
-            await JSRuntime.InvokeVoidAsync("alert", "An error occurred while adding your reply.");
-            Console.WriteLine($"Error adding reply: {ex.Message}");
+            Console.WriteLine($"Could not find post for parent comment {data.ParentCommentId}");
+            return;
         }
+
+        // Note: The reply has already been added to the database by the modal or FeedArticle component
+        // We only need to update the UI here
+
+        // Update comment count
+        var post = posts.FirstOrDefault(p => p.Id == postId.Value);
+        if (post != null)
+        {
+            post.CommentCount++;
+        }
+
+        // Increment refresh trigger to force FeedArticle to reload comments
+        if (!postRefreshTriggers.ContainsKey(postId.Value))
+        {
+            postRefreshTriggers[postId.Value] = 0;
+        }
+        postRefreshTriggers[postId.Value]++;
+
+        StateHasChanged();
     }
 
     private async Task HandleCommentReactionChanged((int CommentId, LikeType ReactionType) data)
@@ -869,7 +865,28 @@
 
             if (result.Success)
             {
-                // Update the comment's reaction data in the UI
+                // Find which post this comment belongs to
+                int? postId = null;
+                foreach (var kvp in postComments)
+                {
+                    if (FindCommentById(kvp.Value, data.CommentId) != null)
+                    {
+                        postId = kvp.Key;
+                        break;
+                    }
+                }
+
+                if (postId.HasValue)
+                {
+                    // Increment refresh trigger to force FeedArticle to reload comments
+                    if (!postRefreshTriggers.ContainsKey(postId.Value))
+                    {
+                        postRefreshTriggers[postId.Value] = 0;
+                    }
+                    postRefreshTriggers[postId.Value]++;
+                }
+
+                // Update the comment's reaction data in the UI (for legacy code)
                 await UpdateCommentReactionData(data.CommentId, data.ReactionType);
                 StateHasChanged();
             }
@@ -890,7 +907,28 @@
 
             if (result.Success)
             {
-                // Update the comment's reaction data in the UI
+                // Find which post this comment belongs to
+                int? postId = null;
+                foreach (var kvp in postComments)
+                {
+                    if (FindCommentById(kvp.Value, commentId) != null)
+                    {
+                        postId = kvp.Key;
+                        break;
+                    }
+                }
+
+                if (postId.HasValue)
+                {
+                    // Increment refresh trigger to force FeedArticle to reload comments
+                    if (!postRefreshTriggers.ContainsKey(postId.Value))
+                    {
+                        postRefreshTriggers[postId.Value] = 0;
+                    }
+                    postRefreshTriggers[postId.Value]++;
+                }
+
+                // Update the comment's reaction data in the UI (for legacy code)
                 await UpdateCommentReactionData(commentId, null);
                 StateHasChanged();
             }

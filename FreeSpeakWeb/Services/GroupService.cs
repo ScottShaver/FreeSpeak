@@ -210,7 +210,7 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Search for groups by partial name match
         /// </summary>
-        public async Task<List<Group>> SearchGroupsAsync(string searchQuery, int skip = 0, int take = 20)
+        public async Task<List<Group>> SearchGroupsAsync(string searchQuery, int skip = 0, int take = 20, string? userId = null)
         {
             try
             {
@@ -224,10 +224,33 @@ namespace FreeSpeakWeb.Services
                 // Convert to lowercase for case-insensitive search
                 var lowerSearchQuery = searchQuery.ToLower();
 
+                // Get groups the user is already a member of if userId is provided
+                var userGroupIds = new List<int>();
+                var pendingRequestGroupIds = new List<int>();
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    // Get groups user is already a member of
+                    userGroupIds = await context.GroupUsers
+                        .Where(gu => gu.UserId == userId)
+                        .Select(gu => gu.GroupId)
+                        .ToListAsync();
+
+                    // Get groups user has pending join requests for
+                    pendingRequestGroupIds = await context.GroupJoinRequests
+                        .Where(jr => jr.UserId == userId)
+                        .Select(jr => jr.GroupId)
+                        .ToListAsync();
+                }
+
+                // Combine both lists to exclude
+                var excludedGroupIds = userGroupIds.Union(pendingRequestGroupIds).ToList();
+
                 return await context.Groups
                     .Include(g => g.Creator)
                     .Where(g => g.IsPublic && !g.IsHidden && 
-                        (g.Name.ToLower().Contains(lowerSearchQuery) || g.Description.ToLower().Contains(lowerSearchQuery)))
+                        (g.Name.ToLower().Contains(lowerSearchQuery) || g.Description.ToLower().Contains(lowerSearchQuery)) &&
+                        !excludedGroupIds.Contains(g.Id)) // Exclude groups user is already a member of or has pending requests for
                     .OrderByDescending(g => g.MemberCount)
                     .ThenByDescending(g => g.LastActiveAt)
                     .Skip(skip)
@@ -256,10 +279,19 @@ namespace FreeSpeakWeb.Services
                     .Select(gu => gu.GroupId)
                     .ToListAsync();
 
-                // Get public groups the user is NOT a member of, ordered by member count and activity
+                // Get groups user has pending join requests for
+                var pendingRequestGroupIds = await context.GroupJoinRequests
+                    .Where(jr => jr.UserId == userId)
+                    .Select(jr => jr.GroupId)
+                    .ToListAsync();
+
+                // Combine both lists to exclude
+                var excludedGroupIds = userGroupIds.Union(pendingRequestGroupIds).ToList();
+
+                // Get public groups the user is NOT a member of and has no pending requests for, ordered by member count and activity
                 return await context.Groups
                     .Include(g => g.Creator)
-                    .Where(g => g.IsPublic && !g.IsHidden && !userGroupIds.Contains(g.Id))
+                    .Where(g => g.IsPublic && !g.IsHidden && !excludedGroupIds.Contains(g.Id))
                     .OrderByDescending(g => g.MemberCount)
                     .ThenByDescending(g => g.LastActiveAt)
                     .Take(take)

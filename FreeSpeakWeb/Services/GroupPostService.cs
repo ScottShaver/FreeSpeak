@@ -592,7 +592,7 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get comments for a group post
+        /// Get top-level comments for a group post (replies loaded separately via GetRepliesAsync)
         /// </summary>
         public async Task<List<GroupPostComment>> GetCommentsAsync(int postId)
         {
@@ -600,10 +600,10 @@ namespace FreeSpeakWeb.Services
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
 
+                // Load only top-level comments with their authors
+                // Nested replies are loaded recursively via GetRepliesAsync() calls
                 var comments = await context.GroupPostComments
                     .Include(c => c.Author)
-                    .Include(c => c.Replies)
-                        .ThenInclude(r => r.Author)
                     .Where(c => c.PostId == postId && c.ParentCommentId == null)
                     .OrderBy(c => c.CreatedAt)
                     .ToListAsync();
@@ -1241,6 +1241,67 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting user reaction for group post comment {CommentId} and user {UserId}", commentId, userId);
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region Group Statistics
+
+        /// <summary>
+        /// Get total number of posts in a group
+        /// </summary>
+        public async Task<int> GetTotalPostCountAsync(int groupId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                return await context.GroupPosts.CountAsync(p => p.GroupId == groupId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting total post count for group {GroupId}", groupId);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Get number of posts in a group within a time period
+        /// </summary>
+        public async Task<int> GetPostCountSinceAsync(int groupId, DateTime since)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                return await context.GroupPosts
+                    .CountAsync(p => p.GroupId == groupId && p.CreatedAt >= since);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting post count since {Since} for group {GroupId}", since, groupId);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Get the last activity timestamp for a group (most recent post)
+        /// </summary>
+        public async Task<DateTime?> GetLastActivityAsync(int groupId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var lastPost = await context.GroupPosts
+                    .Where(p => p.GroupId == groupId)
+                    .OrderByDescending(p => p.CreatedAt)
+                    .FirstOrDefaultAsync();
+
+                return lastPost?.CreatedAt;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting last activity for group {GroupId}", groupId);
                 return null;
             }
         }

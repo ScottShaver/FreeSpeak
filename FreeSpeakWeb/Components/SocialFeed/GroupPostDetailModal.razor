@@ -29,8 +29,8 @@
                 CurrentUserId="@CurrentUserId"
                 CreatedAt="@CreatedAt"
                 ArticleContent="@ArticleContent"
-                LikeCount="@LikeCount"
-                CommentCount="@CommentCount"
+                LikeCount="@localLikeCount"
+                CommentCount="@localCommentCount"
                 ShareCount="@ShareCount"
                 DirectCommentCount="@directCommentCount"
                 Comments="@modalComments"
@@ -164,6 +164,9 @@
     public EventCallback<(int PostId, string Content)> OnCommentAdded { get; set; }
 
     [Parameter]
+    public EventCallback<(int ParentCommentId, string Content)> OnReplySubmitted { get; set; }
+
+    [Parameter]
     public EventCallback<(int CommentId, LikeType ReactionType)> OnCommentReactionChanged { get; set; }
 
     [Parameter]
@@ -198,6 +201,8 @@
 
     private List<CommentDisplayModel> modalComments = new();
     private int directCommentCount = 0;
+    private int localCommentCount = 0;
+    private int localLikeCount = 0;
     private int currentCommentPage = 1;
     private const int commentPageSize = 20;
     private bool isLoadingComments = false;
@@ -206,6 +211,13 @@
     private ElementReference modalContentElement;
     private IJSObjectReference? jsModule;
     private DotNetObjectReference<GroupPostDetailModal>? dotNetHelper;
+
+    protected override void OnParametersSet()
+    {
+        // Initialize local counts from parameters
+        localCommentCount = CommentCount;
+        localLikeCount = LikeCount;
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -313,6 +325,9 @@
             await OnCommentAdded.InvokeAsync(data);
         }
 
+        // Increment local comment count
+        localCommentCount++;
+
         // Reload comments to show the new comment
         currentCommentPage = 1;
         hasMoreComments = true;
@@ -403,16 +418,24 @@
 
             if (result.Success)
             {
+                // Increment local comment count (replies count as comments)
+                localCommentCount++;
+
                 // Reload comments to show the new reply
                 currentCommentPage = 1;
                 hasMoreComments = true;
                 await LoadInitialComments();
 
-                // Update direct comment count since we added a reply
+                // Update direct comment count since we added a reply (though it's not a direct comment)
                 directCommentCount = await GroupPostService.GetDirectCommentCountAsync(PostId);
-                StateHasChanged();
 
-                // NOTE: Don't invoke OnCommentAdded for replies - that's only for direct comments
+                // Notify parent that a reply was submitted so it can update its UI
+                if (OnReplySubmitted.HasDelegate)
+                {
+                    await OnReplySubmitted.InvokeAsync((data.ParentCommentId, data.Content));
+                }
+
+                StateHasChanged();
             }
             else
             {

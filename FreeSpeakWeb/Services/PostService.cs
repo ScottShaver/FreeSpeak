@@ -879,7 +879,7 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get comments for a post with nested replies
+        /// Get top-level comments for a post (replies loaded separately via GetRepliesAsync)
         /// </summary>
         public async Task<List<Comment>> GetCommentsAsync(int postId)
         {
@@ -887,10 +887,10 @@ namespace FreeSpeakWeb.Services
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
 
+                // Load only top-level comments with their authors
+                // Nested replies are loaded recursively via GetRepliesAsync() calls
                 var comments = await context.Comments
                     .Include(c => c.Author)
-                    .Include(c => c.Replies)
-                        .ThenInclude(r => r.Author)
                     .Where(c => c.PostId == postId && c.ParentCommentId == null)
                     .OrderBy(c => c.CreatedAt)
                     .ToListAsync();

@@ -156,6 +156,9 @@
     public EventCallback<(int PostId, string Content)> OnCommentAdded { get; set; }
 
     [Parameter]
+    public EventCallback<(int ParentCommentId, string Content)> OnReplySubmitted { get; set; }
+
+    [Parameter]
     public EventCallback<(int CommentId, LikeType ReactionType)> OnCommentReactionChanged { get; set; }
 
     [Parameter]
@@ -400,11 +403,16 @@
                 hasMoreComments = true;
                 await LoadInitialComments();
 
-                // Update direct comment count since we added a reply
+                // Update direct comment count since we added a reply (though it's not a direct comment)
                 directCommentCount = await PostService.GetDirectCommentCountAsync(PostId);
-                StateHasChanged();
 
-                // NOTE: Don't invoke OnCommentAdded for replies - that's only for direct comments
+                // Notify parent that a reply was submitted so it can update its UI
+                if (OnReplySubmitted.HasDelegate)
+                {
+                    await OnReplySubmitted.InvokeAsync((data.ParentCommentId, data.Content));
+                }
+
+                StateHasChanged();
             }
             else
             {
