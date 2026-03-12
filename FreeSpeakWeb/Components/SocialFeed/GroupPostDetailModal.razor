@@ -1,0 +1,516 @@
+@using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using Microsoft.JSInterop
+@inject GroupPostService GroupPostService
+@inject IJSRuntime JS
+@inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
+@inject UserPreferenceService UserPreferenceService
+@implements IAsyncDisposable
+
+<div class="group-post-detail-modal-backdrop" @onclick="OnClose">
+    <div class="group-post-detail-modal-container" @onclick:stopPropagation="true">
+        <div class="group-post-detail-modal-header">
+            <h2>Post Details</h2>
+            <button type="button" class="close-button" @onclick="OnClose">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="group-post-detail-modal-content" @ref="modalContentElement">
+            <GroupPostArticle 
+                PostId="@PostId"
+                GroupId="@GroupId"
+                GroupName="@GroupName"
+                AuthorId="@AuthorId"
+                AuthorName="@AuthorName"
+                AuthorImageUrl="@AuthorImageUrl"
+                CurrentUserId="@CurrentUserId"
+                CreatedAt="@CreatedAt"
+                ArticleContent="@ArticleContent"
+                LikeCount="@LikeCount"
+                CommentCount="@CommentCount"
+                ShareCount="@ShareCount"
+                DirectCommentCount="@directCommentCount"
+                Comments="@modalComments"
+                CurrentUserImageUrl="@CurrentUserImageUrl"
+                CurrentUserName="@CurrentUserName"
+                ReactionBreakdown="@ReactionBreakdown"
+                UserReaction="@UserReaction"
+                IsPinned="@IsPinned"
+                Images="@Images"
+                OnReactionChanged="@OnReactionChanged"
+                OnRemoveReaction="@OnRemoveReaction"
+                OnPinPost="@OnPinPost"
+                OnUnpinPost="@OnUnpinPost"
+                OnPostDeleted="@HandlePostDeleted"
+                OnEditPost="@OnEditPost"
+                OnCommentAdded="@HandleCommentAdded"
+                OnReplySubmitted="@HandleReplySubmitted"
+                OnCommentReactionChanged="@HandleCommentReactionChanged"
+                OnRemoveCommentReaction="@HandleRemoveCommentReaction"
+                IsModalView="true"
+                IsReadOnly="@IsReadOnly"
+                HideCommentEditor="true" />
+
+            @if (isLoadingComments && !modalComments.Any())
+            {
+                <div class="loading-comments">
+                    <p>Loading comments...</p>
+                </div>
+            }
+
+            @if (isLoadingMoreComments)
+            {
+                <div class="loading-more-comments">
+                    <p>Loading more comments...</p>
+                </div>
+            }
+        </div>
+
+        <!-- Fixed Comment Editor at Bottom -->
+        @if (!IsReadOnly)
+        {
+            <div class="group-post-detail-modal-footer">
+                @if (directCommentCount < SiteSettings.Value.MaxFeedPostDirectCommentCount)
+                {
+                    <div class="modal-comment-editor">
+                        @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
+                        {
+                            <img src="@CurrentUserImageUrl" alt="You" class="comment-user-avatar" />
+                        }
+                        else
+                        {
+                            <div class="comment-user-avatar comment-avatar-placeholder">
+                                <span class="comment-avatar-initial">@GetInitials(CurrentUserName ?? "User")</span>
+                            </div>
+                        }
+                        <div class="editor-wrapper">
+                            <MultiLineCommentEditor OnCommentSubmitted="HandleCommentSubmittedInModal" />
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="modal-comment-limit-message">
+                        <span>No more comments allowed</span>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int PostId { get; set; }
+
+    [Parameter]
+    public int GroupId { get; set; }
+
+    [Parameter]
+    public string GroupName { get; set; } = string.Empty;
+
+    [Parameter]
+    public string AuthorId { get; set; } = string.Empty;
+
+    [Parameter]
+    public string AuthorName { get; set; } = "Anonymous";
+
+    [Parameter]
+    public string? AuthorImageUrl { get; set; }
+
+    [Parameter]
+    public string? CurrentUserId { get; set; }
+
+    [Parameter]
+    public DateTime CreatedAt { get; set; }
+
+    [Parameter]
+    public RenderFragment? ArticleContent { get; set; }
+
+    [Parameter]
+    public int LikeCount { get; set; }
+
+    [Parameter]
+    public int CommentCount { get; set; }
+
+    [Parameter]
+    public int ShareCount { get; set; }
+
+    [Parameter]
+    public List<CommentDisplayModel>? Comments { get; set; }
+
+    [Parameter]
+    public string? CurrentUserImageUrl { get; set; }
+
+    [Parameter]
+    public string? CurrentUserName { get; set; }
+
+    [Parameter]
+    public Dictionary<LikeType, int>? ReactionBreakdown { get; set; }
+
+    [Parameter]
+    public LikeType? UserReaction { get; set; }
+
+    [Parameter]
+    public EventCallback<LikeType> OnReactionChanged { get; set; }
+
+    [Parameter]
+    public EventCallback OnRemoveReaction { get; set; }
+
+    [Parameter]
+    public EventCallback<(int PostId, string Content)> OnCommentAdded { get; set; }
+
+    [Parameter]
+    public EventCallback<(int CommentId, LikeType ReactionType)> OnCommentReactionChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnRemoveCommentReaction { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    public bool IsPinned { get; set; } = false;
+
+    [Parameter]
+    public EventCallback<int> OnPinPost { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnUnpinPost { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnPostDeleted { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnEditPost { get; set; }
+
+    [Parameter]
+    public List<PostImage>? Images { get; set; }
+
+    [Parameter]
+    public int? TargetCommentId { get; set; }
+
+    [Parameter]
+    public bool IsReadOnly { get; set; } = false;
+
+    private List<CommentDisplayModel> modalComments = new();
+    private int directCommentCount = 0;
+    private int currentCommentPage = 1;
+    private const int commentPageSize = 20;
+    private bool isLoadingComments = false;
+    private bool isLoadingMoreComments = false;
+    private bool hasMoreComments = true;
+    private ElementReference modalContentElement;
+    private IJSObjectReference? jsModule;
+    private DotNetObjectReference<GroupPostDetailModal>? dotNetHelper;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Load direct comment count
+            directCommentCount = await GroupPostService.GetDirectCommentCountAsync(PostId);
+
+            await LoadInitialComments();
+
+            try
+            {
+                jsModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/GroupPostDetailModal.razor.js");
+                dotNetHelper = DotNetObjectReference.Create(this);
+                await jsModule.InvokeVoidAsync("initializeCommentScroll", modalContentElement, dotNetHelper);
+
+                // If there's a target comment, scroll to it and highlight it
+                if (TargetCommentId.HasValue && jsModule != null)
+                {
+                    await Task.Delay(100); // Small delay to ensure DOM is ready
+                    await jsModule.InvokeVoidAsync("scrollToAndHighlightComment", TargetCommentId.Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error initializing comment scroll: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task LoadInitialComments()
+    {
+        isLoadingComments = true;
+        StateHasChanged();
+
+        try
+        {
+            var comments = await GroupPostService.GetCommentsPagedAsync(PostId, commentPageSize, currentCommentPage);
+            modalComments = new List<CommentDisplayModel>();
+
+            foreach (var c in comments)
+            {
+                var commentModel = await BuildCommentDisplayModel(c);
+                modalComments.Add(commentModel);
+            }
+
+            hasMoreComments = comments.Count == commentPageSize;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading initial comments: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingComments = false;
+            StateHasChanged();
+        }
+    }
+
+    [JSInvokable]
+    public async Task LoadMoreCommentsAsync()
+    {
+        if (isLoadingMoreComments || !hasMoreComments) return;
+
+        isLoadingMoreComments = true;
+        StateHasChanged();
+
+        try
+        {
+            currentCommentPage++;
+            var comments = await GroupPostService.GetCommentsPagedAsync(PostId, commentPageSize, currentCommentPage);
+
+            if (comments.Any())
+            {
+                foreach (var c in comments)
+                {
+                    var commentModel = await BuildCommentDisplayModel(c);
+                    modalComments.Add(commentModel);
+                }
+
+                hasMoreComments = comments.Count == commentPageSize;
+            }
+            else
+            {
+                hasMoreComments = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading more comments: {ex.Message}");
+            currentCommentPage--;
+        }
+        finally
+        {
+            isLoadingMoreComments = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleCommentAdded((int PostId, string Content) data)
+    {
+        // Invoke parent callback
+        if (OnCommentAdded.HasDelegate)
+        {
+            await OnCommentAdded.InvokeAsync(data);
+        }
+
+        // Reload comments to show the new comment
+        currentCommentPage = 1;
+        hasMoreComments = true;
+        await LoadInitialComments();
+    }
+
+    private async Task HandleCommentReactionChanged((int CommentId, LikeType ReactionType) data)
+    {
+        // Invoke parent callback
+        if (OnCommentReactionChanged.HasDelegate)
+        {
+            await OnCommentReactionChanged.InvokeAsync(data);
+        }
+
+        // Update the local comment's reaction data
+        await UpdateLocalCommentReaction(data.CommentId, data.ReactionType);
+    }
+
+    private async Task HandleRemoveCommentReaction(int commentId)
+    {
+        // Invoke parent callback
+        if (OnRemoveCommentReaction.HasDelegate)
+        {
+            await OnRemoveCommentReaction.InvokeAsync(commentId);
+        }
+
+        // Update the local comment's reaction data
+        await UpdateLocalCommentReaction(commentId, null);
+    }
+
+    private async Task HandlePostDeleted(int postId)
+    {
+        // Invoke parent callback to handle post deletion
+        if (OnPostDeleted.HasDelegate)
+        {
+            await OnPostDeleted.InvokeAsync(postId);
+        }
+
+        // Close the modal since the post is being deleted
+        if (OnClose.HasDelegate)
+        {
+            await OnClose.InvokeAsync();
+        }
+    }
+
+    private async Task UpdateLocalCommentReaction(int commentId, LikeType? newReaction)
+    {
+        // Find the comment in modalComments and update its reaction data
+        var comment = FindCommentById(modalComments, commentId);
+        if (comment != null)
+        {
+            // Update user's reaction
+            comment.UserReaction = newReaction;
+
+            // Reload reaction breakdown and like count
+            comment.ReactionBreakdown = await GroupPostService.GetCommentReactionBreakdownAsync(commentId);
+            comment.LikeCount = await GroupPostService.GetCommentLikeCountAsync(commentId);
+
+            StateHasChanged();
+        }
+    }
+
+    private CommentDisplayModel? FindCommentById(List<CommentDisplayModel> comments, int commentId)
+    {
+        foreach (var comment in comments)
+        {
+            if (comment.CommentId == commentId)
+                return comment;
+
+            if (comment.Replies != null)
+            {
+                var found = FindCommentById(comment.Replies, commentId);
+                if (found != null)
+                    return found;
+            }
+        }
+        return null;
+    }
+
+    private async Task HandleReplySubmitted((int ParentCommentId, string Content) data)
+    {
+        if (string.IsNullOrWhiteSpace(CurrentUserId)) return;
+
+        try
+        {
+            // Add the reply to the database using AddCommentAsync with parentCommentId
+            var result = await GroupPostService.AddCommentAsync(PostId, CurrentUserId, data.Content, null, data.ParentCommentId);
+
+            if (result.Success)
+            {
+                // Reload comments to show the new reply
+                currentCommentPage = 1;
+                hasMoreComments = true;
+                await LoadInitialComments();
+
+                // Update direct comment count since we added a reply
+                directCommentCount = await GroupPostService.GetDirectCommentCountAsync(PostId);
+                StateHasChanged();
+
+                // NOTE: Don't invoke OnCommentAdded for replies - that's only for direct comments
+            }
+            else
+            {
+                // Show error message to user
+                await JS.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to add reply");
+                Console.WriteLine($"Failed to add reply: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("alert", "An error occurred while adding your reply.");
+            Console.WriteLine($"Error adding reply: {ex.Message}");
+        }
+    }
+
+    private async Task<string> GetCommentAuthorName(GroupPostComment comment)
+    {
+        if (comment.Author == null) return "Unknown";
+
+        // Use the author's display name preference
+        return await UserPreferenceService.FormatUserDisplayNameAsync(
+            comment.Author.Id,
+            comment.Author.FirstName,
+            comment.Author.LastName,
+            comment.Author.UserName ?? "Unknown"
+        );
+    }
+
+    private string GetInitials(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "U";
+
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 0)
+            return "U";
+
+        if (parts.Length == 1)
+        {
+            var singleWord = parts[0];
+            if (singleWord.Length >= 2)
+                return singleWord.Substring(0, 2).ToUpper();
+            else
+                return singleWord.Substring(0, 1).ToUpper();
+        }
+
+        return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
+    }
+
+    private async Task<CommentDisplayModel> BuildCommentDisplayModel(GroupPostComment comment)
+    {
+        // Load replies for this comment
+        var replies = await GroupPostService.GetRepliesAsync(comment.Id);
+        var replyModels = new List<CommentDisplayModel>();
+
+        foreach (var reply in replies)
+        {
+            var replyModel = await BuildCommentDisplayModel(reply); // Recursive call for nested replies
+            replyModels.Add(replyModel);
+        }
+
+        return new CommentDisplayModel
+        {
+            CommentId = comment.Id,
+            UserName = await GetCommentAuthorName(comment),
+            UserImageUrl = comment.Author?.ProfilePictureUrl,
+            CommentAuthorId = comment.AuthorId,
+            CommentText = comment.Content,
+            ImageUrl = comment.ImageUrl,
+            Timestamp = comment.CreatedAt,
+            Replies = replyModels.Any() ? replyModels : null,
+            LikeCount = await GroupPostService.GetCommentLikeCountAsync(comment.Id),
+            UserReaction = CurrentUserId != null ? await GroupPostService.GetUserCommentReactionAsync(comment.Id, CurrentUserId) : null,
+            ReactionBreakdown = await GroupPostService.GetCommentReactionBreakdownAsync(comment.Id)
+        };
+    }
+
+    private async Task HandleCommentSubmittedInModal(string commentText)
+    {
+        if (!string.IsNullOrWhiteSpace(commentText))
+        {
+            await HandleCommentAdded((PostId, commentText));
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (jsModule != null)
+        {
+            try
+            {
+                await jsModule.InvokeVoidAsync("cleanupCommentScroll");
+                await jsModule.DisposeAsync();
+            }
+            catch { }
+        }
+
+        dotNetHelper?.Dispose();
+    }
+}

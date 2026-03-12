@@ -19,7 +19,14 @@ namespace FreeSpeakWeb.Data
                 var existingUser = await userManager.FindByEmailAsync("testuser1@example.com");
                 if (existingUser != null)
                 {
-                    logger.LogInformation("Test users already exist. Skipping seeding.");
+                    logger.LogInformation("Test users already exist. Skipping user seeding.");
+
+                    // Still seed groups and posts if DbContext is provided
+                    if (dbContext != null)
+                    {
+                        await SeedPostsAndFriendshipsAsync(dbContext, logger);
+                        await SeedGroupsAndGroupPostsAsync(dbContext, logger);
+                    }
                     return;
                 }
 
@@ -82,6 +89,7 @@ namespace FreeSpeakWeb.Data
             if (dbContext != null)
             {
                 await SeedPostsAndFriendshipsAsync(dbContext, logger);
+                await SeedGroupsAndGroupPostsAsync(dbContext, logger);
             }
             }
             catch (Exception ex)
@@ -222,6 +230,248 @@ namespace FreeSpeakWeb.Data
             {
                 logger.LogError(ex, "[{ExceptionType}] Error occurred while seeding posts and friendships. Exception: {ExceptionMessage}", ex.GetType().Name, ex.Message);
                 // Don't throw - let the app continue even if post seeding fails
+            }
+        }
+
+        private static async Task SeedGroupsAndGroupPostsAsync(ApplicationDbContext dbContext, ILogger logger)
+        {
+            try
+            {
+                // Check if groups already exist
+                var existingGroups = await dbContext.Groups.AnyAsync();
+                if (existingGroups)
+                {
+                    logger.LogInformation("Groups already exist. Skipping group seeding.");
+                    return;
+                }
+
+                // Get all seeded users
+                var users = await dbContext.Users.ToListAsync();
+                if (users.Count == 0)
+                {
+                    logger.LogWarning("No users found for seeding groups.");
+                    return;
+                }
+
+                logger.LogInformation("Seeding groups...");
+
+                var random = Random.Shared;
+                var groups = new List<Group>();
+
+                // Define sample groups
+                var groupData = new[]
+                {
+                    new { 
+                        Name = "Tech Enthusiasts", 
+                        Description = "A community for technology lovers to discuss the latest trends, gadgets, and innovations in the tech world.",
+                        IsPublic = true,
+                        RequiresApproval = false,
+                        CreatorIndex = 0
+                    },
+                    new { 
+                        Name = "Book Club", 
+                        Description = "Share your favorite reads, discuss literature, and discover new books with fellow bookworms.",
+                        IsPublic = true,
+                        RequiresApproval = true,
+                        CreatorIndex = 1
+                    },
+                    new { 
+                        Name = "Fitness & Wellness", 
+                        Description = "Motivate each other, share workout tips, healthy recipes, and wellness advice.",
+                        IsPublic = true,
+                        RequiresApproval = false,
+                        CreatorIndex = 2
+                    },
+                    new { 
+                        Name = "Photography Collective", 
+                        Description = "Share your photos, get feedback, learn techniques, and appreciate visual art together.",
+                        IsPublic = true,
+                        RequiresApproval = false,
+                        CreatorIndex = 3
+                    },
+                    new { 
+                        Name = "Cooking & Recipes", 
+                        Description = "Exchange recipes, cooking tips, and culinary adventures. From beginners to master chefs!",
+                        IsPublic = true,
+                        RequiresApproval = false,
+                        CreatorIndex = 4
+                    },
+                    new { 
+                        Name = "Gaming Community", 
+                        Description = "Connect with fellow gamers, discuss games, share tips, and organize gaming sessions.",
+                        IsPublic = true,
+                        RequiresApproval = false,
+                        CreatorIndex = 5
+                    },
+                    new { 
+                        Name = "Travel Stories", 
+                        Description = "Share your travel experiences, get destination recommendations, and inspire wanderlust.",
+                        IsPublic = true,
+                        RequiresApproval = true,
+                        CreatorIndex = 6
+                    },
+                    new { 
+                        Name = "Pet Lovers United", 
+                        Description = "Show off your pets, share care tips, and connect with other animal lovers.",
+                        IsPublic = true,
+                        RequiresApproval = false,
+                        CreatorIndex = 7
+                    },
+                    new { 
+                        Name = "DIY & Crafts", 
+                        Description = "Share your creative projects, get inspiration, and learn new crafting techniques.",
+                        IsPublic = true,
+                        RequiresApproval = false,
+                        CreatorIndex = 8
+                    },
+                    new { 
+                        Name = "Music Appreciation", 
+                        Description = "Discover new music, discuss artists and albums, and share what you're listening to.",
+                        IsPublic = true,
+                        RequiresApproval = false,
+                        CreatorIndex = 9
+                    }
+                };
+
+                // Create groups
+                foreach (var groupInfo in groupData)
+                {
+                    var creator = users[groupInfo.CreatorIndex];
+                    var daysAgo = random.Next(30, 180); // Groups created 30-180 days ago
+
+                    var group = new Group
+                    {
+                        CreatorId = creator.Id,
+                        Name = groupInfo.Name,
+                        Description = groupInfo.Description,
+                        IsPublic = groupInfo.IsPublic,
+                        IsHidden = false,
+                        RequiresJoinApproval = groupInfo.RequiresApproval,
+                        CreatedAt = DateTime.UtcNow.AddDays(-daysAgo),
+                        LastActiveAt = DateTime.UtcNow.AddDays(-random.Next(0, 7)),
+                        MemberCount = 0 // Will be updated as we add members
+                    };
+                    groups.Add(group);
+                }
+
+                dbContext.Groups.AddRange(groups);
+                await dbContext.SaveChangesAsync();
+                logger.LogInformation("Seeded {GroupCount} groups!", groups.Count);
+
+                logger.LogInformation("Adding group members...");
+
+                // Add creator as admin member and add other members to each group
+                var groupUsers = new List<GroupUser>();
+                foreach (var group in groups)
+                {
+                    // Add creator as admin
+                    groupUsers.Add(new GroupUser
+                    {
+                        GroupId = group.Id,
+                        UserId = group.CreatorId,
+                        JoinedAt = group.CreatedAt,
+                        IsAdmin = true,
+                        IsModerator = false
+                    });
+
+                    // Add 5-15 random members to each group
+                    var memberCount = random.Next(5, 16);
+                    var potentialMembers = users.Where(u => u.Id != group.CreatorId).OrderBy(x => random.Next()).Take(memberCount);
+
+                    foreach (var member in potentialMembers)
+                    {
+                        var isModerator = random.Next(0, 10) == 0; // 10% chance to be moderator
+                        groupUsers.Add(new GroupUser
+                        {
+                            GroupId = group.Id,
+                            UserId = member.Id,
+                            JoinedAt = group.CreatedAt.AddDays(random.Next(1, 30)),
+                            IsAdmin = false,
+                            IsModerator = isModerator
+                        });
+                    }
+
+                    // Update member count
+                    group.MemberCount = groupUsers.Count(gu => gu.GroupId == group.Id);
+                }
+
+                dbContext.GroupUsers.AddRange(groupUsers);
+                await dbContext.SaveChangesAsync();
+                logger.LogInformation("Added {MemberCount} group memberships!", groupUsers.Count);
+
+                logger.LogInformation("Seeding group posts...");
+
+                // Sample group post contents
+                var groupPostContents = new[]
+                {
+                    "Welcome to the group! Looking forward to great discussions.",
+                    "What's everyone working on this week?",
+                    "Just wanted to share this amazing discovery!",
+                    "Does anyone have recommendations for beginners?",
+                    "This has been a game-changer for me. Highly recommended!",
+                    "Looking for advice from the community.",
+                    "Excited to be part of this group!",
+                    "Anyone else experiencing this? Let me know!",
+                    "Here's a tip that helped me tremendously.",
+                    "What do you all think about this?",
+                    "Sharing my latest project with the group!",
+                    "Quick question for the experts here.",
+                    "This made my day! Had to share.",
+                    "Looking for collaborators on something exciting.",
+                    "Weekly check-in: How's everyone doing?",
+                    "Just achieved a major milestone!",
+                    "Need some input from the community.",
+                    "This is why I love this group!",
+                    "Pro tip: This saved me hours of work.",
+                    "What's your favorite thing about this topic?",
+                    "Beginner question: Where do I start?",
+                    "Advanced discussion: Let's dive deep.",
+                    "Resources that helped me level up.",
+                    "Community event idea - thoughts?",
+                    "Celebrating our group's growth!",
+                    "Monthly update: Here's what's new.",
+                    "Feature request: What would you like to see?",
+                    "Success story: Thanks to this community!",
+                    "Challenge accepted! Who's joining me?",
+                    "Throwback to when we started this group!"
+                };
+
+                var groupPosts = new List<GroupPost>();
+
+                // Create 10-20 posts for each group
+                foreach (var group in groups)
+                {
+                    var groupMembers = groupUsers.Where(gu => gu.GroupId == group.Id).ToList();
+                    var postCount = random.Next(10, 21);
+
+                    for (int i = 0; i < postCount; i++)
+                    {
+                        var randomMember = groupMembers[random.Next(groupMembers.Count)];
+                        var daysAgo = random.Next(0, 60);
+                        var hoursAgo = random.Next(0, 24);
+
+                        var post = new GroupPost
+                        {
+                            GroupId = group.Id,
+                            AuthorId = randomMember.UserId,
+                            Content = groupPostContents[random.Next(groupPostContents.Length)],
+                            CreatedAt = DateTime.UtcNow.AddDays(-daysAgo).AddHours(-hoursAgo),
+                            LikeCount = random.Next(0, 30),
+                            CommentCount = random.Next(0, 15)
+                        };
+                        groupPosts.Add(post);
+                    }
+                }
+
+                dbContext.GroupPosts.AddRange(groupPosts);
+                await dbContext.SaveChangesAsync();
+
+                logger.LogInformation("Seeded {PostCount} group posts for {GroupCount} groups!", groupPosts.Count, groups.Count);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "[{ExceptionType}] Error occurred while seeding groups and group posts. Exception: {ExceptionMessage}", ex.GetType().Name, ex.Message);
+                // Don't throw - let the app continue even if group seeding fails
             }
         }
     }

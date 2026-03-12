@@ -102,6 +102,28 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
+        /// Get all pending join requests sent by a user
+        /// </summary>
+        public async Task<List<GroupJoinRequest>> GetUserJoinRequestsAsync(string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.GroupJoinRequests
+                    .Include(jr => jr.Group)
+                    .Where(jr => jr.UserId == userId)
+                    .OrderByDescending(jr => jr.RequestedAt)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving join requests for user {UserId}", userId);
+                return new List<GroupJoinRequest>();
+            }
+        }
+
+        /// <summary>
         /// Approve a join request
         /// </summary>
         public async Task<(bool Success, string? ErrorMessage)> ApproveJoinRequestAsync(

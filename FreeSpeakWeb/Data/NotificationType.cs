@@ -43,6 +43,26 @@ namespace FreeSpeakWeb.Data
         /// <summary>
         /// You were mentioned in a post or comment
         /// </summary>
-        Mention = 7
+        Mention = 7,
+
+        /// <summary>
+        /// Someone liked your group post
+        /// </summary>
+        GroupPostLiked = 8,
+
+        /// <summary>
+        /// Someone commented on your group post
+        /// </summary>
+        GroupPostComment = 9,
+
+        /// <summary>
+        /// Someone replied to your comment in a group
+        /// </summary>
+        GroupCommentReply = 10,
+
+        /// <summary>
+        /// Someone liked your comment in a group
+        /// </summary>
+        GroupCommentLiked = 11
     }
 }

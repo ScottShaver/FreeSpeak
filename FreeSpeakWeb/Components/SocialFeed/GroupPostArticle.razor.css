@@ -1,0 +1,36 @@
+.feed-article {
+    background-color: var(--surface-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 16px;
+    margin-left: 5px;
+    margin-right: 5px;
+    overflow: visible;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color);
+}
+
+/* Group context badge */
+.group-context-badge {
+    padding: 8px 16px;
+    background: linear-gradient(180deg, 
+        color-mix(in srgb, var(--primary-color) 10%, var(--surface-color)), 
+        var(--surface-color) 70%);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.group-context-badge i {
+    color: var(--primary-color);
+}
+
+.group-context-badge strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}

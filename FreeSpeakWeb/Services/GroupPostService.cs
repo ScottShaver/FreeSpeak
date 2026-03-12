@@ -8,15 +8,18 @@ namespace FreeSpeakWeb.Services
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupPostService> _logger;
         private readonly NotificationService _notificationService;
+        private readonly UserPreferenceService _userPreferenceService;
 
         public GroupPostService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupPostService> logger,
-            NotificationService notificationService)
+            NotificationService notificationService,
+            UserPreferenceService userPreferenceService)
         {
             _contextFactory = contextFactory;
             _logger = logger;
             _notificationService = notificationService;
+            _userPreferenceService = userPreferenceService;
         }
 
         #region Post Operations
@@ -343,6 +346,44 @@ namespace FreeSpeakWeb.Services
             }
         }
 
+        /// <summary>
+        /// Get all posts from groups the user is a member of (combined feed)
+        /// </summary>
+        public async Task<List<GroupPost>> GetAllGroupPostsForUserAsync(string userId, int skip = 0, int take = 20)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Get all group IDs the user is a member of
+                var userGroupIds = await context.GroupUsers
+                    .Where(gu => gu.UserId == userId)
+                    .Select(gu => gu.GroupId)
+                    .ToListAsync();
+
+                if (!userGroupIds.Any())
+                {
+                    return new List<GroupPost>();
+                }
+
+                // Get posts from all those groups
+                return await context.GroupPosts
+                    .Include(p => p.Author)
+                    .Include(p => p.Group)
+                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
+                    .Where(p => userGroupIds.Contains(p.GroupId))
+                    .OrderByDescending(p => p.CreatedAt)
+                    .Skip(skip)
+                    .Take(take)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving group posts for user {UserId}", userId);
+                return new List<GroupPost>();
+            }
+        }
+
         #endregion
 
         #region Comment Operations
@@ -429,6 +470,67 @@ namespace FreeSpeakWeb.Services
                 await context.SaveChangesAsync();
 
                 _logger.LogInformation("Comment added to group post {PostId} by user {AuthorId}", postId, authorId);
+
+                // Send notifications
+                var commenter = await context.Users.FindAsync(authorId);
+                if (commenter != null)
+                {
+                    if (parentCommentId.HasValue)
+                    {
+                        // Reply to a comment - notify the parent comment author
+                        if (parentComment != null && parentComment.AuthorId != authorId)
+                        {
+                            var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                                commenter.Id,
+                                commenter.FirstName ?? string.Empty,
+                                commenter.LastName ?? string.Empty,
+                                commenter.UserName ?? "User"
+                            );
+                            var message = $"<strong>{formattedName}</strong> replied to your comment in a group";
+                            await _notificationService.CreateNotificationAsync(
+                                parentComment.AuthorId,
+                                NotificationType.GroupCommentReply,
+                                message,
+                                new { 
+                                    GroupPostId = postId,
+                                    GroupId = post.GroupId,
+                                    CommentId = comment.Id, 
+                                    CommenterId = authorId,
+                                    CommenterName = formattedName,
+                                    CommenterProfilePicture = commenter.ProfilePictureUrl
+                                }
+                            );
+                        }
+                    }
+                    else
+                    {
+                        // Direct comment on post - notify the post author
+                        if (post.AuthorId != authorId)
+                        {
+                            var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                                commenter.Id,
+                                commenter.FirstName ?? string.Empty,
+                                commenter.LastName ?? string.Empty,
+                                commenter.UserName ?? "User"
+                            );
+                            var message = $"<strong>{formattedName}</strong> commented on your group post";
+                            await _notificationService.CreateNotificationAsync(
+                                post.AuthorId,
+                                NotificationType.GroupPostComment,
+                                message,
+                                new { 
+                                    GroupPostId = postId,
+                                    GroupId = post.GroupId,
+                                    CommentId = comment.Id, 
+                                    CommenterId = authorId,
+                                    CommenterName = formattedName,
+                                    CommenterProfilePicture = commenter.ProfilePictureUrl
+                                }
+                            );
+                        }
+                    }
+                }
+
                 return (true, null, comment);
             }
             catch (Exception ex)
@@ -578,6 +680,37 @@ namespace FreeSpeakWeb.Services
 
                     // Update post like count
                     post.LikeCount++;
+
+                    // Send notification to post author (only for new likes, not the post author themselves)
+                    if (post.AuthorId != userId && post.Author != null)
+                    {
+                        var reactor = await context.Users.FindAsync(userId);
+                        if (reactor != null)
+                        {
+                            var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                                reactor.Id,
+                                reactor.FirstName ?? string.Empty,
+                                reactor.LastName ?? string.Empty,
+                                reactor.UserName ?? "User"
+                            );
+                            var reactionText = type.ToString().ToLower();
+                            var message = $"<strong>{formattedName}</strong> reacted to your group post with {reactionText}";
+
+                            await _notificationService.CreateNotificationAsync(
+                                post.AuthorId,
+                                NotificationType.GroupPostLiked,
+                                message,
+                                new { 
+                                    GroupPostId = postId,
+                                    GroupId = post.GroupId,
+                                    ReactorId = userId, 
+                                    ReactorName = formattedName,
+                                    ReactorProfilePicture = reactor.ProfilePictureUrl,
+                                    ReactionType = type.ToString() 
+                                }
+                            );
+                        }
+                    }
                 }
 
                 await context.SaveChangesAsync();
@@ -706,6 +839,38 @@ namespace FreeSpeakWeb.Services
                         CreatedAt = DateTime.UtcNow
                     };
                     context.GroupPostCommentLikes.Add(like);
+
+                    // Send notification to comment author (only for new likes, not the comment author themselves)
+                    if (comment.AuthorId != userId && comment.Author != null)
+                    {
+                        var reactor = await context.Users.FindAsync(userId);
+                        if (reactor != null)
+                        {
+                            var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
+                                reactor.Id,
+                                reactor.FirstName ?? string.Empty,
+                                reactor.LastName ?? string.Empty,
+                                reactor.UserName ?? "User"
+                            );
+                            var reactionText = type.ToString().ToLower();
+                            var message = $"<strong>{formattedName}</strong> reacted to your group comment with {reactionText}";
+
+                            await _notificationService.CreateNotificationAsync(
+                                comment.AuthorId,
+                                NotificationType.GroupCommentLiked,
+                                message,
+                                new { 
+                                    GroupPostId = comment.PostId,
+                                    GroupId = comment.Post.GroupId,
+                                    CommentId = commentId,
+                                    ReactorId = userId, 
+                                    ReactorName = formattedName,
+                                    ReactorProfilePicture = reactor.ProfilePictureUrl,
+                                    ReactionType = type.ToString() 
+                                }
+                            );
+                        }
+                    }
                 }
 
                 await context.SaveChangesAsync();
@@ -864,6 +1029,219 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogError(ex, "Error checking if group post {PostId} notifications are muted for user {UserId}", postId, userId);
                 return false;
+            }
+        }
+
+        #endregion
+
+        #region Like Details Operations
+
+        /// <summary>
+        /// Get detailed likes for a group post including user info and reaction type
+        /// </summary>
+        public async Task<List<(ApplicationUser User, LikeType Type, DateTime CreatedAt)>> GetGroupPostLikesWithDetailsAsync(int postId, int maxCount = 100)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var likes = await context.GroupPostLikes
+                    .Include(l => l.User)
+                    .Where(l => l.PostId == postId)
+                    .OrderByDescending(l => l.CreatedAt)
+                    .Take(maxCount)
+                    .Select(l => new { l.User, l.Type, l.CreatedAt })
+                    .ToListAsync();
+
+                return likes.Select(l => (l.User, l.Type, l.CreatedAt)).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting detailed likes for group post {PostId}", postId);
+                return new List<(ApplicationUser, LikeType, DateTime)>();
+            }
+        }
+
+        /// <summary>
+        /// Get the breakdown of reaction types for a group post
+        /// </summary>
+        public async Task<Dictionary<LikeType, int>> GetReactionBreakdownAsync(int postId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var reactionCounts = await context.GroupPostLikes
+                    .Where(l => l.PostId == postId)
+                    .GroupBy(l => l.Type)
+                    .Select(g => new { Type = g.Key, Count = g.Count() })
+                    .ToDictionaryAsync(x => x.Type, x => x.Count);
+
+                return reactionCounts;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting reaction breakdown for group post {PostId}", postId);
+                return new Dictionary<LikeType, int>();
+            }
+        }
+
+        /// <summary>
+        /// Get user's reaction type for a group post (null if not reacted)
+        /// </summary>
+        public async Task<LikeType?> GetUserReactionAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var like = await context.GroupPostLikes
+                    .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
+
+                return like?.Type;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting user reaction for group post {PostId} and user {UserId}", postId, userId);
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region Comment Retrieval Operations
+
+        /// <summary>
+        /// Get paginated direct comments for a group post (no nested replies)
+        /// </summary>
+        public async Task<List<GroupPostComment>> GetCommentsPagedAsync(int postId, int pageSize, int pageNumber)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var comments = await context.GroupPostComments
+                    .Include(c => c.Author)
+                    .Where(c => c.PostId == postId && c.ParentCommentId == null)
+                    .OrderBy(c => c.CreatedAt)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                return comments;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving paged comments for group post {PostId}", postId);
+                return new List<GroupPostComment>();
+            }
+        }
+
+        /// <summary>
+        /// Get the total count of direct comments for a group post (excluding replies)
+        /// </summary>
+        public async Task<int> GetDirectCommentCountAsync(int postId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.GroupPostComments
+                    .Where(c => c.PostId == postId && c.ParentCommentId == null)
+                    .CountAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving direct comment count for group post {PostId}", postId);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Get replies for a specific comment
+        /// </summary>
+        public async Task<List<GroupPostComment>> GetRepliesAsync(int commentId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var replies = await context.GroupPostComments
+                    .Include(c => c.Author)
+                    .Where(c => c.ParentCommentId == commentId)
+                    .OrderBy(c => c.CreatedAt)
+                    .ToListAsync();
+
+                return replies;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving replies for group post comment {CommentId}", commentId);
+                return new List<GroupPostComment>();
+            }
+        }
+
+        /// <summary>
+        /// Get like count for a group post comment
+        /// </summary>
+        public async Task<int> GetCommentLikeCountAsync(int commentId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.GroupPostCommentLikes
+                    .CountAsync(cl => cl.CommentId == commentId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting like count for group post comment {CommentId}", commentId);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Get the breakdown of reaction types for a group post comment
+        /// </summary>
+        public async Task<Dictionary<LikeType, int>> GetCommentReactionBreakdownAsync(int commentId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var reactionCounts = await context.GroupPostCommentLikes
+                    .Where(cl => cl.CommentId == commentId)
+                    .GroupBy(cl => cl.Type)
+                    .Select(g => new { Type = g.Key, Count = g.Count() })
+                    .ToDictionaryAsync(x => x.Type, x => x.Count);
+
+                return reactionCounts;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting reaction breakdown for group post comment {CommentId}", commentId);
+                return new Dictionary<LikeType, int>();
+            }
+        }
+
+        /// <summary>
+        /// Get user's reaction type for a group post comment (null if not reacted)
+        /// </summary>
+        public async Task<LikeType?> GetUserCommentReactionAsync(int commentId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var like = await context.GroupPostCommentLikes
+                    .FirstOrDefaultAsync(cl => cl.CommentId == commentId && cl.UserId == userId);
+
+                return like?.Type;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting user reaction for group post comment {CommentId} and user {UserId}", commentId, userId);
+                return null;
             }
         }
 
