@@ -1,0 +1,506 @@
+using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Data.Abstractions;
+using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
+using Microsoft.EntityFrameworkCore;
+
+namespace FreeSpeakWeb.Repositories
+{
+    /// <summary>
+    /// Repository implementation for group posts
+    /// </summary>
+    public class GroupPostRepository : IGroupPostRepository<GroupPost, GroupPostImage>
+    {
+        private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
+        private readonly ILogger<GroupPostRepository> _logger;
+        private readonly GroupAccessValidator _accessValidator;
+
+        public GroupPostRepository(
+            IDbContextFactory<ApplicationDbContext> contextFactory,
+            ILogger<GroupPostRepository> logger,
+            GroupAccessValidator accessValidator)
+        {
+            _contextFactory = contextFactory;
+            _logger = logger;
+            _accessValidator = accessValidator;
+        }
+
+        #region Post CRUD Operations
+
+        public async Task<GroupPost?> GetByIdAsync(int postId, bool includeAuthor = true, bool includeImages = true)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var query = context.GroupPosts.AsQueryable();
+
+                if (includeAuthor)
+                    query = query.Include(p => p.Author);
+
+                if (includeImages)
+                    query = query.Include(p => p.Images.OrderBy(i => i.DisplayOrder));
+
+                query = query.Include(p => p.Group);
+
+                return await query.FirstOrDefaultAsync(p => p.Id == postId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving group post {PostId}", postId);
+                return null;
+            }
+        }
+
+        public async Task<(bool Success, string? ErrorMessage, GroupPost? Post)> CreateAsync(GroupPost post)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                context.GroupPosts.Add(post);
+                await context.SaveChangesAsync();
+
+                // Update group's last active timestamp
+                var group = await context.Groups.FindAsync(post.GroupId);
+                if (group != null)
+                {
+                    group.LastActiveAt = DateTime.UtcNow;
+                    await context.SaveChangesAsync();
+                }
+
+                _logger.LogInformation("Group post created: Post ID {PostId} by user {AuthorId} in group {GroupId}",
+                    post.Id, post.AuthorId, post.GroupId);
+                return (true, null, post);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating group post for user {AuthorId} in group {GroupId}",
+                    post.AuthorId, post.GroupId);
+                return (false, "An error occurred while creating the post.", null);
+            }
+        }
+
+        public async Task<(bool Success, string? ErrorMessage)> UpdateContentAsync(int postId, string userId, string newContent)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var post = await context.GroupPosts.FindAsync(postId);
+
+                if (post == null)
+                    return (false, "Post not found.");
+
+                if (post.AuthorId != userId)
+                    return (false, "You are not authorized to edit this post.");
+
+                post.Content = string.IsNullOrWhiteSpace(newContent) ? string.Empty : newContent.Trim();
+                post.UpdatedAt = DateTime.UtcNow;
+
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("Group post {PostId} content updated by user {UserId}", postId, userId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating group post {PostId} for user {UserId}", postId, userId);
+                return (false, "An error occurred while updating the post.");
+            }
+        }
+
+        public async Task<(bool Success, string? ErrorMessage)> DeleteAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var post = await context.GroupPosts
+                    .Include(p => p.Group)
+                    .FirstOrDefaultAsync(p => p.Id == postId);
+
+                if (post == null)
+                    return (false, "Post not found.");
+
+                // Check if user is the author or a group admin/moderator
+                var isAuthor = post.AuthorId == userId;
+                var isAdminOrModerator = await context.GroupUsers
+                    .AnyAsync(gu => gu.GroupId == post.GroupId &&
+                                   gu.UserId == userId &&
+                                   (gu.IsAdmin || gu.IsModerator));
+
+                if (!isAuthor && !isAdminOrModerator)
+                    return (false, "You are not authorized to delete this post.");
+
+                context.GroupPosts.Remove(post);
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("Group post {PostId} deleted by user {UserId}", postId, userId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting group post {PostId} for user {UserId}", postId, userId);
+                return (false, "An error occurred while deleting the post.");
+            }
+        }
+
+        public async Task<bool> CanUserDeleteAsync(int postId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var post = await context.GroupPosts.FindAsync(postId);
+                if (post == null) return false;
+
+                if (post.AuthorId == userId) return true;
+
+                return await context.GroupUsers
+                    .AnyAsync(gu => gu.GroupId == post.GroupId &&
+                                   gu.UserId == userId &&
+                                   (gu.IsAdmin || gu.IsModerator));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking delete permission for group post {PostId}", postId);
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region Image Operations
+
+        public async Task<(bool Success, string? ErrorMessage, List<GroupPostImage>? Images)> AddImagesAsync(
+            int postId, string userId, List<string> imageUrls)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var post = await context.GroupPosts
+                    .Include(p => p.Images)
+                    .FirstOrDefaultAsync(p => p.Id == postId);
+
+                if (post == null)
+                    return (false, "Post not found.", null);
+
+                if (post.AuthorId != userId)
+                    return (false, "You are not authorized to modify this post.", null);
+
+                var currentMaxOrder = post.Images.Any() ? post.Images.Max(img => img.DisplayOrder) : -1;
+
+                var newImages = new List<GroupPostImage>();
+                for (int i = 0; i < imageUrls.Count; i++)
+                {
+                    var postImage = new GroupPostImage
+                    {
+                        PostId = post.Id,
+                        ImageUrl = imageUrls[i],
+                        DisplayOrder = currentMaxOrder + 1 + i,
+                        UploadedAt = DateTime.UtcNow
+                    };
+                    context.GroupPostImages.Add(postImage);
+                    newImages.Add(postImage);
+                }
+
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("Added {Count} images to group post {PostId}", imageUrls.Count, postId);
+                return (true, null, newImages);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error adding images to group post {PostId}", postId);
+                return (false, "An error occurred while adding images.", null);
+            }
+        }
+
+        public async Task<(bool Success, string? ErrorMessage)> RemoveImagesAsync(
+            int postId, string userId, List<int> imageIds)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var post = await context.GroupPosts
+                    .Include(p => p.Images)
+                    .FirstOrDefaultAsync(p => p.Id == postId);
+
+                if (post == null)
+                    return (false, "Post not found.");
+
+                if (post.AuthorId != userId)
+                    return (false, "You are not authorized to modify this post.");
+
+                var imagesToRemove = post.Images.Where(img => imageIds.Contains(img.Id)).ToList();
+                context.GroupPostImages.RemoveRange(imagesToRemove);
+
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("Removed {Count} images from group post {PostId}", imagesToRemove.Count, postId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error removing images from group post {PostId}", postId);
+                return (false, "An error occurred while removing images.");
+            }
+        }
+
+        public async Task<List<GroupPostImage>> GetImagesAsync(int postId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.GroupPostImages
+                    .Where(img => img.PostId == postId)
+                    .OrderBy(img => img.DisplayOrder)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving images for group post {PostId}", postId);
+                return new List<GroupPostImage>();
+            }
+        }
+
+        #endregion
+
+        #region Query Operations
+
+        public async Task<List<GroupPost>> GetByAuthorAsync(string authorId, int skip = 0, int take = 20)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.GroupPosts
+                    .Include(p => p.Author)
+                    .Include(p => p.Group)
+                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
+                    .Where(p => p.AuthorId == authorId)
+                    .OrderByDescending(p => p.CreatedAt)
+                    .Skip(skip)
+                    .Take(take)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving group posts for author {AuthorId}", authorId);
+                return new List<GroupPost>();
+            }
+        }
+
+        public async Task<int> GetCountByAuthorAsync(string authorId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                return await context.GroupPosts.CountAsync(p => p.AuthorId == authorId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error counting group posts for author {AuthorId}", authorId);
+                return 0;
+            }
+        }
+
+        public async Task<bool> ExistsAsync(int postId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                return await context.GroupPosts.AnyAsync(p => p.Id == postId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking existence of group post {PostId}", postId);
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region Count Operations
+
+        public async Task IncrementLikeCountAsync(int postId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                await context.GroupPosts
+                    .Where(p => p.Id == postId)
+                    .ExecuteUpdateAsync(p => p.SetProperty(x => x.LikeCount, x => x.LikeCount + 1));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error incrementing like count for group post {PostId}", postId);
+            }
+        }
+
+        public async Task DecrementLikeCountAsync(int postId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                await context.GroupPosts
+                    .Where(p => p.Id == postId)
+                    .ExecuteUpdateAsync(p => p.SetProperty(x => x.LikeCount, x => Math.Max(0, x.LikeCount - 1)));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error decrementing like count for group post {PostId}", postId);
+            }
+        }
+
+        public async Task IncrementCommentCountAsync(int postId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                await context.GroupPosts
+                    .Where(p => p.Id == postId)
+                    .ExecuteUpdateAsync(p => p.SetProperty(x => x.CommentCount, x => x.CommentCount + 1));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error incrementing comment count for group post {PostId}", postId);
+            }
+        }
+
+        public async Task DecrementCommentCountAsync(int postId, int count = 1)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                await context.GroupPosts
+                    .Where(p => p.Id == postId)
+                    .ExecuteUpdateAsync(p => p.SetProperty(x => x.CommentCount, x => Math.Max(0, x.CommentCount - count)));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error decrementing comment count for group post {PostId}", postId);
+            }
+        }
+
+        public async Task IncrementShareCountAsync(int postId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                await context.GroupPosts
+                    .Where(p => p.Id == postId)
+                    .ExecuteUpdateAsync(p => p.SetProperty(x => x.ShareCount, x => x.ShareCount + 1));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error incrementing share count for group post {PostId}", postId);
+            }
+        }
+
+        #endregion
+
+        #region Group Post Operations
+
+        public async Task<List<GroupPost>> GetByGroupAsync(int groupId, int skip = 0, int take = 20)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.GroupPosts
+                    .Include(p => p.Author)
+                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
+                    .Where(p => p.GroupId == groupId)
+                    .OrderByDescending(p => p.CreatedAt)
+                    .Skip(skip)
+                    .Take(take)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving posts for group {GroupId}", groupId);
+                return new List<GroupPost>();
+            }
+        }
+
+        public async Task<int> GetCountByGroupAsync(int groupId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                return await context.GroupPosts.CountAsync(p => p.GroupId == groupId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error counting posts for group {GroupId}", groupId);
+                return 0;
+            }
+        }
+
+        public async Task<List<GroupPost>> GetByGroupAndAuthorAsync(int groupId, string authorId, int skip = 0, int take = 20)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.GroupPosts
+                    .Include(p => p.Author)
+                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
+                    .Where(p => p.GroupId == groupId && p.AuthorId == authorId)
+                    .OrderByDescending(p => p.CreatedAt)
+                    .Skip(skip)
+                    .Take(take)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving posts for author {AuthorId} in group {GroupId}", authorId, groupId);
+                return new List<GroupPost>();
+            }
+        }
+
+        public async Task<List<GroupPost>> GetAllGroupPostsForUserAsync(string userId, int skip = 0, int take = 20)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Get all group IDs the user is a member of
+                var userGroupIds = await context.GroupUsers
+                    .Where(gu => gu.UserId == userId)
+                    .Select(gu => gu.GroupId)
+                    .ToListAsync();
+
+                if (!userGroupIds.Any())
+                    return new List<GroupPost>();
+
+                return await context.GroupPosts
+                    .Include(p => p.Author)
+                    .Include(p => p.Group)
+                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
+                    .Where(p => userGroupIds.Contains(p.GroupId))
+                    .OrderByDescending(p => p.CreatedAt)
+                    .Skip(skip)
+                    .Take(take)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving group posts for user {UserId}", userId);
+                return new List<GroupPost>();
+            }
+        }
+
+        public async Task<(bool CanPost, string? ErrorMessage)> CanUserPostAsync(int groupId, string userId)
+        {
+            return await _accessValidator.ValidateUserCanPostAsync(groupId, userId);
+        }
+
+        #endregion
+    }
+}

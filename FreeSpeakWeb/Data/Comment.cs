@@ -1,6 +1,8 @@
+using FreeSpeakWeb.Data.Abstractions;
+
 namespace FreeSpeakWeb.Data
 {
-    public class Comment
+    public class Comment : IPostComment
     {
         public int Id { get; set; }
 

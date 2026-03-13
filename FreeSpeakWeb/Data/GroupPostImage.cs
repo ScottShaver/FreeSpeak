@@ -1,6 +1,8 @@
+using FreeSpeakWeb.Data.Abstractions;
+
 namespace FreeSpeakWeb.Data
 {
-    public class GroupPostImage
+    public class GroupPostImage : IPostImage<GroupPost>
     {
         public int Id { get; set; }
 

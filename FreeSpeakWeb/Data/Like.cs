@@ -1,6 +1,8 @@
+using FreeSpeakWeb.Data.Abstractions;
+
 namespace FreeSpeakWeb.Data
 {
-    public class Like
+    public class Like : IPostLike<Post>
     {
         public int Id { get; set; }
 

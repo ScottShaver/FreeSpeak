@@ -1,6 +1,8 @@
+using FreeSpeakWeb.Data.Abstractions;
+
 namespace FreeSpeakWeb.Data
 {
-    public class Post
+    public class Post : IFeedPostEntity
     {
         public int Id { get; set; }
 
@@ -61,5 +63,19 @@ namespace FreeSpeakWeb.Data
         /// Defines who can see this post
         /// </summary>
         public AudienceType AudienceType { get; set; } = AudienceType.Public;
+
+        #region Explicit Interface Implementation
+        string IPostEntity.AuthorId
+        {
+            get => AuthorId;
+            set => AuthorId = value;
+        }
+
+        string IPostEntity.Content
+        {
+            get => Content;
+            set => Content = value;
+        }
+        #endregion
     }
 }

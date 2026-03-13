@@ -1,5 +1,6 @@
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Helpers
 @using FreeSpeakWeb.Services
 @using Microsoft.JSInterop
 @inject GroupPostService GroupPostService
@@ -29,8 +30,8 @@
                 CurrentUserId="@CurrentUserId"
                 CreatedAt="@CreatedAt"
                 ArticleContent="@ArticleContent"
-                LikeCount="@LikeCount"
-                CommentCount="@CommentCount"
+                LikeCount="@localLikeCount"
+                CommentCount="@localCommentCount"
                 ShareCount="@ShareCount"
                 DirectCommentCount="@directCommentCount"
                 Comments="@modalComments"
@@ -83,8 +84,8 @@
                         else
                         {
                             <div class="comment-user-avatar comment-avatar-placeholder">
-                                <span class="comment-avatar-initial">@GetInitials(CurrentUserName ?? "User")</span>
-                            </div>
+                                    <span class="comment-avatar-initial">@CommentHelpers.GetInitials(CurrentUserName ?? "User")</span>
+                                </div>
                         }
                         <div class="editor-wrapper">
                             <MultiLineCommentEditor OnCommentSubmitted="HandleCommentSubmittedInModal" />
@@ -164,6 +165,9 @@
     public EventCallback<(int PostId, string Content)> OnCommentAdded { get; set; }
 
     [Parameter]
+    public EventCallback<(int ParentCommentId, string Content)> OnReplySubmitted { get; set; }
+
+    [Parameter]
     public EventCallback<(int CommentId, LikeType ReactionType)> OnCommentReactionChanged { get; set; }
 
     [Parameter]
@@ -198,6 +202,8 @@
 
     private List<CommentDisplayModel> modalComments = new();
     private int directCommentCount = 0;
+    private int localCommentCount = 0;
+    private int localLikeCount = 0;
     private int currentCommentPage = 1;
     private const int commentPageSize = 20;
     private bool isLoadingComments = false;
@@ -206,6 +212,13 @@
     private ElementReference modalContentElement;
     private IJSObjectReference? jsModule;
     private DotNetObjectReference<GroupPostDetailModal>? dotNetHelper;
+
+    protected override void OnParametersSet()
+    {
+        // Initialize local counts from parameters
+        localCommentCount = CommentCount;
+        localLikeCount = LikeCount;
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -248,7 +261,7 @@
 
             foreach (var c in comments)
             {
-                var commentModel = await BuildCommentDisplayModel(c);
+                var commentModel = await CommentHelpers.BuildCommentDisplayModelAsync(c, GroupPostService, UserPreferenceService, CurrentUserId);
                 modalComments.Add(commentModel);
             }
 
@@ -282,7 +295,7 @@
             {
                 foreach (var c in comments)
                 {
-                    var commentModel = await BuildCommentDisplayModel(c);
+                    var commentModel = await CommentHelpers.BuildCommentDisplayModelAsync(c, GroupPostService, UserPreferenceService, CurrentUserId);
                     modalComments.Add(commentModel);
                 }
 
@@ -312,6 +325,9 @@
         {
             await OnCommentAdded.InvokeAsync(data);
         }
+
+        // Increment local comment count
+        localCommentCount++;
 
         // Reload comments to show the new comment
         currentCommentPage = 1;
@@ -361,7 +377,7 @@
     private async Task UpdateLocalCommentReaction(int commentId, LikeType? newReaction)
     {
         // Find the comment in modalComments and update its reaction data
-        var comment = FindCommentById(modalComments, commentId);
+        var comment = CommentHelpers.FindCommentById(modalComments, commentId);
         if (comment != null)
         {
             // Update user's reaction
@@ -375,120 +391,34 @@
         }
     }
 
-    private CommentDisplayModel? FindCommentById(List<CommentDisplayModel> comments, int commentId)
-    {
-        foreach (var comment in comments)
-        {
-            if (comment.CommentId == commentId)
-                return comment;
-
-            if (comment.Replies != null)
-            {
-                var found = FindCommentById(comment.Replies, commentId);
-                if (found != null)
-                    return found;
-            }
-        }
-        return null;
-    }
-
     private async Task HandleReplySubmitted((int ParentCommentId, string Content) data)
     {
         if (string.IsNullOrWhiteSpace(CurrentUserId)) return;
 
         try
         {
-            // Add the reply to the database using AddCommentAsync with parentCommentId
-            var result = await GroupPostService.AddCommentAsync(PostId, CurrentUserId, data.Content, null, data.ParentCommentId);
-
-            if (result.Success)
+            // Notify parent that a reply was submitted so it can handle the database insertion
+            // The parent component (Groups.razor, etc.) will add the reply to the database
+            if (OnReplySubmitted.HasDelegate)
             {
-                // Reload comments to show the new reply
-                currentCommentPage = 1;
-                hasMoreComments = true;
-                await LoadInitialComments();
-
-                // Update direct comment count since we added a reply
-                directCommentCount = await GroupPostService.GetDirectCommentCountAsync(PostId);
-                StateHasChanged();
-
-                // NOTE: Don't invoke OnCommentAdded for replies - that's only for direct comments
+                await OnReplySubmitted.InvokeAsync((data.ParentCommentId, data.Content));
             }
-            else
-            {
-                // Show error message to user
-                await JS.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to add reply");
-                Console.WriteLine($"Failed to add reply: {result.ErrorMessage}");
-            }
+
+            // Reload comments to show the new reply after parent has added it
+            currentCommentPage = 1;
+            hasMoreComments = true;
+            await LoadInitialComments();
+
+            // Update direct comment count
+            directCommentCount = await GroupPostService.GetDirectCommentCountAsync(PostId);
+
+            StateHasChanged();
         }
         catch (Exception ex)
         {
             await JS.InvokeVoidAsync("alert", "An error occurred while adding your reply.");
             Console.WriteLine($"Error adding reply: {ex.Message}");
         }
-    }
-
-    private async Task<string> GetCommentAuthorName(GroupPostComment comment)
-    {
-        if (comment.Author == null) return "Unknown";
-
-        // Use the author's display name preference
-        return await UserPreferenceService.FormatUserDisplayNameAsync(
-            comment.Author.Id,
-            comment.Author.FirstName,
-            comment.Author.LastName,
-            comment.Author.UserName ?? "Unknown"
-        );
-    }
-
-    private string GetInitials(string? name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-            return "U";
-
-        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-        if (parts.Length == 0)
-            return "U";
-
-        if (parts.Length == 1)
-        {
-            var singleWord = parts[0];
-            if (singleWord.Length >= 2)
-                return singleWord.Substring(0, 2).ToUpper();
-            else
-                return singleWord.Substring(0, 1).ToUpper();
-        }
-
-        return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
-    }
-
-    private async Task<CommentDisplayModel> BuildCommentDisplayModel(GroupPostComment comment)
-    {
-        // Load replies for this comment
-        var replies = await GroupPostService.GetRepliesAsync(comment.Id);
-        var replyModels = new List<CommentDisplayModel>();
-
-        foreach (var reply in replies)
-        {
-            var replyModel = await BuildCommentDisplayModel(reply); // Recursive call for nested replies
-            replyModels.Add(replyModel);
-        }
-
-        return new CommentDisplayModel
-        {
-            CommentId = comment.Id,
-            UserName = await GetCommentAuthorName(comment),
-            UserImageUrl = comment.Author?.ProfilePictureUrl,
-            CommentAuthorId = comment.AuthorId,
-            CommentText = comment.Content,
-            ImageUrl = comment.ImageUrl,
-            Timestamp = comment.CreatedAt,
-            Replies = replyModels.Any() ? replyModels : null,
-            LikeCount = await GroupPostService.GetCommentLikeCountAsync(comment.Id),
-            UserReaction = CurrentUserId != null ? await GroupPostService.GetUserCommentReactionAsync(comment.Id, CurrentUserId) : null,
-            ReactionBreakdown = await GroupPostService.GetCommentReactionBreakdownAsync(comment.Id)
-        };
     }
 
     private async Task HandleCommentSubmittedInModal(string commentText)

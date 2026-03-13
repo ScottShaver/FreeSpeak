@@ -1,19 +1,26 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
 {
     public class FriendsService
     {
+        private readonly IFriendshipRepository _friendshipRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly NotificationService _notificationService;
         private readonly UserPreferenceService _userPreferenceService;
 
         public FriendsService(
+            IFriendshipRepository friendshipRepository,
+            IUserRepository userRepository,
             IDbContextFactory<ApplicationDbContext> contextFactory,
             NotificationService notificationService,
             UserPreferenceService userPreferenceService)
         {
+            _friendshipRepository = friendshipRepository;
+            _userRepository = userRepository;
             _contextFactory = contextFactory;
             _notificationService = notificationService;
             _userPreferenceService = userPreferenceService;
@@ -29,13 +36,8 @@ namespace FreeSpeakWeb.Services
                 return (false, "You cannot send a friend request to yourself.");
             }
 
-            using var context = await _contextFactory.CreateDbContextAsync();
-
             // Check if a friendship already exists between these users
-            var existingFriendship = await context.Friendships
-                .FirstOrDefaultAsync(f =>
-                    (f.RequesterId == requesterId && f.AddresseeId == addresseeId) ||
-                    (f.RequesterId == addresseeId && f.AddresseeId == requesterId));
+            var existingFriendship = await _friendshipRepository.GetFriendshipAsync(requesterId, addresseeId);
 
             if (existingFriendship != null)
             {
@@ -57,11 +59,10 @@ namespace FreeSpeakWeb.Services
                 RequestedAt = DateTime.UtcNow
             };
 
-            context.Friendships.Add(friendship);
-            await context.SaveChangesAsync();
+            await _friendshipRepository.AddAsync(friendship);
 
             // Get requester info for notification
-            var requester = await context.Users.FindAsync(requesterId);
+            var requester = await _userRepository.GetByIdAsync(requesterId);
             if (requester != null)
             {
                 var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
@@ -96,9 +97,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<(bool Success, string? ErrorMessage)> AcceptFriendRequestAsync(int friendshipId, string currentUserId)
         {
-            using var context = await _contextFactory.CreateDbContextAsync();
-
-            var friendship = await context.Friendships.FindAsync(friendshipId);
+            var friendship = await _friendshipRepository.GetByIdAsync(friendshipId);
 
             if (friendship == null)
             {
@@ -118,10 +117,10 @@ namespace FreeSpeakWeb.Services
             friendship.Status = FriendshipStatus.Accepted;
             friendship.RespondedAt = DateTime.UtcNow;
 
-            await context.SaveChangesAsync();
+            await _friendshipRepository.UpdateAsync(friendship);
 
             // Send notification to the original requester
-            var acceptor = await context.Users.FindAsync(currentUserId);
+            var acceptor = await _userRepository.GetByIdAsync(currentUserId);
             if (acceptor != null)
             {
                 var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
@@ -155,9 +154,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<(bool Success, string? ErrorMessage)> RejectFriendRequestAsync(int friendshipId, string currentUserId)
         {
-            using var context = await _contextFactory.CreateDbContextAsync();
-
-            var friendship = await context.Friendships.FindAsync(friendshipId);
+            var friendship = await _friendshipRepository.GetByIdAsync(friendshipId);
 
             if (friendship == null)
             {
@@ -177,7 +174,7 @@ namespace FreeSpeakWeb.Services
             friendship.Status = FriendshipStatus.Rejected;
             friendship.RespondedAt = DateTime.UtcNow;
 
-            await context.SaveChangesAsync();
+            await _friendshipRepository.UpdateAsync(friendship);
 
             return (true, null);
         }
@@ -187,9 +184,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<(bool Success, string? ErrorMessage)> RemoveFriendAsync(int friendshipId, string currentUserId)
         {
-            using var context = await _contextFactory.CreateDbContextAsync();
-
-            var friendship = await context.Friendships.FindAsync(friendshipId);
+            var friendship = await _friendshipRepository.GetByIdAsync(friendshipId);
 
             if (friendship == null)
             {
@@ -201,8 +196,7 @@ namespace FreeSpeakWeb.Services
                 return (false, "You are not authorized to remove this friendship.");
             }
 
-            context.Friendships.Remove(friendship);
-            await context.SaveChangesAsync();
+            await _friendshipRepository.DeleteAsync(friendship);
 
             return (true, null);
         }
@@ -217,17 +211,13 @@ namespace FreeSpeakWeb.Services
                 return (false, "You cannot block yourself.");
             }
 
-            using var context = await _contextFactory.CreateDbContextAsync();
-
-            var existingFriendship = await context.Friendships
-                .FirstOrDefaultAsync(f =>
-                    (f.RequesterId == blockerId && f.AddresseeId == blockedUserId) ||
-                    (f.RequesterId == blockedUserId && f.AddresseeId == blockerId));
+            var existingFriendship = await _friendshipRepository.GetFriendshipAsync(blockerId, blockedUserId);
 
             if (existingFriendship != null)
             {
                 existingFriendship.Status = FriendshipStatus.Blocked;
                 existingFriendship.RespondedAt = DateTime.UtcNow;
+                await _friendshipRepository.UpdateAsync(existingFriendship);
             }
             else
             {
@@ -240,10 +230,8 @@ namespace FreeSpeakWeb.Services
                     RespondedAt = DateTime.UtcNow
                 };
 
-                context.Friendships.Add(friendship);
+                await _friendshipRepository.AddAsync(friendship);
             }
-
-            await context.SaveChangesAsync();
 
             return (true, null);
         }

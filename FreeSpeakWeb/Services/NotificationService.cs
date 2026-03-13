@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
@@ -6,6 +7,7 @@ namespace FreeSpeakWeb.Services
 {
     public class NotificationService
     {
+        private readonly INotificationRepository _notificationRepository;
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<NotificationService> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
@@ -14,10 +16,12 @@ namespace FreeSpeakWeb.Services
         private const int MaxBulkNotificationRecipients = 1000; // Max 1000 recipients per bulk operation
 
         public NotificationService(
+            INotificationRepository notificationRepository,
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<NotificationService> logger,
             IServiceScopeFactory scopeFactory)
         {
+            _notificationRepository = notificationRepository;
             _contextFactory = contextFactory;
             _logger = logger;
             _scopeFactory = scopeFactory;
@@ -205,11 +209,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                return await context.UserNotifications
-                    .Where(n => n.UserId == userId && !n.IsRead)
-                    .CountAsync();
+                return await _notificationRepository.GetUnreadCountAsync(userId);
             }
             catch (Exception ex)
             {
@@ -225,11 +225,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                return await context.UserNotifications
-                    .Where(n => n.UserId == userId)
-                    .CountAsync();
+                return await _notificationRepository.GetTotalCountAsync(userId);
             }
             catch (Exception ex)
             {
@@ -245,10 +241,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                return await context.UserNotifications
-                    .FirstOrDefaultAsync(n => n.Id == notificationId);
+                return await _notificationRepository.GetByIdAsync(notificationId);
             }
             catch (Exception ex)
             {

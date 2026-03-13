@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Helpers
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Components.Shared
@@ -183,7 +184,7 @@
                     var comments = new List<CommentDisplayModel>();
                     foreach (var c in commentsRaw)
                     {
-                        comments.Add(await BuildCommentDisplayModel(c));
+                        comments.Add(await CommentHelpers.BuildCommentDisplayModelAsync(c, PostService, UserPreferenceService, null));
                     }
                     postComments[post.Id] = comments;
 
@@ -230,46 +231,6 @@
 
         // SECURITY: Sanitize user content to prevent XSS attacks
         return HtmlSanitizationService.SanitizeAndFormatContent(content);
-    }
-
-    private async Task<CommentDisplayModel> BuildCommentDisplayModel(Comment comment)
-    {
-        // Load replies for this comment
-        var replies = await PostService.GetRepliesAsync(comment.Id);
-        var replyModels = new List<CommentDisplayModel>();
-
-        foreach (var reply in replies)
-        {
-            var replyModel = await BuildCommentDisplayModel(reply); // Recursive call for nested replies
-            replyModels.Add(replyModel);
-        }
-
-        return new CommentDisplayModel
-        {
-            CommentId = comment.Id,
-            UserName = await GetCommentAuthorName(comment),
-            UserImageUrl = comment.Author?.ProfilePictureUrl,
-            CommentAuthorId = comment.AuthorId,
-            CommentText = comment.Content,
-            Timestamp = comment.CreatedAt,
-            Replies = replyModels.Any() ? replyModels : null,
-            LikeCount = await PostService.GetCommentLikeCountAsync(comment.Id),
-            UserReaction = null, // No user reactions for unauthenticated users
-            ReactionBreakdown = await PostService.GetCommentReactionBreakdownAsync(comment.Id)
-        };
-    }
-
-    private async Task<string> GetCommentAuthorName(Comment comment)
-    {
-        if (comment.Author == null) return "Unknown";
-
-        // Use the author's display name preference
-        return await UserPreferenceService.FormatUserDisplayNameAsync(
-            comment.Author.Id,
-            comment.Author.FirstName,
-            comment.Author.LastName,
-            comment.Author.UserName ?? "Unknown"
-        );
     }
 
     private void ShowPostDetail(Post post)

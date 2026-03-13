@@ -66,3 +66,19 @@ export function scrollToAndHighlightComment(commentId) {
         console.warn(`Comment with ID ${commentId} not found in DOM`);
     }
 }
+
+export function scrollReplyEditorIntoView(editorElement) {
+    if (!editorElement) {
+        console.warn('Reply editor element not found');
+        return;
+    }
+
+    // Small delay to ensure the element is fully rendered
+    setTimeout(() => {
+        editorElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'nearest'
+        });
+    }, 100);
+}

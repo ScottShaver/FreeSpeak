@@ -3,6 +3,7 @@ using FluentAssertions;
 using FreeSpeakWeb.Components.SocialFeed;
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Services;
+using FreeSpeakWeb.Tests.Infrastructure;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -38,11 +39,15 @@ namespace FreeSpeakWeb.Tests.Components
             // Mock NotificationService
             var mockNotificationLogger = new Mock<ILogger<NotificationService>>();
             var mockScopeFactory = new Mock<IServiceScopeFactory>();
-            var notificationService = new NotificationService(mockDbContextFactory.Object, mockNotificationLogger.Object, mockScopeFactory.Object);
+            var mockNotificationRepo = MockRepositories.CreateMockNotificationRepository();            var notificationService = new NotificationService(mockNotificationRepo.Object, mockDbContextFactory.Object, mockNotificationLogger.Object, mockScopeFactory.Object);
 
             // Mock UserPreferenceService
             var mockUserPreferenceLogger = new Mock<ILogger<UserPreferenceService>>();
             var userPreferenceService = new UserPreferenceService(mockDbContextFactory.Object, mockUserPreferenceLogger.Object);
+
+            // Mock PostNotificationHelper
+            var mockNotificationHelperLogger = new Mock<ILogger<PostNotificationHelper>>();
+            var postNotificationHelper = new PostNotificationHelper(mockDbContextFactory.Object, notificationService, userPreferenceService, mockNotificationHelperLogger.Object);
 
             // Create SiteSettings for PostService
             var siteSettings = new SiteSettings
@@ -56,15 +61,24 @@ namespace FreeSpeakWeb.Tests.Components
             // Create PostService with mocked dependencies
             var postService = new PostService(
                 mockDbContextFactory.Object,
+                MockRepositories.CreateMockFeedPostRepository().Object,
+                MockRepositories.CreateMockFeedCommentRepository().Object,
+                MockRepositories.CreateMockFeedPostLikeRepository().Object,
+                MockRepositories.CreateMockFeedCommentLikeRepository().Object,
+                MockRepositories.CreateMockPinnedPostRepository().Object,
+                MockRepositories.CreateMockPostNotificationMuteRepository().Object,
+                MockRepositories.CreateMockNotificationRepository().Object,
                 mockLogger.Object,
                 siteSettingsOptions,
                 mockEnvironment.Object,
                 notificationService,
-                userPreferenceService
+                userPreferenceService,
+                postNotificationHelper
             );
 
             Services.AddSingleton(postService);
             Services.AddSingleton(siteSettingsOptions);
+            Services.AddSingleton(userPreferenceService);
         }
 
         [Fact]
@@ -270,3 +284,4 @@ namespace FreeSpeakWeb.Tests.Components
         }
     }
 }
+

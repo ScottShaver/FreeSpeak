@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Components.SocialFeed;
+using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -8,26 +9,50 @@ namespace FreeSpeakWeb.Services
     public class PostService
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
+        private readonly IFeedPostRepository<Post, PostImage> _postRepository;
+        private readonly IFeedCommentRepository _commentRepository;
+        private readonly IFeedPostLikeRepository _likeRepository;
+        private readonly IFeedCommentLikeRepository _commentLikeRepository;
+        private readonly IPinnedPostRepository _pinnedPostRepository;
+        private readonly IPostNotificationMuteRepository _muteRepository;
+        private readonly INotificationRepository _notificationRepository;
         private readonly ILogger<PostService> _logger;
         private readonly SiteSettings _siteSettings;
         private readonly IWebHostEnvironment _environment;
         private readonly NotificationService _notificationService;
         private readonly UserPreferenceService _userPreferenceService;
+        private readonly PostNotificationHelper _notificationHelper;
 
         public PostService(
-            IDbContextFactory<ApplicationDbContext> contextFactory, 
+            IDbContextFactory<ApplicationDbContext> contextFactory,
+            IFeedPostRepository<Post, PostImage> postRepository,
+            IFeedCommentRepository commentRepository,
+            IFeedPostLikeRepository likeRepository,
+            IFeedCommentLikeRepository commentLikeRepository,
+            IPinnedPostRepository pinnedPostRepository,
+            IPostNotificationMuteRepository muteRepository,
+            INotificationRepository notificationRepository,
             ILogger<PostService> logger, 
             IOptions<SiteSettings> siteSettings,
             IWebHostEnvironment environment,
             NotificationService notificationService,
-            UserPreferenceService userPreferenceService)
+            UserPreferenceService userPreferenceService,
+            PostNotificationHelper notificationHelper)
         {
             _contextFactory = contextFactory;
+            _postRepository = postRepository;
+            _commentRepository = commentRepository;
+            _likeRepository = likeRepository;
+            _commentLikeRepository = commentLikeRepository;
+            _pinnedPostRepository = pinnedPostRepository;
+            _muteRepository = muteRepository;
+            _notificationRepository = notificationRepository;
             _logger = logger;
             _siteSettings = siteSettings.Value;
             _environment = environment;
             _notificationService = notificationService;
             _userPreferenceService = userPreferenceService;
+            _notificationHelper = notificationHelper;
         }
 
         #region Post Operations
@@ -45,8 +70,6 @@ namespace FreeSpeakWeb.Services
 
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
                 var post = new Post
                 {
                     AuthorId = authorId,
@@ -55,28 +78,24 @@ namespace FreeSpeakWeb.Services
                     AudienceType = audienceType
                 };
 
-                context.Posts.Add(post);
-                await context.SaveChangesAsync();
+                var result = await _postRepository.CreateAsync(post);
+                if (!result.Success || result.Post == null)
+                {
+                    return (false, result.ErrorMessage ?? "Failed to create post.", null);
+                }
 
                 // Add images if provided
                 if (imageUrls != null && imageUrls.Any())
                 {
-                    for (int i = 0; i < imageUrls.Count; i++)
+                    var imageResult = await _postRepository.AddImagesAsync(result.Post.Id, authorId, imageUrls);
+                    if (!imageResult.Success)
                     {
-                        var postImage = new PostImage
-                        {
-                            PostId = post.Id,
-                            ImageUrl = imageUrls[i],
-                            DisplayOrder = i,
-                            UploadedAt = DateTime.UtcNow
-                        };
-                        context.PostImages.Add(postImage);
+                        _logger.LogWarning("Post created but failed to add images: {ErrorMessage}", imageResult.ErrorMessage);
                     }
-                    await context.SaveChangesAsync();
                 }
 
-                _logger.LogInformation("Post created by user {AuthorId}: Post ID {PostId}", authorId, post.Id);
-                return (true, null, post);
+                _logger.LogInformation("Post created by user {AuthorId}: Post ID {PostId}", authorId, result.Post.Id);
+                return (true, null, result.Post);
             }
             catch (Exception ex)
             {
@@ -105,70 +124,45 @@ namespace FreeSpeakWeb.Services
 
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var post = await context.Posts
-                    .Include(p => p.Images)
-                    .FirstOrDefaultAsync(p => p.Id == postId);
-
-                if (post == null)
-                {
-                    return (false, "Post not found.", null);
-                }
-
-                if (post.AuthorId != userId)
-                {
-                    return (false, "You are not authorized to edit this post.", null);
-                }
-
                 // Update content
-                post.Content = string.IsNullOrWhiteSpace(newContent) ? string.Empty : newContent.Trim();
-                post.UpdatedAt = DateTime.UtcNow;
+                var contentResult = await _postRepository.UpdateContentAsync(postId, userId, newContent);
+                if (!contentResult.Success)
+                {
+                    return (false, contentResult.ErrorMessage, null);
+                }
 
                 // Remove specified images
                 if (removedImageIds != null && removedImageIds.Any())
                 {
-                    var imagesToRemove = post.Images
-                        .Where(img => removedImageIds.Contains(img.Id))
-                        .ToList();
-
-                    foreach (var image in imagesToRemove)
+                    var removeResult = await _postRepository.RemoveImagesAsync(postId, userId, removedImageIds);
+                    if (!removeResult.Success)
                     {
-                        context.PostImages.Remove(image);
+                        _logger.LogWarning("Post updated but failed to remove images: {ErrorMessage}", removeResult.ErrorMessage);
                     }
                 }
 
                 // Add new images
                 if (newImageUrls != null && newImageUrls.Any())
                 {
-                    var currentMaxOrder = post.Images.Any() ? post.Images.Max(img => img.DisplayOrder) : -1;
-
-                    for (int i = 0; i < newImageUrls.Count; i++)
+                    var addResult = await _postRepository.AddImagesAsync(postId, userId, newImageUrls);
+                    if (!addResult.Success)
                     {
-                        var postImage = new PostImage
-                        {
-                            PostId = post.Id,
-                            ImageUrl = newImageUrls[i],
-                            DisplayOrder = currentMaxOrder + 1 + i,
-                            UploadedAt = DateTime.UtcNow
-                        };
-                        context.PostImages.Add(postImage);
+                        _logger.LogWarning("Post updated but failed to add images: {ErrorMessage}", addResult.ErrorMessage);
                     }
                 }
 
-                await context.SaveChangesAsync();
-
-                // Reload images to get the updated collection
-                await context.Entry(post).Collection(p => p.Images).LoadAsync();
+                // Get updated images
+                var updatedImages = await _postRepository.GetImagesAsync(postId);
 
                 // Verify post still has content or images
-                if (string.IsNullOrWhiteSpace(post.Content) && !post.Images.Any())
+                var post = await _postRepository.GetByIdAsync(postId, includeAuthor: false, includeImages: false);
+                if (post != null && string.IsNullOrWhiteSpace(post.Content) && !updatedImages.Any())
                 {
                     return (false, "Post must contain either text or images.", null);
                 }
 
                 _logger.LogInformation("Post {PostId} updated by user {UserId}", postId, userId);
-                return (true, null, post.Images.OrderBy(i => i.DisplayOrder).ToList());
+                return (true, null, updatedImages);
             }
             catch (Exception ex)
             {
@@ -184,35 +178,14 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var post = await context.Posts.FindAsync(postId);
-
-                if (post == null)
+                var result = await _postRepository.UpdateAudienceAsync(postId, userId, newAudienceType);
+                if (!result.Success)
                 {
-                    return (false, "Post not found.");
+                    return result;
                 }
-
-                if (post.AuthorId != userId)
-                {
-                    return (false, "You are not authorized to modify this post.");
-                }
-
-                post.AudienceType = newAudienceType;
-                post.UpdatedAt = DateTime.UtcNow;
 
                 // Remove any pinned post records since the audience has changed
-                var pinnedPosts = await context.PinnedPosts
-                    .Where(pp => pp.PostId == postId)
-                    .ToListAsync();
-
-                if (pinnedPosts.Any())
-                {
-                    context.PinnedPosts.RemoveRange(pinnedPosts);
-                    _logger.LogInformation("Removed {Count} pinned post record(s) for post {PostId} due to audience change", pinnedPosts.Count, postId);
-                }
-
-                await context.SaveChangesAsync();
+                await _pinnedPostRepository.RemovePinnedPostsByPostIdAsync(postId);
 
                 _logger.LogInformation("Post {PostId} audience updated to {AudienceType} by user {UserId}", postId, newAudienceType, userId);
                 return (true, null);
@@ -435,31 +408,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                // Get user's friend IDs
-                var friendIds = await context.Friendships
-                    .Where(f => f.Status == FriendshipStatus.Accepted &&
-                               (f.RequesterId == userId || f.AddresseeId == userId))
-                    .Select(f => f.RequesterId == userId ? f.AddresseeId : f.RequesterId)
-                    .ToListAsync();
-
-                // Include user's own ID
-                var authorIds = friendIds.Append(userId).ToList();
-
-                var posts = await context.Posts
-                    .Include(p => p.Author)
-                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
-                    .Where(p => authorIds.Contains(p.AuthorId) &&
-                               (p.AuthorId == userId || // User's own posts (all audience types)
-                                p.AudienceType == AudienceType.Public || // Friends' public posts
-                                p.AudienceType == AudienceType.FriendsOnly)) // Friends' friends-only posts
-                    .OrderByDescending(p => p.CreatedAt)
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-
-                return posts;
+                return await _postRepository.GetFeedPostsAsync(userId, (pageNumber - 1) * pageSize, pageSize);
             }
             catch (Exception ex)
             {
@@ -475,18 +424,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var posts = await context.Posts
-                    .Include(p => p.Author)
-                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
-                    .Where(p => p.AuthorId == userId)
-                    .OrderByDescending(p => p.CreatedAt)
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-
-                return posts;
+                return await _postRepository.GetByAuthorAsync(userId, (pageNumber - 1) * pageSize, pageSize);
             }
             catch (Exception ex)
             {
@@ -502,25 +440,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                // Get public posts only, ordered by creation date (most recent first)
-                var posts = await context.Posts
-                    .Include(p => p.Author)
-                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
-                    .Where(p => p.AudienceType == AudienceType.Public)
-                    .OrderByDescending(p => p.CreatedAt)
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize + 1) // Take one extra to check if there are more
-                    .ToListAsync();
-
-                var hasMore = posts.Count > pageSize;
-                if (hasMore)
-                {
-                    posts = posts.Take(pageSize).ToList();
-                }
-
-                return (posts, hasMore);
+                return await _postRepository.GetPublicPostsAsync(pageNumber, pageSize);
             }
             catch (Exception ex)
             {
@@ -536,22 +456,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var friendIds = await context.Friendships
-                    .Where(f => f.Status == FriendshipStatus.Accepted &&
-                               (f.RequesterId == userId || f.AddresseeId == userId))
-                    .Select(f => f.RequesterId == userId ? f.AddresseeId : f.RequesterId)
-                    .ToListAsync();
-
-                var authorIds = friendIds.Append(userId).ToList();
-
-                return await context.Posts
-                    .Where(p => authorIds.Contains(p.AuthorId) &&
-                               (p.AuthorId == userId || // User's own posts (all audience types)
-                                p.AudienceType == AudienceType.Public || // Friends' public posts
-                                p.AudienceType == AudienceType.FriendsOnly)) // Friends' friends-only posts
-                    .CountAsync();
+                return await _postRepository.GetFeedPostsCountAsync(userId);
             }
             catch (Exception ex)
             {
@@ -752,77 +657,28 @@ namespace FreeSpeakWeb.Services
 
                 _logger.LogInformation("Comment added to post {PostId} by user {AuthorId}", postId, authorId);
 
-                // Create notification for new reactions only (not for changing reactions)
-                // Don't notify if user is commenting on their own post/comment
-                var commenter = await context.Users.FindAsync(authorId);
-                if (commenter != null)
+                // Send notifications using helper
+                if (parentCommentId.HasValue && parentComment != null)
                 {
-                    if (parentCommentId.HasValue)
-                    {
-                        // Reply to a comment - notify the parent comment author
-                        if (parentComment != null && parentComment.AuthorId != authorId)
-                        {
-                            // Check if the parent comment author has muted notifications for this post
-                            var isMuted = await context.PostNotificationMutes
-                                .AnyAsync(m => m.PostId == postId && m.UserId == parentComment.AuthorId);
-
-                            if (!isMuted)
-                            {
-                                var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
-                                    commenter.Id,
-                                    commenter.FirstName ?? string.Empty,
-                                    commenter.LastName ?? string.Empty,
-                                    commenter.UserName ?? "User"
-                                );
-                                var message = $"<strong>{formattedName}</strong> replied to your comment";
-                                await _notificationService.CreateNotificationAsync(
-                                    parentComment.AuthorId,
-                                    NotificationType.CommentReply,
-                                    message,
-                                    new { 
-                                        PostId = postId, 
-                                        CommentId = comment.Id, 
-                                        CommenterId = authorId,
-                                        CommenterName = formattedName,
-                                        CommenterProfilePicture = commenter.ProfilePictureUrl
-                                    }
-                                );
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Direct comment on post - notify the post author
-                        if (post.AuthorId != authorId)
-                        {
-                            // Check if the post author has muted notifications for this post
-                            var isMuted = await context.PostNotificationMutes
-                                .AnyAsync(m => m.PostId == postId && m.UserId == post.AuthorId);
-
-                            if (!isMuted)
-                            {
-                                var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
-                                    commenter.Id,
-                                    commenter.FirstName ?? string.Empty,
-                                    commenter.LastName ?? string.Empty,
-                                    commenter.UserName ?? "User"
-                                );
-                                var message = $"<strong>{formattedName}</strong> commented on your post";
-                                await _notificationService.CreateNotificationAsync(
-                                    post.AuthorId,
-                                    NotificationType.PostComment,
-                                    message,
-                                    new { 
-                                        PostId = postId, 
-                                        CommentId = comment.Id, 
-                                        CommenterId = authorId,
-                                        CommenterName = formattedName,
-                                        CommenterProfilePicture = commenter.ProfilePictureUrl
-                                    }
-                                );
-                            }
-                        }
-                    }
+                    // Reply to a comment - notify the parent comment author
+                    await _notificationHelper.NotifyCommentReplyAsync(
+                        parentComment.AuthorId,
+                        authorId,
+                        postId,
+                        comment.Id,
+                        NotificationType.CommentReply
+                    );
+                }
+                else
+                {
+                    // Direct comment on post - notify the post author
+                    await _notificationHelper.NotifyPostCommentAsync(
+                        post.AuthorId,
+                        authorId,
+                        postId,
+                        comment.Id,
+                        NotificationType.PostComment
+                    );
                 }
 
                 return (true, null, comment);
@@ -879,7 +735,7 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get comments for a post with nested replies
+        /// Get top-level comments for a post (replies loaded separately via GetRepliesAsync)
         /// </summary>
         public async Task<List<Comment>> GetCommentsAsync(int postId)
         {
@@ -887,10 +743,10 @@ namespace FreeSpeakWeb.Services
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
 
+                // Load only top-level comments with their authors
+                // Nested replies are loaded recursively via GetRepliesAsync() calls
                 var comments = await context.Comments
                     .Include(c => c.Author)
-                    .Include(c => c.Replies)
-                        .ThenInclude(r => r.Author)
                     .Where(c => c.PostId == postId && c.ParentCommentId == null)
                     .OrderBy(c => c.CreatedAt)
                     .ToListAsync();
@@ -956,6 +812,14 @@ namespace FreeSpeakWeb.Services
                 _logger.LogError(ex, "Error retrieving last comments for post {PostId}", postId);
                 return new List<Comment>();
             }
+        }
+
+        /// <summary>
+        /// Get a comment by its ID
+        /// </summary>
+        public async Task<Comment?> GetCommentByIdAsync(int commentId)
+        {
+            return await _commentRepository.GetByIdAsync(commentId, includeAuthor: true, includeReplies: false);
         }
 
         /// <summary>
@@ -1169,41 +1033,15 @@ namespace FreeSpeakWeb.Services
                 await context.SaveChangesAsync();
 
                 // Create notification for new reactions only (not for changing reactions)
-                // Don't notify if user is reacting to their own post
-                if (isNewReaction && post.AuthorId != userId)
+                if (isNewReaction)
                 {
-                    // Check if the post author has muted notifications for this post
-                    var isMuted = await context.PostNotificationMutes
-                        .AnyAsync(m => m.PostId == postId && m.UserId == post.AuthorId);
-
-                    if (!isMuted)
-                    {
-                        var reactor = await context.Users.FindAsync(userId);
-                        if (reactor != null)
-                        {
-                            var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
-                                reactor.Id,
-                                reactor.FirstName ?? string.Empty,
-                                reactor.LastName ?? string.Empty,
-                                reactor.UserName ?? "User"
-                            );
-                            var reactionText = reactionType.ToString().ToLower();
-                            var message = $"<strong>{formattedName}</strong> reacted to your post with {reactionText}";
-
-                            await _notificationService.CreateNotificationAsync(
-                                post.AuthorId,
-                                NotificationType.PostLiked,
-                                message,
-                                new { 
-                                    PostId = postId, 
-                                    ReactorId = userId, 
-                                    ReactorName = formattedName,
-                                    ReactorProfilePicture = reactor.ProfilePictureUrl,
-                                    ReactionType = reactionType.ToString() 
-                                }
-                            );
-                        }
-                    }
+                    await _notificationHelper.NotifyPostReactionAsync(
+                        post.AuthorId,
+                        userId,
+                        postId,
+                        reactionType,
+                        NotificationType.PostLiked
+                    );
                 }
 
                 return (true, null);
@@ -1483,42 +1321,16 @@ namespace FreeSpeakWeb.Services
                 await context.SaveChangesAsync();
 
                 // Create notification for new reactions only (not for changing reactions)
-                // Don't notify if user is reacting to their own comment
-                if (isNewReaction && comment.AuthorId != userId)
+                if (isNewReaction)
                 {
-                    // Check if the comment author has muted notifications for this post
-                    var isMuted = await context.PostNotificationMutes
-                        .AnyAsync(m => m.PostId == comment.PostId && m.UserId == comment.AuthorId);
-
-                    if (!isMuted)
-                    {
-                        var reactor = await context.Users.FindAsync(userId);
-                        if (reactor != null)
-                        {
-                            var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
-                                reactor.Id,
-                                reactor.FirstName ?? string.Empty,
-                                reactor.LastName ?? string.Empty,
-                                reactor.UserName ?? "User"
-                            );
-                            var reactionText = reactionType.ToString().ToLower();
-                            var message = $"<strong>{formattedName}</strong> reacted to your comment with {reactionText}";
-
-                            await _notificationService.CreateNotificationAsync(
-                                comment.AuthorId,
-                                NotificationType.CommentLiked,
-                                message,
-                                new { 
-                                    PostId = comment.PostId, 
-                                    CommentId = commentId, 
-                                    ReactorId = userId,
-                                    ReactorName = formattedName,
-                                    ReactorProfilePicture = reactor.ProfilePictureUrl,
-                                    ReactionType = reactionType.ToString() 
-                                }
-                            );
-                        }
-                    }
+                    await _notificationHelper.NotifyCommentReactionAsync(
+                        comment.AuthorId,
+                        userId,
+                        comment.PostId,
+                        commentId,
+                        reactionType,
+                        NotificationType.CommentLiked
+                    );
                 }
 
                 return (true, null);

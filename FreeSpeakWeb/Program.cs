@@ -1,6 +1,8 @@
 using FreeSpeakWeb.Components;
 using FreeSpeakWeb.Components.Account;
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Repositories;
+using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -126,6 +128,9 @@ namespace FreeSpeakWeb
             // Add HtmlSanitizationService for XSS protection
             builder.Services.AddSingleton<HtmlSanitizationService>();
 
+            // Add AlertService for user notifications
+            builder.Services.AddScoped<AlertService>();
+
             // Add Group services
             builder.Services.AddScoped<GroupService>();
             builder.Services.AddScoped<GroupRuleService>();
@@ -133,6 +138,35 @@ namespace FreeSpeakWeb
             builder.Services.AddScoped<GroupPostService>();
             builder.Services.AddScoped<PinnedGroupPostService>();
             builder.Services.AddScoped<GroupBannedMemberService>();
+            builder.Services.AddScoped<GroupPostEventHandlers>();
+
+            // Add helper services for shared functionality
+            builder.Services.AddScoped<PostNotificationHelper>();
+            builder.Services.AddScoped<GroupAccessValidator>();
+
+            // Add Repository Pattern implementations for cleaner data access
+            // Post repositories
+            builder.Services.AddScoped<IFeedPostRepository<Post, PostImage>, PostRepository>();
+            builder.Services.AddScoped<IGroupPostRepository<GroupPost, GroupPostImage>, GroupPostRepository>();
+
+            // Comment repositories
+            builder.Services.AddScoped<IFeedCommentRepository, FeedCommentRepository>();
+            builder.Services.AddScoped<IGroupCommentRepository, GroupCommentRepository>();
+
+            // Like repositories
+            builder.Services.AddScoped<IFeedPostLikeRepository, FeedPostLikeRepository>();
+            builder.Services.AddScoped<IGroupPostLikeRepository, GroupPostLikeRepository>();
+            builder.Services.AddScoped<IFeedCommentLikeRepository, FeedCommentLikeRepository>();
+            builder.Services.AddScoped<IGroupCommentLikeRepository, GroupCommentLikeRepository>();
+
+            // Domain repositories
+            builder.Services.AddScoped<IFriendshipRepository, FriendshipRepository>();
+            builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+            builder.Services.AddScoped<IPinnedPostRepository, PinnedPostRepository>();
+            builder.Services.AddScoped<IPostNotificationMuteRepository, PostNotificationMuteRepository>();
+            builder.Services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
 
             // SECURITY: Add rate limiting to prevent abuse
             builder.Services.AddRateLimiter(options =>

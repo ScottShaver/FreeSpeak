@@ -16,6 +16,7 @@
 @inject ThemeService ThemeService
 @inject NotificationBadgeService NotificationBadgeService
 @inject UserPreferenceService UserPreferenceService
+@inject GroupMemberService GroupMemberService
 
 <!-- Always visible header across the top -->
 <div class="top-row ps-3 navbar navbar-dark">
@@ -155,6 +156,20 @@
                         </button>
                     </form>
                 </div>
+
+                <hr class="nav-divider" />
+
+                @if (userGroups != null && userGroups.Any())
+                {
+                    @foreach (var groupUser in userGroups)
+                    {
+                        <div class="nav-item px-3">
+                            <a class="nav-link @(GetActiveMenuItemFromUrl() == $"group/{groupUser.GroupId}" ? "active" : "")" href="@($"group/{groupUser.GroupId}")" data-enhance-nav="false">
+                                <span class="bi bi-diagram-3-fill-nav-menu" aria-hidden="true"></span> @groupUser.Group?.Name
+                            </a>
+                        </div>
+                    }
+                }
             </Authorized>
             <NotAuthorized>
                 <div class="nav-item px-3">
@@ -190,6 +205,7 @@
     private ApplicationUser? currentUser;
     private string? currentUserDisplayName;
     private int unreadNotificationCount = 0;
+    private List<GroupUser>? userGroups;
 
     private string? NavMenuCssClass => showNavMenu ? "nav-scrollable show" : "nav-scrollable";
 
@@ -261,8 +277,28 @@
                 NotificationBadgeService.OnUnreadCountChanged += HandleUnreadCountChanged;
                 await NotificationBadgeService.InitializeAsync(currentUser.Id);
                 unreadNotificationCount = NotificationBadgeService.UnreadCount;
+
+                // Load user's groups
+                await LoadUserGroupsAsync();
             }
         }
+    }
+
+    private async Task LoadUserGroupsAsync()
+    {
+        if (currentUser == null) return;
+
+        var groups = await GroupMemberService.GetUserGroupsAsync(currentUser.Id);
+        // Sort alphabetically by group name
+        userGroups = groups
+            .OrderBy(gu => gu.Group?.Name ?? string.Empty)
+            .ToList();
+    }
+
+    public async Task RefreshUserGroupsAsync()
+    {
+        await LoadUserGroupsAsync();
+        StateHasChanged();
     }
 
     protected override void OnParametersSet()
@@ -287,12 +323,16 @@
             _activeMenuItem = "/Account/Manage";
         else if (path.Equals("friends", StringComparison.OrdinalIgnoreCase))
             _activeMenuItem = "friends";
+        else if (path.Equals("groups", StringComparison.OrdinalIgnoreCase))
+            _activeMenuItem = "groups";
         else if (path.Equals("my-uploads", StringComparison.OrdinalIgnoreCase))
             _activeMenuItem = "my-uploads";
         else if (path.Equals("notifications", StringComparison.OrdinalIgnoreCase))
             _activeMenuItem = "notifications";
         else if (path.Equals("technology-credits", StringComparison.OrdinalIgnoreCase))
             _activeMenuItem = "technology-credits";
+        else if (path.StartsWith("group/", StringComparison.OrdinalIgnoreCase))
+            _activeMenuItem = path.ToLowerInvariant();
         else
             _activeMenuItem = "/" + path;
     }

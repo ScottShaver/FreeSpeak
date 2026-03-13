@@ -1,6 +1,8 @@
+using FreeSpeakWeb.Data.Abstractions;
+
 namespace FreeSpeakWeb.Data
 {
-    public class GroupPost
+    public class GroupPost : IGroupPostEntity
     {
         public int Id { get; set; }
 
@@ -60,5 +62,25 @@ namespace FreeSpeakWeb.Data
         /// Cached count of shares (updated when post is shared)
         /// </summary>
         public int ShareCount { get; set; } = 0;
+
+        #region Explicit Interface Implementation
+        int IGroupPostEntity.GroupId
+        {
+            get => GroupId;
+            set => GroupId = value;
+        }
+
+        string IPostEntity.AuthorId
+        {
+            get => AuthorId;
+            set => AuthorId = value;
+        }
+
+        string IPostEntity.Content
+        {
+            get => Content;
+            set => Content = value;
+        }
+        #endregion
     }
 }

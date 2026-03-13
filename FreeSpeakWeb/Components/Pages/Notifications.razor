@@ -536,7 +536,7 @@
 
         try
         {
-            var result = await GroupPostService.LikePostAsync(selectedGroupPost.Id, currentUserId, reactionType);
+            var result = await GroupPostService.AddOrUpdateReactionAsync(selectedGroupPost.Id, currentUserId, reactionType);
 
             if (result.Success)
             {
@@ -568,7 +568,7 @@
 
         try
         {
-            var result = await GroupPostService.UnlikePostAsync(selectedGroupPost.Id, currentUserId);
+            var result = await GroupPostService.RemoveReactionAsync(selectedGroupPost.Id, currentUserId);
 
             if (result.Success)
             {

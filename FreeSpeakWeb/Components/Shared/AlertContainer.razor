@@ -1,0 +1,58 @@
+@using FreeSpeakWeb.Services
+@implements IDisposable
+@inject AlertService AlertService
+
+<div class="alert-container">
+    @foreach (var alert in alerts)
+    {
+        <div class="alert-message alert-@alert.Type.ToString().ToLower() slide-in" @key="alert.Id">
+            <div class="alert-content">
+                @switch (alert.Type)
+                {
+                    case AlertType.Success:
+                        <span class="alert-icon bi bi-check-circle-fill"></span>
+                        break;
+                    case AlertType.Info:
+                        <span class="alert-icon bi bi-info-circle-fill"></span>
+                        break;
+                    case AlertType.Warning:
+                        <span class="alert-icon bi bi-exclamation-triangle-fill"></span>
+                        break;
+                    case AlertType.Error:
+                        <span class="alert-icon bi bi-x-circle-fill"></span>
+                        break;
+                }
+                <span class="alert-text">@alert.Message</span>
+            </div>
+            <button class="alert-close" @onclick="() => DismissAlert(alert.Id)">
+                <span class="bi bi-x"></span>
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+    private List<AlertMessage> alerts = new();
+
+    protected override void OnInitialized()
+    {
+        alerts = AlertService.GetAlerts();
+        AlertService.OnChange += HandleAlertsChanged;
+    }
+
+    private void HandleAlertsChanged()
+    {
+        alerts = AlertService.GetAlerts();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void DismissAlert(string alertId)
+    {
+        AlertService.RemoveAlert(alertId);
+    }
+
+    public void Dispose()
+    {
+        AlertService.OnChange -= HandleAlertsChanged;
+    }
+}

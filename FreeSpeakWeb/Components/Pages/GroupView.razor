@@ -1,0 +1,731 @@
+@page "/group/{GroupId:int}"
+@rendermode InteractiveServer
+@attribute [Authorize]
+@inherits PostPageBase<GroupPost, GroupPostComment>
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Components.Shared
+@using FreeSpeakWeb.Components.Pages.Base
+@using System.Security.Claims
+@using Microsoft.JSInterop
+
+@implements IAsyncDisposable
+
+@inject IOptions<SiteSettings> SiteSettings
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject GroupPostService GroupPostService
+@inject PinnedGroupPostService PinnedGroupPostService
+@inject GroupService GroupService
+@inject GroupMemberService GroupMemberService
+@inject IJSRuntime JSRuntime
+@inject UserManager<ApplicationUser> UserManager
+@inject UserPreferenceService UserPreferenceService
+@inject HtmlSanitizationService HtmlSanitizationService
+
+<PageTitle>@(group?.Name ?? "Group") - @SiteSettings.Value.SiteName</PageTitle>
+
+<div class="group-view-container">
+    @if (isLoadingGroup)
+    {
+        <div class="loading-indicator">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Loading group information...</p>
+        </div>
+    }
+    else if (group == null)
+    {
+        <div class="alert alert-danger">
+            <h4>Group Not Found</h4>
+            <p>The group you're looking for doesn't exist or you don't have access to it.</p>
+            <a href="/groups" class="btn btn-primary">Go to Groups</a>
+        </div>
+    }
+    else
+    {
+        <!-- Group Header -->
+        <div class="group-header">
+            @if (!string.IsNullOrEmpty(group.HeaderImageUrl))
+            {
+                <div class="group-header-image" style="background-image: url('@group.HeaderImageUrl');"></div>
+            }
+            <div class="group-header-content">
+                <h1>@group.Name</h1>
+                <p class="group-description">@group.Description</p>
+                
+                <div class="group-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Members</span>
+                        <span class="stat-value">@memberCount</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Posts</span>
+                        <span class="stat-value">@totalPosts</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Posts This Week</span>
+                        <span class="stat-value">@postsThisWeek</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Posts Today</span>
+                        <span class="stat-value">@postsToday</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Last Activity</span>
+                        <span class="stat-value">@GetRelativeTime(lastActivity)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Group Feed -->
+        <div class="group-feed-section">
+            <h3>Recent Posts</h3>
+            
+            @if (isLoadingPosts && !groupPosts.Any())
+            {
+                <div class="loading-indicator">
+                    <p>Loading posts...</p>
+                </div>
+            }
+            else if (!groupPosts.Any() && !isLoadingPosts)
+            {
+                <div class="empty-feed">
+                    <p>No posts in this group yet. Be the first to post!</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var post in groupPosts)
+                {
+                    var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
+                    var userReaction = postUserReactions.ContainsKey(post.Id) ? postUserReactions[post.Id] : null;
+                    var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
+                    var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
+                    var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
+
+                    <GroupPostArticle 
+                        PostId="@post.Id"
+                        GroupId="@post.GroupId"
+                        GroupName="@group.Name"
+                        AuthorId="@post.AuthorId"
+                        AuthorName="@authorName"
+                        AuthorImageUrl="@post.Author?.ProfilePictureUrl"
+                        CreatedAt="@post.CreatedAt"
+                        LikeCount="@post.LikeCount"
+                        CommentCount="@post.CommentCount"
+                        ShareCount="@post.ShareCount"
+                        LoadCommentsInternally="true"
+                        CommentsToShow="3"
+                        RefreshTrigger="@refreshTrigger"
+                        CurrentUserId="@currentUserId"
+                        CurrentUserImageUrl="@currentUserImageUrl"
+                        CurrentUserName="@currentUserName"
+                        ReactionBreakdown="@postReactions"
+                        UserReaction="@userReaction"
+                        IsPinned="@isPinned"
+                        Images="@ConvertGroupPostImagesToPostImages(post.Images)"
+                        OnReactionChanged="@(async (reactionType) => await HandleGroupPostReactionChanged(post.Id, reactionType))"
+                        OnRemoveReaction="@(async () => await HandleRemoveGroupPostReaction(post.Id))"
+                        OnPinPost="@HandlePinGroupPost"
+                        OnUnpinPost="@HandleUnpinGroupPost"
+                        OnPostDeleted="@HandleGroupPostDeleted"
+                        OnEditPost="@HandleEditGroupPost"
+                        OnCommentAdded="@HandleGroupPostCommentAdded"
+                        OnReplySubmitted="@HandleGroupPostReplySubmitted"
+                        OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
+                        OnRemoveCommentReaction="@HandleRemoveGroupPostCommentReaction"
+                        OnShowPostDetail="@(() => ShowGroupPostDetail(post))"
+                        OnShowComments="@(() => ShowGroupPostDetail(post))">
+                        <ArticleContent>
+                            @((MarkupString)FormatContentWithLineBreaks(post.Content))
+                        </ArticleContent>
+                    </GroupPostArticle>
+                }
+
+                @if (isLoadingMorePosts)
+                {
+                    <div class="loading-more">
+                        <p>Loading more posts...</p>
+                    </div>
+                }
+
+                @if (hasMorePosts == false && groupPosts.Any())
+                {
+                    <div class="no-more-posts">
+                        <p>No more posts at this time</p>
+                    </div>
+                }
+            }
+        </div>
+    }
+</div>
+
+@if (showGroupPostDetailModal && selectedGroupPost != null)
+{
+    var postReactions = postReactionData.ContainsKey(selectedGroupPost.Id) ? postReactionData[selectedGroupPost.Id] : new Dictionary<LikeType, int>();
+    var userReaction = postUserReactions.ContainsKey(selectedGroupPost.Id) ? postUserReactions[selectedGroupPost.Id] : null;
+    var isPinned = pinnedPosts.ContainsKey(selectedGroupPost.Id) && pinnedPosts[selectedGroupPost.Id];
+    var authorName = postAuthorNames.ContainsKey(selectedGroupPost.Id) ? postAuthorNames[selectedGroupPost.Id] : "Unknown";
+
+    <GroupPostDetailModal 
+        PostId="@selectedGroupPost.Id"
+        GroupId="@selectedGroupPost.GroupId"
+        GroupName="@(group?.Name ?? string.Empty)"
+        AuthorId="@selectedGroupPost.AuthorId"
+        AuthorName="@authorName"
+        AuthorImageUrl="@selectedGroupPost.Author?.ProfilePictureUrl"
+        CurrentUserId="@currentUserId"
+        CreatedAt="@selectedGroupPost.CreatedAt"
+        LikeCount="@selectedGroupPost.LikeCount"
+        CommentCount="@selectedGroupPost.CommentCount"
+        ShareCount="@selectedGroupPost.ShareCount"
+        CurrentUserImageUrl="@currentUserImageUrl"
+        CurrentUserName="@currentUserName"
+        ReactionBreakdown="@postReactions"
+        UserReaction="@userReaction"
+        IsPinned="@isPinned"
+        Images="@ConvertGroupPostImagesToPostImages(selectedGroupPost.Images)"
+        OnReactionChanged="@(async (reactionType) => await HandleGroupPostReactionChanged(selectedGroupPost.Id, reactionType))"
+        OnRemoveReaction="@(async () => await HandleRemoveGroupPostReaction(selectedGroupPost.Id))"
+        OnPinPost="@HandlePinGroupPost"
+        OnUnpinPost="@HandleUnpinGroupPost"
+        OnPostDeleted="@HandleGroupPostDeleted"
+        OnEditPost="@HandleEditGroupPost"
+        OnCommentAdded="@HandleGroupPostCommentAdded"
+        OnReplySubmitted="@HandleGroupPostReplySubmitted"
+        OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
+        OnRemoveCommentReaction="@HandleRemoveGroupPostCommentReaction"
+        OnClose="@CloseGroupPostDetailModal">
+        <ArticleContent>
+            @((MarkupString)FormatContentWithLineBreaks(selectedGroupPost.Content))
+        </ArticleContent>
+    </GroupPostDetailModal>
+}
+
+@code {
+    [Parameter]
+    public int GroupId { get; set; }
+
+    private string? currentUserId;
+    private string? currentUserImageUrl;
+    private string? currentUserName;
+
+    // Group information
+    private Group? group;
+    private bool isLoadingGroup = true;
+    private int memberCount = 0;
+    private int totalPosts = 0;
+    private int postsThisWeek = 0;
+    private int postsToday = 0;
+    private DateTime? lastActivity;
+
+    // Posts state
+    private List<GroupPost> groupPosts = new();
+    private bool isLoadingPosts = false;
+    private bool isLoadingMorePosts = false;
+    private bool? hasMorePosts = null;
+    private int currentPage = 1;
+    private const int pageSize = 20;
+
+    // JavaScript interop
+    private IJSObjectReference? jsModule;
+    private DotNetObjectReference<GroupView>? dotNetHelper;
+
+    // Group-specific dictionaries (rename to use base class naming)
+    // Base class provides: postRefreshTriggers, postReactionData, postUserReactions, pinnedPosts, postAuthorNames
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            currentUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(currentUserId))
+            {
+                var appUser = await UserManager.FindByIdAsync(currentUserId);
+                if (appUser != null)
+                {
+                    currentUserImageUrl = appUser.ProfilePictureUrl;
+                    currentUserName = $"{appUser.FirstName} {appUser.LastName}";
+                }
+
+                await LoadGroupInformation();
+                await LoadGroupPosts();
+            }
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !string.IsNullOrEmpty(currentUserId))
+        {
+            try
+            {
+                jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/Groups.razor.js");
+                dotNetHelper = DotNetObjectReference.Create(this);
+                await jsModule.InvokeAsync<object?>("initializeInfiniteScroll", (object?)null, dotNetHelper);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error initializing infinite scroll: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task LoadGroupInformation()
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        isLoadingGroup = true;
+        StateHasChanged();
+
+        try
+        {
+            // Check if user is a member
+            var isMember = await GroupMemberService.IsMemberAsync(GroupId, currentUserId);
+            if (!isMember)
+            {
+                group = null;
+                isLoadingGroup = false;
+                StateHasChanged();
+                return;
+            }
+
+            // Load group details
+            group = await GroupService.GetGroupByIdAsync(GroupId);
+            if (group == null)
+            {
+                isLoadingGroup = false;
+                StateHasChanged();
+                return;
+            }
+
+            // Load statistics
+            memberCount = await GroupMemberService.GetMemberCountAsync(GroupId);
+            totalPosts = await GroupPostService.GetTotalPostCountAsync(GroupId);
+            
+            var oneWeekAgo = DateTime.UtcNow.AddDays(-7);
+            postsThisWeek = await GroupPostService.GetPostCountSinceAsync(GroupId, oneWeekAgo);
+            
+            var oneDayAgo = DateTime.UtcNow.AddDays(-1);
+            postsToday = await GroupPostService.GetPostCountSinceAsync(GroupId, oneDayAgo);
+            
+            lastActivity = await GroupPostService.GetLastActivityAsync(GroupId) ?? group.CreatedAt;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading group information: {ex.Message}");
+            group = null;
+        }
+        finally
+        {
+            isLoadingGroup = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadGroupPosts()
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        isLoadingPosts = true;
+        StateHasChanged();
+
+        try
+        {
+            currentPage = 1;
+            var loadedPosts = await GroupPostService.GetGroupPostsAsync(GroupId, 0, pageSize);
+            
+            groupPosts = loadedPosts;
+            hasMorePosts = loadedPosts.Count >= pageSize;
+
+            // Load additional data for posts
+            await LoadGroupPostDataAsync(loadedPosts);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading group posts: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingPosts = false;
+            StateHasChanged();
+        }
+    }
+
+    [JSInvokable]
+    public async Task LoadMoreGroupPostsAsync()
+    {
+        if (string.IsNullOrEmpty(currentUserId) || isLoadingMorePosts || hasMorePosts == false) return;
+
+        isLoadingMorePosts = true;
+        StateHasChanged();
+
+        try
+        {
+            currentPage++;
+            var skip = (currentPage - 1) * pageSize;
+            var loadedPosts = await GroupPostService.GetGroupPostsAsync(GroupId, skip, pageSize);
+
+            if (loadedPosts.Any())
+            {
+                groupPosts.AddRange(loadedPosts);
+                hasMorePosts = loadedPosts.Count >= pageSize;
+
+                // Load additional data for new posts
+                await LoadGroupPostDataAsync(loadedPosts);
+            }
+            else
+            {
+                hasMorePosts = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading more group posts: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingMorePosts = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadGroupPostDataAsync(List<GroupPost> posts)
+    {
+        foreach (var post in posts)
+        {
+            if (!postAuthorNames.ContainsKey(post.Id) && post.Author != null)
+            {
+                postAuthorNames[post.Id] = $"{post.Author.FirstName} {post.Author.LastName}";
+            }
+
+            // Load reaction data
+            if (!postReactionData.ContainsKey(post.Id))
+            {
+                var reactions = await GroupPostService.GetReactionBreakdownAsync(post.Id);
+                postReactionData[post.Id] = reactions;
+            }
+
+            // Load user reaction
+            if (!postUserReactions.ContainsKey(post.Id))
+            {
+                var userReaction = await GroupPostService.GetUserReactionAsync(post.Id, currentUserId!);
+                postUserReactions[post.Id] = userReaction;
+            }
+
+            // Load pinned status
+            if (!pinnedPosts.ContainsKey(post.Id))
+            {
+                var isPinned = await PinnedGroupPostService.IsGroupPostPinnedAsync(currentUserId!, post.Id);
+                pinnedPosts[post.Id] = isPinned;
+            }
+        }
+    }
+
+    private async Task HandleGroupPostReactionChanged(int postId, LikeType reactionType)
+    {
+        // Delegate to base class implementation
+        await HandlePostReactionChanged(postId, reactionType);
+    }
+
+    private async Task HandleRemoveGroupPostReaction(int postId)
+    {
+        // Delegate to base class implementation
+        await HandleRemovePostReaction(postId);
+    }
+
+    private async Task HandlePinGroupPost(int postId)
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        var (success, errorMessage) = await PinnedGroupPostService.PinGroupPostAsync(currentUserId, postId);
+
+        if (success)
+        {
+            pinnedPosts[postId] = true;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleUnpinGroupPost(int postId)
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        var (success, errorMessage) = await PinnedGroupPostService.UnpinGroupPostAsync(currentUserId, postId);
+
+        if (success)
+        {
+            pinnedPosts[postId] = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleGroupPostDeleted(int postId)
+    {
+        groupPosts.RemoveAll(p => p.Id == postId);
+        totalPosts = Math.Max(0, totalPosts - 1);
+        StateHasChanged();
+    }
+
+    private async Task HandleEditGroupPost(int postId)
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "Group post editing will be implemented soon.");
+    }
+
+    private async Task HandleGroupPostCommentAdded((int PostId, string Content) args)
+    {
+        // Delegate to base class implementation
+        await HandleCommentAdded(args);
+    }
+
+    private async Task HandleGroupPostReplySubmitted((int ParentCommentId, string Content) args)
+    {
+        // Delegate to base class implementation
+        await HandleReplySubmitted(args);
+    }
+
+    private async Task HandleGroupPostCommentReactionChanged((int CommentId, LikeType ReactionType) args)
+    {
+        // Delegate to base class implementation
+        await HandleCommentReactionChanged(args);
+    }
+
+    private async Task HandleRemoveGroupPostCommentReaction(int commentId)
+    {
+        // Delegate to base class implementation
+        await HandleRemoveCommentReaction(commentId);
+    }
+
+    // Modal state
+    private bool showGroupPostDetailModal = false;
+    private GroupPost? selectedGroupPost = null;
+
+    private void ShowGroupPostDetail(GroupPost post)
+    {
+        selectedGroupPost = post;
+        showGroupPostDetailModal = true;
+        StateHasChanged();
+    }
+
+    private void CloseGroupPostDetailModal()
+    {
+        showGroupPostDetailModal = false;
+        selectedGroupPost = null;
+        StateHasChanged();
+    }
+
+    private GroupPostComment? FindCommentInTree(List<GroupPostComment> comments, int commentId)
+    {
+        foreach (var comment in comments)
+        {
+            if (comment.Id == commentId)
+            {
+                return comment;
+            }
+
+            if (comment.Replies != null && comment.Replies.Any())
+            {
+                var found = FindCommentInTree(comment.Replies.ToList(), commentId);
+                if (found != null)
+                {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
+    private async Task<string> FormatUserDisplayName(ApplicationUser? user)
+    {
+        if (user == null)
+            return "Unknown";
+
+        return await UserPreferenceService.FormatUserDisplayNameAsync(
+            user.Id,
+            user.FirstName,
+            user.LastName,
+            user.UserName ?? "Unknown"
+        );
+    }
+
+    private List<PostImage>? ConvertGroupPostImagesToPostImages(ICollection<GroupPostImage>? groupImages)
+    {
+        if (groupImages == null || !groupImages.Any())
+            return null;
+
+        return groupImages.Select(gi => new PostImage
+        {
+            Id = gi.Id,
+            PostId = gi.PostId,
+            ImageUrl = gi.ImageUrl,
+            DisplayOrder = gi.DisplayOrder,
+            UploadedAt = gi.UploadedAt
+        }).ToList();
+    }
+
+    private string FormatContentWithLineBreaks(string content)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+            return string.Empty;
+
+        return HtmlSanitizationService.SanitizeAndFormatContent(content);
+    }
+
+    private string GetRelativeTime(DateTime? dateTime)
+    {
+        if (dateTime == null)
+            return "Never";
+
+        var timeSpan = DateTime.UtcNow - dateTime.Value;
+
+        if (timeSpan.TotalMinutes < 1)
+            return "just now";
+        if (timeSpan.TotalMinutes < 60)
+            return $"{(int)timeSpan.TotalMinutes}m ago";
+        if (timeSpan.TotalHours < 24)
+            return $"{(int)timeSpan.TotalHours}h ago";
+        if (timeSpan.TotalDays < 30)
+            return $"{(int)timeSpan.TotalDays}d ago";
+
+        return dateTime.Value.ToString("MMM dd, yyyy");
+    }
+
+    #region PostPageBase Abstract Method Implementations
+
+    // Abstract properties
+    protected override string? CurrentUserId => currentUserId;
+    protected override string? CurrentUserImageUrl => currentUserImageUrl;
+    protected override string? CurrentUserName => currentUserName;
+
+    // Service bridge methods for comments
+    protected override async Task<(bool Success, string? ErrorMessage)> AddCommentToPostAsync(
+        int postId, string userId, string content)
+    {
+        var result = await GroupPostService.AddCommentAsync(postId, userId, content);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> AddReplyToPostAsync(
+        int postId, string userId, string content, int? imageId, int parentCommentId)
+    {
+        // Note: imageId parameter is for future use, currently passing null for imageUrl
+        var result = await GroupPostService.AddCommentAsync(postId, userId, content, null, parentCommentId);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<GroupPostComment?> GetCommentByIdAsync(int commentId)
+    {
+        return await GroupPostService.GetCommentByIdAsync(commentId);
+    }
+
+    protected override int GetPostIdFromComment(GroupPostComment comment)
+    {
+        return comment.PostId;
+    }
+
+    protected override void IncrementPostCommentCount(int postId)
+    {
+        var post = groupPosts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.CommentCount++;
+        }
+    }
+
+    // Service bridge methods for reactions
+    protected override async Task<(bool Success, string? ErrorMessage)> AddOrUpdatePostReactionAsync(
+        int postId, string userId, LikeType reactionType)
+    {
+        var result = await GroupPostService.AddOrUpdateReactionAsync(postId, userId, reactionType);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> RemovePostReactionAsync(
+        int postId, string userId)
+    {
+        var result = await GroupPostService.RemoveReactionAsync(postId, userId);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<Dictionary<LikeType, int>> GetPostReactionBreakdownAsync(int postId)
+    {
+        return await GroupPostService.GetReactionBreakdownAsync(postId);
+    }
+
+    protected override void IncrementPostLikeCount(int postId)
+    {
+        var post = groupPosts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.LikeCount++;
+        }
+    }
+
+    protected override void DecrementPostLikeCount(int postId)
+    {
+        var post = groupPosts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.LikeCount = Math.Max(0, post.LikeCount - 1);
+        }
+    }
+
+    // Service bridge methods for comment reactions
+    protected override async Task<(bool Success, string? ErrorMessage)> AddOrUpdateCommentReactionAsync(
+        int commentId, string userId, LikeType reactionType)
+    {
+        var result = await GroupPostService.AddOrUpdateCommentReactionAsync(commentId, userId, reactionType);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> RemoveCommentReactionAsync(
+        int commentId, string userId)
+    {
+        var result = await GroupPostService.RemoveCommentReactionAsync(commentId, userId);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<int?> FindPostIdForCommentAsync(int commentId)
+    {
+        // Search through all posts to find which one contains this comment
+        foreach (var post in groupPosts)
+        {
+            var comments = await GroupPostService.GetCommentsAsync(post.Id);
+            if (FindCommentInTree(comments, commentId) != null)
+            {
+                return post.Id;
+            }
+        }
+        return null;
+    }
+
+    #endregion
+
+    public async ValueTask DisposeAsync()
+    {
+        if (jsModule != null)
+        {
+            try
+            {
+                await jsModule.InvokeVoidAsync("cleanupInfiniteScroll");
+                await jsModule.DisposeAsync();
+            }
+            catch { }
+        }
+
+        dotNetHelper?.Dispose();
+    }
+}
