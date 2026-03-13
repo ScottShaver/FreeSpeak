@@ -93,7 +93,8 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             var factory = CreateDbContextFactory();
             var notificationService = CreateMockNotificationService();
             var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = (FreeSpeakWeb.Repositories.Abstractions.IFriendshipRepository)null!;            var userRepo = (FreeSpeakWeb.Repositories.Abstractions.IUserRepository)null!;            var service = new FriendsService(friendshipRepo, userRepo, factory, notificationService, userPreferenceService);
+            var friendshipRepo = (FreeSpeakWeb.Repositories.Abstractions.IFriendshipRepository)null!;            var userRepo = (FreeSpeakWeb.Repositories.Abstractions.IUserRepository)null!;            var friendshipCache = (FreeSpeakWeb.Services.FriendshipCacheService)null!;
+            var service = new FriendsService(friendshipRepo, userRepo, factory, notificationService, userPreferenceService, friendshipCache);
 
             // Create test users
             var currentUser = CreateTestUser("current", "CurrentUser", "Current", "User");
@@ -124,7 +125,8 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             var factory = CreateDbContextFactory();
             var notificationService = CreateMockNotificationService();
             var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = (FreeSpeakWeb.Repositories.Abstractions.IFriendshipRepository)null!;            var userRepo = (FreeSpeakWeb.Repositories.Abstractions.IUserRepository)null!;            var service = new FriendsService(friendshipRepo, userRepo, factory, notificationService, userPreferenceService);
+            var friendshipRepo = (FreeSpeakWeb.Repositories.Abstractions.IFriendshipRepository)null!;            var userRepo = (FreeSpeakWeb.Repositories.Abstractions.IUserRepository)null!;            var friendshipCache = (FreeSpeakWeb.Services.FriendshipCacheService)null!;
+            var service = new FriendsService(friendshipRepo, userRepo, factory, notificationService, userPreferenceService, friendshipCache);
 
             var currentUser = CreateTestUser("current", "current", "Current", "User");
             var user1 = CreateTestUser("user1", "alice", "Alice", "Smith");
@@ -153,7 +155,8 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             var factory = CreateDbContextFactory();
             var notificationService = CreateMockNotificationService();
             var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = (FreeSpeakWeb.Repositories.Abstractions.IFriendshipRepository)null!;            var userRepo = (FreeSpeakWeb.Repositories.Abstractions.IUserRepository)null!;            var service = new FriendsService(friendshipRepo, userRepo, factory, notificationService, userPreferenceService);
+            var friendshipRepo = (FreeSpeakWeb.Repositories.Abstractions.IFriendshipRepository)null!;            var userRepo = (FreeSpeakWeb.Repositories.Abstractions.IUserRepository)null!;            var friendshipCache = (FreeSpeakWeb.Services.FriendshipCacheService)null!;
+            var service = new FriendsService(friendshipRepo, userRepo, factory, notificationService, userPreferenceService, friendshipCache);
 
             var currentUser = CreateTestUser("current", "current", "Current", "User");
             var user1 = CreateTestUser("user1", "developer123", "Alice", "Smith");
@@ -182,7 +185,8 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             var factory = CreateDbContextFactory();
             var notificationService = CreateMockNotificationService();
             var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = (FreeSpeakWeb.Repositories.Abstractions.IFriendshipRepository)null!;            var userRepo = (FreeSpeakWeb.Repositories.Abstractions.IUserRepository)null!;            var service = new FriendsService(friendshipRepo, userRepo, factory, notificationService, userPreferenceService);
+            var friendshipRepo = (FreeSpeakWeb.Repositories.Abstractions.IFriendshipRepository)null!;            var userRepo = (FreeSpeakWeb.Repositories.Abstractions.IUserRepository)null!;            var friendshipCache = (FreeSpeakWeb.Services.FriendshipCacheService)null!;
+            var service = new FriendsService(friendshipRepo, userRepo, factory, notificationService, userPreferenceService, friendshipCache);
 
             var currentUser = CreateTestUser("current", "current", "Current", "User");
             var user1 = CreateTestUser("user1", "alice", "Alice", "Johnson");
@@ -211,7 +215,8 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             var factory = CreateDbContextFactory();
             var notificationService = CreateMockNotificationService();
             var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = (FreeSpeakWeb.Repositories.Abstractions.IFriendshipRepository)null!;            var userRepo = (FreeSpeakWeb.Repositories.Abstractions.IUserRepository)null!;            var service = new FriendsService(friendshipRepo, userRepo, factory, notificationService, userPreferenceService);
+            var friendshipRepo = (FreeSpeakWeb.Repositories.Abstractions.IFriendshipRepository)null!;            var userRepo = (FreeSpeakWeb.Repositories.Abstractions.IUserRepository)null!;            var friendshipCache = (FreeSpeakWeb.Services.FriendshipCacheService)null!;
+            var service = new FriendsService(friendshipRepo, userRepo, factory, notificationService, userPreferenceService, friendshipCache);
 
             var currentUser = CreateTestUser("current", "current", "Current", "User");
             var friend = CreateTestUser("friend", "friend", "Friend", "User");
@@ -250,7 +255,8 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             var factory = CreateDbContextFactory();
             var notificationService = CreateMockNotificationService();
             var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = (FreeSpeakWeb.Repositories.Abstractions.IFriendshipRepository)null!;            var userRepo = (FreeSpeakWeb.Repositories.Abstractions.IUserRepository)null!;            var service = new FriendsService(friendshipRepo, userRepo, factory, notificationService, userPreferenceService);
+            var friendshipRepo = (FreeSpeakWeb.Repositories.Abstractions.IFriendshipRepository)null!;            var userRepo = (FreeSpeakWeb.Repositories.Abstractions.IUserRepository)null!;            var friendshipCache = (FreeSpeakWeb.Services.FriendshipCacheService)null!;
+            var service = new FriendsService(friendshipRepo, userRepo, factory, notificationService, userPreferenceService, friendshipCache);
 
             var currentUser = CreateTestUser("current", "current", "Current", "User");
             var user1 = CreateTestUser("user1", "TechGuru", "Michael", "Johnson");
@@ -286,5 +292,6 @@ namespace FreeSpeakWeb.IntegrationTests.Services
         }
     }
 }
+
 
 

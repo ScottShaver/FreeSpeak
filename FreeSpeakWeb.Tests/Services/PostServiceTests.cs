@@ -31,26 +31,76 @@ namespace FreeSpeakWeb.Tests.Services
             return mock.Object;
         }
 
-        private static NotificationService CreateMockNotificationService()
+        private NotificationService CreateNotificationService(IDbContextFactory<ApplicationDbContext> contextFactory)
         {
-            var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
             var logger = new Mock<ILogger<NotificationService>>();
             var scopeFactory = new Mock<IServiceScopeFactory>();
-            var notificationRepo = MockRepositories.CreateMockNotificationRepository();            return new NotificationService(notificationRepo.Object, dbFactory.Object, logger.Object, scopeFactory.Object);
+            var notificationRepo = new TestRepositoryFactory(contextFactory).CreateNotificationRepository();
+            return new NotificationService(notificationRepo, contextFactory, logger.Object, scopeFactory.Object);
         }
 
-        private static UserPreferenceService CreateMockUserPreferenceService()
+        private UserPreferenceService CreateUserPreferenceService(IDbContextFactory<ApplicationDbContext> contextFactory)
         {
-            var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
             var logger = new Mock<ILogger<UserPreferenceService>>();
-            return new UserPreferenceService(dbFactory.Object, logger.Object);
+            return new UserPreferenceService(contextFactory, logger.Object);
         }
 
-        private static PostNotificationHelper CreateMockPostNotificationHelper()
+        private PostNotificationHelper CreatePostNotificationHelper(IDbContextFactory<ApplicationDbContext> contextFactory)
         {
-            var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
             var logger = new Mock<ILogger<PostNotificationHelper>>();
-            return new PostNotificationHelper(dbFactory.Object, CreateMockNotificationService(), CreateMockUserPreferenceService(), logger.Object);
+            return new PostNotificationHelper(contextFactory, CreateNotificationService(contextFactory), CreateUserPreferenceService(contextFactory), logger.Object);
+        }
+
+        /// <summary>
+        /// Creates a PostService with real repositories using an in-memory database.
+        /// </summary>
+        private PostService CreatePostService(TestRepositoryFactory repoFactory)
+        {
+            var logger = CreateMockLogger<PostService>();
+            return new PostService(
+                repoFactory.ContextFactory,
+                repoFactory.CreateFeedPostRepository(),
+                repoFactory.CreateFeedCommentRepository(),
+                repoFactory.CreateFeedPostLikeRepository(),
+                repoFactory.CreateFeedCommentLikeRepository(),
+                repoFactory.CreatePinnedPostRepository(),
+                repoFactory.CreatePostNotificationMuteRepository(),
+                repoFactory.CreateNotificationRepository(),
+                logger,
+                CreateTestSiteSettings(),
+                CreateMockWebHostEnvironment(),
+                CreateNotificationService(repoFactory.ContextFactory),
+                CreateUserPreferenceService(repoFactory.ContextFactory),
+                CreatePostNotificationHelper(repoFactory.ContextFactory));
+        }
+
+        /// <summary>
+        /// Creates a PostService with custom site settings for testing limits.
+        /// </summary>
+        private PostService CreatePostServiceWithCustomSettings(TestRepositoryFactory repoFactory, int maxDirectComments = 1000, int maxCommentDepth = 4)
+        {
+            var logger = CreateMockLogger<PostService>();
+            var siteSettings = Options.Create(new SiteSettings
+            {
+                SiteName = "TestSite",
+                MaxFeedPostCommentDepth = maxCommentDepth,
+                MaxFeedPostDirectCommentCount = maxDirectComments
+            });
+            return new PostService(
+                repoFactory.ContextFactory,
+                repoFactory.CreateFeedPostRepository(),
+                repoFactory.CreateFeedCommentRepository(),
+                repoFactory.CreateFeedPostLikeRepository(),
+                repoFactory.CreateFeedCommentLikeRepository(),
+                repoFactory.CreatePinnedPostRepository(),
+                repoFactory.CreatePostNotificationMuteRepository(),
+                repoFactory.CreateNotificationRepository(),
+                logger,
+                siteSettings,
+                CreateMockWebHostEnvironment(),
+                CreateNotificationService(repoFactory.ContextFactory),
+                CreateUserPreferenceService(repoFactory.ContextFactory),
+                CreatePostNotificationHelper(repoFactory.ContextFactory));
         }
 
         #region Post Operations Tests
@@ -59,12 +109,11 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task CreatePostAsync_WithValidContent_ShouldCreatePost()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest1");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest1");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 await context.SaveChangesAsync();
@@ -80,7 +129,7 @@ namespace FreeSpeakWeb.Tests.Services
             post!.Content.Should().Be("Test post content");
             post.AuthorId.Should().Be("user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 var savedPost = context.Posts.FirstOrDefault();
                 savedPost.Should().NotBeNull();
@@ -92,9 +141,8 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task CreatePostAsync_WithEmptyContent_ShouldReturnError()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest2");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest2");
+            var service = CreatePostService(repoFactory);
 
             // Act
             var (success, errorMessage, post) = await service.CreatePostAsync("user1", "");
@@ -109,12 +157,11 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task CreatePostAsync_WithImages_ShouldCreatePostAndImages()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest3");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest3");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 await context.SaveChangesAsync();
@@ -129,7 +176,7 @@ namespace FreeSpeakWeb.Tests.Services
             success.Should().BeTrue();
             post.Should().NotBeNull();
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 var images = context.PostImages.Where(pi => pi.PostId == post!.Id).ToList();
                 images.Should().HaveCount(2);
@@ -142,14 +189,13 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task UpdatePostAsync_ByAuthor_ShouldUpdateContent()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest4");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest4");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1", "Original content");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -157,7 +203,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
             }
@@ -169,7 +215,7 @@ namespace FreeSpeakWeb.Tests.Services
             success.Should().BeTrue();
             errorMessage.Should().BeNull();
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 var updatedPost = context.Posts.Find(postId);
                 updatedPost!.Content.Should().Be("Updated content");
@@ -181,15 +227,14 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task UpdatePostAsync_ByNonAuthor_ShouldReturnError()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest5");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest5");
+            var service = CreatePostService(repoFactory);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
             var post = TestDataFactory.CreateTestPost("user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.AddRange(user1, user2);
                 context.Posts.Add(post);
@@ -197,7 +242,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
             }
@@ -214,14 +259,13 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task DeletePostAsync_ByAuthor_ShouldRemovePost()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest6");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest6");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -229,7 +273,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
             }
@@ -241,7 +285,7 @@ namespace FreeSpeakWeb.Tests.Services
             success.Should().BeTrue();
             errorMessage.Should().BeNull();
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 var deletedPost = context.Posts.Find(postId);
                 deletedPost.Should().BeNull();
@@ -252,21 +296,20 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task GetFeedPostsAsync_ShouldReturnUserAndFriendsPosts()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest7");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest7");
+            var service = CreatePostService(repoFactory);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
             var user3 = TestDataFactory.CreateTestUser(id: "user3");
 
             var friendship = TestDataFactory.CreateTestFriendship("user1", "user2", FriendshipStatus.Accepted);
-            
+
             var post1 = TestDataFactory.CreateTestPost("user1", "User1 post");
             var post2 = TestDataFactory.CreateTestPost("user2", "User2 post");
             var post3 = TestDataFactory.CreateTestPost("user3", "User3 post");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.AddRange(user1, user2, user3);
                 context.Friendships.Add(friendship);
@@ -288,9 +331,8 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task GetFeedPostsAsync_ShouldRespectAudienceSettings()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest_AudienceFilter");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest_AudienceFilter");
+            var service = CreatePostService(repoFactory);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -307,7 +349,7 @@ namespace FreeSpeakWeb.Tests.Services
             var user2FriendsPost = TestDataFactory.CreateTestPost("user2", "User2 friends", audienceType: AudienceType.FriendsOnly);
             var user2PrivatePost = TestDataFactory.CreateTestPost("user2", "User2 private", audienceType: AudienceType.MeOnly);
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.AddRange(user1, user2);
                 context.Friendships.Add(friendship);
@@ -343,14 +385,13 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task AddCommentAsync_WithValidData_ShouldCreateComment()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest8");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest8");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -358,7 +399,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
             }
@@ -372,7 +413,7 @@ namespace FreeSpeakWeb.Tests.Services
             comment.Should().NotBeNull();
             comment!.Content.Should().Be("Great post!");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 var updatedPost = context.Posts.Find(postId);
                 updatedPost!.CommentCount.Should().Be(1);
@@ -383,27 +424,26 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task AddCommentAsync_WithReply_ShouldCreateNestedComment()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest9");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest9");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
             var parentComment = TestDataFactory.CreateTestComment(1, "user1", "Parent comment");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
                 await context.SaveChangesAsync();
-                
+
                 parentComment.PostId = context.Posts.First().Id;
                 context.Comments.Add(parentComment);
                 await context.SaveChangesAsync();
             }
 
             int postId, parentCommentId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
                 parentCommentId = context.Comments.First().Id;
@@ -423,15 +463,14 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task DeleteCommentAsync_ByAuthor_ShouldRemoveCommentAndUpdateCount()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest10");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest10");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1", commentCount: 1);
             var comment = TestDataFactory.CreateTestComment(1, "user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -443,7 +482,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int commentId, postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 commentId = context.Comments.First().Id;
                 postId = context.Posts.First().Id;
@@ -455,7 +494,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Assert
             success.Should().BeTrue();
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 var deletedComment = context.Comments.Find(commentId);
                 deletedComment.Should().BeNull();
@@ -473,14 +512,13 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task ToggleLikeAsync_FirstTime_ShouldAddLike()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest11");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest11");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -488,7 +526,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
             }
@@ -500,7 +538,7 @@ namespace FreeSpeakWeb.Tests.Services
             success.Should().BeTrue();
             isLiked.Should().BeTrue();
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 var like = context.Likes.FirstOrDefault();
                 like.Should().NotBeNull();
@@ -515,15 +553,14 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task ToggleLikeAsync_SecondTime_ShouldRemoveLike()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest12");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest12");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1", likeCount: 1);
             var like = TestDataFactory.CreateTestLike(1, "user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -535,7 +572,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
             }
@@ -547,7 +584,7 @@ namespace FreeSpeakWeb.Tests.Services
             success.Should().BeTrue();
             isLiked.Should().BeFalse();
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 var likes = context.Likes.ToList();
                 likes.Should().BeEmpty();
@@ -561,15 +598,14 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task HasUserLikedPostAsync_WhenLiked_ShouldReturnTrue()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest13");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest13");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
             var like = TestDataFactory.CreateTestLike(1, "user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -581,7 +617,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
             }
@@ -601,14 +637,13 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task AddImageToPostAsync_ByAuthor_ShouldAddImage()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest14");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest14");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -616,7 +651,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
             }
@@ -636,15 +671,14 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task AddImageToPostAsync_ByNonAuthor_ShouldReturnError()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("PostTest15");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("PostTest15");
+            var service = CreatePostService(repoFactory);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
             var post = TestDataFactory.CreateTestPost("user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.AddRange(user1, user2);
                 context.Posts.Add(post);
@@ -652,7 +686,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
             }
@@ -674,20 +708,13 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task AddCommentAsync_WhenDirectCommentLimitReached_ShouldReturnError()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("CommentLimitTest1");
-            var logger = CreateMockLogger<PostService>();
-            var siteSettings = Options.Create(new SiteSettings
-            {
-                SiteName = "TestSite",
-                MaxFeedPostCommentDepth = 4,
-                MaxFeedPostDirectCommentCount = 3 // Set low limit for testing
-            });
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, siteSettings, CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("CommentLimitTest1");
+            var service = CreatePostServiceWithCustomSettings(repoFactory, maxDirectComments: 3);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost(authorId: "user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -695,7 +722,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
             }
@@ -719,20 +746,13 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task AddCommentAsync_ReplyWhenDirectCommentLimitReached_ShouldSucceed()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("CommentLimitTest2");
-            var logger = CreateMockLogger<PostService>();
-            var siteSettings = Options.Create(new SiteSettings
-            {
-                SiteName = "TestSite",
-                MaxFeedPostCommentDepth = 4,
-                MaxFeedPostDirectCommentCount = 2 // Set low limit
-            });
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, siteSettings, CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("CommentLimitTest2");
+            var service = CreatePostServiceWithCustomSettings(repoFactory, maxDirectComments: 2);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost(authorId: "user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -740,7 +760,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
             }
@@ -764,14 +784,13 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task GetDirectCommentCountAsync_ShouldReturnOnlyDirectComments()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("DirectCommentCountTest1");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("DirectCommentCountTest1");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost(authorId: "user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -779,7 +798,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
             }
@@ -804,14 +823,13 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task AddCommentAsync_WithParentCommentId_ShouldCreateReply()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("ReplyTest1");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("ReplyTest1");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost(authorId: "user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -819,7 +837,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
             }
@@ -839,7 +857,7 @@ namespace FreeSpeakWeb.Tests.Services
             reply.Content.Should().Be("Reply to parent");
 
             // Verify in database
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 var savedReply = context.Comments.FirstOrDefault(c => c.ParentCommentId == parentComment.Id);
                 savedReply.Should().NotBeNull();
@@ -851,14 +869,13 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task GetRepliesAsync_ShouldReturnRepliesForComment()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("RepliesTest1");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("RepliesTest1");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost(authorId: "user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -866,7 +883,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
             }

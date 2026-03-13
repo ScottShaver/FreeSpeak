@@ -44,6 +44,17 @@ namespace FreeSpeakWeb.Tests.Infrastructure
             return factory.Object;
         }
 
+        /// <summary>
+        /// Creates a TestRepositoryFactory with a fresh in-memory database.
+        /// </summary>
+        /// <param name="databaseName">Optional database name for test isolation.</param>
+        /// <returns>A TestRepositoryFactory configured with an in-memory database.</returns>
+        protected TestRepositoryFactory CreateTestRepositoryFactory(string databaseName = "")
+        {
+            var contextFactory = CreateDbContextFactory(databaseName);
+            return new TestRepositoryFactory(contextFactory);
+        }
+
         protected ILogger<T> CreateMockLogger<T>()
         {
             return new Mock<ILogger<T>>().Object;

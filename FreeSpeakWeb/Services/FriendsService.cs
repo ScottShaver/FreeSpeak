@@ -15,6 +15,7 @@ namespace FreeSpeakWeb.Services
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly NotificationService _notificationService;
         private readonly UserPreferenceService _userPreferenceService;
+        private readonly FriendshipCacheService _friendshipCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FriendsService"/> class.
@@ -24,18 +25,21 @@ namespace FreeSpeakWeb.Services
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="notificationService">Service for sending notifications.</param>
         /// <param name="userPreferenceService">Service for user display preferences.</param>
+        /// <param name="friendshipCache">Cache service for friend lists.</param>
         public FriendsService(
             IFriendshipRepository friendshipRepository,
             IUserRepository userRepository,
             IDbContextFactory<ApplicationDbContext> contextFactory,
             NotificationService notificationService,
-            UserPreferenceService userPreferenceService)
+            UserPreferenceService userPreferenceService,
+            FriendshipCacheService friendshipCache)
         {
             _friendshipRepository = friendshipRepository;
             _userRepository = userRepository;
             _contextFactory = contextFactory;
             _notificationService = notificationService;
             _userPreferenceService = userPreferenceService;
+            _friendshipCache = friendshipCache;
         }
 
         /// <summary>
@@ -139,6 +143,9 @@ namespace FreeSpeakWeb.Services
 
             await _friendshipRepository.UpdateAsync(friendship);
 
+            // PERFORMANCE: Invalidate friend list cache for both users
+            _friendshipCache.InvalidateFriendshipCache(friendship.RequesterId, friendship.AddresseeId);
+
             // Send notification to the original requester
             var acceptor = await _userRepository.GetByIdAsync(currentUserId);
             if (acceptor != null)
@@ -224,6 +231,9 @@ namespace FreeSpeakWeb.Services
             }
 
             await _friendshipRepository.DeleteAsync(friendship);
+
+            // PERFORMANCE: Invalidate friend list cache for both users
+            _friendshipCache.InvalidateFriendshipCache(friendship.RequesterId, friendship.AddresseeId);
 
             return (true, null);
         }
