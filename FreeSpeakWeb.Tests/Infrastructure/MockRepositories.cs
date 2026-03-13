@@ -1,5 +1,9 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace FreeSpeakWeb.Tests.Infrastructure
@@ -323,6 +327,47 @@ namespace FreeSpeakWeb.Tests.Infrastructure
 
             mock.Setup(r => r.GetMemberCountAsync(It.IsAny<int>()))
                 .ReturnsAsync(0);
+
+            return mock;
+        }
+
+        /// <summary>
+        /// Creates a mock FriendshipCacheService for testing.
+        /// Returns empty friend lists by default. Configure specific behaviors in individual tests.
+        /// </summary>
+        public static Mock<FriendshipCacheService> CreateMockFriendshipCacheService()
+        {
+            // Create mocks for FriendshipCacheService dependencies
+            var mockCache = new Mock<IMemoryCache>();
+            var mockContextFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
+            var mockLogger = new Mock<ILogger<FriendshipCacheService>>();
+
+            // Setup IMemoryCache to always return false (cache miss) by default
+            object? cacheValue = null;
+            mockCache.Setup(c => c.TryGetValue(It.IsAny<object>(), out cacheValue))
+                .Returns(false);
+
+            mockCache.Setup(c => c.CreateEntry(It.IsAny<object>()))
+                .Returns(Mock.Of<ICacheEntry>());
+
+            // Create the mock FriendshipCacheService
+            var mock = new Mock<FriendshipCacheService>(
+                mockCache.Object,
+                mockContextFactory.Object,
+                mockLogger.Object);
+
+            // Setup default behaviors - return empty friend lists
+            mock.Setup(s => s.GetUserFriendIdsAsync(It.IsAny<string>()))
+                .ReturnsAsync(new List<string>());
+
+            mock.Setup(s => s.GetUserFeedAuthorIdsAsync(It.IsAny<string>()))
+                .ReturnsAsync((string userId) => (new List<string>(), new List<string> { userId }));
+
+            mock.Setup(s => s.InvalidateUserFriendCache(It.IsAny<string>()))
+                .Verifiable();
+
+            mock.Setup(s => s.InvalidateFriendshipCache(It.IsAny<string>(), It.IsAny<string>()))
+                .Verifiable();
 
             return mock;
         }

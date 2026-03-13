@@ -1,5 +1,6 @@
 using FluentAssertions;
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Repositories;
 using FreeSpeakWeb.Services;
 using FreeSpeakWeb.Tests.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +15,8 @@ namespace FreeSpeakWeb.Tests.Services
 {
     public class PostServiceEdgeCaseTests : TestBase
     {
+        #region Test Infrastructure
+
         private static IOptions<SiteSettings> CreateTestSiteSettings()
         {
             return Options.Create(new SiteSettings
@@ -31,35 +34,65 @@ namespace FreeSpeakWeb.Tests.Services
             return mock.Object;
         }
 
-        private static NotificationService CreateMockNotificationService()
+        /// <summary>
+        /// Creates a NotificationService with a real repository using the provided context factory.
+        /// </summary>
+        private static NotificationService CreateNotificationService(IDbContextFactory<ApplicationDbContext> contextFactory)
         {
-            var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
             var logger = new Mock<ILogger<NotificationService>>();
             var scopeFactory = new Mock<IServiceScopeFactory>();
-            var notificationRepo = MockRepositories.CreateMockNotificationRepository();            return new NotificationService(notificationRepo.Object, dbFactory.Object, logger.Object, scopeFactory.Object);
+            var notificationRepo = new NotificationRepository(contextFactory, new Mock<ILogger<NotificationRepository>>().Object);
+            return new NotificationService(notificationRepo, contextFactory, logger.Object, scopeFactory.Object);
         }
 
-        private static UserPreferenceService CreateMockUserPreferenceService()
+        /// <summary>
+        /// Creates a UserPreferenceService with a real database context factory.
+        /// </summary>
+        private static UserPreferenceService CreateUserPreferenceService(IDbContextFactory<ApplicationDbContext> contextFactory)
         {
-            var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
             var logger = new Mock<ILogger<UserPreferenceService>>();
-            return new UserPreferenceService(dbFactory.Object, logger.Object);
+            return new UserPreferenceService(contextFactory, logger.Object);
         }
 
-        private static PostNotificationHelper CreateMockPostNotificationHelper()
+        /// <summary>
+        /// Creates a PostNotificationHelper with real dependencies.
+        /// </summary>
+        private static PostNotificationHelper CreatePostNotificationHelper(IDbContextFactory<ApplicationDbContext> contextFactory)
         {
-            var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
             var logger = new Mock<ILogger<PostNotificationHelper>>();
-            return new PostNotificationHelper(dbFactory.Object, CreateMockNotificationService(), CreateMockUserPreferenceService(), logger.Object);
+            return new PostNotificationHelper(contextFactory, CreateNotificationService(contextFactory), CreateUserPreferenceService(contextFactory), logger.Object);
         }
+
+        /// <summary>
+        /// Creates a PostService with real repositories using the test repository factory.
+        /// </summary>
+        private PostService CreatePostService(TestRepositoryFactory repoFactory)
+        {
+            return new PostService(
+                repoFactory.ContextFactory,
+                repoFactory.CreateFeedPostRepository(),
+                repoFactory.CreateFeedCommentRepository(),
+                repoFactory.CreateFeedPostLikeRepository(),
+                repoFactory.CreateFeedCommentLikeRepository(),
+                repoFactory.CreatePinnedPostRepository(),
+                repoFactory.CreatePostNotificationMuteRepository(),
+                repoFactory.CreateNotificationRepository(),
+                CreateMockLogger<PostService>(),
+                CreateTestSiteSettings(),
+                CreateMockWebHostEnvironment(),
+                CreateNotificationService(repoFactory.ContextFactory),
+                CreateUserPreferenceService(repoFactory.ContextFactory),
+                CreatePostNotificationHelper(repoFactory.ContextFactory));
+        }
+
+        #endregion
 
         [Fact]
         public async Task CreatePostAsync_WithWhitespaceOnly_ShouldReturnError()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("EdgeCase1");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("EdgeCase1");
+            var service = CreatePostService(repoFactory);
 
             // Act
             var (success, errorMessage, post) = await service.CreatePostAsync("user1", "   ");
@@ -74,9 +107,8 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task UpdatePostAsync_WithNonExistentPost_ShouldReturnError()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("EdgeCase2");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("EdgeCase2");
+            var service = CreatePostService(repoFactory);
 
             // Act
             var (success, errorMessage, _) = await service.UpdatePostAsync(99999, "user1", "Updated content");
@@ -90,9 +122,8 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task DeletePostAsync_WithNonExistentPost_ShouldReturnError()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("EdgeCase3");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("EdgeCase3");
+            var service = CreatePostService(repoFactory);
 
             // Act
             var (success, errorMessage) = await service.DeletePostAsync(99999, "user1");
@@ -106,9 +137,8 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task AddCommentAsync_ToNonExistentPost_ShouldReturnError()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("EdgeCase4");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("EdgeCase4");
+            var service = CreatePostService(repoFactory);
 
             // Act
             var (success, errorMessage, comment) = await service.AddCommentAsync(99999, "user1", "Comment");
@@ -123,14 +153,13 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task AddCommentAsync_WithInvalidParentComment_ShouldReturnError()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("EdgeCase5");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("EdgeCase5");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -138,7 +167,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 postId = context.Posts.First().Id;
             }
@@ -156,9 +185,8 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task ToggleLikeAsync_OnNonExistentPost_ShouldReturnError()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("EdgeCase6");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("EdgeCase6");
+            var service = CreatePostService(repoFactory);
 
             // Act
             var (success, errorMessage, isLiked) = await service.ToggleLikeAsync(99999, "user1");
@@ -172,16 +200,15 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task GetPostsByUserAsync_WithPagination_ShouldReturnCorrectPage()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("EdgeCase7");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("EdgeCase7");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
-                
+
                 // Create 25 posts
                 for (int i = 1; i <= 25; i++)
                 {
@@ -201,16 +228,15 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task DeleteCommentAsync_WithReplies_ShouldDeleteAllReplies()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("EdgeCase8");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("EdgeCase8");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1", commentCount: 3);
 
             int postId, parentCommentId;
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -257,7 +283,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Assert
             success.Should().BeTrue();
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 var remainingComments = context.Comments.Count();
                 remainingComments.Should().Be(0); // All should be deleted
@@ -271,15 +297,14 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task AddImageToPostAsync_MultipleImages_ShouldIncrementDisplayOrder()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("EdgeCase9");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("EdgeCase9");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);
@@ -293,7 +318,7 @@ namespace FreeSpeakWeb.Tests.Services
             await service.AddImageToPostAsync(postId, "image3.jpg", "user1");
 
             // Assert
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 var images = context.PostImages
                     .Where(pi => pi.PostId == postId)
@@ -311,15 +336,14 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task GetCommentsAsync_ShouldOrderByCreatedAtAscending()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("EdgeCase10");
-            var logger = CreateMockLogger<PostService>();
-            var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var repoFactory = CreateTestRepositoryFactory("EdgeCase10");
+            var service = CreatePostService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var post = TestDataFactory.CreateTestPost("user1");
 
             int postId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.Add(user);
                 context.Posts.Add(post);

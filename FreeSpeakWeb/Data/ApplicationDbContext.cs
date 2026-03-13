@@ -150,6 +150,14 @@ namespace FreeSpeakWeb.Data
                 entity.HasIndex(f => f.AddresseeId);
                 entity.HasIndex(f => f.Status);
                 entity.HasIndex(f => new { f.RequesterId, f.AddresseeId }).IsUnique();
+
+                // PERFORMANCE: Composite indexes for friendship queries
+                // These dramatically improve GetFeedPostsAsync by allowing efficient lookups
+                // of accepted friendships for a specific user
+                entity.HasIndex(f => new { f.Status, f.RequesterId })
+                    .HasDatabaseName("IX_Friendships_Status_RequesterId");
+                entity.HasIndex(f => new { f.Status, f.AddresseeId })
+                    .HasDatabaseName("IX_Friendships_Status_AddresseeId");
             });
 
             // Configure Post entity
@@ -168,6 +176,12 @@ namespace FreeSpeakWeb.Data
                 // Create indexes
                 entity.HasIndex(p => p.AuthorId);
                 entity.HasIndex(p => p.CreatedAt);
+
+                // PERFORMANCE: Composite index for feed queries (AuthorId + AudienceType + CreatedAt)
+                // This dramatically improves GetFeedPostsAsync performance by allowing efficient filtering
+                // on AuthorId and AudienceType, followed by sorting on CreatedAt
+                entity.HasIndex(p => new { p.AuthorId, p.AudienceType, p.CreatedAt })
+                    .HasDatabaseName("IX_Posts_AuthorId_AudienceType_CreatedAt");
             });
 
             // Configure Comment entity

@@ -1,5 +1,6 @@
 using FluentAssertions;
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Repositories;
 using FreeSpeakWeb.Services;
 using FreeSpeakWeb.Tests.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -12,37 +13,55 @@ namespace FreeSpeakWeb.Tests.Services
 {
     public class FriendsServiceTests : TestBase
     {
-        private static NotificationService CreateMockNotificationService()
+        #region Test Infrastructure
+
+        /// <summary>
+        /// Creates a NotificationService with a real repository using the provided context factory.
+        /// </summary>
+        private static NotificationService CreateNotificationService(IDbContextFactory<ApplicationDbContext> contextFactory)
         {
-            var notificationRepo = MockRepositories.CreateMockNotificationRepository();
-            var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
             var logger = new Mock<ILogger<NotificationService>>();
             var scopeFactory = new Mock<IServiceScopeFactory>();
-            return new NotificationService(notificationRepo.Object, dbFactory.Object, logger.Object, scopeFactory.Object);
+            var notificationRepo = new NotificationRepository(contextFactory, new Mock<ILogger<NotificationRepository>>().Object);
+            return new NotificationService(notificationRepo, contextFactory, logger.Object, scopeFactory.Object);
         }
 
-        private static UserPreferenceService CreateMockUserPreferenceService()
+        /// <summary>
+        /// Creates a UserPreferenceService with a real database context factory.
+        /// </summary>
+        private static UserPreferenceService CreateUserPreferenceService(IDbContextFactory<ApplicationDbContext> contextFactory)
         {
-            var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
             var logger = new Mock<ILogger<UserPreferenceService>>();
-            return new UserPreferenceService(dbFactory.Object, logger.Object);
+            return new UserPreferenceService(contextFactory, logger.Object);
         }
+
+        /// <summary>
+        /// Creates a FriendsService with real repositories using the test repository factory.
+        /// </summary>
+        private FriendsService CreateFriendsService(TestRepositoryFactory repoFactory)
+        {
+            return new FriendsService(
+                repoFactory.CreateFriendshipRepository(),
+                repoFactory.CreateUserRepository(),
+                repoFactory.ContextFactory,
+                CreateNotificationService(repoFactory.ContextFactory),
+                CreateUserPreferenceService(repoFactory.ContextFactory),
+                repoFactory.CreateFriendshipCacheService());
+        }
+
+        #endregion
 
         [Fact]
         public async Task SendFriendRequestAsync_WithValidUsers_ShouldCreatePendingFriendship()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("FriendsTest1");
-            var friendshipRepo = MockRepositories.CreateMockFriendshipRepository();
-            var userRepo = MockRepositories.CreateMockUserRepository();
-            var notificationService = CreateMockNotificationService();
-            var userPreferenceService = CreateMockUserPreferenceService();
-            var service = new FriendsService(friendshipRepo.Object, userRepo.Object, dbFactory, notificationService, userPreferenceService);
+            var repoFactory = CreateTestRepositoryFactory("FriendsTest1");
+            var service = CreateFriendsService(repoFactory);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1", userName: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2", userName: "user2");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.AddRange(user1, user2);
                 await context.SaveChangesAsync();
@@ -55,7 +74,7 @@ namespace FreeSpeakWeb.Tests.Services
             success.Should().BeTrue();
             errorMessage.Should().BeNull();
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 var friendship = context.Friendships.FirstOrDefault();
                 friendship.Should().NotBeNull();
@@ -69,10 +88,8 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task SendFriendRequestAsync_ToSelf_ShouldReturnError()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("FriendsTest2");
-            var notificationService = CreateMockNotificationService();
-            var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = MockRepositories.CreateMockFriendshipRepository();            var userRepo = MockRepositories.CreateMockUserRepository();            var service = new FriendsService(friendshipRepo.Object, userRepo.Object, dbFactory, notificationService, userPreferenceService);
+            var repoFactory = CreateTestRepositoryFactory("FriendsTest2");
+            var service = CreateFriendsService(repoFactory);
 
             // Act
             var (success, errorMessage) = await service.SendFriendRequestAsync("user1", "user1");
@@ -86,16 +103,14 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task SendFriendRequestAsync_WhenAlreadyPending_ShouldReturnError()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("FriendsTest3");
-            var notificationService = CreateMockNotificationService();
-            var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = MockRepositories.CreateMockFriendshipRepository();            var userRepo = MockRepositories.CreateMockUserRepository();            var service = new FriendsService(friendshipRepo.Object, userRepo.Object, dbFactory, notificationService, userPreferenceService);
+            var repoFactory = CreateTestRepositoryFactory("FriendsTest3");
+            var service = CreateFriendsService(repoFactory);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
             var friendship = TestDataFactory.CreateTestFriendship("user1", "user2", FriendshipStatus.Pending);
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.AddRange(user1, user2);
                 context.Friendships.Add(friendship);
@@ -114,16 +129,14 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task AcceptFriendRequestAsync_WithValidRequest_ShouldUpdateStatusToAccepted()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("FriendsTest4");
-            var notificationService = CreateMockNotificationService();
-            var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = MockRepositories.CreateMockFriendshipRepository();            var userRepo = MockRepositories.CreateMockUserRepository();            var service = new FriendsService(friendshipRepo.Object, userRepo.Object, dbFactory, notificationService, userPreferenceService);
+            var repoFactory = CreateTestRepositoryFactory("FriendsTest4");
+            var service = CreateFriendsService(repoFactory);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
             var friendship = TestDataFactory.CreateTestFriendship("user1", "user2", FriendshipStatus.Pending);
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.AddRange(user1, user2);
                 context.Friendships.Add(friendship);
@@ -131,7 +144,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int friendshipId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 friendshipId = context.Friendships.First().Id;
             }
@@ -143,7 +156,7 @@ namespace FreeSpeakWeb.Tests.Services
             success.Should().BeTrue();
             errorMessage.Should().BeNull();
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 var updatedFriendship = context.Friendships.Find(friendshipId);
                 updatedFriendship.Should().NotBeNull();
@@ -156,17 +169,15 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task AcceptFriendRequestAsync_ByNonAddressee_ShouldReturnError()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("FriendsTest5");
-            var notificationService = CreateMockNotificationService();
-            var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = MockRepositories.CreateMockFriendshipRepository();            var userRepo = MockRepositories.CreateMockUserRepository();            var service = new FriendsService(friendshipRepo.Object, userRepo.Object, dbFactory, notificationService, userPreferenceService);
+            var repoFactory = CreateTestRepositoryFactory("FriendsTest5");
+            var service = CreateFriendsService(repoFactory);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
             var user3 = TestDataFactory.CreateTestUser(id: "user3");
             var friendship = TestDataFactory.CreateTestFriendship("user1", "user2", FriendshipStatus.Pending);
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.AddRange(user1, user2, user3);
                 context.Friendships.Add(friendship);
@@ -174,7 +185,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             int friendshipId;
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 friendshipId = context.Friendships.First().Id;
             }
@@ -191,10 +202,8 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task GetFriendsAsync_WithAcceptedFriendships_ShouldReturnFriendsList()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("FriendsTest6");
-            var notificationService = CreateMockNotificationService();
-            var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = MockRepositories.CreateMockFriendshipRepository();            var userRepo = MockRepositories.CreateMockUserRepository();            var service = new FriendsService(friendshipRepo.Object, userRepo.Object, dbFactory, notificationService, userPreferenceService);
+            var repoFactory = CreateTestRepositoryFactory("FriendsTest6");
+            var service = CreateFriendsService(repoFactory);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1", userName: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2", userName: "user2");
@@ -204,7 +213,7 @@ namespace FreeSpeakWeb.Tests.Services
             var friendship2 = TestDataFactory.CreateTestFriendship("user3", "user1", FriendshipStatus.Accepted);
             var friendship3 = TestDataFactory.CreateTestFriendship("user1", "user3", FriendshipStatus.Pending);
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.AddRange(user1, user2, user3);
                 context.Friendships.AddRange(friendship1, friendship2);
@@ -224,16 +233,14 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task AreFriendsAsync_WithAcceptedFriendship_ShouldReturnTrue()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("FriendsTest7");
-            var notificationService = CreateMockNotificationService();
-            var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = MockRepositories.CreateMockFriendshipRepository();            var userRepo = MockRepositories.CreateMockUserRepository();            var service = new FriendsService(friendshipRepo.Object, userRepo.Object, dbFactory, notificationService, userPreferenceService);
+            var repoFactory = CreateTestRepositoryFactory("FriendsTest7");
+            var service = CreateFriendsService(repoFactory);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
             var friendship = TestDataFactory.CreateTestFriendship("user1", "user2", FriendshipStatus.Accepted);
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.AddRange(user1, user2);
                 context.Friendships.Add(friendship);
@@ -251,16 +258,14 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task AreFriendsAsync_WithPendingFriendship_ShouldReturnFalse()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("FriendsTest8");
-            var notificationService = CreateMockNotificationService();
-            var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = MockRepositories.CreateMockFriendshipRepository();            var userRepo = MockRepositories.CreateMockUserRepository();            var service = new FriendsService(friendshipRepo.Object, userRepo.Object, dbFactory, notificationService, userPreferenceService);
+            var repoFactory = CreateTestRepositoryFactory("FriendsTest8");
+            var service = CreateFriendsService(repoFactory);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
             var friendship = TestDataFactory.CreateTestFriendship("user1", "user2", FriendshipStatus.Pending);
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.AddRange(user1, user2);
                 context.Friendships.Add(friendship);
@@ -278,17 +283,15 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task SearchUsersAsync_WithMatchingUsers_ShouldReturnResults()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("FriendsTest9");
-            var notificationService = CreateMockNotificationService();
-            var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = MockRepositories.CreateMockFriendshipRepository();            var userRepo = MockRepositories.CreateMockUserRepository();            var service = new FriendsService(friendshipRepo.Object, userRepo.Object, dbFactory, notificationService, userPreferenceService);
+            var repoFactory = CreateTestRepositoryFactory("FriendsTest9");
+            var service = CreateFriendsService(repoFactory);
 
             var currentUser = TestDataFactory.CreateTestUser(id: "current", userName: "current");
             var user1 = TestDataFactory.CreateTestUser(id: "user1", userName: "john", firstName: "John", lastName: "Doe");
             var user2 = TestDataFactory.CreateTestUser(id: "user2", userName: "jane", firstName: "Jane", lastName: "Smith");
             var user3 = TestDataFactory.CreateTestUser(id: "user3", userName: "johnny", firstName: "Johnny", lastName: "Test");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.AddRange(currentUser, user1, user2, user3);
                 await context.SaveChangesAsync();
@@ -307,10 +310,8 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task GetPendingRequestsAsync_ShouldReturnOnlyPendingRequestsForUser()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("FriendsTest10");
-            var notificationService = CreateMockNotificationService();
-            var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = MockRepositories.CreateMockFriendshipRepository();            var userRepo = MockRepositories.CreateMockUserRepository();            var service = new FriendsService(friendshipRepo.Object, userRepo.Object, dbFactory, notificationService, userPreferenceService);
+            var repoFactory = CreateTestRepositoryFactory("FriendsTest10");
+            var service = CreateFriendsService(repoFactory);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -319,7 +320,7 @@ namespace FreeSpeakWeb.Tests.Services
             var pendingRequest = TestDataFactory.CreateTestFriendship("user2", "user1", FriendshipStatus.Pending);
             var acceptedRequest = TestDataFactory.CreateTestFriendship("user3", "user1", FriendshipStatus.Accepted);
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.AddRange(user1, user2, user3);
                 context.Friendships.AddRange(pendingRequest, acceptedRequest);
@@ -338,15 +339,13 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task BlockUserAsync_ShouldCreateBlockedFriendship()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("FriendsTest11");
-            var notificationService = CreateMockNotificationService();
-            var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = MockRepositories.CreateMockFriendshipRepository();            var userRepo = MockRepositories.CreateMockUserRepository();            var service = new FriendsService(friendshipRepo.Object, userRepo.Object, dbFactory, notificationService, userPreferenceService);
+            var repoFactory = CreateTestRepositoryFactory("FriendsTest11");
+            var service = CreateFriendsService(repoFactory);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.AddRange(user1, user2);
                 await context.SaveChangesAsync();
@@ -359,7 +358,7 @@ namespace FreeSpeakWeb.Tests.Services
             success.Should().BeTrue();
             errorMessage.Should().BeNull();
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 var friendship = context.Friendships.FirstOrDefault();
                 friendship.Should().NotBeNull();
@@ -371,10 +370,8 @@ namespace FreeSpeakWeb.Tests.Services
         public async Task GetMutualFriendsAsync_ShouldReturnCommonFriends()
         {
             // Arrange
-            var dbFactory = CreateDbContextFactory("FriendsTest12");
-            var notificationService = CreateMockNotificationService();
-            var userPreferenceService = CreateMockUserPreferenceService();
-            var friendshipRepo = MockRepositories.CreateMockFriendshipRepository();            var userRepo = MockRepositories.CreateMockUserRepository();            var service = new FriendsService(friendshipRepo.Object, userRepo.Object, dbFactory, notificationService, userPreferenceService);
+            var repoFactory = CreateTestRepositoryFactory("FriendsTest12");
+            var service = CreateFriendsService(repoFactory);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -382,19 +379,19 @@ namespace FreeSpeakWeb.Tests.Services
             var mutual2 = TestDataFactory.CreateTestUser(id: "mutual2");
             var notMutual = TestDataFactory.CreateTestUser(id: "notMutual");
 
-            using (var context = await dbFactory.CreateDbContextAsync())
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
                 context.Users.AddRange(user1, user2, mutual1, mutual2, notMutual);
-                
+
                 // User1 friends
                 context.Friendships.Add(TestDataFactory.CreateTestFriendship("user1", "mutual1", FriendshipStatus.Accepted));
                 context.Friendships.Add(TestDataFactory.CreateTestFriendship("user1", "mutual2", FriendshipStatus.Accepted));
                 context.Friendships.Add(TestDataFactory.CreateTestFriendship("user1", "notMutual", FriendshipStatus.Accepted));
-                
+
                 // User2 friends
                 context.Friendships.Add(TestDataFactory.CreateTestFriendship("user2", "mutual1", FriendshipStatus.Accepted));
                 context.Friendships.Add(TestDataFactory.CreateTestFriendship("user2", "mutual2", FriendshipStatus.Accepted));
-                
+
                 await context.SaveChangesAsync();
             }
 
@@ -408,4 +405,5 @@ namespace FreeSpeakWeb.Tests.Services
         }
     }
 }
+
 
