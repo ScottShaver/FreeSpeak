@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 namespace FreeSpeakWeb.Services;
 
 /// <summary>
-/// Service for handling data migrations that don't require schema changes
+/// Service for handling data migrations that don't require schema changes.
+/// Includes migrations for securing file URLs and moving files outside wwwroot.
+/// These migrations are typically run once during application startup in development.
 /// </summary>
 public class DataMigrationService
 {
@@ -12,6 +14,12 @@ public class DataMigrationService
     private readonly ILogger<DataMigrationService> _logger;
     private readonly IWebHostEnvironment _environment;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DataMigrationService"/> class.
+    /// </summary>
+    /// <param name="contextFactory">Factory for creating database contexts.</param>
+    /// <param name="logger">Logger for recording migration progress and errors.</param>
+    /// <param name="environment">Web host environment for accessing file paths.</param>
     public DataMigrationService(
         IDbContextFactory<ApplicationDbContext> contextFactory,
         ILogger<DataMigrationService> logger,
@@ -23,8 +31,11 @@ public class DataMigrationService
     }
 
     /// <summary>
-    /// Updates profile picture URLs from old format to secure API format
+    /// Updates profile picture URLs from old format (/api/profile-picture/) to 
+    /// secure API format (/api/secure-files/profile-picture/).
     /// </summary>
+    /// <returns>A task representing the asynchronous migration operation.</returns>
+    /// <exception cref="Exception">Rethrows any exception after logging.</exception>
     public async Task MigrateProfilePictureUrlsAsync()
     {
         try
@@ -60,9 +71,11 @@ public class DataMigrationService
     }
 
     /// <summary>
-    /// Updates post image URLs from old format to secure API format
-    /// This is for any existing images that might have the old format
+    /// Updates post image URLs from old static format (/uploads/posts/{userId}/images/{filename})
+    /// to secure API format (/api/secure-files/post-image/{userId}/{imageId}/{filename}).
     /// </summary>
+    /// <returns>A task representing the asynchronous migration operation.</returns>
+    /// <exception cref="Exception">Rethrows any exception after logging.</exception>
     public async Task MigratePostImageUrlsAsync()
     {
         try
@@ -107,9 +120,12 @@ public class DataMigrationService
     }
 
     /// <summary>
-    /// Moves uploaded files from wwwroot to AppData (outside public access)
-    /// IMPORTANT: Run this once during deployment to secure existing files
+    /// Moves uploaded files from wwwroot (publicly accessible) to AppData (protected).
+    /// This is a security measure to prevent direct file access without authentication.
+    /// Should be run once during deployment to secure existing files.
     /// </summary>
+    /// <returns>A task representing the asynchronous file move operation.</returns>
+    /// <exception cref="Exception">Rethrows any exception after logging.</exception>
     public async Task MoveFilesOutOfWwwrootAsync()
     {
         await Task.Run(() =>
@@ -160,6 +176,13 @@ public class DataMigrationService
         });
     }
 
+    /// <summary>
+    /// Recursively copies a directory and its contents to a new location.
+    /// Only copies files that don't already exist at the destination.
+    /// </summary>
+    /// <param name="sourceDir">The source directory path to copy from.</param>
+    /// <param name="destDir">The destination directory path to copy to.</param>
+    /// <param name="count">A reference counter incremented for each file copied.</param>
     private void CopyDirectory(string sourceDir, string destDir, ref int count)
     {
         Directory.CreateDirectory(destDir);

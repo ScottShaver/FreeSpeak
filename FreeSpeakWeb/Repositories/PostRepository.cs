@@ -23,6 +23,13 @@ namespace FreeSpeakWeb.Repositories
 
         #region Post CRUD Operations
 
+        /// <summary>
+        /// Retrieves a post by its unique identifier.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post to retrieve.</param>
+        /// <param name="includeAuthor">Whether to include the author's information in the result.</param>
+        /// <param name="includeImages">Whether to include the post's images in the result.</param>
+        /// <returns>The post if found; otherwise, null.</returns>
         public async Task<Post?> GetByIdAsync(int postId, bool includeAuthor = true, bool includeImages = true)
         {
             try
@@ -46,6 +53,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Creates a new post in the database.
+        /// </summary>
+        /// <param name="post">The post entity to create.</param>
+        /// <returns>A tuple containing success status, error message if any, and the created post.</returns>
         public async Task<(bool Success, string? ErrorMessage, Post? Post)> CreateAsync(Post post)
         {
             try
@@ -65,6 +77,13 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Updates the content of an existing post.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post to update.</param>
+        /// <param name="userId">The ID of the user attempting the update (must be the author).</param>
+        /// <param name="newContent">The new content for the post.</param>
+        /// <returns>A tuple containing success status and error message if any.</returns>
         public async Task<(bool Success, string? ErrorMessage)> UpdateContentAsync(int postId, string userId, string newContent)
         {
             try
@@ -94,6 +113,12 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Deletes a post from the database.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post to delete.</param>
+        /// <param name="userId">The ID of the user attempting the deletion (must be the author).</param>
+        /// <returns>A tuple containing success status and error message if any.</returns>
         public async Task<(bool Success, string? ErrorMessage)> DeleteAsync(int postId, string userId)
         {
             try
@@ -121,6 +146,12 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Determines whether a user has permission to delete a specific post.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The ID of the user to check permissions for.</param>
+        /// <returns>True if the user can delete the post; otherwise, false.</returns>
         public async Task<bool> CanUserDeleteAsync(int postId, string userId)
         {
             try
@@ -140,6 +171,13 @@ namespace FreeSpeakWeb.Repositories
 
         #region Image Operations
 
+        /// <summary>
+        /// Adds images to an existing post.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post to add images to.</param>
+        /// <param name="userId">The ID of the user attempting the operation (must be the author).</param>
+        /// <param name="imageUrls">List of image URLs to add to the post.</param>
+        /// <returns>A tuple containing success status, error message if any, and the list of created images.</returns>
         public async Task<(bool Success, string? ErrorMessage, List<PostImage>? Images)> AddImagesAsync(
             int postId, string userId, List<string> imageUrls)
         {
@@ -185,6 +223,13 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Removes specified images from a post.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post to remove images from.</param>
+        /// <param name="userId">The ID of the user attempting the operation (must be the author).</param>
+        /// <param name="imageIds">List of image IDs to remove from the post.</param>
+        /// <returns>A tuple containing success status and error message if any.</returns>
         public async Task<(bool Success, string? ErrorMessage)> RemoveImagesAsync(
             int postId, string userId, List<int> imageIds)
         {
@@ -217,6 +262,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves all images associated with a post, ordered by display order.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>A list of images for the post, or an empty list if none exist or an error occurs.</returns>
         public async Task<List<PostImage>> GetImagesAsync(int postId)
         {
             try
@@ -239,6 +289,13 @@ namespace FreeSpeakWeb.Repositories
 
         #region Query Operations
 
+        /// <summary>
+        /// Retrieves posts by a specific author with pagination support.
+        /// </summary>
+        /// <param name="authorId">The unique identifier of the author.</param>
+        /// <param name="skip">Number of posts to skip for pagination.</param>
+        /// <param name="take">Number of posts to return.</param>
+        /// <returns>A list of posts by the author, ordered by creation date descending.</returns>
         public async Task<List<Post>> GetByAuthorAsync(string authorId, int skip = 0, int take = 20)
         {
             try
@@ -261,6 +318,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets the total count of posts by a specific author.
+        /// </summary>
+        /// <param name="authorId">The unique identifier of the author.</param>
+        /// <returns>The total number of posts by the author.</returns>
         public async Task<int> GetCountByAuthorAsync(string authorId)
         {
             try
@@ -275,6 +337,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Checks whether a post exists in the database.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post to check.</param>
+        /// <returns>True if the post exists; otherwise, false.</returns>
         public async Task<bool> ExistsAsync(int postId)
         {
             try
@@ -293,6 +360,10 @@ namespace FreeSpeakWeb.Repositories
 
         #region Count Operations
 
+        /// <summary>
+        /// Increments the like count for a post by one.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
         public async Task IncrementLikeCountAsync(int postId)
         {
             try
@@ -308,6 +379,10 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Decrements the like count for a post by one, with a minimum of zero.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
         public async Task DecrementLikeCountAsync(int postId)
         {
             try
@@ -323,6 +398,10 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Increments the comment count for a post by one.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
         public async Task IncrementCommentCountAsync(int postId)
         {
             try
@@ -338,6 +417,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Decrements the comment count for a post, with a minimum of zero.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="count">The number to decrement by (default is 1).</param>
         public async Task DecrementCommentCountAsync(int postId, int count = 1)
         {
             try
@@ -353,6 +437,10 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Increments the share count for a post by one.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
         public async Task IncrementShareCountAsync(int postId)
         {
             try
@@ -372,6 +460,13 @@ namespace FreeSpeakWeb.Repositories
 
         #region Feed Post Operations
 
+        /// <summary>
+        /// Updates the audience type for a post.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The ID of the user attempting the update (must be the author).</param>
+        /// <param name="audienceType">The new audience type for the post.</param>
+        /// <returns>A tuple containing success status and error message if any.</returns>
         public async Task<(bool Success, string? ErrorMessage)> UpdateAudienceAsync(int postId, string userId, AudienceType audienceType)
         {
             try
@@ -402,6 +497,14 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves feed posts for a user, including their own posts and posts from friends.
+        /// Only returns posts with appropriate audience settings (public, friends-only, or user's own posts).
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user viewing the feed.</param>
+        /// <param name="skip">Number of posts to skip for pagination.</param>
+        /// <param name="take">Number of posts to return.</param>
+        /// <returns>A list of feed posts ordered by creation date descending.</returns>
         public async Task<List<Post>> GetFeedPostsAsync(string userId, int skip = 0, int take = 20)
         {
             try
@@ -437,6 +540,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets the total count of posts in a user's feed.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user viewing the feed.</param>
+        /// <returns>The total number of posts in the user's feed.</returns>
         public async Task<int> GetFeedPostsCountAsync(string userId)
         {
             try
@@ -465,6 +573,12 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves public posts with pagination support.
+        /// </summary>
+        /// <param name="pageNumber">The page number (1-based).</param>
+        /// <param name="pageSize">The number of posts per page.</param>
+        /// <returns>A tuple containing the list of posts and a flag indicating if more posts exist.</returns>
         public async Task<(List<Post> Posts, bool HasMore)> GetPublicPostsAsync(int pageNumber = 1, int pageSize = 10)
         {
             try

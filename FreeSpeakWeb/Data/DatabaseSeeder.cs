@@ -4,13 +4,34 @@ using Microsoft.Extensions.Logging;
 
 namespace FreeSpeakWeb.Data
 {
+    /// <summary>
+    /// Provides methods for seeding the database with test data for development purposes.
+    /// Includes test users, friendships, posts, groups, and group memberships.
+    /// </summary>
     public static class DatabaseSeeder
     {
+        /// <summary>
+        /// Seeds test users into the database using ASP.NET Core Identity.
+        /// This overload is for seeding users only without DbContext access.
+        /// </summary>
+        /// <param name="userManager">The UserManager for creating and managing Identity users.</param>
+        /// <param name="logger">Logger for recording seeding progress and errors.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public static async Task SeedTestUsersAsync(UserManager<ApplicationUser> userManager, ILogger logger)
         {
             await SeedTestUsersAsync(userManager, null, logger);
         }
 
+        /// <summary>
+        /// Seeds test users, friendships, posts, and groups into the database for development and testing.
+        /// Creates 20 test users with varied profile data, establishes friendships between them,
+        /// generates sample posts, creates community groups, and assigns group memberships.
+        /// </summary>
+        /// <param name="userManager">The UserManager for creating and managing Identity users.</param>
+        /// <param name="dbContext">Optional DbContext for seeding related data (posts, friendships, groups). If null, only users are seeded.</param>
+        /// <param name="logger">Logger for recording seeding progress and errors.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <exception cref="Exception">Rethrows any exception that occurs during user seeding after logging.</exception>
         public static async Task SeedTestUsersAsync(UserManager<ApplicationUser> userManager, ApplicationDbContext? dbContext, ILogger logger)
         {
             try
@@ -99,6 +120,14 @@ namespace FreeSpeakWeb.Data
             }
         }
 
+        /// <summary>
+        /// Seeds posts and friendship relationships for test users.
+        /// Creates friendships between users and generates sample posts with varied content and timestamps.
+        /// Each user receives 5-10 posts with random like and comment counts.
+        /// </summary>
+        /// <param name="dbContext">The database context for accessing and modifying data.</param>
+        /// <param name="logger">Logger for recording seeding progress and errors.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         private static async Task SeedPostsAndFriendshipsAsync(ApplicationDbContext dbContext, ILogger logger)
         {
             try
@@ -233,6 +262,14 @@ namespace FreeSpeakWeb.Data
             }
         }
 
+        /// <summary>
+        /// Seeds community groups, group memberships, and group posts for test data.
+        /// Creates 10 diverse groups with varying settings, assigns members (including admins and moderators),
+        /// and generates sample group posts. Each group receives 5-15 members and 10-20 posts.
+        /// </summary>
+        /// <param name="dbContext">The database context for accessing and modifying data.</param>
+        /// <param name="logger">Logger for recording seeding progress and errors.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         private static async Task SeedGroupsAndGroupPostsAsync(ApplicationDbContext dbContext, ILogger logger)
         {
             try

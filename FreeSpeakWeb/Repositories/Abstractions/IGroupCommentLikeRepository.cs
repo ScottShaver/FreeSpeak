@@ -3,7 +3,9 @@ using FreeSpeakWeb.Data;
 namespace FreeSpeakWeb.Repositories.Abstractions
 {
     /// <summary>
-    /// Repository interface for group comment likes
+    /// Repository interface for managing likes/reactions on group post comments.
+    /// Inherits all standard comment like operations from ICommentLikeRepository.
+    /// Specialized for GroupPostCommentLike entities on GroupPostComment entities.
     /// </summary>
     public interface IGroupCommentLikeRepository : ICommentLikeRepository<GroupPostComment, GroupPostCommentLike>
     {

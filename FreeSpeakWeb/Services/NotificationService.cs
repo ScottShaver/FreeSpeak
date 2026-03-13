@@ -5,6 +5,11 @@ using System.Text.Json;
 
 namespace FreeSpeakWeb.Services
 {
+    /// <summary>
+    /// Service providing business logic for managing user notifications.
+    /// Handles notification creation, retrieval, read/unread status management, and cleanup operations.
+    /// Includes DOS protection limiting bulk notification operations.
+    /// </summary>
     public class NotificationService
     {
         private readonly INotificationRepository _notificationRepository;
@@ -12,9 +17,18 @@ namespace FreeSpeakWeb.Services
         private readonly ILogger<NotificationService> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
 
-        // DOS PROTECTION: Limit bulk operations to prevent resource exhaustion
-        private const int MaxBulkNotificationRecipients = 1000; // Max 1000 recipients per bulk operation
+        /// <summary>
+        /// Maximum number of recipients allowed per bulk notification operation to prevent resource exhaustion.
+        /// </summary>
+        private const int MaxBulkNotificationRecipients = 1000;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotificationService"/> class.
+        /// </summary>
+        /// <param name="notificationRepository">Repository for notification operations.</param>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording service operations.</param>
+        /// <param name="scopeFactory">Factory for creating service scopes.</param>
         public NotificationService(
             INotificationRepository notificationRepository,
             IDbContextFactory<ApplicationDbContext> contextFactory,
@@ -30,8 +44,14 @@ namespace FreeSpeakWeb.Services
         #region Create Notifications
 
         /// <summary>
-        /// Create a new notification for a user with automatic expiration based on user preferences
+        /// Creates a new notification for a user with automatic expiration based on user preferences.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user to notify.</param>
+        /// <param name="type">The type of notification.</param>
+        /// <param name="message">The notification message content.</param>
+        /// <param name="data">Optional additional data to serialize with the notification.</param>
+        /// <param name="expiresAt">Optional expiration date; if not provided, calculated from user preferences.</param>
+        /// <returns>A tuple containing success status, error message if failed, and the created notification if successful.</returns>
         public async Task<(bool Success, string? ErrorMessage, UserNotification? Notification)> CreateNotificationAsync(
             string userId,
             NotificationType type,
@@ -95,8 +115,15 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Create notifications for multiple users
+        /// Creates notifications for multiple users in a single operation.
+        /// Limited to 1000 recipients per call to prevent resource exhaustion.
         /// </summary>
+        /// <param name="userIds">List of user IDs to receive the notification.</param>
+        /// <param name="type">The type of notification.</param>
+        /// <param name="message">The notification message content.</param>
+        /// <param name="data">Optional additional data to serialize with each notification.</param>
+        /// <param name="expiresAt">Optional expiration date for all notifications.</param>
+        /// <returns>A tuple containing success status, error message if failed, and count of created notifications.</returns>
         public async Task<(bool Success, string? ErrorMessage, int CreatedCount)> CreateBulkNotificationsAsync(
             List<string> userIds,
             NotificationType type,
@@ -167,8 +194,13 @@ namespace FreeSpeakWeb.Services
         #region Retrieve Notifications
 
         /// <summary>
-        /// Get notifications for a user with pagination
+        /// Retrieves notifications for a user with pagination and optional read status filter.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <param name="pageSize">Number of notifications per page.</param>
+        /// <param name="pageNumber">The page number to retrieve (1-based).</param>
+        /// <param name="isRead">Optional filter for read/unread status.</param>
+        /// <returns>A list of notifications ordered by creation date descending.</returns>
         public async Task<List<UserNotification>> GetUserNotificationsAsync(
             string userId,
             int pageSize = 20,
@@ -203,8 +235,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get unread notification count for a user
+        /// Gets the count of unread notifications for a user.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The number of unread notifications.</returns>
         public async Task<int> GetUnreadCountAsync(string userId)
         {
             try
@@ -219,8 +253,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get total notification count for a user
+        /// Gets the total count of notifications for a user.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The total number of notifications.</returns>
         public async Task<int> GetTotalCountAsync(string userId)
         {
             try
@@ -235,8 +271,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get a notification by ID
+        /// Retrieves a notification by its unique identifier.
         /// </summary>
+        /// <param name="notificationId">The unique identifier of the notification.</param>
+        /// <returns>The notification if found; otherwise, null.</returns>
         public async Task<UserNotification?> GetNotificationByIdAsync(int notificationId)
         {
             try
@@ -255,8 +293,11 @@ namespace FreeSpeakWeb.Services
         #region Update Notifications
 
         /// <summary>
-        /// Mark a notification as read
+        /// Marks a specific notification as read.
         /// </summary>
+        /// <param name="notificationId">The unique identifier of the notification.</param>
+        /// <param name="userId">The user ID to verify ownership.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> MarkAsReadAsync(int notificationId, string userId)
         {
             try
@@ -288,8 +329,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Mark all notifications as read for a user
+        /// Marks all notifications as read for a user.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A tuple containing success status, error message if failed, and count of updated notifications.</returns>
         public async Task<(bool Success, string? ErrorMessage, int UpdatedCount)> MarkAllAsReadAsync(string userId)
         {
             try
@@ -325,8 +368,11 @@ namespace FreeSpeakWeb.Services
         #region Delete Notifications
 
         /// <summary>
-        /// Delete a specific notification
+        /// Deletes a specific notification.
         /// </summary>
+        /// <param name="notificationId">The unique identifier of the notification.</param>
+        /// <param name="userId">The user ID to verify ownership.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> DeleteNotificationAsync(int notificationId, string userId)
         {
             try
@@ -355,8 +401,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Delete all read notifications for a user
+        /// Deletes all read notifications for a user.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A tuple containing success status, error message if failed, and count of deleted notifications.</returns>
         public async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteReadNotificationsAsync(string userId)
         {
             try
@@ -384,8 +432,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Delete expired notifications across all users
+        /// Deletes expired notifications across all users.
+        /// Typically called by a background service or scheduled job.
         /// </summary>
+        /// <returns>A tuple containing success status, error message if failed, and count of deleted notifications.</returns>
         public async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteExpiredNotificationsAsync()
         {
             try
@@ -418,8 +468,11 @@ namespace FreeSpeakWeb.Services
         #region Helper Methods
 
         /// <summary>
-        /// Deserialize notification data to a specific type
+        /// Deserializes notification data to a specific type.
         /// </summary>
+        /// <typeparam name="T">The type to deserialize the data to.</typeparam>
+        /// <param name="notification">The notification containing the serialized data.</param>
+        /// <returns>The deserialized data if successful; otherwise, null.</returns>
         public T? GetNotificationData<T>(UserNotification notification) where T : class
         {
             if (string.IsNullOrWhiteSpace(notification.Data))

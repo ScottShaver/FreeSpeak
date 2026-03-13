@@ -23,7 +23,6 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject PostService PostService
 @inject ImageUploadService ImageUploadService
-@inject IJSRuntime JSRuntime
 @inject UserManager<ApplicationUser> UserManager
 @inject NavigationStateService NavigationState
 @inject UserPreferenceService UserPreferenceService
@@ -187,10 +186,10 @@
                                     OnUnpinPost="@HandleUnpinPost"
                                     OnPostDeleted="@HandlePostDeleted"
                                     OnEditPost="@HandleEditPost"
-                                    OnCommentAdded="@HandleCommentAdded"
-                                    OnReplySubmitted="@HandleReplySubmitted"
-                                    OnCommentReactionChanged="@HandleCommentReactionChanged"
-                                    OnRemoveCommentReaction="@HandleRemoveCommentReaction"
+                                    OnCommentAdded="@OnCommentAdded"
+                                    OnReplySubmitted="@OnReplySubmitted"
+                                    OnCommentReactionChanged="@OnCommentReactionChanged"
+                                    OnRemoveCommentReaction="@OnRemoveCommentReaction"
                                     OnShowPostDetail="@(() => ShowPostDetail(post))"
                                     OnShowComments="@(() => ShowPostDetail(post))">
                                     <ArticleContent>
@@ -232,10 +231,10 @@
                 OnPinPost="@HandlePinPost"
                 OnUnpinPost="@HandleUnpinPost"
                 OnPostDeleted="@HandlePostDeleted"
-                OnCommentAdded="@HandleCommentAdded"
-                OnReplySubmitted="@HandleReplySubmitted"
-                OnCommentReactionChanged="@HandleCommentReactionChanged"
-                OnRemoveCommentReaction="@HandleRemoveCommentReaction"
+                OnCommentAdded="@OnCommentAdded"
+                OnReplySubmitted="@OnReplySubmitted"
+                OnCommentReactionChanged="@OnCommentReactionChanged"
+                OnRemoveCommentReaction="@OnRemoveCommentReaction"
                 OnClose="@(async () => await ClosePostDetail())">
                 <ArticleContent>
                     @((MarkupString)FormatContentWithLineBreaks(selectedPost.Content))
@@ -715,19 +714,19 @@
         await HandleRemovePostReaction(postId);
     }
 
-    private async Task HandleCommentAdded((int PostId, string Content) data)
+    private async Task OnCommentAdded((int PostId, string Content) data)
     {
         // Delegate to base class implementation
         await HandleCommentAdded(data);
     }
 
-    private async Task HandleReplySubmitted((int ParentCommentId, string Content) data)
+    private async Task OnReplySubmitted((int ParentCommentId, string Content) data)
     {
         // Delegate to base class implementation
         await HandleReplySubmitted(data);
     }
 
-    private async Task HandleCommentReactionChanged((int CommentId, LikeType ReactionType) data)
+    private async Task OnCommentReactionChanged((int CommentId, LikeType ReactionType) data)
     {
         // Delegate to base class implementation
         await HandleCommentReactionChanged(data);
@@ -736,7 +735,7 @@
         await UpdateCommentReactionData(data.CommentId, data.ReactionType);
     }
 
-    private async Task HandleRemoveCommentReaction(int commentId)
+    private async Task OnRemoveCommentReaction(int commentId)
     {
         // Delegate to base class implementation
         await HandleRemoveCommentReaction(commentId);

@@ -3,31 +3,128 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Data
 {
+    /// <summary>
+    /// The main Entity Framework DbContext for the FreeSpeakWeb application.
+    /// Extends IdentityDbContext to provide ASP.NET Core Identity functionality with custom ApplicationUser.
+    /// Configures all database entities, relationships, indexes, and constraints for the social media platform.
+    /// </summary>
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
+        /// <summary>
+        /// Gets or sets the DbSet for friendship relationships between users.
+        /// </summary>
         public DbSet<Friendship> Friendships { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for feed posts.
+        /// </summary>
         public DbSet<Post> Posts { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for comments on feed posts.
+        /// </summary>
         public DbSet<Comment> Comments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for likes/reactions on feed posts.
+        /// </summary>
         public DbSet<Like> Likes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for likes/reactions on feed comments.
+        /// </summary>
         public DbSet<CommentLike> CommentLikes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for images attached to feed posts.
+        /// </summary>
         public DbSet<PostImage> PostImages { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for user-pinned feed posts.
+        /// </summary>
         public DbSet<PinnedPost> PinnedPosts { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for user notifications.
+        /// </summary>
         public DbSet<UserNotification> UserNotifications { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for user preference settings.
+        /// </summary>
         public DbSet<UserPreference> UserPreferences { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for muted post notifications.
+        /// </summary>
         public DbSet<PostNotificationMute> PostNotificationMutes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for community groups.
+        /// </summary>
         public DbSet<Group> Groups { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for group rules.
+        /// </summary>
         public DbSet<GroupRule> GroupRules { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for group join requests.
+        /// </summary>
         public DbSet<GroupJoinRequest> GroupJoinRequests { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for group memberships.
+        /// </summary>
         public DbSet<GroupUser> GroupUsers { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for posts within groups.
+        /// </summary>
         public DbSet<GroupPost> GroupPosts { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for images attached to group posts.
+        /// </summary>
         public DbSet<GroupPostImage> GroupPostImages { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for user-pinned group posts.
+        /// </summary>
         public DbSet<PinnedGroupPost> PinnedGroupPosts { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for banned group members.
+        /// </summary>
         public DbSet<GroupBannedMember> GroupBannedMembers { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for comments on group posts.
+        /// </summary>
         public DbSet<GroupPostComment> GroupPostComments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for likes/reactions on group posts.
+        /// </summary>
         public DbSet<GroupPostLike> GroupPostLikes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for likes/reactions on group post comments.
+        /// </summary>
         public DbSet<GroupPostCommentLike> GroupPostCommentLikes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the DbSet for muted group post notifications.
+        /// </summary>
         public DbSet<GroupPostNotificationMute> GroupPostNotificationMutes { get; set; }
 
+        /// <summary>
+        /// Configures the database model including relationships, indexes, constraints, and delete behaviors
+        /// for all entities in the application. Called by EF Core during model creation.
+        /// </summary>
+        /// <param name="modelBuilder">The builder used to construct the model for this context.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

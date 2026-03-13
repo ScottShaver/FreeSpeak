@@ -13,9 +13,18 @@ using System.Text.Json;
 
 namespace Microsoft.AspNetCore.Routing
 {
+    /// <summary>
+    /// Extension methods for mapping Identity-related endpoints required by Blazor Identity components.
+    /// Provides endpoints for external login, logout, passkey authentication, and account management.
+    /// </summary>
     internal static class IdentityComponentsEndpointRouteBuilderExtensions
     {
-        // These endpoints are required by the Identity Razor components defined in the /Components/Account/Pages directory of this project.
+        /// <summary>
+        /// Maps additional Identity endpoints required by the Blazor Identity Razor components.
+        /// These endpoints handle external authentication, logout, passkey creation/request, and external login linking.
+        /// </summary>
+        /// <param name="endpoints">The endpoint route builder to add routes to.</param>
+        /// <returns>An endpoint convention builder for further configuration.</returns>
         public static IEndpointConventionBuilder MapAdditionalIdentityEndpoints(this IEndpointRouteBuilder endpoints)
         {
             ArgumentNullException.ThrowIfNull(endpoints);

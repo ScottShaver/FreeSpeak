@@ -1,67 +1,75 @@
 namespace FreeSpeakWeb.Data
 {
     /// <summary>
-    /// Represents a user's membership in a group
+    /// Represents a user's membership in a group, including their role, activity, and statistics.
+    /// Tracks join date, post count, points, administrative permissions, and rule acceptance.
     /// </summary>
     public class GroupUser
     {
         /// <summary>
-        /// Unique identifier for the group membership
+        /// Gets or sets the unique identifier for this group membership record.
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// The ID of the group
+        /// Gets or sets the ID of the group.
         /// </summary>
         public int GroupId { get; set; }
 
         /// <summary>
-        /// Navigation property to the group
+        /// Gets or sets the navigation property to the group.
         /// </summary>
         public Group Group { get; set; } = null!;
 
         /// <summary>
-        /// The ID of the user who is a member
+        /// Gets or sets the ID of the user who is a member of the group.
         /// </summary>
         public required string UserId { get; set; }
 
         /// <summary>
-        /// Navigation property to the user
+        /// Gets or sets the navigation property to the user.
         /// </summary>
         public ApplicationUser User { get; set; } = null!;
 
         /// <summary>
-        /// When the user joined the group
+        /// Gets or sets the timestamp when the user joined the group.
+        /// Defaults to UTC now.
         /// </summary>
         public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
 
         /// <summary>
-        /// Number of posts the user has made in this group
+        /// Gets or sets the number of posts the user has created in this group.
+        /// Updated when user creates or deletes posts. Defaults to 0.
         /// </summary>
         public int PostCount { get; set; } = 0;
 
         /// <summary>
-        /// Points the user has earned in this group
+        /// Gets or sets the points the user has earned through activity in this group.
+        /// Can be used for gamification or reputation systems. Defaults to 0.
         /// </summary>
         public int GroupPoints { get; set; } = 0;
 
         /// <summary>
-        /// Whether the user is an administrator of this group
+        /// Gets or sets whether the user has administrator privileges in this group.
+        /// Admins can manage group settings, members, and moderate content. Defaults to false.
         /// </summary>
         public bool IsAdmin { get; set; } = false;
 
         /// <summary>
-        /// Whether the user is a moderator of this group
+        /// Gets or sets whether the user has moderator privileges in this group.
+        /// Moderators can moderate content but have fewer permissions than admins. Defaults to false.
         /// </summary>
         public bool IsModerator { get; set; } = false;
 
         /// <summary>
-        /// When the user was last active in this group
+        /// Gets or sets the timestamp of the user's last activity in this group.
+        /// Updated when user posts, comments, or interacts. Defaults to UTC now.
         /// </summary>
         public DateTime LastActiveAt { get; set; } = DateTime.UtcNow;
 
         /// <summary>
-        /// Whether the user has agreed to the group rules
+        /// Gets or sets whether the user has acknowledged and agreed to the group's rules.
+        /// May be required before the user can post in the group. Defaults to false.
         /// </summary>
         public bool HasAgreedToRules { get; set; } = false;
     }

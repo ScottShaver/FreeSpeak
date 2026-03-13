@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
 {
+    /// <summary>
+    /// Service providing business logic for managing friendships, friend requests, blocking, and user search functionality.
+    /// Handles friend request lifecycle, mutual friend suggestions, and friendship status queries.
+    /// </summary>
     public class FriendsService
     {
         private readonly IFriendshipRepository _friendshipRepository;
@@ -12,6 +16,14 @@ namespace FreeSpeakWeb.Services
         private readonly NotificationService _notificationService;
         private readonly UserPreferenceService _userPreferenceService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FriendsService"/> class.
+        /// </summary>
+        /// <param name="friendshipRepository">Repository for friendship operations.</param>
+        /// <param name="userRepository">Repository for user operations.</param>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="notificationService">Service for sending notifications.</param>
+        /// <param name="userPreferenceService">Service for user display preferences.</param>
         public FriendsService(
             IFriendshipRepository friendshipRepository,
             IUserRepository userRepository,
@@ -27,8 +39,12 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Send a friend request from one user to another
+        /// Sends a friend request from one user to another.
+        /// Creates a pending friendship and notifies the recipient.
         /// </summary>
+        /// <param name="requesterId">The unique identifier of the user sending the request.</param>
+        /// <param name="addresseeId">The unique identifier of the user receiving the request.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> SendFriendRequestAsync(string requesterId, string addresseeId)
         {
             if (requesterId == addresseeId)
@@ -93,8 +109,12 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Accept a pending friend request
+        /// Accepts a pending friend request, establishing the friendship.
+        /// Notifies the original requester that their request was accepted.
         /// </summary>
+        /// <param name="friendshipId">The unique identifier of the friendship record.</param>
+        /// <param name="currentUserId">The user ID of the person accepting (must be the addressee).</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> AcceptFriendRequestAsync(int friendshipId, string currentUserId)
         {
             var friendship = await _friendshipRepository.GetByIdAsync(friendshipId);
@@ -150,8 +170,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Reject a pending friend request
+        /// Rejects a pending friend request.
         /// </summary>
+        /// <param name="friendshipId">The unique identifier of the friendship record.</param>
+        /// <param name="currentUserId">The user ID of the person rejecting (must be the addressee).</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> RejectFriendRequestAsync(int friendshipId, string currentUserId)
         {
             var friendship = await _friendshipRepository.GetByIdAsync(friendshipId);
@@ -180,8 +203,12 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Remove a friendship (unfriend)
+        /// Removes an existing friendship (unfriend operation).
+        /// Either party in the friendship can perform this action.
         /// </summary>
+        /// <param name="friendshipId">The unique identifier of the friendship record.</param>
+        /// <param name="currentUserId">The user ID of the person removing the friendship.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> RemoveFriendAsync(int friendshipId, string currentUserId)
         {
             var friendship = await _friendshipRepository.GetByIdAsync(friendshipId);
@@ -202,8 +229,12 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Block a user
+        /// Blocks a user, preventing any further friend requests or interactions.
+        /// Updates existing friendship to blocked status or creates a new blocked record.
         /// </summary>
+        /// <param name="blockerId">The unique identifier of the user performing the block.</param>
+        /// <param name="blockedUserId">The unique identifier of the user being blocked.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> BlockUserAsync(string blockerId, string blockedUserId)
         {
             if (blockerId == blockedUserId)
@@ -237,8 +268,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get all accepted friends for a user
+        /// Retrieves all accepted friends for a user.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A list of users who are friends with the specified user.</returns>
         public async Task<List<ApplicationUser>> GetFriendsAsync(string userId)
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -258,8 +291,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get pending friend requests received by a user
+        /// Retrieves pending friend requests received by a user.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A list of tuples containing the friendship record and the requester user.</returns>
         public async Task<List<(Friendship Friendship, ApplicationUser Requester)>> GetPendingRequestsAsync(string userId)
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -277,8 +312,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get pending friend requests sent by a user
+        /// Retrieves pending friend requests sent by a user.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A list of tuples containing the friendship record and the addressee user.</returns>
         public async Task<List<(Friendship Friendship, ApplicationUser Addressee)>> GetSentRequestsAsync(string userId)
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -296,8 +333,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Check if two users are friends
+        /// Checks if two users are friends (have an accepted friendship).
         /// </summary>
+        /// <param name="userId1">The unique identifier of the first user.</param>
+        /// <param name="userId2">The unique identifier of the second user.</param>
+        /// <returns>True if the users are friends; otherwise, false.</returns>
         public async Task<bool> AreFriendsAsync(string userId1, string userId2)
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -309,8 +349,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Check the friendship status between two users
+        /// Gets the friendship status between two users.
         /// </summary>
+        /// <param name="userId1">The unique identifier of the first user.</param>
+        /// <param name="userId2">The unique identifier of the second user.</param>
+        /// <returns>The friendship status if a relationship exists; otherwise, null.</returns>
         public async Task<FriendshipStatus?> GetFriendshipStatusAsync(string userId1, string userId2)
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -324,8 +367,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get friendship details between two users
+        /// Retrieves the friendship details between two users.
         /// </summary>
+        /// <param name="userId1">The unique identifier of the first user.</param>
+        /// <param name="userId2">The unique identifier of the second user.</param>
+        /// <returns>The friendship entity if found; otherwise, null.</returns>
         public async Task<Friendship?> GetFriendshipAsync(string userId1, string userId2)
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -337,9 +383,14 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Search for users by username, first name, or last name (excluding current user and already connected users)
-        /// Multiple search terms are treated separately - each term can match different records
+        /// Searches for users by username, first name, or last name.
+        /// Excludes the current user and users with existing relationships.
+        /// Multiple search terms are treated separately - each term can match different records.
         /// </summary>
+        /// <param name="searchTerm">The search term(s) to match against user names.</param>
+        /// <param name="currentUserId">The current user's ID to exclude from results.</param>
+        /// <param name="maxResults">Maximum number of results to return.</param>
+        /// <returns>A list of matching users.</returns>
         public async Task<List<ApplicationUser>> SearchUsersAsync(string searchTerm, string currentUserId, int maxResults = 20)
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -484,8 +535,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get count of accepted friends for a user
+        /// Gets the count of accepted friends for a user.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The number of accepted friendships.</returns>
         public async Task<int> GetFriendsCountAsync(string userId)
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -497,8 +550,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get count of pending friend requests received by a user
+        /// Gets the count of pending friend requests received by a user.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The number of pending incoming friend requests.</returns>
         public async Task<int> GetPendingRequestsCountAsync(string userId)
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -509,8 +564,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get count of pending friend requests sent by a user
+        /// Gets the count of pending friend requests sent by a user.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The number of pending outgoing friend requests.</returns>
         public async Task<int> GetSentRequestsCountAsync(string userId)
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -521,8 +578,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get count of people you may know suggestions
+        /// Gets the count of people you may know suggestions based on mutual friends.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The number of suggested users.</returns>
         public async Task<int> GetPeopleYouMayKnowCountAsync(string userId)
         {
             using var context = await _contextFactory.CreateDbContextAsync();

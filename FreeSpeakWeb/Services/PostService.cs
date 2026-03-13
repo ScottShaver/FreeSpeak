@@ -6,6 +6,10 @@ using Microsoft.Extensions.Options;
 
 namespace FreeSpeakWeb.Services
 {
+    /// <summary>
+    /// Service providing business logic for managing feed posts, comments, likes, reactions, and related operations.
+    /// Handles post CRUD operations, comment management, reaction tracking, post pinning, and notification muting.
+    /// </summary>
     public class PostService
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
@@ -23,6 +27,23 @@ namespace FreeSpeakWeb.Services
         private readonly UserPreferenceService _userPreferenceService;
         private readonly PostNotificationHelper _notificationHelper;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PostService"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="postRepository">Repository for post operations.</param>
+        /// <param name="commentRepository">Repository for comment operations.</param>
+        /// <param name="likeRepository">Repository for post like operations.</param>
+        /// <param name="commentLikeRepository">Repository for comment like operations.</param>
+        /// <param name="pinnedPostRepository">Repository for pinned post operations.</param>
+        /// <param name="muteRepository">Repository for post notification mute operations.</param>
+        /// <param name="notificationRepository">Repository for notification operations.</param>
+        /// <param name="logger">Logger for recording service operations.</param>
+        /// <param name="siteSettings">Site configuration settings.</param>
+        /// <param name="environment">Web hosting environment information.</param>
+        /// <param name="notificationService">Service for sending notifications.</param>
+        /// <param name="userPreferenceService">Service for user display preferences.</param>
+        /// <param name="notificationHelper">Helper for creating post-related notifications.</param>
         public PostService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             IFeedPostRepository<Post, PostImage> postRepository,
@@ -58,8 +79,13 @@ namespace FreeSpeakWeb.Services
         #region Post Operations
 
         /// <summary>
-        /// Create a new post
+        /// Creates a new post with optional images.
         /// </summary>
+        /// <param name="authorId">The unique identifier of the post author.</param>
+        /// <param name="content">The text content of the post (can be empty if images are provided).</param>
+        /// <param name="audienceType">The visibility setting for the post.</param>
+        /// <param name="imageUrls">Optional list of image URLs to attach to the post.</param>
+        /// <returns>A tuple containing success status, error message if failed, and the created post if successful.</returns>
         public async Task<(bool Success, string? ErrorMessage, Post? Post)> CreatePostAsync(string authorId, string content, AudienceType audienceType = AudienceType.Public, List<string>? imageUrls = null)
         {
             // Allow empty content if images are provided
@@ -105,8 +131,14 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Update an existing post
+        /// Updates an existing post's content and images.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post to update.</param>
+        /// <param name="userId">The user ID of the person making the update (must be the author).</param>
+        /// <param name="newContent">The new text content for the post.</param>
+        /// <param name="newImageUrls">Optional list of new image URLs to add.</param>
+        /// <param name="removedImageIds">Optional list of image IDs to remove from the post.</param>
+        /// <returns>A tuple containing success status, error message if failed, and the updated list of images.</returns>
         public async Task<(bool Success, string? ErrorMessage, List<PostImage>? UpdatedImages)> UpdatePostAsync(
             int postId, 
             string userId, 
@@ -172,8 +204,13 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Update the audience type of an existing post
+        /// Updates the audience visibility type of an existing post.
+        /// Also removes any pinned post records since the audience has changed.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post to update.</param>
+        /// <param name="userId">The user ID of the person making the update (must be the author).</param>
+        /// <param name="newAudienceType">The new audience visibility setting.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> UpdatePostAudienceAsync(int postId, string userId, AudienceType newAudienceType)
         {
             try
@@ -198,8 +235,12 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Delete a post and all related data (comments, likes, images, pinned posts, etc.)
+        /// Deletes a post and all related data including comments, likes, images, pinned posts, notification mutes, and notifications.
+        /// Also removes associated image files and cached thumbnails from the file system.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post to delete.</param>
+        /// <param name="userId">The user ID of the person requesting deletion (must be the author).</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> DeletePostAsync(int postId, string userId)
         {
             try
@@ -376,8 +417,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get a post by ID with all related data
+        /// Retrieves a post by its unique identifier with all related data including author, images, and comments with their authors and replies.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>The post with related data if found; otherwise, null.</returns>
         public async Task<Post?> GetPostByIdAsync(int postId)
         {
             try
@@ -402,8 +445,12 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get posts for a user's feed (from friends and self)
+        /// Retrieves posts for a user's feed including posts from friends and the user themselves.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user viewing the feed.</param>
+        /// <param name="pageSize">Number of posts per page.</param>
+        /// <param name="pageNumber">The page number to retrieve (1-based).</param>
+        /// <returns>A list of posts for the user's feed.</returns>
         public async Task<List<Post>> GetFeedPostsAsync(string userId, int pageSize = 20, int pageNumber = 1)
         {
             try
@@ -418,8 +465,12 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get posts by a specific user
+        /// Retrieves posts authored by a specific user.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user whose posts to retrieve.</param>
+        /// <param name="pageSize">Number of posts per page.</param>
+        /// <param name="pageNumber">The page number to retrieve (1-based).</param>
+        /// <returns>A list of posts by the specified user.</returns>
         public async Task<List<Post>> GetPostsByUserAsync(string userId, int pageSize = 20, int pageNumber = 1)
         {
             try
@@ -434,8 +485,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get public posts for unauthenticated users
+        /// Retrieves public posts for unauthenticated users.
         /// </summary>
+        /// <param name="pageNumber">The page number to retrieve (1-based).</param>
+        /// <param name="pageSize">Number of posts per page.</param>
+        /// <returns>A tuple containing the list of posts and a flag indicating if more posts are available.</returns>
         public async Task<(List<Post> Posts, bool HasMore)> GetPublicPostsAsync(int pageNumber = 1, int pageSize = 10)
         {
             try
@@ -450,8 +504,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get total count of posts in user's feed
+        /// Gets the total count of posts in a user's feed.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The total number of posts in the user's feed.</returns>
         public async Task<int> GetFeedPostsCountAsync(string userId)
         {
             try
@@ -466,8 +522,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get a single public post by ID with all its details (for direct links)
+        /// Retrieves a single public post by ID with all its details for direct link access.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="currentUserId">Optional user ID of the current viewer for personalized data like user reactions.</param>
+        /// <returns>A tuple containing success status, error message if failed, and the post view model if successful.</returns>
         public async Task<(bool Success, string? ErrorMessage, PostViewModel? Data)> GetPublicPostByIdAsync(int postId, string? currentUserId = null)
         {
             try
@@ -548,8 +607,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Helper method to build CommentDisplayModel from Comment entity
+        /// Builds a display model for a comment including its reactions, replies, and author information.
         /// </summary>
+        /// <param name="comment">The comment entity to transform.</param>
+        /// <param name="currentUserId">Optional user ID of the current viewer for user-specific reaction data.</param>
+        /// <returns>A fully populated comment display model.</returns>
         private async Task<CommentDisplayModel> BuildCommentDisplayModelAsync(Comment comment, string? currentUserId)
         {
             // Load replies for this comment
@@ -588,8 +650,15 @@ namespace FreeSpeakWeb.Services
         #region Comment Operations
 
         /// <summary>
-        /// Add a comment to a post
+        /// Adds a comment to a post, with optional image attachment and support for nested replies.
+        /// Sends appropriate notifications to post author or parent comment author.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post to comment on.</param>
+        /// <param name="authorId">The unique identifier of the comment author.</param>
+        /// <param name="content">The text content of the comment.</param>
+        /// <param name="imageUrl">Optional URL of an image to attach to the comment.</param>
+        /// <param name="parentCommentId">Optional ID of the parent comment if this is a reply.</param>
+        /// <returns>A tuple containing success status, error message if failed, and the created comment if successful.</returns>
         public async Task<(bool Success, string? ErrorMessage, Comment? Comment)> AddCommentAsync(int postId, string authorId, string content, string? imageUrl = null, int? parentCommentId = null)
         {
             if (string.IsNullOrWhiteSpace(content))
@@ -691,8 +760,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Delete a comment
+        /// Deletes a comment and all its replies, updating the post's comment count accordingly.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the comment to delete.</param>
+        /// <param name="userId">The user ID of the person requesting deletion (must be the author).</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> DeleteCommentAsync(int commentId, string userId)
         {
             try
@@ -735,8 +807,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get top-level comments for a post (replies loaded separately via GetRepliesAsync)
+        /// Retrieves top-level comments for a post (replies are loaded separately via GetRepliesAsync).
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>A list of top-level comments ordered by creation date ascending.</returns>
         public async Task<List<Comment>> GetCommentsAsync(int postId)
         {
             try
@@ -761,8 +835,12 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get paginated direct comments for a post (no nested replies)
+        /// Retrieves paginated direct comments for a post (excluding nested replies).
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="pageSize">Number of comments per page.</param>
+        /// <param name="pageNumber">The page number to retrieve (1-based).</param>
+        /// <returns>A list of comments for the specified page.</returns>
         public async Task<List<Comment>> GetCommentsPagedAsync(int postId, int pageSize, int pageNumber)
         {
             try
@@ -787,8 +865,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get the last N direct comments for a post (for feed display)
+        /// Retrieves the last N direct comments for a post for feed display, ordered oldest first.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="count">The number of recent comments to retrieve.</param>
+        /// <returns>A list of comments ordered from oldest to newest.</returns>
         public async Task<List<Comment>> GetLastCommentsAsync(int postId, int count)
         {
             try
@@ -815,16 +896,20 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get a comment by its ID
+        /// Retrieves a comment by its unique identifier including author information.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <returns>The comment if found; otherwise, null.</returns>
         public async Task<Comment?> GetCommentByIdAsync(int commentId)
         {
             return await _commentRepository.GetByIdAsync(commentId, includeAuthor: true, includeReplies: false);
         }
 
         /// <summary>
-        /// Get the total count of direct comments for a post (excluding replies)
+        /// Gets the total count of direct comments for a post (excluding nested replies).
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>The count of direct comments.</returns>
         public async Task<int> GetDirectCommentCountAsync(int postId)
         {
             try
@@ -843,8 +928,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get replies for a specific comment
+        /// Retrieves replies for a specific comment ordered by creation date.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the parent comment.</param>
+        /// <returns>A list of reply comments with author information.</returns>
         public async Task<List<Comment>> GetRepliesAsync(int commentId)
         {
             try
@@ -871,8 +958,11 @@ namespace FreeSpeakWeb.Services
         #region Like Operations
 
         /// <summary>
-        /// Toggle like on a post (like if not liked, unlike if already liked)
+        /// Toggles a like on a post - adds like if not liked, removes if already liked.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user toggling the like.</param>
+        /// <returns>A tuple containing success status, error message if failed, and whether the post is now liked.</returns>
         public async Task<(bool Success, string? ErrorMessage, bool IsLiked)> ToggleLikeAsync(int postId, string userId)
         {
             try
@@ -924,8 +1014,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Check if a user has liked a post
+        /// Checks if a user has liked a specific post.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>True if the user has liked the post; otherwise, false.</returns>
         public async Task<bool> HasUserLikedPostAsync(int postId, string userId)
         {
             try
@@ -943,8 +1036,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get users who liked a post
+        /// Retrieves the users who have liked a specific post.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>A list of users who liked the post, ordered by most recent first.</returns>
         public async Task<List<ApplicationUser>> GetPostLikesAsync(int postId)
         {
             try
@@ -968,8 +1063,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get like count for a post
+        /// Gets the total like count for a specific post.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>The number of likes on the post.</returns>
         public async Task<int> GetLikeCountAsync(int postId)
         {
             try
@@ -987,8 +1084,13 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Add or update a reaction to a post
+        /// Adds a new reaction to a post or updates an existing reaction type.
+        /// Sends a notification to the post author for new reactions.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user reacting.</param>
+        /// <param name="reactionType">The type of reaction to add or update to.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> AddOrUpdateReactionAsync(int postId, string userId, LikeType reactionType)
         {
             try
@@ -1054,8 +1156,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get the breakdown of reaction types for a post
+        /// Gets the breakdown of reaction types and their counts for a specific post.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>A dictionary mapping reaction types to their counts.</returns>
         public async Task<Dictionary<LikeType, int>> GetReactionBreakdownAsync(int postId)
         {
             try
@@ -1078,8 +1182,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get user's reaction type for a post (null if not reacted)
+        /// Gets a user's reaction type for a specific post.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The user's reaction type if they have reacted; otherwise, null.</returns>
         public async Task<LikeType?> GetUserReactionAsync(int postId, string userId)
         {
             try
@@ -1099,8 +1206,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Remove a user's reaction from a post
+        /// Removes a user's reaction from a specific post.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user whose reaction to remove.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> RemoveLikeAsync(int postId, string userId)
         {
             try
@@ -1136,8 +1246,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get detailed likes for a post including user info and reaction type
+        /// Retrieves detailed like information for a post including user info, reaction type, and timestamp.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="maxCount">Maximum number of likes to retrieve.</param>
+        /// <returns>A list of tuples containing user, reaction type, and creation timestamp.</returns>
         public async Task<List<(ApplicationUser User, LikeType Type, DateTime CreatedAt)>> GetPostLikesWithDetailsAsync(int postId, int maxCount = 100)
         {
             try
@@ -1166,8 +1279,12 @@ namespace FreeSpeakWeb.Services
         #region Post Image Operations
 
         /// <summary>
-        /// Add an image to a post
+        /// Adds an image to an existing post.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="imageUrl">The URL of the image to add.</param>
+        /// <param name="userId">The user ID of the person adding the image (must be the post author).</param>
+        /// <returns>A tuple containing success status, error message if failed, and the created post image if successful.</returns>
         public async Task<(bool Success, string? ErrorMessage, PostImage? PostImage)> AddImageToPostAsync(int postId, string imageUrl, string userId)
         {
             try
@@ -1212,8 +1329,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Remove an image from a post
+        /// Removes an image from a post.
         /// </summary>
+        /// <param name="imageId">The unique identifier of the image to remove.</param>
+        /// <param name="userId">The user ID of the person removing the image (must be the post author).</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> RemoveImageFromPostAsync(int imageId, string userId)
         {
             try
@@ -1248,8 +1368,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get images for a post
+        /// Retrieves all images for a specific post ordered by display order.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>A list of post images in display order.</returns>
         public async Task<List<PostImage>> GetPostImagesAsync(int postId)
         {
             try
@@ -1275,8 +1397,13 @@ namespace FreeSpeakWeb.Services
         #region Comment Like Operations
 
         /// <summary>
-        /// Add or update a reaction to a comment
+        /// Adds a new reaction to a comment or updates an existing reaction type.
+        /// Sends a notification to the comment author for new reactions.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <param name="userId">The unique identifier of the user reacting.</param>
+        /// <param name="reactionType">The type of reaction to add or update to.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> AddOrUpdateCommentReactionAsync(int commentId, string userId, LikeType reactionType)
         {
             try
@@ -1343,8 +1470,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Remove a user's reaction from a comment
+        /// Removes a user's reaction from a specific comment.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <param name="userId">The unique identifier of the user whose reaction to remove.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> RemoveCommentReactionAsync(int commentId, string userId)
         {
             try
@@ -1379,8 +1509,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get the breakdown of reaction types for a comment
+        /// Gets the breakdown of reaction types and their counts for a specific comment.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <returns>A dictionary mapping reaction types to their counts.</returns>
         public async Task<Dictionary<LikeType, int>> GetCommentReactionBreakdownAsync(int commentId)
         {
             try
@@ -1403,8 +1535,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get user's reaction type for a comment (null if not reacted)
+        /// Gets a user's reaction type for a specific comment.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The user's reaction type if they have reacted; otherwise, null.</returns>
         public async Task<LikeType?> GetUserCommentReactionAsync(int commentId, string userId)
         {
             try
@@ -1424,8 +1559,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get like count for a comment
+        /// Gets the total like count for a specific comment.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <returns>The number of likes on the comment.</returns>
         public async Task<int> GetCommentLikeCountAsync(int commentId)
         {
             try
@@ -1447,8 +1584,11 @@ namespace FreeSpeakWeb.Services
         #region Pinned Posts Operations
 
         /// <summary>
-        /// Check if a post is pinned by a user
+        /// Checks if a post is pinned by a specific user.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>True if the post is pinned by the user; otherwise, false.</returns>
         public async Task<bool> IsPostPinnedAsync(int postId, string userId)
         {
             try
@@ -1466,8 +1606,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Pin a post for a user
+        /// Pins a post for a user so it appears in their pinned posts collection.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post to pin.</param>
+        /// <param name="userId">The unique identifier of the user pinning the post.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> PinPostAsync(int postId, string userId)
         {
             try
@@ -1511,8 +1654,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Unpin a post for a user
+        /// Unpins a post for a user, removing it from their pinned posts collection.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post to unpin.</param>
+        /// <param name="userId">The unique identifier of the user unpinning the post.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> UnpinPostAsync(int postId, string userId)
         {
             try
@@ -1540,8 +1686,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get pinned status for multiple posts
+        /// Gets the pinned status for multiple posts for a specific user in a single query.
         /// </summary>
+        /// <param name="postIds">List of post IDs to check pinned status for.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A dictionary mapping post IDs to their pinned status.</returns>
         public async Task<Dictionary<int, bool>> GetPinnedStatusForPostsAsync(List<int> postIds, string userId)
         {
             try
@@ -1563,8 +1712,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get all pinned posts for a user
+        /// Retrieves all pinned posts for a user with author and image information.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A list of pinned posts ordered by most recently pinned first.</returns>
         public async Task<List<Post>> GetPinnedPostsAsync(string userId)
         {
             try
@@ -1595,8 +1746,11 @@ namespace FreeSpeakWeb.Services
         #region Post Notification Muting
 
         /// <summary>
-        /// Mute notifications for a specific post
+        /// Mutes notifications for a specific post for a user.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user muting notifications.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> MutePostNotificationsAsync(int postId, string userId)
         {
             try
@@ -1641,8 +1795,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Unmute notifications for a specific post
+        /// Unmutes notifications for a specific post for a user.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user unmuting notifications.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> UnmutePostNotificationsAsync(int postId, string userId)
         {
             try
@@ -1671,8 +1828,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Check if a user has muted notifications for a specific post
+        /// Checks if a user has muted notifications for a specific post.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>True if notifications are muted for the post; otherwise, false.</returns>
         public async Task<bool> IsPostNotificationMutedAsync(int postId, string userId)
         {
             try
@@ -1694,8 +1854,13 @@ namespace FreeSpeakWeb.Services
         #region User Uploads
 
         /// <summary>
-        /// Get paginated list of images uploaded by a user
+        /// Retrieves a paginated list of images uploaded by a user.
+        /// Filters to common image file extensions (jpg, jpeg, png, gif, webp).
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <param name="page">The page number to retrieve (1-based).</param>
+        /// <param name="pageSize">Number of images per page.</param>
+        /// <returns>A tuple containing success status, list of images, total count, and error message if failed.</returns>
         public async Task<(bool Success, List<PostImage>? Images, int TotalCount, string? ErrorMessage)> GetUserUploadedImagesAsync(string userId, int page = 1, int pageSize = 24)
         {
             try
@@ -1731,8 +1896,13 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get paginated list of videos uploaded by a user
+        /// Retrieves a paginated list of videos uploaded by a user.
+        /// Filters to common video file extensions (mp4, webm, ogg, mov).
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <param name="page">The page number to retrieve (1-based).</param>
+        /// <param name="pageSize">Number of videos per page.</param>
+        /// <returns>A tuple containing success status, list of videos, total count, and error message if failed.</returns>
         public async Task<(bool Success, List<PostImage>? Videos, int TotalCount, string? ErrorMessage)> GetUserUploadedVideosAsync(string userId, int page = 1, int pageSize = 24)
         {
             try

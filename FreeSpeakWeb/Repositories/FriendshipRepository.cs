@@ -5,13 +5,19 @@ using Microsoft.EntityFrameworkCore;
 namespace FreeSpeakWeb.Repositories
 {
     /// <summary>
-    /// Repository implementation for Friendship entity
+    /// Repository implementation for Friendship entities.
+    /// Provides operations for managing friend requests, friendships, and user blocking.
     /// </summary>
     public class FriendshipRepository : IFriendshipRepository
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<FriendshipRepository> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FriendshipRepository"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording repository operations.</param>
         public FriendshipRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<FriendshipRepository> logger)
@@ -20,6 +26,11 @@ namespace FreeSpeakWeb.Repositories
             _logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves a friendship by its unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the friendship.</param>
+        /// <returns>The friendship entity with requester and addressee details if found; otherwise, null.</returns>
         public async Task<Friendship?> GetByIdAsync(int id)
         {
             try
@@ -37,6 +48,10 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves all friendships in the system.
+        /// </summary>
+        /// <returns>A list of all friendships with requester and addressee details.</returns>
         public async Task<List<Friendship>> GetAllAsync()
         {
             try
@@ -54,6 +69,12 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Adds a new friendship entity to the database.
+        /// </summary>
+        /// <param name="entity">The friendship entity to add.</param>
+        /// <returns>The added friendship entity.</returns>
+        /// <exception cref="Exception">Thrown when the database operation fails.</exception>
         public async Task<Friendship> AddAsync(Friendship entity)
         {
             try
@@ -70,6 +91,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Updates an existing friendship entity in the database.
+        /// </summary>
+        /// <param name="entity">The friendship entity with updated values.</param>
+        /// <exception cref="Exception">Thrown when the database operation fails.</exception>
         public async Task UpdateAsync(Friendship entity)
         {
             try
@@ -85,6 +111,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Deletes a friendship entity from the database.
+        /// </summary>
+        /// <param name="entity">The friendship entity to delete.</param>
+        /// <exception cref="Exception">Thrown when the database operation fails.</exception>
         public async Task DeleteAsync(Friendship entity)
         {
             try
@@ -100,6 +131,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Checks whether a friendship with the specified ID exists.
+        /// </summary>
+        /// <param name="id">The unique identifier of the friendship.</param>
+        /// <returns>True if the friendship exists; otherwise, false.</returns>
         public async Task<bool> ExistsAsync(int id)
         {
             try
@@ -114,6 +150,12 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves the friendship between two users, regardless of who initiated the request.
+        /// </summary>
+        /// <param name="userId1">The unique identifier of the first user.</param>
+        /// <param name="userId2">The unique identifier of the second user.</param>
+        /// <returns>The friendship entity if found; otherwise, null.</returns>
         public async Task<Friendship?> GetFriendshipAsync(string userId1, string userId2)
         {
             try
@@ -133,6 +175,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves all friendships (any status) associated with a user.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A list of all friendships where the user is either requester or addressee.</returns>
         public async Task<List<Friendship>> GetUserFriendshipsAsync(string userId)
         {
             try
@@ -151,6 +198,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves all accepted friendships for a user.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A list of accepted friendships where the user is either requester or addressee.</returns>
         public async Task<List<Friendship>> GetAcceptedFriendshipsAsync(string userId)
         {
             try
@@ -169,6 +221,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves pending friend requests received by a user.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user receiving requests.</param>
+        /// <returns>A list of pending friendship requests ordered by request date descending.</returns>
         public async Task<List<Friendship>> GetPendingRequestsAsync(string userId)
         {
             try
@@ -188,6 +245,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves pending friend requests sent by a user.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user who sent requests.</param>
+        /// <returns>A list of pending friendship requests sent by the user, ordered by request date descending.</returns>
         public async Task<List<Friendship>> GetSentRequestsAsync(string userId)
         {
             try
@@ -207,6 +269,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves all users blocked by a specific user.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user who blocked others.</param>
+        /// <returns>A list of friendships with blocked status initiated by the user.</returns>
         public async Task<List<Friendship>> GetBlockedUsersAsync(string userId)
         {
             try
@@ -225,6 +292,12 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Checks whether two users are friends (have an accepted friendship).
+        /// </summary>
+        /// <param name="userId1">The unique identifier of the first user.</param>
+        /// <param name="userId2">The unique identifier of the second user.</param>
+        /// <returns>True if the users are friends; otherwise, false.</returns>
         public async Task<bool> AreFriendsAsync(string userId1, string userId2)
         {
             try
@@ -242,6 +315,12 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Checks whether one user has blocked another.
+        /// </summary>
+        /// <param name="blockerId">The unique identifier of the user who may have blocked.</param>
+        /// <param name="blockedId">The unique identifier of the user who may be blocked.</param>
+        /// <returns>True if the blocker has blocked the other user; otherwise, false.</returns>
         public async Task<bool> IsBlockedAsync(string blockerId, string blockedId)
         {
             try
@@ -257,6 +336,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets the total count of accepted friends for a user.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The total number of friends the user has.</returns>
         public async Task<int> GetFriendCountAsync(string userId)
         {
             try
@@ -272,6 +356,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets the count of pending friend requests received by a user.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The number of pending friend requests awaiting the user's response.</returns>
         public async Task<int> GetPendingRequestCountAsync(string userId)
         {
             try

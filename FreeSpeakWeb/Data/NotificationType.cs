@@ -1,67 +1,72 @@
 namespace FreeSpeakWeb.Data
 {
     /// <summary>
-    /// Defines the type of notification
+    /// Defines the various types of notifications that can be sent to users.
+    /// Used to categorize notifications and determine appropriate routing and display behavior.
     /// </summary>
     public enum NotificationType
     {
         /// <summary>
-        /// General system notification
+        /// General system-generated notification.
+        /// Used for administrative messages, announcements, or system updates.
         /// </summary>
         System = 0,
 
         /// <summary>
-        /// Friend request received
+        /// Notification that a user has received a friend request.
+        /// Recipient can accept, reject, or ignore the request.
         /// </summary>
         FriendRequest = 1,
 
         /// <summary>
-        /// Friend request accepted
+        /// Notification that a friend request has been accepted.
+        /// Sent to the original requester when their friend request is approved.
         /// </summary>
         FriendAccepted = 2,
 
         /// <summary>
-        /// Someone liked your post
+        /// Notification that someone has liked a user's feed post.
         /// </summary>
         PostLiked = 3,
 
         /// <summary>
-        /// Someone commented on your post
+        /// Notification that someone has commented on a user's feed post.
         /// </summary>
         PostComment = 4,
 
         /// <summary>
-        /// Someone replied to your comment
+        /// Notification that someone has replied to a user's comment on a feed post.
         /// </summary>
         CommentReply = 5,
 
         /// <summary>
-        /// Someone liked your comment
+        /// Notification that someone has liked a user's comment on a feed post.
         /// </summary>
         CommentLiked = 6,
 
         /// <summary>
-        /// You were mentioned in a post or comment
+        /// Notification that a user was mentioned in a post or comment.
+        /// Typically triggered by @username syntax.
         /// </summary>
         Mention = 7,
 
         /// <summary>
-        /// Someone liked your group post
+        /// Notification that someone has liked a user's group post.
         /// </summary>
         GroupPostLiked = 8,
 
         /// <summary>
-        /// Someone commented on your group post
+        /// Notification that someone has commented on a user's group post.
         /// </summary>
         GroupPostComment = 9,
 
         /// <summary>
-        /// Someone replied to your comment in a group
+        /// Notification that someone has replied to a user's comment in a group.
         /// </summary>
         GroupCommentReply = 10,
 
         /// <summary>
-        /// Someone liked your comment in a group
+        /// Notification that someone has liked a user's comment in a group.
         /// </summary>
         GroupCommentLiked = 11
     }

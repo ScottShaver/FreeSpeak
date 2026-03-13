@@ -1,34 +1,39 @@
 namespace FreeSpeakWeb.Data;
 
 /// <summary>
-/// Represents a user's preference to mute notifications for a specific post
+/// Represents a user's preference to mute notifications for a specific feed post.
+/// When muted, the user will not receive notifications about new comments or interactions on that post.
 /// </summary>
 public class PostNotificationMute
 {
+    /// <summary>
+    /// Gets or sets the unique identifier for this notification mute record.
+    /// </summary>
     public int Id { get; set; }
 
     /// <summary>
-    /// The ID of the post for which notifications are muted
+    /// Gets or sets the ID of the post for which notifications are muted.
     /// </summary>
     public int PostId { get; set; }
 
     /// <summary>
-    /// Navigation property to the post
+    /// Gets or sets the navigation property to the post.
     /// </summary>
     public Post Post { get; set; } = null!;
 
     /// <summary>
-    /// The ID of the user who muted notifications for this post
+    /// Gets or sets the ID of the user who muted notifications for this post.
     /// </summary>
     public required string UserId { get; set; }
 
     /// <summary>
-    /// Navigation property to the user
+    /// Gets or sets the navigation property to the user.
     /// </summary>
     public ApplicationUser User { get; set; } = null!;
 
     /// <summary>
-    /// When the notification was muted
+    /// Gets or sets the timestamp when notifications were muted.
+    /// Defaults to UTC now.
     /// </summary>
     public DateTime MutedAt { get; set; } = DateTime.UtcNow;
 }

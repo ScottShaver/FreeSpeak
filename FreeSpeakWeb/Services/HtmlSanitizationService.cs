@@ -9,6 +9,11 @@ public class HtmlSanitizationService
 {
     private readonly HtmlSanitizer _sanitizer;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HtmlSanitizationService"/> class.
+    /// Configures the sanitizer to only allow safe formatting tags (br, p, b, i, u, em, strong)
+    /// and removes all attributes, CSS properties, and URL schemes to prevent XSS attacks.
+    /// </summary>
     public HtmlSanitizationService()
     {
         _sanitizer = new HtmlSanitizer();

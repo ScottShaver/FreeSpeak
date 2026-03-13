@@ -5,13 +5,19 @@ using Microsoft.EntityFrameworkCore;
 namespace FreeSpeakWeb.Repositories
 {
     /// <summary>
-    /// Repository implementation for ApplicationUser entity
+    /// Repository implementation for ApplicationUser entities.
+    /// Provides operations for retrieving, searching, and updating user profiles.
     /// </summary>
     public class UserRepository : IUserRepository
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<UserRepository> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserRepository"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording repository operations.</param>
         public UserRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<UserRepository> logger)
@@ -20,6 +26,11 @@ namespace FreeSpeakWeb.Repositories
             _logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves a user by their unique identifier.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The user entity if found; otherwise, null.</returns>
         public async Task<ApplicationUser?> GetByIdAsync(string userId)
         {
             try
@@ -34,6 +45,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves multiple users by their unique identifiers in a single query.
+        /// </summary>
+        /// <param name="userIds">Collection of user IDs to retrieve.</param>
+        /// <returns>A list of users matching the provided IDs.</returns>
         public async Task<List<ApplicationUser>> GetByIdsAsync(IEnumerable<string> userIds)
         {
             try
@@ -49,6 +65,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves a user by their username (case-insensitive).
+        /// </summary>
+        /// <param name="username">The username to search for.</param>
+        /// <returns>The user entity if found; otherwise, null.</returns>
         public async Task<ApplicationUser?> GetByUsernameAsync(string username)
         {
             try
@@ -64,6 +85,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves a user by their email address (case-insensitive).
+        /// </summary>
+        /// <param name="email">The email address to search for.</param>
+        /// <returns>The user entity if found; otherwise, null.</returns>
         public async Task<ApplicationUser?> GetByEmailAsync(string email)
         {
             try
@@ -79,6 +105,13 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Searches for users by first name, last name, or username.
+        /// </summary>
+        /// <param name="searchTerm">The term to search for (case-insensitive).</param>
+        /// <param name="skip">Number of users to skip for pagination.</param>
+        /// <param name="take">Number of users to return.</param>
+        /// <returns>A list of matching users ordered by first name.</returns>
         public async Task<List<ApplicationUser>> SearchUsersAsync(string searchTerm, int skip = 0, int take = 50)
         {
             try
@@ -103,6 +136,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Updates a user's profile information.
+        /// </summary>
+        /// <param name="user">The user entity with updated values.</param>
+        /// <returns>True if the update was successful; otherwise, false.</returns>
         public async Task<bool> UpdateProfileAsync(ApplicationUser user)
         {
             try
@@ -119,6 +157,12 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Updates a user's profile picture URL.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <param name="profilePictureUrl">The new profile picture URL.</param>
+        /// <returns>True if the update was successful; otherwise, false.</returns>
         public async Task<bool> UpdateProfilePictureAsync(string userId, string profilePictureUrl)
         {
             try
@@ -139,6 +183,12 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Checks whether a username is available for use.
+        /// </summary>
+        /// <param name="username">The username to check.</param>
+        /// <param name="excludeUserId">Optional user ID to exclude from the check (for updating own username).</param>
+        /// <returns>True if the username is available; otherwise, false.</returns>
         public async Task<bool> IsUsernameAvailableAsync(string username, string? excludeUserId = null)
         {
             try
@@ -159,6 +209,12 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Checks whether an email address is available for use.
+        /// </summary>
+        /// <param name="email">The email address to check.</param>
+        /// <param name="excludeUserId">Optional user ID to exclude from the check (for updating own email).</param>
+        /// <returns>True if the email is available; otherwise, false.</returns>
         public async Task<bool> IsEmailAvailableAsync(string email, string? excludeUserId = null)
         {
             try
@@ -179,6 +235,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Checks whether a user with the specified ID exists.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>True if the user exists; otherwise, false.</returns>
         public async Task<bool> ExistsAsync(string userId)
         {
             try

@@ -5,13 +5,19 @@ using Microsoft.EntityFrameworkCore;
 namespace FreeSpeakWeb.Repositories
 {
     /// <summary>
-    /// Repository implementation for feed post comments
+    /// Repository implementation for feed post comments.
+    /// Provides CRUD operations and queries for comments on feed posts.
     /// </summary>
     public class FeedCommentRepository : IFeedCommentRepository
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<FeedCommentRepository> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FeedCommentRepository"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording repository operations.</param>
         public FeedCommentRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<FeedCommentRepository> logger)
@@ -20,6 +26,13 @@ namespace FreeSpeakWeb.Repositories
             _logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves a comment by its unique identifier.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <param name="includeAuthor">Whether to include the author's information.</param>
+        /// <param name="includeReplies">Whether to include replies to the comment.</param>
+        /// <returns>The comment if found; otherwise, null.</returns>
         public async Task<Comment?> GetByIdAsync(int commentId, bool includeAuthor = true, bool includeReplies = false)
         {
             try
@@ -42,6 +55,15 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Adds a new comment to a post.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post to comment on.</param>
+        /// <param name="authorId">The unique identifier of the comment author.</param>
+        /// <param name="content">The text content of the comment.</param>
+        /// <param name="imageUrl">Optional URL of an image attached to the comment.</param>
+        /// <param name="parentCommentId">Optional ID of the parent comment if this is a reply.</param>
+        /// <returns>A tuple containing success status, error message if any, and the created comment.</returns>
         public async Task<(bool Success, string? ErrorMessage, Comment? Comment)> AddAsync(
             int postId,
             string authorId,
@@ -91,6 +113,13 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Updates the content of an existing comment.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment to update.</param>
+        /// <param name="userId">The ID of the user attempting the update (must be the author).</param>
+        /// <param name="newContent">The new content for the comment.</param>
+        /// <returns>A tuple containing success status and error message if any.</returns>
         public async Task<(bool Success, string? ErrorMessage)> UpdateAsync(int commentId, string userId, string newContent)
         {
             try
@@ -117,6 +146,12 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Deletes a comment and all its replies recursively.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment to delete.</param>
+        /// <param name="userId">The ID of the user attempting the deletion (must be comment author or post author).</param>
+        /// <returns>A tuple containing success status and error message if any.</returns>
         public async Task<(bool Success, string? ErrorMessage)> DeleteAsync(int commentId, string userId)
         {
             try
@@ -149,6 +184,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Recursively deletes a comment and all its nested replies.
+        /// </summary>
+        /// <param name="context">The database context to use for deletion.</param>
+        /// <param name="comment">The comment to delete along with its replies.</param>
         private async Task DeleteCommentRecursivelyAsync(ApplicationDbContext context, Comment comment)
         {
             // Load all replies if not loaded
@@ -166,6 +206,13 @@ namespace FreeSpeakWeb.Repositories
             context.Comments.Remove(comment);
         }
 
+        /// <summary>
+        /// Determines whether a user has permission to delete a specific comment.
+        /// A user can delete a comment if they are the comment author or the post author.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <param name="userId">The ID of the user to check permissions for.</param>
+        /// <returns>True if the user can delete the comment; otherwise, false.</returns>
         public async Task<bool> CanUserDeleteAsync(int commentId, string userId)
         {
             try
@@ -188,6 +235,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves all top-level comments (non-replies) for a post.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>A list of top-level comments ordered by creation date descending.</returns>
         public async Task<List<Comment>> GetTopLevelCommentsAsync(int postId)
         {
             try
@@ -207,6 +259,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves all direct replies to a specific comment.
+        /// </summary>
+        /// <param name="parentCommentId">The unique identifier of the parent comment.</param>
+        /// <returns>A list of replies ordered by creation date ascending.</returns>
         public async Task<List<Comment>> GetRepliesAsync(int parentCommentId)
         {
             try
@@ -226,6 +283,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves all comments for a post, including both top-level comments and replies.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>A list of all comments ordered by creation date ascending.</returns>
         public async Task<List<Comment>> GetAllCommentsAsync(int postId)
         {
             try
@@ -245,6 +307,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets the total count of comments for a specific post.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>The total number of comments on the post.</returns>
         public async Task<int> GetCommentCountAsync(int postId)
         {
             try
@@ -259,6 +326,13 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves comments by a specific author with pagination support.
+        /// </summary>
+        /// <param name="authorId">The unique identifier of the author.</param>
+        /// <param name="skip">Number of comments to skip for pagination.</param>
+        /// <param name="take">Number of comments to return.</param>
+        /// <returns>A list of comments by the author ordered by creation date descending.</returns>
         public async Task<List<Comment>> GetByAuthorAsync(string authorId, int skip = 0, int take = 20)
         {
             try
@@ -281,6 +355,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Checks whether a comment exists in the database.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment to check.</param>
+        /// <returns>True if the comment exists; otherwise, false.</returns>
         public async Task<bool> ExistsAsync(int commentId)
         {
             try
@@ -295,6 +374,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Calculates the nesting depth of a comment in the reply hierarchy.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <returns>The depth level (0 for top-level comments, 1 for first-level replies, etc.).</returns>
         public async Task<int> GetDepthAsync(int commentId)
         {
             try
@@ -324,6 +408,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Traverses up the comment hierarchy to find the top-level (root) comment.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <returns>The root comment in the reply chain, or null if not found.</returns>
         public async Task<Comment?> GetRootCommentAsync(int commentId)
         {
             try
@@ -350,6 +439,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets the post ID associated with a specific comment.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <returns>The post ID if found; otherwise, null.</returns>
         public async Task<int?> GetPostIdAsync(int commentId)
         {
             try

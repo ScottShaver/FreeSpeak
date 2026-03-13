@@ -10,8 +10,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb
 {
+    /// <summary>
+    /// Application entry point for the FreeSpeak Blazor Server application.
+    /// Configures services, middleware, and the request pipeline.
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// Main entry point for the application. Configures and runs the web host.
+        /// Sets up dependency injection, authentication, database connections,
+        /// rate limiting, security headers, and seeds test data in development.
+        /// </summary>
+        /// <param name="args">Command-line arguments passed to the application.</param>
+        /// <returns>A task representing the asynchronous application run operation.</returns>
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);

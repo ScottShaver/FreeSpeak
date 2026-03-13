@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
 {
+    /// <summary>
+    /// Service providing business logic for managing group posts, comments, likes, reactions, and related operations.
+    /// Handles post CRUD, comment management, reaction tracking, notification muting, and group statistics.
+    /// </summary>
     public class GroupPostService
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
@@ -20,6 +24,22 @@ namespace FreeSpeakWeb.Services
         private readonly PostNotificationHelper _notificationHelper;
         private readonly GroupAccessValidator _accessValidator;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupPostService"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="postRepository">Repository for group post operations.</param>
+        /// <param name="commentRepository">Repository for group comment operations.</param>
+        /// <param name="likeRepository">Repository for group post like operations.</param>
+        /// <param name="commentLikeRepository">Repository for group comment like operations.</param>
+        /// <param name="groupRepository">Repository for group operations.</param>
+        /// <param name="notificationRepository">Repository for notification operations.</param>
+        /// <param name="logger">Logger for recording service operations.</param>
+        /// <param name="notificationService">Service for sending notifications.</param>
+        /// <param name="userPreferenceService">Service for user display preferences.</param>
+        /// <param name="environment">Web hosting environment information.</param>
+        /// <param name="notificationHelper">Helper for creating post-related notifications.</param>
+        /// <param name="accessValidator">Validator for group access permissions.</param>
         public GroupPostService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             IGroupPostRepository<GroupPost, GroupPostImage> postRepository,
@@ -53,8 +73,13 @@ namespace FreeSpeakWeb.Services
         #region Post Operations
 
         /// <summary>
-        /// Create a new group post
+        /// Creates a new post in a group with optional images.
         /// </summary>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <param name="authorId">The unique identifier of the post author.</param>
+        /// <param name="content">The text content of the post (can be empty if images are provided).</param>
+        /// <param name="imageUrls">Optional list of image URLs to attach to the post.</param>
+        /// <returns>A tuple containing success status, error message if failed, and the created post if successful.</returns>
         public async Task<(bool Success, string? ErrorMessage, GroupPost? Post)> CreateGroupPostAsync(
             int groupId,
             string authorId,
@@ -113,8 +138,14 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Update an existing group post
+        /// Updates an existing group post's content and images.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post to update.</param>
+        /// <param name="userId">The user ID of the person making the update (must be the author).</param>
+        /// <param name="newContent">The new text content for the post.</param>
+        /// <param name="newImageUrls">Optional list of new image URLs to add.</param>
+        /// <param name="removedImageIds">Optional list of image IDs to remove from the post.</param>
+        /// <returns>A tuple containing success status, error message if failed, and the updated list of images.</returns>
         public async Task<(bool Success, string? ErrorMessage, List<GroupPostImage>? UpdatedImages)> UpdateGroupPostAsync(
             int postId,
             string userId,
@@ -204,8 +235,12 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Delete a group post and all related data
+        /// Deletes a group post and all related data including comments, likes, images, pinned posts, and notifications.
+        /// Also removes associated image files and cached thumbnails from the file system.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post to delete.</param>
+        /// <param name="userId">The user ID of the person requesting deletion (must be author or group admin/moderator).</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> DeleteGroupPostAsync(int postId, string userId)
         {
             try
@@ -391,40 +426,57 @@ namespace FreeSpeakWeb.Services
         #region Retrieval Operations
 
         /// <summary>
-        /// Get a specific group post by ID
+        /// Retrieves a specific group post by its unique identifier.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>The group post if found; otherwise, null.</returns>
         public async Task<GroupPost?> GetGroupPostByIdAsync(int postId)
         {
             return await _postRepository.GetByIdAsync(postId);
         }
 
         /// <summary>
-        /// Get all posts for a specific group
+        /// Retrieves all posts for a specific group with pagination.
         /// </summary>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <param name="skip">Number of posts to skip for pagination.</param>
+        /// <param name="take">Number of posts to return.</param>
+        /// <returns>A list of group posts.</returns>
         public async Task<List<GroupPost>> GetGroupPostsAsync(int groupId, int skip = 0, int take = 20)
         {
             return await _postRepository.GetByGroupAsync(groupId, skip, take);
         }
 
         /// <summary>
-        /// Get posts by a specific user in a group
+        /// Retrieves posts by a specific user in a group with pagination.
         /// </summary>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <param name="userId">The unique identifier of the post author.</param>
+        /// <param name="skip">Number of posts to skip for pagination.</param>
+        /// <param name="take">Number of posts to return.</param>
+        /// <returns>A list of group posts by the specified user.</returns>
         public async Task<List<GroupPost>> GetUserGroupPostsAsync(int groupId, string userId, int skip = 0, int take = 20)
         {
             return await _postRepository.GetByGroupAndAuthorAsync(groupId, userId, skip, take);
         }
 
         /// <summary>
-        /// Get the total count of posts in a group
+        /// Gets the total count of posts in a group.
         /// </summary>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <returns>The number of posts in the group.</returns>
         public async Task<int> GetGroupPostCountAsync(int groupId)
         {
             return await _postRepository.GetCountByGroupAsync(groupId);
         }
 
         /// <summary>
-        /// Get all posts from groups the user is a member of (combined feed)
+        /// Retrieves all posts from groups the user is a member of (combined feed).
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <param name="skip">Number of posts to skip for pagination.</param>
+        /// <param name="take">Number of posts to return.</param>
+        /// <returns>A list of group posts from all groups the user belongs to.</returns>
         public async Task<List<GroupPost>> GetAllGroupPostsForUserAsync(string userId, int skip = 0, int take = 20)
         {
             return await _postRepository.GetAllGroupPostsForUserAsync(userId, skip, take);
@@ -435,8 +487,15 @@ namespace FreeSpeakWeb.Services
         #region Comment Operations
 
         /// <summary>
-        /// Add a comment to a group post
+        /// Adds a comment to a group post, with optional image attachment and support for nested replies.
+        /// Sends appropriate notifications to post author or parent comment author.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post to comment on.</param>
+        /// <param name="authorId">The unique identifier of the comment author.</param>
+        /// <param name="content">The text content of the comment.</param>
+        /// <param name="imageUrl">Optional URL of an image to attach to the comment.</param>
+        /// <param name="parentCommentId">Optional ID of the parent comment if this is a reply.</param>
+        /// <returns>A tuple containing success status, error message if failed, and the created comment if successful.</returns>
         public async Task<(bool Success, string? ErrorMessage, GroupPostComment? Comment)> AddCommentAsync(
             int postId,
             string authorId,
@@ -542,8 +601,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Delete a comment from a group post
+        /// Deletes a comment from a group post and all its replies, updating the post's comment count.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the comment to delete.</param>
+        /// <param name="userId">The user ID of the person requesting deletion (must be author or group admin/moderator).</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> DeleteCommentAsync(int commentId, string userId)
         {
             try
@@ -593,24 +655,31 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get top-level comments for a group post (replies loaded separately via GetRepliesAsync)
+        /// Retrieves top-level comments for a group post (replies are loaded separately via GetRepliesAsync).
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>A list of top-level comments.</returns>
         public async Task<List<GroupPostComment>> GetCommentsAsync(int postId)
         {
             return await _commentRepository.GetTopLevelCommentsAsync(postId);
         }
 
         /// <summary>
-        /// Get a comment by its ID
+        /// Retrieves a comment by its unique identifier including author information.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <returns>The comment if found; otherwise, null.</returns>
         public async Task<GroupPostComment?> GetCommentByIdAsync(int commentId)
         {
             return await _commentRepository.GetByIdAsync(commentId, includeAuthor: true, includeReplies: false);
         }
 
         /// <summary>
-        /// Get the last N direct comments for a group post (for feed display)
+        /// Retrieves the last N direct comments for a group post for feed display, ordered oldest first.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="count">The number of recent comments to retrieve.</param>
+        /// <returns>A list of comments ordered from oldest to newest.</returns>
         public async Task<List<GroupPostComment>> GetLastCommentsAsync(int postId, int count)
         {
             try
@@ -641,8 +710,13 @@ namespace FreeSpeakWeb.Services
         #region Like Operations
 
         /// <summary>
-        /// Add or update a reaction on a group post
+        /// Adds a new reaction to a group post or updates an existing reaction type.
+        /// Sends a notification to the post author for new reactions.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user reacting.</param>
+        /// <param name="type">The type of reaction to add or update to.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> AddOrUpdateReactionAsync(int postId, string userId, LikeType type = LikeType.Like)
         {
             try
@@ -700,8 +774,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Remove a reaction from a group post
+        /// Removes a user's reaction from a specific group post.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user whose reaction to remove.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> RemoveReactionAsync(int postId, string userId)
         {
             try
@@ -733,8 +810,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Check if a user has liked a group post
+        /// Gets a user's like record for a specific group post.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The like record if found; otherwise, null.</returns>
         public async Task<GroupPostLike?> GetUserLikeAsync(int postId, string userId)
         {
             return await _likeRepository.GetUserLikeAsync(postId, userId);
@@ -745,8 +825,13 @@ namespace FreeSpeakWeb.Services
         #region Comment Like Operations
 
         /// <summary>
-        /// Add or update a reaction on a group post comment
+        /// Adds a new reaction to a group post comment or updates an existing reaction type.
+        /// Sends a notification to the comment author for new reactions.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <param name="userId">The unique identifier of the user reacting.</param>
+        /// <param name="type">The type of reaction to add or update to.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> AddOrUpdateCommentReactionAsync(int commentId, string userId, LikeType type = LikeType.Like)
         {
             try
@@ -809,8 +894,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Remove a reaction from a group post comment
+        /// Removes a user's reaction from a specific group post comment.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <param name="userId">The unique identifier of the user whose reaction to remove.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> RemoveCommentReactionAsync(int commentId, string userId)
         {
             try
@@ -839,8 +927,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Check if a user has liked a group post comment
+        /// Gets a user's like record for a specific group post comment.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The like record if found; otherwise, null.</returns>
         public async Task<GroupPostCommentLike?> GetUserCommentLikeAsync(int commentId, string userId)
         {
             return await _commentLikeRepository.GetUserLikeAsync(commentId, userId);
@@ -851,8 +942,11 @@ namespace FreeSpeakWeb.Services
         #region Notification Mute Operations
 
         /// <summary>
-        /// Mute notifications for a specific group post
+        /// Mutes notifications for a specific group post for a user.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user muting notifications.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> MutePostNotificationsAsync(int postId, string userId)
         {
             try
@@ -897,8 +991,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Unmute notifications for a specific group post
+        /// Unmutes notifications for a specific group post for a user.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user unmuting notifications.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> UnmutePostNotificationsAsync(int postId, string userId)
         {
             try
@@ -927,8 +1024,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Check if a user has muted notifications for a specific group post
+        /// Checks if a user has muted notifications for a specific group post.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>True if notifications are muted for the post; otherwise, false.</returns>
         public async Task<bool> IsPostNotificationMutedAsync(int postId, string userId)
         {
             try
@@ -950,8 +1050,11 @@ namespace FreeSpeakWeb.Services
         #region Like Details Operations
 
         /// <summary>
-        /// Get detailed likes for a group post including user info and reaction type
+        /// Retrieves detailed like information for a group post including user info, reaction type, and timestamp.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="maxCount">Maximum number of likes to retrieve.</param>
+        /// <returns>A list of tuples containing user, reaction type, and creation timestamp.</returns>
         public async Task<List<(ApplicationUser User, LikeType Type, DateTime CreatedAt)>> GetGroupPostLikesWithDetailsAsync(int postId, int maxCount = 100)
         {
             try
@@ -976,16 +1079,21 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get the breakdown of reaction types for a group post
+        /// Gets the breakdown of reaction types and their counts for a specific group post.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>A dictionary mapping reaction types to their counts.</returns>
         public async Task<Dictionary<LikeType, int>> GetReactionBreakdownAsync(int postId)
         {
             return await _likeRepository.GetCountsByTypeAsync(postId);
         }
 
         /// <summary>
-        /// Get user's reaction type for a group post (null if not reacted)
+        /// Gets a user's reaction type for a specific group post.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The user's reaction type if they have reacted; otherwise, null.</returns>
         public async Task<LikeType?> GetUserReactionAsync(int postId, string userId)
         {
             var like = await _likeRepository.GetUserLikeAsync(postId, userId);
@@ -997,8 +1105,12 @@ namespace FreeSpeakWeb.Services
         #region Comment Retrieval Operations
 
         /// <summary>
-        /// Get paginated direct comments for a group post (no nested replies)
+        /// Retrieves paginated direct comments for a group post (excluding nested replies).
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="pageSize">Number of comments per page.</param>
+        /// <param name="pageNumber">The page number to retrieve (1-based).</param>
+        /// <returns>A list of comments for the specified page.</returns>
         public async Task<List<GroupPostComment>> GetCommentsPagedAsync(int postId, int pageSize, int pageNumber)
         {
             try
@@ -1023,8 +1135,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get the total count of direct comments for a group post (excluding replies)
+        /// Gets the total count of direct comments for a group post (excluding nested replies).
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>The count of direct comments.</returns>
         public async Task<int> GetDirectCommentCountAsync(int postId)
         {
             try
@@ -1043,32 +1157,41 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get replies for a specific comment
+        /// Retrieves replies for a specific group post comment.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the parent comment.</param>
+        /// <returns>A list of reply comments.</returns>
         public async Task<List<GroupPostComment>> GetRepliesAsync(int commentId)
         {
             return await _commentRepository.GetRepliesAsync(commentId);
         }
 
         /// <summary>
-        /// Get like count for a group post comment
+        /// Gets the total like count for a specific group post comment.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <returns>The number of likes on the comment.</returns>
         public async Task<int> GetCommentLikeCountAsync(int commentId)
         {
             return await _commentLikeRepository.GetCountAsync(commentId);
         }
 
         /// <summary>
-        /// Get the breakdown of reaction types for a group post comment
+        /// Gets the breakdown of reaction types and their counts for a specific group post comment.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <returns>A dictionary mapping reaction types to their counts.</returns>
         public async Task<Dictionary<LikeType, int>> GetCommentReactionBreakdownAsync(int commentId)
         {
             return await _commentLikeRepository.GetCountsByTypeAsync(commentId);
         }
 
         /// <summary>
-        /// Get user's reaction type for a group post comment (null if not reacted)
+        /// Gets a user's reaction type for a specific group post comment.
         /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The user's reaction type if they have reacted; otherwise, null.</returns>
         public async Task<LikeType?> GetUserCommentReactionAsync(int commentId, string userId)
         {
             var like = await _commentLikeRepository.GetUserLikeAsync(commentId, userId);
@@ -1080,8 +1203,12 @@ namespace FreeSpeakWeb.Services
         #region Post Image Operations
 
         /// <summary>
-        /// Add an image to a group post
+        /// Adds an image to an existing group post.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <param name="imageUrl">The URL of the image to add.</param>
+        /// <param name="userId">The user ID of the person adding the image (must be the post author).</param>
+        /// <returns>A tuple containing success status, error message if failed, and the created post image if successful.</returns>
         public async Task<(bool Success, string? ErrorMessage, GroupPostImage? PostImage)> AddImageToPostAsync(int postId, string imageUrl, string userId)
         {
             try
@@ -1123,8 +1250,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Remove an image from a group post
+        /// Removes an image from a group post.
         /// </summary>
+        /// <param name="imageId">The unique identifier of the image to remove.</param>
+        /// <param name="userId">The user ID of the person removing the image (must be author or group admin/moderator).</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> RemoveImageFromPostAsync(int imageId, string userId)
         {
             try
@@ -1170,8 +1300,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get images for a group post
+        /// Retrieves all images for a specific group post ordered by display order.
         /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>A list of post images in display order.</returns>
         public async Task<List<GroupPostImage>> GetPostImagesAsync(int postId)
         {
             return await _postRepository.GetImagesAsync(postId);
@@ -1182,8 +1314,10 @@ namespace FreeSpeakWeb.Services
         #region Group Statistics
 
         /// <summary>
-        /// Get total number of posts in a group
+        /// Gets the total number of posts in a group.
         /// </summary>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <returns>The total count of posts.</returns>
         public async Task<int> GetTotalPostCountAsync(int groupId)
         {
             try
@@ -1199,8 +1333,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get number of posts in a group within a time period
+        /// Gets the number of posts in a group created since a specific date.
         /// </summary>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <param name="since">The start date for counting posts.</param>
+        /// <returns>The count of posts created since the specified date.</returns>
         public async Task<int> GetPostCountSinceAsync(int groupId, DateTime since)
         {
             try
@@ -1217,8 +1354,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get the last activity timestamp for a group (most recent post)
+        /// Gets the last activity timestamp for a group (most recent post creation date).
         /// </summary>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <returns>The creation date of the most recent post, or null if no posts exist.</returns>
         public async Task<DateTime?> GetLastActivityAsync(int groupId)
         {
             try

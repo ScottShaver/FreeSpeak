@@ -4,19 +4,48 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace FreeSpeakWeb.Services;
 
+/// <summary>
+/// Service for managing user profile pictures including upload, retrieval, and deletion.
+/// Handles image resizing, format conversion, and secure storage outside wwwroot.
+/// </summary>
 public class ProfilePictureService
 {
     private readonly IWebHostEnvironment _environment;
     private readonly ILogger<ProfilePictureService> _logger;
+
+    /// <summary>
+    /// Target size in pixels for profile picture dimensions (square).
+    /// </summary>
     private const int TargetSize = 168;
+
+    /// <summary>
+    /// Maximum allowed file size for profile picture uploads (5MB).
+    /// </summary>
     private const long MaxFileSizeBytes = 5 * 1024 * 1024; // 5MB
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ProfilePictureService"/> class.
+    /// </summary>
+    /// <param name="environment">The web host environment for accessing content paths.</param>
+    /// <param name="logger">The logger for diagnostic output.</param>
     public ProfilePictureService(IWebHostEnvironment environment, ILogger<ProfilePictureService> logger)
     {
         _environment = environment;
         _logger = logger;
     }
 
+    /// <summary>
+    /// Saves a profile picture for a user, resizing it to the target dimensions.
+    /// The image is cropped to a square and saved as JPEG format.
+    /// </summary>
+    /// <param name="imageStream">The stream containing the image data.</param>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <returns>
+    /// A tuple containing:
+    /// - Success: Whether the operation completed successfully.
+    /// - ErrorMessage: Error description if the operation failed, null otherwise.
+    /// - RelativeUrl: The secure API URL for accessing the profile picture if successful.
+    /// </returns>
     public async Task<(bool Success, string? ErrorMessage, string? RelativeUrl)> SaveProfilePictureAsync(
         Stream imageStream, 
         string userId)
@@ -89,6 +118,11 @@ public class ProfilePictureService
         }
     }
 
+    /// <summary>
+    /// Retrieves the profile picture for a user as a byte array.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <returns>The profile picture as a byte array, or null if not found or an error occurs.</returns>
     public async Task<byte[]?> GetProfilePictureAsync(string userId)
     {
         try
@@ -111,6 +145,11 @@ public class ProfilePictureService
         }
     }
 
+    /// <summary>
+    /// Checks whether a profile picture exists for the specified user.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <returns>True if the profile picture exists, false otherwise.</returns>
     public bool ProfilePictureExists(string userId)
     {
         try
@@ -127,6 +166,10 @@ public class ProfilePictureService
         }
     }
 
+    /// <summary>
+    /// Deletes the profile picture for the specified user.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
     public void DeleteProfilePicture(string userId)
     {
         try

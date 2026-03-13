@@ -1,42 +1,50 @@
 namespace FreeSpeakWeb.Data
 {
     /// <summary>
-    /// Represents different types of reactions/likes a user can give to a post
+    /// Defines the different types of emotional reactions a user can express on posts and comments.
+    /// Similar to social media reaction systems, providing richer interaction options beyond a simple like.
     /// </summary>
     public enum LikeType
     {
         /// <summary>
-        /// Default like - thumbs up 👍
+        /// Standard like reaction. Represented by a thumbs up emoji (👍).
+        /// Default reaction type.
         /// </summary>
         Like = 0,
 
         /// <summary>
-        /// Love reaction - heart ❤️
+        /// Love reaction. Represented by a heart emoji (❤️).
+        /// Expresses strong positive affection or appreciation.
         /// </summary>
         Love = 1,
 
         /// <summary>
-        /// Care reaction - hugging face 🤗
+        /// Care reaction. Represented by a hugging face emoji (🤗).
+        /// Expresses empathy, support, or compassion.
         /// </summary>
         Care = 2,
 
         /// <summary>
-        /// Haha reaction - laughing face 😂
+        /// Haha reaction. Represented by a laughing face emoji (😂).
+        /// Indicates something is funny or amusing.
         /// </summary>
         Haha = 3,
 
         /// <summary>
-        /// Wow reaction - surprised face 😮
+        /// Wow reaction. Represented by a surprised face emoji (😮).
+        /// Expresses amazement, surprise, or being impressed.
         /// </summary>
         Wow = 4,
 
         /// <summary>
-        /// Sad reaction - sad face 😢
+        /// Sad reaction. Represented by a crying face emoji (😢).
+        /// Expresses sympathy, sorrow, or disappointment.
         /// </summary>
         Sad = 5,
 
         /// <summary>
-        /// Angry reaction - angry face 😠
+        /// Angry reaction. Represented by an angry face emoji (😠).
+        /// Expresses frustration, anger, or strong disagreement.
         /// </summary>
         Angry = 6
     }

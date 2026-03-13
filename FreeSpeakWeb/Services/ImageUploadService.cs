@@ -3,18 +3,43 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
 {
+    /// <summary>
+    /// Service for handling image and video uploads for posts.
+    /// Stores files securely outside wwwroot and returns authenticated API URLs.
+    /// Includes DOS protection with file size and count limits.
+    /// </summary>
     public class ImageUploadService
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<ImageUploadService> _logger;
         private readonly string _uploadsBasePath;
 
-        // DOS PROTECTION: Limit file sizes and counts to prevent memory exhaustion
-        private const long MaxImageSizeBytes = 10 * 1024 * 1024; // 10MB per image
-        private const long MaxVideoSizeBytes = 100 * 1024 * 1024; // 100MB per video
-        private const int MaxImagesPerUpload = 10; // Max 10 images per upload
-        private const int MaxVideosPerUpload = 5; // Max 5 videos per upload
+        /// <summary>
+        /// Maximum allowed size for a single image upload (10MB).
+        /// </summary>
+        private const long MaxImageSizeBytes = 10 * 1024 * 1024;
 
+        /// <summary>
+        /// Maximum allowed size for a single video upload (100MB).
+        /// </summary>
+        private const long MaxVideoSizeBytes = 100 * 1024 * 1024;
+
+        /// <summary>
+        /// Maximum number of images allowed per upload operation.
+        /// </summary>
+        private const int MaxImagesPerUpload = 10;
+
+        /// <summary>
+        /// Maximum number of videos allowed per upload operation.
+        /// </summary>
+        private const int MaxVideosPerUpload = 5;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageUploadService"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording service operations.</param>
+        /// <param name="environment">Web hosting environment for determining file paths.</param>
         public ImageUploadService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<ImageUploadService> logger,
@@ -27,10 +52,14 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Upload images for a specific user and return their URLs
-        /// Images are organized by user: /uploads/posts/{userId}/images/{filename}
-        /// Returns secure API URLs that require authentication
+        /// Uploads images for a specific user and returns their secure URLs.
+        /// Images are organized by user: /uploads/posts/{userId}/images/{filename}.
+        /// Returns secure API URLs that require authentication.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user uploading images.</param>
+        /// <param name="images">List of images with filename, base64 data, and content type.</param>
+        /// <param name="progress">Optional progress reporter for upload tracking.</param>
+        /// <returns>A tuple containing success status, list of image URLs, and error message if failed.</returns>
         public async Task<(bool Success, List<string> ImageUrls, string? ErrorMessage)> UploadImagesAsync(
             string userId,
             List<(string FileName, string Base64Data, string ContentType)> images,
@@ -139,10 +168,14 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Upload videos for a specific user and return their URLs
-        /// Videos are organized by user: /uploads/posts/{userId}/videos/{filename}
-        /// Returns secure API URLs that require authentication
+        /// Uploads videos for a specific user and returns their secure URLs.
+        /// Videos are organized by user: /uploads/posts/{userId}/videos/{filename}.
+        /// Returns secure API URLs that require authentication.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user uploading videos.</param>
+        /// <param name="videos">List of videos with filename, base64 data, and content type.</param>
+        /// <param name="progress">Optional progress reporter for upload tracking.</param>
+        /// <returns>A tuple containing success status, list of video URLs, and error message if failed.</returns>
         public async Task<(bool Success, List<string> VideoUrls, string? ErrorMessage)> UploadVideosAsync(
             string userId,
             List<(string FileName, string Base64Data, string ContentType)> videos,
@@ -250,6 +283,11 @@ namespace FreeSpeakWeb.Services
             }
         }
 
+        /// <summary>
+        /// Gets the appropriate file extension for an image content type.
+        /// </summary>
+        /// <param name="contentType">The MIME content type of the image.</param>
+        /// <returns>The file extension including the leading dot.</returns>
         private string GetFileExtension(string contentType)
         {
             return contentType.ToLower() switch
@@ -263,6 +301,11 @@ namespace FreeSpeakWeb.Services
             };
         }
 
+        /// <summary>
+        /// Gets the appropriate file extension for a video content type.
+        /// </summary>
+        /// <param name="contentType">The MIME content type of the video.</param>
+        /// <returns>The file extension including the leading dot.</returns>
         private string GetVideoFileExtension(string contentType)
         {
             return contentType.ToLower() switch

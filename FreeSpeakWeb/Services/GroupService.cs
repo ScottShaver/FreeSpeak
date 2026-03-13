@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
 {
+    /// <summary>
+    /// Service providing business logic for managing groups.
+    /// Handles group CRUD operations, search, suggestions, and activity tracking.
+    /// </summary>
     public class GroupService
     {
         private readonly IGroupRepository _groupRepository;
@@ -11,6 +15,13 @@ namespace FreeSpeakWeb.Services
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupService> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupService"/> class.
+        /// </summary>
+        /// <param name="groupRepository">Repository for group operations.</param>
+        /// <param name="userRepository">Repository for user operations.</param>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording service operations.</param>
         public GroupService(
             IGroupRepository groupRepository,
             IUserRepository userRepository,
@@ -26,8 +37,18 @@ namespace FreeSpeakWeb.Services
         #region Create Groups
 
         /// <summary>
-        /// Create a new group
+        /// Creates a new group with the specified settings.
         /// </summary>
+        /// <param name="creatorId">The unique identifier of the user creating the group.</param>
+        /// <param name="name">The name of the group (must be unique).</param>
+        /// <param name="description">The description of the group.</param>
+        /// <param name="isPublic">Whether the group is publicly visible.</param>
+        /// <param name="isHidden">Whether the group is hidden from searches.</param>
+        /// <param name="requiresJoinApproval">Whether join requests require approval.</param>
+        /// <param name="headerImageUrl">Optional URL for the group's header image.</param>
+        /// <param name="verticalHeaderImageUrl">Optional URL for the vertical header image.</param>
+        /// <param name="websiteUrl">Optional website URL for the group.</param>
+        /// <returns>A tuple containing success status, error message if failed, and the created group if successful.</returns>
         public async Task<(bool Success, string? ErrorMessage, Group? Group)> CreateGroupAsync(
             string creatorId,
             string name,
@@ -108,8 +129,10 @@ namespace FreeSpeakWeb.Services
         #region Retrieve Groups
 
         /// <summary>
-        /// Get a group by ID
+        /// Retrieves a group by its unique identifier including creator information.
         /// </summary>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <returns>The group with creator data if found; otherwise, null.</returns>
         public async Task<Group?> GetGroupByIdAsync(int groupId)
         {
             try
@@ -128,8 +151,12 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get all public, non-hidden groups with pagination
+        /// Retrieves all public, non-hidden groups with pagination and optional search.
         /// </summary>
+        /// <param name="pageSize">Number of groups per page.</param>
+        /// <param name="pageNumber">The page number to retrieve (1-based).</param>
+        /// <param name="searchTerm">Optional search term to filter by name or description.</param>
+        /// <returns>A list of public groups ordered by last activity.</returns>
         public async Task<List<Group>> GetPublicGroupsAsync(
             int pageSize = 20,
             int pageNumber = 1,
@@ -165,8 +192,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get groups created by a specific user
+        /// Retrieves all groups created by a specific user.
         /// </summary>
+        /// <param name="creatorId">The unique identifier of the creator.</param>
+        /// <returns>A list of groups ordered by creation date descending.</returns>
         public async Task<List<Group>> GetGroupsByCreatorAsync(string creatorId)
         {
             try
@@ -186,8 +215,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get total count of public groups
+        /// Gets the total count of public, non-hidden groups with optional search filter.
         /// </summary>
+        /// <param name="searchTerm">Optional search term to filter by name or description.</param>
+        /// <returns>The count of matching public groups.</returns>
         public async Task<int> GetPublicGroupCountAsync(string? searchTerm = null)
         {
             try
@@ -215,8 +246,14 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Search for groups by partial name match
+        /// Searches for public groups by partial name or description match.
+        /// Excludes groups the user is already a member of or has pending requests for.
         /// </summary>
+        /// <param name="searchQuery">The search query to match against group names and descriptions.</param>
+        /// <param name="skip">Number of results to skip for pagination.</param>
+        /// <param name="take">Number of results to return.</param>
+        /// <param name="userId">Optional user ID to exclude already-joined or pending groups.</param>
+        /// <returns>A list of matching groups ordered by member count and activity.</returns>
         public async Task<List<Group>> SearchGroupsAsync(string searchQuery, int skip = 0, int take = 20, string? userId = null)
         {
             try
@@ -272,8 +309,12 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get suggested groups for a user based on activity and membership
+        /// Gets suggested groups for a user based on popularity and activity.
+        /// Excludes groups the user is already a member of or has pending requests for.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <param name="take">Maximum number of suggestions to return.</param>
+        /// <returns>A list of suggested groups ordered by member count and activity.</returns>
         public async Task<List<Group>> GetSuggestedGroupsAsync(string userId, int take = 10)
         {
             try
@@ -316,8 +357,19 @@ namespace FreeSpeakWeb.Services
         #region Update Groups
 
         /// <summary>
-        /// Update group information
+        /// Updates group information. Only the group creator can perform this action.
         /// </summary>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <param name="userId">The user ID attempting the update (must be creator).</param>
+        /// <param name="name">Optional new name for the group.</param>
+        /// <param name="description">Optional new description.</param>
+        /// <param name="isPublic">Optional new public visibility setting.</param>
+        /// <param name="isHidden">Optional new hidden setting.</param>
+        /// <param name="requiresJoinApproval">Optional new join approval requirement.</param>
+        /// <param name="headerImageUrl">Optional new header image URL.</param>
+        /// <param name="verticalHeaderImageUrl">Optional new vertical header image URL.</param>
+        /// <param name="websiteUrl">Optional new website URL.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> UpdateGroupAsync(
             int groupId,
             string userId,
@@ -409,8 +461,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Update group's last active timestamp
+        /// Updates a group's last active timestamp to the current time.
         /// </summary>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <returns>True if the update was successful; otherwise, false.</returns>
         public async Task<bool> UpdateLastActiveAsync(int groupId)
         {
             try
@@ -435,8 +489,12 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Update group member count
+        /// Updates the group's member count by the specified delta.
+        /// Ensures the count does not go below zero.
         /// </summary>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <param name="delta">The amount to change the member count (positive or negative).</param>
+        /// <returns>True if the update was successful; otherwise, false.</returns>
         public async Task<bool> UpdateMemberCountAsync(int groupId, int delta)
         {
             try
@@ -469,8 +527,11 @@ namespace FreeSpeakWeb.Services
         #region Delete Groups
 
         /// <summary>
-        /// Delete a group (only by creator)
+        /// Deletes a group. Only the group creator can perform this action.
         /// </summary>
+        /// <param name="groupId">The unique identifier of the group to delete.</param>
+        /// <param name="userId">The user ID attempting the deletion (must be creator).</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> DeleteGroupAsync(int groupId, string userId)
         {
             try

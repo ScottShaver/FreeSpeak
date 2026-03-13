@@ -3,15 +3,23 @@ using Microsoft.JSInterop;
 namespace FreeSpeakWeb.Services
 {
     /// <summary>
-    /// Service for managing application themes
+    /// Service for managing application themes with localStorage persistence.
+    /// Supports multiple themes and provides theme change notifications.
     /// </summary>
     public class ThemeService
     {
         private readonly IJSRuntime _jsRuntime;
         private string _currentTheme = "default";
 
+        /// <summary>
+        /// Event raised when the theme changes. Subscribe to update UI components.
+        /// </summary>
         public event Action? OnThemeChanged;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThemeService"/> class.
+        /// </summary>
+        /// <param name="jsRuntime">The JavaScript runtime for localStorage and DOM manipulation.</param>
         public ThemeService(IJSRuntime jsRuntime)
         {
             _jsRuntime = jsRuntime;
@@ -38,8 +46,10 @@ namespace FreeSpeakWeb.Services
         };
 
         /// <summary>
-        /// Initialize theme from localStorage
+        /// Initializes the theme service by loading the saved theme from localStorage.
+        /// Falls back to the default theme if no saved preference exists or an error occurs.
         /// </summary>
+        /// <returns>A task representing the asynchronous initialization operation.</returns>
         public async Task InitializeAsync()
         {
             try
@@ -59,8 +69,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Set and apply a new theme
+        /// Sets and applies a new theme, persisting the selection to localStorage.
+        /// Raises the <see cref="OnThemeChanged"/> event on success.
         /// </summary>
+        /// <param name="themeName">The name of the theme to apply. Must be a valid key in <see cref="AvailableThemes"/>.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task SetThemeAsync(string themeName)
         {
             if (!AvailableThemes.ContainsKey(themeName))
@@ -85,8 +98,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Apply theme by setting data attribute on document
+        /// Applies a theme by setting the data-theme attribute on the document root element.
         /// </summary>
+        /// <param name="themeName">The name of the theme to apply.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         private async Task ApplyThemeAsync(string themeName)
         {
             try

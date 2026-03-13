@@ -39,6 +39,11 @@ public class ImageResizingService
     private const int MediumMaxSize = 400;
     private const int JpegQuality = 85;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ImageResizingService"/> class.
+    /// </summary>
+    /// <param name="environment">Web hosting environment for determining file paths.</param>
+    /// <param name="logger">Logger for recording service operations.</param>
     public ImageResizingService(
         IWebHostEnvironment environment,
         ILogger<ImageResizingService> logger)
@@ -117,8 +122,12 @@ public class ImageResizingService
     }
 
     /// <summary>
-    /// Resizes an image and saves it to cache
+    /// Resizes an image and saves it to the cache directory.
     /// </summary>
+    /// <param name="originalImagePath">Full path to the original image file.</param>
+    /// <param name="size">The desired size variant.</param>
+    /// <param name="cachePath">Full path where the cached image should be saved.</param>
+    /// <returns>Byte array of the resized image, or null if the operation fails.</returns>
     private async Task<byte[]?> ResizeAndCacheImageAsync(string originalImagePath, ImageSize size, string cachePath)
     {
         if (!File.Exists(originalImagePath))
@@ -162,8 +171,13 @@ public class ImageResizingService
     }
 
     /// <summary>
-    /// Calculates new dimensions maintaining aspect ratio
+    /// Calculates new dimensions for an image while maintaining aspect ratio.
+    /// Returns original dimensions if the image is already smaller than the target.
     /// </summary>
+    /// <param name="originalWidth">The original width of the image in pixels.</param>
+    /// <param name="originalHeight">The original height of the image in pixels.</param>
+    /// <param name="maxDimension">The maximum allowed dimension for either width or height.</param>
+    /// <returns>A tuple containing the calculated width and height.</returns>
     private static (int width, int height) CalculateResizeDimensions(
         int originalWidth, 
         int originalHeight, 
@@ -186,8 +200,11 @@ public class ImageResizingService
     }
 
     /// <summary>
-    /// Generates a cache key for an image and size combination
+    /// Generates a unique cache key for an image and size combination.
     /// </summary>
+    /// <param name="originalPath">Full path to the original image file.</param>
+    /// <param name="size">The size variant being cached.</param>
+    /// <returns>A unique filename to use as the cache key.</returns>
     private static string GenerateCacheKey(string originalPath, ImageSize size)
     {
         // Create a unique key based on file path and size
@@ -196,7 +213,7 @@ public class ImageResizingService
     }
 
     /// <summary>
-    /// Clears the entire image cache
+    /// Clears all cached resized images from the cache directory.
     /// </summary>
     public void ClearCache()
     {
@@ -219,8 +236,9 @@ public class ImageResizingService
     }
 
     /// <summary>
-    /// Clears cache entries older than specified days
+    /// Clears cache entries that haven't been accessed within the specified number of days.
     /// </summary>
+    /// <param name="olderThanDays">Number of days since last access after which entries are deleted.</param>
     public void ClearOldCache(int olderThanDays = 30)
     {
         try

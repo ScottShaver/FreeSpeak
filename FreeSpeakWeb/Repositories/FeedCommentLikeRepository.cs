@@ -4,11 +4,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Repositories
 {
+    /// <summary>
+    /// Repository implementation for feed comment likes.
+    /// Provides operations for adding, removing, and querying likes on comments.
+    /// </summary>
     public class FeedCommentLikeRepository : IFeedCommentLikeRepository
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<FeedCommentLikeRepository> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FeedCommentLikeRepository"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording repository operations.</param>
         public FeedCommentLikeRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<FeedCommentLikeRepository> logger)
@@ -17,6 +26,13 @@ namespace FreeSpeakWeb.Repositories
             _logger = logger;
         }
 
+        /// <summary>
+        /// Adds a new like or updates an existing like on a comment.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment to like.</param>
+        /// <param name="userId">The unique identifier of the user adding the like.</param>
+        /// <param name="likeType">The type of reaction (e.g., Like, Love, Laugh).</param>
+        /// <returns>A tuple containing success status, error message if any, and the like entity.</returns>
         public async Task<(bool Success, string? ErrorMessage, CommentLike? Like)> AddOrUpdateAsync(int commentId, string userId, LikeType likeType)
         {
             try
@@ -43,6 +59,12 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Removes a user's like from a comment.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <param name="userId">The unique identifier of the user removing their like.</param>
+        /// <returns>A tuple containing success status and error message if any.</returns>
         public async Task<(bool Success, string? ErrorMessage)> RemoveAsync(int commentId, string userId)
         {
             try
@@ -63,6 +85,12 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves a user's like on a specific comment.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The like entity if found; otherwise, null.</returns>
         public async Task<CommentLike?> GetUserLikeAsync(int commentId, string userId)
         {
             try
@@ -77,6 +105,12 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Checks whether a user has liked a specific comment.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>True if the user has liked the comment; otherwise, false.</returns>
         public async Task<bool> HasUserLikedAsync(int commentId, string userId)
         {
             try
@@ -91,6 +125,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves all likes for a specific comment, including user information.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <returns>A list of likes on the comment.</returns>
         public async Task<List<CommentLike>> GetByCommentAsync(int commentId)
         {
             try
@@ -105,6 +144,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets the total count of likes for a specific comment.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <returns>The total number of likes on the comment.</returns>
         public async Task<int> GetCountAsync(int commentId)
         {
             try
@@ -119,6 +163,11 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets the count of likes grouped by reaction type for a specific comment.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <returns>A dictionary mapping each like type to its count.</returns>
         public async Task<Dictionary<LikeType, int>> GetCountsByTypeAsync(int commentId)
         {
             try
@@ -133,6 +182,13 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Retrieves a user's likes for multiple comments in a single query.
+        /// Useful for batch loading like status when displaying comments.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <param name="commentIds">Collection of comment IDs to check for likes.</param>
+        /// <returns>A dictionary mapping each comment ID to the user's like (or null if not liked).</returns>
         public async Task<Dictionary<int, CommentLike?>> GetUserLikesForCommentsAsync(string userId, IEnumerable<int> commentIds)
         {
             try

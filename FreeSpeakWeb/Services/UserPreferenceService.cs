@@ -4,14 +4,17 @@ using Microsoft.EntityFrameworkCore;
 namespace FreeSpeakWeb.Services
 {
     /// <summary>
-    /// Service for managing user preferences
+    /// Service for managing user preferences including color scheme, name display format,
+    /// default audience type, and notification expiration settings.
     /// </summary>
     public class UserPreferenceService
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<UserPreferenceService> _logger;
 
-        // Default preference values
+        /// <summary>
+        /// Default values for all preference types used when a user has not set a preference.
+        /// </summary>
         private static readonly Dictionary<PreferenceType, string> DefaultPreferences = new()
         {
             { PreferenceType.ColorScheme, "default" },
@@ -27,6 +30,11 @@ namespace FreeSpeakWeb.Services
             { PreferenceType.NotificationExpiration_System, "30" }
         };
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserPreferenceService"/> class.
+        /// </summary>
+        /// <param name="contextFactory">The factory for creating database contexts.</param>
+        /// <param name="logger">The logger for diagnostic output.</param>
         public UserPreferenceService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<UserPreferenceService> logger)
@@ -36,8 +44,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get a preference value for a user, returning default if not set
+        /// Gets a preference value for a user, returning the default value if not set.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user, or null for default values.</param>
+        /// <param name="preferenceType">The type of preference to retrieve.</param>
+        /// <returns>The user's preference value, or the default value if not set or on error.</returns>
         public async Task<string> GetPreferenceAsync(string? userId, PreferenceType preferenceType)
         {
             // Return default if userId is null
@@ -69,8 +80,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get all preferences for a user
+        /// Gets all preferences for a user, filling in defaults for any unset preferences.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user, or null for all default values.</param>
+        /// <returns>A dictionary mapping preference types to their values.</returns>
         public async Task<Dictionary<PreferenceType, string>> GetAllPreferencesAsync(string? userId)
         {
             // Return all defaults if userId is null
@@ -106,8 +119,12 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Set a preference value for a user
+        /// Sets a preference value for a user, creating or updating the record as needed.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user. Required for setting preferences.</param>
+        /// <param name="preferenceType">The type of preference to set.</param>
+        /// <param name="value">The preference value to store.</param>
+        /// <returns>True if the preference was set successfully, false otherwise.</returns>
         public async Task<bool> SetPreferenceAsync(string? userId, PreferenceType preferenceType, string value)
         {
             // Cannot set preference without valid userId
@@ -158,8 +175,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Set multiple preferences at once
+        /// Sets multiple preferences for a user in a single database transaction.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user. Required for setting preferences.</param>
+        /// <param name="preferences">A dictionary of preference types and values to set.</param>
+        /// <returns>True if all preferences were set successfully, false otherwise.</returns>
         public async Task<bool> SetPreferencesAsync(string? userId, Dictionary<PreferenceType, string> preferences)
         {
             // Cannot set preferences without valid userId
@@ -209,16 +229,21 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get the default value for a preference type
+        /// Gets the default value for a preference type.
         /// </summary>
+        /// <param name="preferenceType">The type of preference to get the default for.</param>
+        /// <returns>The default preference value, or an empty string if no default is defined.</returns>
         public static string GetDefaultPreference(PreferenceType preferenceType)
         {
             return DefaultPreferences.TryGetValue(preferenceType, out var value) ? value : string.Empty;
         }
 
         /// <summary>
-        /// Get notification expiration days for a specific notification type
+        /// Gets the notification expiration days setting for a specific notification type.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user, or null for default values.</param>
+        /// <param name="notificationType">The type of notification to get expiration days for.</param>
+        /// <returns>The number of days after which notifications of this type should expire.</returns>
         public async Task<int> GetNotificationExpirationDaysAsync(string? userId, NotificationType notificationType)
         {
             var preferenceType = notificationType switch
@@ -247,24 +272,31 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get color scheme preference
+        /// Gets the color scheme preference for a user.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user, or null for the default color scheme.</param>
+        /// <returns>The user's color scheme preference (e.g., "default", "dark", "light").</returns>
         public async Task<string> GetColorSchemeAsync(string? userId)
         {
             return await GetPreferenceAsync(userId, PreferenceType.ColorScheme);
         }
 
         /// <summary>
-        /// Set color scheme preference
+        /// Sets the color scheme preference for a user.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <param name="colorScheme">The color scheme to set (e.g., "default", "dark", "light").</param>
+        /// <returns>True if the preference was set successfully, false otherwise.</returns>
         public async Task<bool> SetColorSchemeAsync(string? userId, string colorScheme)
         {
             return await SetPreferenceAsync(userId, PreferenceType.ColorScheme, colorScheme);
         }
 
         /// <summary>
-        /// Get name display preference
+        /// Gets the name display preference for a user.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user, or null for the default display type.</param>
+        /// <returns>The user's preferred name display format.</returns>
         public async Task<NameDisplayType> GetNameDisplayTypeAsync(string? userId)
         {
             var value = await GetPreferenceAsync(userId, PreferenceType.NameDisplay);
@@ -278,8 +310,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get default audience type preference
+        /// Gets the default audience type preference for a user's posts.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user, or null for the default audience type.</param>
+        /// <returns>The user's preferred default audience type for new posts.</returns>
         public async Task<AudienceType> GetDefaultAudienceTypeAsync(string? userId)
         {
             var value = await GetPreferenceAsync(userId, PreferenceType.DefaultAudienceType);
@@ -293,8 +327,13 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Format a user's display name based on their preference
+        /// Formats a user's display name based on their name display preference.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user whose preference to use.</param>
+        /// <param name="firstName">The user's first name.</param>
+        /// <param name="lastName">The user's last name.</param>
+        /// <param name="username">The user's username.</param>
+        /// <returns>The formatted display name according to the user's preference.</returns>
         public async Task<string> FormatUserDisplayNameAsync(string? userId, string firstName, string lastName, string username)
         {
             var nameDisplay = await GetNameDisplayTypeAsync(userId);

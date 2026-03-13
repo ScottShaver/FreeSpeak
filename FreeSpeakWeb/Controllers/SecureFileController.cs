@@ -9,6 +9,11 @@ using System.Text.RegularExpressions;
 
 namespace FreeSpeakWeb.Controllers;
 
+/// <summary>
+/// API controller for serving secure files (images and videos) with authentication,
+/// authorization, rate limiting, and path traversal protection.
+/// Files are stored outside wwwroot in the AppData directory for security.
+/// </summary>
 [Authorize]
 [ApiController]
 [Route("api/secure-files")]
@@ -22,6 +27,15 @@ public class SecureFileController : ControllerBase
     private readonly FriendsService _friendsService;
     private readonly ImageResizingService _imageResizingService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SecureFileController"/> class.
+    /// </summary>
+    /// <param name="environment">The web host environment for accessing content paths.</param>
+    /// <param name="logger">The logger for diagnostic output.</param>
+    /// <param name="profilePictureService">Service for managing profile pictures.</param>
+    /// <param name="contextFactory">Factory for creating database contexts.</param>
+    /// <param name="friendsService">Service for checking friendship status.</param>
+    /// <param name="imageResizingService">Service for resizing images.</param>
     public SecureFileController(
         IWebHostEnvironment environment,
         ILogger<SecureFileController> logger,
@@ -39,10 +53,12 @@ public class SecureFileController : ControllerBase
     }
 
     /// <summary>
-    /// Serves profile pictures with authentication
+    /// Serves profile pictures with optional resizing. Profile pictures are public and
+    /// can be accessed without authentication for use on the public home page.
     /// </summary>
-    /// <param name="userId">The user ID</param>
-    /// <param name="size">Image size: thumbnail (150px), medium (400px), or full (default: thumbnail)</param>
+    /// <param name="userId">The unique identifier of the user whose profile picture to retrieve.</param>
+    /// <param name="size">Image size: "thumbnail" (150px), "medium" (400px), or "full" (default: thumbnail).</param>
+    /// <returns>The profile picture as a JPEG image, or NotFound if not available.</returns>
     [AllowAnonymous] // Profile pictures are public - needed for public home page
     [HttpGet("profile-picture/{userId}")]
     public async Task<IActionResult> GetProfilePicture(string userId, [FromQuery] string? size = null)
@@ -91,11 +107,15 @@ public class SecureFileController : ControllerBase
 
 
     /// <summary>
-    /// Serves post images with authentication and authorization
-    /// Public posts can be accessed without authentication
-    /// Path format: /api/secure-files/post-image/{userId}/{imageId}/{filename}
+    /// Serves post images with authentication and authorization.
+    /// Public posts can be accessed without authentication; other posts require
+    /// the requesting user to be the author or a friend (for FriendsOnly posts).
     /// </summary>
-    /// <param name="size">Image size: thumbnail (150px), medium (400px), or full (default: thumbnail)</param>
+    /// <param name="userId">The unique identifier of the post author.</param>
+    /// <param name="imageId">The unique identifier of the image.</param>
+    /// <param name="filename">The filename of the image.</param>
+    /// <param name="size">Image size: "thumbnail" (150px), "medium" (400px), or "full" (default: thumbnail).</param>
+    /// <returns>The post image with appropriate content type, or an error status.</returns>
     [AllowAnonymous] // Allow access to public post images
     [HttpGet("post-image/{userId}/{imageId}/{filename}")]
     public async Task<IActionResult> GetPostImage(string userId, string imageId, string filename, [FromQuery] string? size = null)
@@ -203,9 +223,13 @@ public class SecureFileController : ControllerBase
     }
 
     /// <summary>
-    /// Serves post videos with authentication and authorization
-    /// Path format: /api/secure-files/post-video/{userId}/{videoId}/{filename}
+    /// Serves post videos with authentication and authorization.
+    /// Currently returns NotFound as video entity support is not yet implemented.
     /// </summary>
+    /// <param name="userId">The unique identifier of the post author.</param>
+    /// <param name="videoId">The unique identifier of the video.</param>
+    /// <param name="filename">The filename of the video.</param>
+    /// <returns>The post video with appropriate content type, or NotFound until video support is implemented.</returns>
     [HttpGet("post-video/{userId}/{videoId}/{filename}")]
     public async Task<IActionResult> GetPostVideo(string userId, string videoId, string filename)
     {
@@ -257,6 +281,11 @@ public class SecureFileController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Gets the MIME content type for an image file based on its extension.
+    /// </summary>
+    /// <param name="filename">The filename to determine content type for.</param>
+    /// <returns>The MIME content type string.</returns>
     private static string GetContentType(string filename)
     {
         var extension = Path.GetExtension(filename).ToLowerInvariant();
@@ -271,6 +300,11 @@ public class SecureFileController : ControllerBase
         };
     }
 
+    /// <summary>
+    /// Gets the MIME content type for a video file based on its extension.
+    /// </summary>
+    /// <param name="filename">The filename to determine content type for.</param>
+    /// <returns>The MIME content type string.</returns>
     private static string GetVideoContentType(string filename)
     {
         var extension = Path.GetExtension(filename).ToLowerInvariant();
@@ -286,8 +320,12 @@ public class SecureFileController : ControllerBase
     }
 
     /// <summary>
-    /// Parses the size query parameter
+    /// Parses the size query parameter into an ImageSize enum value.
+    /// Supports aliases like "thumb" for "thumbnail" and "med" for "medium".
     /// </summary>
+    /// <param name="sizeParam">The size parameter from the query string.</param>
+    /// <param name="defaultSize">The default size to use if the parameter is null or invalid.</param>
+    /// <returns>The parsed ImageSize value.</returns>
     private static ImageSize ParseImageSize(string? sizeParam, ImageSize defaultSize)
     {
         if (string.IsNullOrWhiteSpace(sizeParam))
@@ -305,8 +343,11 @@ public class SecureFileController : ControllerBase
     #region Security Helper Methods
 
     /// <summary>
-    /// Validates that a filename contains only safe characters
+    /// Validates that a filename contains only safe characters to prevent path traversal attacks.
+    /// Only allows alphanumeric characters, dash, underscore, and a single dot for the extension.
     /// </summary>
+    /// <param name="filename">The filename to validate.</param>
+    /// <returns>True if the filename is valid and safe, false otherwise.</returns>
     private static bool IsValidFileName(string filename)
     {
         if (string.IsNullOrWhiteSpace(filename) || filename.Length > 255)
@@ -318,16 +359,22 @@ public class SecureFileController : ControllerBase
     }
 
     /// <summary>
-    /// Validates that a userId is a valid GUID
+    /// Validates that a userId is a valid GUID format to prevent injection attacks.
     /// </summary>
+    /// <param name="userId">The user ID to validate.</param>
+    /// <returns>True if the user ID is a valid GUID, false otherwise.</returns>
     private static bool IsValidUserId(string userId)
     {
         return Guid.TryParse(userId, out _);
     }
 
     /// <summary>
-    /// Validates that the full path is within the allowed directory
+    /// Validates that the full path is within the allowed directory to prevent path traversal attacks.
+    /// Uses normalized paths for comparison to handle relative path components.
     /// </summary>
+    /// <param name="fullPath">The full file path to validate.</param>
+    /// <param name="allowedDirectory">The allowed directory that must contain the path.</param>
+    /// <returns>True if the path is within the allowed directory, false otherwise.</returns>
     private static bool IsPathWithinAllowedDirectory(string fullPath, string allowedDirectory)
     {
         try
@@ -343,8 +390,13 @@ public class SecureFileController : ControllerBase
     }
 
     /// <summary>
-    /// Checks if the current user has permission to view a post based on its audience type
+    /// Checks if the requesting user has permission to view a post based on its audience type.
+    /// Public posts are always accessible. MeOnly posts are only for the author.
+    /// FriendsOnly posts require an active friendship with the author.
     /// </summary>
+    /// <param name="post">The post to check access for.</param>
+    /// <param name="requestingUserId">The ID of the user requesting access, or null for anonymous users.</param>
+    /// <returns>True if the user has permission to view the post, false otherwise.</returns>
     private async Task<bool> CanUserViewPostAsync(Post post, string? requestingUserId)
     {
         // Public posts - always allowed for everyone (including anonymous users)

@@ -3,11 +3,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
 {
+    /// <summary>
+    /// Service providing business logic for managing pinned group posts.
+    /// Allows users to pin/unpin group posts and retrieve their pinned posts.
+    /// </summary>
     public class PinnedGroupPostService
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<PinnedGroupPostService> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PinnedGroupPostService"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording service operations.</param>
         public PinnedGroupPostService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<PinnedGroupPostService> logger)
@@ -17,8 +26,12 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Pin a group post for a user
+        /// Pins a group post for a user so it appears in their pinned posts collection.
+        /// User must be a member of the group to pin posts.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user pinning the post.</param>
+        /// <param name="postId">The unique identifier of the post to pin.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> PinGroupPostAsync(string userId, int postId)
         {
             try
@@ -74,8 +87,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Unpin a group post for a user
+        /// Unpins a group post for a user, removing it from their pinned posts collection.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user unpinning the post.</param>
+        /// <param name="postId">The unique identifier of the post to unpin.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> UnpinGroupPostAsync(string userId, int postId)
         {
             try
@@ -104,8 +120,11 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Check if a user has pinned a specific group post
+        /// Checks if a user has pinned a specific group post.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>True if the post is pinned by the user; otherwise, false.</returns>
         public async Task<bool> IsGroupPostPinnedAsync(string userId, int postId)
         {
             try
@@ -123,8 +142,12 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get all pinned group posts for a user
+        /// Retrieves all pinned group posts for a user across all groups with pagination.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <param name="skip">Number of posts to skip for pagination.</param>
+        /// <param name="take">Number of posts to return.</param>
+        /// <returns>A list of pinned group posts ordered by most recently pinned first.</returns>
         public async Task<List<GroupPost>> GetPinnedGroupPostsAsync(string userId, int skip = 0, int take = 20)
         {
             try
@@ -166,8 +189,13 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get all pinned group posts for a user in a specific group
+        /// Retrieves all pinned group posts for a user in a specific group with pagination.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <param name="skip">Number of posts to skip for pagination.</param>
+        /// <param name="take">Number of posts to return.</param>
+        /// <returns>A list of pinned group posts in the specified group.</returns>
         public async Task<List<GroupPost>> GetPinnedGroupPostsByGroupAsync(string userId, int groupId, int skip = 0, int take = 20)
         {
             try
@@ -214,8 +242,10 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Get the count of pinned group posts for a user
+        /// Gets the total count of pinned group posts for a user.
         /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The number of pinned group posts.</returns>
         public async Task<int> GetPinnedGroupPostCountAsync(string userId)
         {
             try

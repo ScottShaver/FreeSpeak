@@ -1,88 +1,105 @@
 namespace FreeSpeakWeb.Data
 {
     /// <summary>
-    /// Defines the types of user preferences
+    /// Defines the various types of user preferences that can be customized.
+    /// Includes UI preferences, default behaviors, and notification expiration settings.
     /// </summary>
     public enum PreferenceType
     {
         /// <summary>
-        /// Color scheme/theme preference (default, dark, light, ocean, forest, sunset, purple, high-contrast)
+        /// User's preferred color scheme or theme.
+        /// Valid values: default, dark, light, ocean, forest, sunset, purple, high-contrast.
         /// </summary>
         ColorScheme = 0,
 
         /// <summary>
-        /// How to display user names (FullName, FirstName, Username, FirstNameLastInitial)
+        /// How user names should be displayed throughout the application.
+        /// Valid values: FullName, FirstName, Username, FirstNameLastInitial.
         /// </summary>
         NameDisplay = 1,
 
         /// <summary>
-        /// Default audience type for posts (Public, FriendsOnly, OnlyMe)
+        /// Default audience/visibility type when creating new posts.
+        /// Valid values: Public, FriendsOnly, OnlyMe.
         /// </summary>
         DefaultAudienceType = 2,
 
         /// <summary>
-        /// Notification expiration for PostLiked notifications (in days, default 15)
+        /// Number of days before PostLiked notifications expire and are auto-deleted.
+        /// Default: 15 days.
         /// </summary>
         NotificationExpiration_PostLiked = 100,
 
         /// <summary>
-        /// Notification expiration for PostComment notifications (in days, default 15)
+        /// Number of days before PostComment notifications expire and are auto-deleted.
+        /// Default: 15 days.
         /// </summary>
         NotificationExpiration_PostComment = 101,
 
         /// <summary>
-        /// Notification expiration for CommentReply notifications (in days, default 15)
+        /// Number of days before CommentReply notifications expire and are auto-deleted.
+        /// Default: 15 days.
         /// </summary>
         NotificationExpiration_CommentReply = 102,
 
         /// <summary>
-        /// Notification expiration for CommentLiked notifications (in days, default 15)
+        /// Number of days before CommentLiked notifications expire and are auto-deleted.
+        /// Default: 15 days.
         /// </summary>
         NotificationExpiration_CommentLiked = 103,
 
         /// <summary>
-        /// Notification expiration for FriendRequest notifications (in days, default 30)
+        /// Number of days before FriendRequest notifications expire and are auto-deleted.
+        /// Default: 30 days.
         /// </summary>
         NotificationExpiration_FriendRequest = 104,
 
         /// <summary>
-        /// Notification expiration for FriendAccepted notifications (in days, default 15)
+        /// Number of days before FriendAccepted notifications expire and are auto-deleted.
+        /// Default: 15 days.
         /// </summary>
         NotificationExpiration_FriendAccepted = 105,
 
         /// <summary>
-        /// Notification expiration for Mention notifications (in days, default 30)
+        /// Number of days before Mention notifications expire and are auto-deleted.
+        /// Default: 30 days.
         /// </summary>
         NotificationExpiration_Mention = 106,
 
         /// <summary>
-        /// Notification expiration for System notifications (in days, default 30)
+        /// Number of days before System notifications expire and are auto-deleted.
+        /// Default: 30 days.
         /// </summary>
         NotificationExpiration_System = 107
     }
 
     /// <summary>
-    /// Enum for how to display user names
+    /// Defines how user names should be displayed throughout the application.
+    /// Allows users to customize their privacy level and interface preference.
     /// </summary>
     public enum NameDisplayType
     {
         /// <summary>
-        /// Display full name (e.g., "John Smith")
+        /// Display the user's full name (e.g., "John Smith").
+        /// Most formal and complete display option.
         /// </summary>
         FullName = 0,
 
         /// <summary>
-        /// Display first name only (e.g., "John")
+        /// Display only the user's first name (e.g., "John").
+        /// More casual and friendly display option.
         /// </summary>
         FirstName = 1,
 
         /// <summary>
-        /// Display username (e.g., "johnsmith")
+        /// Display the user's username (e.g., "johnsmith").
+        /// Provides privacy by not showing real name.
         /// </summary>
         Username = 2,
 
         /// <summary>
-        /// Display first name and last initial (e.g., "John S.")
+        /// Display first name with last initial (e.g., "John S.").
+        /// Balances friendliness with some privacy protection.
         /// </summary>
         FirstNameLastInitial = 3
     }

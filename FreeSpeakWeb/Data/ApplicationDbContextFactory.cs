@@ -5,10 +5,18 @@ using Microsoft.Extensions.Configuration;
 namespace FreeSpeakWeb.Data
 {
     /// <summary>
-    /// Design-time factory for creating ApplicationDbContext instances during migrations
+    /// Design-time factory for creating ApplicationDbContext instances during EF Core migrations and tooling operations.
+    /// Implements IDesignTimeDbContextFactory to support 'dotnet ef' commands by providing the DbContext configuration.
     /// </summary>
     public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
+        /// <summary>
+        /// Creates a new instance of ApplicationDbContext for design-time operations.
+        /// This method is called by EF Core tooling (migrations, database updates, etc.) to obtain a DbContext instance.
+        /// </summary>
+        /// <param name="args">Command-line arguments passed to the EF Core tools.</param>
+        /// <returns>A configured ApplicationDbContext instance.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the connection string is not found in configuration or user secrets.</exception>
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
