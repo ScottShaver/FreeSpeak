@@ -3,8 +3,10 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Components.Pages.Base
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@inherits PostPageBase<Post, Comment>
 @inject PostService PostService
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -61,14 +63,14 @@
                 Images="@post.Images"
                 IsModalView="true"
                 IsReadOnly="@(string.IsNullOrEmpty(currentUserId))"
-                OnReactionChanged="@HandleReactionChanged"
-                OnRemoveReaction="@HandleRemoveReaction"
+                OnReactionChanged="@(async (reactionType) => await HandlePostReactionChangedWrapper(reactionType))"
+                OnRemoveReaction="@(async () => await HandleRemovePostReactionWrapper())"
                 OnCommentAdded="@HandleCommentAdded"
                 OnReplySubmitted="@HandleReplySubmitted"
                 OnCommentReactionChanged="@HandleCommentReactionChanged"
                 OnRemoveCommentReaction="@HandleRemoveCommentReaction"
-                OnPinPost="@HandlePinPost"
-                OnUnpinPost="@HandleUnpinPost">
+                OnPinPost="@HandlePinPostWrapper"
+                OnUnpinPost="@HandleUnpinPostWrapper">
                 <ArticleContent>
                     @((MarkupString)HtmlSanitizationService.SanitizeAndFormatContent(post.Content))
                 </ArticleContent>
@@ -142,140 +144,134 @@
         NavigationManager.NavigateTo("/");
     }
 
-    private async Task HandleReactionChanged(LikeType reactionType)
+    // Wrapper methods that reload entire post after base handler completes
+    private async Task HandlePostReactionChangedWrapper(LikeType reactionType)
     {
-        if (post == null || string.IsNullOrEmpty(currentUserId)) return;
-
-        var result = await PostService.AddOrUpdateReactionAsync(post.PostId, currentUserId, reactionType);
-
-        if (result.Success)
-        {
-            // Reload the post to get updated reactions
-            var updatedPost = await PostService.GetPublicPostByIdAsync(PostId, currentUserId);
-            if (updatedPost.Success && updatedPost.Data != null)
-            {
-                post = updatedPost.Data;
-                StateHasChanged();
-            }
-        }
+        if (post == null) return;
+        await HandlePostReactionChanged(post.PostId, reactionType);
+        await ReloadPost();
     }
 
-    private async Task HandleRemoveReaction()
+    private async Task HandleRemovePostReactionWrapper()
     {
-        if (post == null || string.IsNullOrEmpty(currentUserId)) return;
-
-        var result = await PostService.RemoveLikeAsync(post.PostId, currentUserId);
-
-        if (result.Success)
-        {
-            // Reload the post to get updated reactions
-            var updatedPost = await PostService.GetPublicPostByIdAsync(PostId, currentUserId);
-            if (updatedPost.Success && updatedPost.Data != null)
-            {
-                post = updatedPost.Data;
-                StateHasChanged();
-            }
-        }
+        if (post == null) return;
+        await HandleRemovePostReaction(post.PostId);
+        await ReloadPost();
     }
 
-    private async Task HandleCommentAdded((int PostId, string Content) commentData)
+    private async Task HandlePinPostWrapper(int postId)
     {
-        if (string.IsNullOrEmpty(currentUserId) || post == null) return;
-
-        var result = await PostService.AddCommentAsync(commentData.PostId, currentUserId, commentData.Content);
-
+        if (post == null) return;
+        var result = await PostService.PinPostAsync(postId, currentUserId!);
         if (result.Success)
         {
-            // Reload the post to get updated comments
-            var updatedPost = await PostService.GetPublicPostByIdAsync(PostId, currentUserId);
-            if (updatedPost.Success && updatedPost.Data != null)
-            {
-                post = updatedPost.Data;
-                StateHasChanged();
-            }
-        }
-    }
-
-    private async Task HandleReplySubmitted((int ParentCommentId, string Content) replyData)
-    {
-        if (string.IsNullOrEmpty(currentUserId) || post == null) return;
-
-        // AddCommentAsync handles both direct comments and replies via the parentCommentId parameter
-        var result = await PostService.AddCommentAsync(post.PostId, currentUserId, replyData.Content, null, replyData.ParentCommentId);
-
-        if (result.Success)
-        {
-            // Reload the post to get updated comments
-            var updatedPost = await PostService.GetPublicPostByIdAsync(PostId, currentUserId);
-            if (updatedPost.Success && updatedPost.Data != null)
-            {
-                post = updatedPost.Data;
-                StateHasChanged();
-            }
-        }
-    }
-
-    private async Task HandleCommentReactionChanged((int CommentId, LikeType ReactionType) reactionData)
-    {
-        if (string.IsNullOrEmpty(currentUserId) || post == null) return;
-
-        var result = await PostService.AddOrUpdateCommentReactionAsync(reactionData.CommentId, currentUserId, reactionData.ReactionType);
-
-        if (result.Success)
-        {
-            // Reload the post to get updated comment reactions
-            var updatedPost = await PostService.GetPublicPostByIdAsync(PostId, currentUserId);
-            if (updatedPost.Success && updatedPost.Data != null)
-            {
-                post = updatedPost.Data;
-                StateHasChanged();
-            }
-        }
-    }
-
-    private async Task HandleRemoveCommentReaction(int commentId)
-    {
-        if (string.IsNullOrEmpty(currentUserId) || post == null) return;
-
-        var result = await PostService.RemoveCommentReactionAsync(commentId, currentUserId);
-
-        if (result.Success)
-        {
-            // Reload the post to get updated comment reactions
-            var updatedPost = await PostService.GetPublicPostByIdAsync(PostId, currentUserId);
-            if (updatedPost.Success && updatedPost.Data != null)
-            {
-                post = updatedPost.Data;
-                StateHasChanged();
-            }
-        }
-    }
-
-    private async Task HandlePinPost(int postId)
-    {
-        if (string.IsNullOrEmpty(currentUserId) || post == null) return;
-
-        var result = await PostService.PinPostAsync(postId, currentUserId);
-
-        if (result.Success)
-        {
-            // Update the local pinned state
             post.IsPinned = true;
             StateHasChanged();
         }
     }
 
-    private async Task HandleUnpinPost(int postId)
+    private async Task HandleUnpinPostWrapper(int postId)
     {
-        if (string.IsNullOrEmpty(currentUserId) || post == null) return;
-
-        var result = await PostService.UnpinPostAsync(postId, currentUserId);
-
+        if (post == null) return;
+        var result = await PostService.UnpinPostAsync(postId, currentUserId!);
         if (result.Success)
         {
-            // Update the local pinned state
             post.IsPinned = false;
             StateHasChanged();
         }
+    }
+
+    // Helper method to reload post after interactions
+    private async Task ReloadPost()
+    {
+        if (post == null) return;
+        var updatedPost = await PostService.GetPublicPostByIdAsync(PostId, currentUserId);
+        if (updatedPost.Success && updatedPost.Data != null)
+        {
+            post = updatedPost.Data;
+            StateHasChanged();
+        }
+    }
+
+    // Abstract property implementations
+    protected override string? CurrentUserId => currentUserId;
+    protected override string? CurrentUserImageUrl => currentUserImageUrl;
+    protected override string? CurrentUserName => currentUserName;
+
+    // Abstract method implementations - bridge to PostService
+    protected override async Task<(bool Success, string? ErrorMessage)> AddCommentToPostAsync(int postId, string userId, string content)
+    {
+        var result = await PostService.AddCommentAsync(postId, userId, content);
+        if (result.Success) await ReloadPost();
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> AddReplyToPostAsync(int postId, string userId, string content, int? imageId, int parentCommentId)
+    {
+        var result = await PostService.AddCommentAsync(postId, userId, content, null, parentCommentId);
+        if (result.Success) await ReloadPost();
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<Comment?> GetCommentByIdAsync(int commentId)
+    {
+        return await PostService.GetCommentByIdAsync(commentId);
+    }
+
+    protected override int GetPostIdFromComment(Comment comment)
+    {
+        return comment.PostId;
+    }
+
+    protected override void IncrementPostCommentCount(int postId)
+    {
+        // Single post page reloads entire post, no need to increment manually
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> AddOrUpdatePostReactionAsync(int postId, string userId, LikeType reactionType)
+    {
+        var result = await PostService.AddOrUpdateReactionAsync(postId, userId, reactionType);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> RemovePostReactionAsync(int postId, string userId)
+    {
+        var result = await PostService.RemoveLikeAsync(postId, userId);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override void IncrementPostLikeCount(int postId)
+    {
+        // Single post page reloads entire post, no need to increment manually
+    }
+
+    protected override void DecrementPostLikeCount(int postId)
+    {
+        // Single post page reloads entire post, no need to increment manually
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> AddOrUpdateCommentReactionAsync(int commentId, string userId, LikeType reactionType)
+    {
+        var result = await PostService.AddOrUpdateCommentReactionAsync(commentId, userId, reactionType);
+        if (result.Success) await ReloadPost();
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> RemoveCommentReactionAsync(int commentId, string userId)
+    {
+        var result = await PostService.RemoveCommentReactionAsync(commentId, userId);
+        if (result.Success) await ReloadPost();
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<Dictionary<LikeType, int>> GetPostReactionBreakdownAsync(int postId)
+    {
+        return await PostService.GetReactionBreakdownAsync(postId);
+    }
+
+    protected override async Task<int?> FindPostIdForCommentAsync(int commentId)
+    {
+        var comment = await PostService.GetCommentByIdAsync(commentId);
+        return comment?.PostId;
     }
 }

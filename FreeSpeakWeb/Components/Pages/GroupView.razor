@@ -1,6 +1,7 @@
 @page "/group/{GroupId:int}"
 @rendermode InteractiveServer
 @attribute [Authorize]
+@inherits PostPageBase<GroupPost, GroupPostComment>
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
@@ -10,6 +11,7 @@
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Components.Shared
+@using FreeSpeakWeb.Components.Pages.Base
 @using System.Security.Claims
 @using Microsoft.JSInterop
 
@@ -104,11 +106,11 @@
             {
                 @foreach (var post in groupPosts)
                 {
-                    var postReactions = groupPostReactionData.ContainsKey(post.Id) ? groupPostReactionData[post.Id] : new Dictionary<LikeType, int>();
-                    var userReaction = groupPostUserReactions.ContainsKey(post.Id) ? groupPostUserReactions[post.Id] : null;
-                    var isPinned = pinnedGroupPosts.ContainsKey(post.Id) && pinnedGroupPosts[post.Id];
-                    var authorName = groupPostAuthorNames.ContainsKey(post.Id) ? groupPostAuthorNames[post.Id] : "Unknown";
-                    var refreshTrigger = groupPostRefreshTriggers.ContainsKey(post.Id) ? groupPostRefreshTriggers[post.Id] : 0;
+                    var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
+                    var userReaction = postUserReactions.ContainsKey(post.Id) ? postUserReactions[post.Id] : null;
+                    var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
+                    var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
+                    var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
 
                     <GroupPostArticle 
                         PostId="@post.Id"
@@ -169,10 +171,10 @@
 
 @if (showGroupPostDetailModal && selectedGroupPost != null)
 {
-    var postReactions = groupPostReactionData.ContainsKey(selectedGroupPost.Id) ? groupPostReactionData[selectedGroupPost.Id] : new Dictionary<LikeType, int>();
-    var userReaction = groupPostUserReactions.ContainsKey(selectedGroupPost.Id) ? groupPostUserReactions[selectedGroupPost.Id] : null;
-    var isPinned = pinnedGroupPosts.ContainsKey(selectedGroupPost.Id) && pinnedGroupPosts[selectedGroupPost.Id];
-    var authorName = groupPostAuthorNames.ContainsKey(selectedGroupPost.Id) ? groupPostAuthorNames[selectedGroupPost.Id] : "Unknown";
+    var postReactions = postReactionData.ContainsKey(selectedGroupPost.Id) ? postReactionData[selectedGroupPost.Id] : new Dictionary<LikeType, int>();
+    var userReaction = postUserReactions.ContainsKey(selectedGroupPost.Id) ? postUserReactions[selectedGroupPost.Id] : null;
+    var isPinned = pinnedPosts.ContainsKey(selectedGroupPost.Id) && pinnedPosts[selectedGroupPost.Id];
+    var authorName = postAuthorNames.ContainsKey(selectedGroupPost.Id) ? postAuthorNames[selectedGroupPost.Id] : "Unknown";
 
     <GroupPostDetailModal 
         PostId="@selectedGroupPost.Id"
@@ -238,14 +240,8 @@
     private IJSObjectReference? jsModule;
     private DotNetObjectReference<GroupView>? dotNetHelper;
 
-    // Shared data dictionaries
-    private Dictionary<int, Dictionary<LikeType, int>> groupPostReactionData = new();
-    private Dictionary<int, LikeType?> groupPostUserReactions = new();
-    private Dictionary<int, bool> pinnedGroupPosts = new();
-    private Dictionary<int, string> groupPostAuthorNames = new();
-
-    // Comment refresh trigger - increment to force GroupPostArticle to reload comments
-    private Dictionary<int, int> groupPostRefreshTriggers = new();
+    // Group-specific dictionaries (rename to use base class naming)
+    // Base class provides: postRefreshTriggers, postReactionData, postUserReactions, pinnedPosts, postAuthorNames
 
     protected override async Task OnInitializedAsync()
     {
@@ -411,93 +407,44 @@
     {
         foreach (var post in posts)
         {
-            if (!groupPostAuthorNames.ContainsKey(post.Id) && post.Author != null)
+            if (!postAuthorNames.ContainsKey(post.Id) && post.Author != null)
             {
-                groupPostAuthorNames[post.Id] = $"{post.Author.FirstName} {post.Author.LastName}";
+                postAuthorNames[post.Id] = $"{post.Author.FirstName} {post.Author.LastName}";
             }
 
             // Load reaction data
-            if (!groupPostReactionData.ContainsKey(post.Id))
+            if (!postReactionData.ContainsKey(post.Id))
             {
                 var reactions = await GroupPostService.GetReactionBreakdownAsync(post.Id);
-                groupPostReactionData[post.Id] = reactions;
+                postReactionData[post.Id] = reactions;
             }
 
             // Load user reaction
-            if (!groupPostUserReactions.ContainsKey(post.Id))
+            if (!postUserReactions.ContainsKey(post.Id))
             {
                 var userReaction = await GroupPostService.GetUserReactionAsync(post.Id, currentUserId!);
-                groupPostUserReactions[post.Id] = userReaction;
+                postUserReactions[post.Id] = userReaction;
             }
 
             // Load pinned status
-            if (!pinnedGroupPosts.ContainsKey(post.Id))
+            if (!pinnedPosts.ContainsKey(post.Id))
             {
                 var isPinned = await PinnedGroupPostService.IsGroupPostPinnedAsync(currentUserId!, post.Id);
-                pinnedGroupPosts[post.Id] = isPinned;
+                pinnedPosts[post.Id] = isPinned;
             }
         }
     }
 
     private async Task HandleGroupPostReactionChanged(int postId, LikeType reactionType)
     {
-        if (currentUserId == null) return;
-
-        try
-        {
-            var result = await GroupPostService.AddOrUpdateReactionAsync(postId, currentUserId, reactionType);
-
-            if (result.Success)
-            {
-                var previousReaction = groupPostUserReactions.ContainsKey(postId) ? groupPostUserReactions[postId] : null;
-                groupPostUserReactions[postId] = reactionType;
-
-                var reactions = await GroupPostService.GetReactionBreakdownAsync(postId);
-                groupPostReactionData[postId] = reactions;
-
-                var post = groupPosts.FirstOrDefault(p => p.Id == postId);
-                if (post != null && previousReaction == null)
-                {
-                    post.LikeCount++;
-                }
-
-                StateHasChanged();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error handling group post reaction: {ex.Message}");
-        }
+        // Delegate to base class implementation
+        await HandlePostReactionChanged(postId, reactionType);
     }
 
     private async Task HandleRemoveGroupPostReaction(int postId)
     {
-        if (currentUserId == null) return;
-
-        try
-        {
-            var result = await GroupPostService.RemoveReactionAsync(postId, currentUserId);
-
-            if (result.Success)
-            {
-                groupPostUserReactions[postId] = null;
-
-                var reactions = await GroupPostService.GetReactionBreakdownAsync(postId);
-                groupPostReactionData[postId] = reactions;
-
-                var post = groupPosts.FirstOrDefault(p => p.Id == postId);
-                if (post != null)
-                {
-                    post.LikeCount = Math.Max(0, post.LikeCount - 1);
-                }
-
-                StateHasChanged();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error removing group post reaction: {ex.Message}");
-        }
+        // Delegate to base class implementation
+        await HandleRemovePostReaction(postId);
     }
 
     private async Task HandlePinGroupPost(int postId)
@@ -508,7 +455,7 @@
 
         if (success)
         {
-            pinnedGroupPosts[postId] = true;
+            pinnedPosts[postId] = true;
             StateHasChanged();
         }
     }
@@ -521,7 +468,7 @@
 
         if (success)
         {
-            pinnedGroupPosts[postId] = false;
+            pinnedPosts[postId] = false;
             StateHasChanged();
         }
     }
@@ -540,173 +487,26 @@
 
     private async Task HandleGroupPostCommentAdded((int PostId, string Content) args)
     {
-        if (currentUserId == null) return;
-
-        try
-        {
-            // When called from the modal, the comment is already added to the database
-            // So we just need to update the UI state
-            var post = groupPosts.FirstOrDefault(p => p.Id == args.PostId);
-            if (post != null)
-            {
-                post.CommentCount++;
-            }
-
-            // Increment refresh trigger to force GroupPostArticle to reload comments
-            if (!groupPostRefreshTriggers.ContainsKey(args.PostId))
-            {
-                groupPostRefreshTriggers[args.PostId] = 0;
-            }
-            groupPostRefreshTriggers[args.PostId]++;
-
-            // GroupPostArticle will reload its own comments
-            StateHasChanged();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error updating UI after comment added: {ex.Message}");
-        }
+        // Delegate to base class implementation
+        await HandleCommentAdded(args);
     }
 
     private async Task HandleGroupPostReplySubmitted((int ParentCommentId, string Content) args)
     {
-        if (currentUserId == null) return;
-
-        try
-        {
-            // Find the post that contains this comment by checking all loaded posts
-            int? postId = null;
-            foreach (var post in groupPosts)
-            {
-                var comments = await GroupPostService.GetCommentsAsync(post.Id);
-                if (FindCommentInTree(comments, args.ParentCommentId) != null)
-                {
-                    postId = post.Id;
-                    break;
-                }
-            }
-
-            if (!postId.HasValue)
-            {
-                Console.WriteLine($"Could not find parent comment {args.ParentCommentId}");
-                return;
-            }
-
-            // If modal is not open, we need to add the reply to the database ourselves
-            if (!showGroupPostDetailModal)
-            {
-                var result = await GroupPostService.AddCommentAsync(postId.Value, currentUserId, args.Content, null, args.ParentCommentId);
-
-                if (!result.Success)
-                {
-                    await JSRuntime.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to add reply");
-                    Console.WriteLine($"Failed to add reply: {result.ErrorMessage}");
-                    return;
-                }
-            }
-
-            var matchedPost = groupPosts.FirstOrDefault(p => p.Id == postId.Value);
-            if (matchedPost != null)
-            {
-                matchedPost.CommentCount++;
-            }
-
-            // Increment refresh trigger to force GroupPostArticle to reload comments
-            if (!groupPostRefreshTriggers.ContainsKey(postId.Value))
-            {
-                groupPostRefreshTriggers[postId.Value] = 0;
-            }
-            groupPostRefreshTriggers[postId.Value]++;
-
-            // GroupPostArticle will reload its own comments
-            StateHasChanged();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error updating UI after reply added: {ex.Message}");
-        }
+        // Delegate to base class implementation
+        await HandleReplySubmitted(args);
     }
 
     private async Task HandleGroupPostCommentReactionChanged((int CommentId, LikeType ReactionType) args)
     {
-        if (currentUserId == null) return;
-
-        try
-        {
-            var result = await GroupPostService.AddOrUpdateCommentReactionAsync(args.CommentId, currentUserId, args.ReactionType);
-
-            if (result.Success)
-            {
-                // Find which post this comment belongs to
-                int? postId = null;
-                foreach (var post in groupPosts)
-                {
-                    var comments = await GroupPostService.GetCommentsAsync(post.Id);
-                    if (FindCommentInTree(comments, args.CommentId) != null)
-                    {
-                        postId = post.Id;
-                        break;
-                    }
-                }
-
-                if (postId.HasValue)
-                {
-                    // Increment refresh trigger to force GroupPostArticle to reload comments
-                    if (!groupPostRefreshTriggers.ContainsKey(postId.Value))
-                    {
-                        groupPostRefreshTriggers[postId.Value] = 0;
-                    }
-                    groupPostRefreshTriggers[postId.Value]++;
-                }
-
-                StateHasChanged();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error handling group comment reaction: {ex.Message}");
-        }
+        // Delegate to base class implementation
+        await HandleCommentReactionChanged(args);
     }
 
     private async Task HandleRemoveGroupPostCommentReaction(int commentId)
     {
-        if (currentUserId == null) return;
-
-        try
-        {
-            var result = await GroupPostService.RemoveCommentReactionAsync(commentId, currentUserId);
-
-            if (result.Success)
-            {
-                // Find which post this comment belongs to
-                int? postId = null;
-                foreach (var post in groupPosts)
-                {
-                    var comments = await GroupPostService.GetCommentsAsync(post.Id);
-                    if (FindCommentInTree(comments, commentId) != null)
-                    {
-                        postId = post.Id;
-                        break;
-                    }
-                }
-
-                if (postId.HasValue)
-                {
-                    // Increment refresh trigger to force GroupPostArticle to reload comments
-                    if (!groupPostRefreshTriggers.ContainsKey(postId.Value))
-                    {
-                        groupPostRefreshTriggers[postId.Value] = 0;
-                    }
-                    groupPostRefreshTriggers[postId.Value]++;
-                }
-
-                StateHasChanged();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error removing group comment reaction: {ex.Message}");
-        }
+        // Delegate to base class implementation
+        await HandleRemoveCommentReaction(commentId);
     }
 
     // Modal state
@@ -802,6 +602,117 @@
 
         return dateTime.Value.ToString("MMM dd, yyyy");
     }
+
+    #region PostPageBase Abstract Method Implementations
+
+    // Abstract properties
+    protected override string? CurrentUserId => currentUserId;
+    protected override string? CurrentUserImageUrl => currentUserImageUrl;
+    protected override string? CurrentUserName => currentUserName;
+
+    // Service bridge methods for comments
+    protected override async Task<(bool Success, string? ErrorMessage)> AddCommentToPostAsync(
+        int postId, string userId, string content)
+    {
+        var result = await GroupPostService.AddCommentAsync(postId, userId, content);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> AddReplyToPostAsync(
+        int postId, string userId, string content, int? imageId, int parentCommentId)
+    {
+        // Note: imageId parameter is for future use, currently passing null for imageUrl
+        var result = await GroupPostService.AddCommentAsync(postId, userId, content, null, parentCommentId);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<GroupPostComment?> GetCommentByIdAsync(int commentId)
+    {
+        return await GroupPostService.GetCommentByIdAsync(commentId);
+    }
+
+    protected override int GetPostIdFromComment(GroupPostComment comment)
+    {
+        return comment.PostId;
+    }
+
+    protected override void IncrementPostCommentCount(int postId)
+    {
+        var post = groupPosts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.CommentCount++;
+        }
+    }
+
+    // Service bridge methods for reactions
+    protected override async Task<(bool Success, string? ErrorMessage)> AddOrUpdatePostReactionAsync(
+        int postId, string userId, LikeType reactionType)
+    {
+        var result = await GroupPostService.AddOrUpdateReactionAsync(postId, userId, reactionType);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> RemovePostReactionAsync(
+        int postId, string userId)
+    {
+        var result = await GroupPostService.RemoveReactionAsync(postId, userId);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<Dictionary<LikeType, int>> GetPostReactionBreakdownAsync(int postId)
+    {
+        return await GroupPostService.GetReactionBreakdownAsync(postId);
+    }
+
+    protected override void IncrementPostLikeCount(int postId)
+    {
+        var post = groupPosts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.LikeCount++;
+        }
+    }
+
+    protected override void DecrementPostLikeCount(int postId)
+    {
+        var post = groupPosts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.LikeCount = Math.Max(0, post.LikeCount - 1);
+        }
+    }
+
+    // Service bridge methods for comment reactions
+    protected override async Task<(bool Success, string? ErrorMessage)> AddOrUpdateCommentReactionAsync(
+        int commentId, string userId, LikeType reactionType)
+    {
+        var result = await GroupPostService.AddOrUpdateCommentReactionAsync(commentId, userId, reactionType);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> RemoveCommentReactionAsync(
+        int commentId, string userId)
+    {
+        var result = await GroupPostService.RemoveCommentReactionAsync(commentId, userId);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<int?> FindPostIdForCommentAsync(int commentId)
+    {
+        // Search through all posts to find which one contains this comment
+        foreach (var post in groupPosts)
+        {
+            var comments = await GroupPostService.GetCommentsAsync(post.Id);
+            if (FindCommentInTree(comments, commentId) != null)
+            {
+                return post.Id;
+            }
+        }
+        return null;
+    }
+
+    #endregion
 
     public async ValueTask DisposeAsync()
     {

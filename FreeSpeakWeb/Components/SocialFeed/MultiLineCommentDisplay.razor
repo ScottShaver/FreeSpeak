@@ -86,7 +86,7 @@
 
         @if (showReplyEditor)
         {
-            <div class="comment-reply-editor">
+            <div class="comment-reply-editor" @ref="replyEditorRef">
                 @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
                 {
                     <img src="@CurrentUserImageUrl" alt="You" class="reply-user-avatar" />
@@ -191,6 +191,8 @@
     private bool showReactionPicker = false;
     private bool showReplyEditor = false;
     private System.Threading.Timer? hideTimer;
+    private ElementReference replyEditorRef;
+    private IJSObjectReference? jsModule;
 
     private bool IsOwnComment => !string.IsNullOrEmpty(CurrentUserId) && !string.IsNullOrEmpty(CommentAuthorId) && CurrentUserId == CommentAuthorId;
 
@@ -251,10 +253,40 @@
         await OnReactionChanged.InvokeAsync((CommentId, LikeType.Like));
     }
 
-    private void ToggleReplyEditor()
+    private async Task ToggleReplyEditor()
     {
         showReplyEditor = !showReplyEditor;
         StateHasChanged();
+
+        // If showing the editor, scroll it into view after a short delay to ensure it's rendered
+        if (showReplyEditor)
+        {
+            await Task.Delay(50); // Small delay to ensure the element is rendered
+            await ScrollReplyEditorIntoView();
+        }
+    }
+
+    private async Task ScrollReplyEditorIntoView()
+    {
+        try
+        {
+            // Try PostDetailModal first
+            jsModule ??= await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/PostDetailModal.razor.js");
+            await jsModule.InvokeVoidAsync("scrollReplyEditorIntoView", replyEditorRef);
+        }
+        catch
+        {
+            try
+            {
+                // Try GroupPostDetailModal if PostDetailModal fails
+                jsModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/GroupPostDetailModal.razor.js");
+                await jsModule.InvokeVoidAsync("scrollReplyEditorIntoView", replyEditorRef);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error scrolling reply editor into view: {ex.Message}");
+            }
+        }
     }
 
     private async Task HandleReplySubmitted(string content)
@@ -356,6 +388,17 @@
     public async ValueTask DisposeAsync()
     {
         hideTimer?.Dispose();
-        await Task.CompletedTask;
+
+        if (jsModule != null)
+        {
+            try
+            {
+                await jsModule.DisposeAsync();
+            }
+            catch
+            {
+                // Ignore disposal errors
+            }
+        }
     }
 }

@@ -815,6 +815,14 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
+        /// Get a comment by its ID
+        /// </summary>
+        public async Task<Comment?> GetCommentByIdAsync(int commentId)
+        {
+            return await _commentRepository.GetByIdAsync(commentId, includeAuthor: true, includeReplies: false);
+        }
+
+        /// <summary>
         /// Get the total count of direct comments for a post (excluding replies)
         /// </summary>
         public async Task<int> GetDirectCommentCountAsync(int postId)

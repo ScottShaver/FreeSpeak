@@ -397,36 +397,22 @@
 
         try
         {
-            // Add the reply to the database using AddCommentAsync with parentCommentId
-            var result = await GroupPostService.AddCommentAsync(PostId, CurrentUserId, data.Content, null, data.ParentCommentId);
-
-            if (result.Success)
+            // Notify parent that a reply was submitted so it can handle the database insertion
+            // The parent component (Groups.razor, etc.) will add the reply to the database
+            if (OnReplySubmitted.HasDelegate)
             {
-                // Increment local comment count (replies count as comments)
-                localCommentCount++;
-
-                // Reload comments to show the new reply
-                currentCommentPage = 1;
-                hasMoreComments = true;
-                await LoadInitialComments();
-
-                // Update direct comment count since we added a reply (though it's not a direct comment)
-                directCommentCount = await GroupPostService.GetDirectCommentCountAsync(PostId);
-
-                // Notify parent that a reply was submitted so it can update its UI
-                if (OnReplySubmitted.HasDelegate)
-                {
-                    await OnReplySubmitted.InvokeAsync((data.ParentCommentId, data.Content));
-                }
-
-                StateHasChanged();
+                await OnReplySubmitted.InvokeAsync((data.ParentCommentId, data.Content));
             }
-            else
-            {
-                // Show error message to user
-                await JS.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to add reply");
-                Console.WriteLine($"Failed to add reply: {result.ErrorMessage}");
-            }
+
+            // Reload comments to show the new reply after parent has added it
+            currentCommentPage = 1;
+            hasMoreComments = true;
+            await LoadInitialComments();
+
+            // Update direct comment count
+            directCommentCount = await GroupPostService.GetDirectCommentCountAsync(PostId);
+
+            StateHasChanged();
         }
         catch (Exception ex)
         {

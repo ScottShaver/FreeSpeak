@@ -395,21 +395,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<GroupPost?> GetGroupPostByIdAsync(int postId)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                return await context.GroupPosts
-                    .Include(p => p.Author)
-                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
-                    .Include(p => p.Group)
-                    .FirstOrDefaultAsync(p => p.Id == postId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving group post {PostId}", postId);
-                return null;
-            }
+            return await _postRepository.GetByIdAsync(postId);
         }
 
         /// <summary>
@@ -417,24 +403,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<List<GroupPost>> GetGroupPostsAsync(int groupId, int skip = 0, int take = 20)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                return await context.GroupPosts
-                    .Include(p => p.Author)
-                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
-                    .Where(p => p.GroupId == groupId)
-                    .OrderByDescending(p => p.CreatedAt)
-                    .Skip(skip)
-                    .Take(take)
-                    .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving posts for group {GroupId}", groupId);
-                return new List<GroupPost>();
-            }
+            return await _postRepository.GetByGroupAsync(groupId, skip, take);
         }
 
         /// <summary>
@@ -442,24 +411,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<List<GroupPost>> GetUserGroupPostsAsync(int groupId, string userId, int skip = 0, int take = 20)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                return await context.GroupPosts
-                    .Include(p => p.Author)
-                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
-                    .Where(p => p.GroupId == groupId && p.AuthorId == userId)
-                    .OrderByDescending(p => p.CreatedAt)
-                    .Skip(skip)
-                    .Take(take)
-                    .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving posts for user {UserId} in group {GroupId}", userId, groupId);
-                return new List<GroupPost>();
-            }
+            return await _postRepository.GetByGroupAndAuthorAsync(groupId, userId, skip, take);
         }
 
         /// <summary>
@@ -467,16 +419,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<int> GetGroupPostCountAsync(int groupId)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
-                return await context.GroupPosts.CountAsync(p => p.GroupId == groupId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error counting posts for group {GroupId}", groupId);
-                return 0;
-            }
+            return await _postRepository.GetCountByGroupAsync(groupId);
         }
 
         /// <summary>
@@ -484,37 +427,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<List<GroupPost>> GetAllGroupPostsForUserAsync(string userId, int skip = 0, int take = 20)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                // Get all group IDs the user is a member of
-                var userGroupIds = await context.GroupUsers
-                    .Where(gu => gu.UserId == userId)
-                    .Select(gu => gu.GroupId)
-                    .ToListAsync();
-
-                if (!userGroupIds.Any())
-                {
-                    return new List<GroupPost>();
-                }
-
-                // Get posts from all those groups
-                return await context.GroupPosts
-                    .Include(p => p.Author)
-                    .Include(p => p.Group)
-                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
-                    .Where(p => userGroupIds.Contains(p.GroupId))
-                    .OrderByDescending(p => p.CreatedAt)
-                    .Skip(skip)
-                    .Take(take)
-                    .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving group posts for user {UserId}", userId);
-                return new List<GroupPost>();
-            }
+            return await _postRepository.GetAllGroupPostsForUserAsync(userId, skip, take);
         }
 
         #endregion
@@ -684,25 +597,15 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<List<GroupPostComment>> GetCommentsAsync(int postId)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
+            return await _commentRepository.GetTopLevelCommentsAsync(postId);
+        }
 
-                // Load only top-level comments with their authors
-                // Nested replies are loaded recursively via GetRepliesAsync() calls
-                var comments = await context.GroupPostComments
-                    .Include(c => c.Author)
-                    .Where(c => c.PostId == postId && c.ParentCommentId == null)
-                    .OrderBy(c => c.CreatedAt)
-                    .ToListAsync();
-
-                return comments;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving comments for group post {PostId}", postId);
-                return new List<GroupPostComment>();
-            }
+        /// <summary>
+        /// Get a comment by its ID
+        /// </summary>
+        public async Task<GroupPostComment?> GetCommentByIdAsync(int commentId)
+        {
+            return await _commentRepository.GetByIdAsync(commentId, includeAuthor: true, includeReplies: false);
         }
 
         /// <summary>
@@ -744,12 +647,8 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
                 // Verify post exists
-                var post = await context.GroupPosts
-                    .Include(p => p.Author)
-                    .FirstOrDefaultAsync(p => p.Id == postId);
+                var post = await _postRepository.GetByIdAsync(postId);
                 if (post == null)
                 {
                     return (false, "Post not found.");
@@ -763,37 +662,22 @@ namespace FreeSpeakWeb.Services
                 }
 
                 // Check if like already exists
-                var existingLike = await context.GroupPostLikes
-                    .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
-
+                var existingLike = await _likeRepository.GetUserLikeAsync(postId, userId);
                 bool isNewReaction = existingLike == null;
 
-                if (existingLike != null)
+                // Add or update the reaction
+                var result = await _likeRepository.AddOrUpdateAsync(postId, userId, type);
+                if (!result.Success)
                 {
-                    // Update existing like type
-                    existingLike.Type = type;
-                }
-                else
-                {
-                    // Create new like
-                    var like = new GroupPostLike
-                    {
-                        PostId = postId,
-                        UserId = userId,
-                        Type = type,
-                        CreatedAt = DateTime.UtcNow
-                    };
-                    context.GroupPostLikes.Add(like);
-
-                    // Update post like count
-                    post.LikeCount++;
+                    return (false, result.ErrorMessage);
                 }
 
-                await context.SaveChangesAsync();
-
-                // Send notification for new reactions only
+                // Update post like count for new reactions
                 if (isNewReaction)
                 {
+                    await _postRepository.IncrementLikeCountAsync(postId);
+
+                    // Send notification for new reactions only
                     await _notificationHelper.NotifyPostReactionAsync(
                         post.AuthorId,
                         userId,
@@ -801,7 +685,7 @@ namespace FreeSpeakWeb.Services
                         type,
                         NotificationType.GroupPostLiked,
                         groupId: post.GroupId,
-                        checkMute: false // Group posts don't have mute status checked for likes in original
+                        checkMute: false
                     );
                 }
 
@@ -822,24 +706,21 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var like = await context.GroupPostLikes
-                    .Include(l => l.Post)
-                    .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
-
-                if (like == null)
+                // Check if like exists before removing
+                var existingLike = await _likeRepository.GetUserLikeAsync(postId, userId);
+                if (existingLike == null)
                 {
                     return (false, "Like not found.");
                 }
 
-                var post = like.Post;
-                context.GroupPostLikes.Remove(like);
+                var result = await _likeRepository.RemoveAsync(postId, userId);
+                if (!result.Success)
+                {
+                    return (false, result.ErrorMessage);
+                }
 
                 // Update post like count
-                post.LikeCount--;
-
-                await context.SaveChangesAsync();
+                await _postRepository.DecrementLikeCountAsync(postId);
 
                 _logger.LogInformation("User {UserId} unliked group post {PostId}", userId, postId);
                 return (true, null);
@@ -856,17 +737,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<GroupPostLike?> GetUserLikeAsync(int postId, string userId)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
-                return await context.GroupPostLikes
-                    .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error checking like for group post {PostId} and user {UserId}", postId, userId);
-                return null;
-            }
+            return await _likeRepository.GetUserLikeAsync(postId, userId);
         }
 
         #endregion
@@ -880,50 +751,40 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                // Verify comment exists
-                var comment = await context.GroupPostComments
-                    .Include(c => c.Post)
-                    .FirstOrDefaultAsync(c => c.Id == commentId);
+                // Verify comment exists and get post info
+                var comment = await _commentRepository.GetByIdAsync(commentId, includeAuthor: true, includeReplies: false);
                 if (comment == null)
                 {
                     return (false, "Comment not found.");
                 }
 
+                // Get post for group ID
+                var post = await _postRepository.GetByIdAsync(comment.PostId);
+                if (post == null)
+                {
+                    return (false, "Post not found.");
+                }
+
                 // Validate user can act in this group
-                var (canAct, actError) = await _accessValidator.ValidateUserCanActAsync(comment.Post.GroupId, userId);
+                var (canAct, actError) = await _accessValidator.ValidateUserCanActAsync(post.GroupId, userId);
                 if (!canAct)
                 {
                     return (false, actError);
                 }
 
                 // Check if like already exists
-                var existingLike = await context.GroupPostCommentLikes
-                    .FirstOrDefaultAsync(l => l.CommentId == commentId && l.UserId == userId);
+                var existingLike = await _commentLikeRepository.GetUserLikeAsync(commentId, userId);
+                bool isNewReaction = existingLike == null;
 
-                if (existingLike != null)
+                // Add or update the reaction
+                var result = await _commentLikeRepository.AddOrUpdateAsync(commentId, userId, type);
+                if (!result.Success)
                 {
-                    // Update existing like type
-                    existingLike.Type = type;
+                    return (false, result.ErrorMessage);
                 }
-                else
-                {
-                    // Create new like
-                    var like = new GroupPostCommentLike
-                    {
-                        CommentId = commentId,
-                        UserId = userId,
-                        Type = type,
-                        CreatedAt = DateTime.UtcNow
-                    };
-                    context.GroupPostCommentLikes.Add(like);
-                }
-
-                await context.SaveChangesAsync();
 
                 // Send notification for new reactions only
-                if (existingLike == null)
+                if (isNewReaction)
                 {
                     await _notificationHelper.NotifyCommentReactionAsync(
                         comment.AuthorId,
@@ -932,8 +793,8 @@ namespace FreeSpeakWeb.Services
                         commentId,
                         type,
                         NotificationType.GroupCommentLiked,
-                        groupId: comment.Post.GroupId,
-                        checkMute: false // Group posts don't have mute status checked for comment likes
+                        groupId: post.GroupId,
+                        checkMute: false
                     );
                 }
 
@@ -954,18 +815,18 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var like = await context.GroupPostCommentLikes
-                    .FirstOrDefaultAsync(l => l.CommentId == commentId && l.UserId == userId);
-
-                if (like == null)
+                // Check if like exists before removing
+                var existingLike = await _commentLikeRepository.GetUserLikeAsync(commentId, userId);
+                if (existingLike == null)
                 {
                     return (false, "Like not found.");
                 }
 
-                context.GroupPostCommentLikes.Remove(like);
-                await context.SaveChangesAsync();
+                var result = await _commentLikeRepository.RemoveAsync(commentId, userId);
+                if (!result.Success)
+                {
+                    return (false, result.ErrorMessage);
+                }
 
                 _logger.LogInformation("User {UserId} unliked group post comment {CommentId}", userId, commentId);
                 return (true, null);
@@ -982,17 +843,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<GroupPostCommentLike?> GetUserCommentLikeAsync(int commentId, string userId)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
-                return await context.GroupPostCommentLikes
-                    .FirstOrDefaultAsync(l => l.CommentId == commentId && l.UserId == userId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error checking like for group post comment {CommentId} and user {UserId}", commentId, userId);
-                return null;
-            }
+            return await _commentLikeRepository.GetUserLikeAsync(commentId, userId);
         }
 
         #endregion
@@ -1129,23 +980,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<Dictionary<LikeType, int>> GetReactionBreakdownAsync(int postId)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var reactionCounts = await context.GroupPostLikes
-                    .Where(l => l.PostId == postId)
-                    .GroupBy(l => l.Type)
-                    .Select(g => new { Type = g.Key, Count = g.Count() })
-                    .ToDictionaryAsync(x => x.Type, x => x.Count);
-
-                return reactionCounts;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting reaction breakdown for group post {PostId}", postId);
-                return new Dictionary<LikeType, int>();
-            }
+            return await _likeRepository.GetCountsByTypeAsync(postId);
         }
 
         /// <summary>
@@ -1153,20 +988,8 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<LikeType?> GetUserReactionAsync(int postId, string userId)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var like = await context.GroupPostLikes
-                    .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
-
-                return like?.Type;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting user reaction for group post {PostId} and user {UserId}", postId, userId);
-                return null;
-            }
+            var like = await _likeRepository.GetUserLikeAsync(postId, userId);
+            return like?.Type;
         }
 
         #endregion
@@ -1224,23 +1047,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<List<GroupPostComment>> GetRepliesAsync(int commentId)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var replies = await context.GroupPostComments
-                    .Include(c => c.Author)
-                    .Where(c => c.ParentCommentId == commentId)
-                    .OrderBy(c => c.CreatedAt)
-                    .ToListAsync();
-
-                return replies;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving replies for group post comment {CommentId}", commentId);
-                return new List<GroupPostComment>();
-            }
+            return await _commentRepository.GetRepliesAsync(commentId);
         }
 
         /// <summary>
@@ -1248,18 +1055,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<int> GetCommentLikeCountAsync(int commentId)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                return await context.GroupPostCommentLikes
-                    .CountAsync(cl => cl.CommentId == commentId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting like count for group post comment {CommentId}", commentId);
-                return 0;
-            }
+            return await _commentLikeRepository.GetCountAsync(commentId);
         }
 
         /// <summary>
@@ -1267,23 +1063,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<Dictionary<LikeType, int>> GetCommentReactionBreakdownAsync(int commentId)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var reactionCounts = await context.GroupPostCommentLikes
-                    .Where(cl => cl.CommentId == commentId)
-                    .GroupBy(cl => cl.Type)
-                    .Select(g => new { Type = g.Key, Count = g.Count() })
-                    .ToDictionaryAsync(x => x.Type, x => x.Count);
-
-                return reactionCounts;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting reaction breakdown for group post comment {CommentId}", commentId);
-                return new Dictionary<LikeType, int>();
-            }
+            return await _commentLikeRepository.GetCountsByTypeAsync(commentId);
         }
 
         /// <summary>
@@ -1291,20 +1071,8 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<LikeType?> GetUserCommentReactionAsync(int commentId, string userId)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var like = await context.GroupPostCommentLikes
-                    .FirstOrDefaultAsync(cl => cl.CommentId == commentId && cl.UserId == userId);
-
-                return like?.Type;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting user reaction for group post comment {CommentId} and user {UserId}", commentId, userId);
-                return null;
-            }
+            var like = await _commentLikeRepository.GetUserLikeAsync(commentId, userId);
+            return like?.Type;
         }
 
         #endregion
@@ -1318,9 +1086,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var post = await context.GroupPosts.FindAsync(postId);
+                var post = await _postRepository.GetByIdAsync(postId, includeAuthor: false, includeImages: false);
                 if (post == null)
                 {
                     return (false, "Post not found.", null);
@@ -1339,24 +1105,15 @@ namespace FreeSpeakWeb.Services
                     return (false, actError, null);
                 }
 
-                // Get the next display order
-                var maxDisplayOrder = await context.GroupPostImages
-                    .Where(pi => pi.PostId == postId)
-                    .MaxAsync(pi => (int?)pi.DisplayOrder) ?? -1;
-
-                var postImage = new GroupPostImage
+                // Use repository to add image
+                var result = await _postRepository.AddImagesAsync(postId, userId, [imageUrl]);
+                if (!result.Success || result.Images == null || !result.Images.Any())
                 {
-                    PostId = postId,
-                    ImageUrl = imageUrl,
-                    DisplayOrder = maxDisplayOrder + 1,
-                    UploadedAt = DateTime.UtcNow
-                };
-
-                context.GroupPostImages.Add(postImage);
-                await context.SaveChangesAsync();
+                    return (false, result.ErrorMessage ?? "Failed to add image.", null);
+                }
 
                 _logger.LogInformation("Image added to group post {PostId} by user {UserId}", postId, userId);
-                return (true, null, postImage);
+                return (true, null, result.Images.First());
             }
             catch (Exception ex)
             {
@@ -1417,22 +1174,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public async Task<List<GroupPostImage>> GetPostImagesAsync(int postId)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var images = await context.GroupPostImages
-                    .Where(pi => pi.PostId == postId)
-                    .OrderBy(pi => pi.DisplayOrder)
-                    .ToListAsync();
-
-                return images;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving images for group post {PostId}", postId);
-                return new List<GroupPostImage>();
-            }
+            return await _postRepository.GetImagesAsync(postId);
         }
 
         #endregion

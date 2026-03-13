@@ -1,6 +1,7 @@
-﻿@page "/home"
+@page "/home"
 @rendermode InteractiveServer
 @attribute [Authorize]
+@inherits PostPageBase<Post, Comment>
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
@@ -11,6 +12,7 @@
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Components.Shared
+@using FreeSpeakWeb.Components.Pages.Base
 @using System.Security.Claims
 @using Microsoft.JSInterop
 
@@ -74,7 +76,7 @@
                             @foreach (var post in posts)
                             {
                                 var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
-                                var userReaction = userReactions.ContainsKey(post.Id) ? userReactions[post.Id] : null;
+                                var userReaction = postUserReactions.ContainsKey(post.Id) ? postUserReactions[post.Id] : null;
                                 var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
                                 var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
                                 var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
@@ -154,7 +156,7 @@
                             @foreach (var post in pinnedPostsList)
                             {
                                 var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
-                                var userReaction = userReactions.ContainsKey(post.Id) ? userReactions[post.Id] : null;
+                                var userReaction = postUserReactions.ContainsKey(post.Id) ? postUserReactions[post.Id] : null;
                                 var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
                                 var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
                                 var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
@@ -205,7 +207,7 @@
         @if (showPostDetail && selectedPost != null)
         {
             var postReactions = postReactionData.ContainsKey(selectedPost.Id) ? postReactionData[selectedPost.Id] : new Dictionary<LikeType, int>();
-            var userReaction = userReactions.ContainsKey(selectedPost.Id) ? userReactions[selectedPost.Id] : null;
+            var userReaction = postUserReactions.ContainsKey(selectedPost.Id) ? postUserReactions[selectedPost.Id] : null;
             var isPinned = pinnedPosts.ContainsKey(selectedPost.Id) && pinnedPosts[selectedPost.Id];
             var authorName = postAuthorNames.ContainsKey(selectedPost.Id) ? postAuthorNames[selectedPost.Id] : "Unknown";
 
@@ -279,15 +281,9 @@
 @code {
     private List<Post> posts = new();
     private List<Post> pinnedPostsList = new();
-    private Dictionary<int, Dictionary<LikeType, int>> postReactionData = new();
-    private Dictionary<int, LikeType?> userReactions = new();
+    // Base class provides: postRefreshTriggers, postReactionData, postUserReactions, pinnedPosts, postAuthorNames
     private Dictionary<int, List<CommentDisplayModel>> postComments = new();
     private Dictionary<int, int> postDirectCommentCounts = new();
-    private Dictionary<int, bool> pinnedPosts = new();
-    private Dictionary<int, string> postAuthorNames = new();
-
-    // Comment refresh trigger - increment to force FeedArticle to reload comments
-    private Dictionary<int, int> postRefreshTriggers = new();
 
     private int currentPage = 1;
     private const int pageSize = 20;
@@ -503,7 +499,7 @@
 
                 // Get user's reaction
                 var userReaction = await PostService.GetUserReactionAsync(post.Id, currentUserId);
-                userReactions[post.Id] = userReaction;
+                postUserReactions[post.Id] = userReaction;
 
                 // Get direct comment count
                 var directCommentCount = await PostService.GetDirectCommentCountAsync(post.Id);
@@ -631,7 +627,7 @@
 
         // Clean up related data
         postReactionData.Remove(postId);
-        userReactions.Remove(postId);
+        postUserReactions.Remove(postId);
         postComments.Remove(postId);
         postDirectCommentCounts.Remove(postId);
         pinnedPosts.Remove(postId);
@@ -709,235 +705,44 @@
 
     private async Task HandleReactionChanged(int postId, LikeType reactionType)
     {
-        if (currentUserId == null) return;
-
-        try
-        {
-            var result = await PostService.AddOrUpdateReactionAsync(postId, currentUserId, reactionType);
-
-            if (result.Success)
-            {
-                // Update user's reaction
-                var previousReaction = userReactions.ContainsKey(postId) ? userReactions[postId] : null;
-                userReactions[postId] = reactionType;
-
-                // Reload reaction breakdown
-                var reactions = await PostService.GetReactionBreakdownAsync(postId);
-                postReactionData[postId] = reactions;
-
-                // Update like count if this is a new reaction
-                var post = posts.FirstOrDefault(p => p.Id == postId);
-                if (post != null && previousReaction == null)
-                {
-                    post.LikeCount++;
-                }
-
-                StateHasChanged();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error handling reaction: {ex.Message}");
-        }
+        // Delegate to base class implementation
+        await HandlePostReactionChanged(postId, reactionType);
     }
 
     private async Task HandleRemoveReaction(int postId)
     {
-        if (currentUserId == null) return;
-
-        try
-        {
-            var result = await PostService.RemoveLikeAsync(postId, currentUserId);
-
-            if (result.Success)
-            {
-                // Remove user's reaction
-                userReactions[postId] = null;
-
-                // Reload reaction breakdown
-                var reactions = await PostService.GetReactionBreakdownAsync(postId);
-                postReactionData[postId] = reactions;
-
-                // Update like count
-                var post = posts.FirstOrDefault(p => p.Id == postId);
-                if (post != null)
-                {
-                    post.LikeCount = Math.Max(0, post.LikeCount - 1);
-                }
-
-                StateHasChanged();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error removing reaction: {ex.Message}");
-        }
+        // Delegate to base class implementation
+        await HandleRemovePostReaction(postId);
     }
 
     private async Task HandleCommentAdded((int PostId, string Content) data)
     {
-        if (currentUserId == null) return;
-
-        try
-        {
-            // Add the comment to the database
-            var result = await PostService.AddCommentAsync(data.PostId, currentUserId, data.Content);
-
-            if (result.Success)
-            {
-                // Update the post's comment count in the UI
-                var post = posts.FirstOrDefault(p => p.Id == data.PostId);
-                if (post != null)
-                {
-                    post.CommentCount++;
-                }
-
-                // Increment refresh trigger to force FeedArticle to reload comments
-                if (!postRefreshTriggers.ContainsKey(data.PostId))
-                {
-                    postRefreshTriggers[data.PostId] = 0;
-                }
-                postRefreshTriggers[data.PostId]++;
-
-                StateHasChanged();
-            }
-            else
-            {
-                // Show error message to user
-                await JSRuntime.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to add comment");
-                Console.WriteLine($"Failed to add comment: {result.ErrorMessage}");
-            }
-        }
-        catch (Exception ex)
-        {
-            await JSRuntime.InvokeVoidAsync("alert", "An error occurred while adding your comment.");
-            Console.WriteLine($"Error adding comment: {ex.Message}");
-        }
+        // Delegate to base class implementation
+        await HandleCommentAdded(data);
     }
 
     private async Task HandleReplySubmitted((int ParentCommentId, string Content) data)
     {
-        if (currentUserId == null) return;
-
-        // Get the parent comment's PostId by searching through postComments
-        int? postId = null;
-        foreach (var kvp in postComments)
-        {
-            if (CommentHelpers.FindCommentById(kvp.Value, data.ParentCommentId) != null)
-            {
-                postId = kvp.Key;
-                break;
-            }
-        }
-
-        if (postId == null)
-        {
-            Console.WriteLine($"Could not find post for parent comment {data.ParentCommentId}");
-            return;
-        }
-
-        // Note: The reply has already been added to the database by the modal or FeedArticle component
-        // We only need to update the UI here
-
-        // Update comment count
-        var post = posts.FirstOrDefault(p => p.Id == postId.Value);
-        if (post != null)
-        {
-            post.CommentCount++;
-        }
-
-        // Increment refresh trigger to force FeedArticle to reload comments
-        if (!postRefreshTriggers.ContainsKey(postId.Value))
-        {
-            postRefreshTriggers[postId.Value] = 0;
-        }
-        postRefreshTriggers[postId.Value]++;
-
-        StateHasChanged();
+        // Delegate to base class implementation
+        await HandleReplySubmitted(data);
     }
 
     private async Task HandleCommentReactionChanged((int CommentId, LikeType ReactionType) data)
     {
-        if (currentUserId == null) return;
+        // Delegate to base class implementation
+        await HandleCommentReactionChanged(data);
 
-        try
-        {
-            var result = await PostService.AddOrUpdateCommentReactionAsync(data.CommentId, currentUserId, data.ReactionType);
-
-            if (result.Success)
-            {
-                // Find which post this comment belongs to
-                int? postId = null;
-                foreach (var kvp in postComments)
-                {
-                    if (CommentHelpers.FindCommentById(kvp.Value, data.CommentId) != null)
-                    {
-                        postId = kvp.Key;
-                        break;
-                    }
-                }
-
-                if (postId.HasValue)
-                {
-                    // Increment refresh trigger to force FeedArticle to reload comments
-                    if (!postRefreshTriggers.ContainsKey(postId.Value))
-                    {
-                        postRefreshTriggers[postId.Value] = 0;
-                    }
-                    postRefreshTriggers[postId.Value]++;
-                }
-
-                // Update the comment's reaction data in the UI (for legacy code)
-                await UpdateCommentReactionData(data.CommentId, data.ReactionType);
-                StateHasChanged();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error handling comment reaction: {ex.Message}");
-        }
+        // Additionally update the legacy UI comment data
+        await UpdateCommentReactionData(data.CommentId, data.ReactionType);
     }
 
     private async Task HandleRemoveCommentReaction(int commentId)
     {
-        if (currentUserId == null) return;
+        // Delegate to base class implementation
+        await HandleRemoveCommentReaction(commentId);
 
-        try
-        {
-            var result = await PostService.RemoveCommentReactionAsync(commentId, currentUserId);
-
-            if (result.Success)
-            {
-                // Find which post this comment belongs to
-                int? postId = null;
-                foreach (var kvp in postComments)
-                {
-                    if (CommentHelpers.FindCommentById(kvp.Value, commentId) != null)
-                    {
-                        postId = kvp.Key;
-                        break;
-                    }
-                }
-
-                if (postId.HasValue)
-                {
-                    // Increment refresh trigger to force FeedArticle to reload comments
-                    if (!postRefreshTriggers.ContainsKey(postId.Value))
-                    {
-                        postRefreshTriggers[postId.Value] = 0;
-                    }
-                    postRefreshTriggers[postId.Value]++;
-                }
-
-                // Update the comment's reaction data in the UI (for legacy code)
-                await UpdateCommentReactionData(commentId, null);
-                StateHasChanged();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error removing comment reaction: {ex.Message}");
-        }
+        // Additionally update the legacy UI comment data
+        await UpdateCommentReactionData(commentId, null);
     }
 
     private async Task UpdateCommentReactionData(int commentId, LikeType? newReaction)
@@ -1177,6 +982,116 @@
         showEditPostImageUpload = false;
         StateHasChanged();
     }
+
+    #region PostPageBase Abstract Method Implementations
+
+    // Abstract properties
+    protected override string? CurrentUserId => currentUserId;
+    protected override string? CurrentUserImageUrl => currentUserImageUrl;
+    protected override string? CurrentUserName => currentUserName;
+
+    // Service bridge methods for comments
+    protected override async Task<(bool Success, string? ErrorMessage)> AddCommentToPostAsync(
+        int postId, string userId, string content)
+    {
+        var result = await PostService.AddCommentAsync(postId, userId, content);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> AddReplyToPostAsync(
+        int postId, string userId, string content, int? imageId, int parentCommentId)
+    {
+        // Note: imageId parameter is for future use, currently passing null for imageUrl
+        var result = await PostService.AddCommentAsync(postId, userId, content, null, parentCommentId);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<Comment?> GetCommentByIdAsync(int commentId)
+    {
+        return await PostService.GetCommentByIdAsync(commentId);
+    }
+
+    protected override int GetPostIdFromComment(Comment comment)
+    {
+        return comment.PostId;
+    }
+
+    protected override void IncrementPostCommentCount(int postId)
+    {
+        var post = posts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.CommentCount++;
+        }
+    }
+
+    // Service bridge methods for reactions
+    protected override async Task<(bool Success, string? ErrorMessage)> AddOrUpdatePostReactionAsync(
+        int postId, string userId, LikeType reactionType)
+    {
+        var result = await PostService.AddOrUpdateReactionAsync(postId, userId, reactionType);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> RemovePostReactionAsync(
+        int postId, string userId)
+    {
+        var result = await PostService.RemoveLikeAsync(postId, userId);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<Dictionary<LikeType, int>> GetPostReactionBreakdownAsync(int postId)
+    {
+        return await PostService.GetReactionBreakdownAsync(postId);
+    }
+
+    protected override void IncrementPostLikeCount(int postId)
+    {
+        var post = posts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.LikeCount++;
+        }
+    }
+
+    protected override void DecrementPostLikeCount(int postId)
+    {
+        var post = posts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.LikeCount = Math.Max(0, post.LikeCount - 1);
+        }
+    }
+
+    // Service bridge methods for comment reactions
+    protected override async Task<(bool Success, string? ErrorMessage)> AddOrUpdateCommentReactionAsync(
+        int commentId, string userId, LikeType reactionType)
+    {
+        var result = await PostService.AddOrUpdateCommentReactionAsync(commentId, userId, reactionType);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> RemoveCommentReactionAsync(
+        int commentId, string userId)
+    {
+        var result = await PostService.RemoveCommentReactionAsync(commentId, userId);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<int?> FindPostIdForCommentAsync(int commentId)
+    {
+        // Search through postComments dictionary
+        foreach (var kvp in postComments)
+        {
+            if (CommentHelpers.FindCommentById(kvp.Value, commentId) != null)
+            {
+                return kvp.Key;
+            }
+        }
+        return null;
+    }
+
+    #endregion
 
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
