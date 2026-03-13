@@ -1041,7 +1041,7 @@
 
         try
         {
-            var result = await GroupPostService.LikePostAsync(postId, currentUserId, reactionType);
+            var result = await GroupPostService.AddOrUpdateReactionAsync(postId, currentUserId, reactionType);
 
             if (result.Success)
             {
@@ -1082,7 +1082,7 @@
 
         try
         {
-            var result = await GroupPostService.UnlikePostAsync(postId, currentUserId);
+            var result = await GroupPostService.RemoveReactionAsync(postId, currentUserId);
 
             if (result.Success)
             {
@@ -1293,7 +1293,7 @@
 
         try
         {
-            var result = await GroupPostService.LikeCommentAsync(args.CommentId, currentUserId, args.ReactionType);
+            var result = await GroupPostService.AddOrUpdateCommentReactionAsync(args.CommentId, currentUserId, args.ReactionType);
 
             if (result.Success)
             {
@@ -1334,7 +1334,7 @@
 
         try
         {
-            var result = await GroupPostService.UnlikeCommentAsync(commentId, currentUserId);
+            var result = await GroupPostService.RemoveCommentReactionAsync(commentId, currentUserId);
 
             if (result.Success)
             {

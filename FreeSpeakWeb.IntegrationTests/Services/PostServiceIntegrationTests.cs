@@ -52,6 +52,33 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             return new NullUserPreferenceService();
         }
 
+        private static PostNotificationHelper CreateMockPostNotificationHelper()
+        {
+            // Create a no-op post notification helper for testing
+            return new NullPostNotificationHelper();
+        }
+
+        // Null implementation of PostNotificationHelper for testing
+        private class NullPostNotificationHelper : PostNotificationHelper
+        {
+            public NullPostNotificationHelper()
+                : base(new NullDbContextFactory(), new NullNotificationService(), new NullUserPreferenceService(), new NullLogger<PostNotificationHelper>())
+            {
+            }
+
+            private class NullDbContextFactory : IDbContextFactory<ApplicationDbContext>
+            {
+                public ApplicationDbContext CreateDbContext() => null!;
+            }
+
+            private class NullLogger<T> : ILogger<T>
+            {
+                public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+                public bool IsEnabled(LogLevel logLevel) => false;
+                public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) { }
+            }
+        }
+
         // Null implementation of UserPreferenceService for testing
         private class NullUserPreferenceService : UserPreferenceService
         {
@@ -111,7 +138,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
 
             var author = CreateTestUser("author1", "author", "Post", "Author");
             var commenter1 = CreateTestUser("commenter1", "commenter1", "First", "Commenter");
@@ -189,7 +216,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
 
             var user1 = CreateTestUser("user1", "user1", "User", "One");
             var user2 = CreateTestUser("user2", "user2", "User", "Two");
@@ -246,7 +273,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
 
             var author = CreateTestUser("author1", "author", "Post", "Author");
             var commenter = CreateTestUser("commenter1", "commenter", "Comment", "Author");

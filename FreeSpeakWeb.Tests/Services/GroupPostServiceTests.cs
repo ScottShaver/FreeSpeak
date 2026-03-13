@@ -2,6 +2,7 @@ using FluentAssertions;
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Services;
 using FreeSpeakWeb.Tests.Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,13 @@ namespace FreeSpeakWeb.Tests.Services
 {
     public class GroupPostServiceTests : TestBase
     {
+        private static IWebHostEnvironment CreateMockWebHostEnvironment()
+        {
+            var mock = new Mock<IWebHostEnvironment>();
+            mock.Setup(m => m.ContentRootPath).Returns(Path.GetTempPath());
+            return mock.Object;
+        }
+
         private static NotificationService CreateMockNotificationService()
         {
             var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
@@ -28,6 +36,19 @@ namespace FreeSpeakWeb.Tests.Services
             return new UserPreferenceService(dbFactory.Object, logger.Object);
         }
 
+        private static PostNotificationHelper CreateMockPostNotificationHelper()
+        {
+            var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
+            var logger = new Mock<ILogger<PostNotificationHelper>>();
+            return new PostNotificationHelper(dbFactory.Object, CreateMockNotificationService(), CreateMockUserPreferenceService(), logger.Object);
+        }
+
+        private static GroupAccessValidator CreateMockGroupAccessValidator(IDbContextFactory<ApplicationDbContext> dbFactory)
+        {
+            var logger = new Mock<ILogger<GroupAccessValidator>>();
+            return new GroupAccessValidator(dbFactory, logger.Object);
+        }
+
         #region Post Operations Tests
 
         [Fact]
@@ -36,7 +57,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest1");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -70,7 +91,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest2");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user2");
@@ -97,7 +118,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest3");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user2");
@@ -131,7 +152,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest4");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -168,7 +189,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest5");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -204,7 +225,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest6");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var author = TestDataFactory.CreateTestUser(id: "user1");
             var moderator = TestDataFactory.CreateTestUser(id: "user2");
@@ -242,7 +263,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest7");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -284,7 +305,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest8");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var author = TestDataFactory.CreateTestUser(id: "user2");
             var nonMember = TestDataFactory.CreateTestUser(id: "user1");
@@ -321,7 +342,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest9");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -362,12 +383,12 @@ namespace FreeSpeakWeb.Tests.Services
         #region Like Operations Tests
 
         [Fact]
-        public async Task LikePostAsync_ValidUser_ShouldCreateLike()
+        public async Task AddOrUpdateReactionAsync_ValidUser_ShouldCreateLike()
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest10");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -387,7 +408,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             // Act
-            var (success, errorMessage) = await service.LikePostAsync(post.Id, "user1");
+            var (success, errorMessage) = await service.AddOrUpdateReactionAsync(post.Id, "user1");
 
             // Assert
             success.Should().BeTrue();
@@ -403,12 +424,12 @@ namespace FreeSpeakWeb.Tests.Services
         }
 
         [Fact]
-        public async Task UnlikePostAsync_ExistingLike_ShouldRemoveLike()
+        public async Task RemoveReactionAsync_ExistingLike_ShouldRemoveLike()
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest11");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -429,7 +450,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             // Act
-            var (success, errorMessage) = await service.UnlikePostAsync(post.Id, "user1");
+            var (success, errorMessage) = await service.RemoveReactionAsync(post.Id, "user1");
 
             // Assert
             success.Should().BeTrue();
@@ -449,12 +470,12 @@ namespace FreeSpeakWeb.Tests.Services
         #region Comment Like Operations Tests
 
         [Fact]
-        public async Task LikeCommentAsync_ValidUser_ShouldCreateLike()
+        public async Task AddOrUpdateCommentReactionAsync_ValidUser_ShouldCreateLike()
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest12");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -478,7 +499,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             // Act
-            var (success, errorMessage) = await service.LikeCommentAsync(comment.Id, "user1");
+            var (success, errorMessage) = await service.AddOrUpdateCommentReactionAsync(comment.Id, "user1");
 
             // Assert
             success.Should().BeTrue();
@@ -492,12 +513,12 @@ namespace FreeSpeakWeb.Tests.Services
         }
 
         [Fact]
-        public async Task UnlikeCommentAsync_ExistingLike_ShouldRemoveLike()
+        public async Task RemoveCommentReactionAsync_ExistingLike_ShouldRemoveLike()
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest13");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -522,7 +543,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             // Act
-            var (success, errorMessage) = await service.UnlikeCommentAsync(comment.Id, "user1");
+            var (success, errorMessage) = await service.RemoveCommentReactionAsync(comment.Id, "user1");
 
             // Assert
             success.Should().BeTrue();
@@ -545,7 +566,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest14");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -581,7 +602,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest15");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -621,7 +642,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest16");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -658,7 +679,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest17");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService());
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -683,6 +704,345 @@ namespace FreeSpeakWeb.Tests.Services
             // Assert
             posts.Should().HaveCount(3);
             posts[0].Content.Should().Be("Post 3"); // Most recent first
+        }
+
+        [Fact]
+        public async Task GetLastCommentsAsync_ShouldReturnLastNCommentsInAscendingOrder()
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory("GroupPostTest18");
+            var logger = CreateMockLogger<GroupPostService>();
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+
+            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var group = TestDataFactory.CreateTestGroup("user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+
+            int postId;
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(user);
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+                groupUser.GroupId = group.Id;
+                context.GroupUsers.Add(groupUser);
+
+                var post = TestDataFactory.CreateTestGroupPost(group.Id, "user1", "Test post");
+                context.GroupPosts.Add(post);
+                await context.SaveChangesAsync();
+                postId = post.Id;
+
+                // Add 5 comments with sequential timestamps
+                for (int i = 1; i <= 5; i++)
+                {
+                    var comment = new GroupPostComment
+                    {
+                        PostId = postId,
+                        AuthorId = "user1",
+                        Content = $"Comment {i}",
+                        CreatedAt = DateTime.UtcNow.AddMinutes(i)
+                    };
+                    context.GroupPostComments.Add(comment);
+                }
+                await context.SaveChangesAsync();
+            }
+
+            // Act - get last 3 comments
+            var comments = await service.GetLastCommentsAsync(postId, 3);
+
+            // Assert
+            comments.Should().HaveCount(3);
+            // Comments should be returned in ascending order (oldest to newest of the last 3)
+            comments[0].Content.Should().Be("Comment 3");
+            comments[1].Content.Should().Be("Comment 4");
+            comments[2].Content.Should().Be("Comment 5");
+        }
+
+        #endregion
+
+        #region Post Image Operations Tests
+
+        [Fact]
+        public async Task AddImageToPostAsync_ByAuthor_ShouldAddImage()
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory("GroupPostTest19");
+            var logger = CreateMockLogger<GroupPostService>();
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+
+            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var group = TestDataFactory.CreateTestGroup("user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var post = TestDataFactory.CreateTestGroupPost(1, "user1");
+
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(user);
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+                post.GroupId = group.Id;
+                groupUser.GroupId = group.Id;
+                context.GroupPosts.Add(post);
+                context.GroupUsers.Add(groupUser);
+                await context.SaveChangesAsync();
+            }
+
+            // Act
+            var (success, errorMessage, postImage) = await service.AddImageToPostAsync(post.Id, "/images/test.jpg", "user1");
+
+            // Assert
+            success.Should().BeTrue();
+            errorMessage.Should().BeNull();
+            postImage.Should().NotBeNull();
+            postImage!.ImageUrl.Should().Be("/images/test.jpg");
+            postImage.DisplayOrder.Should().Be(0);
+
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                var savedImage = await context.GroupPostImages.FirstOrDefaultAsync(i => i.PostId == post.Id);
+                savedImage.Should().NotBeNull();
+            }
+        }
+
+        [Fact]
+        public async Task AddImageToPostAsync_ByNonAuthor_ShouldReturnError()
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory("GroupPostTest20");
+            var logger = CreateMockLogger<GroupPostService>();
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+
+            var user1 = TestDataFactory.CreateTestUser(id: "user1");
+            var user2 = TestDataFactory.CreateTestUser(id: "user2");
+            var group = TestDataFactory.CreateTestGroup("user1");
+            var groupUser1 = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser2 = TestDataFactory.CreateTestGroupUser(1, "user2");
+            var post = TestDataFactory.CreateTestGroupPost(1, "user1");
+
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.AddRange(user1, user2);
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+                post.GroupId = group.Id;
+                groupUser1.GroupId = group.Id;
+                groupUser2.GroupId = group.Id;
+                context.GroupPosts.Add(post);
+                context.GroupUsers.AddRange(groupUser1, groupUser2);
+                await context.SaveChangesAsync();
+            }
+
+            // Act - user2 tries to add image to user1's post
+            var (success, errorMessage, postImage) = await service.AddImageToPostAsync(post.Id, "/images/test.jpg", "user2");
+
+            // Assert
+            success.Should().BeFalse();
+            errorMessage.Should().Contain("not authorized");
+            postImage.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task AddImageToPostAsync_MultipleImages_ShouldIncrementDisplayOrder()
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory("GroupPostTest21");
+            var logger = CreateMockLogger<GroupPostService>();
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+
+            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var group = TestDataFactory.CreateTestGroup("user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var post = TestDataFactory.CreateTestGroupPost(1, "user1");
+
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(user);
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+                post.GroupId = group.Id;
+                groupUser.GroupId = group.Id;
+                context.GroupPosts.Add(post);
+                context.GroupUsers.Add(groupUser);
+                await context.SaveChangesAsync();
+            }
+
+            // Act - add multiple images
+            var (success1, _, image1) = await service.AddImageToPostAsync(post.Id, "/images/test1.jpg", "user1");
+            var (success2, _, image2) = await service.AddImageToPostAsync(post.Id, "/images/test2.jpg", "user1");
+            var (success3, _, image3) = await service.AddImageToPostAsync(post.Id, "/images/test3.jpg", "user1");
+
+            // Assert
+            success1.Should().BeTrue();
+            success2.Should().BeTrue();
+            success3.Should().BeTrue();
+            image1!.DisplayOrder.Should().Be(0);
+            image2!.DisplayOrder.Should().Be(1);
+            image3!.DisplayOrder.Should().Be(2);
+        }
+
+        [Fact]
+        public async Task RemoveImageFromPostAsync_ByAuthor_ShouldRemoveImage()
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory("GroupPostTest22");
+            var logger = CreateMockLogger<GroupPostService>();
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+
+            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var group = TestDataFactory.CreateTestGroup("user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var post = TestDataFactory.CreateTestGroupPost(1, "user1");
+            int imageId;
+
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(user);
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+                post.GroupId = group.Id;
+                groupUser.GroupId = group.Id;
+                context.GroupPosts.Add(post);
+                context.GroupUsers.Add(groupUser);
+                await context.SaveChangesAsync();
+
+                var image = new GroupPostImage
+                {
+                    PostId = post.Id,
+                    ImageUrl = "/images/test.jpg",
+                    DisplayOrder = 0
+                };
+                context.GroupPostImages.Add(image);
+                await context.SaveChangesAsync();
+                imageId = image.Id;
+            }
+
+            // Act
+            var (success, errorMessage) = await service.RemoveImageFromPostAsync(imageId, "user1");
+
+            // Assert
+            success.Should().BeTrue();
+            errorMessage.Should().BeNull();
+
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                var removedImage = await context.GroupPostImages.FindAsync(imageId);
+                removedImage.Should().BeNull();
+            }
+        }
+
+        [Fact]
+        public async Task RemoveImageFromPostAsync_ByNonAuthorNonAdmin_ShouldReturnError()
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory("GroupPostTest23");
+            var logger = CreateMockLogger<GroupPostService>();
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+
+            var user1 = TestDataFactory.CreateTestUser(id: "user1");
+            var user2 = TestDataFactory.CreateTestUser(id: "user2");
+            var group = TestDataFactory.CreateTestGroup("user1");
+            var groupUser1 = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser2 = TestDataFactory.CreateTestGroupUser(1, "user2");
+            var post = TestDataFactory.CreateTestGroupPost(1, "user1");
+            int imageId;
+
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.AddRange(user1, user2);
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+                post.GroupId = group.Id;
+                groupUser1.GroupId = group.Id;
+                groupUser2.GroupId = group.Id;
+                context.GroupPosts.Add(post);
+                context.GroupUsers.AddRange(groupUser1, groupUser2);
+                await context.SaveChangesAsync();
+
+                var image = new GroupPostImage
+                {
+                    PostId = post.Id,
+                    ImageUrl = "/images/test.jpg",
+                    DisplayOrder = 0
+                };
+                context.GroupPostImages.Add(image);
+                await context.SaveChangesAsync();
+                imageId = image.Id;
+            }
+
+            // Act - user2 (not author, not admin) tries to remove image
+            var (success, errorMessage) = await service.RemoveImageFromPostAsync(imageId, "user2");
+
+            // Assert
+            success.Should().BeFalse();
+            errorMessage.Should().Contain("not authorized");
+        }
+
+        [Fact]
+        public async Task GetPostImagesAsync_ShouldReturnImagesInDisplayOrder()
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory("GroupPostTest24");
+            var logger = CreateMockLogger<GroupPostService>();
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+
+            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var group = TestDataFactory.CreateTestGroup("user1");
+            var post = TestDataFactory.CreateTestGroupPost(1, "user1");
+
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(user);
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+                post.GroupId = group.Id;
+                context.GroupPosts.Add(post);
+                await context.SaveChangesAsync();
+
+                // Add images in non-sequential display order
+                var image1 = new GroupPostImage { PostId = post.Id, ImageUrl = "/images/third.jpg", DisplayOrder = 2 };
+                var image2 = new GroupPostImage { PostId = post.Id, ImageUrl = "/images/first.jpg", DisplayOrder = 0 };
+                var image3 = new GroupPostImage { PostId = post.Id, ImageUrl = "/images/second.jpg", DisplayOrder = 1 };
+                context.GroupPostImages.AddRange(image1, image2, image3);
+                await context.SaveChangesAsync();
+            }
+
+            // Act
+            var images = await service.GetPostImagesAsync(post.Id);
+
+            // Assert
+            images.Should().HaveCount(3);
+            images[0].ImageUrl.Should().Be("/images/first.jpg");
+            images[1].ImageUrl.Should().Be("/images/second.jpg");
+            images[2].ImageUrl.Should().Be("/images/third.jpg");
+        }
+
+        [Fact]
+        public async Task GetPostImagesAsync_NoImages_ShouldReturnEmptyList()
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory("GroupPostTest25");
+            var logger = CreateMockLogger<GroupPostService>();
+            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+
+            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var group = TestDataFactory.CreateTestGroup("user1");
+            var post = TestDataFactory.CreateTestGroupPost(1, "user1");
+
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(user);
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+                post.GroupId = group.Id;
+                context.GroupPosts.Add(post);
+                await context.SaveChangesAsync();
+            }
+
+            // Act
+            var images = await service.GetPostImagesAsync(post.Id);
+
+            // Assert
+            images.Should().BeEmpty();
         }
 
         #endregion

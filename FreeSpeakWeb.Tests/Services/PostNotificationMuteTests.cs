@@ -45,13 +45,20 @@ public class PostNotificationMuteTests : TestBase
         return new UserPreferenceService(dbFactory.Object, logger.Object);
     }
 
+    private static PostNotificationHelper CreateMockPostNotificationHelper()
+    {
+        var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
+        var logger = new Mock<ILogger<PostNotificationHelper>>();
+        return new PostNotificationHelper(dbFactory.Object, CreateMockNotificationService(), CreateMockUserPreferenceService(), logger.Object);
+    }
+
     [Fact]
     public async Task MutePostNotificationsAsync_ShouldCreateMuteRecord()
     {
         // Arrange
         var dbFactory = CreateDbContextFactory("MuteTest1");
         var logger = CreateMockLogger<PostService>();
-        var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
+        var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
 
         var user = new ApplicationUser { Id = "user1", UserName = "testuser", Email = "test@test.com" };
         using (var context = await dbFactory.CreateDbContextAsync())
@@ -88,7 +95,7 @@ public class PostNotificationMuteTests : TestBase
         // Arrange
         var dbFactory = CreateDbContextFactory("MuteTest2");
         var logger = CreateMockLogger<PostService>();
-        var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
+        var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
 
         using (var context = await dbFactory.CreateDbContextAsync())
         {
@@ -129,7 +136,7 @@ public class PostNotificationMuteTests : TestBase
         // Arrange
         var dbFactory = CreateDbContextFactory("MuteTest3");
         var logger = CreateMockLogger<PostService>();
-        var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
+        var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
 
         var invalidPostId = 99999;
         var userId = "user1";
@@ -148,7 +155,7 @@ public class PostNotificationMuteTests : TestBase
         // Arrange
         var dbFactory = CreateDbContextFactory("MuteTest4");
         var logger = CreateMockLogger<PostService>();
-        var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
+        var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
 
         using (var context = await dbFactory.CreateDbContextAsync())
         {
@@ -190,7 +197,7 @@ public class PostNotificationMuteTests : TestBase
         // Arrange
         var dbFactory = CreateDbContextFactory("MuteTest5");
         var logger = CreateMockLogger<PostService>();
-        var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
+        var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
 
         using (var context = await dbFactory.CreateDbContextAsync())
         {
@@ -221,7 +228,7 @@ public class PostNotificationMuteTests : TestBase
         // Arrange
         var dbFactory = CreateDbContextFactory("MuteTest6");
         var logger = CreateMockLogger<PostService>();
-        var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
+        var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
 
         using (var context = await dbFactory.CreateDbContextAsync())
         {
@@ -258,7 +265,7 @@ public class PostNotificationMuteTests : TestBase
         // Arrange
         var dbFactory = CreateDbContextFactory("MuteTest7");
         var logger = CreateMockLogger<PostService>();
-        var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService());
+        var service = new PostService(dbFactory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
 
         using (var context = await dbFactory.CreateDbContextAsync())
         {

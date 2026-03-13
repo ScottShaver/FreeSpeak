@@ -125,7 +125,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                var result = await _groupPostService.LikePostAsync(postId, userId, reactionType);
+                var result = await _groupPostService.AddOrUpdateReactionAsync(postId, userId, reactionType);
 
                 if (result.Success)
                 {
@@ -161,7 +161,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                var result = await _groupPostService.UnlikePostAsync(postId, userId);
+                var result = await _groupPostService.RemoveReactionAsync(postId, userId);
 
                 if (result.Success)
                 {
@@ -195,7 +195,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                var result = await _groupPostService.LikeCommentAsync(commentId, userId, reactionType);
+                var result = await _groupPostService.AddOrUpdateCommentReactionAsync(commentId, userId, reactionType);
 
                 if (result.Success)
                 {
@@ -219,7 +219,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                var result = await _groupPostService.UnlikeCommentAsync(commentId, userId);
+                var result = await _groupPostService.RemoveCommentReactionAsync(commentId, userId);
 
                 if (result.Success)
                 {

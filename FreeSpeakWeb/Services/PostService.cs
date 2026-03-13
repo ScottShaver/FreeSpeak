@@ -13,6 +13,7 @@ namespace FreeSpeakWeb.Services
         private readonly IWebHostEnvironment _environment;
         private readonly NotificationService _notificationService;
         private readonly UserPreferenceService _userPreferenceService;
+        private readonly PostNotificationHelper _notificationHelper;
 
         public PostService(
             IDbContextFactory<ApplicationDbContext> contextFactory, 
@@ -20,7 +21,8 @@ namespace FreeSpeakWeb.Services
             IOptions<SiteSettings> siteSettings,
             IWebHostEnvironment environment,
             NotificationService notificationService,
-            UserPreferenceService userPreferenceService)
+            UserPreferenceService userPreferenceService,
+            PostNotificationHelper notificationHelper)
         {
             _contextFactory = contextFactory;
             _logger = logger;
@@ -28,6 +30,7 @@ namespace FreeSpeakWeb.Services
             _environment = environment;
             _notificationService = notificationService;
             _userPreferenceService = userPreferenceService;
+            _notificationHelper = notificationHelper;
         }
 
         #region Post Operations
@@ -752,77 +755,28 @@ namespace FreeSpeakWeb.Services
 
                 _logger.LogInformation("Comment added to post {PostId} by user {AuthorId}", postId, authorId);
 
-                // Create notification for new reactions only (not for changing reactions)
-                // Don't notify if user is commenting on their own post/comment
-                var commenter = await context.Users.FindAsync(authorId);
-                if (commenter != null)
+                // Send notifications using helper
+                if (parentCommentId.HasValue && parentComment != null)
                 {
-                    if (parentCommentId.HasValue)
-                    {
-                        // Reply to a comment - notify the parent comment author
-                        if (parentComment != null && parentComment.AuthorId != authorId)
-                        {
-                            // Check if the parent comment author has muted notifications for this post
-                            var isMuted = await context.PostNotificationMutes
-                                .AnyAsync(m => m.PostId == postId && m.UserId == parentComment.AuthorId);
-
-                            if (!isMuted)
-                            {
-                                var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
-                                    commenter.Id,
-                                    commenter.FirstName ?? string.Empty,
-                                    commenter.LastName ?? string.Empty,
-                                    commenter.UserName ?? "User"
-                                );
-                                var message = $"<strong>{formattedName}</strong> replied to your comment";
-                                await _notificationService.CreateNotificationAsync(
-                                    parentComment.AuthorId,
-                                    NotificationType.CommentReply,
-                                    message,
-                                    new { 
-                                        PostId = postId, 
-                                        CommentId = comment.Id, 
-                                        CommenterId = authorId,
-                                        CommenterName = formattedName,
-                                        CommenterProfilePicture = commenter.ProfilePictureUrl
-                                    }
-                                );
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Direct comment on post - notify the post author
-                        if (post.AuthorId != authorId)
-                        {
-                            // Check if the post author has muted notifications for this post
-                            var isMuted = await context.PostNotificationMutes
-                                .AnyAsync(m => m.PostId == postId && m.UserId == post.AuthorId);
-
-                            if (!isMuted)
-                            {
-                                var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
-                                    commenter.Id,
-                                    commenter.FirstName ?? string.Empty,
-                                    commenter.LastName ?? string.Empty,
-                                    commenter.UserName ?? "User"
-                                );
-                                var message = $"<strong>{formattedName}</strong> commented on your post";
-                                await _notificationService.CreateNotificationAsync(
-                                    post.AuthorId,
-                                    NotificationType.PostComment,
-                                    message,
-                                    new { 
-                                        PostId = postId, 
-                                        CommentId = comment.Id, 
-                                        CommenterId = authorId,
-                                        CommenterName = formattedName,
-                                        CommenterProfilePicture = commenter.ProfilePictureUrl
-                                    }
-                                );
-                            }
-                        }
-                    }
+                    // Reply to a comment - notify the parent comment author
+                    await _notificationHelper.NotifyCommentReplyAsync(
+                        parentComment.AuthorId,
+                        authorId,
+                        postId,
+                        comment.Id,
+                        NotificationType.CommentReply
+                    );
+                }
+                else
+                {
+                    // Direct comment on post - notify the post author
+                    await _notificationHelper.NotifyPostCommentAsync(
+                        post.AuthorId,
+                        authorId,
+                        postId,
+                        comment.Id,
+                        NotificationType.PostComment
+                    );
                 }
 
                 return (true, null, comment);
@@ -1169,41 +1123,15 @@ namespace FreeSpeakWeb.Services
                 await context.SaveChangesAsync();
 
                 // Create notification for new reactions only (not for changing reactions)
-                // Don't notify if user is reacting to their own post
-                if (isNewReaction && post.AuthorId != userId)
+                if (isNewReaction)
                 {
-                    // Check if the post author has muted notifications for this post
-                    var isMuted = await context.PostNotificationMutes
-                        .AnyAsync(m => m.PostId == postId && m.UserId == post.AuthorId);
-
-                    if (!isMuted)
-                    {
-                        var reactor = await context.Users.FindAsync(userId);
-                        if (reactor != null)
-                        {
-                            var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
-                                reactor.Id,
-                                reactor.FirstName ?? string.Empty,
-                                reactor.LastName ?? string.Empty,
-                                reactor.UserName ?? "User"
-                            );
-                            var reactionText = reactionType.ToString().ToLower();
-                            var message = $"<strong>{formattedName}</strong> reacted to your post with {reactionText}";
-
-                            await _notificationService.CreateNotificationAsync(
-                                post.AuthorId,
-                                NotificationType.PostLiked,
-                                message,
-                                new { 
-                                    PostId = postId, 
-                                    ReactorId = userId, 
-                                    ReactorName = formattedName,
-                                    ReactorProfilePicture = reactor.ProfilePictureUrl,
-                                    ReactionType = reactionType.ToString() 
-                                }
-                            );
-                        }
-                    }
+                    await _notificationHelper.NotifyPostReactionAsync(
+                        post.AuthorId,
+                        userId,
+                        postId,
+                        reactionType,
+                        NotificationType.PostLiked
+                    );
                 }
 
                 return (true, null);
@@ -1483,42 +1411,16 @@ namespace FreeSpeakWeb.Services
                 await context.SaveChangesAsync();
 
                 // Create notification for new reactions only (not for changing reactions)
-                // Don't notify if user is reacting to their own comment
-                if (isNewReaction && comment.AuthorId != userId)
+                if (isNewReaction)
                 {
-                    // Check if the comment author has muted notifications for this post
-                    var isMuted = await context.PostNotificationMutes
-                        .AnyAsync(m => m.PostId == comment.PostId && m.UserId == comment.AuthorId);
-
-                    if (!isMuted)
-                    {
-                        var reactor = await context.Users.FindAsync(userId);
-                        if (reactor != null)
-                        {
-                            var formattedName = await _userPreferenceService.FormatUserDisplayNameAsync(
-                                reactor.Id,
-                                reactor.FirstName ?? string.Empty,
-                                reactor.LastName ?? string.Empty,
-                                reactor.UserName ?? "User"
-                            );
-                            var reactionText = reactionType.ToString().ToLower();
-                            var message = $"<strong>{formattedName}</strong> reacted to your comment with {reactionText}";
-
-                            await _notificationService.CreateNotificationAsync(
-                                comment.AuthorId,
-                                NotificationType.CommentLiked,
-                                message,
-                                new { 
-                                    PostId = comment.PostId, 
-                                    CommentId = commentId, 
-                                    ReactorId = userId,
-                                    ReactorName = formattedName,
-                                    ReactorProfilePicture = reactor.ProfilePictureUrl,
-                                    ReactionType = reactionType.ToString() 
-                                }
-                            );
-                        }
-                    }
+                    await _notificationHelper.NotifyCommentReactionAsync(
+                        comment.AuthorId,
+                        userId,
+                        comment.PostId,
+                        commentId,
+                        reactionType,
+                        NotificationType.CommentLiked
+                    );
                 }
 
                 return (true, null);

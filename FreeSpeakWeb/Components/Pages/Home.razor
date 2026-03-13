@@ -7,6 +7,7 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Helpers
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Components.Shared
@@ -822,7 +823,7 @@
         int? postId = null;
         foreach (var kvp in postComments)
         {
-            if (FindCommentById(kvp.Value, data.ParentCommentId) != null)
+            if (CommentHelpers.FindCommentById(kvp.Value, data.ParentCommentId) != null)
             {
                 postId = kvp.Key;
                 break;
@@ -869,7 +870,7 @@
                 int? postId = null;
                 foreach (var kvp in postComments)
                 {
-                    if (FindCommentById(kvp.Value, data.CommentId) != null)
+                    if (CommentHelpers.FindCommentById(kvp.Value, data.CommentId) != null)
                     {
                         postId = kvp.Key;
                         break;
@@ -911,7 +912,7 @@
                 int? postId = null;
                 foreach (var kvp in postComments)
                 {
-                    if (FindCommentById(kvp.Value, commentId) != null)
+                    if (CommentHelpers.FindCommentById(kvp.Value, commentId) != null)
                     {
                         postId = kvp.Key;
                         break;
@@ -944,7 +945,7 @@
         // Find the comment in the postComments dictionary and update its reaction data
         foreach (var kvp in postComments)
         {
-            var comment = FindCommentById(kvp.Value, commentId);
+            var comment = CommentHelpers.FindCommentById(kvp.Value, commentId);
             if (comment != null)
             {
                 // Update user's reaction
@@ -956,23 +957,6 @@
                 break;
             }
         }
-    }
-
-    private CommentDisplayModel? FindCommentById(List<CommentDisplayModel> comments, int commentId)
-    {
-        foreach (var comment in comments)
-        {
-            if (comment.CommentId == commentId)
-                return comment;
-
-            if (comment.Replies != null)
-            {
-                var found = FindCommentById(comment.Replies, commentId);
-                if (found != null)
-                    return found;
-            }
-        }
-        return null;
     }
 
     private async Task HandlePostCreated((string Content, AudienceType AudienceType, List<ImageUploadModal.SelectedImage> Images) postData)

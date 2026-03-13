@@ -44,6 +44,10 @@ namespace FreeSpeakWeb.Tests.Components
             var mockUserPreferenceLogger = new Mock<ILogger<UserPreferenceService>>();
             var userPreferenceService = new UserPreferenceService(mockDbContextFactory.Object, mockUserPreferenceLogger.Object);
 
+            // Mock PostNotificationHelper
+            var mockNotificationHelperLogger = new Mock<ILogger<PostNotificationHelper>>();
+            var postNotificationHelper = new PostNotificationHelper(mockDbContextFactory.Object, notificationService, userPreferenceService, mockNotificationHelperLogger.Object);
+
             // Create SiteSettings for PostService
             var siteSettings = new SiteSettings
             {
@@ -60,11 +64,13 @@ namespace FreeSpeakWeb.Tests.Components
                 siteSettingsOptions,
                 mockEnvironment.Object,
                 notificationService,
-                userPreferenceService
+                userPreferenceService,
+                postNotificationHelper
             );
 
             Services.AddSingleton(postService);
             Services.AddSingleton(siteSettingsOptions);
+            Services.AddSingleton(userPreferenceService);
         }
 
         [Fact]
