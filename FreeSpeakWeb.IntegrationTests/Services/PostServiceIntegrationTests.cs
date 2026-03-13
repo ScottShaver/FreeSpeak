@@ -139,7 +139,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var service = new PostService(factory, null!, null!, null!, null!, null!, null!, null!, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
 
             var author = CreateTestUser("author1", "author", "Post", "Author");
             var commenter1 = CreateTestUser("commenter1", "commenter1", "First", "Commenter");
@@ -217,7 +217,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var service = new PostService(factory, null!, null!, null!, null!, null!, null!, null!, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
 
             var user1 = CreateTestUser("user1", "user1", "User", "One");
             var user2 = CreateTestUser("user2", "user2", "User", "Two");
@@ -274,7 +274,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
+            var service = new PostService(factory, null!, null!, null!, null!, null!, null!, null!, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper());
 
             var author = CreateTestUser("author1", "author", "Post", "Author");
             var commenter = CreateTestUser("commenter1", "commenter", "Comment", "Author");

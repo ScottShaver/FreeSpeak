@@ -145,6 +145,20 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        public async Task<int> GetTotalCountAsync(string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                return await context.UserNotifications.CountAsync(n => n.UserId == userId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error counting total notifications for user {UserId}", userId);
+                return 0;
+            }
+        }
+
         public async Task<bool> MarkAsReadAsync(int notificationId, string userId)
         {
             try

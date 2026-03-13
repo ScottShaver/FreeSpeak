@@ -57,7 +57,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest1");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -91,7 +91,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest2");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user2");
@@ -118,7 +118,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest3");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user2");
@@ -152,7 +152,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest4");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -189,7 +189,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest5");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -225,7 +225,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest6");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var author = TestDataFactory.CreateTestUser(id: "user1");
             var moderator = TestDataFactory.CreateTestUser(id: "user2");
@@ -263,7 +263,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest7");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -305,7 +305,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest8");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var author = TestDataFactory.CreateTestUser(id: "user2");
             var nonMember = TestDataFactory.CreateTestUser(id: "user1");
@@ -342,7 +342,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest9");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -388,7 +388,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest10");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -429,7 +429,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest11");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -475,7 +475,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest12");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -518,7 +518,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest13");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -566,7 +566,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest14");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -602,7 +602,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest15");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -642,7 +642,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest16");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -679,7 +679,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest17");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -712,7 +712,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest18");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -768,7 +768,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest19");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -810,7 +810,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest20");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -847,7 +847,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest21");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -886,7 +886,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest22");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -936,7 +936,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest23");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -983,7 +983,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest24");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");
@@ -1022,7 +1022,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("GroupPostTest25");
             var logger = CreateMockLogger<GroupPostService>();
-            var service = new GroupPostService(dbFactory, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
+            var service = new GroupPostService(dbFactory, MockRepositories.CreateMockGroupPostRepository().Object, MockRepositories.CreateMockGroupCommentRepository().Object, MockRepositories.CreateMockGroupPostLikeRepository().Object, MockRepositories.CreateMockGroupCommentLikeRepository().Object, MockRepositories.CreateMockGroupRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockWebHostEnvironment(), CreateMockPostNotificationHelper(), CreateMockGroupAccessValidator(dbFactory));
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("user1");

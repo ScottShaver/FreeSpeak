@@ -18,6 +18,11 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         Task<int> GetUnreadCountAsync(string userId);
 
         /// <summary>
+        /// Get total notification count for a user
+        /// </summary>
+        Task<int> GetTotalCountAsync(string userId);
+
+        /// <summary>
         /// Mark a notification as read
         /// </summary>
         Task<bool> MarkAsReadAsync(int notificationId, string userId);

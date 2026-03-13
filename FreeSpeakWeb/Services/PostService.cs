@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Components.SocialFeed;
+using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -8,6 +9,13 @@ namespace FreeSpeakWeb.Services
     public class PostService
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
+        private readonly IFeedPostRepository<Post, PostImage> _postRepository;
+        private readonly IFeedCommentRepository _commentRepository;
+        private readonly IFeedPostLikeRepository _likeRepository;
+        private readonly IFeedCommentLikeRepository _commentLikeRepository;
+        private readonly IPinnedPostRepository _pinnedPostRepository;
+        private readonly IPostNotificationMuteRepository _muteRepository;
+        private readonly INotificationRepository _notificationRepository;
         private readonly ILogger<PostService> _logger;
         private readonly SiteSettings _siteSettings;
         private readonly IWebHostEnvironment _environment;
@@ -16,7 +24,14 @@ namespace FreeSpeakWeb.Services
         private readonly PostNotificationHelper _notificationHelper;
 
         public PostService(
-            IDbContextFactory<ApplicationDbContext> contextFactory, 
+            IDbContextFactory<ApplicationDbContext> contextFactory,
+            IFeedPostRepository<Post, PostImage> postRepository,
+            IFeedCommentRepository commentRepository,
+            IFeedPostLikeRepository likeRepository,
+            IFeedCommentLikeRepository commentLikeRepository,
+            IPinnedPostRepository pinnedPostRepository,
+            IPostNotificationMuteRepository muteRepository,
+            INotificationRepository notificationRepository,
             ILogger<PostService> logger, 
             IOptions<SiteSettings> siteSettings,
             IWebHostEnvironment environment,
@@ -25,6 +40,13 @@ namespace FreeSpeakWeb.Services
             PostNotificationHelper notificationHelper)
         {
             _contextFactory = contextFactory;
+            _postRepository = postRepository;
+            _commentRepository = commentRepository;
+            _likeRepository = likeRepository;
+            _commentLikeRepository = commentLikeRepository;
+            _pinnedPostRepository = pinnedPostRepository;
+            _muteRepository = muteRepository;
+            _notificationRepository = notificationRepository;
             _logger = logger;
             _siteSettings = siteSettings.Value;
             _environment = environment;
@@ -48,8 +70,6 @@ namespace FreeSpeakWeb.Services
 
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
                 var post = new Post
                 {
                     AuthorId = authorId,
@@ -58,28 +78,24 @@ namespace FreeSpeakWeb.Services
                     AudienceType = audienceType
                 };
 
-                context.Posts.Add(post);
-                await context.SaveChangesAsync();
+                var result = await _postRepository.CreateAsync(post);
+                if (!result.Success || result.Post == null)
+                {
+                    return (false, result.ErrorMessage ?? "Failed to create post.", null);
+                }
 
                 // Add images if provided
                 if (imageUrls != null && imageUrls.Any())
                 {
-                    for (int i = 0; i < imageUrls.Count; i++)
+                    var imageResult = await _postRepository.AddImagesAsync(result.Post.Id, authorId, imageUrls);
+                    if (!imageResult.Success)
                     {
-                        var postImage = new PostImage
-                        {
-                            PostId = post.Id,
-                            ImageUrl = imageUrls[i],
-                            DisplayOrder = i,
-                            UploadedAt = DateTime.UtcNow
-                        };
-                        context.PostImages.Add(postImage);
+                        _logger.LogWarning("Post created but failed to add images: {ErrorMessage}", imageResult.ErrorMessage);
                     }
-                    await context.SaveChangesAsync();
                 }
 
-                _logger.LogInformation("Post created by user {AuthorId}: Post ID {PostId}", authorId, post.Id);
-                return (true, null, post);
+                _logger.LogInformation("Post created by user {AuthorId}: Post ID {PostId}", authorId, result.Post.Id);
+                return (true, null, result.Post);
             }
             catch (Exception ex)
             {
@@ -108,70 +124,45 @@ namespace FreeSpeakWeb.Services
 
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var post = await context.Posts
-                    .Include(p => p.Images)
-                    .FirstOrDefaultAsync(p => p.Id == postId);
-
-                if (post == null)
-                {
-                    return (false, "Post not found.", null);
-                }
-
-                if (post.AuthorId != userId)
-                {
-                    return (false, "You are not authorized to edit this post.", null);
-                }
-
                 // Update content
-                post.Content = string.IsNullOrWhiteSpace(newContent) ? string.Empty : newContent.Trim();
-                post.UpdatedAt = DateTime.UtcNow;
+                var contentResult = await _postRepository.UpdateContentAsync(postId, userId, newContent);
+                if (!contentResult.Success)
+                {
+                    return (false, contentResult.ErrorMessage, null);
+                }
 
                 // Remove specified images
                 if (removedImageIds != null && removedImageIds.Any())
                 {
-                    var imagesToRemove = post.Images
-                        .Where(img => removedImageIds.Contains(img.Id))
-                        .ToList();
-
-                    foreach (var image in imagesToRemove)
+                    var removeResult = await _postRepository.RemoveImagesAsync(postId, userId, removedImageIds);
+                    if (!removeResult.Success)
                     {
-                        context.PostImages.Remove(image);
+                        _logger.LogWarning("Post updated but failed to remove images: {ErrorMessage}", removeResult.ErrorMessage);
                     }
                 }
 
                 // Add new images
                 if (newImageUrls != null && newImageUrls.Any())
                 {
-                    var currentMaxOrder = post.Images.Any() ? post.Images.Max(img => img.DisplayOrder) : -1;
-
-                    for (int i = 0; i < newImageUrls.Count; i++)
+                    var addResult = await _postRepository.AddImagesAsync(postId, userId, newImageUrls);
+                    if (!addResult.Success)
                     {
-                        var postImage = new PostImage
-                        {
-                            PostId = post.Id,
-                            ImageUrl = newImageUrls[i],
-                            DisplayOrder = currentMaxOrder + 1 + i,
-                            UploadedAt = DateTime.UtcNow
-                        };
-                        context.PostImages.Add(postImage);
+                        _logger.LogWarning("Post updated but failed to add images: {ErrorMessage}", addResult.ErrorMessage);
                     }
                 }
 
-                await context.SaveChangesAsync();
-
-                // Reload images to get the updated collection
-                await context.Entry(post).Collection(p => p.Images).LoadAsync();
+                // Get updated images
+                var updatedImages = await _postRepository.GetImagesAsync(postId);
 
                 // Verify post still has content or images
-                if (string.IsNullOrWhiteSpace(post.Content) && !post.Images.Any())
+                var post = await _postRepository.GetByIdAsync(postId, includeAuthor: false, includeImages: false);
+                if (post != null && string.IsNullOrWhiteSpace(post.Content) && !updatedImages.Any())
                 {
                     return (false, "Post must contain either text or images.", null);
                 }
 
                 _logger.LogInformation("Post {PostId} updated by user {UserId}", postId, userId);
-                return (true, null, post.Images.OrderBy(i => i.DisplayOrder).ToList());
+                return (true, null, updatedImages);
             }
             catch (Exception ex)
             {
@@ -187,35 +178,14 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var post = await context.Posts.FindAsync(postId);
-
-                if (post == null)
+                var result = await _postRepository.UpdateAudienceAsync(postId, userId, newAudienceType);
+                if (!result.Success)
                 {
-                    return (false, "Post not found.");
+                    return result;
                 }
-
-                if (post.AuthorId != userId)
-                {
-                    return (false, "You are not authorized to modify this post.");
-                }
-
-                post.AudienceType = newAudienceType;
-                post.UpdatedAt = DateTime.UtcNow;
 
                 // Remove any pinned post records since the audience has changed
-                var pinnedPosts = await context.PinnedPosts
-                    .Where(pp => pp.PostId == postId)
-                    .ToListAsync();
-
-                if (pinnedPosts.Any())
-                {
-                    context.PinnedPosts.RemoveRange(pinnedPosts);
-                    _logger.LogInformation("Removed {Count} pinned post record(s) for post {PostId} due to audience change", pinnedPosts.Count, postId);
-                }
-
-                await context.SaveChangesAsync();
+                await _pinnedPostRepository.RemovePinnedPostsByPostIdAsync(postId);
 
                 _logger.LogInformation("Post {PostId} audience updated to {AudienceType} by user {UserId}", postId, newAudienceType, userId);
                 return (true, null);
@@ -438,31 +408,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                // Get user's friend IDs
-                var friendIds = await context.Friendships
-                    .Where(f => f.Status == FriendshipStatus.Accepted &&
-                               (f.RequesterId == userId || f.AddresseeId == userId))
-                    .Select(f => f.RequesterId == userId ? f.AddresseeId : f.RequesterId)
-                    .ToListAsync();
-
-                // Include user's own ID
-                var authorIds = friendIds.Append(userId).ToList();
-
-                var posts = await context.Posts
-                    .Include(p => p.Author)
-                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
-                    .Where(p => authorIds.Contains(p.AuthorId) &&
-                               (p.AuthorId == userId || // User's own posts (all audience types)
-                                p.AudienceType == AudienceType.Public || // Friends' public posts
-                                p.AudienceType == AudienceType.FriendsOnly)) // Friends' friends-only posts
-                    .OrderByDescending(p => p.CreatedAt)
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-
-                return posts;
+                return await _postRepository.GetFeedPostsAsync(userId, (pageNumber - 1) * pageSize, pageSize);
             }
             catch (Exception ex)
             {
@@ -478,18 +424,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var posts = await context.Posts
-                    .Include(p => p.Author)
-                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
-                    .Where(p => p.AuthorId == userId)
-                    .OrderByDescending(p => p.CreatedAt)
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-
-                return posts;
+                return await _postRepository.GetByAuthorAsync(userId, (pageNumber - 1) * pageSize, pageSize);
             }
             catch (Exception ex)
             {
@@ -505,25 +440,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                // Get public posts only, ordered by creation date (most recent first)
-                var posts = await context.Posts
-                    .Include(p => p.Author)
-                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
-                    .Where(p => p.AudienceType == AudienceType.Public)
-                    .OrderByDescending(p => p.CreatedAt)
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize + 1) // Take one extra to check if there are more
-                    .ToListAsync();
-
-                var hasMore = posts.Count > pageSize;
-                if (hasMore)
-                {
-                    posts = posts.Take(pageSize).ToList();
-                }
-
-                return (posts, hasMore);
+                return await _postRepository.GetPublicPostsAsync(pageNumber, pageSize);
             }
             catch (Exception ex)
             {
@@ -539,22 +456,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var friendIds = await context.Friendships
-                    .Where(f => f.Status == FriendshipStatus.Accepted &&
-                               (f.RequesterId == userId || f.AddresseeId == userId))
-                    .Select(f => f.RequesterId == userId ? f.AddresseeId : f.RequesterId)
-                    .ToListAsync();
-
-                var authorIds = friendIds.Append(userId).ToList();
-
-                return await context.Posts
-                    .Where(p => authorIds.Contains(p.AuthorId) &&
-                               (p.AuthorId == userId || // User's own posts (all audience types)
-                                p.AudienceType == AudienceType.Public || // Friends' public posts
-                                p.AudienceType == AudienceType.FriendsOnly)) // Friends' friends-only posts
-                    .CountAsync();
+                return await _postRepository.GetFeedPostsCountAsync(userId);
             }
             catch (Exception ex)
             {

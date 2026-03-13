@@ -69,6 +69,13 @@ namespace FreeSpeakWeb.Tests.Services
         {
             return new PostService(
                 dbFactory,
+                MockRepositories.CreateMockFeedPostRepository().Object,
+                MockRepositories.CreateMockFeedCommentRepository().Object,
+                MockRepositories.CreateMockFeedPostLikeRepository().Object,
+                MockRepositories.CreateMockFeedCommentLikeRepository().Object,
+                MockRepositories.CreateMockPinnedPostRepository().Object,
+                MockRepositories.CreateMockPostNotificationMuteRepository().Object,
+                MockRepositories.CreateMockNotificationRepository().Object,
                 CreateMockLogger<PostService>(),
                 CreateTestSiteSettings(),
                 CreateMockWebHostEnvironment(),
@@ -81,6 +88,12 @@ namespace FreeSpeakWeb.Tests.Services
         {
             return new GroupPostService(
                 dbFactory,
+                MockRepositories.CreateMockGroupPostRepository().Object,
+                MockRepositories.CreateMockGroupCommentRepository().Object,
+                MockRepositories.CreateMockGroupPostLikeRepository().Object,
+                MockRepositories.CreateMockGroupCommentLikeRepository().Object,
+                MockRepositories.CreateMockGroupRepository().Object,
+                MockRepositories.CreateMockNotificationRepository().Object,
                 CreateMockLogger<GroupPostService>(),
                 CreateMockNotificationService(),
                 CreateMockUserPreferenceService(),

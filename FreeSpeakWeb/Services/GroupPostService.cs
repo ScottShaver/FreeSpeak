@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
@@ -6,6 +7,12 @@ namespace FreeSpeakWeb.Services
     public class GroupPostService
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
+        private readonly IGroupPostRepository<GroupPost, GroupPostImage> _postRepository;
+        private readonly IGroupCommentRepository _commentRepository;
+        private readonly IGroupPostLikeRepository _likeRepository;
+        private readonly IGroupCommentLikeRepository _commentLikeRepository;
+        private readonly IGroupRepository _groupRepository;
+        private readonly INotificationRepository _notificationRepository;
         private readonly ILogger<GroupPostService> _logger;
         private readonly NotificationService _notificationService;
         private readonly UserPreferenceService _userPreferenceService;
@@ -15,6 +22,12 @@ namespace FreeSpeakWeb.Services
 
         public GroupPostService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
+            IGroupPostRepository<GroupPost, GroupPostImage> postRepository,
+            IGroupCommentRepository commentRepository,
+            IGroupPostLikeRepository likeRepository,
+            IGroupCommentLikeRepository commentLikeRepository,
+            IGroupRepository groupRepository,
+            INotificationRepository notificationRepository,
             ILogger<GroupPostService> logger,
             NotificationService notificationService,
             UserPreferenceService userPreferenceService,
@@ -23,6 +36,12 @@ namespace FreeSpeakWeb.Services
             GroupAccessValidator accessValidator)
         {
             _contextFactory = contextFactory;
+            _postRepository = postRepository;
+            _commentRepository = commentRepository;
+            _likeRepository = likeRepository;
+            _commentLikeRepository = commentLikeRepository;
+            _groupRepository = groupRepository;
+            _notificationRepository = notificationRepository;
             _logger = logger;
             _notificationService = notificationService;
             _userPreferenceService = userPreferenceService;
@@ -56,8 +75,6 @@ namespace FreeSpeakWeb.Services
 
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
                 var post = new GroupPost
                 {
                     GroupId = groupId,
@@ -66,36 +83,27 @@ namespace FreeSpeakWeb.Services
                     CreatedAt = DateTime.UtcNow
                 };
 
-                context.GroupPosts.Add(post);
-                await context.SaveChangesAsync();
+                var result = await _postRepository.CreateAsync(post);
+                if (!result.Success || result.Post == null)
+                {
+                    return (false, result.ErrorMessage ?? "Failed to create post.", null);
+                }
 
                 // Add images if provided
                 if (imageUrls != null && imageUrls.Any())
                 {
-                    for (int i = 0; i < imageUrls.Count; i++)
+                    var imageResult = await _postRepository.AddImagesAsync(result.Post.Id, authorId, imageUrls);
+                    if (!imageResult.Success)
                     {
-                        var postImage = new GroupPostImage
-                        {
-                            PostId = post.Id,
-                            ImageUrl = imageUrls[i],
-                            DisplayOrder = i,
-                            UploadedAt = DateTime.UtcNow
-                        };
-                        context.GroupPostImages.Add(postImage);
+                        _logger.LogWarning("Group post created but failed to add images: {ErrorMessage}", imageResult.ErrorMessage);
                     }
-                    await context.SaveChangesAsync();
                 }
 
                 // Update group's last active timestamp
-                var group = await context.Groups.FindAsync(groupId);
-                if (group != null)
-                {
-                    group.LastActiveAt = DateTime.UtcNow;
-                    await context.SaveChangesAsync();
-                }
+                await _groupRepository.UpdateLastActiveAsync(groupId);
 
-                _logger.LogInformation("Group post created by user {AuthorId} in group {GroupId}: Post ID {PostId}", authorId, groupId, post.Id);
-                return (true, null, post);
+                _logger.LogInformation("Group post created by user {AuthorId} in group {GroupId}: Post ID {PostId}", authorId, groupId, result.Post.Id);
+                return (true, null, result.Post);
             }
             catch (Exception ex)
             {

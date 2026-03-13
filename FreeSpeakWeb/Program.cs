@@ -164,6 +164,9 @@ namespace FreeSpeakWeb
             builder.Services.AddScoped<IGroupRepository, GroupRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+            builder.Services.AddScoped<IPinnedPostRepository, PinnedPostRepository>();
+            builder.Services.AddScoped<IPostNotificationMuteRepository, PostNotificationMuteRepository>();
+            builder.Services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
 
             // SECURITY: Add rate limiting to prevent abuse
             builder.Services.AddRateLimiter(options =>

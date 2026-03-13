@@ -61,6 +61,13 @@ namespace FreeSpeakWeb.Tests.Components
             // Create PostService with mocked dependencies
             var postService = new PostService(
                 mockDbContextFactory.Object,
+                MockRepositories.CreateMockFeedPostRepository().Object,
+                MockRepositories.CreateMockFeedCommentRepository().Object,
+                MockRepositories.CreateMockFeedPostLikeRepository().Object,
+                MockRepositories.CreateMockFeedCommentLikeRepository().Object,
+                MockRepositories.CreateMockPinnedPostRepository().Object,
+                MockRepositories.CreateMockPostNotificationMuteRepository().Object,
+                MockRepositories.CreateMockNotificationRepository().Object,
                 mockLogger.Object,
                 siteSettingsOptions,
                 mockEnvironment.Object,

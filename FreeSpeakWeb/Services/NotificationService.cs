@@ -209,11 +209,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                return await context.UserNotifications
-                    .Where(n => n.UserId == userId && !n.IsRead)
-                    .CountAsync();
+                return await _notificationRepository.GetUnreadCountAsync(userId);
             }
             catch (Exception ex)
             {
@@ -229,11 +225,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                return await context.UserNotifications
-                    .Where(n => n.UserId == userId)
-                    .CountAsync();
+                return await _notificationRepository.GetTotalCountAsync(userId);
             }
             catch (Exception ex)
             {
@@ -249,10 +241,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                return await context.UserNotifications
-                    .FirstOrDefaultAsync(n => n.Id == notificationId);
+                return await _notificationRepository.GetByIdAsync(notificationId);
             }
             catch (Exception ex)
             {
