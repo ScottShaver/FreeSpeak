@@ -7,7 +7,8 @@ A modern social media platform built with Blazor Server and .NET 10, featuring r
 FreeSpeak is a feature-rich social networking application that enables users to:
 - Create and share posts with image support
 - Engage with content through multiple reaction types (Like, Love, Care, Haha, Wow, Sad, Angry)
-- Participate in threaded conversations with nested comments
+- Participate in threaded conversations with nested comments (up to 4 levels deep)
+- Create and join groups with dedicated posting and moderation
 - View detailed analytics for posts and interactions
 - Manage their profile with custom avatars
 - Receive real-time notifications for social interactions
@@ -132,8 +133,6 @@ Run all tests:
 dotnet test
 ```
 
-See [TESTING.md](TESTING.md) for detailed testing guidelines.
-
 ## Project Structure
 
 ```
@@ -141,30 +140,41 @@ FreeSpeak/
 ├── FreeSpeakWeb/                 # Main Blazor Server application
 │   ├── Components/
 │   │   ├── Pages/                # Routable pages
+│   │   │   ├── Base/            # Base components for code reuse
+│   │   │   │   └── PostPageBase.cs # Generic base for post pages
 │   │   │   ├── Home.razor       # Main feed page
+│   │   │   ├── Groups.razor     # Group feed aggregation
+│   │   │   ├── GroupView.razor  # Individual group page
 │   │   │   ├── Notifications.razor # Notifications center
 │   │   │   └── FriendsList.razor # Friends management
 │   │   ├── SocialFeed/          # Feed components
-│   │   │   ├── FeedArticle.razor # Post display component
+│   │   │   ├── FeedArticle.razor # Regular post display
+│   │   │   ├── GroupPostArticle.razor # Group post display
 │   │   │   ├── PostDetailModal.razor # Full post view with comments
+│   │   │   ├── GroupPostDetailModal.razor # Group post modal
 │   │   │   └── MultiLineCommentDisplay.razor # Comment component
 │   │   └── Shared/              # Shared components
 │   │       └── NotificationComponent.razor # Single notification display
 │   ├── Data/                     # Entity models and DbContext
 │   │   ├── ApplicationDbContext.cs
-│   │   ├── Post.cs
-│   │   ├── Comment.cs
-│   │   ├── UserNotification.cs
-│   │   └── NotificationType.cs
+│   │   ├── Post.cs              # Regular posts
+│   │   ├── GroupPost.cs         # Group posts
+│   │   ├── Group.cs             # Group entity
+│   │   ├── Comment.cs           # Post comments
+│   │   ├── GroupPostComment.cs  # Group post comments
+│   │   └── UserNotification.cs
 │   ├── Services/                 # Business logic services
 │   │   ├── PostService.cs       # Post and comment operations
+│   │   ├── GroupPostService.cs  # Group post operations
+│   │   ├── GroupService.cs      # Group management
 │   │   ├── NotificationService.cs # Notification management
 │   │   ├── FriendsService.cs    # Friend relationships
 │   │   └── ImageUploadService.cs # Image handling
 │   ├── Migrations/              # EF Core database migrations
 │   └── appsettings.json         # Configuration
 ├── FreeSpeakWeb.Tests/          # Unit tests
-└── FreeSpeakWeb.IntegrationTests/ # Integration tests
+├── FreeSpeakWeb.IntegrationTests/ # Integration tests
+└── docs/                         # Documentation
 ```
 
 ## Key Features
@@ -210,6 +220,29 @@ The application includes a comprehensive notification system that keeps users in
 - Friend-only post visibility
 - Friends list management
 
+### Groups System
+
+Create and participate in topic-based communities:
+
+**Group Features:**
+- Create public or private groups
+- Group-specific post feeds
+- Member management (join, leave, invite)
+- Role-based permissions (Admin, Moderator, Member)
+- Group post pinning and bookmarking
+- Notification muting per post
+
+**Moderation Tools:**
+- Ban/unban members
+- Delete posts and comments
+- Moderator role assignment
+
+**Technical Implementation:**
+- Separate entity model (GroupPost, GroupPostComment, GroupPostLike)
+- Cascade delete for data integrity
+- Cached counts for performance
+- See [docs/GROUP_POST_SYSTEM.md](docs/GROUP_POST_SYSTEM.md) for schema details
+
 ### Image & Media
 
 **Upload Features:**
@@ -235,7 +268,9 @@ The application includes a comprehensive notification system that keeps users in
 - Content type validation
 - Size limits on uploads
 
-See [SECURITY_IMPLEMENTATION_SUMMARY.md](SECURITY_IMPLEMENTATION_SUMMARY.md) for detailed security information.
+For detailed security audit results, see:
+- [docs/SECURITY_AUDIT_RESULTS.md](docs/SECURITY_AUDIT_RESULTS.md) - XSS and SQL injection audit
+- [docs/DOS_DDOS_AUDIT_RESULTS.md](docs/DOS_DDOS_AUDIT_RESULTS.md) - DOS/DDOS vulnerability audit
 
 ## Contributing
 
