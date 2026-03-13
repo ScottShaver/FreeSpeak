@@ -1,6 +1,8 @@
+using FreeSpeakWeb.Data.Abstractions;
+
 namespace FreeSpeakWeb.Data
 {
-    public class GroupPostComment
+    public class GroupPostComment : IPostComment
     {
         public int Id { get; set; }
 

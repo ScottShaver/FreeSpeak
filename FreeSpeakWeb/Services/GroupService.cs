@@ -1,17 +1,24 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
 {
     public class GroupService
     {
+        private readonly IGroupRepository _groupRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupService> _logger;
 
         public GroupService(
+            IGroupRepository groupRepository,
+            IUserRepository userRepository,
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupService> logger)
         {
+            _groupRepository = groupRepository;
+            _userRepository = userRepository;
             _contextFactory = contextFactory;
             _logger = logger;
         }

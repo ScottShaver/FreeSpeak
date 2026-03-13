@@ -104,13 +104,14 @@ namespace FreeSpeakWeb.IntegrationTests.Services
         private class NullNotificationService : NotificationService
         {
             public NullNotificationService() 
-                : base(new NullDbContextFactory(), new NullLogger(), new NullServiceScopeFactory())
+                : base(null!, new NullDbContextFactory(), new NullLogger(), new NullServiceScopeFactory())
             {
             }
 
             private class NullDbContextFactory : IDbContextFactory<ApplicationDbContext>
             {
                 public ApplicationDbContext CreateDbContext() => null!;
+                public Task<ApplicationDbContext> CreateDbContextAsync(CancellationToken cancellationToken = default) => Task.FromResult<ApplicationDbContext>(null!);
             }
 
             private class NullServiceScopeFactory : IServiceScopeFactory
@@ -336,4 +337,6 @@ namespace FreeSpeakWeb.IntegrationTests.Services
         }
     }
 }
+
+
 

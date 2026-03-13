@@ -1,6 +1,8 @@
 using FreeSpeakWeb.Components;
 using FreeSpeakWeb.Components.Account;
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Repositories;
+using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -141,6 +143,27 @@ namespace FreeSpeakWeb
             // Add helper services for shared functionality
             builder.Services.AddScoped<PostNotificationHelper>();
             builder.Services.AddScoped<GroupAccessValidator>();
+
+            // Add Repository Pattern implementations for cleaner data access
+            // Post repositories
+            builder.Services.AddScoped<IFeedPostRepository<Post, PostImage>, PostRepository>();
+            builder.Services.AddScoped<IGroupPostRepository<GroupPost, GroupPostImage>, GroupPostRepository>();
+
+            // Comment repositories
+            builder.Services.AddScoped<IFeedCommentRepository, FeedCommentRepository>();
+            builder.Services.AddScoped<IGroupCommentRepository, GroupCommentRepository>();
+
+            // Like repositories
+            builder.Services.AddScoped<IFeedPostLikeRepository, FeedPostLikeRepository>();
+            builder.Services.AddScoped<IGroupPostLikeRepository, GroupPostLikeRepository>();
+            builder.Services.AddScoped<IFeedCommentLikeRepository, FeedCommentLikeRepository>();
+            builder.Services.AddScoped<IGroupCommentLikeRepository, GroupCommentLikeRepository>();
+
+            // Domain repositories
+            builder.Services.AddScoped<IFriendshipRepository, FriendshipRepository>();
+            builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
             // SECURITY: Add rate limiting to prevent abuse
             builder.Services.AddRateLimiter(options =>

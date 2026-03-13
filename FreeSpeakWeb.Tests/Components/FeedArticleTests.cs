@@ -3,6 +3,7 @@ using FluentAssertions;
 using FreeSpeakWeb.Components.SocialFeed;
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Services;
+using FreeSpeakWeb.Tests.Infrastructure;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,7 @@ namespace FreeSpeakWeb.Tests.Components
             // Mock NotificationService
             var mockNotificationLogger = new Mock<ILogger<NotificationService>>();
             var mockScopeFactory = new Mock<IServiceScopeFactory>();
-            var notificationService = new NotificationService(mockDbContextFactory.Object, mockNotificationLogger.Object, mockScopeFactory.Object);
+            var mockNotificationRepo = MockRepositories.CreateMockNotificationRepository();            var notificationService = new NotificationService(mockNotificationRepo.Object, mockDbContextFactory.Object, mockNotificationLogger.Object, mockScopeFactory.Object);
 
             // Mock UserPreferenceService
             var mockUserPreferenceLogger = new Mock<ILogger<UserPreferenceService>>();
@@ -276,3 +277,4 @@ namespace FreeSpeakWeb.Tests.Components
         }
     }
 }
+

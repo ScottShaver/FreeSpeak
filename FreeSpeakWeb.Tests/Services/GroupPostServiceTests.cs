@@ -26,7 +26,7 @@ namespace FreeSpeakWeb.Tests.Services
             var dbFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
             var logger = new Mock<ILogger<NotificationService>>();
             var scopeFactory = new Mock<IServiceScopeFactory>();
-            return new NotificationService(dbFactory.Object, logger.Object, scopeFactory.Object);
+            var notificationRepo = MockRepositories.CreateMockNotificationRepository();            return new NotificationService(notificationRepo.Object, dbFactory.Object, logger.Object, scopeFactory.Object);
         }
 
         private static UserPreferenceService CreateMockUserPreferenceService()
@@ -1048,3 +1048,4 @@ namespace FreeSpeakWeb.Tests.Services
         #endregion
     }
 }
+

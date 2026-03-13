@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
@@ -6,6 +7,7 @@ namespace FreeSpeakWeb.Services
 {
     public class NotificationService
     {
+        private readonly INotificationRepository _notificationRepository;
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<NotificationService> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
@@ -14,10 +16,12 @@ namespace FreeSpeakWeb.Services
         private const int MaxBulkNotificationRecipients = 1000; // Max 1000 recipients per bulk operation
 
         public NotificationService(
+            INotificationRepository notificationRepository,
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<NotificationService> logger,
             IServiceScopeFactory scopeFactory)
         {
+            _notificationRepository = notificationRepository;
             _contextFactory = contextFactory;
             _logger = logger;
             _scopeFactory = scopeFactory;
