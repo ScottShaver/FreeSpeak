@@ -310,6 +310,13 @@
     [Parameter]
     public int RefreshTrigger { get; set; } = 0;
 
+    /// <summary>
+    /// Gets or sets whether notifications are muted for this post.
+    /// When provided by parent, avoids N+1 queries by using batch-loaded mute status.
+    /// </summary>
+    [Parameter]
+    public bool? IsMuted { get; set; }
+
     // Internal state for audience and pinned status (to properly handle re-renders)
     // These are the source of truth for rendering
     private AudienceType currentAudienceType = AudienceType.Public;
@@ -319,8 +326,9 @@
     private bool hasLocalAudienceChange = false;
     private bool hasLocalPinnedChange = false;
 
-    // Notification mute state
+    // Notification mute state - uses IsMuted parameter if provided, otherwise loaded on first render
     private bool isNotificationMuted = false;
+    private bool hasMuteStatusFromParameter = false;
 
     private bool showReactionPicker = false;
     private bool showLikesModal = false;
@@ -923,6 +931,13 @@
             hasLocalPinnedChange = false;
         }
 
+        // Use IsMuted parameter if provided (batch-loaded by parent to avoid N+1)
+        if (IsMuted.HasValue)
+        {
+            isNotificationMuted = IsMuted.Value;
+            hasMuteStatusFromParameter = true;
+        }
+
         // Load comments if internal loading enabled and (PostId has changed OR RefreshTrigger has changed)
         if (LoadCommentsInternally && !isLoadingComments && (lastLoadedPostId != PostId || lastRefreshTrigger != RefreshTrigger))
         {
@@ -936,8 +951,8 @@
     {
         if (firstRender)
         {
-            // Check if notifications are muted for this post
-            if (!string.IsNullOrEmpty(CurrentUserId))
+            // Only load mute status if not provided by parent parameter (avoids N+1 queries)
+            if (!hasMuteStatusFromParameter && !string.IsNullOrEmpty(CurrentUserId))
             {
                 try
                 {

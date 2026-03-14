@@ -18,13 +18,13 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var userId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        Logger.LogInformation("ThemeInitializer OnInitializedAsync - UserId: {UserId}", userId ?? "null");
+        Logger.LogDebug("ThemeInitializer OnInitializedAsync - UserId: {UserId}", userId ?? "null");
 
         if (!string.IsNullOrEmpty(userId))
         {
             // Load from database
             _savedThemeToApply = await PreferenceService.GetColorSchemeAsync(userId);
-            Logger.LogInformation("ThemeInitializer - Loaded theme from database: {Theme}", _savedThemeToApply ?? "null");
+            Logger.LogDebug("ThemeInitializer - Loaded theme from database: {Theme}", _savedThemeToApply ?? "null");
         }
     }
 
@@ -39,21 +39,21 @@
                 // Only call SetThemeAsync if theme is different to avoid unnecessary re-render
                 if (ThemeService.CurrentTheme != _savedThemeToApply)
                 {
-                    Logger.LogInformation("ThemeInitializer - Syncing theme in ThemeService: {Theme}", _savedThemeToApply);
+                    Logger.LogDebug("ThemeInitializer - Syncing theme in ThemeService: {Theme}", _savedThemeToApply);
                     await ThemeService.SetThemeAsync(_savedThemeToApply);
-                    Logger.LogInformation("ThemeInitializer - Theme synced successfully");
+                    Logger.LogDebug("ThemeInitializer - Theme synced successfully");
                 }
                 else
                 {
-                    Logger.LogInformation("ThemeInitializer - Theme already correct, no update needed");
+                    Logger.LogDebug("ThemeInitializer - Theme already correct, no update needed");
                 }
             }
             else
             {
                 // Not logged in - initialize from localStorage
-                Logger.LogInformation("ThemeInitializer - Initializing theme from localStorage");
+                Logger.LogDebug("ThemeInitializer - Initializing theme from localStorage");
                 await ThemeService.InitializeAsync();
-                Logger.LogInformation("ThemeInitializer - Theme initialized: {Theme}", ThemeService.CurrentTheme);
+                Logger.LogDebug("ThemeInitializer - Theme initialized: {Theme}", ThemeService.CurrentTheme);
             }
         }
     }

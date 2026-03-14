@@ -1045,6 +1045,38 @@ namespace FreeSpeakWeb.Services
             }
         }
 
+        /// <summary>
+        /// Gets the mute status for multiple group posts for a specific user in a single query.
+        /// Used to batch load mute status and avoid N+1 queries when displaying group feeds.
+        /// </summary>
+        /// <param name="postIds">List of post IDs to check mute status for.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A dictionary mapping post IDs to their mute status (true if muted).</returns>
+        public async Task<Dictionary<int, bool>> GetMuteStatusForPostsAsync(List<int> postIds, string userId)
+        {
+            if (postIds == null || !postIds.Any() || string.IsNullOrEmpty(userId))
+            {
+                return new Dictionary<int, bool>();
+            }
+
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var mutedPostIds = await context.GroupPostNotificationMutes
+                    .Where(m => postIds.Contains(m.PostId) && m.UserId == userId)
+                    .Select(m => m.PostId)
+                    .ToListAsync();
+
+                return postIds.ToDictionary(id => id, id => mutedPostIds.Contains(id));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting mute status for group posts for user {UserId}", userId);
+                return postIds.ToDictionary(id => id, id => false);
+            }
+        }
+
         #endregion
 
         #region Like Details Operations
@@ -1098,6 +1130,27 @@ namespace FreeSpeakWeb.Services
         {
             var like = await _likeRepository.GetUserLikeAsync(postId, userId);
             return like?.Type;
+        }
+
+        /// <summary>
+        /// Gets reaction breakdowns for multiple group posts in a single database query.
+        /// </summary>
+        /// <param name="postIds">The list of post identifiers to query.</param>
+        /// <returns>A dictionary mapping post IDs to dictionaries of like types and their counts.</returns>
+        public async Task<Dictionary<int, Dictionary<LikeType, int>>> GetReactionBreakdownForPostsAsync(List<int> postIds)
+        {
+            return await _likeRepository.GetCountsByTypeForPostsAsync(postIds);
+        }
+
+        /// <summary>
+        /// Gets user reactions for multiple group posts in a single database query.
+        /// </summary>
+        /// <param name="postIds">The list of post identifiers to query.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A dictionary mapping post IDs to the user's reaction type (or null if no reaction).</returns>
+        public async Task<Dictionary<int, LikeType?>> GetUserReactionsForPostsAsync(List<int> postIds, string userId)
+        {
+            return await _likeRepository.GetUserReactionsForPostsAsync(postIds, userId);
         }
 
         #endregion
@@ -1207,6 +1260,17 @@ namespace FreeSpeakWeb.Services
         public async Task<List<GroupPostComment>> GetCommentsByIdsAsync(IEnumerable<int> commentIds)
         {
             return await _commentRepository.GetByIdsAsync(commentIds, includeAuthor: true);
+        }
+
+        /// <summary>
+        /// Gets all comments for a group post including top-level comments and all nested replies in a single query.
+        /// Optimized method that eliminates N+1 query problems when loading comment trees.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>A list of all comments for the post with author information.</returns>
+        public async Task<List<GroupPostComment>> GetAllCommentsAsync(int postId)
+        {
+            return await _commentRepository.GetAllCommentsAsync(postId);
         }
 
         /// <summary>

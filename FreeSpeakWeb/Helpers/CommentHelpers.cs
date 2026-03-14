@@ -192,12 +192,11 @@ public static class CommentHelpers
         if (comments == null || comments.Count == 0)
             return new List<CommentDisplayModel>();
 
-        // Step 1: Load ALL comments in the tree structure (1 query via GetByIdsAsync)
-        var allCommentIds = new HashSet<int>();
-        await CollectAllCommentIdsRecursive(comments, postService, allCommentIds);
+        // Get the postId from the first comment (all comments should belong to the same post)
+        var postId = comments.First().PostId;
 
-        var commentIdList = allCommentIds.ToList();
-        var allComments = await postService.GetCommentsByIdsAsync(commentIdList);
+        // Step 1: Load ALL comments for the post in a SINGLE query (no more N+1!)
+        var allComments = await postService.GetAllCommentsAsync(postId);
         var commentsById = allComments.ToDictionary(c => c.Id);
 
         // Step 2: Batch load user preferences (1 query)
@@ -212,6 +211,7 @@ public static class CommentHelpers
         var formattedNames = userPreferenceService.FormatUserDisplayNames(userNames, userPreferences);
 
         // Step 3: Batch load all reaction data (3 queries)
+        var commentIdList = allComments.Select(c => c.Id).ToList();
         var likeCounts = await postService.GetCommentLikeCountsAsync(commentIdList);
         var userReactions = currentUserId != null 
             ? await postService.GetUserCommentReactionsAsync(currentUserId, commentIdList)
@@ -253,12 +253,11 @@ public static class CommentHelpers
         if (comments == null || comments.Count == 0)
             return new List<CommentDisplayModel>();
 
-        // Step 1: Load ALL comments in the tree structure (1 query via GetByIdsAsync)
-        var allCommentIds = new HashSet<int>();
-        await CollectAllCommentIdsRecursive(comments, groupPostService, allCommentIds);
+        // Get the postId from the first comment (all comments should belong to the same post)
+        var postId = comments.First().PostId;
 
-        var commentIdList = allCommentIds.ToList();
-        var allComments = await groupPostService.GetCommentsByIdsAsync(commentIdList);
+        // Step 1: Load ALL comments for the post in a SINGLE query (no more N+1!)
+        var allComments = await groupPostService.GetAllCommentsAsync(postId);
         var commentsById = allComments.ToDictionary(c => c.Id);
 
         // Step 2: Batch load user preferences (1 query)
@@ -273,6 +272,7 @@ public static class CommentHelpers
         var formattedNames = userPreferenceService.FormatUserDisplayNames(userNames, userPreferences);
 
         // Step 3: Batch load all reaction data (3 queries)
+        var commentIdList = allComments.Select(c => c.Id).ToList();
         var likeCounts = await groupPostService.GetCommentLikeCountsAsync(commentIdList);
         var userReactions = currentUserId != null 
             ? await groupPostService.GetUserCommentReactionsAsync(currentUserId, commentIdList)
@@ -300,49 +300,8 @@ public static class CommentHelpers
 
     #region Batch Loading Helper Methods
 
-    /// <summary>
-    /// Recursively collect all comment IDs from a Comment tree for batch loading.
-    /// This method makes additional queries to discover all nested replies.
-    /// </summary>
-    private static async Task CollectAllCommentIdsRecursive(
-        List<Comment> comments,
-        PostService postService,
-        HashSet<int> commentIds)
-    {
-        foreach (var comment in comments)
-        {
-            commentIds.Add(comment.Id);
-
-            // Get replies and collect their IDs too
-            var replies = await postService.GetRepliesAsync(comment.Id);
-            if (replies != null && replies.Count > 0)
-            {
-                await CollectAllCommentIdsRecursive(replies, postService, commentIds);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Recursively collect all comment IDs from a GroupPostComment tree for batch loading.
-    /// This method makes additional queries to discover all nested replies.
-    /// </summary>
-    private static async Task CollectAllCommentIdsRecursive(
-        List<GroupPostComment> comments,
-        GroupPostService groupPostService,
-        HashSet<int> commentIds)
-    {
-        foreach (var comment in comments)
-        {
-            commentIds.Add(comment.Id);
-
-            // Get replies and collect their IDs too
-            var replies = await groupPostService.GetRepliesAsync(comment.Id);
-            if (replies != null && replies.Count > 0)
-            {
-                await CollectAllCommentIdsRecursive(replies, groupPostService, commentIds);
-            }
-        }
-    }
+    // Note: Removed CollectAllCommentIdsRecursive methods as they created N+1 queries.
+    // Now using GetAllCommentsAsync to load all comments for a post in a single query.
 
     /// <summary>
     /// Build a CommentDisplayModel from a Comment entity using fully pre-loaded cached data.

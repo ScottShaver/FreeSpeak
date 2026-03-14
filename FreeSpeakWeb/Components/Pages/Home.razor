@@ -79,6 +79,7 @@
                                 var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
                                 var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
                                 var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
+                                var isMuted = postMuteStatus.ContainsKey(post.Id) ? postMuteStatus[post.Id] : (bool?)null;
 
                                 <FeedArticle 
                                     PostId="@post.Id"
@@ -99,6 +100,7 @@
                                     UserReaction="@userReaction"
                                     AudienceType="@post.AudienceType"
                                     IsPinned="@isPinned"
+                                    IsMuted="@isMuted"
                                     Images="@post.Images?.ToList()"
                                     OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(post.Id, reactionType))"
                                     OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
@@ -159,6 +161,7 @@
                                 var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
                                 var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
                                 var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
+                                var isMuted = postMuteStatus.ContainsKey(post.Id) ? postMuteStatus[post.Id] : (bool?)null;
 
                                 <FeedArticle 
                                     PostId="@post.Id"
@@ -179,6 +182,7 @@
                                     UserReaction="@userReaction"
                                     AudienceType="@post.AudienceType"
                                     IsPinned="@isPinned"
+                                    IsMuted="@isMuted"
                                     Images="@post.Images?.ToList()"
                                     OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(post.Id, reactionType))"
                                     OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
@@ -283,6 +287,7 @@
     // Base class provides: postRefreshTriggers, postReactionData, postUserReactions, pinnedPosts, postAuthorNames
     private Dictionary<int, List<CommentDisplayModel>> postComments = new();
     private Dictionary<int, int> postDirectCommentCounts = new();
+    private Dictionary<int, bool> postMuteStatus = new();
 
     private int currentPage = 1;
     private const int pageSize = 20;
@@ -376,6 +381,9 @@
 
             // Load author names for all posts
             await LoadAuthorNamesForPosts(loadedPosts);
+
+            // Load mute status for all posts (batch load to avoid N+1)
+            await LoadMuteStatusForPosts(loadedPosts);
         }
         catch (Exception ex)
         {
@@ -405,6 +413,9 @@
 
             // Load author names for pinned posts
             await LoadAuthorNamesForPosts(loadedPosts);
+
+            // Load mute status for pinned posts (batch load to avoid N+1)
+            await LoadMuteStatusForPosts(loadedPosts);
         }
         catch (Exception ex)
         {
@@ -442,6 +453,9 @@
 
                 // Load author names for new posts
                 await LoadAuthorNamesForPosts(loadedPosts);
+
+                // Load mute status for new posts (batch load to avoid N+1)
+                await LoadMuteStatusForPosts(loadedPosts);
             }
             else
             {
@@ -484,31 +498,49 @@
 
     private async Task LoadReactionDataForPosts(List<Post> postsToLoad)
     {
-        if (currentUserId == null) return;
+        if (currentUserId == null || !postsToLoad.Any()) return;
 
-        foreach (var post in postsToLoad)
+        try
         {
-            try
+            // Get all post IDs in one collection
+            var postIds = postsToLoad.Select(p => p.Id).ToList();
+
+            // Get reaction breakdowns for all posts in a single query
+            var reactionBreakdowns = await PostService.GetReactionBreakdownForPostsAsync(postIds);
+            foreach (var kvp in reactionBreakdowns)
             {
-                // Get reaction breakdown
-                var reactions = await PostService.GetReactionBreakdownAsync(post.Id);
-                postReactionData[post.Id] = reactions;
-
-                // Get user's reaction
-                var userReaction = await PostService.GetUserReactionAsync(post.Id, currentUserId);
-                postUserReactions[post.Id] = userReaction;
-
-                // Get direct comment count
-                var directCommentCount = await PostService.GetDirectCommentCountAsync(post.Id);
-                postDirectCommentCounts[post.Id] = directCommentCount;
-
-                // Get last 3 comments for feed display
-                await LoadCommentsForPost(post.Id, 3);
+                postReactionData[kvp.Key] = kvp.Value;
             }
-            catch (Exception ex)
+
+            // Get user reactions for all posts in a single query
+            var userReactions = await PostService.GetUserReactionsForPostsAsync(postIds, currentUserId);
+            foreach (var kvp in userReactions)
             {
-                // Silently fail - reaction data optional
+                postUserReactions[kvp.Key] = kvp.Value;
             }
+
+            // Note: Direct comment counts and comment loading still happen per-post
+            // These could be optimized separately if needed
+            foreach (var post in postsToLoad)
+            {
+                try
+                {
+                    // Get direct comment count
+                    var directCommentCount = await PostService.GetDirectCommentCountAsync(post.Id);
+                    postDirectCommentCounts[post.Id] = directCommentCount;
+
+                    // Get last 3 comments for feed display
+                    await LoadCommentsForPost(post.Id, 3);
+                }
+                catch (Exception ex)
+                {
+                    // Silently fail - comment data optional
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Silently fail - reaction data optional
         }
     }
 
@@ -559,6 +591,26 @@
         catch (Exception ex)
         {
             // Silently fail - author names optional
+        }
+    }
+
+    private async Task LoadMuteStatusForPosts(List<Post> postsToLoad)
+    {
+        if (currentUserId == null || !postsToLoad.Any()) return;
+
+        try
+        {
+            var postIds = postsToLoad.Select(p => p.Id).ToList();
+            var muteStatus = await PostService.GetMuteStatusForPostsAsync(postIds, currentUserId);
+
+            foreach (var kvp in muteStatus)
+            {
+                postMuteStatus[kvp.Key] = kvp.Value;
+            }
+        }
+        catch (Exception ex)
+        {
+            // Silently fail - mute status optional
         }
     }
 

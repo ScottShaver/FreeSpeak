@@ -37,8 +37,8 @@
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="group-feed-tab" data-bs-toggle="tab" data-bs-target="#group-feed-content" type="button" role="tab" aria-controls="group-feed-content" aria-selected="true" @onclick="OnGroupFeedTabClick">
-                My Group Feed
-            </button>
+                    My Group Feed
+                </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="pinned-group-tab" data-bs-toggle="tab" data-bs-target="#pinned-group-content" type="button" role="tab" aria-controls="pinned-group-content" aria-selected="false" @onclick="OnPinnedTabClick">
@@ -104,6 +104,7 @@
                         var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
                         var groupName = groupNames.ContainsKey(post.GroupId) ? groupNames[post.GroupId] : "Unknown Group";
                         var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
+                        var isMuted = postMuteStatus.ContainsKey(post.Id) ? postMuteStatus[post.Id] : (bool?)null;
 
                         <GroupPostArticle 
                             PostId="@post.Id"
@@ -125,6 +126,7 @@
                             ReactionBreakdown="@postReactions"
                             UserReaction="@userReaction"
                             IsPinned="@isPinned"
+                            IsMuted="@isMuted"
                             Images="@ConvertGroupPostImagesToPostImages(post.Images)"
                             OnReactionChanged="@(async (reactionType) => await HandleGroupPostReactionChanged(post.Id, reactionType))"
                             OnRemoveReaction="@(async () => await HandleRemoveGroupPostReaction(post.Id))"
@@ -198,6 +200,7 @@
                         var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
                         var groupName = groupNames.ContainsKey(post.GroupId) ? groupNames[post.GroupId] : "Unknown Group";
                         var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
+                        var isMuted = postMuteStatus.ContainsKey(post.Id) ? postMuteStatus[post.Id] : (bool?)null;
 
                         <GroupPostArticle 
                             PostId="@post.Id"
@@ -219,6 +222,7 @@
                             ReactionBreakdown="@postReactions"
                             UserReaction="@userReaction"
                             IsPinned="@isPinned"
+                            IsMuted="@isMuted"
                             Images="@ConvertGroupPostImagesToPostImages(post.Images)"
                             OnReactionChanged="@(async (reactionType) => await HandleGroupPostReactionChanged(post.Id, reactionType))"
                             OnRemoveReaction="@(async () => await HandleRemoveGroupPostReaction(post.Id))"
@@ -496,6 +500,10 @@
     // Group-specific data dictionaries (rename to use base class naming)
     // Base class provides: postRefreshTriggers, postReactionData, postUserReactions, pinnedPosts, postAuthorNames
     private Dictionary<int, string> groupNames = new();
+    private Dictionary<int, bool> postMuteStatus = new();
+
+    // Guard flag to prevent double-loading on initial navigation
+    private bool hasCompletedInitialLoad = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -523,6 +531,9 @@
 
                 // Load join requests count for badge
                 await LoadJoinRequestsCount();
+
+                // Mark initial load as complete to allow tab refresh on subsequent clicks
+                hasCompletedInitialLoad = true;
             }
         }
     }
@@ -569,9 +580,16 @@
         }
     }
 
+    /// <summary>
+    /// Loads the group feed posts for the current user.
+    /// Includes a guard to prevent concurrent loading operations.
+    /// </summary>
     private async Task LoadGroupFeed()
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
+
+        // Prevent concurrent loading operations
+        if (isLoadingGroupFeed) return;
 
         isLoadingGroupFeed = true;
         StateHasChanged();
@@ -660,6 +678,8 @@
 
     private async Task LoadGroupPostDataAsync(List<GroupPost> posts)
     {
+        if (!posts.Any()) return;
+
         // Populate group names and author names
         foreach (var post in posts)
         {
@@ -672,26 +692,62 @@
             {
                 postAuthorNames[post.Id] = $"{post.Author.FirstName} {post.Author.LastName}";
             }
+        }
 
-            // Load reaction data
-            if (!postReactionData.ContainsKey(post.Id))
+        // Get post IDs that need reaction data loaded
+        var postIdsNeedingReactions = posts
+            .Where(p => !postReactionData.ContainsKey(p.Id))
+            .Select(p => p.Id)
+            .ToList();
+
+        if (postIdsNeedingReactions.Any())
+        {
+            // Load reaction data for all posts in a single query
+            var reactions = await GroupPostService.GetReactionBreakdownForPostsAsync(postIdsNeedingReactions);
+            foreach (var kvp in reactions)
             {
-                var reactions = await GroupPostService.GetReactionBreakdownAsync(post.Id);
-                postReactionData[post.Id] = reactions;
+                postReactionData[kvp.Key] = kvp.Value;
             }
+        }
 
-            // Load user reaction
-            if (!postUserReactions.ContainsKey(post.Id))
+        // Get post IDs that need user reactions loaded
+        var postIdsNeedingUserReactions = posts
+            .Where(p => !postUserReactions.ContainsKey(p.Id))
+            .Select(p => p.Id)
+            .ToList();
+
+        if (postIdsNeedingUserReactions.Any() && currentUserId != null)
+        {
+            // Load user reactions for all posts in a single query
+            var userReactions = await GroupPostService.GetUserReactionsForPostsAsync(postIdsNeedingUserReactions, currentUserId);
+            foreach (var kvp in userReactions)
             {
-                var userReaction = await GroupPostService.GetUserReactionAsync(post.Id, currentUserId!);
-                postUserReactions[post.Id] = userReaction;
+                postUserReactions[kvp.Key] = kvp.Value;
             }
+        }
 
-            // Load pinned status
-            if (!pinnedPosts.ContainsKey(post.Id))
+        // Load pinned status (still per-post, could be optimized separately)
+        foreach (var post in posts)
+        {
+            if (!pinnedPosts.ContainsKey(post.Id) && currentUserId != null)
             {
-                var isPinned = await PinnedGroupPostService.IsGroupPostPinnedAsync(currentUserId!, post.Id);
+                var isPinned = await PinnedGroupPostService.IsGroupPostPinnedAsync(currentUserId, post.Id);
                 pinnedPosts[post.Id] = isPinned;
+            }
+        }
+
+        // Load mute status in batch to avoid N+1 queries
+        var postIdsNeedingMuteStatus = posts
+            .Where(p => !postMuteStatus.ContainsKey(p.Id))
+            .Select(p => p.Id)
+            .ToList();
+
+        if (postIdsNeedingMuteStatus.Any() && currentUserId != null)
+        {
+            var muteStatus = await GroupPostService.GetMuteStatusForPostsAsync(postIdsNeedingMuteStatus, currentUserId);
+            foreach (var kvp in muteStatus)
+            {
+                postMuteStatus[kvp.Key] = kvp.Value;
             }
         }
     }
@@ -876,10 +932,17 @@
         }
     }
 
+    /// <summary>
+    /// Handles the click event on the Group Feed tab.
+    /// Only reloads data if the initial load has completed to prevent double-loading on initial navigation.
+    /// </summary>
     private async Task OnGroupFeedTabClick()
     {
-        // Reload the group feed to ensure fresh data
-        await LoadGroupFeed();
+        // Only reload if initial load has completed (prevents double-load on initial navigation)
+        if (hasCompletedInitialLoad)
+        {
+            await LoadGroupFeed();
+        }
     }
 
     private async Task OnPinnedTabClick()

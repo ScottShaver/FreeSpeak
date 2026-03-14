@@ -260,9 +260,20 @@
     [Parameter]
     public int RefreshTrigger { get; set; } = 0;
 
+    /// <summary>
+    /// Gets or sets whether notifications are muted for this group post.
+    /// When provided by parent, avoids N+1 queries by using batch-loaded mute status.
+    /// </summary>
+    [Parameter]
+    public bool? IsMuted { get; set; }
+
     // Internal state for pinned status
     private bool currentIsPinned = false;
     private bool hasLocalPinnedChange = false;
+
+    // Notification mute state - uses IsMuted parameter if provided, otherwise loaded on first render
+    private bool isNotificationMuted = false;
+    private bool hasMuteStatusFromParameter = false;
 
     private bool showReactionPicker = false;
     private bool showLikesModal = false;
@@ -397,58 +408,72 @@
             }
             else
             {
-                menuItems.Add(new PopupMenu.PopupMenuItem
+                    menuItems.Add(new PopupMenu.PopupMenuItem
+                        {
+                            Text = "Edit Post",
+                            Icon = "bi bi-pencil",
+                            OnClick = EventCallback.Factory.Create(this, async () => await HandleEditPostClick())
+                        });
+
+                        menuItems.Add(new PopupMenu.PopupMenuItem
+                        {
+                            Text = currentIsPinned ? "Unpin Post" : "Pin Post",
+                            Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
+                            OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
+                        });
+
+                        menuItems.Add(new PopupMenu.PopupMenuItem
+                        {
+                            Text = isNotificationMuted ? "Turn On Notifications" : "Turn Off Notifications",
+                            Icon = isNotificationMuted ? "bi bi-bell" : "bi bi-bell-slash",
+                            OnClick = EventCallback.Factory.Create(this, async () => await HandleToggleNotificationsClick())
+                        });
+
+                        menuItems.Add(new PopupMenu.PopupMenuItem
+                        {
+                            Text = "Delete Post",
+                            Icon = "bi bi-trash",
+                            OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
+                        });
+
+                        menuItems.Add(new PopupMenu.PopupMenuItem
+                        {
+                            Text = "Copy Link",
+                            Icon = "bi bi-link-45deg",
+                            OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
+                        });
+                    }
+                }
+                else if (!string.IsNullOrEmpty(CurrentUserId))
                 {
-                    Text = "Edit Post",
-                    Icon = "bi bi-pencil",
-                    OnClick = EventCallback.Factory.Create(this, async () => await HandleEditPostClick())
-                });
+                    menuItems.Add(new PopupMenu.PopupMenuItem
+                    {
+                        Text = currentIsPinned ? "Unpin Post" : "Pin Post",
+                        Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
+                        OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
+                    });
 
-                menuItems.Add(new PopupMenu.PopupMenuItem
-                {
-                    Text = currentIsPinned ? "Unpin Post" : "Pin Post",
-                    Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
-                    OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
-                });
+                    menuItems.Add(new PopupMenu.PopupMenuItem
+                    {
+                        Text = isNotificationMuted ? "Turn On Notifications" : "Turn Off Notifications",
+                        Icon = isNotificationMuted ? "bi bi-bell" : "bi bi-bell-slash",
+                        OnClick = EventCallback.Factory.Create(this, async () => await HandleToggleNotificationsClick())
+                    });
 
-                menuItems.Add(new PopupMenu.PopupMenuItem
-                {
-                    Text = "Delete Post",
-                    Icon = "bi bi-trash",
-                    OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
-                });
+                    menuItems.Add(new PopupMenu.PopupMenuItem
+                    {
+                        Text = "Report Post",
+                        Icon = "bi bi-flag",
+                        OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Report Post"))
+                    });
 
-                menuItems.Add(new PopupMenu.PopupMenuItem
-                {
-                    Text = "Copy Link",
-                    Icon = "bi bi-link-45deg",
-                    OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
-                });
-            }
-        }
-        else if (!string.IsNullOrEmpty(CurrentUserId))
-        {
-            menuItems.Add(new PopupMenu.PopupMenuItem
-            {
-                Text = currentIsPinned ? "Unpin Post" : "Pin Post",
-                Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
-                OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
-            });
-
-            menuItems.Add(new PopupMenu.PopupMenuItem
-            {
-                Text = "Report Post",
-                Icon = "bi bi-flag",
-                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Report Post"))
-            });
-
-            menuItems.Add(new PopupMenu.PopupMenuItem
-            {
-                Text = "Copy Link",
-                Icon = "bi bi-link-45deg",
-                OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
-            });
-        }
+                    menuItems.Add(new PopupMenu.PopupMenuItem
+                    {
+                        Text = "Copy Link",
+                        Icon = "bi bi-link-45deg",
+                        OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
+                    });
+                }
         else
         {
             menuItems.Add(new PopupMenu.PopupMenuItem
@@ -544,6 +569,42 @@
         }
     }
 
+    /// <summary>
+    /// Handles toggling notification mute status for this group post.
+    /// </summary>
+    private async Task HandleToggleNotificationsClick()
+    {
+        CloseMenu();
+
+        if (string.IsNullOrEmpty(CurrentUserId)) return;
+
+        try
+        {
+            if (isNotificationMuted)
+            {
+                var result = await GroupPostService.UnmutePostNotificationsAsync(PostId, CurrentUserId);
+                if (result.Success)
+                {
+                    isNotificationMuted = false;
+                    StateHasChanged();
+                }
+            }
+            else
+            {
+                var result = await GroupPostService.MutePostNotificationsAsync(PostId, CurrentUserId);
+                if (result.Success)
+                {
+                    isNotificationMuted = true;
+                    StateHasChanged();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Silently fail - notification toggle optional
+        }
+    }
+
     private async Task ShowMenu()
     {
         await JS.InvokeVoidAsync("alert", "Article Menu");
@@ -632,6 +693,13 @@
             hasLocalPinnedChange = false;
         }
 
+        // Use IsMuted parameter if provided (batch-loaded by parent to avoid N+1)
+        if (IsMuted.HasValue)
+        {
+            isNotificationMuted = IsMuted.Value;
+            hasMuteStatusFromParameter = true;
+        }
+
         // Load comments if internal loading enabled and (PostId has changed OR RefreshTrigger has changed)
         if (LoadCommentsInternally && !isLoadingComments && (lastLoadedPostId != PostId || lastRefreshTrigger != RefreshTrigger))
         {
@@ -645,6 +713,20 @@
     {
         if (firstRender)
         {
+            // Only load mute status if not provided by parent parameter (avoids N+1 queries)
+            if (!hasMuteStatusFromParameter && !string.IsNullOrEmpty(CurrentUserId))
+            {
+                try
+                {
+                    isNotificationMuted = await GroupPostService.IsPostNotificationMutedAsync(PostId, CurrentUserId);
+                    StateHasChanged();
+                }
+                catch (Exception ex)
+                {
+                    // Silently fail - mute status optional
+                }
+            }
+
             if (!IsModalView)
             {
                 try
