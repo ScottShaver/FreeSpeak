@@ -1,12 +1,23 @@
 namespace FreeSpeakWeb.Services;
 
+/// <summary>
+/// Service for tracking and managing navigation state across the application.
+/// Monitors URL changes and updates the active menu item accordingly.
+/// </summary>
 public class NavigationStateService : IDisposable
 {
     private string _activeMenuItem = string.Empty;
     private readonly Microsoft.AspNetCore.Components.NavigationManager _navigationManager;
 
+    /// <summary>
+    /// Event raised when the navigation state changes.
+    /// </summary>
     public event Action? OnChange;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NavigationStateService"/> class.
+    /// </summary>
+    /// <param name="navigationManager">The navigation manager for URL tracking.</param>
     public NavigationStateService(Microsoft.AspNetCore.Components.NavigationManager navigationManager)
     {
         _navigationManager = navigationManager;
@@ -18,6 +29,10 @@ public class NavigationStateService : IDisposable
         UpdateActiveMenuItemFromUrl();
     }
 
+    /// <summary>
+    /// Gets or sets the active menu item identifier.
+    /// Setting this property triggers the OnChange event.
+    /// </summary>
     public string ActiveMenuItem
     {
         get => _activeMenuItem;
@@ -31,12 +46,22 @@ public class NavigationStateService : IDisposable
         }
     }
 
+    /// <summary>
+    /// Handles navigation location changes.
+    /// Updates the active menu item based on the new URL.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The location changed event arguments.</param>
     private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
     {
         UpdateActiveMenuItemFromUrl();
         NotifyStateChanged();
     }
 
+    /// <summary>
+    /// Updates the active menu item based on the current URL.
+    /// Maps URL paths to menu item identifiers.
+    /// </summary>
     private void UpdateActiveMenuItemFromUrl()
     {
         var uri = _navigationManager.ToBaseRelativePath(_navigationManager.Uri);
@@ -81,8 +106,14 @@ public class NavigationStateService : IDisposable
         }
     }
 
+    /// <summary>
+    /// Notifies subscribers that the navigation state has changed.
+    /// </summary>
     private void NotifyStateChanged() => OnChange?.Invoke();
 
+    /// <summary>
+    /// Disposes the service and unsubscribes from navigation events.
+    /// </summary>
     public void Dispose()
     {
         _navigationManager.LocationChanged -= OnLocationChanged;
