@@ -649,5 +649,118 @@ namespace FreeSpeakWeb.Data
                 // Don't throw - let the app continue even if group seeding fails
             }
         }
+
+        /// <summary>
+        /// Manages AuditLog table partitions by creating monthly partitions for the current year
+        /// and removing partitions older than one year to control data retention.
+        /// This method should be called during application startup to ensure partitions exist.
+        /// </summary>
+        /// <param name="dbContext">The ApplicationDbContext for executing partition management SQL.</param>
+        /// <param name="logger">Logger for recording partition management operations.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public static async Task ManageAuditLogPartitionsAsync(ApplicationDbContext dbContext, ILogger logger)
+        {
+            try
+            {
+                logger.LogInformation("Starting AuditLog partition management...");
+
+                var currentYear = DateTime.UtcNow.Year;
+                var currentMonth = DateTime.UtcNow.Month;
+
+                // Get the database connection once and ensure it's open
+                var connection = dbContext.Database.GetDbConnection();
+                var shouldCloseConnection = connection.State != System.Data.ConnectionState.Open;
+
+                if (shouldCloseConnection)
+                {
+                    await connection.OpenAsync();
+                }
+
+                try
+                {
+                    // 1. Create partitions for all months of the current year if they don't exist
+                    for (int month = 1; month <= 12; month++)
+                    {
+                        var partitionName = $"AuditLogs_y{currentYear}_m{month:D2}";
+                        var startDate = new DateTime(currentYear, month, 1, 0, 0, 0, DateTimeKind.Utc);
+                        var endDate = startDate.AddMonths(1);
+
+                        // Check if partition exists using a scalar query
+                        var partitionExistsQuery = $@"
+                            SELECT COUNT(1) FROM pg_class 
+                            WHERE relname = '{partitionName}' 
+                            AND relkind = 'r';
+                        ";
+
+                        using var command = connection.CreateCommand();
+                        command.CommandText = partitionExistsQuery;
+                        var result = await command.ExecuteScalarAsync();
+                        var partitionExists = Convert.ToInt32(result) > 0;
+
+                        if (!partitionExists)
+                        {
+                            // Create the partition
+                            await dbContext.Database.ExecuteSqlRawAsync($@"
+                                CREATE TABLE ""{partitionName}"" PARTITION OF ""AuditLogs""
+                                FOR VALUES FROM ('{startDate:yyyy-MM-dd HH:mm:ss}') TO ('{endDate:yyyy-MM-dd HH:mm:ss}');
+                            ");
+
+                            logger.LogInformation("Created partition: {PartitionName} for date range {StartDate} to {EndDate}", 
+                                partitionName, startDate, endDate);
+                        }
+                        else
+                        {
+                            logger.LogDebug("Partition {PartitionName} already exists, skipping.", partitionName);
+                        }
+                    }
+
+                    // 2. Remove partitions from the previous year (older than 1 year)
+                    // Only remove partitions for months from the previous year up to the current month number
+                    var previousYear = currentYear - 1;
+                    for (int month = 1; month <= currentMonth; month++)
+                    {
+                        var oldPartitionName = $"AuditLogs_y{previousYear}_m{month:D2}";
+
+                        // Check if old partition exists using a scalar query
+                        var oldPartitionExistsQuery = $@"
+                            SELECT COUNT(1) FROM pg_class 
+                            WHERE relname = '{oldPartitionName}' 
+                            AND relkind = 'r';
+                        ";
+
+                        using var command = connection.CreateCommand();
+                        command.CommandText = oldPartitionExistsQuery;
+                        var result = await command.ExecuteScalarAsync();
+                        var oldPartitionExists = Convert.ToInt32(result) > 0;
+
+                        if (oldPartitionExists)
+                        {
+                            // Drop the old partition (this will delete the data)
+                            await dbContext.Database.ExecuteSqlRawAsync($@"
+                                DROP TABLE IF EXISTS ""{oldPartitionName}"";
+                            ");
+
+                            logger.LogInformation("Removed old partition: {PartitionName} (data older than 1 year)", oldPartitionName);
+                        }
+                    }
+
+                    logger.LogInformation("AuditLog partition management completed successfully!");
+                }
+                finally
+                {
+                    // Only close the connection if we opened it
+                    if (shouldCloseConnection && connection.State == System.Data.ConnectionState.Open)
+                    {
+                        await connection.CloseAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "[{ExceptionType}] Error occurred while managing AuditLog partitions. Exception: {ExceptionMessage}", 
+                    ex.GetType().Name, ex.Message);
+                // Don't throw - let the app continue even if partition management fails
+            }
+        }
     }
 }

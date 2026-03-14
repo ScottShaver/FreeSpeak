@@ -1,0 +1,347 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Repositories.Abstractions
+@using System.Text.Json
+@inject IAuditLogRepository AuditLogRepository
+@inject ILogger<AuditLogSearchModal> Logger
+
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-search me-2"></i>
+                    Search Audit Logs
+                </h5>
+                <button type="button" class="btn-close" @onclick="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Search Form -->
+                <div class="search-form-section mb-4 p-3 bg-light rounded">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="actionCategory" class="form-label">Action Category</label>
+                            <select id="actionCategory" 
+                                    class="form-select" 
+                                    @bind="selectedActionCategory">
+                                <option value="">All Categories</option>
+                                <option value="Authentication">Authentication</option>
+                                <option value="ProfileUpdate">ProfileUpdate</option>
+                                <option value="RoleChange">RoleChange</option>
+                                <option value="ContentCreation">ContentCreation</option>
+                                <option value="ContentModeration">ContentModeration</option>
+                                <option value="AccountLockout">AccountLockout</option>
+                                <option value="SecurityEvent">SecurityEvent</option>
+                                <option value="SystemConfiguration">SystemConfiguration</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="startDate" class="form-label">Start Date</label>
+                            <input type="date" 
+                                   id="startDate" 
+                                   class="form-control" 
+                                   @bind="startDate" />
+                        </div>
+                        <div class="col-md-3">
+                            <label for="endDate" class="form-label">End Date</label>
+                            <input type="date" 
+                                   id="endDate" 
+                                   class="form-control" 
+                                   @bind="endDate" />
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" 
+                                    class="btn btn-primary w-100" 
+                                    @onclick="SearchAuditLogsAsync"
+                                    disabled="@isSearching">
+                                @if (isSearching)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                                }
+                                <i class="bi bi-search me-1"></i>Search
+                            </button>
+                        </div>
+                    </div>
+                    @if (hasSearched && auditLogs.Count > 0)
+                    {
+                        <div class="mt-2">
+                            <small class="text-muted">
+                                Found @auditLogs.Count result(s)
+                                @if (auditLogs.Count >= 500)
+                                {
+                                    <span class="text-warning fw-bold">(Limited to 500 maximum)</span>
+                                }
+                            </small>
+                        </div>
+                    }
+                </div>
+
+                <!-- Search Results -->
+                @if (isSearching)
+                {
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Searching audit logs...</span>
+                        </div>
+                        <p class="text-muted mt-2">Searching audit logs...</p>
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                    </div>
+                }
+                else if (hasSearched && auditLogs.Count == 0)
+                {
+                    <div class="alert alert-info" role="alert">
+                        <i class="bi bi-info-circle me-2"></i>
+                        No audit log entries found matching your search criteria.
+                    </div>
+                }
+                else if (hasSearched && auditLogs.Count > 0)
+                {
+                    <div class="audit-log-section">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-sm">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 180px;">Date/Time</th>
+                                        <th style="width: 200px;">User ID</th>
+                                        <th style="width: 150px;">Category</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var log in paginatedLogs)
+                                    {
+                                        <tr>
+                                            <td class="text-nowrap small">
+                                                @log.ActionStamp.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
+                                            </td>
+                                            <td class="text-truncate small" style="max-width: 200px;" title="@log.UserId">
+                                                @log.UserId
+                                            </td>
+                                            <td>
+                                                <span class="badge @GetCategoryBadgeClass(log.ActionCategory)">
+                                                    @log.ActionCategory
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <button type="button" 
+                                                        class="btn btn-sm btn-link p-0 text-start" 
+                                                        @onclick="() => ToggleDetails(log.Id)">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                                    </svg>
+                                                </button>
+                                                @if (expandedLogId == log.Id)
+                                                {
+                                                    <div class="mt-2 p-2 bg-light rounded">
+                                                        <pre class="mb-0 small" style="white-space: pre-wrap; word-wrap: break-word;">@FormatJsonDetails(log.ActionDetails)</pre>
+                                                    </div>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination Controls -->
+                        @if (totalPages > 1)
+                        {
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-secondary" 
+                                        @onclick="LoadPreviousPage"
+                                        disabled="@(currentPage <= 1)">
+                                    <i class="bi bi-chevron-left me-1"></i>Previous
+                                </button>
+                                <span class="text-muted small">Page @currentPage of @totalPages</span>
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-secondary" 
+                                        @onclick="LoadNextPage"
+                                        disabled="@(currentPage >= totalPages)">
+                                    Next<i class="bi bi-chevron-right ms-1"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-search fs-1"></i>
+                        <p class="mt-3">Use the search filters above to find audit log entries.</p>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// Callback invoked when the modal is closed.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private List<AuditLog> auditLogs = new();
+    private List<AuditLog> paginatedLogs = new();
+    private string selectedActionCategory = "";
+    private DateTime? startDate;
+    private DateTime? endDate;
+    private bool isSearching = false;
+    private bool hasSearched = false;
+    private string? errorMessage;
+    private long? expandedLogId = null;
+
+    // Pagination
+    private int currentPage = 1;
+    private const int PageSize = 20;
+    private int totalPages = 0;
+
+    /// <summary>
+    /// Searches for audit logs based on the selected filters.
+    /// </summary>
+    private async Task SearchAuditLogsAsync()
+    {
+        isSearching = true;
+        hasSearched = false;
+        errorMessage = null;
+        expandedLogId = null;
+        currentPage = 1;
+        StateHasChanged();
+
+        try
+        {
+            // Prepare the category filter (null if "All Categories" is selected)
+            string? categoryFilter = string.IsNullOrWhiteSpace(selectedActionCategory) ? null : selectedActionCategory;
+
+            // Call the repository search method
+            auditLogs = await AuditLogRepository.SearchAuditLogsAsync(
+                categoryFilter,
+                startDate,
+                endDate
+            );
+
+            hasSearched = true;
+
+            // Calculate pagination
+            totalPages = (int)Math.Ceiling((double)auditLogs.Count / PageSize);
+            UpdatePaginatedLogs();
+
+            Logger.LogInformation("Audit log search completed: Found {Count} entries with filters - Category: {Category}, StartDate: {StartDate}, EndDate: {EndDate}",
+                auditLogs.Count, categoryFilter ?? "All", startDate?.ToString("yyyy-MM-dd") ?? "None", endDate?.ToString("yyyy-MM-dd") ?? "None");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "[{ExceptionType}] Error searching audit logs. Exception: {ExceptionMessage}",
+                ex.GetType().Name, ex.Message);
+            errorMessage = "An error occurred while searching audit logs. Please try again.";
+            hasSearched = true;
+        }
+        finally
+        {
+            isSearching = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Updates the paginated logs based on the current page.
+    /// </summary>
+    private void UpdatePaginatedLogs()
+    {
+        paginatedLogs = auditLogs
+            .Skip((currentPage - 1) * PageSize)
+            .Take(PageSize)
+            .ToList();
+    }
+
+    /// <summary>
+    /// Loads the next page of results.
+    /// </summary>
+    private void LoadNextPage()
+    {
+        if (currentPage < totalPages)
+        {
+            currentPage++;
+            UpdatePaginatedLogs();
+            expandedLogId = null;
+        }
+    }
+
+    /// <summary>
+    /// Loads the previous page of results.
+    /// </summary>
+    private void LoadPreviousPage()
+    {
+        if (currentPage > 1)
+        {
+            currentPage--;
+            UpdatePaginatedLogs();
+            expandedLogId = null;
+        }
+    }
+
+    /// <summary>
+    /// Toggles the expanded view of audit log details.
+    /// </summary>
+    /// <param name="logId">The ID of the log entry to toggle.</param>
+    private void ToggleDetails(long logId)
+    {
+        expandedLogId = expandedLogId == logId ? null : logId;
+    }
+
+    /// <summary>
+    /// Formats JSON details for display with proper indentation.
+    /// </summary>
+    /// <param name="jsonDetails">The JSON string to format.</param>
+    /// <returns>Formatted JSON string or original if parsing fails.</returns>
+    private string FormatJsonDetails(string jsonDetails)
+    {
+        try
+        {
+            var jsonDoc = JsonDocument.Parse(jsonDetails);
+            return JsonSerializer.Serialize(jsonDoc, new JsonSerializerOptions { WriteIndented = true });
+        }
+        catch
+        {
+            return jsonDetails;
+        }
+    }
+
+    /// <summary>
+    /// Gets the appropriate Bootstrap badge class for an action category.
+    /// </summary>
+    /// <param name="category">The action category.</param>
+    /// <returns>Bootstrap badge class name.</returns>
+    private string GetCategoryBadgeClass(string category)
+    {
+        return category switch
+        {
+            "Authentication" => "bg-primary",
+            "ProfileUpdate" => "bg-info",
+            "RoleChange" => "bg-warning",
+            "ContentCreation" => "bg-success",
+            "ContentModeration" => "bg-danger",
+            "AccountLockout" => "bg-dark",
+            "SecurityEvent" => "bg-danger",
+            "SystemConfiguration" => "bg-warning",
+            _ => "bg-secondary"
+        };
+    }
+
+    /// <summary>
+    /// Closes the modal and invokes the OnClose callback.
+    /// </summary>
+    private async Task Close()
+    {
+        await OnClose.InvokeAsync();
+    }
+}

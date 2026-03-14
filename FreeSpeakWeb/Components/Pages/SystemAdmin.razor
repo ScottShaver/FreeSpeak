@@ -143,15 +143,18 @@
                                                     <td>@(user.Occupation ?? "—")</td>
                                                     <td>
                                                         <div class="dropdown">
-                                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                                                            <button class="btn btn-sm btn-outline-secondary" 
                                                                     type="button" 
                                                                     id="userActions-@user.Id" 
                                                                     data-bs-toggle="dropdown" 
                                                                     aria-expanded="false"
-                                                                    title="Actions">
-                                                                <i class="bi bi-three-dots-vertical"></i>
+                                                                    title="Actions"
+                                                                    style="position: relative; z-index: 1;">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="pointer-events: none;">
+                                                                    <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                                                </svg>
                                                             </button>
-                                                            <ul class="dropdown-menu" aria-labelledby="userActions-@user.Id">
+                                                            <ul class="dropdown-menu" aria-labelledby="userActions-@user.Id" style="z-index: 1060;">
                                                                 <li>
                                                                     <button type="button" class="dropdown-item" @onclick="() => OpenRoleModal(user)">
                                                                         <i class="bi bi-person-badge me-2"></i>Edit Roles
@@ -160,6 +163,11 @@
                                                                 <li>
                                                                     <button type="button" class="dropdown-item" @onclick="() => OpenLockoutModal(user)">
                                                                         <i class="bi bi-lock me-2"></i>Lockout Info
+                                                                    </button>
+                                                                </li>
+                                                                <li>
+                                                                    <button type="button" class="dropdown-item" @onclick="() => OpenAuditLogModal(user)">
+                                                                        <i class="bi bi-clock-history me-2"></i>Audit Log
                                                                     </button>
                                                                 </li>
                                                                 <li><hr class="dropdown-divider" /></li>
@@ -225,15 +233,6 @@
                                     <h5 class="card-title"><i class="bi bi-person-plus me-2"></i>Create User</h5>
                                     <p class="card-text">Add new users to the system manually.</p>
                                     <button class="btn btn-primary" @onclick="OpenCreateUserModal">Create New User</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 mb-3">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title"><i class="bi bi-clock-history me-2"></i>Audit Log</h5>
-                                    <p class="card-text">View user activity and account changes.</p>
-                                    <button class="btn btn-primary" disabled>Coming Soon</button>
                                 </div>
                             </div>
                         </div>
@@ -441,6 +440,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-clock-history me-2"></i>Audit Log Search</h5>
+                                    <p class="card-text">Search and analyze system audit logs with filters.</p>
+                                    <button class="btn btn-primary" @onclick="OpenAuditLogSearchModal">
+                                        <i class="bi bi-search me-1"></i>Search Logs
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -539,6 +549,21 @@
         OnUserCreated="HandleUserCreated" />
 }
 
+@* Audit Log Modal *@
+@if (showAuditLogModal && selectedUser != null)
+{
+    <FreeSpeakWeb.Components.Admin.UserAuditLogModal 
+        User="@selectedUser"
+        OnClose="CloseAuditLogModal" />
+}
+
+@* Audit Log Search Modal *@
+@if (showAuditLogSearchModal)
+{
+    <FreeSpeakWeb.Components.Admin.AuditLogSearchModal 
+        OnClose="CloseAuditLogSearchModal" />
+}
+
 @code {
     private string? currentUserName;
     private string? currentUserEmail;
@@ -559,6 +584,12 @@
 
     // Create user modal state
     private bool showCreateUserModal = false;
+
+    // Audit log modal state
+    private bool showAuditLogModal = false;
+
+    // Audit log search modal state
+    private bool showAuditLogSearchModal = false;
 
     /// <summary>
     /// Initializes the component by loading the current user's information and roles.
@@ -708,6 +739,45 @@
     private void CloseCreateUserModal()
     {
         showCreateUserModal = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Opens the audit log modal for the specified user.
+    /// </summary>
+    /// <param name="user">The user whose audit logs will be displayed.</param>
+    private void OpenAuditLogModal(ApplicationUser user)
+    {
+        selectedUser = user;
+        showAuditLogModal = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the audit log modal.
+    /// </summary>
+    private void CloseAuditLogModal()
+    {
+        showAuditLogModal = false;
+        selectedUser = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Opens the audit log search modal.
+    /// </summary>
+    private void OpenAuditLogSearchModal()
+    {
+        showAuditLogSearchModal = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the audit log search modal.
+    /// </summary>
+    private void CloseAuditLogSearchModal()
+    {
+        showAuditLogSearchModal = false;
         StateHasChanged();
     }
 

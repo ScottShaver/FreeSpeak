@@ -220,6 +220,7 @@ namespace FreeSpeakWeb
             builder.Services.AddScoped<IPinnedPostRepository, PinnedPostRepository>();
             builder.Services.AddScoped<IPostNotificationMuteRepository, PostNotificationMuteRepository>();
             builder.Services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
+            builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 
             // SECURITY: Add rate limiting to prevent abuse
             builder.Services.AddRateLimiter(options =>
@@ -299,6 +300,9 @@ namespace FreeSpeakWeb
 
                     // Seed roles and system administrator first
                     await DatabaseSeeder.SeedRolesAndSystemAdminAsync(roleManager, userManager, systemAdminConfig, logger);
+
+                    // Manage AuditLog table partitions
+                    await DatabaseSeeder.ManageAuditLogPartitionsAsync(dbContext, logger);
 
                     // Then seed test users
                     await DatabaseSeeder.SeedTestUsersAsync(userManager, dbContext, logger);
