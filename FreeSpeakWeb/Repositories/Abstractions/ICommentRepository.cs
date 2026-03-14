@@ -77,6 +77,15 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         /// </summary>
         Task<bool> ExistsAsync(int commentId);
 
+        /// <summary>
+        /// Get multiple comments by their IDs in a single query.
+        /// Useful for batch loading comments when building comment trees.
+        /// </summary>
+        /// <param name="commentIds">Collection of comment IDs to retrieve.</param>
+        /// <param name="includeAuthor">Whether to include author information.</param>
+        /// <returns>A list of comments matching the provided IDs.</returns>
+        Task<List<TComment>> GetByIdsAsync(IEnumerable<int> commentIds, bool includeAuthor = true);
+
         #endregion
 
         #region Hierarchy Operations

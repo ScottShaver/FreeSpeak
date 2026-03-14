@@ -198,13 +198,11 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
             else
             {
                 await JSRuntime.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to add comment");
-                Console.WriteLine($"Failed to add comment: {result.ErrorMessage}");
             }
         }
         catch (Exception ex)
         {
             await JSRuntime.InvokeVoidAsync("alert", "An error occurred while adding your comment.");
-            Console.WriteLine($"Error adding comment: {ex.Message}");
         }
     }
 
@@ -222,7 +220,6 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
             var parentComment = await GetCommentByIdAsync(args.ParentCommentId);
             if (parentComment == null)
             {
-                Console.WriteLine($"Could not find parent comment {args.ParentCommentId}");
                 return;
             }
 
@@ -233,7 +230,6 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
             if (!result.Success)
             {
                 await JSRuntime.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to add reply");
-                Console.WriteLine($"Failed to add reply: {result.ErrorMessage}");
                 return;
             }
 
@@ -243,7 +239,7 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error updating UI after reply added: {ex.Message}");
+            // Silently fail - UI will remain in previous state
         }
     }
 
@@ -283,7 +279,7 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error handling post reaction: {ex.Message}");
+            // Silently fail - UI will remain in previous state
         }
     }
 
@@ -313,7 +309,7 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error removing post reaction: {ex.Message}");
+            // Silently fail - UI will remain in previous state
         }
     }
 
@@ -343,7 +339,7 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error handling comment reaction: {ex.Message}");
+            // Silently fail - UI will remain in previous state
         }
     }
 
@@ -373,7 +369,7 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error removing comment reaction: {ex.Message}");
+            // Silently fail - UI will remain in previous state
         }
     }
 

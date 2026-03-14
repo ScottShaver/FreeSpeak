@@ -134,6 +134,22 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         /// </summary>
         Task<Dictionary<int, TLike?>> GetUserLikesForCommentsAsync(string userId, IEnumerable<int> commentIds);
 
+        /// <summary>
+        /// Get like counts for multiple comments at once (for feed display)
+        /// Eliminates N+1 query problem when displaying comment lists
+        /// </summary>
+        /// <param name="commentIds">List of comment IDs to get counts for</param>
+        /// <returns>Dictionary mapping comment ID to total like count</returns>
+        Task<Dictionary<int, int>> GetCountsForCommentsAsync(IEnumerable<int> commentIds);
+
+        /// <summary>
+        /// Get reaction breakdowns for multiple comments at once (for feed display)
+        /// Returns like counts grouped by reaction type for each comment
+        /// </summary>
+        /// <param name="commentIds">List of comment IDs to get breakdowns for</param>
+        /// <returns>Dictionary mapping comment ID to its reaction breakdown</returns>
+        Task<Dictionary<int, Dictionary<LikeType, int>>> GetReactionBreakdownsForCommentsAsync(IEnumerable<int> commentIds);
+
         #endregion
     }
 }

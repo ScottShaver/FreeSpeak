@@ -148,5 +148,69 @@ namespace FreeSpeakWeb.Repositories
                 return commentIds.ToDictionary(id => id, _ => (GroupPostCommentLike?)null);
             }
         }
+
+        /// <summary>
+        /// Gets the total like count for multiple comments in a single query.
+        /// Useful for batch loading like counts when displaying comment lists.
+        /// </summary>
+        /// <param name="commentIds">Collection of comment IDs to get counts for.</param>
+        /// <returns>A dictionary mapping each comment ID to its like count.</returns>
+        public async Task<Dictionary<int, int>> GetCountsForCommentsAsync(IEnumerable<int> commentIds)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var commentIdList = commentIds.ToList();
+                var counts = await context.GroupPostCommentLikes
+                    .Where(l => commentIdList.Contains(l.CommentId))
+                    .GroupBy(l => l.CommentId)
+                    .Select(g => new { CommentId = g.Key, Count = g.Count() })
+                    .ToListAsync();
+
+                return commentIdList.ToDictionary(
+                    commentId => commentId,
+                    commentId => counts.FirstOrDefault(c => c.CommentId == commentId)?.Count ?? 0
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving like counts for multiple group comments");
+                return commentIds.ToDictionary(id => id, _ => 0);
+            }
+        }
+
+        /// <summary>
+        /// Gets the reaction breakdown (like counts by type) for multiple comments in a single query.
+        /// Useful for batch loading reaction data when displaying comment lists.
+        /// </summary>
+        /// <param name="commentIds">Collection of comment IDs to get reaction breakdowns for.</param>
+        /// <returns>A dictionary mapping each comment ID to its reaction breakdown (LikeType to count).</returns>
+        public async Task<Dictionary<int, Dictionary<LikeType, int>>> GetReactionBreakdownsForCommentsAsync(IEnumerable<int> commentIds)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var commentIdList = commentIds.ToList();
+                var reactions = await context.GroupPostCommentLikes
+                    .Where(l => commentIdList.Contains(l.CommentId))
+                    .GroupBy(l => new { l.CommentId, l.Type })
+                    .Select(g => new { g.Key.CommentId, g.Key.Type, Count = g.Count() })
+                    .ToListAsync();
+
+                var result = commentIdList.ToDictionary(
+                    commentId => commentId,
+                    commentId => reactions
+                        .Where(r => r.CommentId == commentId)
+                        .ToDictionary(r => r.Type, r => r.Count)
+                );
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving reaction breakdowns for multiple group comments");
+                return commentIds.ToDictionary(id => id, _ => new Dictionary<LikeType, int>());
+            }
+        }
     }
 }

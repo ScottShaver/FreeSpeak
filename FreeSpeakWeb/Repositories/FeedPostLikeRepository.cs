@@ -286,5 +286,85 @@ namespace FreeSpeakWeb.Repositories
                 return postIds.ToDictionary(id => id, _ => (Like?)null);
             }
         }
+
+        /// <summary>
+        /// Gets the count of likes grouped by reaction type for multiple posts in a single query.
+        /// </summary>
+        /// <param name="postIds">The list of post identifiers to query.</param>
+        /// <returns>A dictionary mapping post IDs to dictionaries of like types and their counts.</returns>
+        public async Task<Dictionary<int, Dictionary<LikeType, int>>> GetCountsByTypeForPostsAsync(List<int> postIds)
+        {
+            try
+            {
+                if (postIds == null || !postIds.Any())
+                {
+                    return new Dictionary<int, Dictionary<LikeType, int>>();
+                }
+
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Get all likes for the specified posts in a single query
+                var likes = await context.Likes
+                    .Where(l => postIds.Contains(l.PostId))
+                    .GroupBy(l => new { l.PostId, l.Type })
+                    .Select(g => new { g.Key.PostId, g.Key.Type, Count = g.Count() })
+                    .ToListAsync();
+
+                // Group by post ID and create the nested dictionary
+                var result = new Dictionary<int, Dictionary<LikeType, int>>();
+                foreach (var postId in postIds)
+                {
+                    var postLikes = likes
+                        .Where(l => l.PostId == postId)
+                        .ToDictionary(l => l.Type, l => l.Count);
+                    result[postId] = postLikes;
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error counting likes by type for multiple posts");
+                return new Dictionary<int, Dictionary<LikeType, int>>();
+            }
+        }
+
+        /// <summary>
+        /// Gets user reactions for multiple posts in a single query.
+        /// </summary>
+        /// <param name="postIds">The list of post identifiers to query.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A dictionary mapping post IDs to the user's reaction type (or null if no reaction).</returns>
+        public async Task<Dictionary<int, LikeType?>> GetUserReactionsForPostsAsync(List<int> postIds, string userId)
+        {
+            try
+            {
+                if (postIds == null || !postIds.Any())
+                {
+                    return new Dictionary<int, LikeType?>();
+                }
+
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Get all user likes for the specified posts in a single query
+                var userLikes = await context.Likes
+                    .Where(l => postIds.Contains(l.PostId) && l.UserId == userId)
+                    .Select(l => new { l.PostId, l.Type })
+                    .ToListAsync();
+
+                // Create dictionary with all post IDs, defaulting to null for posts without likes
+                var result = postIds.ToDictionary(
+                    postId => postId,
+                    postId => userLikes.FirstOrDefault(l => l.PostId == postId)?.Type
+                );
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving user reactions for multiple posts");
+                return postIds.ToDictionary(id => id, _ => (LikeType?)null);
+            }
+        }
     }
 }

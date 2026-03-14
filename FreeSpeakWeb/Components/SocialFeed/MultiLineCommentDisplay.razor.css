@@ -238,6 +238,32 @@
     padding-left: 0;
 }
 
+.comment-view-replies,
+.comment-hide-replies {
+    margin-top: 8px;
+    padding-left: 12px;
+}
+
+.view-replies-button,
+.hide-replies-button {
+    background: none;
+    border: none;
+    color: #65676b;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 0;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.view-replies-button:hover,
+.hide-replies-button:hover {
+    color: #050505;
+    text-decoration: underline;
+}
+
 /* Nested comments have slightly smaller avatars */
 .comment-replies .comment-display .avatar-img {
     width: 28px;

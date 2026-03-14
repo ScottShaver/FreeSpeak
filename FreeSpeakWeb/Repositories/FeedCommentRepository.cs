@@ -284,6 +284,36 @@ namespace FreeSpeakWeb.Repositories
         }
 
         /// <summary>
+        /// Retrieves multiple comments by their IDs in a single query.
+        /// This batch method is useful for loading all comments in a tree structure efficiently.
+        /// </summary>
+        /// <param name="commentIds">Collection of comment IDs to retrieve.</param>
+        /// <param name="includeAuthor">Whether to include author information.</param>
+        /// <returns>A list of comments matching the provided IDs.</returns>
+        public async Task<List<Comment>> GetByIdsAsync(IEnumerable<int> commentIds, bool includeAuthor = true)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var commentIdList = commentIds.ToList();
+
+                var query = context.Comments.Where(c => commentIdList.Contains(c.Id));
+
+                if (includeAuthor)
+                {
+                    query = query.Include(c => c.Author);
+                }
+
+                return await query.OrderBy(c => c.CreatedAt).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving comments by IDs");
+                return new List<Comment>();
+            }
+        }
+
+        /// <summary>
         /// Retrieves all comments for a post, including both top-level comments and replies.
         /// </summary>
         /// <param name="postId">The unique identifier of the post.</param>

@@ -174,6 +174,232 @@ public static class CommentHelpers
         };
     }
 
+    /// <summary>
+    /// Build CommentDisplayModels for a list of post comments with optimized batch loading.
+    /// Loads ALL nested comments, user preferences, and reaction data in minimal queries.
+    /// </summary>
+    /// <param name="comments">The list of Comment entities to build from</param>
+    /// <param name="postService">PostService for loading replies and reaction data</param>
+    /// <param name="userPreferenceService">UserPreferenceService for formatting display names</param>
+    /// <param name="currentUserId">Current user ID for loading user-specific reaction data (optional)</param>
+    /// <returns>A list of fully populated CommentDisplayModels</returns>
+    public static async Task<List<CommentDisplayModel>> BuildCommentDisplayModelsAsync(
+        List<Comment> comments,
+        PostService postService,
+        UserPreferenceService userPreferenceService,
+        string? currentUserId = null)
+    {
+        if (comments == null || comments.Count == 0)
+            return new List<CommentDisplayModel>();
+
+        // Get the postId from the first comment (all comments should belong to the same post)
+        var postId = comments.First().PostId;
+
+        // Step 1: Load ALL comments for the post in a SINGLE query (no more N+1!)
+        var allComments = await postService.GetAllCommentsAsync(postId);
+        var commentsById = allComments.ToDictionary(c => c.Id);
+
+        // Step 2: Batch load user preferences (1 query)
+        var userIds = allComments.Where(c => c.Author != null).Select(c => c.AuthorId).Distinct().ToList();
+        var userPreferences = await userPreferenceService.GetNameDisplayTypesAsync(userIds);
+        var userNames = allComments
+            .Where(c => c.Author != null)
+            .GroupBy(c => c.AuthorId)
+            .ToDictionary(
+                g => g.Key, 
+                g => (g.First().Author!.FirstName, g.First().Author.LastName, g.First().Author.UserName ?? "Unknown"));
+        var formattedNames = userPreferenceService.FormatUserDisplayNames(userNames, userPreferences);
+
+        // Step 3: Batch load all reaction data (3 queries)
+        var commentIdList = allComments.Select(c => c.Id).ToList();
+        var likeCounts = await postService.GetCommentLikeCountsAsync(commentIdList);
+        var userReactions = currentUserId != null 
+            ? await postService.GetUserCommentReactionsAsync(currentUserId, commentIdList)
+            : new Dictionary<int, LikeType?>();
+        var reactionBreakdowns = await postService.GetCommentReactionBreakdownsAsync(commentIdList);
+
+        // Step 4: Build models with all cached data (no more queries!)
+        var result = new List<CommentDisplayModel>();
+        foreach (var comment in comments)
+        {
+            var model = BuildCommentWithAllCachedData(
+                comment,
+                commentsById,
+                formattedNames,
+                likeCounts,
+                userReactions,
+                reactionBreakdowns);
+            result.Add(model);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Build CommentDisplayModels for a list of group post comments with optimized batch loading.
+    /// Loads ALL nested comments, user preferences, and reaction data in minimal queries.
+    /// </summary>
+    /// <param name="comments">The list of GroupPostComment entities to build from</param>
+    /// <param name="groupPostService">GroupPostService for loading replies and reaction data</param>
+    /// <param name="userPreferenceService">UserPreferenceService for formatting display names</param>
+    /// <param name="currentUserId">Current user ID for loading user-specific reaction data (optional)</param>
+    /// <returns>A list of fully populated CommentDisplayModels</returns>
+    public static async Task<List<CommentDisplayModel>> BuildCommentDisplayModelsAsync(
+        List<GroupPostComment> comments,
+        GroupPostService groupPostService,
+        UserPreferenceService userPreferenceService,
+        string? currentUserId = null)
+    {
+        if (comments == null || comments.Count == 0)
+            return new List<CommentDisplayModel>();
+
+        // Get the postId from the first comment (all comments should belong to the same post)
+        var postId = comments.First().PostId;
+
+        // Step 1: Load ALL comments for the post in a SINGLE query (no more N+1!)
+        var allComments = await groupPostService.GetAllCommentsAsync(postId);
+        var commentsById = allComments.ToDictionary(c => c.Id);
+
+        // Step 2: Batch load user preferences (1 query)
+        var userIds = allComments.Where(c => c.Author != null).Select(c => c.AuthorId).Distinct().ToList();
+        var userPreferences = await userPreferenceService.GetNameDisplayTypesAsync(userIds);
+        var userNames = allComments
+            .Where(c => c.Author != null)
+            .GroupBy(c => c.AuthorId)
+            .ToDictionary(
+                g => g.Key, 
+                g => (g.First().Author!.FirstName, g.First().Author.LastName, g.First().Author.UserName ?? "Unknown"));
+        var formattedNames = userPreferenceService.FormatUserDisplayNames(userNames, userPreferences);
+
+        // Step 3: Batch load all reaction data (3 queries)
+        var commentIdList = allComments.Select(c => c.Id).ToList();
+        var likeCounts = await groupPostService.GetCommentLikeCountsAsync(commentIdList);
+        var userReactions = currentUserId != null 
+            ? await groupPostService.GetUserCommentReactionsAsync(currentUserId, commentIdList)
+            : new Dictionary<int, LikeType?>();
+        var reactionBreakdowns = await groupPostService.GetCommentReactionBreakdownsAsync(commentIdList);
+
+        // Step 4: Build models with all cached data (no more queries!)
+        var result = new List<CommentDisplayModel>();
+        foreach (var comment in comments)
+        {
+            var model = BuildCommentWithAllCachedData(
+                comment,
+                commentsById,
+                formattedNames,
+                likeCounts,
+                userReactions,
+                reactionBreakdowns);
+            result.Add(model);
+        }
+
+        return result;
+    }
+
+    #endregion
+
+    #region Batch Loading Helper Methods
+
+    // Note: Removed CollectAllCommentIdsRecursive methods as they created N+1 queries.
+    // Now using GetAllCommentsAsync to load all comments for a post in a single query.
+
+    /// <summary>
+    /// Build a CommentDisplayModel from a Comment entity using fully pre-loaded cached data.
+    /// This method builds the entire tree structure without any database queries.
+    /// </summary>
+    private static CommentDisplayModel BuildCommentWithAllCachedData(
+        Comment comment,
+        Dictionary<int, Comment> allCommentsById,
+        Dictionary<string, string> userDisplayNames,
+        Dictionary<int, int> likeCounts,
+        Dictionary<int, LikeType?> userReactions,
+        Dictionary<int, Dictionary<LikeType, int>> reactionBreakdowns)
+    {
+        // Find all direct replies from the cached comments
+        var replies = allCommentsById.Values
+            .Where(c => c.ParentCommentId == comment.Id)
+            .OrderBy(c => c.CreatedAt)
+            .ToList();
+
+        var replyModels = new List<CommentDisplayModel>();
+        foreach (var reply in replies)
+        {
+            var replyModel = BuildCommentWithAllCachedData(
+                reply,
+                allCommentsById,
+                userDisplayNames,
+                likeCounts,
+                userReactions,
+                reactionBreakdowns);
+            replyModels.Add(replyModel);
+        }
+
+        var authorName = userDisplayNames.GetValueOrDefault(comment.AuthorId, "Unknown");
+
+        return new CommentDisplayModel
+        {
+            CommentId = comment.Id,
+            UserName = authorName,
+            UserImageUrl = comment.Author?.ProfilePictureUrl,
+            CommentAuthorId = comment.AuthorId,
+            CommentText = comment.Content,
+            Timestamp = comment.CreatedAt,
+            Replies = replyModels.Count > 0 ? replyModels : null,
+            LikeCount = likeCounts.GetValueOrDefault(comment.Id, 0),
+            UserReaction = userReactions.GetValueOrDefault(comment.Id),
+            ReactionBreakdown = reactionBreakdowns.GetValueOrDefault(comment.Id, new Dictionary<LikeType, int>())
+        };
+    }
+
+    /// <summary>
+    /// Build a CommentDisplayModel from a GroupPostComment entity using fully pre-loaded cached data.
+    /// This method builds the entire tree structure without any database queries.
+    /// </summary>
+    private static CommentDisplayModel BuildCommentWithAllCachedData(
+        GroupPostComment comment,
+        Dictionary<int, GroupPostComment> allCommentsById,
+        Dictionary<string, string> userDisplayNames,
+        Dictionary<int, int> likeCounts,
+        Dictionary<int, LikeType?> userReactions,
+        Dictionary<int, Dictionary<LikeType, int>> reactionBreakdowns)
+    {
+        // Find all direct replies from the cached comments
+        var replies = allCommentsById.Values
+            .Where(c => c.ParentCommentId == comment.Id)
+            .OrderBy(c => c.CreatedAt)
+            .ToList();
+
+        var replyModels = new List<CommentDisplayModel>();
+        foreach (var reply in replies)
+        {
+            var replyModel = BuildCommentWithAllCachedData(
+                reply,
+                allCommentsById,
+                userDisplayNames,
+                likeCounts,
+                userReactions,
+                reactionBreakdowns);
+            replyModels.Add(replyModel);
+        }
+
+        var authorName = userDisplayNames.GetValueOrDefault(comment.AuthorId, "Unknown");
+
+        return new CommentDisplayModel
+        {
+            CommentId = comment.Id,
+            UserName = authorName,
+            UserImageUrl = comment.Author?.ProfilePictureUrl,
+            CommentAuthorId = comment.AuthorId,
+            CommentText = comment.Content,
+            ImageUrl = comment.ImageUrl,
+            Timestamp = comment.CreatedAt,
+            Replies = replyModels.Count > 0 ? replyModels : null,
+            LikeCount = likeCounts.GetValueOrDefault(comment.Id, 0),
+            UserReaction = userReactions.GetValueOrDefault(comment.Id),
+            ReactionBreakdown = reactionBreakdowns.GetValueOrDefault(comment.Id, new Dictionary<LikeType, int>())
+        };
+    }
+
     #endregion
 
     #region Author Name Formatting

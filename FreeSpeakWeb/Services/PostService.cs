@@ -936,23 +936,7 @@ namespace FreeSpeakWeb.Services
         /// <returns>A list of reply comments with author information.</returns>
         public async Task<List<Comment>> GetRepliesAsync(int commentId)
         {
-            try
-            {
-                using var context = await _contextFactory.CreateDbContextAsync();
-
-                var replies = await context.Comments
-                    .Include(c => c.Author)
-                    .Where(c => c.ParentCommentId == commentId)
-                    .OrderBy(c => c.CreatedAt)
-                    .ToListAsync();
-
-                return replies;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving replies for comment {CommentId}", commentId);
-                return new List<Comment>();
-            }
+            return await _commentRepository.GetRepliesAsync(commentId);
         }
 
         #endregion
@@ -1204,6 +1188,43 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogError(ex, "Error getting user reaction for post {PostId} and user {UserId}", postId, userId);
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets reaction breakdowns for multiple posts in a single database query.
+        /// </summary>
+        /// <param name="postIds">The list of post identifiers to query.</param>
+        /// <returns>A dictionary mapping post IDs to dictionaries of like types and their counts.</returns>
+        public async Task<Dictionary<int, Dictionary<LikeType, int>>> GetReactionBreakdownForPostsAsync(List<int> postIds)
+        {
+            try
+            {
+                return await _likeRepository.GetCountsByTypeForPostsAsync(postIds);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting reaction breakdown for multiple posts");
+                return new Dictionary<int, Dictionary<LikeType, int>>();
+            }
+        }
+
+        /// <summary>
+        /// Gets user reactions for multiple posts in a single database query.
+        /// </summary>
+        /// <param name="postIds">The list of post identifiers to query.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A dictionary mapping post IDs to the user's reaction type (or null if no reaction).</returns>
+        public async Task<Dictionary<int, LikeType?>> GetUserReactionsForPostsAsync(List<int> postIds, string userId)
+        {
+            try
+            {
+                return await _likeRepository.GetUserReactionsForPostsAsync(postIds, userId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting user reactions for multiple posts");
+                return new Dictionary<int, LikeType?>();
             }
         }
 
@@ -1581,6 +1602,63 @@ namespace FreeSpeakWeb.Services
             }
         }
 
+        /// <summary>
+        /// Gets multiple comments by their IDs in a single query.
+        /// This batch method reduces database round trips when loading comment trees.
+        /// </summary>
+        /// <param name="commentIds">Collection of comment IDs to retrieve.</param>
+        /// <returns>A list of comments matching the provided IDs.</returns>
+        public async Task<List<Comment>> GetCommentsByIdsAsync(IEnumerable<int> commentIds)
+        {
+            return await _commentRepository.GetByIdsAsync(commentIds, includeAuthor: true);
+        }
+
+        /// <summary>
+        /// Gets all comments for a post including top-level comments and all nested replies in a single query.
+        /// Optimized method that eliminates N+1 query problems when loading comment trees.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>A list of all comments for the post with author information.</returns>
+        public async Task<List<Comment>> GetAllCommentsAsync(int postId)
+        {
+            return await _commentRepository.GetAllCommentsAsync(postId);
+        }
+
+        /// <summary>
+        /// Gets the like counts for multiple comments in a single query.
+        /// This batch method reduces database round trips when loading comment lists.
+        /// </summary>
+        /// <param name="commentIds">Collection of comment IDs to get counts for.</param>
+        /// <returns>A dictionary mapping each comment ID to its like count.</returns>
+        public async Task<Dictionary<int, int>> GetCommentLikeCountsAsync(IEnumerable<int> commentIds)
+        {
+            return await _commentLikeRepository.GetCountsForCommentsAsync(commentIds);
+        }
+
+        /// <summary>
+        /// Gets the user reactions for multiple comments in a single query.
+        /// This batch method reduces database round trips when loading comment lists.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <param name="commentIds">Collection of comment IDs to check reactions for.</param>
+        /// <returns>A dictionary mapping each comment ID to the user's reaction type (or null).</returns>
+        public async Task<Dictionary<int, LikeType?>> GetUserCommentReactionsAsync(string userId, IEnumerable<int> commentIds)
+        {
+            var likes = await _commentLikeRepository.GetUserLikesForCommentsAsync(userId, commentIds);
+            return likes.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.Type);
+        }
+
+        /// <summary>
+        /// Gets the reaction breakdowns for multiple comments in a single query.
+        /// This batch method reduces database round trips when loading comment lists.
+        /// </summary>
+        /// <param name="commentIds">Collection of comment IDs to get reaction breakdowns for.</param>
+        /// <returns>A dictionary mapping each comment ID to its reaction breakdown.</returns>
+        public async Task<Dictionary<int, Dictionary<LikeType, int>>> GetCommentReactionBreakdownsAsync(IEnumerable<int> commentIds)
+        {
+            return await _commentLikeRepository.GetReactionBreakdownsForCommentsAsync(commentIds);
+        }
+
         #endregion
 
         #region Pinned Posts Operations
@@ -1848,6 +1926,38 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogError(ex, "Error checking if post {PostId} notifications are muted for user {UserId}", postId, userId);
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the mute status for multiple posts for a specific user in a single query.
+        /// Used to batch load mute status and avoid N+1 queries when displaying feeds.
+        /// </summary>
+        /// <param name="postIds">List of post IDs to check mute status for.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A dictionary mapping post IDs to their mute status (true if muted).</returns>
+        public async Task<Dictionary<int, bool>> GetMuteStatusForPostsAsync(List<int> postIds, string userId)
+        {
+            if (postIds == null || !postIds.Any() || string.IsNullOrEmpty(userId))
+            {
+                return new Dictionary<int, bool>();
+            }
+
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var mutedPostIds = await context.PostNotificationMutes
+                    .Where(m => postIds.Contains(m.PostId) && m.UserId == userId)
+                    .Select(m => m.PostId)
+                    .ToListAsync();
+
+                return postIds.ToDictionary(id => id, id => mutedPostIds.Contains(id));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting mute status for posts for user {UserId}", userId);
+                return postIds.ToDictionary(id => id, id => false);
             }
         }
 

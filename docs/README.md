@@ -9,6 +9,16 @@ This folder contains technical documentation for the FreeSpeak application.
 | Document | Description |
 |----------|-------------|
 | [DEVELOPER_GUIDE_BASE_COMPONENTS.md](DEVELOPER_GUIDE_BASE_COMPONENTS.md) | Guide to using `PostPageBase<TPost, TComment>` generic base component for post pages |
+| [TESTING_PATTERNS.md](TESTING_PATTERNS.md) | Unit testing patterns, best practices, and infrastructure guide |
+| [REPOSITORY_PATTERN.md](REPOSITORY_PATTERN.md) | Repository pattern implementation and data access architecture |
+| [CONFIGURATION.md](CONFIGURATION.md) | Complete configuration guide including appsettings.json, environment variables, and options pattern |
+
+### Architecture & Performance
+
+| Document | Description |
+|----------|-------------|
+| [CACHING.md](CACHING.md) | Comprehensive caching strategy including distributed cache, friendship cache, and compiled queries |
+| [PERFORMANCE_OPTIMIZATION.md](PERFORMANCE_OPTIMIZATION.md) | Database query optimizations, AsNoTracking, AsSplitQuery, DTO projections, and performance metrics |
 
 ### Group Post System
 
@@ -45,4 +55,8 @@ This folder contains technical documentation for the FreeSpeak application.
 - **New to the codebase?** Start with the [main README](../README.md)
 - **Working with post pages?** See [DEVELOPER_GUIDE_BASE_COMPONENTS.md](DEVELOPER_GUIDE_BASE_COMPONENTS.md)
 - **Working with groups?** See [GROUP_POST_SYSTEM.md](GROUP_POST_SYSTEM.md)
+- **Setting up caching?** See [CACHING.md](CACHING.md) and [CONFIGURATION.md](CONFIGURATION.md)
+- **Writing tests?** See [TESTING_PATTERNS.md](TESTING_PATTERNS.md)
+- **Optimizing queries?** See [PERFORMANCE_OPTIMIZATION.md](PERFORMANCE_OPTIMIZATION.md)
+- **Understanding repositories?** See [REPOSITORY_PATTERN.md](REPOSITORY_PATTERN.md)
 - **Security concerns?** See [SECURITY_AUDIT_RESULTS.md](SECURITY_AUDIT_RESULTS.md)

@@ -347,5 +347,84 @@ namespace FreeSpeakWeb.Services
                 _ => $"{firstName} {lastName}".Trim()
             };
         }
+
+        /// <summary>
+        /// Gets the name display preferences for multiple users in a single query.
+        /// This batch method reduces database round trips when formatting display names for multiple users.
+        /// </summary>
+        /// <param name="userIds">Collection of user IDs to get preferences for.</param>
+        /// <returns>A dictionary mapping each user ID to their name display preference.</returns>
+        public async Task<Dictionary<string, NameDisplayType>> GetNameDisplayTypesAsync(IEnumerable<string> userIds)
+        {
+            var userIdList = userIds.Where(id => !string.IsNullOrEmpty(id)).Distinct().ToList();
+
+            if (!userIdList.Any())
+            {
+                return new Dictionary<string, NameDisplayType>();
+            }
+
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var preferences = await context.UserPreferences
+                    .Where(p => userIdList.Contains(p.UserId) && p.PreferenceType == PreferenceType.NameDisplay)
+                    .ToListAsync();
+
+                var result = new Dictionary<string, NameDisplayType>();
+
+                foreach (var userId in userIdList)
+                {
+                    var preference = preferences.FirstOrDefault(p => p.UserId == userId);
+                    if (preference != null && Enum.TryParse<NameDisplayType>(preference.PreferenceValue, out var nameDisplay))
+                    {
+                        result[userId] = nameDisplay;
+                    }
+                    else
+                    {
+                        result[userId] = NameDisplayType.FullName; // Default
+                    }
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting name display preferences for multiple users");
+                return userIdList.ToDictionary(id => id, _ => NameDisplayType.FullName);
+            }
+        }
+
+        /// <summary>
+        /// Formats display names for multiple users in batch using their cached preferences.
+        /// This method is optimized for use with pre-loaded user preference data.
+        /// </summary>
+        /// <param name="users">Dictionary mapping user IDs to their name components (firstName, lastName, username).</param>
+        /// <param name="preferences">Pre-loaded name display preferences for the users.</param>
+        /// <returns>A dictionary mapping each user ID to their formatted display name.</returns>
+        public Dictionary<string, string> FormatUserDisplayNames(
+            Dictionary<string, (string firstName, string lastName, string username)> users,
+            Dictionary<string, NameDisplayType> preferences)
+        {
+            var result = new Dictionary<string, string>();
+
+            foreach (var kvp in users)
+            {
+                var userId = kvp.Key;
+                var (firstName, lastName, username) = kvp.Value;
+                var nameDisplay = preferences.GetValueOrDefault(userId, NameDisplayType.FullName);
+
+                result[userId] = nameDisplay switch
+                {
+                    NameDisplayType.FullName => $"{firstName} {lastName}".Trim(),
+                    NameDisplayType.FirstName => firstName,
+                    NameDisplayType.Username => username,
+                    NameDisplayType.FirstNameLastInitial => $"{firstName} {(!string.IsNullOrEmpty(lastName) ? lastName[0] + "." : "")}".Trim(),
+                    _ => $"{firstName} {lastName}".Trim()
+                };
+            }
+
+            return result;
+        }
     }
 }

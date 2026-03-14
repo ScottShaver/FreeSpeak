@@ -110,6 +110,7 @@
                     var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
                     var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
                     var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
+                    var isMuted = postMuteStatus.ContainsKey(post.Id) ? postMuteStatus[post.Id] : (bool?)null;
 
                     <GroupPostArticle 
                         PostId="@post.Id"
@@ -131,6 +132,7 @@
                         ReactionBreakdown="@postReactions"
                         UserReaction="@userReaction"
                         IsPinned="@isPinned"
+                        IsMuted="@isMuted"
                         Images="@ConvertGroupPostImagesToPostImages(post.Images)"
                         OnReactionChanged="@(async (reactionType) => await HandleGroupPostReactionChanged(post.Id, reactionType))"
                         OnRemoveReaction="@(async () => await HandleRemoveGroupPostReaction(post.Id))"
@@ -220,7 +222,7 @@
 
     // Group information
     private Group? group;
-    private bool isLoadingGroup = true;
+    private bool isLoadingGroup = false;
     private int memberCount = 0;
     private int totalPosts = 0;
     private int postsThisWeek = 0;
@@ -234,6 +236,7 @@
     private bool? hasMorePosts = null;
     private int currentPage = 1;
     private const int pageSize = 20;
+    private Dictionary<int, bool> postMuteStatus = new();
 
     // JavaScript interop
     private IJSObjectReference? jsModule;
@@ -278,14 +281,21 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error initializing infinite scroll: {ex.Message}");
+                // Silently fail - infinite scroll optional
             }
         }
     }
 
+    /// <summary>
+    /// Loads the group information and statistics.
+    /// Includes a guard to prevent concurrent loading operations.
+    /// </summary>
     private async Task LoadGroupInformation()
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
+
+        // Prevent concurrent loading operations
+        if (isLoadingGroup) return;
 
         isLoadingGroup = true;
         StateHasChanged();
@@ -325,7 +335,6 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading group information: {ex.Message}");
             group = null;
         }
         finally
@@ -335,9 +344,16 @@
         }
     }
 
+    /// <summary>
+    /// Loads the group posts for display.
+    /// Includes a guard to prevent concurrent loading operations.
+    /// </summary>
     private async Task LoadGroupPosts()
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
+
+        // Prevent concurrent loading operations
+        if (isLoadingPosts) return;
 
         isLoadingPosts = true;
         StateHasChanged();
@@ -355,7 +371,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading group posts: {ex.Message}");
+            // Silently fail - posts will show empty
         }
         finally
         {
@@ -393,7 +409,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading more group posts: {ex.Message}");
+            // Silently fail - pagination will stop
         }
         finally
         {
@@ -404,32 +420,71 @@
 
     private async Task LoadGroupPostDataAsync(List<GroupPost> posts)
     {
+        if (!posts.Any()) return;
+
+        // Populate author names
         foreach (var post in posts)
         {
             if (!postAuthorNames.ContainsKey(post.Id) && post.Author != null)
             {
                 postAuthorNames[post.Id] = $"{post.Author.FirstName} {post.Author.LastName}";
             }
+        }
 
-            // Load reaction data
-            if (!postReactionData.ContainsKey(post.Id))
+        // Get post IDs that need reaction data loaded
+        var postIdsNeedingReactions = posts
+            .Where(p => !postReactionData.ContainsKey(p.Id))
+            .Select(p => p.Id)
+            .ToList();
+
+        if (postIdsNeedingReactions.Any())
+        {
+            // Load reaction data for all posts in a single query
+            var reactions = await GroupPostService.GetReactionBreakdownForPostsAsync(postIdsNeedingReactions);
+            foreach (var kvp in reactions)
             {
-                var reactions = await GroupPostService.GetReactionBreakdownAsync(post.Id);
-                postReactionData[post.Id] = reactions;
+                postReactionData[kvp.Key] = kvp.Value;
             }
+        }
 
-            // Load user reaction
-            if (!postUserReactions.ContainsKey(post.Id))
+        // Get post IDs that need user reactions loaded
+        var postIdsNeedingUserReactions = posts
+            .Where(p => !postUserReactions.ContainsKey(p.Id))
+            .Select(p => p.Id)
+            .ToList();
+
+        if (postIdsNeedingUserReactions.Any() && currentUserId != null)
+        {
+            // Load user reactions for all posts in a single query
+            var userReactions = await GroupPostService.GetUserReactionsForPostsAsync(postIdsNeedingUserReactions, currentUserId);
+            foreach (var kvp in userReactions)
             {
-                var userReaction = await GroupPostService.GetUserReactionAsync(post.Id, currentUserId!);
-                postUserReactions[post.Id] = userReaction;
+                postUserReactions[kvp.Key] = kvp.Value;
             }
+        }
 
-            // Load pinned status
-            if (!pinnedPosts.ContainsKey(post.Id))
+        // Load pinned status (still per-post, could be optimized separately)
+        foreach (var post in posts)
+        {
+            if (!pinnedPosts.ContainsKey(post.Id) && currentUserId != null)
             {
-                var isPinned = await PinnedGroupPostService.IsGroupPostPinnedAsync(currentUserId!, post.Id);
+                var isPinned = await PinnedGroupPostService.IsGroupPostPinnedAsync(currentUserId, post.Id);
                 pinnedPosts[post.Id] = isPinned;
+            }
+        }
+
+        // Load mute status in batch to avoid N+1 queries
+        var postIdsNeedingMuteStatus = posts
+            .Where(p => !postMuteStatus.ContainsKey(p.Id))
+            .Select(p => p.Id)
+            .ToList();
+
+        if (postIdsNeedingMuteStatus.Any() && currentUserId != null)
+        {
+            var muteStatus = await GroupPostService.GetMuteStatusForPostsAsync(postIdsNeedingMuteStatus, currentUserId);
+            foreach (var kvp in muteStatus)
+            {
+                postMuteStatus[kvp.Key] = kvp.Value;
             }
         }
     }
