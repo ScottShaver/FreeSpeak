@@ -1,0 +1,326 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services.Abstractions
+@using Microsoft.AspNetCore.Identity
+@inject IRoleService RoleService
+@inject ILogger<UserRoleManagementModal> Logger
+
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-person-badge me-2"></i>
+                    Manage Roles for @User?.UserName
+                </h5>
+                <button type="button" class="btn-close" @onclick="Close" disabled="@isSaving"></button>
+            </div>
+            <div class="modal-body">
+                @if (User != null)
+                {
+                    <div class="user-info-section mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            @if (!string.IsNullOrEmpty(User.ProfilePictureUrl))
+                            {
+                                <img src="@User.ProfilePictureUrl" alt="Profile" class="rounded-circle" style="width: 48px; height: 48px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                    <i class="bi bi-person-fill text-white fs-4"></i>
+                                </div>
+                            }
+                            <div>
+                                <div class="fw-bold">@User.FirstName @User.LastName</div>
+                                <div class="text-muted small">@User.Email</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (isLoading)
+                    {
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading roles...</span>
+                            </div>
+                            <p class="text-muted mt-2">Loading available roles...</p>
+                        </div>
+                    }
+                    else if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                        </div>
+                    }
+                    else if (availableRoles.Count == 0)
+                    {
+                        <div class="alert alert-info" role="alert">
+                            <i class="bi bi-info-circle me-2"></i>
+                            No roles available in the system.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="roles-section">
+                            <h6 class="mb-3">Available Roles</h6>
+                            <p class="text-muted small mb-3">Select or deselect roles to assign or remove them from this user.</p>
+
+                            @foreach (var role in availableRoles)
+                            {
+                                var isChecked = userRoles.Contains(role);
+                                var roleId = $"role-{role.Replace(" ", "-").ToLower()}";
+
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" 
+                                           type="checkbox" 
+                                           id="@roleId" 
+                                           checked="@isChecked"
+                                           disabled="@isSaving"
+                                           @onchange="@(e => HandleRoleToggle(role, (bool)(e.Value ?? false)))" />
+                                    <label class="form-check-label" for="@roleId">
+                                        <strong>@role</strong>
+                                        <div class="small text-muted">@GetRoleDescription(role)</div>
+                                    </label>
+                                </div>
+                            }
+                        </div>
+
+                        @if (hasChanges)
+                        {
+                            <div class="alert alert-warning mt-3" role="alert">
+                                <i class="bi bi-info-circle me-2"></i>
+                                You have unsaved changes. Click "Save Changes" to apply them.
+                            </div>
+                        }
+
+                        @if (isSaving)
+                        {
+                            <div class="alert alert-info mt-3" role="alert">
+                                <div class="d-flex align-items-center">
+                                    <div class="spinner-border spinner-border-sm me-2" role="status">
+                                        <span class="visually-hidden">Saving...</span>
+                                    </div>
+                                    <span>Saving role changes...</span>
+                                </div>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(successMessage))
+                        {
+                            <div class="alert alert-success mt-3" role="alert">
+                                <i class="bi bi-check-circle me-2"></i>@successMessage
+                            </div>
+                        }
+                    }
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" 
+                        class="btn btn-secondary" 
+                        @onclick="Close"
+                        disabled="@isSaving">
+                    Close
+                </button>
+                @if (!isLoading && availableRoles.Count > 0)
+                {
+                    <button type="button" 
+                            class="btn btn-primary" 
+                            @onclick="SaveChanges"
+                            disabled="@(!hasChanges || isSaving)">
+                        @if (isSaving)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        }
+                        Save Changes
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// The user whose roles are being managed.
+    /// </summary>
+    [Parameter]
+    public ApplicationUser? User { get; set; }
+
+    /// <summary>
+    /// Event callback triggered when the modal is closed.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    /// <summary>
+    /// Event callback triggered when roles are successfully updated.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnRolesUpdated { get; set; }
+
+    private List<string> availableRoles = new();
+    private HashSet<string> userRoles = new();
+    private HashSet<string> originalUserRoles = new();
+    private bool isLoading = true;
+    private bool isSaving = false;
+    private bool hasChanges = false;
+    private string? errorMessage;
+    private string? successMessage;
+
+    /// <summary>
+    /// Initializes the modal by loading available roles and the user's current roles.
+    /// </summary>
+    protected override async Task OnParametersSetAsync()
+    {
+        if (User != null)
+        {
+            await LoadRolesAsync();
+        }
+    }
+
+    /// <summary>
+    /// Loads all available system roles and the current user's assigned roles.
+    /// </summary>
+    private async Task LoadRolesAsync()
+    {
+        try
+        {
+            isLoading = true;
+            errorMessage = null;
+            StateHasChanged();
+
+            // Load available roles
+            availableRoles = await RoleService.GetAllRolesAsync();
+
+            // Load user's current roles
+            var currentRoles = await RoleService.GetUserRolesAsync(User!.Id);
+            userRoles = new HashSet<string>(currentRoles);
+            originalUserRoles = new HashSet<string>(currentRoles);
+
+            hasChanges = false;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading roles for user {UserId}", User?.Id);
+            errorMessage = "Failed to load roles. Please try again.";
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Handles toggling a role on or off for the user.
+    /// </summary>
+    /// <param name="roleName">The name of the role being toggled.</param>
+    /// <param name="isChecked">Whether the role should be assigned (true) or removed (false).</param>
+    private void HandleRoleToggle(string roleName, bool isChecked)
+    {
+        if (isChecked)
+        {
+            userRoles.Add(roleName);
+        }
+        else
+        {
+            userRoles.Remove(roleName);
+        }
+
+        // Check if there are changes compared to the original state
+        hasChanges = !userRoles.SetEquals(originalUserRoles);
+        successMessage = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Saves the role changes to the database.
+    /// </summary>
+    private async Task SaveChanges()
+    {
+        if (User == null || !hasChanges)
+        {
+            return;
+        }
+
+        try
+        {
+            isSaving = true;
+            errorMessage = null;
+            successMessage = null;
+            StateHasChanged();
+
+            // Determine which roles to add and remove
+            var rolesToAdd = userRoles.Except(originalUserRoles).ToList();
+            var rolesToRemove = originalUserRoles.Except(userRoles).ToList();
+
+            // Add new roles
+            foreach (var role in rolesToAdd)
+            {
+                var result = await RoleService.AddUserToRoleAsync(User.Id, role);
+                if (!result)
+                {
+                    throw new Exception($"Failed to add role: {role}");
+                }
+            }
+
+            // Remove old roles
+            foreach (var role in rolesToRemove)
+            {
+                var result = await RoleService.RemoveUserFromRoleAsync(User.Id, role);
+                if (!result)
+                {
+                    throw new Exception($"Failed to remove role: {role}");
+                }
+            }
+
+            // Update the original state
+            originalUserRoles = new HashSet<string>(userRoles);
+            hasChanges = false;
+            successMessage = "Role changes saved successfully!";
+
+            Logger.LogInformation("Updated roles for user {UserId}. Added: {AddedRoles}, Removed: {RemovedRoles}", 
+                User.Id, string.Join(", ", rolesToAdd), string.Join(", ", rolesToRemove));
+
+            // Notify parent component
+            await OnRolesUpdated.InvokeAsync();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error saving role changes for user {UserId}", User?.Id);
+            errorMessage = $"Failed to save role changes: {ex.Message}";
+        }
+        finally
+        {
+            isSaving = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Closes the modal and invokes the OnClose callback.
+    /// </summary>
+    private async Task Close()
+    {
+        if (!isSaving)
+        {
+            await OnClose.InvokeAsync();
+        }
+    }
+
+    /// <summary>
+    /// Returns a description for each role.
+    /// </summary>
+    /// <param name="roleName">The name of the role.</param>
+    /// <returns>A description of the role's purpose and permissions.</returns>
+    private string GetRoleDescription(string roleName)
+    {
+        return roleName switch
+        {
+            "SystemAdministrator" => "Full system access with all administrative privileges",
+            "SystemModerator" => "Site-wide content moderation and user management",
+            "GroupAdministrator" => "Can create and manage groups",
+            "GroupModerator" => "Can moderate content within assigned groups",
+            _ => "Custom role"
+        };
+    }
+}

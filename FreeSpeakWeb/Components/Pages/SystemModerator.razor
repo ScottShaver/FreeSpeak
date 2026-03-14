@@ -1,0 +1,87 @@
+@page "/system-moderator"
+@rendermode InteractiveServer
+@attribute [Authorize(Roles = "SystemAdministrator,SystemModerator")]
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using FreeSpeakWeb.Data
+
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>System Moderator Functions</PageTitle>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">
+                <i class="bi bi-shield-check me-2"></i>
+                System Moderator Functions
+            </h1>
+
+            <div class="alert alert-info" role="alert">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Welcome, System Moderator!</strong> This page is accessible to users with the SystemAdministrator or SystemModerator role.
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Available Functions</h5>
+                </div>
+                <div class="card-body">
+                    <p>This is a placeholder page for System Moderator functions. Future features may include:</p>
+                    <ul>
+                        <li>Content moderation queue</li>
+                        <li>User reports review</li>
+                        <li>Flagged posts management</li>
+                        <li>Community guideline enforcement</li>
+                        <li>User warnings and suspensions</li>
+                        <li>Moderation activity logs</li>
+                    </ul>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(currentUserName))
+            {
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Your Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Username:</strong> @currentUserName</p>
+                        <p><strong>Email:</strong> @currentUserEmail</p>
+                        <p class="mb-0"><strong>Roles:</strong> @string.Join(", ", userRoles)</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? currentUserName;
+    private string? currentUserEmail;
+    private List<string> userRoles = new();
+
+    /// <summary>
+    /// Initializes the component by loading the current user's information and roles.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            var currentUser = await UserManager.GetUserAsync(user);
+            if (currentUser != null)
+            {
+                currentUserName = currentUser.UserName;
+                currentUserEmail = currentUser.Email;
+
+                var roles = await UserManager.GetRolesAsync(currentUser);
+                userRoles = roles.ToList();
+            }
+        }
+    }
+}

@@ -1,0 +1,385 @@
+@using FreeSpeakWeb.Data
+@using Microsoft.AspNetCore.Identity
+@using System.ComponentModel.DataAnnotations
+@inject UserManager<ApplicationUser> UserManager
+@inject ILogger<UserCreationModal> Logger
+
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-person-plus me-2"></i>
+                    Create New User
+                </h5>
+                <button type="button" class="btn-close" @onclick="Close" disabled="@isCreating"></button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@userModel" OnValidSubmit="CreateUser">
+                    <DataAnnotationsValidator />
+
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(successMessage))
+                    {
+                        <div class="alert alert-success" role="alert">
+                            <i class="bi bi-check-circle me-2"></i>@successMessage
+                        </div>
+                    }
+
+                    @if (isCreating)
+                    {
+                        <div class="alert alert-info" role="alert">
+                            <div class="d-flex align-items-center">
+                                <div class="spinner-border spinner-border-sm me-2" role="status">
+                                    <span class="visually-hidden">Creating user...</span>
+                                </div>
+                                <span>Creating user account...</span>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="row g-3">
+                        <!-- Account Information Section -->
+                        <div class="col-12">
+                            <h6 class="border-bottom pb-2 mb-3">Account Information</h6>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="username" class="form-label">
+                                Username <span class="text-danger">*</span>
+                            </label>
+                            <InputText id="username" 
+                                       class="form-control" 
+                                       @bind-Value="userModel.UserName" 
+                                       placeholder="Enter username"
+                                       autocomplete="off"
+                                       disabled="@isCreating" />
+                            <ValidationMessage For="@(() => userModel.UserName)" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">
+                                Email <span class="text-danger">*</span>
+                            </label>
+                            <InputText id="email" 
+                                       type="email"
+                                       class="form-control" 
+                                       @bind-Value="userModel.Email" 
+                                       placeholder="Enter email address"
+                                       disabled="@isCreating" />
+                            <ValidationMessage For="@(() => userModel.Email)" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">
+                                Password <span class="text-danger">*</span>
+                            </label>
+                            <InputText id="password" 
+                                       type="password"
+                                       class="form-control" 
+                                       @bind-Value="userModel.Password" 
+                                       placeholder="Enter password"
+                                       autocomplete="new-password"
+                                       disabled="@isCreating" />
+                            <ValidationMessage For="@(() => userModel.Password)" />
+                            <div class="form-text">Must be at least 6 characters long.</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="confirmPassword" class="form-label">
+                                Confirm Password <span class="text-danger">*</span>
+                            </label>
+                            <InputText id="confirmPassword" 
+                                       type="password"
+                                       class="form-control" 
+                                       @bind-Value="userModel.ConfirmPassword" 
+                                       placeholder="Confirm password"
+                                       autocomplete="new-password"
+                                       disabled="@isCreating" />
+                            <ValidationMessage For="@(() => userModel.ConfirmPassword)" />
+                        </div>
+
+                        <!-- Personal Information Section -->
+                        <div class="col-12 mt-4">
+                            <h6 class="border-bottom pb-2 mb-3">Personal Information</h6>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="firstName" class="form-label">
+                                First Name <span class="text-danger">*</span>
+                            </label>
+                            <InputText id="firstName" 
+                                       class="form-control" 
+                                       @bind-Value="userModel.FirstName" 
+                                       placeholder="Enter first name"
+                                       disabled="@isCreating" />
+                            <ValidationMessage For="@(() => userModel.FirstName)" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="lastName" class="form-label">
+                                Last Name <span class="text-danger">*</span>
+                            </label>
+                            <InputText id="lastName" 
+                                       class="form-control" 
+                                       @bind-Value="userModel.LastName" 
+                                       placeholder="Enter last name"
+                                       disabled="@isCreating" />
+                            <ValidationMessage For="@(() => userModel.LastName)" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="nameSuffix" class="form-label">
+                                Name Suffix
+                            </label>
+                            <InputText id="nameSuffix" 
+                                       class="form-control" 
+                                       @bind-Value="userModel.NameSuffix" 
+                                       placeholder="Jr., Sr., III, etc."
+                                       disabled="@isCreating" />
+                            <ValidationMessage For="@(() => userModel.NameSuffix)" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="dateOfBirth" class="form-label">
+                                Date of Birth
+                            </label>
+                            <InputDate id="dateOfBirth" 
+                                       class="form-control" 
+                                       @bind-Value="userModel.DateOfBirth" 
+                                       disabled="@isCreating" />
+                            <ValidationMessage For="@(() => userModel.DateOfBirth)" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="occupation" class="form-label">
+                                Occupation
+                            </label>
+                            <InputText id="occupation" 
+                                       class="form-control" 
+                                       @bind-Value="userModel.Occupation" 
+                                       placeholder="Enter occupation"
+                                       disabled="@isCreating" />
+                            <ValidationMessage For="@(() => userModel.Occupation)" />
+                        </div>
+
+                        <!-- Location Information Section -->
+                        <div class="col-12 mt-4">
+                            <h6 class="border-bottom pb-2 mb-3">Location Information</h6>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="city" class="form-label">
+                                City
+                            </label>
+                            <InputText id="city" 
+                                       class="form-control" 
+                                       @bind-Value="userModel.City" 
+                                       placeholder="Enter city"
+                                       disabled="@isCreating" />
+                            <ValidationMessage For="@(() => userModel.City)" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="state" class="form-label">
+                                State
+                            </label>
+                            <InputText id="state" 
+                                       class="form-control" 
+                                       @bind-Value="userModel.State" 
+                                       placeholder="Enter state"
+                                       disabled="@isCreating" />
+                            <ValidationMessage For="@(() => userModel.State)" />
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                       type="checkbox" 
+                                       id="emailConfirmed" 
+                                       @bind="userModel.EmailConfirmed"
+                                       disabled="@isCreating" />
+                                <label class="form-check-label" for="emailConfirmed">
+                                    Mark email as confirmed
+                                </label>
+                                <div class="form-text">If checked, the user will not need to verify their email address.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer mt-4">
+                        @if (userCreatedSuccessfully)
+                        {
+                            <button type="button" 
+                                    class="btn btn-primary" 
+                                    @onclick="Close">
+                                Close
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" 
+                                    class="btn btn-secondary" 
+                                    @onclick="Close"
+                                    disabled="@isCreating">
+                                Cancel
+                            </button>
+                            <button type="submit" 
+                                    class="btn btn-primary"
+                                    disabled="@isCreating">
+                                @if (isCreating)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                }
+                                Create User
+                            </button>
+                        }
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// Event callback triggered when the modal is closed.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    /// <summary>
+    /// Event callback triggered when a user is successfully created.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnUserCreated { get; set; }
+
+    private CreateUserModel userModel = new();
+    private bool isCreating = false;
+    private bool userCreatedSuccessfully = false;
+    private string? errorMessage;
+    private string? successMessage;
+
+    /// <summary>
+    /// Creates a new user account with the provided information.
+    /// </summary>
+    private async Task CreateUser()
+    {
+        try
+        {
+            isCreating = true;
+            errorMessage = null;
+            successMessage = null;
+            StateHasChanged();
+
+            // Create the ApplicationUser object
+            var user = new ApplicationUser
+            {
+                UserName = userModel.UserName,
+                Email = userModel.Email,
+                EmailConfirmed = userModel.EmailConfirmed,
+                FirstName = userModel.FirstName,
+                LastName = userModel.LastName,
+                NameSuffix = userModel.NameSuffix,
+                DateOfBirth = userModel.DateOfBirth,
+                City = userModel.City,
+                State = userModel.State,
+                Occupation = userModel.Occupation
+            };
+
+            // Create the user with the password
+            var result = await UserManager.CreateAsync(user, userModel.Password);
+
+            if (result.Succeeded)
+            {
+                Logger.LogInformation("System administrator created new user account: {UserName} ({Email})", 
+                    user.UserName, user.Email);
+
+                successMessage = $"User '{user.UserName}' created successfully!";
+                userCreatedSuccessfully = true;
+
+                // Notify parent component
+                await OnUserCreated.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = string.Join("; ", result.Errors.Select(e => e.Description));
+                Logger.LogWarning("Failed to create user account. Errors: {Errors}", errorMessage);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error creating user account");
+            errorMessage = $"An error occurred while creating the user: {ex.Message}";
+        }
+        finally
+        {
+            isCreating = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Closes the modal and invokes the OnClose callback.
+    /// </summary>
+    private async Task Close()
+    {
+        if (!isCreating)
+        {
+            await OnClose.InvokeAsync();
+        }
+    }
+
+    /// <summary>
+    /// Model class for the user creation form with validation.
+    /// </summary>
+    private class CreateUserModel
+    {
+        [Required(ErrorMessage = "Username is required")]
+        [StringLength(256, ErrorMessage = "Username cannot exceed 256 characters")]
+        public string UserName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        [StringLength(256, ErrorMessage = "Email cannot exceed 256 characters")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Password is required")]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long")]
+        public string Password { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Password confirmation is required")]
+        [Compare(nameof(Password), ErrorMessage = "Passwords do not match")]
+        public string ConfirmPassword { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "First name is required")]
+        [StringLength(75, ErrorMessage = "First name cannot exceed 75 characters")]
+        public string FirstName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Last name is required")]
+        [StringLength(75, ErrorMessage = "Last name cannot exceed 75 characters")]
+        public string LastName { get; set; } = string.Empty;
+
+        [StringLength(75, ErrorMessage = "Name suffix cannot exceed 75 characters")]
+        public string? NameSuffix { get; set; }
+
+        public DateOnly? DateOfBirth { get; set; }
+
+        [StringLength(75, ErrorMessage = "City cannot exceed 75 characters")]
+        public string? City { get; set; }
+
+        [StringLength(75, ErrorMessage = "State cannot exceed 75 characters")]
+        public string? State { get; set; }
+
+        [StringLength(75, ErrorMessage = "Occupation cannot exceed 75 characters")]
+        public string? Occupation { get; set; }
+
+        public bool EmailConfirmed { get; set; } = false;
+    }
+}

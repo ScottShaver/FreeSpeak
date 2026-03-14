@@ -1,5 +1,6 @@
 ﻿@page "/Account/Lockout"
 
+@using Microsoft.AspNetCore.Components
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
@@ -7,33 +8,241 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IOptions<SiteSettings> SiteSettings
+@inject ILogger<Lockout> Logger
 
 <PageTitle>@SiteSettings.Value.SiteName - Locked out</PageTitle>
 
-<header>
-    <h1 class="text-danger">Locked out</h1>
-    @if (isPermanentLockout)
-    {
-        <p class="text-danger" role="alert">Your account has been permanently disabled, this cannot be undone.</p>
-    }
-    else
-    {
-        <p class="text-danger" role="alert">This account has been locked out, please try again later.</p>
-    }
-</header>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-lock-fill text-danger" style="font-size: 4rem;"></i>
+                    </div>
+                    <h1 class="text-danger text-center mb-4">Account Locked</h1>
+
+                    @if (isPermanentLockout)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <h5 class="alert-heading">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                Account Permanently Disabled
+                            </h5>
+                            <p>Your account has been permanently disabled by a system administrator. This action cannot be undone or bypassed.</p>
+                            <hr />
+                            <p class="mb-2">
+                                <strong>Important:</strong> Password reset and other account recovery options will not unlock a permanently disabled account.
+                            </p>
+                            <p class="mb-0">
+                                If you believe this is a mistake, please contact the site administrator for assistance.
+                            </p>
+                        </div>
+                    }
+                    else if (lockoutEnd.HasValue && lockoutEnd.Value > DateTimeOffset.UtcNow)
+                    {
+                        <div class="alert alert-warning" role="alert">
+                            <h5 class="alert-heading">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                Temporary Account Lockout
+                            </h5>
+                            <p>Your account has been locked due to multiple failed login attempts.</p>
+
+                            @if (remainingLockoutTime > TimeSpan.Zero)
+                            {
+                                <hr />
+                                <div class="mb-2">
+                                    <strong>Locked until:</strong> @lockoutEnd.Value.ToLocalTime().ToString("MMM dd, yyyy h:mm:ss tt")
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Time remaining:</strong> 
+                                    @if (remainingLockoutTime.TotalHours >= 1)
+                                    {
+                                        <span>@remainingLockoutTime.Hours hours @remainingLockoutTime.Minutes minutes</span>
+                                    }
+                                    else if (remainingLockoutTime.TotalMinutes >= 1)
+                                    {
+                                        <span>@remainingLockoutTime.Minutes minutes @remainingLockoutTime.Seconds seconds</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@remainingLockoutTime.Seconds seconds</span>
+                                    }
+                                </div>
+                            }
+
+                            <hr />
+                            <p class="mb-0">
+                                <strong>What you can do:</strong>
+                            </p>
+                            <ul class="mb-0">
+                                <li>Wait for the lockout period to expire</li>
+                                <li>If you forgot your password, use the <a href="Account/ForgotPassword">Forgot Password</a> option</li>
+                                <li>Contact support if you need immediate assistance</li>
+                            </ul>
+                        </div>
+
+                        @if (remainingLockoutTime > TimeSpan.Zero && remainingLockoutTime.TotalMinutes <= 5)
+                        {
+                            <div class="text-center mt-3">
+                                <p class="text-muted">
+                                    Your account will be unlocked automatically. You may refresh this page to try logging in again.
+                                </p>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info" role="alert">
+                            <p class="mb-0">Your account lockout has expired. You may now <a href="Account/Login">try logging in again</a>.</p>
+                        </div>
+                    }
+
+                    <div class="text-center mt-4">
+                        <a href="/" class="btn btn-primary">
+                            <i class="bi bi-house me-2"></i>Return to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle me-2"></i>
+                        @if (isPermanentLockout)
+                        {
+                            <text>Account Status</text>
+                        }
+                        else if (lockoutEnd.HasValue && lockoutEnd.Value > DateTimeOffset.UtcNow)
+                        {
+                            <text>Your Lockout Details</text>
+                        }
+                        else
+                        {
+                            <text>Security Information</text>
+                        }
+                    </h5>
+
+                    @if (isPermanentLockout)
+                    {
+                        <p class="card-text text-danger">
+                            <strong>Your account has been permanently locked by a system administrator.</strong>
+                        </p>
+                        <p class="card-text">
+                            This typically occurs due to severe or repeated violations of the site's terms of service.
+                        </p>
+                        <ul class="mb-2">
+                            <li><strong>Status:</strong> Permanently disabled</li>
+                            <li><strong>Recovery options:</strong> None - password reset will not unlock this account</li>
+                            <li><strong>Contact:</strong> Site administrator only</li>
+                        </ul>
+                        <p class="card-text mb-0">
+                            Only a system administrator can remove a permanent account lockout. If you believe this is an error, please contact support.
+                        </p>
+                    }
+                    else if (lockoutEnd.HasValue && lockoutEnd.Value > DateTimeOffset.UtcNow)
+                    {
+                        <p class="card-text">
+                            Your account is temporarily locked due to multiple failed login attempts.
+                        </p>
+                        <ul>
+                            <li><strong>Locked until:</strong> @lockoutEnd.Value.ToLocalTime().ToString("MMM dd, yyyy h:mm:ss tt")</li>
+                            <li><strong>Time remaining:</strong> 
+                                @if (remainingLockoutTime.Hours > 0)
+                                {
+                                    <text>@remainingLockoutTime.Hours hour@(remainingLockoutTime.Hours != 1 ? "s" : "") </text>
+                                }
+                                @if (remainingLockoutTime.Minutes > 0)
+                                {
+                                    <text>@remainingLockoutTime.Minutes minute@(remainingLockoutTime.Minutes != 1 ? "s" : "") </text>
+                                }
+                                @if (remainingLockoutTime.Hours == 0)
+                                {
+                                    <text>@remainingLockoutTime.Seconds second@(remainingLockoutTime.Seconds != 1 ? "s" : "")</text>
+                                }
+                            </li>
+                            <li><strong>What to do:</strong> Wait for the lockout to expire, or use <a href="Account/ForgotPassword">password reset</a> to unlock immediately</li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="card-text">
+                            For your security, accounts are temporarily locked after multiple failed login attempts.
+                            This helps protect your account from unauthorized access attempts.
+                        </p>
+                        <ul>
+                            <li><strong>Maximum attempts:</strong> 5 failed login attempts</li>
+                            <li><strong>Lockout duration:</strong> 5 minutes</li>
+                            <li><strong>Reset:</strong> Successful login or password reset will clear failed attempts</li>
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
-    private bool isPermanentLockout;
+    /// <summary>
+    /// Username passed from login page when user gets locked out.
+    /// </summary>
+    [SupplyParameterFromQuery]
+    public string? Username { get; set; }
 
+    private bool isPermanentLockout;
+    private DateTimeOffset? lockoutEnd;
+    private TimeSpan remainingLockoutTime;
+
+    /// <summary>
+    /// Initializes the lockout page and determines the lockout status and remaining time.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = await UserManager.GetUserAsync(authState.User);
+        ApplicationUser? user = null;
+
+        // First try to get user from username parameter (for unauthenticated lockout scenarios)
+        if (!string.IsNullOrWhiteSpace(Username))
+        {
+            try
+            {
+                user = await UserManager.FindByNameAsync(Username);
+                if (user == null)
+                {
+                    Logger.LogWarning("User not found for lockout page: {Username}", Username);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Error retrieving user by username for lockout page: {Username}", Username);
+            }
+        }
+
+        // Fall back to authenticated user if no username parameter
+        if (user == null)
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            user = await UserManager.GetUserAsync(authState.User);
+        }
 
         if (user is not null && user.LockoutEnd.HasValue)
         {
-            // Check if lockout is permanent (set to max value)
-            isPermanentLockout = user.LockoutEnd.Value >= DateTimeOffset.MaxValue.AddDays(-1);
+            lockoutEnd = user.LockoutEnd.Value;
+
+            // Check if lockout is permanent (more than 100 years in the future)
+            isPermanentLockout = lockoutEnd.Value > DateTimeOffset.UtcNow.AddYears(100);
+
+            if (!isPermanentLockout)
+            {
+                // Calculate remaining time
+                remainingLockoutTime = lockoutEnd.Value - DateTimeOffset.UtcNow;
+
+                // Ensure we don't show negative time
+                if (remainingLockoutTime < TimeSpan.Zero)
+                {
+                    remainingLockoutTime = TimeSpan.Zero;
+                }
+            }
         }
     }
 }

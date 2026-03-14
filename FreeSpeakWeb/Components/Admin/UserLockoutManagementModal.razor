@@ -1,0 +1,597 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services.Abstractions
+@using Microsoft.AspNetCore.Identity
+@inject IUserLockoutService LockoutService
+@inject ILogger<UserLockoutManagementModal> Logger
+
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-lock-fill me-2"></i>
+                    Lockout Management for @User?.UserName
+                </h5>
+                <button type="button" class="btn-close" @onclick="Close" disabled="@isProcessing"></button>
+            </div>
+            <div class="modal-body">
+                @if (User != null)
+                {
+                    <div class="user-info-section mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            @if (!string.IsNullOrEmpty(User.ProfilePictureUrl))
+                            {
+                                <img src="@User.ProfilePictureUrl" alt="Profile" class="rounded-circle" style="width: 48px; height: 48px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                    <i class="bi bi-person-fill text-white fs-4"></i>
+                                </div>
+                            }
+                            <div>
+                                <div class="fw-bold">@User.FirstName @User.LastName</div>
+                                <div class="text-muted small">@User.Email</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (isLoading)
+                    {
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading lockout status...</span>
+                            </div>
+                            <p class="text-muted mt-2">Loading lockout information...</p>
+                        </div>
+                    }
+                    else if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Current Lockout Status -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h6 class="mb-0">
+                                    <i class="bi bi-info-circle me-2"></i>Current Lockout Status
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                @if (currentLockoutEnd.HasValue && currentLockoutEnd.Value > DateTimeOffset.UtcNow)
+                                {
+                                    @if (isPermanentlyLocked)
+                                    {
+                                        <div class="alert alert-danger mb-0">
+                                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                            <strong>Permanently Locked Out</strong>
+                                            <p class="mb-0 mt-2">This account has been permanently disabled and cannot log in.</p>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="alert alert-warning mb-0">
+                                            <i class="bi bi-clock-fill me-2"></i>
+                                            <strong>Currently Locked Out</strong>
+                                            <div class="mt-2">
+                                                <div><strong>Locked Until:</strong> @currentLockoutEnd.Value.ToLocalTime().ToString("MMM dd, yyyy h:mm:ss tt")</div>
+                                                <div><strong>Time Remaining:</strong> @GetRemainingTimeDisplay()</div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="alert alert-success mb-0">
+                                        <i class="bi bi-check-circle me-2"></i>
+                                        <strong>Not Locked Out</strong>
+                                        <p class="mb-0 mt-2">This user is not currently locked out and can log in normally.</p>
+                                    </div>
+                                }
+
+                                @if (accessFailedCount > 0)
+                                {
+                                    <div class="mt-3 pt-3 border-top">
+                                        <div class="text-muted small">
+                                            <i class="bi bi-exclamation-circle me-1"></i>
+                                            Failed Login Attempts: <strong>@accessFailedCount</strong> / 5
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Lockout Actions -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">
+                                    <i class="bi bi-gear me-2"></i>Lockout Actions
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <!-- Remove Lockout -->
+                                @if ((currentLockoutEnd.HasValue && currentLockoutEnd.Value > DateTimeOffset.UtcNow) || accessFailedCount > 0)
+                                {
+                                    <div class="lockout-action-section mb-4">
+                                        <h6 class="text-success">
+                                            <i class="bi bi-unlock me-2"></i>Remove Lockout
+                                        </h6>
+                                        <p class="text-muted small">Clear any active lockout and reset failed login attempts to zero.</p>
+                                        <button type="button" 
+                                                class="btn btn-success"
+                                                @onclick="RemoveLockout"
+                                                disabled="@isProcessing">
+                                            @if (isProcessing && currentAction == "remove")
+                                            {
+                                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                            }
+                                            <i class="bi bi-unlock me-2"></i>Remove Lockout & Reset Failed Attempts
+                                        </button>
+                                    </div>
+                                    <hr />
+                                }
+
+                                <!-- Permanent Lockout -->
+                                <div class="lockout-action-section mb-4">
+                                    <h6 class="text-danger">
+                                        <i class="bi bi-ban me-2"></i>Permanent Lockout
+                                    </h6>
+                                    <p class="text-muted small">
+                                        Permanently disable this account. This action can be reversed by using the "Remove Lockout" option above.
+                                    </p>
+                                    <button type="button" 
+                                            class="btn btn-danger"
+                                            @onclick="SetPermanentLockout"
+                                            disabled="@(isProcessing || isPermanentlyLocked)">
+                                        @if (isProcessing && currentAction == "permanent")
+                                        {
+                                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        }
+                                        <i class="bi bi-ban me-2"></i>@(isPermanentlyLocked ? "Already Permanently Locked" : "Set Permanent Lockout")
+                                    </button>
+                                </div>
+
+                                <hr />
+
+                                <!-- Temporary Lockout by Duration -->
+                                <div class="lockout-action-section mb-4">
+                                    <h6 class="text-warning">
+                                        <i class="bi bi-clock-history me-2"></i>Temporary Lockout (Duration)
+                                    </h6>
+                                    <p class="text-muted small">Lock out the user for a specific duration starting from now.</p>
+
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label for="durationMinutes" class="form-label">Minutes</label>
+                                            <input type="number" 
+                                                   id="durationMinutes"
+                                                   class="form-control" 
+                                                   min="0"
+                                                   max="59"
+                                                   @bind="durationMinutes"
+                                                   disabled="@isProcessing" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="durationHours" class="form-label">Hours</label>
+                                            <input type="number" 
+                                                   id="durationHours"
+                                                   class="form-control" 
+                                                   min="0"
+                                                   max="23"
+                                                   @bind="durationHours"
+                                                   disabled="@isProcessing" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="durationDays" class="form-label">Days</label>
+                                            <input type="number" 
+                                                   id="durationDays"
+                                                   class="form-control" 
+                                                   min="0"
+                                                   max="365"
+                                                   @bind="durationDays"
+                                                   disabled="@isProcessing" />
+                                        </div>
+                                    </div>
+
+                                    @if (GetDurationInMinutes() > 0)
+                                    {
+                                        <div class="alert alert-info mt-3 mb-0">
+                                            <small>
+                                                <i class="bi bi-info-circle me-1"></i>
+                                                User will be locked out until: <strong>@GetCalculatedLockoutEnd().ToLocalTime().ToString("MMM dd, yyyy h:mm tt")</strong>
+                                            </small>
+                                        </div>
+                                    }
+
+                                    <button type="button" 
+                                            class="btn btn-warning mt-3"
+                                            @onclick="SetTemporaryLockoutByDuration"
+                                            disabled="@(isProcessing || GetDurationInMinutes() == 0)">
+                                        @if (isProcessing && currentAction == "duration")
+                                        {
+                                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        }
+                                        <i class="bi bi-clock me-2"></i>Set Temporary Lockout
+                                    </button>
+                                </div>
+
+                                <hr />
+
+                                <!-- Temporary Lockout by Specific Date/Time -->
+                                <div class="lockout-action-section">
+                                    <h6 class="text-warning">
+                                        <i class="bi bi-calendar-event me-2"></i>Temporary Lockout (Specific Date)
+                                    </h6>
+                                    <p class="text-muted small">Lock out the user until a specific date and time.</p>
+
+                                    <div class="mb-3">
+                                        <label for="specificDateTime" class="form-label">Lockout Until</label>
+                                        <input type="datetime-local" 
+                                               id="specificDateTime"
+                                               class="form-control" 
+                                               min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")"
+                                               @bind="specificLockoutDateTime"
+                                               disabled="@isProcessing" />
+                                        <small class="form-text text-muted">
+                                            User will be able to log in after this date and time.
+                                        </small>
+                                    </div>
+
+                                    <button type="button" 
+                                            class="btn btn-warning"
+                                            @onclick="SetTemporaryLockoutByDate"
+                                            disabled="@(isProcessing || !specificLockoutDateTime.HasValue || specificLockoutDateTime.Value <= DateTime.Now)">
+                                        @if (isProcessing && currentAction == "specific")
+                                        {
+                                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        }
+                                        <i class="bi bi-calendar-check me-2"></i>Set Lockout Until Date
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(successMessage))
+                        {
+                            <div class="alert alert-success mt-3" role="alert">
+                                <i class="bi bi-check-circle me-2"></i>@successMessage
+                            </div>
+                        }
+                    }
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" 
+                        class="btn btn-secondary" 
+                        @onclick="Close"
+                        disabled="@isProcessing">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// The user whose lockout status is being managed.
+    /// </summary>
+    [Parameter]
+    public ApplicationUser? User { get; set; }
+
+    /// <summary>
+    /// Event callback triggered when the modal is closed.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    /// <summary>
+    /// Event callback triggered when lockout status is successfully updated.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnLockoutUpdated { get; set; }
+
+    private bool isLoading = true;
+    private bool isProcessing = false;
+    private string? errorMessage;
+    private string? successMessage;
+    private string currentAction = "";
+
+    private DateTimeOffset? currentLockoutEnd;
+    private bool isPermanentlyLocked = false;
+    private int accessFailedCount = 0;
+
+    private int durationMinutes = 0;
+    private int durationHours = 0;
+    private int durationDays = 0;
+    private DateTime? specificLockoutDateTime;
+
+    /// <summary>
+    /// Initializes the modal by loading the user's current lockout status.
+    /// </summary>
+    protected override async Task OnParametersSetAsync()
+    {
+        if (User != null)
+        {
+            await LoadLockoutStatusAsync();
+        }
+    }
+
+    /// <summary>
+    /// Loads the current lockout status for the user.
+    /// </summary>
+    private async Task LoadLockoutStatusAsync()
+    {
+        try
+        {
+            isLoading = true;
+            errorMessage = null;
+            StateHasChanged();
+
+            var status = await LockoutService.GetLockoutStatusAsync(User!.Id);
+            currentLockoutEnd = status.LockoutEnd;
+            accessFailedCount = status.AccessFailedCount;
+            isPermanentlyLocked = status.IsPermanentlyLocked;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading lockout status for user {UserId}", User?.Id);
+            errorMessage = "Failed to load lockout status. Please try again.";
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Removes the current lockout and resets failed login attempts.
+    /// </summary>
+    private async Task RemoveLockout()
+    {
+        if (User == null)
+            return;
+
+        try
+        {
+            isProcessing = true;
+            currentAction = "remove";
+            errorMessage = null;
+            successMessage = null;
+            StateHasChanged();
+
+            var result = await LockoutService.RemoveLockoutAsync(User.Id);
+            if (result)
+            {
+                successMessage = "Lockout removed successfully. Failed login attempts have been reset.";
+                Logger.LogInformation("Removed lockout for user {UserId} by system administrator", User.Id);
+                await LoadLockoutStatusAsync();
+                await OnLockoutUpdated.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = "Failed to remove lockout. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error removing lockout for user {UserId}", User?.Id);
+            errorMessage = $"Failed to remove lockout: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+            currentAction = "";
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Sets a permanent lockout for the user.
+    /// </summary>
+    private async Task SetPermanentLockout()
+    {
+        if (User == null)
+            return;
+
+        try
+        {
+            isProcessing = true;
+            currentAction = "permanent";
+            errorMessage = null;
+            successMessage = null;
+            StateHasChanged();
+
+            var result = await LockoutService.SetPermanentLockoutAsync(User.Id);
+            if (result)
+            {
+                successMessage = "User has been permanently locked out.";
+                Logger.LogWarning("Set permanent lockout for user {UserId} by system administrator", User.Id);
+                await LoadLockoutStatusAsync();
+                await OnLockoutUpdated.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = "Failed to set permanent lockout. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error setting permanent lockout for user {UserId}", User?.Id);
+            errorMessage = $"Failed to set permanent lockout: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+            currentAction = "";
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Sets a temporary lockout based on duration from now.
+    /// </summary>
+    private async Task SetTemporaryLockoutByDuration()
+    {
+        if (User == null || GetDurationInMinutes() == 0)
+            return;
+
+        try
+        {
+            isProcessing = true;
+            currentAction = "duration";
+            errorMessage = null;
+            successMessage = null;
+            StateHasChanged();
+
+            var duration = TimeSpan.FromMinutes(GetDurationInMinutes());
+            var result = await LockoutService.SetTemporaryLockoutAsync(User.Id, duration);
+
+            if (result)
+            {
+                successMessage = $"User has been locked out for {GetDurationDisplay()}.";
+                Logger.LogWarning("Set temporary lockout for user {UserId} (duration: {Duration}) by system administrator", 
+                    User.Id, GetDurationDisplay());
+                await LoadLockoutStatusAsync();
+                await OnLockoutUpdated.InvokeAsync();
+
+                // Reset duration inputs
+                durationMinutes = 0;
+                durationHours = 0;
+                durationDays = 0;
+            }
+            else
+            {
+                errorMessage = "Failed to set temporary lockout. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error setting temporary lockout for user {UserId}", User?.Id);
+            errorMessage = $"Failed to set temporary lockout: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+            currentAction = "";
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Sets a temporary lockout until a specific date/time.
+    /// </summary>
+    private async Task SetTemporaryLockoutByDate()
+    {
+        if (User == null || !specificLockoutDateTime.HasValue || specificLockoutDateTime.Value <= DateTime.Now)
+            return;
+
+        try
+        {
+            isProcessing = true;
+            currentAction = "specific";
+            errorMessage = null;
+            successMessage = null;
+            StateHasChanged();
+
+            // Convert the local datetime to UTC for PostgreSQL compatibility
+            // PostgreSQL timestamp with time zone only accepts UTC offset (0)
+            var localDateTime = specificLockoutDateTime.Value;
+            var utcDateTime = DateTime.SpecifyKind(localDateTime, DateTimeKind.Local).ToUniversalTime();
+            var lockoutEnd = new DateTimeOffset(utcDateTime, TimeSpan.Zero);
+
+            var result = await LockoutService.SetLockoutEndAsync(User.Id, lockoutEnd);
+
+            if (result)
+            {
+                successMessage = $"User has been locked out until {specificLockoutDateTime.Value:MMM dd, yyyy h:mm tt}.";
+                Logger.LogWarning("Set temporary lockout for user {UserId} (until: {LockoutEnd}) by system administrator", 
+                    User.Id, lockoutEnd);
+                await LoadLockoutStatusAsync();
+                await OnLockoutUpdated.InvokeAsync();
+
+                // Reset date input
+                specificLockoutDateTime = null;
+            }
+            else
+            {
+                errorMessage = "Failed to set temporary lockout. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error setting temporary lockout by date for user {UserId}", User?.Id);
+            errorMessage = $"Failed to set temporary lockout: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+            currentAction = "";
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Closes the modal and invokes the OnClose callback.
+    /// </summary>
+    private async Task Close()
+    {
+        if (!isProcessing)
+        {
+            await OnClose.InvokeAsync();
+        }
+    }
+
+    /// <summary>
+    /// Calculates the total duration in minutes.
+    /// </summary>
+    private int GetDurationInMinutes()
+    {
+        return durationMinutes + (durationHours * 60) + (durationDays * 24 * 60);
+    }
+
+    /// <summary>
+    /// Gets a friendly display string for the duration.
+    /// </summary>
+    private string GetDurationDisplay()
+    {
+        var parts = new List<string>();
+        if (durationDays > 0) parts.Add($"{durationDays} day{(durationDays > 1 ? "s" : "")}");
+        if (durationHours > 0) parts.Add($"{durationHours} hour{(durationHours > 1 ? "s" : "")}");
+        if (durationMinutes > 0) parts.Add($"{durationMinutes} minute{(durationMinutes > 1 ? "s" : "")}");
+        return string.Join(", ", parts);
+    }
+
+    /// <summary>
+    /// Calculates the lockout end time based on current duration inputs.
+    /// </summary>
+    private DateTimeOffset GetCalculatedLockoutEnd()
+    {
+        return DateTimeOffset.Now.AddMinutes(GetDurationInMinutes());
+    }
+
+    /// <summary>
+    /// Gets a friendly display of the remaining lockout time.
+    /// </summary>
+    private string GetRemainingTimeDisplay()
+    {
+        if (!currentLockoutEnd.HasValue || isPermanentlyLocked)
+            return "N/A";
+
+        var remaining = currentLockoutEnd.Value - DateTimeOffset.UtcNow;
+        if (remaining.TotalSeconds <= 0)
+            return "Expired";
+
+        var parts = new List<string>();
+        if (remaining.Days > 0) parts.Add($"{remaining.Days} day{(remaining.Days > 1 ? "s" : "")}");
+        if (remaining.Hours > 0) parts.Add($"{remaining.Hours} hour{(remaining.Hours > 1 ? "s" : "")}");
+        if (remaining.Minutes > 0) parts.Add($"{remaining.Minutes} minute{(remaining.Minutes > 1 ? "s" : "")}");
+        if (parts.Count == 0 && remaining.Seconds > 0) parts.Add($"{remaining.Seconds} second{(remaining.Seconds > 1 ? "s" : "")}");
+
+        return string.Join(", ", parts);
+    }
+}

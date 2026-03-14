@@ -137,6 +137,41 @@ namespace FreeSpeakWeb.Repositories
         }
 
         /// <summary>
+        /// Searches for users across all profile fields for administrative purposes.
+        /// Searches FirstName, LastName, UserName, Email, City, State, and Occupation.
+        /// </summary>
+        /// <param name="searchTerm">The term to search for (case-insensitive).</param>
+        /// <param name="maxResults">Maximum number of results to return.</param>
+        /// <returns>A list of matching users ordered by first name.</returns>
+        public async Task<List<ApplicationUser>> AdminSearchUsersAsync(string searchTerm, int maxResults = 100)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var searchLower = searchTerm.ToLower();
+
+                return await context.Users
+                    .Where(u =>
+                        (u.FirstName != null && u.FirstName.ToLower().Contains(searchLower)) ||
+                        (u.LastName != null && u.LastName.ToLower().Contains(searchLower)) ||
+                        (u.UserName != null && u.UserName.ToLower().Contains(searchLower)) ||
+                        (u.Email != null && u.Email.ToLower().Contains(searchLower)) ||
+                        (u.City != null && u.City.ToLower().Contains(searchLower)) ||
+                        (u.State != null && u.State.ToLower().Contains(searchLower)) ||
+                        (u.Occupation != null && u.Occupation.ToLower().Contains(searchLower)))
+                    .OrderBy(u => u.FirstName)
+                    .ThenBy(u => u.LastName)
+                    .Take(maxResults)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error performing admin search with term {SearchTerm}", searchTerm);
+                return new List<ApplicationUser>();
+            }
+        }
+
+        /// <summary>
         /// Updates a user's profile information.
         /// </summary>
         /// <param name="user">The user entity with updated values.</param>

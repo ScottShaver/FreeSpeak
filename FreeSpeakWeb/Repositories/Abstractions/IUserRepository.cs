@@ -49,6 +49,15 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         Task<List<ApplicationUser>> SearchUsersAsync(string searchTerm, int skip = 0, int take = 50);
 
         /// <summary>
+        /// Searches for users across all profile fields for administrative purposes.
+        /// Searches FirstName, LastName, UserName, Email, City, State, and Occupation.
+        /// </summary>
+        /// <param name="searchTerm">The term to search for (case-insensitive).</param>
+        /// <param name="maxResults">Maximum number of results to return. Default is 100.</param>
+        /// <returns>A list of matching users ordered by first name.</returns>
+        Task<List<ApplicationUser>> AdminSearchUsersAsync(string searchTerm, int maxResults = 100);
+
+        /// <summary>
         /// Updates a user's profile information.
         /// </summary>
         /// <param name="user">The user entity with updated profile data.</param>

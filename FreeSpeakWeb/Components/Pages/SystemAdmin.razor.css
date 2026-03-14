@@ -1,0 +1,20 @@
+/* Ensure dropdown menus appear above scrollbars and other elements */
+.dropdown-menu {
+    z-index: 1050;
+}
+
+/* Ensure the table container allows dropdowns to overflow */
+.table-responsive {
+    overflow: visible;
+}
+
+/* When table is in a scrollable container, ensure dropdown button triggers properly */
+.dropdown {
+    position: relative;
+    z-index: 1;
+}
+
+/* Active dropdown should be on top */
+.dropdown.show {
+    z-index: 1051;
+}

@@ -23,6 +23,144 @@ namespace FreeSpeakWeb.Data
         }
 
         /// <summary>
+        /// Seeds the AspNetRoles table with predefined system roles and creates the system administrator user.
+        /// Creates four roles: SystemAdministrator, SystemModerator, GroupModerator, and GroupAdministrator.
+        /// Also creates a system administrator user from configuration settings and assigns the SystemAdministrator role.
+        /// </summary>
+        /// <param name="roleManager">The RoleManager for creating and managing Identity roles.</param>
+        /// <param name="userManager">The UserManager for creating and managing Identity users.</param>
+        /// <param name="systemAdminConfig">Configuration settings for the system administrator account.</param>
+        /// <param name="logger">Logger for recording seeding progress and errors.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public static async Task SeedRolesAndSystemAdminAsync(
+            RoleManager<IdentityRole> roleManager, 
+            UserManager<ApplicationUser> userManager,
+            SystemAdministratorInitInfo systemAdminConfig,
+            ILogger logger)
+        {
+            try
+            {
+                // Define the roles to be seeded
+                var roles = new[] 
+                { 
+                    "SystemAdministrator", 
+                    "SystemModerator", 
+                    "GroupModerator", 
+                    "GroupAdministrator" 
+                };
+
+                // Seed roles
+                logger.LogInformation("Seeding user roles...");
+                foreach (var roleName in roles)
+                {
+                    var roleExists = await roleManager.RoleExistsAsync(roleName);
+                    if (!roleExists)
+                    {
+                        var role = new IdentityRole(roleName);
+                        var result = await roleManager.CreateAsync(role);
+
+                        if (result.Succeeded)
+                        {
+                            logger.LogInformation("Created role: {RoleName}", roleName);
+                        }
+                        else
+                        {
+                            logger.LogWarning("Failed to create role {RoleName}: {Errors}", 
+                                roleName, string.Join(", ", result.Errors.Select(e => e.Description)));
+                        }
+                    }
+                    else
+                    {
+                        logger.LogInformation("Role {RoleName} already exists, skipping.", roleName);
+                    }
+                }
+
+                // Create system administrator user
+                logger.LogInformation("Creating system administrator user...");
+
+                // Validate configuration
+                if (string.IsNullOrWhiteSpace(systemAdminConfig.UserName) ||
+                    string.IsNullOrWhiteSpace(systemAdminConfig.Email) ||
+                    string.IsNullOrWhiteSpace(systemAdminConfig.Password) ||
+                    string.IsNullOrWhiteSpace(systemAdminConfig.FirstName) ||
+                    string.IsNullOrWhiteSpace(systemAdminConfig.LastName))
+                {
+                    logger.LogWarning("System administrator configuration is incomplete. Skipping system admin user creation.");
+                    return;
+                }
+
+                // Check if system admin already exists
+                var existingAdmin = await userManager.FindByEmailAsync(systemAdminConfig.Email);
+                if (existingAdmin != null)
+                {
+                    logger.LogInformation("System administrator user already exists: {Email}", systemAdminConfig.Email);
+
+                    // Ensure the user has the SystemAdministrator role
+                    if (!await userManager.IsInRoleAsync(existingAdmin, "SystemAdministrator"))
+                    {
+                        var addRoleResult = await userManager.AddToRoleAsync(existingAdmin, "SystemAdministrator");
+                        if (addRoleResult.Succeeded)
+                        {
+                            logger.LogInformation("Added SystemAdministrator role to existing user: {Email}", systemAdminConfig.Email);
+                        }
+                        else
+                        {
+                            logger.LogWarning("Failed to add SystemAdministrator role to user {Email}: {Errors}",
+                                systemAdminConfig.Email, string.Join(", ", addRoleResult.Errors.Select(e => e.Description)));
+                        }
+                    }
+                    return;
+                }
+
+                // Create the system admin user
+                var systemAdmin = new ApplicationUser
+                {
+                    UserName = systemAdminConfig.UserName,
+                    Email = systemAdminConfig.Email,
+                    EmailConfirmed = true,
+                    PhoneNumber = systemAdminConfig.PhoneNumber,
+                    PhoneNumberConfirmed = !string.IsNullOrWhiteSpace(systemAdminConfig.PhoneNumber),
+                    FirstName = systemAdminConfig.FirstName,
+                    LastName = systemAdminConfig.LastName
+                };
+
+                var createResult = await userManager.CreateAsync(systemAdmin, systemAdminConfig.Password);
+
+                if (createResult.Succeeded)
+                {
+                    logger.LogInformation("Successfully created system administrator user: {UserName} ({Email})", 
+                        systemAdminConfig.UserName, systemAdminConfig.Email);
+
+                    // Assign SystemAdministrator role
+                    var roleResult = await userManager.AddToRoleAsync(systemAdmin, "SystemAdministrator");
+                    if (roleResult.Succeeded)
+                    {
+                        logger.LogInformation("Successfully assigned SystemAdministrator role to user: {UserName}", 
+                            systemAdminConfig.UserName);
+                    }
+                    else
+                    {
+                        logger.LogWarning("Failed to assign SystemAdministrator role to user {UserName}: {Errors}",
+                            systemAdminConfig.UserName, string.Join(", ", roleResult.Errors.Select(e => e.Description)));
+                    }
+                }
+                else
+                {
+                    logger.LogWarning("Failed to create system administrator user: {Errors}",
+                        string.Join(", ", createResult.Errors.Select(e => e.Description)));
+                }
+
+                logger.LogInformation("Role and system administrator seeding completed!");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "[{ExceptionType}] Error occurred while seeding roles and system administrator. Exception: {ExceptionMessage}", 
+                    ex.GetType().Name, ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Seeds test users, friendships, posts, and groups into the database for development and testing.
         /// Creates 20 test users with varied profile data, establishes friendships between them,
         /// generates sample posts, creates community groups, and assigns group memberships.

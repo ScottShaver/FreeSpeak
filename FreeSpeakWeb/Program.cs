@@ -65,6 +65,9 @@ namespace FreeSpeakWeb
             // Configure SiteSettings
             builder.Services.Configure<SiteSettings>(builder.Configuration);
 
+            // Configure SystemAdministratorInitInfo
+            builder.Services.Configure<SystemAdministratorInitInfo>(builder.Configuration.GetSection("SystemAdministratorInitInfo"));
+
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<IdentityRedirectManager>();
             builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
@@ -90,7 +93,11 @@ namespace FreeSpeakWeb
                 {
                     options.SignIn.RequireConfirmedAccount = true;
                     options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
+                    options.Lockout.AllowedForNewUsers = true;
+                    options.Lockout.MaxFailedAccessAttempts = 5;
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
@@ -170,6 +177,12 @@ namespace FreeSpeakWeb
 
             // Add AlertService for user notifications
             builder.Services.AddScoped<AlertService>();
+
+            // Add RoleService for managing user roles
+            builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.IRoleService, RoleService>();
+
+            // Add UserLockoutService for managing user account lockouts
+            builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.IUserLockoutService, UserLockoutService>();
 
             // Add Group services
             builder.Services.AddScoped<GroupService>();
@@ -278,9 +291,16 @@ namespace FreeSpeakWeb
                 var services = scope.ServiceProvider;
                 try
                 {
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                     var dbContext = services.GetRequiredService<ApplicationDbContext>();
                     var logger = services.GetRequiredService<ILogger<Program>>();
+                    var systemAdminConfig = services.GetRequiredService<Microsoft.Extensions.Options.IOptions<SystemAdministratorInitInfo>>().Value;
+
+                    // Seed roles and system administrator first
+                    await DatabaseSeeder.SeedRolesAndSystemAdminAsync(roleManager, userManager, systemAdminConfig, logger);
+
+                    // Then seed test users
                     await DatabaseSeeder.SeedTestUsersAsync(userManager, dbContext, logger);
 
                     // Migrate existing URLs to secure format

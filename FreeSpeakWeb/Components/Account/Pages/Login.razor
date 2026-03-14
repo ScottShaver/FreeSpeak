@@ -98,6 +98,10 @@
         }
     }
 
+    /// <summary>
+    /// Handles the login form submission.
+    /// Validates credentials and manages account lockout for failed login attempts.
+    /// </summary>
     public async Task LoginUser()
     {
         // If doing a password sign-in, validate the form.
@@ -106,13 +110,12 @@
             return;
         }
 
-        // This doesn't count login failures towards account lockout
-        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        var result = await SignInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+        // Enable account lockout on failed login attempts
+        var result = await SignInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: true);
 
         if (result.Succeeded)
         {
-            Logger.LogInformation("User logged in.");
+            Logger.LogInformation("User {UserName} logged in successfully.", Input.UserName);
             RedirectManager.RedirectTo("/home");
         }
         else if (result.RequiresTwoFactor)
@@ -123,12 +126,18 @@
         }
         else if (result.IsLockedOut)
         {
-            Logger.LogWarning("User account locked out.");
-            RedirectManager.RedirectTo("Account/Lockout");
+            Logger.LogWarning("User account {UserName} locked out due to multiple failed login attempts.", Input.UserName);
+            RedirectManager.RedirectTo($"Account/Lockout?username={Uri.EscapeDataString(Input.UserName)}");
+        }
+        else if (result.IsNotAllowed)
+        {
+            Logger.LogWarning("User {UserName} login not allowed (email not confirmed).", Input.UserName);
+            errorMessage = "Error: Your email address has not been confirmed. Please check your email and confirm your account.";
         }
         else
         {
-            errorMessage = "Error: Invalid login attempt.";
+            Logger.LogWarning("Invalid login attempt for user {UserName}.", Input.UserName);
+            errorMessage = "Error: Invalid username or password. Please try again.";
         }
     }
 

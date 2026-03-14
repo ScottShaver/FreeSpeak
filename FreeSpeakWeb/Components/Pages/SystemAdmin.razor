@@ -1,0 +1,744 @@
+@page "/system-admin"
+@rendermode InteractiveServer
+@attribute [Authorize(Roles = "SystemAdministrator")]
+@implements IDisposable
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Repositories.Abstractions
+
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IUserRepository UserRepository
+@inject ILogger<SystemAdmin> Logger
+
+<PageTitle>System Administration Functions</PageTitle>
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">
+                <i class="bi bi-shield-lock-fill me-2"></i>
+                System Administration Functions
+            </h1>
+
+            <div class="alert alert-info" role="alert">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Welcome, System Administrator!</strong> This page is only accessible to users with the SystemAdministrator role.
+            </div>
+
+            @if (!string.IsNullOrEmpty(currentUserName))
+            {
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="bi bi-person-circle fs-3"></i>
+                            <div>
+                                <p class="mb-1"><strong>@currentUserName</strong> (@currentUserEmail)</p>
+                                <p class="mb-0 text-muted">Roles: @string.Join(", ", userRoles)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Tabbed Interface -->
+            <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="user-management-tab" data-bs-toggle="tab" data-bs-target="#user-management" type="button" role="tab" aria-controls="user-management" aria-selected="true">
+                        <i class="bi bi-people me-2"></i>User Management
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="system-config-tab" data-bs-toggle="tab" data-bs-target="#system-config" type="button" role="tab" aria-controls="system-config" aria-selected="false">
+                        <i class="bi bi-gear me-2"></i>System Configuration
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="content-moderation-tab" data-bs-toggle="tab" data-bs-target="#content-moderation" type="button" role="tab" aria-controls="content-moderation" aria-selected="false">
+                        <i class="bi bi-shield-check me-2"></i>Site-wide Content Moderation
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="analytics-tab" data-bs-toggle="tab" data-bs-target="#analytics" type="button" role="tab" aria-controls="analytics" aria-selected="false">
+                        <i class="bi bi-graph-up me-2"></i>Analytics and Reporting
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="database-tab" data-bs-toggle="tab" data-bs-target="#database" type="button" role="tab" aria-controls="database" aria-selected="false">
+                        <i class="bi bi-database me-2"></i>Database Maintenance Tools
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content border border-top-0 p-4" id="adminTabsContent">
+                <!-- User Management Tab -->
+                <div class="tab-pane fade show active" id="user-management" role="tabpanel" aria-labelledby="user-management-tab">
+                    <h3 class="mb-3">
+                        <i class="bi bi-people me-2"></i>User Management
+                    </h3>
+                    <p class="text-muted">Manage user accounts, roles, and permissions across the system.</p>
+
+                    <!-- User Search Section -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-search me-2"></i>Search Users</h5>
+                            <p class="card-text text-muted">Search across username, email, name, city, state, and occupation.</p>
+
+                            <div class="search-section mb-3">
+                                <input type="text" 
+                                       class="form-control" 
+                                       placeholder="Start typing to search users..." 
+                                       @bind="searchTerm"
+                                       @bind:event="oninput"
+                                       @onkeyup="HandleSearchKeyUp" />
+                            </div>
+
+                            @if (isSearching)
+                            {
+                                <div class="text-center py-3">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Searching...</span>
+                                    </div>
+                                </div>
+                            }
+                            else if (searchResults.Count > 0)
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Location</th>
+                                                <th>Occupation</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var user in searchResults)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @if (!string.IsNullOrEmpty(user.ProfilePictureUrl))
+                                                        {
+                                                            <img src="@user.ProfilePictureUrl" alt="Profile" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;" />
+                                                        }
+                                                        @user.UserName
+                                                    </td>
+                                                    <td>@user.FirstName @user.LastName</td>
+                                                    <td>@user.Email</td>
+                                                    <td>
+                                                        @if (!string.IsNullOrEmpty(user.City) || !string.IsNullOrEmpty(user.State))
+                                                        {
+                                                            <span>@user.City@(!string.IsNullOrEmpty(user.City) && !string.IsNullOrEmpty(user.State) ? ", " : "")@user.State</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-muted">—</span>
+                                                        }
+                                                    </td>
+                                                    <td>@(user.Occupation ?? "—")</td>
+                                                    <td>
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                                                                    type="button" 
+                                                                    id="userActions-@user.Id" 
+                                                                    data-bs-toggle="dropdown" 
+                                                                    aria-expanded="false"
+                                                                    title="Actions">
+                                                                <i class="bi bi-three-dots-vertical"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu" aria-labelledby="userActions-@user.Id">
+                                                                <li>
+                                                                    <button type="button" class="dropdown-item" @onclick="() => OpenRoleModal(user)">
+                                                                        <i class="bi bi-person-badge me-2"></i>Edit Roles
+                                                                    </button>
+                                                                </li>
+                                                                <li>
+                                                                    <button type="button" class="dropdown-item" @onclick="() => OpenLockoutModal(user)">
+                                                                        <i class="bi bi-lock me-2"></i>Lockout Info
+                                                                    </button>
+                                                                </li>
+                                                                <li><hr class="dropdown-divider" /></li>
+                                                                <li>
+                                                                    <button type="button" class="dropdown-item" disabled>
+                                                                        <i class="bi bi-eye me-2"></i>View Profile
+                                                                    </button>
+                                                                </li>
+                                                                <li>
+                                                                    <button type="button" class="dropdown-item" disabled>
+                                                                        <i class="bi bi-person-x me-2"></i>Suspend User
+                                                                    </button>
+                                                                </li>
+                                                                <li>
+                                                                    <button type="button" class="dropdown-item" disabled>
+                                                                        <i class="bi bi-envelope me-2"></i>Send Message
+                                                                    </button>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                @if (searchResults.Count >= 100)
+                                {
+                                    <div class="alert alert-info" role="alert">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        Showing first 100 results. Please refine your search for more specific results.
+                                    </div>
+                                }
+                            }
+                            else if (hasSearched && !isSearching)
+                            {
+                                <div class="alert alert-info" role="alert">
+                                    <p class="mb-0">No users found matching "@searchTerm".</p>
+                                </div>
+                            }
+                            else if (!hasSearched)
+                            {
+                                <div class="alert alert-info" role="alert">
+                                    <p class="mb-0">Start typing in the search box to find users.</p>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(errorMessage))
+                            {
+                                <div class="alert alert-danger" role="alert">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Other User Management Features -->
+                    <h5 class="mb-3">Additional Features</h5>
+                    <div class="row mt-4">
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-person-plus me-2"></i>Create User</h5>
+                                    <p class="card-text">Add new users to the system manually.</p>
+                                    <button class="btn btn-primary" @onclick="OpenCreateUserModal">Create New User</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-clock-history me-2"></i>Audit Log</h5>
+                                    <p class="card-text">View user activity and account changes.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-file-earmark-spreadsheet me-2"></i>Export Users</h5>
+                                    <p class="card-text">Export user data for analysis or backup.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Configuration Tab -->
+                <div class="tab-pane fade" id="system-config" role="tabpanel" aria-labelledby="system-config-tab">
+                    <h3 class="mb-3">
+                        <i class="bi bi-gear me-2"></i>System Configuration
+                    </h3>
+                    <p class="text-muted">Configure system-wide settings and preferences.</p>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-globe me-2"></i>Site Settings</h5>
+                                    <p class="card-text">Configure site name, branding, and appearance.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-envelope me-2"></i>Email Configuration</h5>
+                                    <p class="card-text">Set up email servers and notification templates.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-shield-lock me-2"></i>Security Settings</h5>
+                                    <p class="card-text">Configure authentication and security policies.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-file-earmark-text me-2"></i>Content Policies</h5>
+                                    <p class="card-text">Manage community guidelines and terms of service.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-hdd me-2"></i>Storage Settings</h5>
+                                    <p class="card-text">Configure file upload limits and storage options.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-speedometer me-2"></i>Performance</h5>
+                                    <p class="card-text">Configure caching and performance settings.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Site-wide Content Moderation Tab -->
+                <div class="tab-pane fade" id="content-moderation" role="tabpanel" aria-labelledby="content-moderation-tab">
+                    <h3 class="mb-3">
+                        <i class="bi bi-shield-check me-2"></i>Site-wide Content Moderation
+                    </h3>
+                    <p class="text-muted">Monitor and moderate content across the entire platform.</p>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-flag me-2"></i>Flagged Content</h5>
+                                    <p class="card-text">Review posts and comments flagged by users.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-exclamation-triangle me-2"></i>Reported Users</h5>
+                                    <p class="card-text">View and act on user reports and complaints.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-trash me-2"></i>Content Removal</h5>
+                                    <p class="card-text">Remove inappropriate content site-wide.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-search me-2"></i>Content Search</h5>
+                                    <p class="card-text">Search for specific content across the platform.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-journal-text me-2"></i>Moderation Log</h5>
+                                    <p class="card-text">View history of moderation actions taken.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-filter me-2"></i>Content Filters</h5>
+                                    <p class="card-text">Manage automated content filtering rules.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics and Reporting Tab -->
+                <div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
+                    <h3 class="mb-3">
+                        <i class="bi bi-graph-up me-2"></i>Analytics and Reporting
+                    </h3>
+                    <p class="text-muted">View statistics, metrics, and generate reports.</p>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-speedometer2 me-2"></i>Dashboard</h5>
+                                    <p class="card-text">View key metrics and system health at a glance.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-people-fill me-2"></i>User Statistics</h5>
+                                    <p class="card-text">Analyze user growth, activity, and engagement.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-chat-dots me-2"></i>Content Analytics</h5>
+                                    <p class="card-text">Track posts, comments, and content trends.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-diagram-3 me-2"></i>Group Analytics</h5>
+                                    <p class="card-text">Analyze group activity and member participation.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-file-earmark-bar-graph me-2"></i>Custom Reports</h5>
+                                    <p class="card-text">Generate custom reports with specific criteria.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-download me-2"></i>Export Data</h5>
+                                    <p class="card-text">Export analytics data to CSV or Excel format.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Database Maintenance Tools Tab -->
+                <div class="tab-pane fade" id="database" role="tabpanel" aria-labelledby="database-tab">
+                    <h3 class="mb-3">
+                        <i class="bi bi-database me-2"></i>Database Maintenance Tools
+                    </h3>
+                    <p class="text-muted">Manage database health, backups, and maintenance tasks.</p>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-arrow-clockwise me-2"></i>Backup Database</h5>
+                                    <p class="card-text">Create a full backup of the database.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-arrow-counterclockwise me-2"></i>Restore Database</h5>
+                                    <p class="card-text">Restore from a previous backup point.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-braces me-2"></i>Run Migrations</h5>
+                                    <p class="card-text">Apply pending database schema migrations.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-broom me-2"></i>Cleanup Tasks</h5>
+                                    <p class="card-text">Remove old notifications and temporary data.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-bar-chart me-2"></i>Database Statistics</h5>
+                                    <p class="card-text">View database size, table statistics, and health.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-tools me-2"></i>Optimize Tables</h5>
+                                    <p class="card-text">Optimize database tables for better performance.</p>
+                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Role Management Modal *@
+@if (showRoleModal && selectedUser != null)
+{
+    <FreeSpeakWeb.Components.Admin.UserRoleManagementModal 
+        User="@selectedUser"
+        OnClose="CloseRoleModal"
+        OnRolesUpdated="HandleRolesUpdated" />
+}
+
+@* Lockout Management Modal *@
+@if (showLockoutModal && selectedUser != null)
+{
+    <FreeSpeakWeb.Components.Admin.UserLockoutManagementModal 
+        User="@selectedUser"
+        OnClose="CloseLockoutModal"
+        OnLockoutUpdated="HandleLockoutUpdated" />
+}
+
+@* Create User Modal *@
+@if (showCreateUserModal)
+{
+    <FreeSpeakWeb.Components.Admin.UserCreationModal 
+        OnClose="CloseCreateUserModal"
+        OnUserCreated="HandleUserCreated" />
+}
+
+@code {
+    private string? currentUserName;
+    private string? currentUserEmail;
+    private List<string> userRoles = new();
+    private string searchTerm = string.Empty;
+    private List<ApplicationUser> searchResults = new();
+    private bool isSearching = false;
+    private bool hasSearched = false;
+    private string? errorMessage;
+    private System.Threading.Timer? searchDebounceTimer;
+
+    // Role management modal state
+    private bool showRoleModal = false;
+    private ApplicationUser? selectedUser = null;
+
+    // Lockout management modal state
+    private bool showLockoutModal = false;
+
+    // Create user modal state
+    private bool showCreateUserModal = false;
+
+    /// <summary>
+    /// Initializes the component by loading the current user's information and roles.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            var currentUser = await UserManager.GetUserAsync(user);
+            if (currentUser != null)
+            {
+                currentUserName = currentUser.UserName;
+                currentUserEmail = currentUser.Email;
+
+                var roles = await UserManager.GetRolesAsync(currentUser);
+                userRoles = roles.ToList();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles the keyup event on the search input with debouncing.
+    /// Triggers a search 300ms after the user stops typing.
+    /// </summary>
+    private async Task HandleSearchKeyUp(KeyboardEventArgs e)
+    {
+        // Dispose existing timer
+        searchDebounceTimer?.Dispose();
+
+        // Capture the current search term value
+        var currentSearchTerm = searchTerm;
+
+        // Create new timer that will trigger search after 300ms of no typing
+        searchDebounceTimer = new System.Threading.Timer(async _ =>
+        {
+            await InvokeAsync(async () =>
+            {
+                // Use the captured search term to ensure we search for the correct value
+                if (string.IsNullOrWhiteSpace(currentSearchTerm))
+                {
+                    searchResults.Clear();
+                    hasSearched = false;
+                    StateHasChanged();
+                }
+                else if (!isSearching)
+                {
+                    isSearching = true;
+                    hasSearched = true;
+                    errorMessage = null;
+
+                    try
+                    {
+                        searchResults = await UserRepository.AdminSearchUsersAsync(currentSearchTerm);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogError(ex, "[{ExceptionType}] Error occurred while searching for users. Search term: {SearchTerm}. Exception: {ExceptionMessage}", ex.GetType().Name, currentSearchTerm, ex.Message);
+                        errorMessage = "An error occurred while searching. Please try again.";
+                        searchResults.Clear();
+                    }
+                    finally
+                    {
+                        isSearching = false;
+                        StateHasChanged();
+                    }
+                }
+            });
+        }, null, 300, Timeout.Infinite);
+    }
+
+    /// <summary>
+    /// Opens the role management modal for the specified user.
+    /// </summary>
+    /// <param name="user">The user whose roles will be managed.</param>
+    private void OpenRoleModal(ApplicationUser user)
+    {
+        selectedUser = user;
+        showRoleModal = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the role management modal.
+    /// </summary>
+    private void CloseRoleModal()
+    {
+        showRoleModal = false;
+        selectedUser = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles the event when roles are successfully updated.
+    /// Refreshes the search results to reflect any changes.
+    /// </summary>
+    private async Task HandleRolesUpdated()
+    {
+        // Optionally refresh the search results if needed
+        Logger.LogInformation("Roles updated for user {UserId}", selectedUser?.Id);
+    }
+
+    /// <summary>
+    /// Opens the lockout management modal for the specified user.
+    /// </summary>
+    /// <param name="user">The user whose lockout status will be managed.</param>
+    private void OpenLockoutModal(ApplicationUser user)
+    {
+        selectedUser = user;
+        showLockoutModal = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the lockout management modal.
+    /// </summary>
+    private void CloseLockoutModal()
+    {
+        showLockoutModal = false;
+        selectedUser = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles the event when lockout status is successfully updated.
+    /// </summary>
+    private async Task HandleLockoutUpdated()
+    {
+        // Optionally refresh the search results if needed
+        Logger.LogInformation("Lockout status updated for user {UserId}", selectedUser?.Id);
+    }
+
+    /// <summary>
+    /// Opens the create user modal.
+    /// </summary>
+    private void OpenCreateUserModal()
+    {
+        showCreateUserModal = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the create user modal.
+    /// </summary>
+    private void CloseCreateUserModal()
+    {
+        showCreateUserModal = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles the event when a new user is successfully created.
+    /// Refreshes the search results if a search term exists.
+    /// </summary>
+    private async Task HandleUserCreated()
+    {
+        Logger.LogInformation("New user created successfully");
+
+        // If there's an active search, refresh the results
+        if (!string.IsNullOrWhiteSpace(searchTerm) && hasSearched)
+        {
+            try
+            {
+                searchResults = await UserRepository.AdminSearchUsersAsync(searchTerm);
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Error refreshing search results after user creation");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Disposes resources when the component is disposed.
+    /// </summary>
+    public void Dispose()
+    {
+        searchDebounceTimer?.Dispose();
+    }
+}
