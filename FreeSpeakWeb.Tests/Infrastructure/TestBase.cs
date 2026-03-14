@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -58,6 +59,20 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         protected ILogger<T> CreateMockLogger<T>()
         {
             return new Mock<ILogger<T>>().Object;
+        }
+
+        /// <summary>
+        /// Creates a mock IAuditLogRepository for testing.
+        /// </summary>
+        /// <returns>A mock IAuditLogRepository that does nothing.</returns>
+        protected IAuditLogRepository CreateMockAuditLogRepository()
+        {
+            var mock = new Mock<IAuditLogRepository>();
+            mock.Setup(x => x.LogActionAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.CompletedTask);
+            mock.Setup(x => x.LogActionAsync(It.IsAny<string>(), It.IsAny<ActionCategory>(), It.IsAny<object>()))
+                .Returns(Task.CompletedTask);
+            return mock.Object;
         }
 
         public void Dispose()

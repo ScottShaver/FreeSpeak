@@ -46,7 +46,8 @@ namespace FreeSpeakWeb.Tests.Services
                 repoFactory.ContextFactory,
                 CreateNotificationService(repoFactory.ContextFactory),
                 CreateUserPreferenceService(repoFactory.ContextFactory),
-                repoFactory.CreateFriendshipCacheService());
+                repoFactory.CreateFriendshipCacheService(),
+                MockRepositories.CreateMockAuditLogRepository().Object);
         }
 
         #endregion

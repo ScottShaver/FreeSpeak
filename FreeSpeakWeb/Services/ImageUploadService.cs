@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
@@ -7,11 +8,15 @@ namespace FreeSpeakWeb.Services
     /// Service for handling image and video uploads for posts.
     /// Stores files securely outside wwwroot and returns authenticated API URLs.
     /// Includes DOS protection with file size and count limits.
+    /// Validates file signatures (magic bytes) to prevent disguised malicious files.
+    /// Scans files for viruses/malware when ClamAV is configured.
     /// </summary>
     public class ImageUploadService
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<ImageUploadService> _logger;
+        private readonly IFileSignatureValidator _fileSignatureValidator;
+        private readonly IVirusScanService _virusScanService;
         private readonly string _uploadsBasePath;
 
         /// <summary>
@@ -40,13 +45,19 @@ namespace FreeSpeakWeb.Services
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording service operations.</param>
         /// <param name="environment">Web hosting environment for determining file paths.</param>
+        /// <param name="fileSignatureValidator">Validator for file magic bytes.</param>
+        /// <param name="virusScanService">Service for scanning files for viruses/malware.</param>
         public ImageUploadService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<ImageUploadService> logger,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            IFileSignatureValidator fileSignatureValidator,
+            IVirusScanService virusScanService)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _fileSignatureValidator = fileSignatureValidator;
+            _virusScanService = virusScanService;
             // SECURITY: Store uploads outside wwwroot to prevent direct access
             _uploadsBasePath = Path.Combine(environment.ContentRootPath, "AppData", "uploads", "posts");
         }
@@ -119,6 +130,27 @@ namespace FreeSpeakWeb.Services
                     {
                         _logger.LogWarning("Image {FileName} exceeds size limit for user {UserId}", image.FileName, userId);
                         return (false, new List<string>(), $"Image {image.FileName} exceeds {MaxImageSizeBytes / 1024 / 1024}MB size limit");
+                    }
+
+                    // SECURITY: Validate file signature (magic bytes) to prevent disguised malicious files
+                    var signatureValidation = _fileSignatureValidator.ValidateFileSignature(imageBytes, uniqueFileName);
+                    if (!signatureValidation.IsValid)
+                    {
+                        _logger.LogWarning("Image {FileName} failed signature validation for user {UserId}: {Error}", 
+                            image.FileName, userId, signatureValidation.ErrorMessage);
+                        return (false, new List<string>(), $"Image {image.FileName}: {signatureValidation.ErrorMessage}");
+                    }
+
+                    // SECURITY: Scan for viruses/malware
+                    var virusScanResult = await _virusScanService.ScanAsync(imageBytes, image.FileName);
+                    if (!virusScanResult.IsClean)
+                    {
+                        _logger.LogWarning("Image {FileName} failed virus scan for user {UserId}: {Virus}", 
+                            image.FileName, userId, virusScanResult.VirusName ?? virusScanResult.ErrorMessage);
+                        var reason = virusScanResult.VirusName != null 
+                            ? $"Malware detected: {virusScanResult.VirusName}" 
+                            : virusScanResult.ErrorMessage ?? "Virus scan failed";
+                        return (false, new List<string>(), $"Image {image.FileName}: {reason}");
                     }
 
                     await File.WriteAllBytesAsync(filePath, imageBytes);
@@ -235,6 +267,27 @@ namespace FreeSpeakWeb.Services
                     {
                         _logger.LogWarning("Video {FileName} exceeds size limit for user {UserId}", video.FileName, userId);
                         return (false, new List<string>(), $"Video {video.FileName} exceeds {MaxVideoSizeBytes / 1024 / 1024}MB size limit");
+                    }
+
+                    // SECURITY: Validate file signature (magic bytes) to prevent disguised malicious files
+                    var signatureValidation = _fileSignatureValidator.ValidateFileSignature(videoBytes, uniqueFileName);
+                    if (!signatureValidation.IsValid)
+                    {
+                        _logger.LogWarning("Video {FileName} failed signature validation for user {UserId}: {Error}", 
+                            video.FileName, userId, signatureValidation.ErrorMessage);
+                        return (false, new List<string>(), $"Video {video.FileName}: {signatureValidation.ErrorMessage}");
+                    }
+
+                    // SECURITY: Scan for viruses/malware
+                    var virusScanResult = await _virusScanService.ScanAsync(videoBytes, video.FileName);
+                    if (!virusScanResult.IsClean)
+                    {
+                        _logger.LogWarning("Video {FileName} failed virus scan for user {UserId}: {Virus}", 
+                            video.FileName, userId, virusScanResult.VirusName ?? virusScanResult.ErrorMessage);
+                        var reason = virusScanResult.VirusName != null 
+                            ? $"Malware detected: {virusScanResult.VirusName}" 
+                            : virusScanResult.ErrorMessage ?? "Virus scan failed";
+                        return (false, new List<string>(), $"Video {video.FileName}: {reason}");
                     }
 
                     await File.WriteAllBytesAsync(filePath, videoBytes);

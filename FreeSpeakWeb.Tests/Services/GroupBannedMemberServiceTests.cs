@@ -9,13 +9,22 @@ namespace FreeSpeakWeb.Tests.Services
 {
     public class GroupBannedMemberServiceTests : TestBase
     {
+        private GroupBannedMemberService CreateService(string dbName)
+        {
+            var dbFactory = CreateDbContextFactory(dbName);
+            var logger = CreateMockLogger<GroupBannedMemberService>();
+            var auditLogRepository = CreateMockAuditLogRepository();
+            return new GroupBannedMemberService(dbFactory, logger, auditLogRepository);
+        }
+
         [Fact]
         public async Task BanUserAsync_ByAdmin_ShouldBanUser()
         {
             // Arrange
             var dbFactory = CreateDbContextFactory("BanTest1");
             var logger = CreateMockLogger<GroupBannedMemberService>();
-            var service = new GroupBannedMemberService(dbFactory, logger);
+            var auditLogRepository = CreateMockAuditLogRepository();
+            var service = new GroupBannedMemberService(dbFactory, logger, auditLogRepository);
 
             var admin = TestDataFactory.CreateTestUser(id: "admin1");
             var user = TestDataFactory.CreateTestUser(id: "user1");
@@ -58,7 +67,8 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("BanTest2");
             var logger = CreateMockLogger<GroupBannedMemberService>();
-            var service = new GroupBannedMemberService(dbFactory, logger);
+            var auditLogRepository = CreateMockAuditLogRepository();
+            var service = new GroupBannedMemberService(dbFactory, logger, auditLogRepository);
 
             var moderator = TestDataFactory.CreateTestUser(id: "mod1");
             var user = TestDataFactory.CreateTestUser(id: "user1");
@@ -91,7 +101,8 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("BanTest3");
             var logger = CreateMockLogger<GroupBannedMemberService>();
-            var service = new GroupBannedMemberService(dbFactory, logger);
+            var auditLogRepository = CreateMockAuditLogRepository();
+            var service = new GroupBannedMemberService(dbFactory, logger, auditLogRepository);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -124,7 +135,8 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("BanTest4");
             var logger = CreateMockLogger<GroupBannedMemberService>();
-            var service = new GroupBannedMemberService(dbFactory, logger);
+            var auditLogRepository = CreateMockAuditLogRepository();
+            var service = new GroupBannedMemberService(dbFactory, logger, auditLogRepository);
 
             var admin = TestDataFactory.CreateTestUser(id: "admin1");
             var creator = TestDataFactory.CreateTestUser(id: "creator1");
@@ -157,7 +169,8 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("BanTest5");
             var logger = CreateMockLogger<GroupBannedMemberService>();
-            var service = new GroupBannedMemberService(dbFactory, logger);
+            var auditLogRepository = CreateMockAuditLogRepository();
+            var service = new GroupBannedMemberService(dbFactory, logger, auditLogRepository);
 
             var admin = TestDataFactory.CreateTestUser(id: "admin1");
             var moderator = TestDataFactory.CreateTestUser(id: "mod1");
@@ -190,7 +203,8 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("BanTest6");
             var logger = CreateMockLogger<GroupBannedMemberService>();
-            var service = new GroupBannedMemberService(dbFactory, logger);
+            var auditLogRepository = CreateMockAuditLogRepository();
+            var service = new GroupBannedMemberService(dbFactory, logger, auditLogRepository);
 
             var admin = TestDataFactory.CreateTestUser(id: "admin1");
             var user = TestDataFactory.CreateTestUser(id: "user1");
@@ -228,7 +242,8 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("BanTest7");
             var logger = CreateMockLogger<GroupBannedMemberService>();
-            var service = new GroupBannedMemberService(dbFactory, logger);
+            var auditLogRepository = CreateMockAuditLogRepository();
+            var service = new GroupBannedMemberService(dbFactory, logger, auditLogRepository);
 
             var admin = TestDataFactory.CreateTestUser(id: "admin1");
             var user = TestDataFactory.CreateTestUser(id: "user1");
@@ -268,7 +283,8 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("BanTest8");
             var logger = CreateMockLogger<GroupBannedMemberService>();
-            var service = new GroupBannedMemberService(dbFactory, logger);
+            var auditLogRepository = CreateMockAuditLogRepository();
+            var service = new GroupBannedMemberService(dbFactory, logger, auditLogRepository);
 
             var admin = TestDataFactory.CreateTestUser(id: "admin1");
             var user = TestDataFactory.CreateTestUser(id: "user1");
@@ -299,7 +315,8 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("BanTest9");
             var logger = CreateMockLogger<GroupBannedMemberService>();
-            var service = new GroupBannedMemberService(dbFactory, logger);
+            var auditLogRepository = CreateMockAuditLogRepository();
+            var service = new GroupBannedMemberService(dbFactory, logger, auditLogRepository);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("creator1");
@@ -328,7 +345,8 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("BanTest10");
             var logger = CreateMockLogger<GroupBannedMemberService>();
-            var service = new GroupBannedMemberService(dbFactory, logger);
+            var auditLogRepository = CreateMockAuditLogRepository();
+            var service = new GroupBannedMemberService(dbFactory, logger, auditLogRepository);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group = TestDataFactory.CreateTestGroup("creator1");
@@ -353,7 +371,8 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("BanTest11");
             var logger = CreateMockLogger<GroupBannedMemberService>();
-            var service = new GroupBannedMemberService(dbFactory, logger);
+            var auditLogRepository = CreateMockAuditLogRepository();
+            var service = new GroupBannedMemberService(dbFactory, logger, auditLogRepository);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -384,7 +403,8 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("BanTest12");
             var logger = CreateMockLogger<GroupBannedMemberService>();
-            var service = new GroupBannedMemberService(dbFactory, logger);
+            var auditLogRepository = CreateMockAuditLogRepository();
+            var service = new GroupBannedMemberService(dbFactory, logger, auditLogRepository);
 
             var user1 = TestDataFactory.CreateTestUser(id: "user1");
             var user2 = TestDataFactory.CreateTestUser(id: "user2");
@@ -417,7 +437,8 @@ namespace FreeSpeakWeb.Tests.Services
             // Arrange
             var dbFactory = CreateDbContextFactory("BanTest13");
             var logger = CreateMockLogger<GroupBannedMemberService>();
-            var service = new GroupBannedMemberService(dbFactory, logger);
+            var auditLogRepository = CreateMockAuditLogRepository();
+            var service = new GroupBannedMemberService(dbFactory, logger, auditLogRepository);
 
             var user = TestDataFactory.CreateTestUser(id: "user1");
             var group1 = TestDataFactory.CreateTestGroup("creator1", "Group 1");

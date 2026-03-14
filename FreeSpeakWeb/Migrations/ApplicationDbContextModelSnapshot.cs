@@ -119,6 +119,41 @@ namespace FreeSpeakWeb.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("FreeSpeakWeb.Data.AuditLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("ActionStamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ActionCategory")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ActionDetails")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)");
+
+                    b.HasKey("Id", "ActionStamp");
+
+                    b.HasIndex("ActionCategory");
+
+                    b.HasIndex("ActionStamp");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserId", "ActionStamp");
+
+                    b.ToTable("AuditLogs");
+                });
+
             modelBuilder.Entity("FreeSpeakWeb.Data.Comment", b =>
                 {
                     b.Property<int>("Id")

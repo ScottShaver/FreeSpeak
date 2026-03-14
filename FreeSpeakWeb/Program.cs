@@ -4,6 +4,7 @@ using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services;
+using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +66,9 @@ namespace FreeSpeakWeb
             // Configure SiteSettings
             builder.Services.Configure<SiteSettings>(builder.Configuration);
 
+            // Configure SystemAdministratorInitInfo
+            builder.Services.Configure<SystemAdministratorInitInfo>(builder.Configuration.GetSection("SystemAdministratorInitInfo"));
+
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<IdentityRedirectManager>();
             builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
@@ -90,7 +94,11 @@ namespace FreeSpeakWeb
                 {
                     options.SignIn.RequireConfirmedAccount = true;
                     options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
+                    options.Lockout.AllowedForNewUsers = true;
+                    options.Lockout.MaxFailedAccessAttempts = 5;
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
@@ -119,6 +127,10 @@ namespace FreeSpeakWeb
                 builder.Services.AddDistributedMemoryCache();
             }
             builder.Services.AddScoped<ICacheService, DistributedCacheService>();
+
+            // SECURITY: Configure distributed rate limiting settings
+            builder.Services.Configure<RateLimitingSettings>(builder.Configuration.GetSection("RateLimiting"));
+            builder.Services.AddSingleton<IDistributedRateLimitingService, DistributedRateLimitingService>();
 
             // PERFORMANCE: Add query performance monitoring service
             builder.Services.AddScoped<QueryPerformanceLogger>();
@@ -165,11 +177,24 @@ namespace FreeSpeakWeb
             // Add UserPreferenceService for managing user preferences
             builder.Services.AddScoped<UserPreferenceService>();
 
+            // SECURITY: Add FileSignatureValidator for magic byte validation
+            builder.Services.AddSingleton<IFileSignatureValidator, FileSignatureValidator>();
+
+            // SECURITY: Add virus scanning service with ClamAV
+            builder.Services.Configure<VirusScanSettings>(builder.Configuration.GetSection("VirusScan"));
+            builder.Services.AddSingleton<IVirusScanService, ClamAvVirusScanService>();
+
             // Add HtmlSanitizationService for XSS protection
             builder.Services.AddSingleton<HtmlSanitizationService>();
 
             // Add AlertService for user notifications
             builder.Services.AddScoped<AlertService>();
+
+            // Add RoleService for managing user roles
+            builder.Services.AddScoped<IRoleService, RoleService>();
+
+            // Add UserLockoutService for managing user account lockouts
+            builder.Services.AddScoped<IUserLockoutService, UserLockoutService>();
 
             // Add Group services
             builder.Services.AddScoped<GroupService>();
@@ -207,6 +232,7 @@ namespace FreeSpeakWeb
             builder.Services.AddScoped<IPinnedPostRepository, PinnedPostRepository>();
             builder.Services.AddScoped<IPostNotificationMuteRepository, PostNotificationMuteRepository>();
             builder.Services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
+            builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 
             // SECURITY: Add rate limiting to prevent abuse
             builder.Services.AddRateLimiter(options =>
@@ -278,9 +304,19 @@ namespace FreeSpeakWeb
                 var services = scope.ServiceProvider;
                 try
                 {
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                     var dbContext = services.GetRequiredService<ApplicationDbContext>();
                     var logger = services.GetRequiredService<ILogger<Program>>();
+                    var systemAdminConfig = services.GetRequiredService<Microsoft.Extensions.Options.IOptions<SystemAdministratorInitInfo>>().Value;
+
+                    // Seed roles and system administrator first
+                    await DatabaseSeeder.SeedRolesAndSystemAdminAsync(roleManager, userManager, systemAdminConfig, logger);
+
+                    // Manage AuditLog table partitions
+                    await DatabaseSeeder.ManageAuditLogPartitionsAsync(dbContext, logger);
+
+                    // Then seed test users
                     await DatabaseSeeder.SeedTestUsersAsync(userManager, dbContext, logger);
 
                     // Migrate existing URLs to secure format

@@ -371,5 +371,34 @@ namespace FreeSpeakWeb.Tests.Infrastructure
 
             return mock;
         }
+
+        /// <summary>
+        /// Creates a mock IAuditLogRepository for testing.
+        /// The mock accepts any audit log action without actually persisting it.
+        /// </summary>
+        public static Mock<IAuditLogRepository> CreateMockAuditLogRepository()
+        {
+            var mock = new Mock<IAuditLogRepository>();
+
+            // Setup LogActionAsync to complete successfully
+            mock.Setup(r => r.LogActionAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.CompletedTask);
+
+            // Setup generic LogActionAsync to complete successfully
+            mock.Setup(r => r.LogActionAsync(It.IsAny<string>(), It.IsAny<ActionCategory>(), It.IsAny<object>()))
+                .Returns(Task.CompletedTask);
+
+            // Setup query methods to return empty results
+            mock.Setup(r => r.GetUserAuditLogsAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+                .ReturnsAsync(new List<AuditLog>());
+
+            mock.Setup(r => r.GetUserAuditLogCountAsync(It.IsAny<string>()))
+                .ReturnsAsync(0);
+
+            mock.Setup(r => r.SearchAuditLogsAsync(It.IsAny<string?>(), It.IsAny<DateTime?>(), It.IsAny<DateTime?>()))
+                .ReturnsAsync(new List<AuditLog>());
+
+            return mock;
+        }
     }
 }

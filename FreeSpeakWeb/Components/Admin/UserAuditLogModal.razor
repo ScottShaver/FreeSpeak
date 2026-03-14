@@ -1,0 +1,286 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Repositories.Abstractions
+@using System.Text.Json
+@inject IAuditLogRepository AuditLogRepository
+@inject ILogger<UserAuditLogModal> Logger
+
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-clock-history me-2"></i>
+                    Audit Log for @User?.UserName
+                </h5>
+                <button type="button" class="btn-close" @onclick="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (User != null)
+                {
+                    <div class="user-info-section mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            @if (!string.IsNullOrEmpty(User.ProfilePictureUrl))
+                            {
+                                <img src="@User.ProfilePictureUrl" alt="Profile" class="rounded-circle" style="width: 48px; height: 48px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                    <i class="bi bi-person-fill text-white fs-4"></i>
+                                </div>
+                            }
+                            <div>
+                                <div class="fw-bold">@User.FirstName @User.LastName</div>
+                                <div class="text-muted small">@User.Email</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (isLoading)
+                    {
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading audit logs...</span>
+                            </div>
+                            <p class="text-muted mt-2">Loading audit history...</p>
+                        </div>
+                    }
+                    else if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                        </div>
+                    }
+                    else if (auditLogs.Count == 0)
+                    {
+                        <div class="alert alert-info" role="alert">
+                            <i class="bi bi-info-circle me-2"></i>
+                            No audit log entries found for this user.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="audit-log-section">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0">Activity History (@totalCount total entries)</h6>
+                                @if (hasMorePages)
+                                {
+                                    <span class="badge bg-secondary">Page @currentPage</span>
+                                }
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 180px;">Date/Time</th>
+                                            <th style="width: 150px;">Category</th>
+                                            <th>Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var log in auditLogs)
+                                        {
+                                            <tr>
+                                                <td class="text-nowrap small">
+                                                    @log.ActionStamp.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
+                                                </td>
+                                                <td>
+                                                    <span class="badge @GetCategoryBadgeClass(log.ActionCategory)">
+                                                        @log.ActionCategory
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <button type="button" 
+                                                            class="btn btn-sm btn-link p-0 text-start" 
+                                                            @onclick="() => ToggleDetails(log.Id)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                                        </svg>
+                                                    </button>
+                                                    @if (expandedLogId == log.Id)
+                                                    {
+                                                        <div class="mt-2 p-2 bg-light rounded">
+                                                            <pre class="mb-0 small" style="white-space: pre-wrap; word-wrap: break-word;">@FormatJsonDetails(log.ActionDetails)</pre>
+                                                        </div>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            @if (hasMorePages)
+                            {
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <button type="button" 
+                                            class="btn btn-sm btn-outline-secondary" 
+                                            @onclick="LoadPreviousPage"
+                                            disabled="@(currentPage <= 1 || isLoading)">
+                                        <i class="bi bi-chevron-left me-1"></i>Previous
+                                    </button>
+                                    <span class="text-muted small">Page @currentPage</span>
+                                    <button type="button" 
+                                            class="btn btn-sm btn-outline-secondary" 
+                                            @onclick="LoadNextPage"
+                                            disabled="@(!hasMorePages || isLoading)">
+                                        Next<i class="bi bi-chevron-right ms-1"></i>
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// The user whose audit logs are being displayed.
+    /// </summary>
+    [Parameter]
+    public ApplicationUser? User { get; set; }
+
+    /// <summary>
+    /// Callback invoked when the modal is closed.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private List<AuditLog> auditLogs = new();
+    private int totalCount = 0;
+    private int currentPage = 1;
+    private const int PageSize = 20;
+    private bool hasMorePages = false;
+    private bool isLoading = false;
+    private string? errorMessage;
+    private long? expandedLogId = null;
+
+    /// <summary>
+    /// Initializes the modal by loading the first page of audit logs.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        if (User != null)
+        {
+            await LoadAuditLogsAsync();
+        }
+    }
+
+    /// <summary>
+    /// Loads audit logs for the current page.
+    /// </summary>
+    private async Task LoadAuditLogsAsync()
+    {
+        if (User == null) return;
+
+        isLoading = true;
+        errorMessage = null;
+        StateHasChanged();
+
+        try
+        {
+            auditLogs = await AuditLogRepository.GetUserAuditLogsAsync(User.Id, currentPage, PageSize);
+            totalCount = await AuditLogRepository.GetUserAuditLogCountAsync(User.Id);
+            hasMorePages = (currentPage * PageSize) < totalCount;
+
+            Logger.LogInformation("Loaded {Count} audit log entries for user {UserId} (page {Page})", 
+                auditLogs.Count, User.Id, currentPage);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "[{ExceptionType}] Error loading audit logs for user {UserId}. Exception: {ExceptionMessage}",
+                ex.GetType().Name, User.Id, ex.Message);
+            errorMessage = "An error occurred while loading audit logs. Please try again.";
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Loads the next page of audit logs.
+    /// </summary>
+    private async Task LoadNextPage()
+    {
+        if (hasMorePages)
+        {
+            currentPage++;
+            await LoadAuditLogsAsync();
+        }
+    }
+
+    /// <summary>
+    /// Loads the previous page of audit logs.
+    /// </summary>
+    private async Task LoadPreviousPage()
+    {
+        if (currentPage > 1)
+        {
+            currentPage--;
+            await LoadAuditLogsAsync();
+        }
+    }
+
+    /// <summary>
+    /// Toggles the expanded view of audit log details.
+    /// </summary>
+    /// <param name="logId">The ID of the log entry to toggle.</param>
+    private void ToggleDetails(long logId)
+    {
+        expandedLogId = expandedLogId == logId ? null : logId;
+    }
+
+    /// <summary>
+    /// Formats JSON details for display with proper indentation.
+    /// </summary>
+    /// <param name="jsonDetails">The JSON string to format.</param>
+    /// <returns>Formatted JSON string or original if parsing fails.</returns>
+    private string FormatJsonDetails(string jsonDetails)
+    {
+        try
+        {
+            var jsonDoc = JsonDocument.Parse(jsonDetails);
+            return JsonSerializer.Serialize(jsonDoc, new JsonSerializerOptions { WriteIndented = true });
+        }
+        catch
+        {
+            return jsonDetails;
+        }
+    }
+
+    /// <summary>
+    /// Gets the appropriate Bootstrap badge class for an action category.
+    /// </summary>
+    /// <param name="category">The action category.</param>
+    /// <returns>Bootstrap badge class name.</returns>
+    private string GetCategoryBadgeClass(string category)
+    {
+        return category switch
+        {
+            "Authentication" => "bg-primary",
+            "ProfileUpdate" => "bg-info",
+            "RoleChange" => "bg-warning",
+            "ContentCreation" => "bg-success",
+            "ContentModeration" => "bg-danger",
+            "AccountLockout" => "bg-dark",
+            _ => "bg-secondary"
+        };
+    }
+
+    /// <summary>
+    /// Closes the modal and invokes the OnClose callback.
+    /// </summary>
+    private async Task Close()
+    {
+        await OnClose.InvokeAsync();
+    }
+}

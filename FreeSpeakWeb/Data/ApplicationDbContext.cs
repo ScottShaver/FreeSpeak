@@ -121,6 +121,11 @@ namespace FreeSpeakWeb.Data
         public DbSet<GroupPostNotificationMute> GroupPostNotificationMutes { get; set; }
 
         /// <summary>
+        /// Gets or sets the DbSet for audit log entries tracking user actions and system events.
+        /// </summary>
+        public DbSet<AuditLog> AuditLogs { get; set; }
+
+        /// <summary>
         /// Configures the database model including relationships, indexes, constraints, and delete behaviors
         /// for all entities in the application. Called by EF Core during model creation.
         /// </summary>
@@ -662,6 +667,20 @@ namespace FreeSpeakWeb.Data
                 entity.HasIndex(m => m.UserId);
                 // Unique constraint: a user can only mute a group post once
                 entity.HasIndex(m => new { m.PostId, m.UserId }).IsUnique();
+            });
+
+            // Configure AuditLog entity
+            // Note: This uses a composite primary key (Id, ActionStamp) because the table is partitioned
+            // by ActionStamp. PostgreSQL requires the partition key to be part of the primary key.
+            modelBuilder.Entity<AuditLog>(entity =>
+            {
+                entity.HasKey(a => new { a.Id, a.ActionStamp });
+
+                // Create indexes for efficient querying by user and timestamp
+                entity.HasIndex(a => a.UserId);
+                entity.HasIndex(a => a.ActionStamp);
+                entity.HasIndex(a => new { a.UserId, a.ActionStamp });
+                entity.HasIndex(a => a.ActionCategory);
             });
         }
     }

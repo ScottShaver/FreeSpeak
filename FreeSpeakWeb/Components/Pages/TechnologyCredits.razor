@@ -56,6 +56,9 @@
             <li><strong>Microsoft.Extensions.Caching.StackExchangeRedis</strong> (10.0.2) - <em>MIT License</em>
                 <br/><small>Distributed caching with Redis for multi-server deployments (optional, configurable via appsettings.json)</small>
             </li>
+            <li><strong>nClam</strong> (9.0.0) - <em>Apache 2.0 License</em>
+                <br/><small>ClamAV antivirus client for scanning uploaded files for viruses and malware (optional, configurable via appsettings.json)</small>
+            </li>
         </ul>
 
         <h3>Custom Features & Services</h3>
@@ -72,8 +75,14 @@
             <li><strong>Security Features</strong> - Secure file serving with authenticated endpoints
                 <br/><small>Files stored outside wwwroot with rate limiting and authorization checks</small>
             </li>
-            <li><strong>Rate Limiting</strong> - Built-in ASP.NET Core rate limiting
-                <br/><small>Global and per-endpoint limits to prevent abuse</small>
+            <li><strong>Rate Limiting</strong> - Built-in ASP.NET Core rate limiting with optional Redis support
+                <br/><small>Global and per-endpoint limits to prevent abuse, distributed rate limiting for multi-server deployments</small>
+            </li>
+            <li><strong>File Signature Validation</strong> - Magic byte validation for uploaded files
+                <br/><small>Prevents disguised malicious files by verifying content matches declared file type</small>
+            </li>
+            <li><strong>Virus Scanning</strong> - Optional ClamAV integration for file uploads
+                <br/><small>Scans images and videos for viruses/malware before storage</small>
             </li>
         </ul>
 

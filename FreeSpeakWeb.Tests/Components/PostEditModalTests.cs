@@ -3,6 +3,7 @@ using FreeSpeakWeb.Components.SocialFeed;
 using FreeSpeakWeb.Components.Shared;
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Services;
+using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
@@ -30,7 +31,21 @@ public class PostEditModalTests : TestContext
         var mockEnvironment = new Mock<IWebHostEnvironment>();
         mockEnvironment.Setup(e => e.ContentRootPath).Returns(Path.GetTempPath());
 
-        var imageUploadService = new ImageUploadService(mockContextFactory.Object, mockLogger.Object, mockEnvironment.Object);
+        // Setup security services
+        var mockFileSignatureValidator = new Mock<IFileSignatureValidator>();
+        mockFileSignatureValidator.Setup(v => v.ValidateFileSignature(It.IsAny<byte[]>(), It.IsAny<string>()))
+            .Returns((true, (string?)null));
+
+        var mockVirusScanService = new Mock<IVirusScanService>();
+        mockVirusScanService.Setup(v => v.ScanAsync(It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(VirusScanResult.Skipped());
+
+        var imageUploadService = new ImageUploadService(
+            mockContextFactory.Object, 
+            mockLogger.Object, 
+            mockEnvironment.Object,
+            mockFileSignatureValidator.Object,
+            mockVirusScanService.Object);
 
         Services.AddSingleton<IJSRuntime>(mockJsRuntime.Object);
         Services.AddSingleton(imageUploadService);

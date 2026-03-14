@@ -4,12 +4,15 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
+@using FreeSpeakWeb.Repositories.Abstractions
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<DeletePersonalData> Logger
 @inject IOptions<SiteSettings> SiteSettings
+@inject IAuditLogRepository AuditLogRepository
 
 <PageTitle>@SiteSettings.Value.SiteName - Disable Account</PageTitle>
 
@@ -91,6 +94,16 @@
 
         var userId = await UserManager.GetUserIdAsync(user);
         Logger.LogInformation("User with ID '{UserId}' disabled their account.", userId);
+
+        // Log the account disable to audit log
+        await AuditLogRepository.LogActionAsync(userId, ActionCategory.UserPersonalData, new UserPersonalDataDetails
+        {
+            OperationType = "AccountDisabled",
+            DataScope = "Account",
+            Success = true,
+            Reason = "User requested account disable",
+            IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString()
+        });
 
         RedirectManager.RedirectToCurrentPage();
     }

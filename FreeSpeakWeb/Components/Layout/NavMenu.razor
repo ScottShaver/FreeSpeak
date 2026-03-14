@@ -32,7 +32,7 @@
         <div class="d-flex align-items-center gap-3 justify-content-center" style="">
             <AuthorizeView>
                 <Authorized>
-                    <a href="/" title="Home" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="/home" title="Home" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/home" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/home" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-house-door-fill-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
 
@@ -100,8 +100,32 @@
     <nav class="nav flex-column">
         <AuthorizeView>
             <Authorized>
+                @* System Administration Menu Items *@
+                @if (isSystemAdministrator)
+                {
+                    <div class="nav-item px-3">
+                        <a class="nav-link @(GetActiveMenuItemFromUrl() == "system-admin" ? "active" : "")" href="system-admin" data-enhance-nav="false">
+                            <span class="bi bi-shield-lock-fill" aria-hidden="true"></span> System Administration
+                        </a>
+                    </div>
+                }
+
+                @if (isSystemAdministrator || isSystemModerator)
+                {
+                    <div class="nav-item px-3">
+                        <a class="nav-link @(GetActiveMenuItemFromUrl() == "system-moderator" ? "active" : "")" href="system-moderator" data-enhance-nav="false">
+                            <span class="bi bi-shield-check" aria-hidden="true"></span> System Moderator
+                        </a>
+                    </div>
+                }
+
+                @if (isSystemAdministrator || isSystemModerator)
+                {
+                    <hr class="nav-divider" />
+                }
+
                 <div class="nav-item px-3">
-                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "/" ? "active" : "")" href="/" data-enhance-nav="false">
+                    <a class="nav-link @(GetActiveMenuItemFromUrl() == "/home" ? "active" : "")" href="/home" data-enhance-nav="false">
                         <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
                     </a>
                 </div>
@@ -157,10 +181,10 @@
                     </form>
                 </div>
 
-                <hr class="nav-divider" />
-
                 @if (userGroups != null && userGroups.Any())
                 {
+                    <hr class="nav-divider" />
+
                     @foreach (var groupUser in userGroups)
                     {
                         <div class="nav-item px-3">
@@ -206,6 +230,8 @@
     private string? currentUserDisplayName;
     private int unreadNotificationCount = 0;
     private List<GroupUser>? userGroups;
+    private bool isSystemAdministrator = false;
+    private bool isSystemModerator = false;
 
     private string? NavMenuCssClass => showNavMenu ? "nav-scrollable show" : "nav-scrollable";
 
@@ -263,6 +289,13 @@
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             currentUser = await userManager.GetUserAsync(authState.User);
 
+            // Check user roles
+            if (currentUser != null)
+            {
+                isSystemAdministrator = await userManager.IsInRoleAsync(currentUser, "SystemAdministrator");
+                isSystemModerator = await userManager.IsInRoleAsync(currentUser, "SystemModerator");
+            }
+
             // Initialize notification badge service
             if (currentUser != null)
             {
@@ -315,12 +348,18 @@
 
         if (string.IsNullOrEmpty(path))
             _activeMenuItem = "/";
+        else if (path.Equals("home", StringComparison.OrdinalIgnoreCase))
+            _activeMenuItem = "/home";
         else if (path.Equals("Account/Login", StringComparison.OrdinalIgnoreCase))
             _activeMenuItem = "/Account/Login";
         else if (path.Equals("Account/Register", StringComparison.OrdinalIgnoreCase))
             _activeMenuItem = "/Account/Register";
         else if (path.Equals("Account/Manage", StringComparison.OrdinalIgnoreCase))
             _activeMenuItem = "/Account/Manage";
+        else if (path.Equals("system-admin", StringComparison.OrdinalIgnoreCase))
+            _activeMenuItem = "system-admin";
+        else if (path.Equals("system-moderator", StringComparison.OrdinalIgnoreCase))
+            _activeMenuItem = "system-moderator";
         else if (path.Equals("friends", StringComparison.OrdinalIgnoreCase))
             _activeMenuItem = "friends";
         else if (path.Equals("groups", StringComparison.OrdinalIgnoreCase))

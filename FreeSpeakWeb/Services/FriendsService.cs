@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,7 @@ namespace FreeSpeakWeb.Services
         private readonly NotificationService _notificationService;
         private readonly UserPreferenceService _userPreferenceService;
         private readonly FriendshipCacheService _friendshipCache;
+        private readonly IAuditLogRepository _auditLogRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FriendsService"/> class.
@@ -26,13 +28,15 @@ namespace FreeSpeakWeb.Services
         /// <param name="notificationService">Service for sending notifications.</param>
         /// <param name="userPreferenceService">Service for user display preferences.</param>
         /// <param name="friendshipCache">Cache service for friend lists.</param>
+        /// <param name="auditLogRepository">Repository for audit log operations.</param>
         public FriendsService(
             IFriendshipRepository friendshipRepository,
             IUserRepository userRepository,
             IDbContextFactory<ApplicationDbContext> contextFactory,
             NotificationService notificationService,
             UserPreferenceService userPreferenceService,
-            FriendshipCacheService friendshipCache)
+            FriendshipCacheService friendshipCache,
+            IAuditLogRepository auditLogRepository)
         {
             _friendshipRepository = friendshipRepository;
             _userRepository = userRepository;
@@ -40,6 +44,7 @@ namespace FreeSpeakWeb.Services
             _notificationService = notificationService;
             _userPreferenceService = userPreferenceService;
             _friendshipCache = friendshipCache;
+            _auditLogRepository = auditLogRepository;
         }
 
         /// <summary>
@@ -109,6 +114,14 @@ namespace FreeSpeakWeb.Services
                 );
             }
 
+            // Log friend request sent to audit log
+            await _auditLogRepository.LogActionAsync(requesterId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
+            {
+                ActionType = "Sent",
+                TargetUserId = addresseeId,
+                IsInitiator = true
+            });
+
             return (true, null);
         }
 
@@ -173,6 +186,14 @@ namespace FreeSpeakWeb.Services
                 );
             }
 
+            // Log friend request accepted to audit log
+            await _auditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
+            {
+                ActionType = "Accepted",
+                TargetUserId = friendship.RequesterId,
+                IsInitiator = false
+            });
+
             return (true, null);
         }
 
@@ -205,6 +226,14 @@ namespace FreeSpeakWeb.Services
             friendship.RespondedAt = DateTime.UtcNow;
 
             await _friendshipRepository.UpdateAsync(friendship);
+
+            // Log friend request declined to audit log
+            await _auditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
+            {
+                ActionType = "Declined",
+                TargetUserId = friendship.RequesterId,
+                IsInitiator = false
+            });
 
             return (true, null);
         }

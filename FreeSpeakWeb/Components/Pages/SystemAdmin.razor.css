@@ -1,0 +1,4 @@
+/* Ensure the table container allows dropdowns to overflow */
+.table-responsive {
+    overflow: visible !important;
+}

@@ -69,12 +69,13 @@ namespace FreeSpeakWeb.Tests.Services
                 CreateMockUserPreferenceService(),
                 CreateMockWebHostEnvironment(),
                 CreateMockPostNotificationHelper(),
-                CreateMockGroupAccessValidator(dbFactory));
+                CreateMockGroupAccessValidator(dbFactory),
+                MockRepositories.CreateMockAuditLogRepository().Object);
         }
 
         private GroupBannedMemberService CreateGroupBannedMemberService(IDbContextFactory<ApplicationDbContext> dbFactory)
         {
-            return new GroupBannedMemberService(dbFactory, CreateMockLogger<GroupBannedMemberService>());
+            return new GroupBannedMemberService(dbFactory, CreateMockLogger<GroupBannedMemberService>(), MockRepositories.CreateMockAuditLogRepository().Object);
         }
 
         #endregion
