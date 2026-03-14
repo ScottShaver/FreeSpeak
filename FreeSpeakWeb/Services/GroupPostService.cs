@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,7 @@ namespace FreeSpeakWeb.Services
         private readonly IWebHostEnvironment _environment;
         private readonly PostNotificationHelper _notificationHelper;
         private readonly GroupAccessValidator _accessValidator;
+        private readonly IAuditLogRepository _auditLogRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupPostService"/> class.
@@ -40,6 +42,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="environment">Web hosting environment information.</param>
         /// <param name="notificationHelper">Helper for creating post-related notifications.</param>
         /// <param name="accessValidator">Validator for group access permissions.</param>
+        /// <param name="auditLogRepository">Repository for audit log operations.</param>
         public GroupPostService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             IGroupPostRepository<GroupPost, GroupPostImage> postRepository,
@@ -53,7 +56,8 @@ namespace FreeSpeakWeb.Services
             UserPreferenceService userPreferenceService,
             IWebHostEnvironment environment,
             PostNotificationHelper notificationHelper,
-            GroupAccessValidator accessValidator)
+            GroupAccessValidator accessValidator,
+            IAuditLogRepository auditLogRepository)
         {
             _contextFactory = contextFactory;
             _postRepository = postRepository;
@@ -68,6 +72,7 @@ namespace FreeSpeakWeb.Services
             _environment = environment;
             _notificationHelper = notificationHelper;
             _accessValidator = accessValidator;
+            _auditLogRepository = auditLogRepository;
         }
 
         #region Post Operations
@@ -128,7 +133,17 @@ namespace FreeSpeakWeb.Services
                 await _groupRepository.UpdateLastActiveAsync(groupId);
 
                 _logger.LogInformation("Group post created by user {AuthorId} in group {GroupId}: Post ID {PostId}", authorId, groupId, result.Post.Id);
-                return (true, null, result.Post);
+
+                                // Log group post creation to audit log
+                                await _auditLogRepository.LogActionAsync(authorId, ActionCategory.UserGroupPost, new UserGroupPostDetails
+                                {
+                                    GroupId = groupId,
+                                    PostId = result.Post.Id,
+                                    ContentSummary = content?.Length > 100 ? content.Substring(0, 100) + "..." : content,
+                                    HasMedia = imageUrls != null && imageUrls.Any()
+                                });
+
+                                return (true, null, result.Post);
             }
             catch (Exception ex)
             {

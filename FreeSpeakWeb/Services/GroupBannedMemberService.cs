@@ -1,19 +1,34 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Data.AuditLogDetails;
+using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
 {
+    /// <summary>
+    /// Service for managing banned members in groups.
+    /// Handles banning, unbanning, and checking ban status of users.
+    /// </summary>
     public class GroupBannedMemberService
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupBannedMemberService> _logger;
+        private readonly IAuditLogRepository _auditLogRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupBannedMemberService"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording service operations.</param>
+        /// <param name="auditLogRepository">Repository for audit log operations.</param>
         public GroupBannedMemberService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<GroupBannedMemberService> logger)
+            ILogger<GroupBannedMemberService> logger,
+            IAuditLogRepository auditLogRepository)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _auditLogRepository = auditLogRepository;
         }
 
         /// <summary>
@@ -65,6 +80,9 @@ namespace FreeSpeakWeb.Services
                     return (false, "User is already banned from this group.");
                 }
 
+                // Get user details for audit log
+                var bannedUser = await context.Users.FindAsync(userId);
+
                 // Create ban record
                 var bannedMember = new GroupBannedMember
                 {
@@ -81,6 +99,17 @@ namespace FreeSpeakWeb.Services
                 await context.SaveChangesAsync();
 
                 _logger.LogInformation("User {UserId} banned from group {GroupId} by {BannedByUserId}", userId, groupId, bannedByUserId);
+
+                // Log ban action to audit log
+                await _auditLogRepository.LogActionAsync(bannedByUserId, ActionCategory.GroupAdminBanUser, new GroupAdminBanUserDetails
+                {
+                    GroupId = groupId,
+                    GroupName = group?.Name ?? string.Empty,
+                    BannedUserId = userId,
+                    BannedUserDisplayName = bannedUser != null ? $"{bannedUser.FirstName} {bannedUser.LastName}" : null,
+                    IsPermanent = true
+                });
+
                 return (true, null);
             }
             catch (Exception ex)

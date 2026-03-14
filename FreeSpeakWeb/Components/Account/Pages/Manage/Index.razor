@@ -4,6 +4,8 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
+@using FreeSpeakWeb.Repositories.Abstractions
 @using FreeSpeakWeb.Services
 
 @inject UserManager<ApplicationUser> UserManager
@@ -15,6 +17,7 @@
 @inject NavigationManager NavigationManager
 @inject ILogger<Index> Logger
 @inject NavigationStateService NavigationState
+@inject IAuditLogRepository AuditLogRepository
 
 <PageTitle>@SiteSettings.Value.SiteName - Profile</PageTitle>
 
@@ -169,6 +172,18 @@
             {
                 user.ProfilePictureUrl = result.RelativeUrl;
                 await UserManager.UpdateAsync(user);
+
+                // Log profile picture update to audit log
+                await AuditLogRepository.LogActionAsync(user.Id, ActionCategory.UserUpload, new UserUploadDetails
+                {
+                    UploadType = "ProfilePicture",
+                    FileName = selectedFile.Name,
+                    ContentType = selectedFile.ContentType,
+                    FileSizeBytes = selectedFile.Size,
+                    Success = true,
+                    StoragePath = result.RelativeUrl
+                });
+
                 statusMessage = "Your profile picture has been updated";
                 selectedFile = null;
                 profilePictureError = null;
@@ -275,6 +290,14 @@
                 statusMessage = "Error: Failed to update profile.";
                 return;
             }
+
+            // Log profile update to audit log
+            await AuditLogRepository.LogActionAsync(user.Id, ActionCategory.UserProfileChange, new UserProfileChangeDetails
+            {
+                FieldName = "Profile",
+                Notes = "Profile information updated"
+            });
+
             statusMessage = "Your profile has been updated";
         }
     }

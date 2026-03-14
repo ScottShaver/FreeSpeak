@@ -24,14 +24,10 @@
                                     class="form-select" 
                                     @bind="selectedActionCategory">
                                 <option value="">All Categories</option>
-                                <option value="Authentication">Authentication</option>
-                                <option value="ProfileUpdate">ProfileUpdate</option>
-                                <option value="RoleChange">RoleChange</option>
-                                <option value="ContentCreation">ContentCreation</option>
-                                <option value="ContentModeration">ContentModeration</option>
-                                <option value="AccountLockout">AccountLockout</option>
-                                <option value="SecurityEvent">SecurityEvent</option>
-                                <option value="SystemConfiguration">SystemConfiguration</option>
+                                @foreach (var category in Enum.GetValues<ActionCategory>())
+                                {
+                                    <option value="@category.ToString()">@category.ToString()</option>
+                                }
                             </select>
                         </div>
                         <div class="col-md-3">

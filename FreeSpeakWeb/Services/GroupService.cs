@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,7 @@ namespace FreeSpeakWeb.Services
         private readonly IUserRepository _userRepository;
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupService> _logger;
+        private readonly IAuditLogRepository _auditLogRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupService"/> class.
@@ -22,16 +24,19 @@ namespace FreeSpeakWeb.Services
         /// <param name="userRepository">Repository for user operations.</param>
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording service operations.</param>
+        /// <param name="auditLogRepository">Repository for audit log operations.</param>
         public GroupService(
             IGroupRepository groupRepository,
             IUserRepository userRepository,
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<GroupService> logger)
+            ILogger<GroupService> logger,
+            IAuditLogRepository auditLogRepository)
         {
             _groupRepository = groupRepository;
             _userRepository = userRepository;
             _contextFactory = contextFactory;
             _logger = logger;
+            _auditLogRepository = auditLogRepository;
         }
 
         #region Create Groups
@@ -114,6 +119,17 @@ namespace FreeSpeakWeb.Services
 
                 _logger.LogInformation("Group created: {GroupId} '{GroupName}' by user {CreatorId}", 
                     group.Id, group.Name, creatorId);
+
+                // Log group creation to audit log
+                await _auditLogRepository.LogActionAsync(creatorId, ActionCategory.GroupAdminCreateGroup, new GroupAdminCreateGroupDetails
+                {
+                    GroupId = group.Id,
+                    GroupName = group.Name,
+                    Description = description?.Length > 200 ? description.Substring(0, 200) + "..." : description,
+                    IsPublic = isPublic,
+                    IsHidden = isHidden,
+                    RequiresJoinApproval = requiresJoinApproval
+                });
 
                 return (true, null, group);
             }
@@ -400,6 +416,11 @@ namespace FreeSpeakWeb.Services
                     return (false, "Only the group creator can update group settings.");
                 }
 
+                // Track changes for audit log
+                var changedFields = new List<string>();
+                var oldName = group.Name;
+                var oldIsPublic = group.IsPublic;
+
                 // Update fields if provided
                 if (!string.IsNullOrWhiteSpace(name))
                 {
@@ -410,47 +431,95 @@ namespace FreeSpeakWeb.Services
                     {
                         return (false, "A group with this name already exists.");
                     }
+                    if (group.Name != name)
+                    {
+                        changedFields.Add("Name");
+                    }
                     group.Name = name;
                 }
 
                 if (!string.IsNullOrWhiteSpace(description))
                 {
+                    if (group.Description != description)
+                    {
+                        changedFields.Add("Description");
+                    }
                     group.Description = description;
                 }
 
                 if (isPublic.HasValue)
                 {
+                    if (group.IsPublic != isPublic.Value)
+                    {
+                        changedFields.Add("IsPublic");
+                    }
                     group.IsPublic = isPublic.Value;
                 }
 
                 if (isHidden.HasValue)
                 {
+                    if (group.IsHidden != isHidden.Value)
+                    {
+                        changedFields.Add("IsHidden");
+                    }
                     group.IsHidden = isHidden.Value;
                 }
 
                 if (requiresJoinApproval.HasValue)
                 {
+                    if (group.RequiresJoinApproval != requiresJoinApproval.Value)
+                    {
+                        changedFields.Add("RequiresJoinApproval");
+                    }
                     group.RequiresJoinApproval = requiresJoinApproval.Value;
                 }
 
                 if (headerImageUrl != null)
                 {
+                    if (group.HeaderImageUrl != headerImageUrl)
+                    {
+                        changedFields.Add("HeaderImageUrl");
+                    }
                     group.HeaderImageUrl = headerImageUrl;
                 }
 
                 if (verticalHeaderImageUrl != null)
                 {
+                    if (group.VerticalHeaderImageUrl != verticalHeaderImageUrl)
+                    {
+                        changedFields.Add("VerticalHeaderImageUrl");
+                    }
                     group.VerticalHeaderImageUrl = verticalHeaderImageUrl;
                 }
 
                 if (websiteUrl != null)
                 {
+                    if (group.WebsiteUrl != websiteUrl)
+                    {
+                        changedFields.Add("WebsiteUrl");
+                    }
                     group.WebsiteUrl = websiteUrl;
                 }
 
                 await context.SaveChangesAsync();
 
                 _logger.LogInformation("Group {GroupId} updated by user {UserId}", groupId, userId);
+
+                // Log group edit to audit log if changes were made
+                if (changedFields.Count > 0)
+                {
+                    await _auditLogRepository.LogActionAsync(userId, ActionCategory.GroupAdminEditGroup, new GroupAdminEditGroupDetails
+                    {
+                        GroupId = groupId,
+                        GroupName = group.Name,
+                        ChangedFields = changedFields,
+                        OldName = changedFields.Contains("Name") ? oldName : null,
+                        NewName = changedFields.Contains("Name") ? group.Name : null,
+                        OldIsPublic = changedFields.Contains("IsPublic") ? oldIsPublic : null,
+                        NewIsPublic = changedFields.Contains("IsPublic") ? group.IsPublic : null
+                    });
+                }
+
                 return (true, null);
             }
             catch (Exception ex)

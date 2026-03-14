@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,17 +11,20 @@ namespace FreeSpeakWeb.Services
         private readonly IGroupMemberRepository _memberRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly ILogger<GroupMemberService> _logger;
+        private readonly IAuditLogRepository _auditLogRepository;
 
         public GroupMemberService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             IGroupMemberRepository memberRepository,
             IGroupRepository groupRepository,
-            ILogger<GroupMemberService> logger)
+            ILogger<GroupMemberService> logger,
+            IAuditLogRepository auditLogRepository)
         {
             _contextFactory = contextFactory;
             _memberRepository = memberRepository;
             _groupRepository = groupRepository;
             _logger = logger;
+            _auditLogRepository = auditLogRepository;
         }
 
         #region Join Requests
@@ -76,6 +80,15 @@ namespace FreeSpeakWeb.Services
 
                 _logger.LogInformation("Join request {RequestId} created for group {GroupId} by user {UserId}", 
                     request.Id, groupId, userId);
+
+                // Log join request to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserGroupRequests, new UserGroupRequestsDetails
+                {
+                    ActionType = "RequestSubmitted",
+                    GroupId = groupId,
+                    GroupName = group.Name,
+                    RequiresApproval = true
+                });
 
                 return (true, null, request);
             }
@@ -143,6 +156,7 @@ namespace FreeSpeakWeb.Services
 
                 var request = await context.GroupJoinRequests
                     .Include(jr => jr.Group)
+                    .Include(jr => jr.User)
                     .FirstOrDefaultAsync(jr => jr.Id == requestId);
 
                 if (request == null)
@@ -172,6 +186,18 @@ namespace FreeSpeakWeb.Services
                 await context.SaveChangesAsync();
 
                 _logger.LogInformation("Join request {RequestId} approved by user {ApproverId}", requestId, approverId);
+
+                // Log join request approval to audit log
+                await _auditLogRepository.LogActionAsync(approverId, ActionCategory.GroupAdminApproveJoinRequest, new GroupAdminApproveJoinRequestDetails
+                {
+                    GroupId = request.GroupId,
+                    GroupName = request.Group.Name,
+                    JoinRequestId = requestId,
+                    ApprovedUserId = request.UserId,
+                    ApprovedUserDisplayName = request.User != null ? $"{request.User.FirstName} {request.User.LastName}" : null,
+                    RequestedAt = request.RequestedAt
+                });
+
                 return (true, null);
             }
             catch (Exception ex)
@@ -194,6 +220,7 @@ namespace FreeSpeakWeb.Services
 
                 var request = await context.GroupJoinRequests
                     .Include(jr => jr.Group)
+                    .Include(jr => jr.User)
                     .FirstOrDefaultAsync(jr => jr.Id == requestId);
 
                 if (request == null)
@@ -211,10 +238,29 @@ namespace FreeSpeakWeb.Services
                     return (false, "Only group creator or admins can reject join requests.");
                 }
 
+                // Capture details before removing
+                var groupId = request.GroupId;
+                var groupName = request.Group.Name;
+                var deniedUserId = request.UserId;
+                var deniedUserDisplayName = request.User != null ? $"{request.User.FirstName} {request.User.LastName}" : null;
+                var requestedAt = request.RequestedAt;
+
                 context.GroupJoinRequests.Remove(request);
                 await context.SaveChangesAsync();
 
                 _logger.LogInformation("Join request {RequestId} rejected by user {RejecterId}", requestId, rejecterId);
+
+                // Log join request denial to audit log
+                await _auditLogRepository.LogActionAsync(rejecterId, ActionCategory.GroupAdminDenyJoinRequest, new GroupAdminDenyJoinRequestDetails
+                {
+                    GroupId = groupId,
+                    GroupName = groupName,
+                    JoinRequestId = requestId,
+                    DeniedUserId = deniedUserId,
+                    DeniedUserDisplayName = deniedUserDisplayName,
+                    RequestedAt = requestedAt
+                });
+
                 return (true, null);
             }
             catch (Exception ex)
@@ -336,7 +382,19 @@ namespace FreeSpeakWeb.Services
                     return (false, "This group requires approval to join. Please submit a join request.");
                 }
 
-                return await AddMemberAsync(groupId, userId);
+                var result = await AddMemberAsync(groupId, userId);
+                if (result.Success)
+                {
+                    // Log direct group join to audit log
+                    await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserGroupRequests, new UserGroupRequestsDetails
+                    {
+                        ActionType = "DirectJoin",
+                        GroupId = groupId,
+                        GroupName = group.Name,
+                        RequiresApproval = false
+                    });
+                }
+                return result;
             }
             catch (Exception ex)
             {
@@ -446,6 +504,7 @@ namespace FreeSpeakWeb.Services
                 using var context = await _contextFactory.CreateDbContextAsync();
 
                 var groupUser = await context.GroupUsers
+                    .Include(gu => gu.Group)
                     .FirstOrDefaultAsync(gu => gu.GroupId == groupId && gu.UserId == userId);
 
                 if (groupUser == null)
@@ -453,10 +512,24 @@ namespace FreeSpeakWeb.Services
                     return (false, "You are not a member of this group.");
                 }
 
+                var isFirstAgreement = !groupUser.HasAgreedToRules;
                 groupUser.HasAgreedToRules = true;
                 await context.SaveChangesAsync();
 
                 _logger.LogInformation("User {UserId} agreed to rules for group {GroupId}", userId, groupId);
+
+                // Get rule count for audit log
+                var ruleCount = await context.GroupRules.CountAsync(r => r.GroupId == groupId);
+
+                // Log agree to rules to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserGroupAgreeToRules, new UserGroupAgreeToRulesDetails
+                {
+                    GroupId = groupId,
+                    GroupName = groupUser.Group?.Name ?? string.Empty,
+                    RuleCount = ruleCount,
+                    IsFirstAgreement = isFirstAgreement
+                });
+
                 return (true, null);
             }
             catch (Exception ex)
@@ -581,6 +654,7 @@ namespace FreeSpeakWeb.Services
                 }
 
                 var groupUser = await context.GroupUsers
+                    .Include(gu => gu.User)
                     .FirstOrDefaultAsync(gu => gu.GroupId == groupId && gu.UserId == targetUserId);
 
                 if (groupUser == null)
@@ -588,11 +662,29 @@ namespace FreeSpeakWeb.Services
                     return (false, "User is not a member of this group.");
                 }
 
+                // Determine old role for audit
+                var oldRole = groupUser.IsAdmin ? "Admin" : (groupUser.IsModerator ? "Moderator" : "Member");
+
                 groupUser.IsAdmin = isAdmin;
                 await context.SaveChangesAsync();
 
+                // Determine new role for audit
+                var newRole = isAdmin ? "Admin" : (groupUser.IsModerator ? "Moderator" : "Member");
+
                 _logger.LogInformation("User {TargetUserId} admin status set to {IsAdmin} in group {GroupId} by {RequesterId}", 
                     targetUserId, isAdmin, groupId, requesterId);
+
+                // Log role change to audit log
+                await _auditLogRepository.LogActionAsync(requesterId, ActionCategory.GroupAdminChangeMemberRole, new GroupAdminChangeMemberRoleDetails
+                {
+                    GroupId = groupId,
+                    GroupName = group.Name,
+                    TargetUserId = targetUserId,
+                    TargetUserDisplayName = groupUser.User != null ? $"{groupUser.User.FirstName} {groupUser.User.LastName}" : null,
+                    OldRole = oldRole,
+                    NewRole = newRole
+                });
+
                 return (true, null);
             }
             catch (Exception ex)
@@ -632,6 +724,7 @@ namespace FreeSpeakWeb.Services
                 }
 
                 var groupUser = await context.GroupUsers
+                    .Include(gu => gu.User)
                     .FirstOrDefaultAsync(gu => gu.GroupId == groupId && gu.UserId == targetUserId);
 
                 if (groupUser == null)
@@ -639,11 +732,29 @@ namespace FreeSpeakWeb.Services
                     return (false, "User is not a member of this group.");
                 }
 
+                // Determine old role for audit
+                var oldRole = groupUser.IsAdmin ? "Admin" : (groupUser.IsModerator ? "Moderator" : "Member");
+
                 groupUser.IsModerator = isModerator;
                 await context.SaveChangesAsync();
 
+                // Determine new role for audit
+                var newRole = groupUser.IsAdmin ? "Admin" : (isModerator ? "Moderator" : "Member");
+
                 _logger.LogInformation("User {TargetUserId} moderator status set to {IsModerator} in group {GroupId} by {RequesterId}", 
                     targetUserId, isModerator, groupId, requesterId);
+
+                // Log role change to audit log
+                await _auditLogRepository.LogActionAsync(requesterId, ActionCategory.GroupAdminChangeMemberRole, new GroupAdminChangeMemberRoleDetails
+                {
+                    GroupId = groupId,
+                    GroupName = group.Name,
+                    TargetUserId = targetUserId,
+                    TargetUserDisplayName = groupUser.User != null ? $"{groupUser.User.FirstName} {groupUser.User.LastName}" : null,
+                    OldRole = oldRole,
+                    NewRole = newRole
+                });
+
                 return (true, null);
             }
             catch (Exception ex)
@@ -697,19 +808,27 @@ namespace FreeSpeakWeb.Services
 
                 await context.SaveChangesAsync();
 
-                _logger.LogInformation("User {UserId} left group {GroupId}", userId, groupId);
-                return (true, null);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error leaving group {GroupId} by user {UserId}", groupId, userId);
-                return (false, "An error occurred while leaving the group.");
-            }
-        }
+                                // Log group leave to audit log
+                                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserGroupLeave, new UserGroupLeaveDetails
+                                {
+                                    LeaveType = "Voluntary",
+                                    GroupId = groupId,
+                                    GroupName = group.Name
+                                });
 
-        /// <summary>
-        /// Remove a member from a group (by admin/creator)
-        /// </summary>
+                                _logger.LogInformation("User {UserId} left group {GroupId}", userId, groupId);
+                                return (true, null);
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex, "Error leaving group {GroupId} by user {UserId}", groupId, userId);
+                                return (false, "An error occurred while leaving the group.");
+                            }
+                        }
+
+                        /// <summary>
+                        /// Remove a member from a group (by admin/creator)
+                        /// </summary>
         public async Task<(bool Success, string? ErrorMessage)> RemoveMemberAsync(
             int groupId,
             string targetUserId,

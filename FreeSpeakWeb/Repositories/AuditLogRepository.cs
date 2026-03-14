@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,6 +59,21 @@ namespace FreeSpeakWeb.Repositories
                     ex.GetType().Name, actionCategory, userId, ex.Message);
                 // Don't throw - audit logging should not break the main flow
             }
+        }
+
+        /// <summary>
+        /// Creates a new audit log entry for a user action using strongly-typed category and details.
+        /// </summary>
+        /// <typeparam name="TDetails">The type of the action details object (from AuditLogDetails namespace).</typeparam>
+        /// <param name="userId">The unique identifier of the user performing the action.</param>
+        /// <param name="actionCategory">The category of the action from the ActionCategory enum.</param>
+        /// <param name="details">The strongly-typed details object containing action-specific information.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public async Task LogActionAsync<TDetails>(string userId, ActionCategory actionCategory, TDetails details) where TDetails : class
+        {
+            var actionCategoryString = actionCategory.ToString();
+            var actionDetails = AuditLogDetailsSerializer.ToJson(details);
+            await LogActionAsync(userId, actionCategoryString, actionDetails);
         }
 
         /// <summary>

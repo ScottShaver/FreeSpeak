@@ -1,0 +1,39 @@
+namespace FreeSpeakWeb.Data.AuditLogDetails
+{
+    /// <summary>
+    /// Contains details for group moderator approve post audit log entries.
+    /// Tracks when moderators approve posts in moderated groups.
+    /// </summary>
+    public class GroupModeratorApprovePostDetails
+    {
+        /// <summary>
+        /// Gets or sets the unique identifier of the group.
+        /// </summary>
+        public int GroupId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the group.
+        /// </summary>
+        public string GroupName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the unique identifier of the approved post.
+        /// </summary>
+        public int PostId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the unique identifier of the post author.
+        /// </summary>
+        public string PostAuthorId { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the display name of the post author.
+        /// </summary>
+        public string? PostAuthorDisplayName { get; set; }
+
+        /// <summary>
+        /// Gets or sets a brief summary of the post content.
+        /// </summary>
+        public string? ContentSummary { get; set; }
+    }
+}

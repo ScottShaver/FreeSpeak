@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Components.SocialFeed;
 using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Mapping;
@@ -28,6 +29,7 @@ namespace FreeSpeakWeb.Services
         private readonly NotificationService _notificationService;
         private readonly UserPreferenceService _userPreferenceService;
         private readonly PostNotificationHelper _notificationHelper;
+        private readonly IAuditLogRepository _auditLogRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PostService"/> class.
@@ -46,6 +48,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="notificationService">Service for sending notifications.</param>
         /// <param name="userPreferenceService">Service for user display preferences.</param>
         /// <param name="notificationHelper">Helper for creating post-related notifications.</param>
+        /// <param name="auditLogRepository">Repository for audit log operations.</param>
         public PostService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             IFeedPostRepository<Post, PostImage> postRepository,
@@ -60,7 +63,8 @@ namespace FreeSpeakWeb.Services
             IWebHostEnvironment environment,
             NotificationService notificationService,
             UserPreferenceService userPreferenceService,
-            PostNotificationHelper notificationHelper)
+            PostNotificationHelper notificationHelper,
+            IAuditLogRepository auditLogRepository)
         {
             _contextFactory = contextFactory;
             _postRepository = postRepository;
@@ -76,6 +80,7 @@ namespace FreeSpeakWeb.Services
             _notificationService = notificationService;
             _userPreferenceService = userPreferenceService;
             _notificationHelper = notificationHelper;
+            _auditLogRepository = auditLogRepository;
         }
 
         #region Post Operations
@@ -123,7 +128,18 @@ namespace FreeSpeakWeb.Services
                 }
 
                 _logger.LogInformation("Post created by user {AuthorId}: Post ID {PostId}", authorId, result.Post.Id);
-                return (true, null, result.Post);
+
+                                // Log post creation to audit log
+                                await _auditLogRepository.LogActionAsync(authorId, ActionCategory.UserPost, new UserPostDetails
+                                {
+                                    PostId = result.Post.Id,
+                                    Visibility = audienceType.ToString(),
+                                    ContentSummary = content?.Length > 100 ? content.Substring(0, 100) + "..." : content,
+                                    HasMedia = imageUrls != null && imageUrls.Any(),
+                                    MediaType = imageUrls != null && imageUrls.Any() ? "Image" : null
+                                });
+
+                                return (true, null, result.Post);
             }
             catch (Exception ex)
             {
@@ -407,6 +423,15 @@ namespace FreeSpeakWeb.Services
                 context.Posts.Remove(post);
 
                 await context.SaveChangesAsync();
+
+                // Log post deletion to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserPost, new UserPostDetails
+                {
+                    PostId = postId,
+                    Visibility = post.AudienceType.ToString(),
+                    ContentSummary = "[DELETED] " + (post.Content?.Length > 80 ? post.Content.Substring(0, 80) + "..." : post.Content),
+                    HasMedia = post.Images.Any()
+                });
 
                 _logger.LogInformation("Post {PostId} and all related data deleted by user {UserId}", postId, userId);
                 return (true, null);

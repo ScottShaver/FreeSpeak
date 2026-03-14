@@ -1,6 +1,8 @@
 using FreeSpeakWeb.Components.Account.Pages;
 using FreeSpeakWeb.Components.Account.Pages.Manage;
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Data.AuditLogDetails;
+using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -51,10 +53,24 @@ namespace Microsoft.AspNetCore.Routing
             });
 
             accountGroup.MapPost("/Logout", async (
+                HttpContext context,
                 ClaimsPrincipal user,
                 [FromServices] SignInManager<ApplicationUser> signInManager,
+                [FromServices] UserManager<ApplicationUser> userManager,
+                [FromServices] IAuditLogRepository auditLogRepository,
                 [FromForm] string returnUrl) =>
             {
+                var appUser = await userManager.GetUserAsync(user);
+                if (appUser != null)
+                {
+                    // Log the logout to audit log before signing out
+                    await auditLogRepository.LogActionAsync(appUser.Id, ActionCategory.UserLogout, new UserLogoutDetails
+                    {
+                        LogoutMethod = "Manual",
+                        IpAddress = context.Connection.RemoteIpAddress?.ToString()
+                    });
+                }
+
                 await signInManager.SignOutAsync();
                 return TypedResults.LocalRedirect($"~/{returnUrl}");
             });
@@ -123,7 +139,8 @@ namespace Microsoft.AspNetCore.Routing
             manageGroup.MapPost("/DownloadPersonalData", async (
                 HttpContext context,
                 [FromServices] UserManager<ApplicationUser> userManager,
-                [FromServices] AuthenticationStateProvider authenticationStateProvider) =>
+                [FromServices] AuthenticationStateProvider authenticationStateProvider,
+                [FromServices] IAuditLogRepository auditLogRepository) =>
             {
                 var user = await userManager.GetUserAsync(context.User);
                 if (user is null)
@@ -133,6 +150,15 @@ namespace Microsoft.AspNetCore.Routing
 
                 var userId = await userManager.GetUserIdAsync(user);
                 downloadLogger.LogInformation("User with ID '{UserId}' asked for their personal data.", userId);
+
+                // Log the personal data download to audit log
+                await auditLogRepository.LogActionAsync(userId, ActionCategory.UserPersonalData, new UserPersonalDataDetails
+                {
+                    OperationType = "DataDownload",
+                    DataScope = "All",
+                    Success = true,
+                    IpAddress = context.Connection.RemoteIpAddress?.ToString()
+                });
 
                 // Only include personal data for download
                 var personalData = new Dictionary<string, string>();

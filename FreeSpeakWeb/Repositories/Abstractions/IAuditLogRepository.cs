@@ -18,6 +18,16 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         Task LogActionAsync(string userId, string actionCategory, string actionDetails);
 
         /// <summary>
+        /// Creates a new audit log entry for a user action using strongly-typed category and details.
+        /// </summary>
+        /// <typeparam name="TDetails">The type of the action details object (from AuditLogDetails namespace).</typeparam>
+        /// <param name="userId">The unique identifier of the user performing the action.</param>
+        /// <param name="actionCategory">The category of the action from the ActionCategory enum.</param>
+        /// <param name="details">The strongly-typed details object containing action-specific information.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        Task LogActionAsync<TDetails>(string userId, ActionCategory actionCategory, TDetails details) where TDetails : class;
+
+        /// <summary>
         /// Retrieves audit log entries for a specific user, ordered by most recent first.
         /// </summary>
         /// <param name="userId">The unique identifier of the user.</param>

@@ -81,7 +81,8 @@ namespace FreeSpeakWeb.Tests.Services
                 CreateMockWebHostEnvironment(),
                 CreateMockNotificationService(),
                 CreateMockUserPreferenceService(),
-                CreateMockPostNotificationHelper());
+                CreateMockPostNotificationHelper(),
+                MockRepositories.CreateMockAuditLogRepository().Object);
         }
 
         private GroupPostService CreateGroupPostService(IDbContextFactory<ApplicationDbContext> dbFactory)
@@ -99,7 +100,8 @@ namespace FreeSpeakWeb.Tests.Services
                 CreateMockUserPreferenceService(),
                 CreateMockWebHostEnvironment(),
                 CreateMockPostNotificationHelper(),
-                CreateMockGroupAccessValidator(dbFactory));
+                CreateMockGroupAccessValidator(dbFactory),
+                MockRepositories.CreateMockAuditLogRepository().Object);
         }
 
         private static UserNotification CreateTestNotification(

@@ -70,7 +70,8 @@ namespace FreeSpeakWeb.Tests.Services
                 CreateUserPreferenceService(repoFactory.ContextFactory),
                 CreateMockWebHostEnvironment(),
                 CreatePostNotificationHelper(repoFactory.ContextFactory),
-                repoFactory.CreateGroupAccessValidator());
+                repoFactory.CreateGroupAccessValidator(),
+                MockRepositories.CreateMockAuditLogRepository().Object);
         }
 
         #region Post Operations Tests

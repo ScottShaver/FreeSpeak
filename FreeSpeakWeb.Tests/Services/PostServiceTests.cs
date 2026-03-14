@@ -71,7 +71,8 @@ namespace FreeSpeakWeb.Tests.Services
                 CreateMockWebHostEnvironment(),
                 CreateNotificationService(repoFactory.ContextFactory),
                 CreateUserPreferenceService(repoFactory.ContextFactory),
-                CreatePostNotificationHelper(repoFactory.ContextFactory));
+                CreatePostNotificationHelper(repoFactory.ContextFactory),
+                MockRepositories.CreateMockAuditLogRepository().Object);
         }
 
         /// <summary>
@@ -100,7 +101,8 @@ namespace FreeSpeakWeb.Tests.Services
                 CreateMockWebHostEnvironment(),
                 CreateNotificationService(repoFactory.ContextFactory),
                 CreateUserPreferenceService(repoFactory.ContextFactory),
-                CreatePostNotificationHelper(repoFactory.ContextFactory));
+                CreatePostNotificationHelper(repoFactory.ContextFactory),
+                MockRepositories.CreateMockAuditLogRepository().Object);
         }
 
         #region Post Operations Tests

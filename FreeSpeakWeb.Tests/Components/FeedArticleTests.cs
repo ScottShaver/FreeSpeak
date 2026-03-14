@@ -73,7 +73,8 @@ namespace FreeSpeakWeb.Tests.Components
                 mockEnvironment.Object,
                 notificationService,
                 userPreferenceService,
-                postNotificationHelper
+                postNotificationHelper,
+                MockRepositories.CreateMockAuditLogRepository().Object
             );
 
             Services.AddSingleton(postService);
