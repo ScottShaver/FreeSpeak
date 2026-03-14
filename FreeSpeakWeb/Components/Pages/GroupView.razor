@@ -278,7 +278,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error initializing infinite scroll: {ex.Message}");
+                // Silently fail - infinite scroll optional
             }
         }
     }
@@ -325,7 +325,6 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading group information: {ex.Message}");
             group = null;
         }
         finally
@@ -355,7 +354,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading group posts: {ex.Message}");
+            // Silently fail - posts will show empty
         }
         finally
         {
@@ -393,7 +392,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading more group posts: {ex.Message}");
+            // Silently fail - pagination will stop
         }
         finally
         {

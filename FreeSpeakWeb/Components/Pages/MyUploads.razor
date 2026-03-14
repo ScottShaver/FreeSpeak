@@ -240,7 +240,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error initializing infinite scroll: {ex.Message}");
+                // Silently fail - infinite scroll optional
             }
         }
     }
@@ -280,7 +280,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error switching tabs: {ex.Message}");
+                // Silently fail - tab switch will show error state
             }
         }
     }
@@ -306,7 +306,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading pictures: {ex.Message}");
+            // Silently fail - pictures will show empty
         }
         finally
         {
@@ -350,7 +350,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading videos: {ex.Message}");
+            // Silently fail - videos will show empty
         }
         finally
         {

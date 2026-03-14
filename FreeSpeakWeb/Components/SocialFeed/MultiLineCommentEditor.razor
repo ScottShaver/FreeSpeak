@@ -165,7 +165,6 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error inserting emoji: {ex.Message}");
                 // Fallback to appending
                 CommentText += emoji;
                 if (module is not null)

@@ -2,6 +2,7 @@
 @using FreeSpeakWeb.Components.Shared
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Helpers
 @inject IJSRuntime JS
 @inject PostService PostService
 @inject UserPreferenceService UserPreferenceService
@@ -779,7 +780,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error copying link: {ex.Message}");
+            // Silently fail - clipboard copy optional
         }
     }
 
@@ -817,7 +818,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error toggling notifications: {ex.Message}");
+            // Silently fail - notification toggle optional
         }
     }
 
@@ -853,7 +854,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading likes: {ex.Message}");
+            // Silently fail - likes list optional
         }
         finally
         {
@@ -945,7 +946,7 @@
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error checking notification mute status: {ex.Message}");
+                    // Silently fail - mute status optional
                 }
             }
 
@@ -959,7 +960,7 @@
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error initializing content measurement: {ex.Message}");
+                    // Silently fail - content measurement optional
                 }
             }
         }
@@ -1013,7 +1014,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[FeedArticle] Error loading comments: {ex.Message}");
+            // Silently fail - comments optional
         }
         finally
         {
@@ -1023,60 +1024,12 @@
 
     private async Task<List<CommentDisplayModel>> BuildCommentModelsAsync(List<Comment> comments)
     {
-        var models = new List<CommentDisplayModel>();
-        foreach (var c in comments)
-        {
-            models.Add(await BuildCommentModelAsync(c));
-        }
-        return models;
-    }
-
-    private async Task<CommentDisplayModel> BuildCommentModelAsync(Comment comment)
-    {
-        // Load replies recursively using separate queries (same approach as modal)
-        var replies = await PostService.GetRepliesAsync(comment.Id);
-        var replyModels = new List<CommentDisplayModel>();
-
-        foreach (var reply in replies)
-        {
-            var replyModel = await BuildCommentModelAsync(reply); // Recursive call
-            replyModels.Add(replyModel);
-        }
-
-        // Get user display name
-        var userName = "Unknown";
-        if (comment.Author != null)
-        {
-            userName = await UserPreferenceService.FormatUserDisplayNameAsync(
-                comment.Author.Id,
-                comment.Author.FirstName,
-                comment.Author.LastName,
-                comment.Author.UserName ?? "Unknown"
-            );
-        }
-
-        // Get user's reaction
-        LikeType? userReaction = null;
-        if (!string.IsNullOrEmpty(CurrentUserId))
-        {
-            var userLike = await PostService.GetUserCommentReactionAsync(comment.Id, CurrentUserId);
-            userReaction = userLike;
-        }
-
-        return new CommentDisplayModel
-        {
-            CommentId = comment.Id,
-            UserName = userName,
-            UserImageUrl = comment.Author?.ProfilePictureUrl,
-            CommentAuthorId = comment.AuthorId,
-            CommentText = comment.Content,
-            ImageUrl = comment.ImageUrl,
-            Timestamp = comment.CreatedAt,
-            Replies = replyModels.Any() ? replyModels : null,
-            LikeCount = await PostService.GetCommentLikeCountAsync(comment.Id),
-            UserReaction = userReaction,
-            ReactionBreakdown = await PostService.GetCommentReactionBreakdownAsync(comment.Id)
-        };
+        // Use batch loading to reduce database round trips
+        return await CommentHelpers.BuildCommentDisplayModelsAsync(
+            comments,
+            PostService,
+            UserPreferenceService,
+            CurrentUserId);
     }
 
     public async ValueTask DisposeAsync()

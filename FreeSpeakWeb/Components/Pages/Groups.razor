@@ -536,11 +536,10 @@
                 jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/Groups.razor.js");
                 dotNetHelper = DotNetObjectReference.Create(this);
                 await jsModule.InvokeVoidAsync("initializeInfiniteScroll", (object?)null, dotNetHelper);
-                Console.WriteLine("Infinite scroll initialized for Groups page");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error initializing infinite scroll: {ex.Message}");
+                // Silently fail - infinite scroll not critical
             }
         }
     }
@@ -566,7 +565,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading user groups: {ex.Message}");
+            // Silently fail - user groups list optional
         }
     }
 
@@ -601,7 +600,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading group feed: {ex.Message}");
+            // Silently fail - feed will show empty
         }
         finally
         {
@@ -650,7 +649,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading more group posts: {ex.Message}");
+            // Silently fail - pagination will stop
         }
         finally
         {
@@ -749,7 +748,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading pinned group posts: {ex.Message}");
+            // Silently fail - pinned feed will show empty
         }
         finally
         {
@@ -821,7 +820,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading more pinned group posts: {ex.Message}");
+            // Silently fail - pagination will stop
         }
         finally
         {
@@ -852,7 +851,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading join requests: {ex.Message}");
+            // Silently fail - join requests will show empty
         }
         finally
         {
@@ -873,7 +872,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading join requests count: {ex.Message}");
+            // Silently fail - badge will not show
         }
     }
 
@@ -914,7 +913,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading suggested groups: {ex.Message}");
+            // Silently fail - suggested groups will show empty
         }
         finally
         {
@@ -950,7 +949,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error searching groups: {ex.Message}");
+            // Silently fail - search results will show empty
         }
         finally
         {
@@ -973,6 +972,11 @@
                 if (success)
                 {
                     AlertService.ShowSuccess("Join request sent successfully!");
+
+                    // Remove from both lists since request was sent
+                    suggestedGroups.RemoveAll(g => g.Id == group.Id);
+                    searchedGroups.RemoveAll(g => g.Id == group.Id);
+                    StateHasChanged();
                 }
                 else
                 {
@@ -998,7 +1002,6 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error joining group: {ex.Message}");
             AlertService.ShowError("An error occurred while joining the group.");
         }
     }
@@ -1025,7 +1028,6 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error cancelling join request: {ex.Message}");
             AlertService.ShowError("An error occurred while cancelling the join request.");
         }
     }
@@ -1078,24 +1080,20 @@
 
     private async Task HandleEditGroupPost(int postId)
     {
-        Console.WriteLine($"HandleEditGroupPost called with postId: {postId}");
-
         var post = groupPosts.FirstOrDefault(p => p.Id == postId);
         if (post == null)
         {
-            Console.WriteLine($"Post not found in groupPosts list, checking pinned posts");
             post = pinnedGroupPostsList.FirstOrDefault(p => p.Id == postId);
         }
 
         if (post != null)
         {
-            Console.WriteLine($"Group post found, editing functionality not yet implemented");
             await JSRuntime.InvokeVoidAsync("alert", "Group post editing will be implemented soon.");
             // TODO: Create GroupPostEditModal component similar to PostEditModal
         }
         else
         {
-            Console.WriteLine($"ERROR: Group post {postId} not found in any list");
+            // Post not found - silently ignore
         }
     }
 

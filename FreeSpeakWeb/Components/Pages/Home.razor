@@ -349,11 +349,10 @@
                 dotNetHelper = DotNetObjectReference.Create(this);
                 // Pass null for element since we're using window scroll now
                 await jsModule.InvokeVoidAsync("initializeInfiniteScroll", (object?)null, dotNetHelper);
-                Console.WriteLine("Infinite scroll initialized from Home.razor");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error initializing infinite scroll: {ex.Message}");
+                // Silently fail - infinite scroll not critical
             }
         }
     }
@@ -380,8 +379,7 @@
         }
         catch (Exception ex)
         {
-            // Log error (you might want to inject ILogger here)
-            Console.WriteLine($"Error loading posts: {ex.Message}");
+            // Silently fail - feed will show empty
         }
         finally
         {
@@ -410,7 +408,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading pinned posts: {ex.Message}");
+            // Silently fail - pinned feed will show empty
         }
         finally
         {
@@ -452,7 +450,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading more posts: {ex.Message}");
+            // Silently fail - pagination will stop
             currentPage--; // Revert page increment on error
         }
         finally
@@ -509,7 +507,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading reactions for post {post.Id}: {ex.Message}");
+                // Silently fail - reaction data optional
             }
         }
     }
@@ -531,7 +529,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading pinned status: {ex.Message}");
+            // Silently fail - pinned status optional
         }
     }
 
@@ -551,11 +549,16 @@
                     );
                     postAuthorNames[post.Id] = displayName;
                 }
+                else
+                {
+                    // Handle cases where author might be null (e.g., deleted user)
+                    postAuthorNames[post.Id] = "Unknown User";
+                }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading author names: {ex.Message}");
+            // Silently fail - author names optional
         }
     }
 
@@ -578,12 +581,12 @@
             }
             else
             {
-                Console.WriteLine($"Error pinning post: {result.ErrorMessage}");
+                // Silently fail - pinning unsuccessful
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error pinning post {postId}: {ex.Message}");
+            // Silently fail - pinning unsuccessful
         }
     }
 
@@ -606,12 +609,12 @@
             }
             else
             {
-                Console.WriteLine($"Error unpinning post: {result.ErrorMessage}");
+                // Silently fail - unpinning unsuccessful
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error unpinning post {postId}: {ex.Message}");
+            // Silently fail - unpinning unsuccessful
         }
     }
 
@@ -646,60 +649,20 @@
         try
         {
             var comments = await PostService.GetLastCommentsAsync(postId, count);
-            var commentModels = new List<CommentDisplayModel>();
 
-            foreach (var c in comments)
-            {
-                var commentModel = await BuildCommentDisplayModel(c);
-                commentModels.Add(commentModel);
-            }
+            // Use batch loading to reduce database round trips
+            var commentModels = await CommentHelpers.BuildCommentDisplayModelsAsync(
+                comments.ToList(),
+                PostService,
+                UserPreferenceService,
+                currentUserId);
 
             postComments[postId] = commentModels;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading comments for post {postId}: {ex.Message}");
+            // Silently fail - comments optional
         }
-    }
-
-    private async Task<CommentDisplayModel> BuildCommentDisplayModel(Comment comment)
-    {
-        // Load replies for this comment
-        var replies = await PostService.GetRepliesAsync(comment.Id);
-        var replyModels = new List<CommentDisplayModel>();
-
-        foreach (var reply in replies)
-        {
-            var replyModel = await BuildCommentDisplayModel(reply); // Recursive call for nested replies
-            replyModels.Add(replyModel);
-        }
-
-        return new CommentDisplayModel
-        {
-            CommentId = comment.Id,
-            UserName = await GetCommentAuthorName(comment),
-            UserImageUrl = comment.Author?.ProfilePictureUrl,
-            CommentAuthorId = comment.AuthorId,
-            CommentText = comment.Content,
-            Timestamp = comment.CreatedAt,
-            Replies = replyModels.Any() ? replyModels : null,
-            LikeCount = await PostService.GetCommentLikeCountAsync(comment.Id),
-            UserReaction = currentUserId != null ? await PostService.GetUserCommentReactionAsync(comment.Id, currentUserId) : null,
-            ReactionBreakdown = await PostService.GetCommentReactionBreakdownAsync(comment.Id)
-        };
-    }
-
-    private async Task<string> GetCommentAuthorName(Comment comment)
-    {
-        if (comment.Author == null) return "Unknown";
-
-        // Use the author's display name preference
-        return await UserPreferenceService.FormatUserDisplayNameAsync(
-            comment.Author.Id,
-            comment.Author.FirstName,
-            comment.Author.LastName,
-            comment.Author.UserName ?? "Unknown"
-        );
     }
 
     private async Task HandleReactionChanged(int postId, LikeType reactionType)
@@ -806,7 +769,6 @@
 
                 if (!uploadResult.Success)
                 {
-                    Console.WriteLine($"Failed to upload images: {uploadResult.ErrorMessage}");
                     showUploadProgress = false;
                     StateHasChanged();
                     return;
@@ -857,14 +819,12 @@
             }
             else
             {
-                Console.WriteLine($"Failed to create post: {result.ErrorMessage}");
                 showUploadProgress = false;
                 StateHasChanged();
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error creating post: {ex.Message}");
             showUploadProgress = false;
             StateHasChanged();
         }
@@ -892,25 +852,21 @@
 
     private void HandleEditPost(int postId)
     {
-        Console.WriteLine($"HandleEditPost called with postId: {postId}");
-
         var post = posts.FirstOrDefault(p => p.Id == postId);
         if (post == null)
         {
-            Console.WriteLine($"Post not found in posts list, checking pinned posts");
             post = pinnedPostsList.FirstOrDefault(p => p.Id == postId);
         }
 
         if (post != null)
         {
-            Console.WriteLine($"Post found, opening edit modal");
             editPost = post;
             showEditPost = true;
             StateHasChanged();
         }
         else
         {
-            Console.WriteLine($"ERROR: Post {postId} not found in any list");
+            // Post not found - silently ignore
         }
     }
 
@@ -955,7 +911,6 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error updating post: {ex.Message}");
             await JSRuntime.InvokeVoidAsync("alert", "An error occurred while updating the post.");
         }
     }

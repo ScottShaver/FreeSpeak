@@ -349,8 +349,6 @@
 
     private async Task HandleNotificationClick(UserNotification notification)
     {
-        Console.WriteLine($"[DEBUG] Notification clicked: Type={notification.Type}, Data={notification.Data}");
-
         if (currentUserId == null) return;
 
         // Mark as read if not already
@@ -377,12 +375,10 @@
                     PropertyNameCaseInsensitive = true 
                 };
                 var data = JsonSerializer.Deserialize<NotificationData>(notification.Data, options);
-                Console.WriteLine($"[DEBUG] Deserialized data: NavigationUrl={data?.NavigationUrl}, PostId={data?.PostId}, GroupPostId={data?.GroupPostId}, GroupId={data?.GroupId}");
 
                 // Handle navigation URL (for friend requests, etc.)
                 if (!string.IsNullOrEmpty(data?.NavigationUrl))
                 {
-                    Console.WriteLine($"[DEBUG] Navigating to: {data.NavigationUrl}");
                     NavigationManager.NavigateTo(data.NavigationUrl, forceLoad: true);
                     return;
                 }
@@ -454,14 +450,12 @@
             }
             catch (Exception ex)
             {
-                // Log error but don't crash
-                Console.WriteLine($"[DEBUG] Error parsing notification data: {ex.Message}");
-                Console.WriteLine($"[DEBUG] Exception details: {ex}");
+                // Silently fail - notification data parsing optional
             }
         }
         else
         {
-            Console.WriteLine("[DEBUG] Notification.Data is null or empty");
+            // Notification data is null or empty
         }
     }
 
@@ -493,7 +487,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error handling reaction: {ex.Message}");
+            // Silently fail - reaction change optional
         }
     }
 
@@ -525,7 +519,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error removing reaction: {ex.Message}");
+            // Silently fail - reaction removal optional
         }
     }
 
@@ -558,7 +552,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error handling group post reaction: {ex.Message}");
+            // Silently fail - reaction change optional
         }
     }
 
@@ -590,7 +584,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error removing group post reaction: {ex.Message}");
+            // Silently fail - reaction removal optional
         }
     }
 
@@ -610,7 +604,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error pinning group post: {ex.Message}");
+            // Silently fail - pinning optional
         }
     }
 
@@ -630,7 +624,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error unpinning group post: {ex.Message}");
+            // Silently fail - unpinning optional
         }
     }
 
@@ -656,7 +650,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error adding group post comment: {ex.Message}");
+            // Silently fail - comment addition optional
         }
     }
 
@@ -704,7 +698,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error pinning post: {ex.Message}");
+            // Silently fail - pinning optional
         }
     }
 
@@ -724,7 +718,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error unpinning post: {ex.Message}");
+            // Silently fail - unpinning optional
         }
     }
 
@@ -750,7 +744,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error adding comment: {ex.Message}");
+            // Silently fail - comment addition optional
         }
     }
 

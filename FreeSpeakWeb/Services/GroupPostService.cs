@@ -1198,6 +1198,52 @@ namespace FreeSpeakWeb.Services
             return like?.Type;
         }
 
+        /// <summary>
+        /// Gets multiple comments by their IDs in a single query.
+        /// This batch method reduces database round trips when loading comment trees.
+        /// </summary>
+        /// <param name="commentIds">Collection of comment IDs to retrieve.</param>
+        /// <returns>A list of comments matching the provided IDs.</returns>
+        public async Task<List<GroupPostComment>> GetCommentsByIdsAsync(IEnumerable<int> commentIds)
+        {
+            return await _commentRepository.GetByIdsAsync(commentIds, includeAuthor: true);
+        }
+
+        /// <summary>
+        /// Gets the like counts for multiple comments in a single query.
+        /// This batch method reduces database round trips when loading comment lists.
+        /// </summary>
+        /// <param name="commentIds">Collection of comment IDs to get counts for.</param>
+        /// <returns>A dictionary mapping each comment ID to its like count.</returns>
+        public async Task<Dictionary<int, int>> GetCommentLikeCountsAsync(IEnumerable<int> commentIds)
+        {
+            return await _commentLikeRepository.GetCountsForCommentsAsync(commentIds);
+        }
+
+        /// <summary>
+        /// Gets the user reactions for multiple comments in a single query.
+        /// This batch method reduces database round trips when loading comment lists.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <param name="commentIds">Collection of comment IDs to check reactions for.</param>
+        /// <returns>A dictionary mapping each comment ID to the user's reaction type (or null).</returns>
+        public async Task<Dictionary<int, LikeType?>> GetUserCommentReactionsAsync(string userId, IEnumerable<int> commentIds)
+        {
+            var likes = await _commentLikeRepository.GetUserLikesForCommentsAsync(userId, commentIds);
+            return likes.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.Type);
+        }
+
+        /// <summary>
+        /// Gets the reaction breakdowns for multiple comments in a single query.
+        /// This batch method reduces database round trips when loading comment lists.
+        /// </summary>
+        /// <param name="commentIds">Collection of comment IDs to get reaction breakdowns for.</param>
+        /// <returns>A dictionary mapping each comment ID to its reaction breakdown.</returns>
+        public async Task<Dictionary<int, Dictionary<LikeType, int>>> GetCommentReactionBreakdownsAsync(IEnumerable<int> commentIds)
+        {
+            return await _commentLikeRepository.GetReactionBreakdownsForCommentsAsync(commentIds);
+        }
+
         #endregion
 
         #region Post Image Operations

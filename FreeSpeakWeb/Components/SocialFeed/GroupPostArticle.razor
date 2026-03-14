@@ -540,7 +540,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error copying link: {ex.Message}");
+            // Silently fail - clipboard copy optional
         }
     }
 
@@ -576,7 +576,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading likes: {ex.Message}");
+            // Silently fail - likes list optional
         }
         finally
         {
@@ -655,7 +655,7 @@
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error initializing content measurement: {ex.Message}");
+                    // Silently fail - content measurement optional
                 }
             }
         }
@@ -718,7 +718,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[GroupPostArticle] Error loading comments: {ex.Message}");
+            // Silently fail - comments optional
         }
         finally
         {

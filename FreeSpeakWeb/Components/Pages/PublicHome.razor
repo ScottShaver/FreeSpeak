@@ -179,13 +179,13 @@
                     var reactions = await PostService.GetReactionBreakdownAsync(post.Id);
                     postReactionData[post.Id] = reactions;
 
-                    // Load recent comments (last 3, page 1)
+                    // Load recent comments (last 3, page 1) with batch loading
                     var commentsRaw = await PostService.GetCommentsPagedAsync(post.Id, 3, 1);
-                    var comments = new List<CommentDisplayModel>();
-                    foreach (var c in commentsRaw)
-                    {
-                        comments.Add(await CommentHelpers.BuildCommentDisplayModelAsync(c, PostService, UserPreferenceService, null));
-                    }
+                    var comments = await CommentHelpers.BuildCommentDisplayModelsAsync(
+                        commentsRaw.ToList(),
+                        PostService,
+                        UserPreferenceService,
+                        null); // No current user for public page
                     postComments[post.Id] = comments;
 
                     // Get direct comment count
@@ -203,12 +203,17 @@
                         );
                         postAuthorNames[post.Id] = displayName;
                     }
+                    else
+                    {
+                        // Handle cases where author might be null (e.g., deleted user)
+                        postAuthorNames[post.Id] = "Unknown User";
+                    }
                 }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading public posts: {ex.Message}");
+            // Silently fail - feed will show empty
         }
         finally
         {

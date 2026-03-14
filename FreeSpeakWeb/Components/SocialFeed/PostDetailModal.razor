@@ -227,7 +227,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error initializing comment scroll: {ex.Message}");
+                // Silently fail - scrolling not critical
             }
         }
     }
@@ -240,19 +240,19 @@
         try
         {
             var comments = await PostService.GetCommentsPagedAsync(PostId, commentPageSize, currentCommentPage);
-            modalComments = new List<CommentDisplayModel>();
 
-            foreach (var c in comments)
-            {
-                var commentModel = await CommentHelpers.BuildCommentDisplayModelAsync(c, PostService, UserPreferenceService, CurrentUserId);
-                modalComments.Add(commentModel);
-            }
+            // Use batch loading to reduce database round trips
+            modalComments = await CommentHelpers.BuildCommentDisplayModelsAsync(
+                comments.ToList(),
+                PostService,
+                UserPreferenceService,
+                CurrentUserId);
 
             hasMoreComments = comments.Count == commentPageSize;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading initial comments: {ex.Message}");
+            // Silently fail - comments will show empty
         }
         finally
         {
@@ -276,12 +276,14 @@
 
             if (comments.Any())
             {
-                foreach (var c in comments)
-                {
-                    var commentModel = await CommentHelpers.BuildCommentDisplayModelAsync(c, PostService, UserPreferenceService, CurrentUserId);
-                    modalComments.Add(commentModel);
-                }
+                // Use batch loading to reduce database round trips
+                var newCommentModels = await CommentHelpers.BuildCommentDisplayModelsAsync(
+                    comments.ToList(),
+                    PostService,
+                    UserPreferenceService,
+                    CurrentUserId);
 
+                modalComments.AddRange(newCommentModels);
                 hasMoreComments = comments.Count == commentPageSize;
             }
             else
@@ -291,7 +293,6 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading more comments: {ex.Message}");
             currentCommentPage--;
         }
         finally
@@ -397,7 +398,6 @@
         catch (Exception ex)
         {
             await JS.InvokeVoidAsync("alert", "An error occurred while adding your reply.");
-            Console.WriteLine($"Error adding reply: {ex.Message}");
         }
     }
 

@@ -105,30 +105,49 @@
 
         @if (Replies != null && Replies.Any())
         {
-            <div class="comment-replies">
-                @foreach (var reply in Replies)
+            @if (Depth == 0 && !showReplies)
+            {
+                <div class="comment-view-replies">
+                    <button type="button" class="view-replies-button" @onclick="ToggleReplies">
+                        View replies (@CountAllReplies(Replies))
+                    </button>
+                </div>
+            }
+            @if (Depth > 0 || showReplies)
+            {
+                <div class="comment-replies">
+                    @foreach (var reply in Replies)
+                    {
+                        <MultiLineCommentDisplay 
+                            CommentId="@reply.CommentId"
+                            UserName="@reply.UserName"
+                            UserImageUrl="@reply.UserImageUrl"
+                            CommentText="@reply.CommentText"
+                            ImageUrl="@reply.ImageUrl"
+                            Timestamp="@reply.Timestamp"
+                            Replies="@reply.Replies"
+                            LikeCount="@reply.LikeCount"
+                            UserReaction="@reply.UserReaction"
+                            ReactionBreakdown="@reply.ReactionBreakdown"
+                            CurrentUserId="@CurrentUserId"
+                            CurrentUserImageUrl="@CurrentUserImageUrl"
+                            CurrentUserName="@CurrentUserName"
+                            CommentAuthorId="@reply.CommentAuthorId"
+                            Depth="@(Depth + 1)"
+                            OnReactionChanged="@OnReactionChanged"
+                            OnRemoveReaction="@OnRemoveReaction"
+                            OnReplySubmitted="@OnReplySubmitted" />
+                    }
+                </div>
+                @if (Depth == 0 && showReplies)
                 {
-                    <MultiLineCommentDisplay 
-                        CommentId="@reply.CommentId"
-                        UserName="@reply.UserName"
-                        UserImageUrl="@reply.UserImageUrl"
-                        CommentText="@reply.CommentText"
-                        ImageUrl="@reply.ImageUrl"
-                        Timestamp="@reply.Timestamp"
-                        Replies="@reply.Replies"
-                        LikeCount="@reply.LikeCount"
-                        UserReaction="@reply.UserReaction"
-                        ReactionBreakdown="@reply.ReactionBreakdown"
-                        CurrentUserId="@CurrentUserId"
-                        CurrentUserImageUrl="@CurrentUserImageUrl"
-                        CurrentUserName="@CurrentUserName"
-                        CommentAuthorId="@reply.CommentAuthorId"
-                        Depth="@(Depth + 1)"
-                        OnReactionChanged="@OnReactionChanged"
-                        OnRemoveReaction="@OnRemoveReaction"
-                        OnReplySubmitted="@OnReplySubmitted" />
+                    <div class="comment-hide-replies">
+                        <button type="button" class="hide-replies-button" @onclick="ToggleReplies">
+                            Hide replies
+                        </button>
+                    </div>
                 }
-            </div>
+            }
         }
     </div>
 </div>
@@ -190,6 +209,7 @@
 
     private bool showReactionPicker = false;
     private bool showReplyEditor = false;
+    private bool showReplies = false;
     private System.Threading.Timer? hideTimer;
     private ElementReference replyEditorRef;
     private IJSObjectReference? jsModule;
@@ -253,6 +273,15 @@
         await OnReactionChanged.InvokeAsync((CommentId, LikeType.Like));
     }
 
+    /// <summary>
+    /// Toggles the visibility of reply comments
+    /// </summary>
+    private void ToggleReplies()
+    {
+        showReplies = !showReplies;
+        StateHasChanged();
+    }
+
     private async Task ToggleReplyEditor()
     {
         showReplyEditor = !showReplyEditor;
@@ -284,7 +313,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error scrolling reply editor into view: {ex.Message}");
+                // Silently fail - scrolling not critical
             }
         }
     }
@@ -319,6 +348,24 @@
         }
 
         return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
+    }
+
+    /// <summary>
+    /// Recursively counts all nested replies (children, grandchildren, etc.)
+    /// </summary>
+    /// <param name="replies">The list of replies to count</param>
+    /// <returns>Total count of all nested replies</returns>
+    private int CountAllReplies(List<CommentDisplayModel>? replies)
+    {
+        if (replies == null || !replies.Any())
+            return 0;
+
+        int count = replies.Count;
+        foreach (var reply in replies)
+        {
+            count += CountAllReplies(reply.Replies);
+        }
+        return count;
     }
 
     private string GetReactionEmoji(LikeType reactionType)

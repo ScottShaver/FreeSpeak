@@ -97,7 +97,9 @@ namespace FreeSpeakWeb.Mapping
             {
                 PostId = post.Id,
                 AuthorId = post.AuthorId,
-                AuthorName = authorName ?? $"{post.Author?.FirstName} {post.Author?.LastName}".Trim(),
+                AuthorName = authorName ?? (post.Author != null 
+                    ? $"{post.Author.FirstName} {post.Author.LastName}".Trim() 
+                    : "Unknown User"),
                 AuthorImageUrl = post.Author?.ProfilePictureUrl,
                 Content = post.Content,
                 CreatedAt = post.CreatedAt,
