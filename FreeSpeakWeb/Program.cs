@@ -4,6 +4,7 @@ using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services;
+using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -127,6 +128,10 @@ namespace FreeSpeakWeb
             }
             builder.Services.AddScoped<ICacheService, DistributedCacheService>();
 
+            // SECURITY: Configure distributed rate limiting settings
+            builder.Services.Configure<RateLimitingSettings>(builder.Configuration.GetSection("RateLimiting"));
+            builder.Services.AddSingleton<IDistributedRateLimitingService, DistributedRateLimitingService>();
+
             // PERFORMANCE: Add query performance monitoring service
             builder.Services.AddScoped<QueryPerformanceLogger>();
 
@@ -172,6 +177,13 @@ namespace FreeSpeakWeb
             // Add UserPreferenceService for managing user preferences
             builder.Services.AddScoped<UserPreferenceService>();
 
+            // SECURITY: Add FileSignatureValidator for magic byte validation
+            builder.Services.AddSingleton<IFileSignatureValidator, FileSignatureValidator>();
+
+            // SECURITY: Add virus scanning service with ClamAV
+            builder.Services.Configure<VirusScanSettings>(builder.Configuration.GetSection("VirusScan"));
+            builder.Services.AddSingleton<IVirusScanService, ClamAvVirusScanService>();
+
             // Add HtmlSanitizationService for XSS protection
             builder.Services.AddSingleton<HtmlSanitizationService>();
 
@@ -179,10 +191,10 @@ namespace FreeSpeakWeb
             builder.Services.AddScoped<AlertService>();
 
             // Add RoleService for managing user roles
-            builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.IRoleService, RoleService>();
+            builder.Services.AddScoped<IRoleService, RoleService>();
 
             // Add UserLockoutService for managing user account lockouts
-            builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.IUserLockoutService, UserLockoutService>();
+            builder.Services.AddScoped<IUserLockoutService, UserLockoutService>();
 
             // Add Group services
             builder.Services.AddScoped<GroupService>();
