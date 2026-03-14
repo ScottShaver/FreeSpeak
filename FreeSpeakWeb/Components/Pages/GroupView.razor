@@ -27,6 +27,7 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject UserPreferenceService UserPreferenceService
 @inject HtmlSanitizationService HtmlSanitizationService
+@inject ImageUploadService ImageUploadService
 
 <PageTitle>@(group?.Name ?? "Group") - @SiteSettings.Value.SiteName</PageTitle>
 
@@ -87,6 +88,15 @@
 
         <!-- Group Feed -->
         <div class="group-feed-section">
+            <!-- Post Creator -->
+            <div class="group-post-creator mb-4">
+                <PostCreator 
+                    CurrentUserImageUrl="@currentUserImageUrl"
+                    CurrentUserName="@currentUserName"
+                    ShowAudienceSelector="false"
+                    OnPostCreated="HandleGroupPostCreated" />
+            </div>
+
             <h3>Recent Posts</h3>
             
             @if (isLoadingPosts && !groupPosts.Any())
@@ -212,6 +222,14 @@
     </GroupPostDetailModal>
 }
 
+<UploadProgressModal 
+    IsVisible="@showUploadProgress"
+    Title="@uploadProgressTitle"
+    Message="@uploadProgressMessage"
+    Progress="@uploadProgress"
+    CurrentStep="@uploadCurrentStep"
+    TotalSteps="@uploadTotalSteps" />
+
 @code {
     [Parameter]
     public int GroupId { get; set; }
@@ -241,6 +259,14 @@
     // JavaScript interop
     private IJSObjectReference? jsModule;
     private DotNetObjectReference<GroupView>? dotNetHelper;
+
+    // Upload progress tracking
+    private bool showUploadProgress = false;
+    private string uploadProgressTitle = "Adding Your Post";
+    private string uploadProgressMessage = "Please wait...";
+    private int uploadProgress = 0;
+    private int uploadCurrentStep = 0;
+    private int uploadTotalSteps = 0;
 
     // Group-specific dictionaries (rename to use base class naming)
     // Base class provides: postRefreshTriggers, postReactionData, postUserReactions, pinnedPosts, postAuthorNames
@@ -422,12 +448,26 @@
     {
         if (!posts.Any()) return;
 
-        // Populate author names
+        // Populate author names using user display preferences
         foreach (var post in posts)
         {
-            if (!postAuthorNames.ContainsKey(post.Id) && post.Author != null)
+            if (!postAuthorNames.ContainsKey(post.Id))
             {
-                postAuthorNames[post.Id] = $"{post.Author.FirstName} {post.Author.LastName}";
+                if (post.Author != null)
+                {
+                    var displayName = await UserPreferenceService.FormatUserDisplayNameAsync(
+                        post.Author.Id,
+                        post.Author.FirstName,
+                        post.Author.LastName,
+                        post.Author.UserName ?? "Unknown"
+                    );
+                    postAuthorNames[post.Id] = displayName;
+                }
+                else
+                {
+                    // Handle cases where author might be null (e.g., deleted user)
+                    postAuthorNames[post.Id] = "Unknown User";
+                }
             }
         }
 
@@ -534,9 +574,132 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Handles the creation of a new group post from the PostCreator component.
+    /// Uploads images if provided, creates the post, and refreshes the post list.
+    /// </summary>
+    /// <param name="postData">Tuple containing post content, audience type (unused for groups), and selected images.</param>
+    private async Task HandleGroupPostCreated((string Content, AudienceType AudienceType, List<ImageUploadModal.SelectedImage> Images) postData)
+    {
+        if (string.IsNullOrEmpty(currentUserId) || group == null) return;
+
+        try
+        {
+            var imageUrls = new List<string>();
+
+            // Calculate total steps
+            var hasImages = postData.Images != null && postData.Images.Any();
+            uploadTotalSteps = hasImages ? 2 : 1;
+            uploadCurrentStep = 0;
+
+            // Show progress modal
+            showUploadProgress = true;
+            uploadProgress = 0;
+            StateHasChanged();
+
+            // Step 1: Upload images if any
+            if (hasImages && postData.Images != null)
+            {
+                uploadCurrentStep = 1;
+                uploadProgressMessage = $"Uploading {postData.Images.Count} {(postData.Images.Count == 1 ? "image" : "images")}...";
+                StateHasChanged();
+
+                // Convert selected images to upload format
+                var imagesToUpload = postData.Images.Select(img => (
+                    FileName: img.FileName,
+                    Base64Data: img.DataUrl,
+                    ContentType: img.ContentType
+                )).ToList();
+
+                // Create progress reporter
+                var progress = new Progress<int>(percent =>
+                {
+                    uploadProgress = percent / 2;
+                    InvokeAsync(StateHasChanged);
+                });
+
+                var uploadResult = await ImageUploadService.UploadImagesAsync(currentUserId, imagesToUpload, progress, groupId: GroupId);
+
+                if (!uploadResult.Success)
+                {
+                    showUploadProgress = false;
+                    StateHasChanged();
+                    return;
+                }
+
+                imageUrls = uploadResult.ImageUrls;
+                uploadProgress = 50;
+                StateHasChanged();
+            }
+
+            // Step 2: Create the group post
+            uploadCurrentStep = hasImages ? 2 : 1;
+            uploadProgressMessage = "Creating your post...";
+            uploadProgress = hasImages ? 50 : 0;
+            StateHasChanged();
+
+            var result = await GroupPostService.CreateGroupPostAsync(GroupId, currentUserId, postData.Content, imageUrls);
+
+            if (result.Success && result.Post != null)
+            {
+                uploadProgress = 100;
+                StateHasChanged();
+
+                // Small delay to show 100% completion
+                await Task.Delay(500);
+
+                // Hide progress modal
+                showUploadProgress = false;
+                StateHasChanged();
+
+                // Update statistics
+                totalPosts++;
+                postsToday++;
+                postsThisWeek++;
+                lastActivity = DateTime.UtcNow;
+
+                // Reload the group posts to include the new post
+                await LoadGroupPosts();
+
+                // Scroll to top to show the new post
+                if (jsModule != null)
+                {
+                    try
+                    {
+                        await jsModule.InvokeVoidAsync("scrollToTop");
+                    }
+                    catch
+                    {
+                        // Ignore scroll errors
+                    }
+                }
+
+                StateHasChanged();
+            }
+            else
+            {
+                showUploadProgress = false;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            showUploadProgress = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Handles the edit post action by opening the post detail modal.
+    /// </summary>
+    /// <param name="postId">The ID of the post to edit.</param>
     private async Task HandleEditGroupPost(int postId)
     {
-        await JSRuntime.InvokeVoidAsync("alert", "Group post editing will be implemented soon.");
+        var post = groupPosts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            ShowGroupPostDetail(post);
+        }
     }
 
     private async Task HandleGroupPostCommentAdded((int PostId, string Content) args)

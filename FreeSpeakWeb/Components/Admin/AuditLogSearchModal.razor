@@ -18,7 +18,15 @@
                 <!-- Search Form -->
                 <div class="search-form-section mb-4 p-3 bg-light rounded">
                     <div class="row g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <label for="userId" class="form-label">User ID (Exact Match)</label>
+                            <input type="text" 
+                                   id="userId" 
+                                   class="form-control" 
+                                   placeholder="Enter user GUID..."
+                                   @bind="searchUserId" />
+                        </div>
+                        <div class="col-md-3">
                             <label for="actionCategory" class="form-label">Action Category</label>
                             <select id="actionCategory" 
                                     class="form-select" 
@@ -30,14 +38,14 @@
                                 }
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="startDate" class="form-label">Start Date</label>
                             <input type="date" 
                                    id="startDate" 
                                    class="form-control" 
                                    @bind="startDate" />
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="endDate" class="form-label">End Date</label>
                             <input type="date" 
                                    id="endDate" 
@@ -188,6 +196,7 @@
 
     private List<AuditLog> auditLogs = new();
     private List<AuditLog> paginatedLogs = new();
+    private string searchUserId = "";
     private string selectedActionCategory = "";
     private DateTime? startDate;
     private DateTime? endDate;
@@ -218,11 +227,15 @@
             // Prepare the category filter (null if "All Categories" is selected)
             string? categoryFilter = string.IsNullOrWhiteSpace(selectedActionCategory) ? null : selectedActionCategory;
 
+            // Prepare the user ID filter (null if empty)
+            string? userIdFilter = string.IsNullOrWhiteSpace(searchUserId) ? null : searchUserId.Trim();
+
             // Call the repository search method
             auditLogs = await AuditLogRepository.SearchAuditLogsAsync(
                 categoryFilter,
                 startDate,
-                endDate
+                endDate,
+                userIdFilter
             );
 
             hasSearched = true;
@@ -231,8 +244,8 @@
             totalPages = (int)Math.Ceiling((double)auditLogs.Count / PageSize);
             UpdatePaginatedLogs();
 
-            Logger.LogInformation("Audit log search completed: Found {Count} entries with filters - Category: {Category}, StartDate: {StartDate}, EndDate: {EndDate}",
-                auditLogs.Count, categoryFilter ?? "All", startDate?.ToString("yyyy-MM-dd") ?? "None", endDate?.ToString("yyyy-MM-dd") ?? "None");
+            Logger.LogInformation("Audit log search completed: Found {Count} entries with filters - Category: {Category}, StartDate: {StartDate}, EndDate: {EndDate}, UserId: {UserId}",
+                auditLogs.Count, categoryFilter ?? "All", startDate?.ToString("yyyy-MM-dd") ?? "None", endDate?.ToString("yyyy-MM-dd") ?? "None", userIdFilter ?? "All");
         }
         catch (Exception ex)
         {

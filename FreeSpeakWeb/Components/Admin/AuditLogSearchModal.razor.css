@@ -1,0 +1,29 @@
+/* Resizable columns for audit log search table */
+.audit-log-section .table th {
+    resize: horizontal;
+    overflow: auto;
+    min-width: 100px;
+    position: relative;
+}
+
+.audit-log-section .table th:last-child {
+    resize: none;
+}
+
+/* Set initial column widths for better UX */
+.audit-log-section .table th:nth-child(1) { /* Date/Time */
+    width: 180px;
+}
+
+.audit-log-section .table th:nth-child(2) { /* User ID */
+    width: 200px;
+}
+
+.audit-log-section .table th:nth-child(3) { /* Category */
+    width: 150px;
+}
+
+.audit-log-section .table th:nth-child(4) { /* Details */
+    width: auto;
+    min-width: 200px;
+}

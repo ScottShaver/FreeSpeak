@@ -65,16 +65,19 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Uploads images for a specific user and returns their secure URLs.
         /// Images are organized by user: /uploads/posts/{userId}/images/{filename}.
+        /// For group posts, images are organized by group: /uploads/groupposts/{groupId}/images/{filename}.
         /// Returns secure API URLs that require authentication.
         /// </summary>
         /// <param name="userId">The unique identifier of the user uploading images.</param>
         /// <param name="images">List of images with filename, base64 data, and content type.</param>
         /// <param name="progress">Optional progress reporter for upload tracking.</param>
+        /// <param name="groupId">Optional group ID for group post images (uses different storage path and endpoint).</param>
         /// <returns>A tuple containing success status, list of image URLs, and error message if failed.</returns>
         public async Task<(bool Success, List<string> ImageUrls, string? ErrorMessage)> UploadImagesAsync(
             string userId,
             List<(string FileName, string Base64Data, string ContentType)> images,
-            IProgress<int>? progress = null)
+            IProgress<int>? progress = null,
+            int? groupId = null)
         {
             // SECURITY: Validate userId is a valid GUID to prevent path traversal attacks
             if (!Guid.TryParse(userId, out _))
@@ -95,28 +98,44 @@ namespace FreeSpeakWeb.Services
 
             var imageUrls = new List<string>();
             var totalImages = images.Count;
+            var isGroupPost = groupId.HasValue;
 
             try
             {
-                // Create user-specific images directory
-                var userImagesPath = Path.Combine(_uploadsBasePath, userId, "images");
-                if (!Directory.Exists(userImagesPath))
+                // Create the images directory once before the loop
+                string imagesPath;
+                if (isGroupPost)
                 {
-                    Directory.CreateDirectory(userImagesPath);
-                    _logger.LogInformation("Created images directory for user {UserId}", userId);
+                    // Group posts: AppData/uploads/groupposts/{groupId}/images/{filename}
+                    imagesPath = Path.Combine(
+                        Path.GetDirectoryName(_uploadsBasePath)!, 
+                        "groupposts", 
+                        groupId!.Value.ToString(), 
+                        "images");
+                }
+                else
+                {
+                    // Regular posts: AppData/uploads/posts/{userId}/images/{filename}
+                    imagesPath = Path.Combine(_uploadsBasePath, userId, "images");
+                }
+
+                if (!Directory.Exists(imagesPath))
+                {
+                    Directory.CreateDirectory(imagesPath);
+                    _logger.LogInformation("Created images directory: {Path}", imagesPath);
                 }
 
                 for (int i = 0; i < images.Count; i++)
                 {
                     var image = images[i];
 
-                    // Generate unique filename and image ID
-                    var fileExtension = GetFileExtension(image.ContentType);
-                    var imageId = Guid.NewGuid().ToString();
-                    var uniqueFileName = $"{imageId}{fileExtension}";
-                    var filePath = Path.Combine(userImagesPath, uniqueFileName);
+                                        // Generate unique filename and image ID
+                                        var fileExtension = GetFileExtension(image.ContentType);
+                                        var imageId = Guid.NewGuid().ToString();
+                                        var uniqueFileName = $"{imageId}{fileExtension}";
+                                        var filePath = Path.Combine(imagesPath, uniqueFileName);
 
-                    // Convert base64 to bytes and save
+                                        // Convert base64 to bytes and save
                     var base64Data = image.Base64Data;
                     if (base64Data.Contains(","))
                     {
@@ -155,9 +174,20 @@ namespace FreeSpeakWeb.Services
 
                     await File.WriteAllBytesAsync(filePath, imageBytes);
 
-                    // Return secure API URL that requires authentication
-                    var imageUrl = $"/api/secure-files/post-image/{userId}/{imageId}/{uniqueFileName}";
-                    imageUrls.Add(imageUrl);
+                                        // Return secure API URL that requires authentication
+                                        // Use different endpoint and path structure for group posts vs regular posts
+                                        // Regular posts: /api/secure-files/post-image/{userId}/{imageId}/{filename}
+                                        // Group posts: /api/secure-files/group-post-image/{groupId}/{imageId}/{filename}
+                                        string imageUrl;
+                                        if (isGroupPost)
+                                        {
+                                            imageUrl = $"/api/secure-files/group-post-image/{groupId}/{imageId}/{uniqueFileName}";
+                                        }
+                                        else
+                                        {
+                                            imageUrl = $"/api/secure-files/post-image/{userId}/{imageId}/{uniqueFileName}";
+                                        }
+                                        imageUrls.Add(imageUrl);
 
                     // Report progress
                     if (progress != null)

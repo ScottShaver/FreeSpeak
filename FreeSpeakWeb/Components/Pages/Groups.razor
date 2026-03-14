@@ -1141,6 +1141,10 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Handles the edit post action by opening the post detail modal.
+    /// </summary>
+    /// <param name="postId">The ID of the post to edit.</param>
     private async Task HandleEditGroupPost(int postId)
     {
         var post = groupPosts.FirstOrDefault(p => p.Id == postId);
@@ -1151,12 +1155,7 @@
 
         if (post != null)
         {
-            await JSRuntime.InvokeVoidAsync("alert", "Group post editing will be implemented soon.");
-            // TODO: Create GroupPostEditModal component similar to PostEditModal
-        }
-        else
-        {
-            // Post not found - silently ignore
+            await ShowGroupPostDetail(post);
         }
     }
 

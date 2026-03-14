@@ -12,6 +12,11 @@
     border: 1px solid var(--border-color);
 }
 
+/* Elevate z-index when menu is open to prevent popup from appearing behind other posts */
+.feed-article.menu-open {
+    z-index: 100;
+}
+
 /* 1. Header Area */
 .article-header {
     display: flex;

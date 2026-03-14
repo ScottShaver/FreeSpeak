@@ -1,0 +1,444 @@
+@page "/group/{GroupId:int}/post/{PostId:int}"
+@rendermode InteractiveServer
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Components.Pages.Base
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@inherits PostPageBase<GroupPost, GroupPostComment>
+@inject GroupPostService GroupPostService
+@inject GroupService GroupService
+@inject GroupMemberService GroupMemberService
+@inject PinnedGroupPostService PinnedGroupPostService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HtmlSanitizationService HtmlSanitizationService
+@inject UserPreferenceService UserPreferenceService
+@inject UserManager<ApplicationUser> UserManager
+@attribute [AllowAnonymous]
+
+<PageTitle>@pageTitle</PageTitle>
+
+<div class="single-group-post-container">
+    @if (isLoading)
+    {
+        <div class="loading-container">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p>Loading post...</p>
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error-container">
+            <div class="alert alert-warning" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <h4>Post Not Available</h4>
+                <p>@errorMessage</p>
+                <button type="button" class="btn btn-primary mt-3" @onclick="NavigateToGroup">
+                    <i class="bi bi-people-fill"></i> Go to Group
+                </button>
+            </div>
+        </div>
+    }
+    else if (post != null)
+    {
+        <div class="single-post-wrapper">
+            <GroupPostArticle 
+                PostId="@post.Id"
+                GroupId="@post.GroupId"
+                GroupName="@groupName"
+                AuthorId="@post.AuthorId"
+                AuthorName="@authorName"
+                AuthorImageUrl="@post.Author?.ProfilePictureUrl"
+                CreatedAt="@post.CreatedAt"
+                LikeCount="@post.LikeCount"
+                CommentCount="@post.CommentCount"
+                ShareCount="@post.ShareCount"
+                LoadCommentsInternally="true"
+                CommentsToShow="100"
+                CurrentUserId="@currentUserId"
+                CurrentUserImageUrl="@currentUserImageUrl"
+                CurrentUserName="@currentUserName"
+                ReactionBreakdown="@reactionBreakdown"
+                UserReaction="@userReaction"
+                IsPinned="@isPinned"
+                Images="@ConvertGroupPostImagesToPostImages(post.Images)"
+                IsModalView="true"
+                IsReadOnly="@(string.IsNullOrEmpty(currentUserId))"
+                OnReactionChanged="@(async (reactionType) => await HandlePostReactionChangedWrapper(reactionType))"
+                OnRemoveReaction="@(async () => await HandleRemovePostReactionWrapper())"
+                OnPinPost="@HandlePinPostWrapper"
+                OnUnpinPost="@HandleUnpinPostWrapper"
+                OnCommentAdded="@HandleCommentAdded"
+                OnReplySubmitted="@HandleReplySubmitted"
+                OnCommentReactionChanged="@HandleCommentReactionChanged"
+                OnRemoveCommentReaction="@HandleRemoveCommentReaction">
+                <ArticleContent>
+                    @((MarkupString)HtmlSanitizationService.SanitizeAndFormatContent(post.Content))
+                </ArticleContent>
+            </GroupPostArticle>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int GroupId { get; set; }
+
+    [Parameter]
+    public int PostId { get; set; }
+
+    private GroupPost? post;
+    private string? currentUserId;
+    private string? currentUserImageUrl;
+    private string? currentUserName;
+    private bool isLoading = true;
+    private string? errorMessage;
+    private string pageTitle = "Group Post";
+    private string groupName = string.Empty;
+    private string authorName = string.Empty;
+    private Dictionary<LikeType, int> reactionBreakdown = new();
+    private LikeType? userReaction;
+    private bool isPinned;
+
+    /// <summary>
+    /// Initializes the component and loads the group post data.
+    /// For public groups, anyone can view posts. For private groups, only members can view.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Get current user information
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated == true)
+            {
+                currentUserId = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                currentUserName = user.Identity.Name;
+
+                // Load the actual user from the database to get accurate profile picture
+                if (currentUserId != null)
+                {
+                    var currentUser = await UserManager.FindByIdAsync(currentUserId);
+                    if (currentUser != null)
+                    {
+                        currentUserImageUrl = currentUser.ProfilePictureUrl;
+                    }
+                }
+            }
+
+            // Load the group first to check visibility
+            var group = await GroupService.GetGroupByIdAsync(GroupId);
+            if (group == null)
+            {
+                errorMessage = "This group does not exist.";
+                isLoading = false;
+                return;
+            }
+
+            groupName = group.Name;
+
+            // For private groups, verify user is a member
+            if (!group.IsPublic)
+            {
+                if (string.IsNullOrEmpty(currentUserId))
+                {
+                    errorMessage = "You must be logged in to view posts in this private group.";
+                    isLoading = false;
+                    return;
+                }
+
+                var isMember = await GroupMemberService.IsMemberAsync(GroupId, currentUserId);
+                if (!isMember)
+                {
+                    errorMessage = "You must be a member of this group to view this post.";
+                    isLoading = false;
+                    return;
+                }
+            }
+
+            // Load the group post
+            post = await GroupPostService.GetGroupPostByIdAsync(PostId);
+
+            if (post != null && post.GroupId == GroupId)
+            {
+                // Load author name with user preference
+                if (post.Author != null)
+                {
+                    authorName = await UserPreferenceService.FormatUserDisplayNameAsync(
+                        post.Author.Id,
+                        post.Author.FirstName,
+                        post.Author.LastName,
+                        post.Author.UserName ?? "Unknown"
+                    );
+                }
+                else
+                {
+                    authorName = "Unknown";
+                }
+
+                // Load reaction data
+                reactionBreakdown = await GroupPostService.GetReactionBreakdownAsync(PostId);
+
+                // Load user's reaction (only if authenticated)
+                if (!string.IsNullOrEmpty(currentUserId))
+                {
+                    userReaction = await GroupPostService.GetUserReactionAsync(PostId, currentUserId);
+                    isPinned = await PinnedGroupPostService.IsGroupPostPinnedAsync(currentUserId, PostId);
+                }
+
+                pageTitle = $"Post by {authorName} in {groupName}";
+            }
+            else
+            {
+                errorMessage = "Sorry, this post is no longer available or does not belong to this group.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while loading this post.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    /// <summary>
+    /// Navigates to the group page.
+    /// </summary>
+    private void NavigateToGroup()
+    {
+        NavigationManager.NavigateTo($"/group/{GroupId}");
+    }
+
+    /// <summary>
+    /// Wrapper method for handling post reaction changes.
+    /// </summary>
+    /// <param name="reactionType">The type of reaction.</param>
+    private async Task HandlePostReactionChangedWrapper(LikeType reactionType)
+    {
+        if (post == null) return;
+        await HandlePostReactionChanged(post.Id, reactionType);
+        await ReloadPost();
+    }
+
+    /// <summary>
+    /// Wrapper method for handling post reaction removal.
+    /// </summary>
+    private async Task HandleRemovePostReactionWrapper()
+    {
+        if (post == null) return;
+        await HandleRemovePostReaction(post.Id);
+        await ReloadPost();
+    }
+
+    /// <summary>
+    /// Wrapper method for handling post pinning.
+    /// </summary>
+    /// <param name="postId">The post ID to pin.</param>
+    private async Task HandlePinPostWrapper(int postId)
+    {
+        if (post == null || string.IsNullOrEmpty(currentUserId)) return;
+        var (success, _) = await PinnedGroupPostService.PinGroupPostAsync(currentUserId, postId);
+        if (success)
+        {
+            isPinned = true;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Wrapper method for handling post unpinning.
+    /// </summary>
+    /// <param name="postId">The post ID to unpin.</param>
+    private async Task HandleUnpinPostWrapper(int postId)
+    {
+        if (post == null || string.IsNullOrEmpty(currentUserId)) return;
+        var (success, _) = await PinnedGroupPostService.UnpinGroupPostAsync(currentUserId, postId);
+        if (success)
+        {
+            isPinned = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Reloads the post data after interactions.
+    /// </summary>
+    private async Task ReloadPost()
+    {
+        if (post == null) return;
+
+        var updatedPost = await GroupPostService.GetGroupPostByIdAsync(PostId);
+        if (updatedPost != null)
+        {
+            post = updatedPost;
+            reactionBreakdown = await GroupPostService.GetReactionBreakdownAsync(PostId);
+            if (!string.IsNullOrEmpty(currentUserId))
+            {
+                userReaction = await GroupPostService.GetUserReactionAsync(PostId, currentUserId);
+            }
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Converts GroupPostImage collection to PostImage list for component compatibility.
+    /// </summary>
+    /// <param name="groupImages">The group post images to convert.</param>
+    /// <returns>A list of PostImage objects.</returns>
+    private List<PostImage>? ConvertGroupPostImagesToPostImages(ICollection<GroupPostImage>? groupImages)
+    {
+        if (groupImages == null || !groupImages.Any())
+            return null;
+
+        return groupImages.Select(gi => new PostImage
+        {
+            Id = gi.Id,
+            PostId = gi.PostId,
+            ImageUrl = gi.ImageUrl,
+            DisplayOrder = gi.DisplayOrder,
+            UploadedAt = gi.UploadedAt
+        }).ToList();
+    }
+
+    #region PostPageBase Abstract Property and Method Implementations
+
+    /// <summary>
+    /// Gets the current user's ID.
+    /// </summary>
+    protected override string? CurrentUserId => currentUserId;
+
+    /// <summary>
+    /// Gets the current user's profile image URL.
+    /// </summary>
+    protected override string? CurrentUserImageUrl => currentUserImageUrl;
+
+    /// <summary>
+    /// Gets the current user's display name.
+    /// </summary>
+    protected override string? CurrentUserName => currentUserName;
+
+    /// <summary>
+    /// Adds a comment to the post.
+    /// </summary>
+    protected override async Task<(bool Success, string? ErrorMessage)> AddCommentToPostAsync(int postId, string userId, string content)
+    {
+        var result = await GroupPostService.AddCommentAsync(postId, userId, content);
+        if (result.Success) await ReloadPost();
+        return (result.Success, result.ErrorMessage);
+    }
+
+    /// <summary>
+    /// Adds a reply to a comment on the post.
+    /// </summary>
+    protected override async Task<(bool Success, string? ErrorMessage)> AddReplyToPostAsync(int postId, string userId, string content, int? imageId, int parentCommentId)
+    {
+        var result = await GroupPostService.AddCommentAsync(postId, userId, content, null, parentCommentId);
+        if (result.Success) await ReloadPost();
+        return (result.Success, result.ErrorMessage);
+    }
+
+    /// <summary>
+    /// Gets a comment by its ID.
+    /// </summary>
+    protected override async Task<GroupPostComment?> GetCommentByIdAsync(int commentId)
+    {
+        return await GroupPostService.GetCommentByIdAsync(commentId);
+    }
+
+    /// <summary>
+    /// Gets the post ID from a comment.
+    /// </summary>
+    protected override int GetPostIdFromComment(GroupPostComment comment)
+    {
+        return comment.PostId;
+    }
+
+    /// <summary>
+    /// Increments the post's comment count.
+    /// </summary>
+    protected override void IncrementPostCommentCount(int postId)
+    {
+        // Single post page reloads entire post, no need to increment manually
+    }
+
+    /// <summary>
+    /// Adds or updates a reaction on the post.
+    /// </summary>
+    protected override async Task<(bool Success, string? ErrorMessage)> AddOrUpdatePostReactionAsync(int postId, string userId, LikeType reactionType)
+    {
+        var result = await GroupPostService.AddOrUpdateReactionAsync(postId, userId, reactionType);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    /// <summary>
+    /// Removes a reaction from the post.
+    /// </summary>
+    protected override async Task<(bool Success, string? ErrorMessage)> RemovePostReactionAsync(int postId, string userId)
+    {
+        var result = await GroupPostService.RemoveReactionAsync(postId, userId);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    /// <summary>
+    /// Increments the post's like count.
+    /// </summary>
+    protected override void IncrementPostLikeCount(int postId)
+    {
+        // Single post page reloads entire post, no need to increment manually
+    }
+
+    /// <summary>
+    /// Decrements the post's like count.
+    /// </summary>
+    protected override void DecrementPostLikeCount(int postId)
+    {
+        // Single post page reloads entire post, no need to decrement manually
+    }
+
+    /// <summary>
+    /// Adds or updates a reaction on a comment.
+    /// </summary>
+    protected override async Task<(bool Success, string? ErrorMessage)> AddOrUpdateCommentReactionAsync(int commentId, string userId, LikeType reactionType)
+    {
+        var result = await GroupPostService.AddOrUpdateCommentReactionAsync(commentId, userId, reactionType);
+        if (result.Success) await ReloadPost();
+        return (result.Success, result.ErrorMessage);
+    }
+
+    /// <summary>
+    /// Removes a reaction from a comment.
+    /// </summary>
+    protected override async Task<(bool Success, string? ErrorMessage)> RemoveCommentReactionAsync(int commentId, string userId)
+    {
+        var result = await GroupPostService.RemoveCommentReactionAsync(commentId, userId);
+        if (result.Success) await ReloadPost();
+        return (result.Success, result.ErrorMessage);
+    }
+
+    /// <summary>
+    /// Gets the reaction breakdown for a post.
+    /// </summary>
+    protected override async Task<Dictionary<LikeType, int>> GetPostReactionBreakdownAsync(int postId)
+    {
+        return await GroupPostService.GetReactionBreakdownAsync(postId);
+    }
+
+    /// <summary>
+    /// Finds the post ID for a given comment.
+    /// </summary>
+    protected override async Task<int?> FindPostIdForCommentAsync(int commentId)
+    {
+        var comment = await GroupPostService.GetCommentByIdAsync(commentId);
+        return comment?.PostId;
+    }
+
+    #endregion
+}
