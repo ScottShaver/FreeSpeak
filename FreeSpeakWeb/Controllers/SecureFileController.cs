@@ -223,6 +223,120 @@ public class SecureFileController : ControllerBase
     }
 
     /// <summary>
+    /// Serves group post images with authentication and authorization.
+    /// Public groups allow anonymous access; private groups require membership.
+    /// </summary>
+    /// <param name="groupId">The unique identifier of the group.</param>
+    /// <param name="imageId">The unique identifier of the image.</param>
+    /// <param name="filename">The filename of the image.</param>
+    /// <param name="size">Image size: "thumbnail" (150px), "medium" (400px), or "full" (default: thumbnail).</param>
+    /// <returns>The group post image with appropriate content type, or an error status.</returns>
+    [AllowAnonymous] // Allow access to public group post images
+    [HttpGet("group-post-image/{groupId:int}/{imageId}/{filename}")]
+    public async Task<IActionResult> GetGroupPostImage(int groupId, string imageId, string filename, [FromQuery] string? size = null)
+    {
+        try
+        {
+            // SECURITY: Get requesting user ID (may be null for anonymous users)
+            var requestingUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // SECURITY: Validate all inputs
+            if (!Guid.TryParse(imageId, out _))
+            {
+                _logger.LogWarning("Invalid imageId format: {ImageId}", imageId);
+                return BadRequest("Invalid image ID");
+            }
+
+            if (!IsValidFileName(filename))
+            {
+                _logger.LogWarning("Invalid filename format: {Filename}", filename);
+                return BadRequest("Invalid filename");
+            }
+
+            // Parse size parameter (default to thumbnail for feed performance)
+            var imageSize = ParseImageSize(size, ImageSize.Thumbnail);
+
+            // SECURITY: Find the group post image in database to verify permissions
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var groupPostImage = await context.GroupPostImages
+                .Include(gpi => gpi.Post)
+                .ThenInclude(gp => gp.Group)
+                .FirstOrDefaultAsync(gpi => gpi.ImageUrl.Contains(imageId));
+
+            if (groupPostImage == null)
+            {
+                _logger.LogWarning("Group post image not found for imageId: {ImageId}", imageId);
+                return NotFound();
+            }
+
+            // Verify the image belongs to the specified group
+            if (groupPostImage.Post.GroupId != groupId)
+            {
+                _logger.LogWarning("Group post image {ImageId} does not belong to group {GroupId}", imageId, groupId);
+                return NotFound();
+            }
+
+            // SECURITY: Check if user has permission to view this group post
+            if (!await CanUserViewGroupPostAsync(groupPostImage.Post, requestingUserId, context))
+            {
+                _logger.LogWarning("User {RequestingUserId} denied access to group post {PostId} image {ImageId}", 
+                    requestingUserId ?? "anonymous", groupPostImage.PostId, imageId);
+                return Forbid();
+            }
+
+            // Construct the file path: AppData/uploads/groupposts/{groupId}/images/{filename}
+            var filePath = Path.Combine(
+                _environment.ContentRootPath,
+                "AppData",
+                "uploads",
+                "groupposts",
+                groupId.ToString(),
+                "images",
+                filename
+            );
+
+            // SECURITY: Verify path is within allowed directory
+            var allowedDirectory = Path.Combine(_environment.ContentRootPath, "AppData", "uploads", "groupposts");
+            if (!IsPathWithinAllowedDirectory(filePath, allowedDirectory))
+            {
+                _logger.LogWarning("Path traversal attempt detected: {FilePath}", filePath);
+                return BadRequest("Invalid path");
+            }
+
+            // Ensure the file exists
+            if (!System.IO.File.Exists(filePath))
+            {
+                _logger.LogWarning("Group post image file not found: {ImageId}", imageId);
+                return NotFound();
+            }
+
+            // Get resized image (or full if requested)
+            var imageBytes = await _imageResizingService.GetResizedImageAsync(filePath, imageSize);
+
+            if (imageBytes == null)
+            {
+                return NotFound();
+            }
+
+            // Determine content type
+            var contentType = GetContentType(filename);
+
+            // Set secure headers with longer cache for thumbnails
+            var maxAge = imageSize == ImageSize.Thumbnail ? 7200 : 3600;
+            Response.Headers.Append("Cache-Control", $"private, max-age={maxAge}");
+            Response.Headers.Append("X-Content-Type-Options", "nosniff");
+
+            // Return the file
+            return File(imageBytes, contentType, enableRangeProcessing: true);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error serving group post image for group {GroupId}, imageId {ImageId}", groupId, imageId);
+            return StatusCode(500, "An error occurred while retrieving the image");
+        }
+    }
+
+    /// <summary>
     /// Serves post videos with authentication and authorization.
     /// Currently returns NotFound as video entity support is not yet implemented.
     /// </summary>
@@ -423,6 +537,35 @@ public class SecureFileController : ControllerBase
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Checks if the requesting user has permission to view a group post based on group visibility and membership.
+    /// Public groups are always accessible. Private groups require membership.
+    /// </summary>
+    /// <param name="groupPost">The group post to check access for.</param>
+    /// <param name="requestingUserId">The ID of the user requesting access, or null for anonymous users.</param>
+    /// <param name="context">The database context for membership checks.</param>
+    /// <returns>True if the user has permission to view the group post, false otherwise.</returns>
+    private async Task<bool> CanUserViewGroupPostAsync(GroupPost groupPost, string? requestingUserId, ApplicationDbContext context)
+    {
+        // Post author can always view their own posts
+        if (!string.IsNullOrEmpty(requestingUserId) && groupPost.AuthorId == requestingUserId)
+            return true;
+
+        // Public groups - always allowed for everyone (including anonymous users)
+        if (groupPost.Group != null && groupPost.Group.IsPublic)
+            return true;
+
+        // No requesting user means unauthorized for private group posts
+        if (string.IsNullOrEmpty(requestingUserId))
+            return false;
+
+        // Private groups - check membership
+        var isMember = await context.GroupUsers
+            .AnyAsync(gu => gu.GroupId == groupPost.GroupId && gu.UserId == requestingUserId);
+
+        return isMember;
     }
 
     #endregion

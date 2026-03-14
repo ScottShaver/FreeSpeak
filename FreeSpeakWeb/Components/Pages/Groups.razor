@@ -505,6 +505,10 @@
     // Guard flag to prevent double-loading on initial navigation
     private bool hasCompletedInitialLoad = false;
 
+    /// <summary>
+    /// Initializes the component when it is first loaded.
+    /// Retrieves the current user's authentication state, loads their groups, and initializes the group feed.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -538,6 +542,11 @@
         }
     }
 
+    /// <summary>
+    /// Called after the component has rendered.
+    /// On first render, initializes JavaScript interop for infinite scroll functionality.
+    /// </summary>
+    /// <param name="firstRender">True if this is the first time the component has rendered, false otherwise.</param>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && !string.IsNullOrEmpty(currentUserId))
@@ -555,6 +564,10 @@
         }
     }
 
+    /// <summary>
+    /// Loads the list of groups that the current user is a member of.
+    /// Extracts unique groups from the user's group posts and populates the userGroups list.
+    /// </summary>
     private async Task LoadUserGroups()
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
@@ -627,6 +640,10 @@
         }
     }
 
+    /// <summary>
+    /// Loads the next page of group posts for infinite scroll functionality.
+    /// This method is invoked from JavaScript when the user scrolls near the bottom of the page.
+    /// </summary>
     [JSInvokable]
     public async Task LoadMoreGroupPostsAsync()
     {
@@ -676,6 +693,11 @@
         }
     }
 
+    /// <summary>
+    /// Loads additional data for a list of group posts, including reactions, author names, pinned status, and mute status.
+    /// Uses batch queries where possible to optimize performance.
+    /// </summary>
+    /// <param name="posts">The list of group posts to load data for.</param>
     private async Task LoadGroupPostDataAsync(List<GroupPost> posts)
     {
         if (!posts.Any()) return;
@@ -752,6 +774,11 @@
         }
     }
 
+    /// <summary>
+    /// Handles the group filter dropdown change event.
+    /// Updates the selected group filter and reloads the group feed.
+    /// </summary>
+    /// <param name="e">The change event arguments containing the selected group ID.</param>
     private async Task OnGroupFilterChanged(ChangeEventArgs e)
     {
         var value = e.Value?.ToString();
@@ -769,6 +796,10 @@
         await LoadGroupFeed();
     }
 
+    /// <summary>
+    /// Loads the user's pinned group posts.
+    /// Applies group filtering if a specific group is selected.
+    /// </summary>
     private async Task LoadPinnedGroupPosts()
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
@@ -813,6 +844,11 @@
         }
     }
 
+    /// <summary>
+    /// Handles the pinned posts group filter dropdown change event.
+    /// Updates the selected group filter and reloads the pinned posts feed.
+    /// </summary>
+    /// <param name="e">The change event arguments containing the selected group ID.</param>
     private async Task OnPinnedGroupFilterChanged(ChangeEventArgs e)
     {
         var value = e.Value?.ToString();
@@ -830,6 +866,10 @@
         await LoadPinnedGroupPosts();
     }
 
+    /// <summary>
+    /// Loads the next page of pinned group posts for infinite scroll functionality.
+    /// This method is invoked from JavaScript when the user scrolls near the bottom of the pinned posts tab.
+    /// </summary>
     [JSInvokable]
     public async Task LoadMorePinnedGroupPostsAsync()
     {
@@ -885,6 +925,10 @@
         }
     }
 
+    /// <summary>
+    /// Loads the user's pending group join requests.
+    /// Populates the group names for display.
+    /// </summary>
     private async Task LoadJoinRequests()
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
@@ -916,6 +960,10 @@
         }
     }
 
+    /// <summary>
+    /// Loads the count of pending join requests for badge display.
+    /// This is a lightweight version of LoadJoinRequests for initial page load.
+    /// </summary>
     private async Task LoadJoinRequestsCount()
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
@@ -945,24 +993,40 @@
         }
     }
 
+    /// <summary>
+    /// Handles the click event on the Pinned Group Posts tab.
+    /// Always reloads pinned posts to ensure fresh data.
+    /// </summary>
     private async Task OnPinnedTabClick()
     {
         // Always reload pinned posts to ensure fresh data
         await LoadPinnedGroupPosts();
     }
 
+    /// <summary>
+    /// Handles the click event on the Group Join Requests tab.
+    /// Always reloads join requests to ensure fresh data.
+    /// </summary>
     private async Task OnJoinRequestsTabClick()
     {
         // Always reload join requests to ensure fresh data
         await LoadJoinRequests();
     }
 
+    /// <summary>
+    /// Handles the click event on the Groups You Might Like tab.
+    /// Always reloads suggested groups to ensure fresh data.
+    /// </summary>
     private async Task OnSuggestedGroupsTabClick()
     {
         // Always reload suggested groups to ensure fresh data
         await LoadSuggestedGroups();
     }
 
+    /// <summary>
+    /// Loads groups that the user might be interested in joining.
+    /// Uses the GroupService to get personalized suggestions based on the user's interests.
+    /// </summary>
     private async Task LoadSuggestedGroups()
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
@@ -985,6 +1049,11 @@
         }
     }
 
+    /// <summary>
+    /// Handles keyboard events in the group search input.
+    /// Implements a 300ms debounce to avoid excessive search requests.
+    /// </summary>
+    /// <param name="e">The keyboard event arguments.</param>
     private async Task OnGroupSearchKeyUp(KeyboardEventArgs e)
     {
         searchDebounceTimer?.Dispose();
@@ -994,6 +1063,10 @@
         }, null, 300, Timeout.Infinite);
     }
 
+    /// <summary>
+    /// Performs a search for groups matching the current search query.
+    /// Clears the results if the search query is empty.
+    /// </summary>
     private async Task SearchGroups()
     {
         if (string.IsNullOrWhiteSpace(groupSearchQuery))
@@ -1021,6 +1094,11 @@
         }
     }
 
+    /// <summary>
+    /// Handles the user's request to join a group.
+    /// If the group requires approval, creates a join request; otherwise, joins the group immediately.
+    /// </summary>
+    /// <param name="group">The group to join.</param>
     private async Task JoinGroup(Group group)
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
@@ -1069,6 +1147,11 @@
         }
     }
 
+    /// <summary>
+    /// Cancels a pending group join request.
+    /// Removes the request from the list upon successful cancellation.
+    /// </summary>
+    /// <param name="requestId">The ID of the join request to cancel.</param>
     private async Task CancelJoinRequest(int requestId)
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
@@ -1095,18 +1178,34 @@
         }
     }
 
+    /// <summary>
+    /// Handles changes to a group post reaction (like/love/etc).
+    /// Delegates to the base class implementation.
+    /// </summary>
+    /// <param name="postId">The ID of the post.</param>
+    /// <param name="reactionType">The type of reaction.</param>
     private async Task HandleGroupPostReactionChanged(int postId, LikeType reactionType)
     {
         // Delegate to base class implementation (handles both groupPosts and pinnedGroupPostsList)
         await HandlePostReactionChanged(postId, reactionType);
     }
 
+    /// <summary>
+    /// Handles the removal of a reaction from a group post.
+    /// Delegates to the base class implementation.
+    /// </summary>
+    /// <param name="postId">The ID of the post.</param>
     private async Task HandleRemoveGroupPostReaction(int postId)
     {
         // Delegate to base class implementation (handles both groupPosts and pinnedGroupPostsList)
         await HandleRemovePostReaction(postId);
     }
 
+    /// <summary>
+    /// Handles pinning a group post for the current user.
+    /// Updates the pinned status in the UI upon success.
+    /// </summary>
+    /// <param name="postId">The ID of the post to pin.</param>
     private async Task HandlePinGroupPost(int postId)
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
@@ -1120,6 +1219,11 @@
         }
     }
 
+    /// <summary>
+    /// Handles unpinning a group post for the current user.
+    /// Removes the post from the pinned posts list and updates the UI upon success.
+    /// </summary>
+    /// <param name="postId">The ID of the post to unpin.</param>
     private async Task HandleUnpinGroupPost(int postId)
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
@@ -1134,6 +1238,11 @@
         }
     }
 
+    /// <summary>
+    /// Handles the deletion of a group post.
+    /// Removes the post from both the main feed and pinned posts list.
+    /// </summary>
+    /// <param name="postId">The ID of the deleted post.</param>
     private async Task HandleGroupPostDeleted(int postId)
     {
         groupPosts.RemoveAll(p => p.Id == postId);
@@ -1141,6 +1250,10 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Handles the edit post action by opening the post detail modal.
+    /// </summary>
+    /// <param name="postId">The ID of the post to edit.</param>
     private async Task HandleEditGroupPost(int postId)
     {
         var post = groupPosts.FirstOrDefault(p => p.Id == postId);
@@ -1151,33 +1264,48 @@
 
         if (post != null)
         {
-            await JSRuntime.InvokeVoidAsync("alert", "Group post editing will be implemented soon.");
-            // TODO: Create GroupPostEditModal component similar to PostEditModal
-        }
-        else
-        {
-            // Post not found - silently ignore
+            await ShowGroupPostDetail(post);
         }
     }
 
+    /// <summary>
+    /// Handles the addition of a comment to a group post.
+    /// Delegates to the base class implementation.
+    /// </summary>
+    /// <param name="args">Tuple containing the post ID and comment content.</param>
     private async Task HandleGroupPostCommentAdded((int PostId, string Content) args)
     {
         // Delegate to base class implementation (handles both groupPosts and pinnedGroupPostsList)
         await HandleCommentAdded(args);
     }
 
+    /// <summary>
+    /// Handles the submission of a reply to a group post comment.
+    /// Delegates to the base class implementation.
+    /// </summary>
+    /// <param name="args">Tuple containing the parent comment ID and reply content.</param>
     private async Task HandleGroupPostReplySubmitted((int ParentCommentId, string Content) args)
     {
         // Delegate to base class implementation (handles both groupPosts and pinnedGroupPostsList)
         await HandleReplySubmitted(args);
     }
 
+    /// <summary>
+    /// Handles changes to a comment reaction on a group post.
+    /// Delegates to the base class implementation.
+    /// </summary>
+    /// <param name="args">Tuple containing the comment ID and reaction type.</param>
     private async Task HandleGroupPostCommentReactionChanged((int CommentId, LikeType ReactionType) args)
     {
         // Delegate to base class implementation
         await HandleCommentReactionChanged(args);
     }
 
+    /// <summary>
+    /// Handles the removal of a reaction from a group post comment.
+    /// Delegates to the base class implementation.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment.</param>
     private async Task HandleRemoveGroupPostCommentReaction(int commentId)
     {
         // Delegate to base class implementation
@@ -1188,6 +1316,10 @@
     private bool showGroupPostDetailModal = false;
     private GroupPost? selectedGroupPost = null;
 
+    /// <summary>
+    /// Shows the detailed view modal for a group post.
+    /// </summary>
+    /// <param name="post">The group post to display in detail.</param>
     private async Task ShowGroupPostDetail(GroupPost post)
     {
         selectedGroupPost = post;
@@ -1196,6 +1328,9 @@
         await Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Closes the group post detail modal.
+    /// </summary>
     private void CloseGroupPostDetailModal()
     {
         showGroupPostDetailModal = false;
@@ -1203,6 +1338,12 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Recursively searches for a comment in a hierarchical comment tree.
+    /// </summary>
+    /// <param name="comments">The list of comments to search.</param>
+    /// <param name="commentId">The ID of the comment to find.</param>
+    /// <returns>The found comment, or null if not found.</returns>
     private GroupPostComment? FindCommentInTree(List<GroupPostComment> comments, int commentId)
     {
         foreach (var comment in comments)
@@ -1224,6 +1365,11 @@
         return null;
     }
 
+    /// <summary>
+    /// Formats a user's display name according to their preferences.
+    /// </summary>
+    /// <param name="user">The user to format the display name for.</param>
+    /// <returns>The formatted display name.</returns>
     private async Task<string> FormatUserDisplayName(ApplicationUser? user)
     {
         if (user == null)
@@ -1237,6 +1383,12 @@
         );
     }
 
+    /// <summary>
+    /// Converts a collection of GroupPostImage objects to PostImage objects.
+    /// This is needed for compatibility with shared components that expect PostImage type.
+    /// </summary>
+    /// <param name="groupImages">The collection of group post images to convert.</param>
+    /// <returns>A list of PostImage objects, or null if the input is null or empty.</returns>
     private List<PostImage>? ConvertGroupPostImagesToPostImages(ICollection<GroupPostImage>? groupImages)
     {
         if (groupImages == null || !groupImages.Any())
@@ -1252,6 +1404,11 @@
         }).ToList();
     }
 
+    /// <summary>
+    /// Formats post content by sanitizing HTML and preserving line breaks.
+    /// </summary>
+    /// <param name="content">The content to format.</param>
+    /// <returns>The formatted and sanitized content string.</returns>
     private string FormatContentWithLineBreaks(string content)
     {
         if (string.IsNullOrWhiteSpace(content))
@@ -1260,6 +1417,11 @@
         return HtmlSanitizationService.SanitizeAndFormatContent(content);
     }
 
+    /// <summary>
+    /// Converts a DateTime to a relative time string (e.g., "2h ago", "3d ago").
+    /// </summary>
+    /// <param name="dateTime">The DateTime to convert.</param>
+    /// <returns>A human-readable relative time string.</returns>
     private string GetRelativeTime(DateTime dateTime)
     {
         var timeSpan = DateTime.UtcNow - dateTime;
@@ -1284,6 +1446,14 @@
     protected override string? CurrentUserName => currentUserName;
 
     // Service bridge methods for comments
+    /// <summary>
+    /// Adds a comment to a group post.
+    /// This method bridges the base class abstract method to the GroupPostService.
+    /// </summary>
+    /// <param name="postId">The ID of the post to comment on.</param>
+    /// <param name="userId">The ID of the user adding the comment.</param>
+    /// <param name="content">The comment content.</param>
+    /// <returns>A tuple indicating success and an optional error message.</returns>
     protected override async Task<(bool Success, string? ErrorMessage)> AddCommentToPostAsync(
         int postId, string userId, string content)
     {
@@ -1291,6 +1461,16 @@
         return (result.Success, result.ErrorMessage);
     }
 
+    /// <summary>
+    /// Adds a reply to a group post comment.
+    /// This method bridges the base class abstract method to the GroupPostService.
+    /// </summary>
+    /// <param name="postId">The ID of the post.</param>
+    /// <param name="userId">The ID of the user adding the reply.</param>
+    /// <param name="content">The reply content.</param>
+    /// <param name="imageId">Optional image ID (currently unused, reserved for future use).</param>
+    /// <param name="parentCommentId">The ID of the parent comment.</param>
+    /// <returns>A tuple indicating success and an optional error message.</returns>
     protected override async Task<(bool Success, string? ErrorMessage)> AddReplyToPostAsync(
         int postId, string userId, string content, int? imageId, int parentCommentId)
     {
@@ -1299,16 +1479,33 @@
         return (result.Success, result.ErrorMessage);
     }
 
+    /// <summary>
+    /// Retrieves a comment by its ID.
+    /// This method bridges the base class abstract method to the GroupPostService.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment to retrieve.</param>
+    /// <returns>The comment, or null if not found.</returns>
     protected override async Task<GroupPostComment?> GetCommentByIdAsync(int commentId)
     {
         return await GroupPostService.GetCommentByIdAsync(commentId);
     }
 
+    /// <summary>
+    /// Gets the post ID from a comment.
+    /// This method bridges the base class abstract method.
+    /// </summary>
+    /// <param name="comment">The comment to get the post ID from.</param>
+    /// <returns>The post ID.</returns>
     protected override int GetPostIdFromComment(GroupPostComment comment)
     {
         return comment.PostId;
     }
 
+    /// <summary>
+    /// Increments the comment count for a post in the UI.
+    /// Updates both the main feed and pinned posts list.
+    /// </summary>
+    /// <param name="postId">The ID of the post.</param>
     protected override void IncrementPostCommentCount(int postId)
     {
         var post = groupPosts.FirstOrDefault(p => p.Id == postId);
@@ -1326,6 +1523,14 @@
     }
 
     // Service bridge methods for reactions
+    /// <summary>
+    /// Adds or updates a reaction on a group post.
+    /// This method bridges the base class abstract method to the GroupPostService.
+    /// </summary>
+    /// <param name="postId">The ID of the post.</param>
+    /// <param name="userId">The ID of the user reacting.</param>
+    /// <param name="reactionType">The type of reaction.</param>
+    /// <returns>A tuple indicating success and an optional error message.</returns>
     protected override async Task<(bool Success, string? ErrorMessage)> AddOrUpdatePostReactionAsync(
         int postId, string userId, LikeType reactionType)
     {
@@ -1333,6 +1538,13 @@
         return (result.Success, result.ErrorMessage);
     }
 
+    /// <summary>
+    /// Removes a reaction from a group post.
+    /// This method bridges the base class abstract method to the GroupPostService.
+    /// </summary>
+    /// <param name="postId">The ID of the post.</param>
+    /// <param name="userId">The ID of the user removing their reaction.</param>
+    /// <returns>A tuple indicating success and an optional error message.</returns>
     protected override async Task<(bool Success, string? ErrorMessage)> RemovePostReactionAsync(
         int postId, string userId)
     {
@@ -1340,11 +1552,22 @@
         return (result.Success, result.ErrorMessage);
     }
 
+    /// <summary>
+    /// Gets the reaction breakdown (counts by reaction type) for a group post.
+    /// This method bridges the base class abstract method to the GroupPostService.
+    /// </summary>
+    /// <param name="postId">The ID of the post.</param>
+    /// <returns>A dictionary mapping reaction types to their counts.</returns>
     protected override async Task<Dictionary<LikeType, int>> GetPostReactionBreakdownAsync(int postId)
     {
         return await GroupPostService.GetReactionBreakdownAsync(postId);
     }
 
+    /// <summary>
+    /// Increments the like count for a post in the UI.
+    /// Updates both the main feed and pinned posts list.
+    /// </summary>
+    /// <param name="postId">The ID of the post.</param>
     protected override void IncrementPostLikeCount(int postId)
     {
         var post = groupPosts.FirstOrDefault(p => p.Id == postId);
@@ -1361,6 +1584,11 @@
         }
     }
 
+    /// <summary>
+    /// Decrements the like count for a post in the UI.
+    /// Updates both the main feed and pinned posts list.
+    /// </summary>
+    /// <param name="postId">The ID of the post.</param>
     protected override void DecrementPostLikeCount(int postId)
     {
         var post = groupPosts.FirstOrDefault(p => p.Id == postId);
@@ -1378,6 +1606,14 @@
     }
 
     // Service bridge methods for comment reactions
+    /// <summary>
+    /// Adds or updates a reaction on a comment.
+    /// This method bridges the base class abstract method to the GroupPostService.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment.</param>
+    /// <param name="userId">The ID of the user reacting.</param>
+    /// <param name="reactionType">The type of reaction.</param>
+    /// <returns>A tuple indicating success and an optional error message.</returns>
     protected override async Task<(bool Success, string? ErrorMessage)> AddOrUpdateCommentReactionAsync(
         int commentId, string userId, LikeType reactionType)
     {
@@ -1385,6 +1621,13 @@
         return (result.Success, result.ErrorMessage);
     }
 
+    /// <summary>
+    /// Removes a reaction from a comment.
+    /// This method bridges the base class abstract method to the GroupPostService.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment.</param>
+    /// <param name="userId">The ID of the user removing their reaction.</param>
+    /// <returns>A tuple indicating success and an optional error message.</returns>
     protected override async Task<(bool Success, string? ErrorMessage)> RemoveCommentReactionAsync(
         int commentId, string userId)
     {
@@ -1392,6 +1635,12 @@
         return (result.Success, result.ErrorMessage);
     }
 
+    /// <summary>
+    /// Finds the post ID for a given comment by searching through all loaded posts.
+    /// This method bridges the base class abstract method.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment.</param>
+    /// <returns>The post ID if found, otherwise null.</returns>
     protected override async Task<int?> FindPostIdForCommentAsync(int commentId)
     {
         // Search through both groupPosts and pinnedGroupPostsList

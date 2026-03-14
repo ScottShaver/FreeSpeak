@@ -2,3 +2,40 @@
 .table-responsive {
     overflow: visible !important;
 }
+
+/* Resizable columns for user search table */
+::deep .table th {
+    resize: horizontal;
+    overflow: auto;
+    min-width: 80px;
+    position: relative;
+}
+
+::deep .table th:last-child {
+    resize: none;
+}
+
+/* Set initial column widths for better UX */
+::deep .table th:nth-child(1) { /* Username */
+    width: 150px;
+}
+
+::deep .table th:nth-child(2) { /* Name */
+    width: 180px;
+}
+
+::deep .table th:nth-child(3) { /* Email */
+    width: 200px;
+}
+
+::deep .table th:nth-child(4) { /* Location */
+    width: 150px;
+}
+
+::deep .table th:nth-child(5) { /* Occupation */
+    width: 130px;
+}
+
+::deep .table th:nth-child(6) { /* Actions */
+    width: 80px;
+}

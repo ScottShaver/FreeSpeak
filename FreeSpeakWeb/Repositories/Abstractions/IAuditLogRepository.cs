@@ -62,13 +62,14 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         Task<List<AuditLog>> GetAuditLogsByCategoryAsync(string actionCategory, int pageNumber = 1, int pageSize = 50);
 
         /// <summary>
-        /// Searches audit log entries with optional filters for action category and date range.
+        /// Searches audit log entries with optional filters for action category, date range, and user ID.
         /// Returns the most recent entries up to a maximum of 500 records.
         /// </summary>
         /// <param name="actionCategory">Optional action category filter (e.g., "Authentication", "ProfileUpdate"). If null or empty, all categories are included.</param>
         /// <param name="startDate">Optional start date for the search range (inclusive). If null, no start date filter is applied.</param>
         /// <param name="endDate">Optional end date for the search range (inclusive). If null, no end date filter is applied.</param>
+        /// <param name="userId">Optional user ID filter for exact match. If null or empty, all users are included.</param>
         /// <returns>A list of up to 500 audit log entries matching the search criteria, ordered by most recent first.</returns>
-        Task<List<AuditLog>> SearchAuditLogsAsync(string? actionCategory = null, DateTime? startDate = null, DateTime? endDate = null);
+        Task<List<AuditLog>> SearchAuditLogsAsync(string? actionCategory = null, DateTime? startDate = null, DateTime? endDate = null, string? userId = null);
     }
 }

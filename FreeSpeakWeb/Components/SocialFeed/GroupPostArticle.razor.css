@@ -12,6 +12,11 @@
     border: 1px solid var(--border-color);
 }
 
+/* Elevate z-index when menu is open to prevent popup from appearing behind other posts */
+.feed-article.menu-open {
+    z-index: 100;
+}
+
 /* Group context badge */
 .group-context-badge {
     padding: 8px 16px;
@@ -33,6 +38,14 @@
 .group-context-badge strong {
     color: var(--text-primary);
     font-weight: 600;
+}
+
+/* Comments Display */
+.article-comments {
+    padding: 12px 16px;
+    clear: both;
+    position: relative;
+    background-color: #f8f9fa;
 }
 
 /* More Comments Indicator */

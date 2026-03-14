@@ -19,13 +19,12 @@
     border-radius: 8px;
     width: 100%;
     max-width: 1000px;
-    min-height: 600px;
-    max-height: calc(100vh - 40px);
+    height: calc(100vh - 40px); /* Fixed height to prevent resizing */
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     margin: auto;
-    overflow: hidden;
+    overflow: visible; /* Allow popup menus to overflow */
 }
 
 .group-post-detail-modal-header {
@@ -64,6 +63,7 @@
 .group-post-detail-modal-content {
     flex: 1;
     overflow-y: auto;
+    overflow-x: visible; /* Allow popup menus to overflow horizontally */
     padding: 0;
     min-height: 0;
 }
@@ -130,7 +130,7 @@
 .group-post-detail-modal-content ::deep .feed-article.no-images {
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 200px); /* Ensure minimum height for sticky positioning */
+    flex: 1; /* Fill available space in the modal */
 }
 
 /* Make article content not grow when no images */

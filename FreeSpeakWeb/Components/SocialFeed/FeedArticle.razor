@@ -10,7 +10,7 @@
 @inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
 @implements IAsyncDisposable
 
-<div class="feed-article">
+<div class="feed-article @(showMenu ? "menu-open" : "")">
     <!-- 1. Header Area -->
     <FeedArticleHeader 
         AuthorName="@AuthorName"

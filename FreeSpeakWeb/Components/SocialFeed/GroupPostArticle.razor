@@ -9,7 +9,7 @@
 @inject UserPreferenceService UserPreferenceService
 @implements IAsyncDisposable
 
-<div class="feed-article">
+<div class="feed-article @(showMenu ? "menu-open" : "")">
     <!-- 1. Header Area -->
     <FeedArticleHeader 
         AuthorName="@GetFormattedAuthorName()"

@@ -5,6 +5,7 @@
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.JSInterop
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Repositories.Abstractions
 
@@ -12,6 +13,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IUserRepository UserRepository
 @inject ILogger<SystemAdmin> Logger
+@inject IJSRuntime JSRuntime
 
 <PageTitle>System Administration Functions</PageTitle>
 
@@ -155,6 +157,12 @@
                                                                 </svg>
                                                             </button>
                                                             <ul class="dropdown-menu" aria-labelledby="userActions-@user.Id" style="z-index: 1060;">
+                                                                <li>
+                                                                    <button type="button" class="dropdown-item" @onclick="() => CopyUserIdToClipboard(user.Id)">
+                                                                        <i class="bi bi-clipboard me-2"></i>Copy User ID
+                                                                    </button>
+                                                                </li>
+                                                                <li><hr class="dropdown-divider" /></li>
                                                                 <li>
                                                                     <button type="button" class="dropdown-item" @onclick="() => OpenRoleModal(user)">
                                                                         <i class="bi bi-person-badge me-2"></i>Edit Roles
@@ -751,6 +759,23 @@
         selectedUser = user;
         showAuditLogModal = true;
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// Copies the specified user's ID (GUID) to the clipboard.
+    /// </summary>
+    /// <param name="userId">The user ID to copy to the clipboard.</param>
+    private async Task CopyUserIdToClipboard(string userId)
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", userId);
+            Logger.LogDebug("User ID {UserId} copied to clipboard", userId);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex, "Failed to copy user ID to clipboard");
+        }
     }
 
     /// <summary>
