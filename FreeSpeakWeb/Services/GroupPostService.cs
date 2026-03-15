@@ -25,6 +25,7 @@ namespace FreeSpeakWeb.Services
         private readonly PostNotificationHelper _notificationHelper;
         private readonly GroupAccessValidator _accessValidator;
         private readonly IAuditLogRepository _auditLogRepository;
+        private readonly GroupPointsService _groupPointsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupPostService"/> class.
@@ -43,6 +44,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="notificationHelper">Helper for creating post-related notifications.</param>
         /// <param name="accessValidator">Validator for group access permissions.</param>
         /// <param name="auditLogRepository">Repository for audit log operations.</param>
+        /// <param name="groupPointsService">Service for managing group member points.</param>
         public GroupPostService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             IGroupPostRepository<GroupPost, GroupPostImage> postRepository,
@@ -57,7 +59,8 @@ namespace FreeSpeakWeb.Services
             IWebHostEnvironment environment,
             PostNotificationHelper notificationHelper,
             GroupAccessValidator accessValidator,
-            IAuditLogRepository auditLogRepository)
+            IAuditLogRepository auditLogRepository,
+            GroupPointsService groupPointsService)
         {
             _contextFactory = contextFactory;
             _postRepository = postRepository;
@@ -73,6 +76,7 @@ namespace FreeSpeakWeb.Services
             _notificationHelper = notificationHelper;
             _accessValidator = accessValidator;
             _auditLogRepository = auditLogRepository;
+            _groupPointsService = groupPointsService;
         }
 
         #region Post Operations
@@ -134,16 +138,27 @@ namespace FreeSpeakWeb.Services
 
                 _logger.LogInformation("Group post created by user {AuthorId} in group {GroupId}: Post ID {PostId}", authorId, groupId, result.Post.Id);
 
-                                // Log group post creation to audit log
-                                await _auditLogRepository.LogActionAsync(authorId, ActionCategory.UserGroupPost, new UserGroupPostDetails
-                                {
-                                    GroupId = groupId,
-                                    PostId = result.Post.Id,
-                                    ContentSummary = content?.Length > 100 ? content.Substring(0, 100) + "..." : content,
-                                    HasMedia = imageUrls != null && imageUrls.Any()
-                                });
+                // Log group post creation to audit log
+                await _auditLogRepository.LogActionAsync(authorId, ActionCategory.UserGroupPost, new UserGroupPostDetails
+                {
+                    GroupId = groupId,
+                    PostId = result.Post.Id,
+                    ContentSummary = content?.Length > 100 ? content.Substring(0, 100) + "..." : content,
+                    HasMedia = imageUrls != null && imageUrls.Any()
+                });
 
-                                return (true, null, result.Post);
+                // Award points for post creation
+                try
+                {
+                    await _groupPointsService.AwardPostCreationPointsAsync(authorId, groupId);
+                }
+                catch (Exception pointsEx)
+                {
+                    // Log but don't fail the post creation if points award fails
+                    _logger.LogWarning(pointsEx, "Failed to award points for post creation. User {AuthorId}, Group {GroupId}, Post {PostId}", authorId, groupId, result.Post.Id);
+                }
+
+                return (true, null, result.Post);
             }
             catch (Exception ex)
             {
@@ -580,6 +595,32 @@ namespace FreeSpeakWeb.Services
 
                 _logger.LogInformation("Comment added to group post {PostId} by user {AuthorId}", postId, authorId);
 
+                // Award points for commenting on another user's post
+                try
+                {
+                    await _groupPointsService.AwardCommentPointsAsync(authorId, post.AuthorId, post.GroupId);
+                }
+                catch (Exception pointsEx)
+                {
+                    // Log but don't fail the comment creation if points award fails
+                    _logger.LogWarning(pointsEx, "Failed to award points for comment. User {AuthorId}, Post {PostId}, Group {GroupId}", authorId, postId, post.GroupId);
+                }
+
+                // Check if post reached 50 comments milestone and award bonus points to post author
+                if (post.CommentCount == 50)
+                {
+                    try
+                    {
+                        await _groupPointsService.AwardPost50CommentsMilestoneAsync(post.AuthorId, post.GroupId);
+                        _logger.LogInformation("Post {PostId} reached 50 comments milestone. Awarded bonus points to author {AuthorId}", postId, post.AuthorId);
+                    }
+                    catch (Exception milestoneEx)
+                    {
+                        // Log but don't fail the comment creation if milestone award fails
+                        _logger.LogWarning(milestoneEx, "Failed to award 50 comments milestone points. Post {PostId}, Author {AuthorId}, Group {GroupId}", postId, post.AuthorId, post.GroupId);
+                    }
+                }
+
                 // Send notifications using helper
                 if (parentCommentId.HasValue && parentComment != null)
                 {
@@ -766,6 +807,24 @@ namespace FreeSpeakWeb.Services
                 {
                     await _postRepository.IncrementLikeCountAsync(postId);
 
+                    // Reload post to get updated LikeCount for milestone check
+                    post = await _postRepository.GetByIdAsync(postId);
+
+                    // Check if post reached 20 likes milestone and award bonus points to post author
+                    if (post != null && post.LikeCount == 20)
+                    {
+                        try
+                        {
+                            await _groupPointsService.AwardPost20LikesMilestoneAsync(post.AuthorId, post.GroupId);
+                            _logger.LogInformation("Post {PostId} reached 20 likes milestone. Awarded bonus points to author {AuthorId}", postId, post.AuthorId);
+                        }
+                        catch (Exception milestoneEx)
+                        {
+                            // Log but don't fail the like operation if milestone award fails
+                            _logger.LogWarning(milestoneEx, "Failed to award 20 likes milestone points. Post {PostId}, Author {AuthorId}, Group {GroupId}", postId, post.AuthorId, post.GroupId);
+                        }
+                    }
+
                     // Send notification for new reactions only
                     await _notificationHelper.NotifyPostReactionAsync(
                         post.AuthorId,
@@ -896,6 +955,17 @@ namespace FreeSpeakWeb.Services
                         groupId: post.GroupId,
                         checkMute: false
                     );
+
+                    // Award points for liking another user's comment
+                    try
+                    {
+                        await _groupPointsService.AwardLikePointsAsync(userId, comment.AuthorId, post.GroupId);
+                    }
+                    catch (Exception pointsEx)
+                    {
+                        // Log but don't fail the like operation if points award fails
+                        _logger.LogWarning(pointsEx, "Failed to award points for comment like. User {UserId}, Comment {CommentId}, Group {GroupId}", userId, commentId, post.GroupId);
+                    }
                 }
 
                 _logger.LogInformation("User {UserId} liked group post comment {CommentId}", userId, commentId);

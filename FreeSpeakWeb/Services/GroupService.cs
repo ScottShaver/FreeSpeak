@@ -382,6 +382,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="isPublic">Optional new public visibility setting.</param>
         /// <param name="isHidden">Optional new hidden setting.</param>
         /// <param name="requiresJoinApproval">Optional new join approval requirement.</param>
+        /// <param name="enablePointsSystem">Optional setting to enable or disable the points system for this group.</param>
         /// <param name="headerImageUrl">Optional new header image URL.</param>
         /// <param name="verticalHeaderImageUrl">Optional new vertical header image URL.</param>
         /// <param name="websiteUrl">Optional new website URL.</param>
@@ -394,6 +395,7 @@ namespace FreeSpeakWeb.Services
             bool? isPublic = null,
             bool? isHidden = null,
             bool? requiresJoinApproval = null,
+            bool? enablePointsSystem = null,
             string? headerImageUrl = null,
             string? verticalHeaderImageUrl = null,
             string? websiteUrl = null)
@@ -472,6 +474,15 @@ namespace FreeSpeakWeb.Services
                         changedFields.Add("RequiresJoinApproval");
                     }
                     group.RequiresJoinApproval = requiresJoinApproval.Value;
+                }
+
+                if (enablePointsSystem.HasValue)
+                {
+                    if (group.EnablePointsSystem != enablePointsSystem.Value)
+                    {
+                        changedFields.Add("EnablePointsSystem");
+                    }
+                    group.EnablePointsSystem = enablePointsSystem.Value;
                 }
 
                 if (headerImageUrl != null)

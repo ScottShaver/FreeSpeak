@@ -1,0 +1,240 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using Microsoft.AspNetCore.Identity
+
+@inject GroupService GroupService
+@inject ILogger<GroupSettingsModal> Logger
+
+<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-gear me-2"></i>Group Settings
+                </h5>
+                <button type="button" class="btn-close" @onclick="OnClose" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (isLoading)
+                {
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <form>
+                        <div class="mb-3">
+                            <label for="groupName" class="form-label">Group Name</label>
+                            <input type="text" class="form-control" id="groupName" @bind="groupName" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="groupDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="groupDescription" rows="3" @bind="groupDescription"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="isPublic" @bind="isPublic" />
+                                <label class="form-check-label" for="isPublic">
+                                    Public Group
+                                </label>
+                                <div class="form-text">Public groups are visible to all users.</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="isHidden" @bind="isHidden" />
+                                <label class="form-check-label" for="isHidden">
+                                    Hidden from Discovery
+                                </label>
+                                <div class="form-text">Hidden groups don't appear in search results.</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="requiresJoinApproval" @bind="requiresJoinApproval" />
+                                <label class="form-check-label" for="requiresJoinApproval">
+                                    Require Join Approval
+                                </label>
+                                <div class="form-text">New members must be approved before joining.</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enablePointsSystem" @bind="enablePointsSystem" />
+                                <label class="form-check-label" for="enablePointsSystem">
+                                    <i class="bi bi-trophy me-1"></i>Enable Points System
+                                </label>
+                                <div class="form-text">
+                                    Members earn points for posts, comments, and likes. Members can achieve Rising Contributor, Top Contributor, and All-star Contributor badges.
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(successMessage))
+                        {
+                            <div class="alert alert-success" role="alert">
+                                <i class="bi bi-check-circle me-2"></i>@successMessage
+                            </div>
+                        }
+                    </form>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="OnClose" disabled="@isSaving">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary" @onclick="SaveSettings" disabled="@(isSaving || isLoading)">
+                    @if (isSaving)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    }
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// The group to edit settings for.
+    /// </summary>
+    [Parameter]
+    public Group Group { get; set; } = null!;
+
+    /// <summary>
+    /// The current user's ID.
+    /// </summary>
+    [Parameter]
+    public string CurrentUserId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Callback invoked when the modal is closed.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    /// <summary>
+    /// Callback invoked when settings are successfully saved.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnSettingsSaved { get; set; }
+
+    private string groupName = string.Empty;
+    private string groupDescription = string.Empty;
+    private bool isPublic;
+    private bool isHidden;
+    private bool requiresJoinApproval;
+    private bool enablePointsSystem;
+
+    private bool isLoading = false;
+    private bool isSaving = false;
+    private string? errorMessage;
+    private string? successMessage;
+
+    /// <summary>
+    /// Initializes the component by loading the current group settings.
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        if (Group != null)
+        {
+            groupName = Group.Name;
+            groupDescription = Group.Description;
+            isPublic = Group.IsPublic;
+            isHidden = Group.IsHidden;
+            requiresJoinApproval = Group.RequiresJoinApproval;
+            enablePointsSystem = Group.EnablePointsSystem;
+        }
+    }
+
+    /// <summary>
+    /// Saves the updated group settings.
+    /// </summary>
+    private async Task SaveSettings()
+    {
+        errorMessage = null;
+        successMessage = null;
+
+        if (string.IsNullOrWhiteSpace(groupName))
+        {
+            errorMessage = "Group name is required.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(groupDescription))
+        {
+            errorMessage = "Group description is required.";
+            return;
+        }
+
+        isSaving = true;
+        StateHasChanged();
+
+        try
+        {
+            var (success, error) = await GroupService.UpdateGroupAsync(
+                Group.Id,
+                CurrentUserId,
+                name: groupName,
+                description: groupDescription,
+                isPublic: isPublic,
+                isHidden: isHidden,
+                requiresJoinApproval: requiresJoinApproval,
+                enablePointsSystem: enablePointsSystem
+            );
+
+            if (success)
+            {
+                successMessage = "Settings saved successfully!";
+                Logger.LogInformation("Group {GroupId} settings updated by user {UserId}", Group.Id, CurrentUserId);
+
+                // Update the Group object with new values
+                Group.Name = groupName;
+                Group.Description = groupDescription;
+                Group.IsPublic = isPublic;
+                Group.IsHidden = isHidden;
+                Group.RequiresJoinApproval = requiresJoinApproval;
+                Group.EnablePointsSystem = enablePointsSystem;
+
+                StateHasChanged();
+
+                // Notify parent component
+                await OnSettingsSaved.InvokeAsync();
+
+                // Close modal after a brief delay
+                await Task.Delay(1500);
+                await OnClose.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = error ?? "Failed to save settings.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error saving group settings for group {GroupId}", Group.Id);
+            errorMessage = "An unexpected error occurred while saving settings.";
+        }
+        finally
+        {
+            isSaving = false;
+            StateHasChanged();
+        }
+    }
+}

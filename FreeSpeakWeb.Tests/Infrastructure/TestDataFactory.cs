@@ -109,12 +109,23 @@ namespace FreeSpeakWeb.Tests.Infrastructure
             };
         }
 
+        /// <summary>
+        /// Creates a test group with the specified properties.
+        /// </summary>
+        /// <param name="creatorId">The ID of the user creating the group.</param>
+        /// <param name="name">The name of the group.</param>
+        /// <param name="description">The description of the group.</param>
+        /// <param name="isPublic">Whether the group is public.</param>
+        /// <param name="isHidden">Whether the group is hidden.</param>
+        /// <param name="enablePointsSystem">Whether the points system is enabled for this group.</param>
+        /// <returns>A new <see cref="Group"/> instance.</returns>
         public static Group CreateTestGroup(
             string creatorId,
             string name = "Test Group",
             string description = "Test group description",
             bool isPublic = true,
-            bool isHidden = false)
+            bool isHidden = false,
+            bool enablePointsSystem = false)
         {
             return new Group
             {
@@ -123,6 +134,7 @@ namespace FreeSpeakWeb.Tests.Infrastructure
                 Description = description,
                 IsPublic = isPublic,
                 IsHidden = isHidden,
+                EnablePointsSystem = enablePointsSystem,
                 CreatedAt = DateTime.UtcNow,
                 LastActiveAt = DateTime.UtcNow
             };

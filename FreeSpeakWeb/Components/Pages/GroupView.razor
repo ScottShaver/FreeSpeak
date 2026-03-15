@@ -58,7 +58,15 @@
                 <div class="group-header-image" style="background-image: url('@group.HeaderImageUrl');"></div>
             }
             <div class="group-header-content">
-                <h1>@group.Name</h1>
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h1>@group.Name</h1>
+                    @if (!string.IsNullOrEmpty(currentUserId) && group.CreatorId == currentUserId)
+                    {
+                        <button class="btn btn-outline-secondary btn-sm" @onclick="OpenGroupSettings" title="Group Settings">
+                            <i class="bi bi-gear me-1"></i>Settings
+                        </button>
+                    }
+                </div>
                 <p class="group-description">@group.Description</p>
                 
                 <div class="group-stats">
@@ -129,6 +137,7 @@
                         AuthorId="@post.AuthorId"
                         AuthorName="@authorName"
                         AuthorImageUrl="@post.Author?.ProfilePictureUrl"
+                        AuthorGroupPoints="@null"
                         CreatedAt="@post.CreatedAt"
                         LikeCount="@post.LikeCount"
                         CommentCount="@post.CommentCount"
@@ -229,6 +238,15 @@
     Progress="@uploadProgress"
     CurrentStep="@uploadCurrentStep"
     TotalSteps="@uploadTotalSteps" />
+
+@if (showGroupSettings && group != null)
+{
+    <FreeSpeakWeb.Components.Groups.GroupSettingsModal 
+        Group="@group"
+        CurrentUserId="@currentUserId"
+        OnClose="CloseGroupSettings"
+        OnSettingsSaved="HandleGroupSettingsSaved" />
+}
 
 @code {
     [Parameter]
@@ -729,6 +747,38 @@
     // Modal state
     private bool showGroupPostDetailModal = false;
     private GroupPost? selectedGroupPost = null;
+
+    // Group settings modal state
+    private bool showGroupSettings = false;
+
+    /// <summary>
+    /// Opens the group settings modal.
+    /// </summary>
+    private void OpenGroupSettings()
+    {
+        showGroupSettings = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the group settings modal.
+    /// </summary>
+    private void CloseGroupSettings()
+    {
+        showGroupSettings = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles the event when group settings are saved successfully.
+    /// Refreshes the group information to reflect changes.
+    /// </summary>
+    private async Task HandleGroupSettingsSaved()
+    {
+        // The group object has already been updated by the modal
+        // Just refresh the UI
+        StateHasChanged();
+    }
 
     private void ShowGroupPostDetail(GroupPost post)
     {

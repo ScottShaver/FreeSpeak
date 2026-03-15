@@ -20,6 +20,7 @@ namespace FreeSpeakWeb.DTOs
     /// <param name="LikeCount">The cached count of likes on this group post.</param>
     /// <param name="CommentCount">The cached count of comments on this group post.</param>
     /// <param name="ShareCount">The cached count of shares on this group post.</param>
+    /// <param name="AuthorGroupPoints">The author's accumulated points in this group.</param>
     /// <param name="Images">The collection of image DTOs attached to this group post.</param>
     public record GroupPostListDto(
         int Id,
@@ -34,6 +35,7 @@ namespace FreeSpeakWeb.DTOs
         int LikeCount,
         int CommentCount,
         int ShareCount,
+        int AuthorGroupPoints,
         List<PostImageDto> Images
     );
 
@@ -55,6 +57,7 @@ namespace FreeSpeakWeb.DTOs
     /// <param name="LikeCount">The cached count of likes on this group post.</param>
     /// <param name="CommentCount">The cached count of comments on this group post.</param>
     /// <param name="ShareCount">The cached count of shares on this group post.</param>
+    /// <param name="AuthorGroupPoints">The author's accumulated points in this group.</param>
     /// <param name="Images">The collection of image DTOs attached to this group post.</param>
     public record GroupPostDetailDto(
         int Id,
@@ -71,6 +74,7 @@ namespace FreeSpeakWeb.DTOs
         int LikeCount,
         int CommentCount,
         int ShareCount,
+        int AuthorGroupPoints,
         List<PostImageDto> Images
     )
     {

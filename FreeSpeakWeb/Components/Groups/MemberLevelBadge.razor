@@ -1,0 +1,85 @@
+@using FreeSpeakWeb.Services
+
+@* Display member level badge with icon and level name *@
+@if (Level != MemberLevel.Member || ShowForAllLevels)
+{
+    <span class="member-level-badge @CssClass" title="@GetTooltip()">
+        <i class="bi @iconClass @colorClass"></i>
+        @if (ShowText)
+        {
+            <span class="ms-1">@levelName</span>
+        }
+        @if (ShowPoints && Points.HasValue)
+        {
+            <span class="ms-1 text-muted">(@Points pts)</span>
+        }
+    </span>
+}
+
+@code {
+    /// <summary>
+    /// The member level to display.
+    /// </summary>
+    [Parameter]
+    public MemberLevel Level { get; set; }
+
+    /// <summary>
+    /// Optional: The current point total to display alongside the badge.
+    /// </summary>
+    [Parameter]
+    public int? Points { get; set; }
+
+    /// <summary>
+    /// Whether to show the text label for the level. Default is true.
+    /// </summary>
+    [Parameter]
+    public bool ShowText { get; set; } = true;
+
+    /// <summary>
+    /// Whether to show the point total. Default is false.
+    /// </summary>
+    [Parameter]
+    public bool ShowPoints { get; set; } = false;
+
+    /// <summary>
+    /// Whether to show badges for all levels including basic "Member". Default is false (only shows achievement levels).
+    /// </summary>
+    [Parameter]
+    public bool ShowForAllLevels { get; set; } = false;
+
+    /// <summary>
+    /// Additional CSS classes to apply to the badge container.
+    /// </summary>
+    [Parameter]
+    public string? CssClass { get; set; }
+
+    private string iconClass = string.Empty;
+    private string colorClass = string.Empty;
+    private string levelName = string.Empty;
+
+    /// <summary>
+    /// Initializes the component and sets badge properties based on the level.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        iconClass = GroupPointsService.GetMemberLevelIcon(Level);
+        colorClass = GroupPointsService.GetMemberLevelColor(Level);
+        levelName = GroupPointsService.GetMemberLevelName(Level);
+    }
+
+    /// <summary>
+    /// Gets the tooltip text explaining the achievement level.
+    /// </summary>
+    /// <returns>A descriptive tooltip string.</returns>
+    private string GetTooltip()
+    {
+        return Level switch
+        {
+            MemberLevel.AllStarContributor => $"All-star Contributor - Achieved at {GroupPointsService.AllStarContributorThreshold}+ points",
+            MemberLevel.TopContributor => $"Top Contributor - Achieved at {GroupPointsService.TopContributorThreshold}+ points",
+            MemberLevel.RisingContributor => $"Rising Contributor - Achieved at {GroupPointsService.RisingContributorThreshold}+ points",
+            MemberLevel.Member => "Member",
+            _ => "Member"
+        };
+    }
+}

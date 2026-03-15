@@ -58,6 +58,18 @@ namespace FreeSpeakWeb.Data
         public bool RequiresJoinApproval { get; set; } = false;
 
         /// <summary>
+        /// Gets or sets whether users must accept the group rules before joining.
+        /// When true, users must agree to the group's rules (from GroupRules table) before joining or submitting a join request. Defaults to false.
+        /// </summary>
+        public bool RequireAcceptRules { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets whether the group points system is enabled for this group.
+        /// When true, members earn points for posts, comments, likes, and milestones. Group admins can toggle this feature. Defaults to false.
+        /// </summary>
+        public bool EnablePointsSystem { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets the ID of the user who created this group.
         /// The creator typically has full administrative permissions.
         /// </summary>

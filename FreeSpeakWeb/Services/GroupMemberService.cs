@@ -32,9 +32,13 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Create a join request for a group
         /// </summary>
+        /// <param name="groupId">The ID of the group.</param>
+        /// <param name="userId">The ID of the user requesting to join.</param>
+        /// <param name="hasAgreedToRules">Whether the user has agreed to the group rules (required if group has RequireAcceptRules set).</param>
         public async Task<(bool Success, string? ErrorMessage, GroupJoinRequest? Request)> CreateJoinRequestAsync(
             int groupId,
-            string userId)
+            string userId,
+            bool hasAgreedToRules = false)
         {
             if (string.IsNullOrWhiteSpace(userId))
             {
@@ -50,6 +54,12 @@ namespace FreeSpeakWeb.Services
                 if (group == null)
                 {
                     return (false, "Group not found.", null);
+                }
+
+                // Check if group requires rules acceptance
+                if (group.RequireAcceptRules && !hasAgreedToRules)
+                {
+                    return (false, "You must agree to the group rules before submitting a join request.", null);
                 }
 
                 // Check if user is already a member
@@ -78,8 +88,8 @@ namespace FreeSpeakWeb.Services
                 context.GroupJoinRequests.Add(request);
                 await context.SaveChangesAsync();
 
-                _logger.LogInformation("Join request {RequestId} created for group {GroupId} by user {UserId}", 
-                    request.Id, groupId, userId);
+                _logger.LogInformation("Join request {RequestId} created for group {GroupId} by user {UserId} with rules agreement: {HasAgreedToRules}", 
+                    request.Id, groupId, userId, hasAgreedToRules);
 
                 // Log join request to audit log
                 await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserGroupRequests, new UserGroupRequestsDetails
@@ -174,8 +184,8 @@ namespace FreeSpeakWeb.Services
                     return (false, "Only group creator or admins can approve join requests.");
                 }
 
-                // Add user as member
-                var addResult = await AddMemberAsync(request.GroupId, request.UserId);
+                // Add user as member (with rules agreement true since they made it through the join request)
+                var addResult = await AddMemberAsync(request.GroupId, request.UserId, hasAgreedToRules: true);
                 if (!addResult.Success)
                 {
                     return addResult;
@@ -309,7 +319,10 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Add a member to a group (internal method)
         /// </summary>
-        private async Task<(bool Success, string? ErrorMessage)> AddMemberAsync(int groupId, string userId)
+        /// <param name="groupId">The ID of the group.</param>
+        /// <param name="userId">The ID of the user to add.</param>
+        /// <param name="hasAgreedToRules">Whether the user has agreed to the group rules.</param>
+        private async Task<(bool Success, string? ErrorMessage)> AddMemberAsync(int groupId, string userId, bool hasAgreedToRules = false)
         {
             try
             {
@@ -333,7 +346,7 @@ namespace FreeSpeakWeb.Services
                     GroupPoints = 0,
                     IsAdmin = false,
                     IsModerator = false,
-                    HasAgreedToRules = false
+                    HasAgreedToRules = hasAgreedToRules
                 };
 
                 context.GroupUsers.Add(groupUser);
@@ -347,7 +360,7 @@ namespace FreeSpeakWeb.Services
 
                 await context.SaveChangesAsync();
 
-                _logger.LogInformation("User {UserId} added to group {GroupId}", userId, groupId);
+                _logger.LogInformation("User {UserId} added to group {GroupId} with rules agreement: {HasAgreedToRules}", userId, groupId, hasAgreedToRules);
                 return (true, null);
             }
             catch (Exception ex)
@@ -360,7 +373,10 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Join a public group (no approval required)
         /// </summary>
-        public async Task<(bool Success, string? ErrorMessage)> JoinGroupAsync(int groupId, string userId)
+        /// <param name="groupId">The ID of the group to join.</param>
+        /// <param name="userId">The ID of the user joining.</param>
+        /// <param name="hasAgreedToRules">Whether the user has agreed to the group rules (required if group has RequireAcceptRules set).</param>
+        public async Task<(bool Success, string? ErrorMessage)> JoinGroupAsync(int groupId, string userId, bool hasAgreedToRules = false)
         {
             try
             {
@@ -382,7 +398,13 @@ namespace FreeSpeakWeb.Services
                     return (false, "This group requires approval to join. Please submit a join request.");
                 }
 
-                var result = await AddMemberAsync(groupId, userId);
+                // Check if group requires rules acceptance
+                if (group.RequireAcceptRules && !hasAgreedToRules)
+                {
+                    return (false, "You must agree to the group rules before joining.");
+                }
+
+                var result = await AddMemberAsync(groupId, userId, hasAgreedToRules);
                 if (result.Success)
                 {
                     // Log direct group join to audit log

@@ -11,6 +11,7 @@
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Components.Shared
+@using FreeSpeakWeb.Components.Groups
 @using FreeSpeakWeb.Components.Pages.Base
 @using System.Security.Claims
 @using Microsoft.JSInterop
@@ -451,6 +452,16 @@
     </GroupPostDetailModal>
 }
 
+@* Rules Acceptance Modal *@
+@if (showRulesModal && selectedGroupForJoin != null)
+{
+    <RulesAcceptanceModal 
+        Group="@selectedGroupForJoin"
+        AgreeButtonText="@(selectedGroupForJoin.RequiresJoinApproval ? "Submit Request" : "Join Group")"
+        OnClose="CloseRulesModal"
+        OnAgree="HandleRulesAgreed" />
+}
+
 @code {
     private string? currentUserId;
     private string? currentUserImageUrl;
@@ -496,6 +507,10 @@
     // Suggested Groups state
     private List<Group> suggestedGroups = new();
     private bool isLoadingSuggestedGroups = false;
+
+    // Rules acceptance modal state
+    private bool showRulesModal = false;
+    private Group? selectedGroupForJoin = null;
 
     // Group-specific data dictionaries (rename to use base class naming)
     // Base class provides: postRefreshTriggers, postReactionData, postUserReactions, pinnedPosts, postAuthorNames
@@ -1096,10 +1111,60 @@
 
     /// <summary>
     /// Handles the user's request to join a group.
-    /// If the group requires approval, creates a join request; otherwise, joins the group immediately.
+    /// If the group requires rules acceptance, shows the rules modal first.
+    /// Otherwise, if the group requires approval, creates a join request; otherwise, joins the group immediately.
     /// </summary>
     /// <param name="group">The group to join.</param>
     private async Task JoinGroup(Group group)
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        // Check if group requires rules acceptance
+        if (group.RequireAcceptRules)
+        {
+            selectedGroupForJoin = group;
+            showRulesModal = true;
+            StateHasChanged();
+            return;
+        }
+
+        // Proceed with join without rules requirement
+        await ProcessJoinGroup(group, hasAgreedToRules: false);
+    }
+
+    /// <summary>
+    /// Closes the rules acceptance modal.
+    /// </summary>
+    private void CloseRulesModal()
+    {
+        showRulesModal = false;
+        selectedGroupForJoin = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles the user agreeing to group rules.
+    /// Proceeds with the join process with rules agreement flag set to true.
+    /// </summary>
+    private async Task HandleRulesAgreed()
+    {
+        if (selectedGroupForJoin == null) return;
+
+        var group = selectedGroupForJoin;
+
+        // Close the modal
+        CloseRulesModal();
+
+        // Proceed with join with rules agreement
+        await ProcessJoinGroup(group, hasAgreedToRules: true);
+    }
+
+    /// <summary>
+    /// Processes the actual group join or join request.
+    /// </summary>
+    /// <param name="group">The group to join.</param>
+    /// <param name="hasAgreedToRules">Whether the user has agreed to the group rules.</param>
+    private async Task ProcessJoinGroup(Group group, bool hasAgreedToRules)
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
 
@@ -1108,7 +1173,7 @@
             if (group.RequiresJoinApproval)
             {
                 // Send join request
-                var (success, errorMessage, request) = await GroupMemberService.CreateJoinRequestAsync(group.Id, currentUserId);
+                var (success, errorMessage, request) = await GroupMemberService.CreateJoinRequestAsync(group.Id, currentUserId, hasAgreedToRules);
 
                 if (success)
                 {
@@ -1127,7 +1192,7 @@
             else
             {
                 // Join immediately
-                var (success, errorMessage) = await GroupMemberService.JoinGroupAsync(group.Id, currentUserId);
+                var (success, errorMessage) = await GroupMemberService.JoinGroupAsync(group.Id, currentUserId, hasAgreedToRules);
 
                 if (success)
                 {
