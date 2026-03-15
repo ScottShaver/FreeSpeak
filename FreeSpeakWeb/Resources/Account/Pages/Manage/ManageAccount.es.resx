@@ -60,205 +60,205 @@
   </resheader>
   <!-- Profile Page -->
   <data name="Profile" xml:space="preserve">
-    <value>Profile</value>
+    <value>Perfil</value>
   </data>
   <data name="ProfilePicture" xml:space="preserve">
-    <value>Profile Picture</value>
+    <value>Foto de perfil</value>
   </data>
   <data name="ProfilePictureHelpText" xml:space="preserve">
-    <value>Upload an image (max 5MB). Image will be resized to 168x168 pixels.</value>
+    <value>Sube una imagen (máx. 5MB). La imagen se redimensionará a 168x168 píxeles.</value>
   </data>
   <data name="UploadNewProfilePicture" xml:space="preserve">
-    <value>Upload new profile picture</value>
+    <value>Subir nueva foto de perfil</value>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>Username</value>
+    <value>Nombre de usuario</value>
   </data>
   <data name="FirstName" xml:space="preserve">
-    <value>First Name</value>
+    <value>Nombre</value>
   </data>
   <data name="LastName" xml:space="preserve">
-    <value>Last Name</value>
+    <value>Apellido</value>
   </data>
   <data name="NameSuffix" xml:space="preserve">
-    <value>Name Suffix</value>
+    <value>Sufijo del nombre</value>
   </data>
   <data name="DateOfBirth" xml:space="preserve">
-    <value>Date of Birth</value>
+    <value>Fecha de nacimiento</value>
   </data>
   <data name="City" xml:space="preserve">
-    <value>City</value>
+    <value>Ciudad</value>
   </data>
   <data name="State" xml:space="preserve">
-    <value>State</value>
+    <value>Estado/Provincia</value>
   </data>
   <data name="Occupation" xml:space="preserve">
-    <value>Occupation</value>
+    <value>Ocupación</value>
   </data>
   <data name="PhoneNumber" xml:space="preserve">
-    <value>Phone number</value>
+    <value>Número de teléfono</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Save</value>
+    <value>Guardar</value>
   </data>
   <!-- Email Page -->
   <data name="Email" xml:space="preserve">
-    <value>Email</value>
+    <value>Correo electrónico</value>
   </data>
   <data name="ManageEmail" xml:space="preserve">
-    <value>Manage email</value>
+    <value>Administrar correo electrónico</value>
   </data>
   <data name="YourEmailIsConfirmed" xml:space="preserve">
-    <value>Your email is confirmed.</value>
+    <value>Tu correo electrónico está confirmado.</value>
   </data>
   <data name="PleaseConfirmYourEmail" xml:space="preserve">
-    <value>Please confirm your email.</value>
+    <value>Por favor confirma tu correo electrónico.</value>
   </data>
   <data name="SendVerificationEmail" xml:space="preserve">
-    <value>Send verification email</value>
+    <value>Enviar correo de verificación</value>
   </data>
   <data name="NewEmail" xml:space="preserve">
-    <value>New email</value>
+    <value>Nuevo correo electrónico</value>
   </data>
   <data name="ChangeEmail" xml:space="preserve">
-    <value>Change email</value>
+    <value>Cambiar correo electrónico</value>
   </data>
   <!-- Password Pages -->
   <data name="ChangePassword" xml:space="preserve">
-    <value>Change password</value>
+    <value>Cambiar contraseña</value>
   </data>
   <data name="CurrentPassword" xml:space="preserve">
-    <value>Current password</value>
+    <value>Contraseña actual</value>
   </data>
   <data name="NewPassword" xml:space="preserve">
-    <value>New password</value>
+    <value>Nueva contraseña</value>
   </data>
   <data name="ConfirmNewPassword" xml:space="preserve">
-    <value>Confirm new password</value>
+    <value>Confirmar nueva contraseña</value>
   </data>
   <data name="UpdatePassword" xml:space="preserve">
-    <value>Update password</value>
+    <value>Actualizar contraseña</value>
   </data>
   <data name="SetPassword" xml:space="preserve">
-    <value>Set password</value>
+    <value>Establecer contraseña</value>
   </data>
   <data name="SetYourPassword" xml:space="preserve">
-    <value>Set your password</value>
+    <value>Establecer tu contraseña</value>
   </data>
   <data name="YouDoNotHaveLocalPassword" xml:space="preserve">
-    <value>You do not have a local username/password for this site. Add a local account so you can log in without an external login.</value>
+    <value>No tienes un nombre de usuario/contraseña local para este sitio. Agrega una cuenta local para poder iniciar sesión sin un inicio de sesión externo.</value>
   </data>
   <!-- Two-Factor Authentication -->
   <data name="TwoFactorAuthentication" xml:space="preserve">
-    <value>Two-factor authentication</value>
+    <value>Autenticación de dos factores</value>
   </data>
   <data name="Enabled" xml:space="preserve">
-    <value>Enabled</value>
+    <value>Activado</value>
   </data>
   <data name="Disabled" xml:space="preserve">
-    <value>Disabled</value>
+    <value>Desactivado</value>
   </data>
   <data name="Disable2FA" xml:space="preserve">
-    <value>Disable 2FA</value>
+    <value>Desactivar autenticación de dos factores</value>
   </data>
   <data name="ResetRecoveryCodes" xml:space="preserve">
-    <value>Reset recovery codes</value>
+    <value>Restablecer códigos de recuperación</value>
   </data>
   <data name="SetupAuthenticatorApp" xml:space="preserve">
-    <value>Setup authenticator app</value>
+    <value>Configurar aplicación de autenticación</value>
   </data>
   <data name="ResetAuthenticatorKey" xml:space="preserve">
-    <value>Reset authenticator key</value>
+    <value>Restablecer clave de autenticación</value>
   </data>
   <data name="RecoveryCodes" xml:space="preserve">
-    <value>Recovery codes</value>
+    <value>Códigos de recuperación</value>
   </data>
   <data name="RecoveryCodesLeft" xml:space="preserve">
-    <value>{0} recovery codes left</value>
+    <value>{0} códigos de recuperación restantes</value>
   </data>
   <data name="GenerateNewRecoveryCodes" xml:space="preserve">
-    <value>Generate new recovery codes</value>
+    <value>Generar nuevos códigos de recuperación</value>
   </data>
   <!-- Personal Data -->
   <data name="PersonalData" xml:space="preserve">
-    <value>Personal data</value>
+    <value>Datos personales</value>
   </data>
   <data name="DownloadYourData" xml:space="preserve">
-    <value>Download your data</value>
+    <value>Descargar tus datos</value>
   </data>
   <data name="Download" xml:space="preserve">
-    <value>Download</value>
+    <value>Descargar</value>
   </data>
   <data name="DeleteYourData" xml:space="preserve">
-    <value>Delete your data</value>
+    <value>Eliminar tus datos</value>
   </data>
   <data name="DeleteAccount" xml:space="preserve">
-    <value>Delete account</value>
+    <value>Eliminar cuenta</value>
   </data>
   <data name="DeleteAccountWarning" xml:space="preserve">
-    <value>Deleting this data will permanently remove your account, and this cannot be recovered.</value>
+    <value>Eliminar estos datos eliminará permanentemente tu cuenta, y esta acción no se puede deshacer.</value>
   </data>
   <data name="DisableAccount" xml:space="preserve">
-    <value>Disable Account</value>
+    <value>Desactivar cuenta</value>
   </data>
   <data name="DisableAccountWarning" xml:space="preserve">
-    <value>Disabling your account will permanently lock you out, and this cannot be recovered.</value>
+    <value>Desactivar tu cuenta te bloqueará permanentemente, y esta acción no se puede deshacer.</value>
   </data>
   <data name="DisableMyAccount" xml:space="preserve">
-    <value>Disable my account</value>
+    <value>Desactivar mi cuenta</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Password</value>
+    <value>Contraseña</value>
   </data>
   <data name="IncorrectPassword" xml:space="preserve">
-    <value>Error: Incorrect password.</value>
+    <value>Error: Contraseña incorrecta.</value>
   </data>
   <!-- Navigation Menu -->
   <data name="Account" xml:space="preserve">
-    <value>Account</value>
+    <value>Cuenta</value>
   </data>
   <data name="SecuritySettings" xml:space="preserve">
-    <value>Security Settings</value>
+    <value>Configuración de seguridad</value>
   </data>
   <data name="ExternalLogins" xml:space="preserve">
-    <value>External logins</value>
-  </data>
-  <!-- LikesModal -->
-  <data name="PeopleWhoReacted" xml:space="preserve">
-    <value>People who reacted</value>
-  </data>
-  <data name="AllReactions" xml:space="preserve">
-    <value>All</value>
-  </data>
-  <data name="NoReactionsYet" xml:space="preserve">
-    <value>No reactions yet</value>
-  </data>
-  <!-- Comment Editor -->
-  <data name="WriteAComment" xml:space="preserve">
-    <value>Write a comment...</value>
-  </data>
-  <data name="Post" xml:space="preserve">
-    <value>Post</value>
+    <value>Inicios de sesión externos</value>
   </data>
   <!-- Preferences -->
   <data name="Preferences" xml:space="preserve">
-    <value>Preferences</value>
+    <value>Preferencias</value>
+  </data>
+  <!-- LikesModal -->
+  <data name="PeopleWhoReacted" xml:space="preserve">
+    <value>Personas que reaccionaron</value>
+  </data>
+  <data name="AllReactions" xml:space="preserve">
+    <value>Todos</value>
+  </data>
+  <data name="NoReactionsYet" xml:space="preserve">
+    <value>Aún no hay reacciones</value>
+  </data>
+  <!-- Comment Editor -->
+  <data name="WriteAComment" xml:space="preserve">
+    <value>Escribe un comentario...</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Publicar</value>
   </data>
   <!-- Common -->
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Cancelar</value>
   </data>
   <data name="Confirm" xml:space="preserve">
-    <value>Confirm</value>
+    <value>Confirmar</value>
   </data>
   <data name="Submit" xml:space="preserve">
-    <value>Submit</value>
+    <value>Enviar</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Close</value>
+    <value>Cerrar</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>Yes</value>
+    <value>Sí</value>
   </data>
   <data name="No" xml:space="preserve">
     <value>No</value>
