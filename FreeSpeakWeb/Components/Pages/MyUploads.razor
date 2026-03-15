@@ -238,7 +238,7 @@
                 dotNetHelper = DotNetObjectReference.Create(this);
                 await module.InvokeVoidAsync("initializeInfiniteScroll", picturesScrollElement, dotNetHelper, "pictures");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Silently fail - infinite scroll optional
             }
@@ -278,7 +278,7 @@
                     await module.InvokeVoidAsync("initializeInfiniteScroll", videosScrollElement, dotNetHelper, "videos");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Silently fail - tab switch will show error state
             }
@@ -304,7 +304,7 @@
                 picturesPage++;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - pictures will show empty
         }
@@ -348,7 +348,7 @@
                 videosPage++;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - videos will show empty
         }

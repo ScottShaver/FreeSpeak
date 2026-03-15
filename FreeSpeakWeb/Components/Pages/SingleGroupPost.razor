@@ -16,6 +16,7 @@
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject UserPreferenceService UserPreferenceService
 @inject UserManager<ApplicationUser> UserManager
+@inject FreeSpeakWeb.Repositories.GroupCommentRepository GroupCommentRepository
 @attribute [AllowAnonymous]
 
 <PageTitle>@pageTitle</PageTitle>
@@ -75,7 +76,10 @@
                 OnCommentAdded="@HandleCommentAdded"
                 OnReplySubmitted="@HandleReplySubmitted"
                 OnCommentReactionChanged="@HandleCommentReactionChanged"
-                OnRemoveCommentReaction="@HandleRemoveCommentReaction">
+                OnRemoveCommentReaction="@HandleRemoveCommentReaction"
+                OnDeleteComment="@HandleDeleteComment"
+                OnCommentUpdated="@HandleCommentUpdated"
+                OnReportComment="@HandleReportComment">
                 <ArticleContent>
                     @((MarkupString)HtmlSanitizationService.SanitizeAndFormatContent(post.Content))
                 </ArticleContent>
@@ -199,7 +203,7 @@
                 errorMessage = "Sorry, this post is no longer available or does not belong to this group.";
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             errorMessage = "An error occurred while loading this post.";
         }
@@ -438,6 +442,47 @@
     {
         var comment = await GroupPostService.GetCommentByIdAsync(commentId);
         return comment?.PostId;
+    }
+
+    /// <summary>
+    /// Deletes a comment from the group post.
+    /// </summary>
+    protected override async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteCommentAsync(
+        int commentId, string userId)
+    {
+        var result = await GroupCommentRepository.DeleteAsync(commentId, userId);
+        if (result.Success) await ReloadPost();
+        return (result.Success, result.ErrorMessage, result.DeletedCount);
+    }
+
+    /// <summary>
+    /// Updates a comment's content.
+    /// </summary>
+    protected override async Task<(bool Success, string? ErrorMessage)> UpdateCommentAsync(
+        int commentId, string userId, string newContent)
+    {
+        var result = await GroupCommentRepository.UpdateAsync(commentId, userId, newContent);
+        if (result.Success) await ReloadPost();
+        return (result.Success, result.ErrorMessage);
+    }
+
+    /// <summary>
+    /// Reports a comment for moderation.
+    /// </summary>
+    protected override async Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
+        int commentId, string userId)
+    {
+        // TODO: Implement comment reporting when report system is available
+        await Task.CompletedTask;
+        return (true, null);
+    }
+
+    /// <summary>
+    /// Decrements the comment count for the post.
+    /// </summary>
+    protected override void DecrementPostCommentCount(int postId, int decrementBy = 1)
+    {
+        // Single post page reloads entire post, no need to decrement manually
     }
 
     #endregion

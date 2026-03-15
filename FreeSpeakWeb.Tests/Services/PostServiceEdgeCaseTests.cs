@@ -279,7 +279,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             // Act - Delete parent comment
-            var (success, errorMessage) = await service.DeleteCommentAsync(parentCommentId, "user1");
+            var (success, errorMessage, deletedCount) = await service.DeleteCommentAsync(parentCommentId, "user1");
 
             // Assert
             success.Should().BeTrue();

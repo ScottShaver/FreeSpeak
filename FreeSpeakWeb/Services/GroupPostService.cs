@@ -1240,13 +1240,21 @@ namespace FreeSpeakWeb.Services
 
                 var likes = await context.GroupPostLikes
                     .Include(l => l.User)
-                    .Where(l => l.PostId == postId)
+                    .Where(l => l.PostId == postId && l.User != null)
                     .OrderByDescending(l => l.CreatedAt)
                     .Take(maxCount)
-                    .Select(l => new { l.User, l.Type, l.CreatedAt })
                     .ToListAsync();
 
-                return likes.Select(l => (l.User, l.Type, l.CreatedAt)).ToList();
+                var result = new List<(ApplicationUser User, LikeType Type, DateTime CreatedAt)>();
+                foreach (var like in likes)
+                {
+                    if (like.User != null)
+                    {
+                        result.Add((like.User, like.Type, like.CreatedAt));
+                    }
+                }
+
+                return result;
             }
             catch (Exception ex)
             {

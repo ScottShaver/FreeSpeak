@@ -6,6 +6,7 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Data.AuditLogDetails
 @using FreeSpeakWeb.Repositories.Abstractions
+@using FreeSpeakWeb.Services
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
@@ -13,6 +14,7 @@
 @inject ILogger<DeletePersonalData> Logger
 @inject IOptions<SiteSettings> SiteSettings
 @inject IAuditLogRepository AuditLogRepository
+@inject AlertService AlertService
 
 <PageTitle>@SiteSettings.Value.SiteName - Disable Account</PageTitle>
 
@@ -77,6 +79,7 @@
         if (requirePassword && !await UserManager.CheckPasswordAsync(user, Input.Password))
         {
             message = "Error: Incorrect password.";
+            AlertService.ShowError("Incorrect password. Please try again.");
             return;
         }
 
@@ -105,6 +108,7 @@
             IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString()
         });
 
+        AlertService.ShowSuccess("Your account has been disabled.");
         RedirectManager.RedirectToCurrentPage();
     }
 

@@ -167,7 +167,7 @@
             {
                 module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/PostEditModal.razor.js");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Silently fail - JS module optional
             }
@@ -224,7 +224,7 @@
                 emojiPickerPositionStyle = await module.InvokeAsync<string>("calculateEmojiPickerPosition", emojiButtonElement);
                 StateHasChanged();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Silently fail - emoji picker positioning optional
             }
@@ -241,7 +241,7 @@
                 var newContent = await module.InvokeAsync<string>("insertTextAtCursor", textareaElement, emoji);
                 editedContent = newContent;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Fallback to appending
                 editedContent += emoji;

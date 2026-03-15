@@ -29,6 +29,7 @@
 @inject UserPreferenceService UserPreferenceService
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject ImageUploadService ImageUploadService
+@inject FreeSpeakWeb.Repositories.Abstractions.IGroupCommentRepository GroupCommentRepository
 
 <PageTitle>@(group?.Name ?? "Group") - @SiteSettings.Value.SiteName</PageTitle>
 
@@ -163,6 +164,9 @@
                         OnReplySubmitted="@HandleGroupPostReplySubmitted"
                         OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
                         OnRemoveCommentReaction="@HandleRemoveGroupPostCommentReaction"
+                        OnDeleteComment="@HandleDeleteComment"
+                        OnCommentUpdated="@HandleCommentUpdated"
+                        OnReportComment="@HandleReportComment"
                         OnShowPostDetail="@(() => ShowGroupPostDetail(post))"
                         OnShowComments="@(() => ShowGroupPostDetail(post))">
                         <ArticleContent>
@@ -223,6 +227,9 @@
         OnReplySubmitted="@HandleGroupPostReplySubmitted"
         OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
         OnRemoveCommentReaction="@HandleRemoveGroupPostCommentReaction"
+        OnDeleteComment="@HandleDeleteComment"
+        OnCommentUpdated="@HandleCommentUpdated"
+        OnReportComment="@HandleReportComment"
         OnClose="@CloseGroupPostDetailModal">
         <ArticleContent>
             @((MarkupString)FormatContentWithLineBreaks(selectedGroupPost.Content))
@@ -322,7 +329,7 @@
                 dotNetHelper = DotNetObjectReference.Create(this);
                 await jsModule.InvokeAsync<object?>("initializeInfiniteScroll", (object?)null, dotNetHelper);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Silently fail - infinite scroll optional
             }
@@ -376,7 +383,7 @@
             
             lastActivity = await GroupPostService.GetLastActivityAsync(GroupId) ?? group.CreatedAt;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             group = null;
         }
@@ -412,7 +419,7 @@
             // Load additional data for posts (reactions, pinned status, mute status)
             await LoadGroupPostDataAsync(groupPosts);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - posts will show empty
         }
@@ -451,7 +458,7 @@
                 hasMorePosts = false;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - pagination will stop
         }
@@ -551,7 +558,12 @@
         if (success)
         {
             pinnedPosts[postId] = true;
+            AlertService.ShowSuccess("Post pinned successfully.");
             StateHasChanged();
+        }
+        else
+        {
+            AlertService.ShowError(errorMessage ?? "Failed to pin post.");
         }
     }
 
@@ -564,7 +576,12 @@
         if (success)
         {
             pinnedPosts[postId] = false;
+            AlertService.ShowSuccess("Post unpinned successfully.");
             StateHasChanged();
+        }
+        else
+        {
+            AlertService.ShowError(errorMessage ?? "Failed to unpin post.");
         }
     }
 
@@ -653,6 +670,8 @@
                 showUploadProgress = false;
                 StateHasChanged();
 
+                AlertService.ShowSuccess("Post created successfully!");
+
                 // Update statistics
                 totalPosts++;
                 postsToday++;
@@ -680,12 +699,14 @@
             else
             {
                 showUploadProgress = false;
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to create post.");
                 StateHasChanged();
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             showUploadProgress = false;
+            AlertService.ShowError("An error occurred while creating your post.");
             StateHasChanged();
         }
     }
@@ -970,6 +991,38 @@
             }
         }
         return null;
+    }
+
+    // Service bridge methods for comment management
+    protected override async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteCommentAsync(
+        int commentId, string userId)
+    {
+        var result = await GroupCommentRepository.DeleteAsync(commentId, userId);
+        return (result.Success, result.ErrorMessage, result.DeletedCount);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> UpdateCommentAsync(
+        int commentId, string userId, string newContent)
+    {
+        var result = await GroupCommentRepository.UpdateAsync(commentId, userId, newContent);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
+        int commentId, string userId)
+    {
+        // TODO: Implement comment reporting when report system is available
+        await Task.CompletedTask;
+        return (true, null);
+    }
+
+    protected override void DecrementPostCommentCount(int postId, int decrementBy = 1)
+    {
+        var post = groupPosts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.CommentCount = Math.Max(0, post.CommentCount - decrementBy);
+        }
     }
 
     #endregion

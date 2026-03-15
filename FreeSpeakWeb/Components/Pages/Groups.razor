@@ -30,7 +30,7 @@
 @inject NavigationStateService NavigationState
 @inject UserPreferenceService UserPreferenceService
 @inject HtmlSanitizationService HtmlSanitizationService
-@inject AlertService AlertService
+@inject FreeSpeakWeb.Repositories.Abstractions.IGroupCommentRepository GroupCommentRepository
 
 <PageTitle>@SiteSettings.Value.SiteName - Groups</PageTitle>
 
@@ -139,6 +139,9 @@
                             OnReplySubmitted="@HandleGroupPostReplySubmitted"
                             OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
                             OnRemoveCommentReaction="@HandleRemoveGroupPostCommentReaction"
+                            OnDeleteComment="@HandleDeleteComment"
+                            OnCommentUpdated="@HandleCommentUpdated"
+                            OnReportComment="@HandleReportComment"
                             OnShowPostDetail="@(() => ShowGroupPostDetail(post))"
                             OnShowComments="@(() => ShowGroupPostDetail(post))">
                             <ArticleContent>
@@ -234,6 +237,9 @@
                             OnReplySubmitted="@HandleGroupPostReplySubmitted"
                             OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
                             OnRemoveCommentReaction="@HandleRemoveGroupPostCommentReaction"
+                            OnDeleteComment="@HandleDeleteComment"
+                            OnCommentUpdated="@HandleCommentUpdated"
+                            OnReportComment="@HandleReportComment"
                             OnShowPostDetail="@(() => ShowGroupPostDetail(post))"
                             OnShowComments="@(() => ShowGroupPostDetail(post))">
                             <ArticleContent>
@@ -442,6 +448,9 @@
         OnReplySubmitted="@HandleGroupPostReplySubmitted"
         OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
         OnRemoveCommentReaction="@HandleRemoveGroupPostCommentReaction"
+        OnDeleteComment="@HandleDeleteComment"
+        OnCommentUpdated="@HandleCommentUpdated"
+        OnReportComment="@HandleReportComment"
         OnClose="@CloseGroupPostDetailModal">
         <ArticleContent>
             @((MarkupString)FormatContentWithLineBreaks(selectedGroupPost.Content))
@@ -569,7 +578,7 @@
                 dotNetHelper = DotNetObjectReference.Create(this);
                 await jsModule.InvokeVoidAsync("initializeInfiniteScroll", (object?)null, dotNetHelper);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Silently fail - infinite scroll not critical
             }
@@ -599,7 +608,7 @@
 
             userGroups = uniqueGroups;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - user groups list optional
         }
@@ -641,7 +650,7 @@
             // Load additional data for posts (reactions, pinned status, mute status)
             await LoadGroupPostDataAsync(groupPosts);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - feed will show empty
         }
@@ -695,7 +704,7 @@
                 hasMoreGroupPosts = false;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - pagination will stop
         }
@@ -833,7 +842,7 @@
                 pinnedPosts[post.Id] = true;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - pinned feed will show empty
         }
@@ -915,7 +924,7 @@
                 hasMorePinnedPosts = false;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - pagination will stop
         }
@@ -950,7 +959,7 @@
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - join requests will show empty
         }
@@ -975,7 +984,7 @@
             groupJoinRequests = await GroupMemberService.GetUserJoinRequestsAsync(currentUserId);
             StateHasChanged();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - badge will not show
         }
@@ -1039,7 +1048,7 @@
         {
             suggestedGroups = await GroupService.GetSuggestedGroupsAsync(currentUserId, 20);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - suggested groups will show empty
         }
@@ -1084,7 +1093,7 @@
         {
             searchedGroups = await GroupService.SearchGroupsAsync(groupSearchQuery, 0, 20, currentUserId);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - search results will show empty
         }
@@ -1194,7 +1203,7 @@
         }
         catch (Exception ex)
         {
-            AlertService.ShowError("An error occurred while joining the group.");
+            AlertService.ShowError("An error occurred while joining the group. " + ex.GetType());
         }
     }
 
@@ -1225,7 +1234,7 @@
         }
         catch (Exception ex)
         {
-            AlertService.ShowError("An error occurred while cancelling the join request.");
+            AlertService.ShowError("An error occurred while cancelling the join request. " + ex.GetType());
         }
     }
 
@@ -1266,7 +1275,12 @@
         if (success)
         {
             pinnedPosts[postId] = true;
+            AlertService.ShowSuccess("Post pinned successfully.");
             StateHasChanged();
+        }
+        else
+        {
+            AlertService.ShowError(errorMessage ?? "Failed to pin post.");
         }
     }
 
@@ -1285,7 +1299,12 @@
         {
             pinnedPosts[postId] = false;
             pinnedGroupPostsList.RemoveAll(p => p.Id == postId);
+            AlertService.ShowSuccess("Post unpinned successfully.");
             StateHasChanged();
+        }
+        else
+        {
+            AlertService.ShowError(errorMessage ?? "Failed to unpin post.");
         }
     }
 
@@ -1713,6 +1732,69 @@
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Deletes a comment from the group post.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment to delete.</param>
+    /// <param name="userId">The ID of the user requesting the deletion.</param>
+    /// <returns>A tuple indicating success, an optional error message, and the count of deleted comments.</returns>
+    protected override async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteCommentAsync(
+        int commentId, string userId)
+    {
+        var result = await GroupCommentRepository.DeleteAsync(commentId, userId);
+        return (result.Success, result.ErrorMessage, result.DeletedCount);
+    }
+
+    /// <summary>
+    /// Updates a comment's content.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment to update.</param>
+    /// <param name="userId">The ID of the user requesting the update.</param>
+    /// <param name="newContent">The new content for the comment.</param>
+    /// <returns>A tuple indicating success and an optional error message.</returns>
+    protected override async Task<(bool Success, string? ErrorMessage)> UpdateCommentAsync(
+        int commentId, string userId, string newContent)
+    {
+        var result = await GroupCommentRepository.UpdateAsync(commentId, userId, newContent);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    /// <summary>
+    /// Reports a comment for moderation.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment to report.</param>
+    /// <param name="userId">The ID of the user making the report.</param>
+    /// <returns>A tuple indicating success and an optional error message.</returns>
+    protected override async Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
+        int commentId, string userId)
+    {
+        // TODO: Implement comment reporting when report system is available
+        await Task.CompletedTask;
+        return (true, null);
+    }
+
+    /// <summary>
+    /// Decrements the comment count for a post in the UI.
+    /// Updates both the main feed and pinned posts list.
+    /// </summary>
+    /// <param name="postId">The ID of the post.</param>
+    /// <param name="decrementBy">The number to decrement by.</param>
+    protected override void DecrementPostCommentCount(int postId, int decrementBy = 1)
+    {
+        var post = groupPosts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.CommentCount = Math.Max(0, post.CommentCount - decrementBy);
+        }
+
+        // Also update pinnedGroupPostsList if post exists there
+        var pinnedPost = pinnedGroupPostsList.FirstOrDefault(p => p.Id == postId);
+        if (pinnedPost != null)
+        {
+            pinnedPost.CommentCount = Math.Max(0, pinnedPost.CommentCount - decrementBy);
+        }
     }
 
     #endregion

@@ -21,6 +21,7 @@
 @inject UserPreferenceService UserPreferenceService
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject NotificationBadgeService NotificationBadgeService
+@inject AlertService AlertService
 
 <PageTitle>Notifications - FreeSpeak</PageTitle>
 
@@ -343,7 +344,12 @@
             // Refresh the badge service to update navigation badges
             await NotificationBadgeService.RefreshUnreadCountAsync();
 
+            AlertService.ShowSuccess("Notification deleted.");
             StateHasChanged();
+        }
+        else
+        {
+            AlertService.ShowError(errorMessage ?? "Failed to delete notification.");
         }
     }
 
@@ -448,7 +454,7 @@
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Silently fail - notification data parsing optional
             }
@@ -485,7 +491,7 @@
                 StateHasChanged();
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - reaction change optional
         }
@@ -517,7 +523,7 @@
                 StateHasChanged();
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - reaction removal optional
         }
@@ -550,7 +556,7 @@
                 StateHasChanged();
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - reaction change optional
         }
@@ -582,7 +588,7 @@
                 StateHasChanged();
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - reaction removal optional
         }
@@ -602,7 +608,7 @@
                 StateHasChanged();
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - pinning optional
         }
@@ -622,7 +628,7 @@
                 StateHasChanged();
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - unpinning optional
         }
@@ -648,7 +654,7 @@
                 StateHasChanged();
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - comment addition optional
         }
@@ -696,7 +702,7 @@
                 StateHasChanged();
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - pinning optional
         }
@@ -716,7 +722,7 @@
                 StateHasChanged();
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - unpinning optional
         }
@@ -742,7 +748,7 @@
                 StateHasChanged();
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - comment addition optional
         }
@@ -797,6 +803,12 @@
 
             // Refresh the badge service to update navigation badges
             await NotificationBadgeService.RefreshUnreadCountAsync();
+
+            AlertService.ShowSuccess($"Marked {updatedCount} notifications as read.");
+        }
+        else
+        {
+            AlertService.ShowError(errorMessage ?? "Failed to mark notifications as read.");
         }
 
         isMarkingAllRead = false;
@@ -821,6 +833,12 @@
 
             // Refresh the badge service to update navigation badges
             await NotificationBadgeService.RefreshUnreadCountAsync();
+
+            AlertService.ShowSuccess($"Deleted {deletedCount} read notifications.");
+        }
+        else
+        {
+            AlertService.ShowError(errorMessage ?? "Failed to delete read notifications.");
         }
 
         isDeletingRead = false;

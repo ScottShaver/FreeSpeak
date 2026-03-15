@@ -8,6 +8,7 @@
 @inject UserPreferenceService UserPreferenceService
 @inject NavigationManager NavigationManager
 @inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
+@inject AlertService AlertService
 @implements IAsyncDisposable
 
 <div class="feed-article @(showMenu ? "menu-open" : "")">
@@ -101,7 +102,11 @@
                     Depth="0"
                     OnReactionChanged="@OnCommentReactionChanged"
                     OnRemoveReaction="@OnRemoveCommentReaction"
-                    OnReplySubmitted="@OnReplySubmitted" />
+                    OnReplySubmitted="@OnReplySubmittedLocally"
+                    OnDeleteComment="@OnCommentDeleted"
+                    OnEditComment="@OnCommentEditedLocally"
+                    OnCommentUpdated="@OnCommentUpdatedLocally"
+                    OnReportComment="@OnReportComment" />
             }
         </div>
     }
@@ -261,6 +266,30 @@
 
     [Parameter]
     public EventCallback<int> OnRemoveCommentReaction { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when a user requests to delete their own comment.
+    /// </summary>
+    [Parameter]
+    public EventCallback<int> OnDeleteComment { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when a user requests to edit their own comment.
+    /// </summary>
+    [Parameter]
+    public EventCallback<(int CommentId, string CurrentContent)> OnEditComment { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when a comment is successfully updated with new content via inline editing.
+    /// </summary>
+    [Parameter]
+    public EventCallback<(int CommentId, string NewContent)> OnCommentUpdated { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when a user requests to report another user's comment.
+    /// </summary>
+    [Parameter]
+    public EventCallback<int> OnReportComment { get; set; }
 
     [Parameter]
     public bool HideCommentEditor { get; set; } = false;
@@ -687,13 +716,15 @@
                 await OnAudienceTypeChanged.InvokeAsync(newAudienceType);
             }
 
+            AlertService.ShowSuccess("Post visibility updated.");
+
             // Force an immediate re-render to show the new state
             StateHasChanged();
         }
         else
         {
             // Show error message
-            await JS.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to update post audience.");
+            AlertService.ShowError(result.ErrorMessage ?? "Failed to update post audience.");
         }
     }
 
@@ -730,6 +761,8 @@
 
         if (result.Success)
         {
+            AlertService.ShowSuccess("Post deleted successfully.");
+
             // Notify parent component that the post was deleted
             if (OnPostDeleted.HasDelegate)
             {
@@ -739,7 +772,7 @@
         else
         {
             // Show error message
-            await JS.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to delete post.");
+            AlertService.ShowError(result.ErrorMessage ?? "Failed to delete post.");
         }
     }
 
@@ -785,10 +818,11 @@
 
             // Copy to clipboard using JavaScript
             await JS.InvokeVoidAsync("navigator.clipboard.writeText", postUrl);
+            AlertService.ShowSuccess("Link copied to clipboard.");
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            // Silently fail - clipboard copy optional
+            AlertService.ShowError("Failed to copy link to clipboard.");
         }
     }
 
@@ -810,6 +844,7 @@
                 if (result.Success)
                 {
                     isNotificationMuted = false;
+                    AlertService.ShowSuccess("Notifications unmuted for this post.");
                     StateHasChanged();
                 }
             }
@@ -820,13 +855,14 @@
                 if (result.Success)
                 {
                     isNotificationMuted = true;
+                    AlertService.ShowSuccess("Notifications muted for this post.");
                     StateHasChanged();
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            // Silently fail - notification toggle optional
+            AlertService.ShowError("Failed to update notification settings.");
         }
     }
 
@@ -860,7 +896,7 @@
         {
             likes = await PostService.GetPostLikesWithDetailsAsync(PostId);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - likes list optional
         }
@@ -901,6 +937,78 @@
             await OnCommentAdded.InvokeAsync((PostId, commentText));
 
             // If loading internally, reload comments
+            if (LoadCommentsInternally)
+            {
+                await LoadCommentsAsync();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles when a comment is deleted, forwarding to the parent and reloading internal comments if necessary.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment that was deleted</param>
+    private async Task OnCommentDeleted(int commentId)
+    {
+        if (OnDeleteComment.HasDelegate)
+        {
+            await OnDeleteComment.InvokeAsync(commentId);
+
+            // If loading internally, reload comments to reflect the deletion
+            if (LoadCommentsInternally)
+            {
+                await LoadCommentsAsync();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles when a reply is submitted, forwarding to the parent and reloading internal comments if necessary.
+    /// </summary>
+    /// <param name="args">Tuple containing the ParentCommentId and reply Content</param>
+    private async Task OnReplySubmittedLocally((int ParentCommentId, string Content) args)
+    {
+        if (OnReplySubmitted.HasDelegate)
+        {
+            await OnReplySubmitted.InvokeAsync(args);
+
+            // If loading internally, reload comments to reflect the new reply
+            if (LoadCommentsInternally)
+            {
+                await LoadCommentsAsync();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles when a comment is edited, forwarding to the parent and reloading internal comments if necessary.
+    /// </summary>
+    /// <param name="args">Tuple containing the CommentId and CurrentContent</param>
+    private async Task OnCommentEditedLocally((int CommentId, string CurrentContent) args)
+    {
+        if (OnEditComment.HasDelegate)
+        {
+            await OnEditComment.InvokeAsync(args);
+
+            // If loading internally, reload comments to reflect the edit
+            if (LoadCommentsInternally)
+            {
+                await LoadCommentsAsync();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles when a comment is successfully updated via inline editing, forwarding to the parent and reloading internal comments if necessary.
+    /// </summary>
+    /// <param name="args">Tuple containing the CommentId and NewContent</param>
+    private async Task OnCommentUpdatedLocally((int CommentId, string NewContent) args)
+    {
+        if (OnCommentUpdated.HasDelegate)
+        {
+            await OnCommentUpdated.InvokeAsync(args);
+
+            // If loading internally, reload comments to reflect the update
             if (LoadCommentsInternally)
             {
                 await LoadCommentsAsync();
@@ -959,7 +1067,7 @@
                     isNotificationMuted = await PostService.IsPostNotificationMutedAsync(PostId, CurrentUserId);
                     StateHasChanged();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // Silently fail - mute status optional
                 }
@@ -973,7 +1081,7 @@
                     dotNetHelper = DotNetObjectReference.Create(this);
                     await module.InvokeVoidAsync("initializeContentMeasurement", contentElement, dotNetHelper);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // Silently fail - content measurement optional
                 }
@@ -1027,7 +1135,7 @@
             internalComments = await BuildCommentModelsAsync(topComments);
             internalDirectCommentCount = allComments.Count(c => c.ParentCommentId == null);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - comments optional
         }

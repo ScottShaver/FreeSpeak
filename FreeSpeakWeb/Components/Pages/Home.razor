@@ -13,6 +13,7 @@
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Components.Shared
 @using FreeSpeakWeb.Components.Pages.Base
+@using FreeSpeakWeb.Repositories.Abstractions
 @using System.Security.Claims
 @using Microsoft.JSInterop
 
@@ -27,6 +28,7 @@
 @inject NavigationStateService NavigationState
 @inject UserPreferenceService UserPreferenceService
 @inject HtmlSanitizationService HtmlSanitizationService
+@inject IFeedCommentRepository FeedCommentRepository
 
 <PageTitle>@SiteSettings.Value.SiteName - Home</PageTitle>
 
@@ -112,6 +114,9 @@
                                     OnReplySubmitted="@HandleReplySubmitted"
                                     OnCommentReactionChanged="@HandleCommentReactionChanged"
                                     OnRemoveCommentReaction="@HandleRemoveCommentReaction"
+                                    OnDeleteComment="@HandleDeleteComment"
+                                    OnCommentUpdated="@HandleCommentUpdated"
+                                    OnReportComment="@HandleReportComment"
                                     OnShowPostDetail="@(() => ShowPostDetail(post))"
                                     OnShowComments="@(() => ShowPostDetail(post))">
                                     <ArticleContent>
@@ -194,9 +199,12 @@
                                     OnReplySubmitted="@OnReplySubmitted"
                                     OnCommentReactionChanged="@OnCommentReactionChanged"
                                     OnRemoveCommentReaction="@OnRemoveCommentReaction"
-                                    OnShowPostDetail="@(() => ShowPostDetail(post))"
-                                    OnShowComments="@(() => ShowPostDetail(post))">
-                                    <ArticleContent>
+                                    OnDeleteComment="@HandleDeleteComment"
+                                    OnCommentUpdated="@HandleCommentUpdated"
+                                    OnReportComment="@HandleReportComment"
+                                        OnShowPostDetail="@(() => ShowPostDetail(post))"
+                                        OnShowComments="@(() => ShowPostDetail(post))">
+                                        <ArticleContent>
                                         @((MarkupString)FormatContentWithLineBreaks(post.Content))
                                     </ArticleContent>
                                 </FeedArticle>
@@ -239,6 +247,9 @@
                 OnReplySubmitted="@OnReplySubmitted"
                 OnCommentReactionChanged="@OnCommentReactionChanged"
                 OnRemoveCommentReaction="@OnRemoveCommentReaction"
+                OnDeleteComment="@HandleDeleteComment"
+                OnCommentUpdated="@HandleCommentUpdated"
+                OnReportComment="@HandleReportComment"
                 OnClose="@(async () => await ClosePostDetail())">
                 <ArticleContent>
                     @((MarkupString)FormatContentWithLineBreaks(selectedPost.Content))
@@ -355,7 +366,7 @@
                 // Pass null for element since we're using window scroll now
                 await jsModule.InvokeVoidAsync("initializeInfiniteScroll", (object?)null, dotNetHelper);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Silently fail - infinite scroll not critical
             }
@@ -385,7 +396,7 @@
             // Load mute status for all posts (batch load to avoid N+1)
             await LoadMuteStatusForPosts(loadedPosts);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - feed will show empty
         }
@@ -417,7 +428,7 @@
             // Load mute status for pinned posts (batch load to avoid N+1)
             await LoadMuteStatusForPosts(loadedPosts);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - pinned feed will show empty
         }
@@ -462,7 +473,7 @@
                 hasMorePosts = false;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - pagination will stop
             currentPage--; // Revert page increment on error
@@ -532,13 +543,13 @@
                     // Get last 3 comments for feed display
                     await LoadCommentsForPost(post.Id, 3);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // Silently fail - comment data optional
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - reaction data optional
         }
@@ -559,7 +570,7 @@
                 pinnedPosts[kvp.Key] = kvp.Value;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - pinned status optional
         }
@@ -588,7 +599,7 @@
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - author names optional
         }
@@ -608,7 +619,7 @@
                 postMuteStatus[kvp.Key] = kvp.Value;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - mute status optional
         }
@@ -629,16 +640,17 @@
                 // Reload pinned posts list to include the newly pinned post
                 await LoadPinnedPosts();
 
+                AlertService.ShowSuccess("Post pinned successfully.");
                 StateHasChanged();
             }
             else
             {
-                // Silently fail - pinning unsuccessful
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to pin post.");
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            // Silently fail - pinning unsuccessful
+            AlertService.ShowError("An error occurred while pinning the post.");
         }
     }
 
@@ -657,16 +669,17 @@
                 // Reload pinned posts list to remove the unpinned post
                 await LoadPinnedPosts();
 
+                AlertService.ShowSuccess("Post unpinned successfully.");
                 StateHasChanged();
             }
             else
             {
-                // Silently fail - unpinning unsuccessful
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to unpin post.");
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            // Silently fail - unpinning unsuccessful
+            AlertService.ShowError("An error occurred while unpinning the post.");
         }
     }
 
@@ -711,7 +724,7 @@
 
             postComments[postId] = commentModels;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - comments optional
         }
@@ -851,6 +864,8 @@
                 showUploadProgress = false;
                 StateHasChanged();
 
+                AlertService.ShowSuccess("Post created successfully!");
+
                 // Reload the feed to include the new post
                 await LoadInitialPosts();
 
@@ -872,12 +887,14 @@
             else
             {
                 showUploadProgress = false;
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to create post.");
                 StateHasChanged();
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             showUploadProgress = false;
+            AlertService.ShowError("An error occurred while creating your post.");
             StateHasChanged();
         }
     }
@@ -961,7 +978,7 @@
                 await JSRuntime.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to update post");
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             await JSRuntime.InvokeVoidAsync("alert", "An error occurred while updating the post.");
         }
@@ -1095,6 +1112,39 @@
             }
         }
         return null;
+    }
+
+    // Service bridge methods for comment management
+    protected override async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteCommentAsync(
+        int commentId, string userId)
+    {
+        var result = await PostService.DeleteCommentAsync(commentId, userId);
+        return (result.Success, result.ErrorMessage, result.DeletedCount);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> UpdateCommentAsync(
+        int commentId, string userId, string newContent)
+    {
+        var result = await FeedCommentRepository.UpdateAsync(commentId, userId, newContent);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
+        int commentId, string userId)
+    {
+        // TODO: Implement comment reporting when report system is available
+        // For now, return success with a placeholder message
+        await Task.CompletedTask;
+        return (true, null);
+    }
+
+    protected override void DecrementPostCommentCount(int postId, int decrementBy = 1)
+    {
+        var post = posts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.CommentCount = Math.Max(0, post.CommentCount - decrementBy);
+        }
     }
 
     #endregion

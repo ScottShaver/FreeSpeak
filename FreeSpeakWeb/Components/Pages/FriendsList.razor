@@ -19,6 +19,7 @@
 @inject ILogger<FriendsList> Logger
 @inject NavigationStateService NavigationState
 @inject NavigationManager NavigationManager
+@inject AlertService AlertService
 
 <PageTitle>@SiteSettings.Value.SiteName - Friends</PageTitle>
 
@@ -539,6 +540,7 @@
         if (result.Success)
         {
             statusMessage = $"Friend request sent to {GetDisplayName(user)}.";
+            AlertService.ShowSuccess($"Friend request sent to {GetDisplayName(user)}.");
             // Remove from search results
             searchResults = searchResults.Where(u => u.Id != user.Id).ToList();
             // Update sent requests count
@@ -548,6 +550,7 @@
         else
         {
             errorMessage = result.ErrorMessage ?? "Failed to send friend request.";
+            AlertService.ShowError(result.ErrorMessage ?? "Failed to send friend request.");
         }
     }
 
@@ -562,6 +565,7 @@
             if (result.Success)
             {
                 statusMessage = $"Removed {GetDisplayName(friend)} from your friends.";
+                AlertService.ShowSuccess($"Removed {GetDisplayName(friend)} from your friends.");
                 await LoadFriendsAsync();
                 // Update suggestions count as it may change
                 peopleYouMayKnowCount = await FriendsService.GetPeopleYouMayKnowCountAsync(currentUserId);
@@ -570,6 +574,7 @@
             else
             {
                 errorMessage = result.ErrorMessage ?? "Failed to remove friend.";
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to remove friend.");
             }
         }
     }
@@ -582,6 +587,7 @@
         if (result.Success)
         {
             statusMessage = $"Friend request sent to {GetDisplayName(user)}.";
+            AlertService.ShowSuccess($"Friend request sent to {GetDisplayName(user)}.");
             // Remove from suggestions
             peopleYouMayKnow = peopleYouMayKnow.Where(p => p.User.Id != user.Id).ToList();
             peopleYouMayKnowCount = peopleYouMayKnow.Count;
@@ -592,6 +598,7 @@
         else
         {
             errorMessage = result.ErrorMessage ?? "Failed to send friend request.";
+            AlertService.ShowError(result.ErrorMessage ?? "Failed to send friend request.");
         }
     }
 
@@ -614,6 +621,7 @@
             if (result.Success)
             {
                 statusMessage = $"You are now friends with {GetDisplayName(requester)}.";
+                AlertService.ShowSuccess($"You are now friends with {GetDisplayName(requester)}.");
                 await LoadPendingRequestsAsync();
                 // Update friends count and suggestions count as well
                 friendsCount = await FriendsService.GetFriendsCountAsync(currentUserId);
@@ -623,6 +631,7 @@
             else
             {
                 errorMessage = result.ErrorMessage ?? "Failed to accept friend request.";
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to accept friend request.");
             }
         }
     }
@@ -638,12 +647,14 @@
             if (result.Success)
             {
                 statusMessage = $"Declined friend request from {GetDisplayName(requester)}.";
+                AlertService.ShowSuccess($"Declined friend request from {GetDisplayName(requester)}.");
                 await LoadPendingRequestsAsync();
                 StateHasChanged();
             }
             else
             {
                 errorMessage = result.ErrorMessage ?? "Failed to decline friend request.";
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to decline friend request.");
             }
         }
     }
@@ -659,12 +670,14 @@
             if (result.Success)
             {
                 statusMessage = $"Cancelled friend request to {GetDisplayName(addressee)}.";
+                AlertService.ShowSuccess($"Cancelled friend request to {GetDisplayName(addressee)}.");
                 await LoadSentRequestsAsync();
                 StateHasChanged();
             }
             else
             {
                 errorMessage = result.ErrorMessage ?? "Failed to cancel friend request.";
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to cancel friend request.");
             }
         }
     }

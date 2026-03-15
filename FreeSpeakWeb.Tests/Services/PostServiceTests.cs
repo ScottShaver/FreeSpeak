@@ -491,7 +491,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             // Act
-            var (success, errorMessage) = await service.DeleteCommentAsync(commentId, "user1");
+            var (success, errorMessage, deletedCount) = await service.DeleteCommentAsync(commentId, "user1");
 
             // Assert
             success.Should().BeTrue();

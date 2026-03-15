@@ -356,9 +356,6 @@
     }
 
     // Resizable column state
-    private ElementReference tableRef;
-    private bool isResizing = false;
-    private int resizingColumnIndex = -1;
     private double startX = 0;
     private double startWidth = 0;
     private double[] columnWidths = { 180, 200, 150 }; // Initial widths for Date/Time, User ID, Category
@@ -370,8 +367,6 @@
     /// <param name="columnIndex">The index of the column being resized.</param>
     private async Task StartResize(MouseEventArgs e, int columnIndex)
     {
-        isResizing = true;
-        resizingColumnIndex = columnIndex;
         startX = e.ClientX;
         startWidth = columnWidths[columnIndex];
 

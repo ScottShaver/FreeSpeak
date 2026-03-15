@@ -5,7 +5,7 @@ namespace FreeSpeakWeb.Services
 {
     /// <summary>
     /// Service for managing user preferences including color scheme, name display format,
-    /// default audience type, and notification expiration settings.
+    /// default audience type, notification expiration settings, timezone, country, and language.
     /// </summary>
     public class UserPreferenceService
     {
@@ -27,7 +27,10 @@ namespace FreeSpeakWeb.Services
             { PreferenceType.NotificationExpiration_FriendRequest, "30" },
             { PreferenceType.NotificationExpiration_FriendAccepted, "15" },
             { PreferenceType.NotificationExpiration_Mention, "30" },
-            { PreferenceType.NotificationExpiration_System, "30" }
+            { PreferenceType.NotificationExpiration_System, "30" },
+            { PreferenceType.Timezone, "America/New_York" },
+            { PreferenceType.Country, "US" },
+            { PreferenceType.Language, "en" }
         };
 
         /// <summary>

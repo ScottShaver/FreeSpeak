@@ -7,12 +7,15 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
+@using FreeSpeakWeb.Repositories.Abstractions
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IEmailSender<ApplicationUser> EmailSender
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject IOptions<SiteSettings> SiteSettings
+@inject IAuditLogRepository AuditLogRepository
 
 <PageTitle>@SiteSettings.Value.SiteName - Resend email confirmation</PageTitle>
 
@@ -38,6 +41,9 @@
 @code {
     private string? message;
 
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = default!;
 
@@ -56,6 +62,16 @@
         }
 
         var userId = await UserManager.GetUserIdAsync(user);
+
+        // Log resend confirmation request to audit log
+        await AuditLogRepository.LogActionAsync(userId, ActionCategory.UserEmailConfirmation, new UserEmailConfirmationDetails
+        {
+            OperationType = "ResendConfirmation",
+            Email = Input.Email!,
+            IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString(),
+            Success = true
+        });
+
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         var callbackUrl = NavigationManager.GetUriWithQueryParameters(

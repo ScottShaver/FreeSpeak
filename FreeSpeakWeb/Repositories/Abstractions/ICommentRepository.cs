@@ -34,9 +34,13 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         Task<(bool Success, string? ErrorMessage)> UpdateAsync(int commentId, string userId, string newContent);
 
         /// <summary>
-        /// Delete a comment and its replies
+        /// Delete a comment and all its nested replies, returning the total count of deleted comments.
+        /// Also updates the post's comment count in the database.
         /// </summary>
-        Task<(bool Success, string? ErrorMessage)> DeleteAsync(int commentId, string userId);
+        /// <param name="commentId">The ID of the comment to delete.</param>
+        /// <param name="userId">The ID of the user attempting the deletion.</param>
+        /// <returns>A tuple with success status, error message if any, and the count of deleted comments (including the main comment and all nested replies).</returns>
+        Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteAsync(int commentId, string userId);
 
         /// <summary>
         /// Check if a user can delete a specific comment

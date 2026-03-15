@@ -787,12 +787,13 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Deletes a comment and all its replies, updating the post's comment count accordingly.
+        /// Deletes a comment and all its nested replies recursively, updating the post's comment count accordingly.
+        /// Also deletes all associated likes on the comment and its replies (handled by cascade delete).
         /// </summary>
         /// <param name="commentId">The unique identifier of the comment to delete.</param>
         /// <param name="userId">The user ID of the person requesting deletion (must be the author).</param>
-        /// <returns>A tuple containing success status and error message if failed.</returns>
-        public async Task<(bool Success, string? ErrorMessage)> DeleteCommentAsync(int commentId, string userId)
+        /// <returns>A tuple containing success status, error message if failed, and the count of deleted comments.</returns>
+        public async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteCommentAsync(int commentId, string userId)
         {
             try
             {
@@ -800,37 +801,96 @@ namespace FreeSpeakWeb.Services
 
                 var comment = await context.Comments
                     .Include(c => c.Post)
-                    .Include(c => c.Replies)
                     .FirstOrDefaultAsync(c => c.Id == commentId);
 
                 if (comment == null)
                 {
-                    return (false, "Comment not found.");
+                    return (false, "Comment not found.", 0);
                 }
 
                 if (comment.AuthorId != userId)
                 {
-                    return (false, "You are not authorized to delete this comment.");
+                    return (false, "You are not authorized to delete this comment.", 0);
                 }
 
                 var post = comment.Post;
-                var commentCount = 1 + comment.Replies.Count; // Include the comment and all replies
 
-                context.Comments.Remove(comment);
+                // Collect all comment IDs to delete (parent + all nested replies)
+                var commentsToDelete = await CollectCommentAndRepliesAsync(context, commentId);
+                var totalCommentCount = commentsToDelete.Count;
 
-                // Update post comment count
-                post.CommentCount -= commentCount;
+                // Delete all comments (EF Core will handle cascade for likes)
+                context.Comments.RemoveRange(commentsToDelete);
+
+                // Update post comment count with the total number of deleted comments
+                post.CommentCount = Math.Max(0, post.CommentCount - totalCommentCount);
 
                 await context.SaveChangesAsync();
 
-                _logger.LogInformation("Comment {CommentId} deleted by user {UserId}", commentId, userId);
-                return (true, null);
+                _logger.LogInformation("Comment {CommentId} and {ReplyCount} nested replies deleted by user {UserId}", 
+                    commentId, totalCommentCount - 1, userId);
+                return (true, null, totalCommentCount);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting comment {CommentId} for user {UserId}", commentId, userId);
-                return (false, "An error occurred while deleting the comment.");
+                return (false, "An error occurred while deleting the comment.", 0);
             }
+        }
+
+        /// <summary>
+        /// Recursively counts a comment and all its nested replies.
+        /// </summary>
+        /// <param name="context">The database context.</param>
+        /// <param name="commentId">The ID of the comment to count.</param>
+        /// <returns>The total count including the comment itself and all nested replies.</returns>
+        private async Task<int> CountCommentAndRepliesAsync(ApplicationDbContext context, int commentId)
+        {
+            int count = 1; // Count the comment itself
+
+            var replyIds = await context.Comments
+                .Where(c => c.ParentCommentId == commentId)
+                .Select(c => c.Id)
+                .ToListAsync();
+
+            foreach (var replyId in replyIds)
+            {
+                count += await CountCommentAndRepliesAsync(context, replyId);
+            }
+
+            return count;
+        }
+
+        /// <summary>
+        /// Recursively collects a comment and all its nested replies for deletion.
+        /// </summary>
+        /// <param name="context">The database context.</param>
+        /// <param name="commentId">The ID of the root comment to collect.</param>
+        /// <returns>A list of all comments to delete, including the root comment and all nested replies.</returns>
+        private async Task<List<Comment>> CollectCommentAndRepliesAsync(ApplicationDbContext context, int commentId)
+        {
+            var result = new List<Comment>();
+
+            var comment = await context.Comments.FindAsync(commentId);
+            if (comment == null)
+                return result;
+
+            // First, recursively collect all replies
+            var replyIds = await context.Comments
+                .Where(c => c.ParentCommentId == commentId)
+                .Select(c => c.Id)
+                .ToListAsync();
+
+            foreach (var replyId in replyIds)
+            {
+                var nestedReplies = await CollectCommentAndRepliesAsync(context, replyId);
+                result.AddRange(nestedReplies);
+            }
+
+            // Add the current comment last (so children are deleted first)
+            result.Add(comment);
+
+            return result;
         }
 
         /// <summary>

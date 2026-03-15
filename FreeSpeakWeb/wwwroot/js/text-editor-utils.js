@@ -153,3 +153,16 @@ export function blurTextarea(textarea) {
         textarea.blur();
     }
 }
+
+/**
+ * Focus the textarea and move cursor to the end
+ * @param {HTMLTextAreaElement} textarea - The textarea element to focus
+ */
+export function focusTextarea(textarea) {
+    if (textarea) {
+        textarea.focus();
+        // Move cursor to the end of the text
+        const length = textarea.value.length;
+        textarea.setSelectionRange(length, length);
+    }
+}

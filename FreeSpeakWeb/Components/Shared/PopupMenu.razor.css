@@ -10,13 +10,13 @@
 
 .popup-menu {
     position: absolute;
-    background: var(--surface-color);
+    background: var(--surface-color, #ffffff);
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     min-width: 200px;
     padding: 4px;
     z-index: 1999;
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--border-color, #e4e6eb);
 }
 
 .popup-menu-item {
@@ -28,8 +28,8 @@
     margin: 4px;
     border: 2px solid transparent;
     border-radius: 8px;
-    background: var(--surface-color);
-    color: var(--text-primary);
+    background: var(--surface-color, #ffffff);
+    color: var(--text-primary, #050505);
     font-size: 15px;
     font-weight: 500;
     text-align: left;
@@ -38,16 +38,22 @@
 }
 
 .popup-menu-item:hover {
-    background-color: var(--surface-hover);
-    border-color: var(--primary-color);
+    background-color: var(--surface-hover, #f2f2f2);
+    border-color: var(--primary-color, #0d6efd);
+}
+
+.popup-menu-item:focus {
+    background-color: var(--surface-hover, #f2f2f2);
+    border-color: var(--primary-color, #0d6efd);
+    outline: none;
 }
 
 .popup-menu-item:active {
-    background-color: var(--surface-secondary);
-    border-color: var(--primary-color);
+    background-color: var(--surface-secondary, #f8f9fa);
+    border-color: var(--primary-color, #0d6efd);
 }
 
 .popup-menu-item span:first-child {
     font-size: 18px;
-    color: var(--text-secondary);
+    color: var(--text-secondary, #65676b);
 }

@@ -7,12 +7,17 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
+@using FreeSpeakWeb.Repositories.Abstractions
+@using FreeSpeakWeb.Services
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IEmailSender<ApplicationUser> EmailSender
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject IOptions<SiteSettings> SiteSettings
+@inject IAuditLogRepository AuditLogRepository
+@inject AlertService AlertService
 
 <PageTitle>@SiteSettings.Value.SiteName - Manage email</PageTitle>
 
@@ -108,6 +113,7 @@
         if (Input.NewEmail is null || Input.NewEmail == email)
         {
             message = "Your email is unchanged.";
+            AlertService.ShowInfo("Your email is unchanged.");
             return;
         }
 
@@ -118,6 +124,16 @@
         }
 
         var userId = await UserManager.GetUserIdAsync(user);
+
+        // Log email change request to audit log
+        await AuditLogRepository.LogActionAsync(userId, ActionCategory.UserProfileChange, new UserProfileChangeDetails
+        {
+            FieldName = "Email",
+            NewValue = Input.NewEmail,
+            OldValue = email,
+            Notes = "Email change requested - pending confirmation"
+        });
+
         var code = await UserManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         var callbackUrl = NavigationManager.GetUriWithQueryParameters(
@@ -129,11 +145,13 @@
             // Once you add a real email sender, you should remove this code that lets you confirm the email change
             emailChangeLink = callbackUrl;
             message = "Click the link above to confirm your email change.";
+            AlertService.ShowInfo("Click the link above to confirm your email change.");
         }
         else
         {
             await EmailSender.SendConfirmationLinkAsync(user, Input.NewEmail, HtmlEncoder.Default.Encode(callbackUrl));
             message = "Confirmation link to change email sent. Please check your email.";
+            AlertService.ShowSuccess("Confirmation link sent to your new email address.");
         }
     }
 
@@ -151,6 +169,16 @@
         }
 
         var userId = await UserManager.GetUserIdAsync(user);
+
+        // Log email verification request to audit log
+        await AuditLogRepository.LogActionAsync(userId, ActionCategory.UserEmailConfirmation, new UserEmailConfirmationDetails
+        {
+            OperationType = "SendVerification",
+            Email = email,
+            IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString(),
+            Success = true
+        });
+
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         var callbackUrl = NavigationManager.GetUriWithQueryParameters(
@@ -162,11 +190,13 @@
             // Once you add a real email sender, you should remove this code that lets you confirm the account
             emailVerificationLink = callbackUrl;
             message = "Click the link above to verify your email.";
+            AlertService.ShowInfo("Click the link above to verify your email.");
         }
         else
         {
             await EmailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(callbackUrl));
             message = "Verification email sent. Please check your email.";
+            AlertService.ShowSuccess("Verification email sent. Please check your email.");
         }
     }
 

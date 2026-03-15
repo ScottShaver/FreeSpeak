@@ -184,6 +184,18 @@ namespace FreeSpeakWeb.Data
         /// Action when a user declines a group's rules.
         /// Tracks user declining to accept group rules.
         /// </summary>
-        UserGroupDeclineRules = 29
+        UserGroupDeclineRules = 29,
+
+        /// <summary>
+        /// Action when a new user registers an account.
+        /// Tracks new user account creation events.
+        /// </summary>
+        UserRegister = 30,
+
+        /// <summary>
+        /// Action related to email confirmation operations.
+        /// Includes resending confirmation emails and confirming email addresses.
+        /// </summary>
+        UserEmailConfirmation = 31
     }
 }

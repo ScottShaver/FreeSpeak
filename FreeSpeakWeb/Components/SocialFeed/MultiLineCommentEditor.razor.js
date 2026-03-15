@@ -9,3 +9,4 @@ export const resetTextarea = TextEditorUtils.resetTextarea;
 export const insertTextAtCursor = TextEditorUtils.insertTextAtCursor;
 export const replaceTextPreserveCursor = TextEditorUtils.replaceTextPreserveCursor;
 export const calculateEmojiPickerPosition = EmojiPickerUtils.calculateEmojiPickerPosition;
+export const focusTextarea = TextEditorUtils.focusTextarea;

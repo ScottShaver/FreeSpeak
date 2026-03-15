@@ -1,11 +1,15 @@
 @rendermode InteractiveServer
 
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
+@using FreeSpeakWeb.Repositories.Abstractions
 @using FreeSpeakWeb.Services
 @using Microsoft.AspNetCore.Identity
 @inject UserPreferenceService PreferenceService
 @inject UserManager<ApplicationUser> UserManager
 @inject ThemeService ThemeService
+@inject IAuditLogRepository AuditLogRepository
+@inject AlertService AlertService
 
 <div class="card mb-4">
     <div class="card-header">
@@ -56,6 +60,91 @@
                         <option value="@AudienceType.MeOnly">Only Me (Private)</option>
                     </select>
                     <div class="form-text">Default visibility for new posts. You can change this when creating a post.</div>
+                </div>
+
+                <!-- Timezone -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Timezone</label>
+                    <select class="form-select" @bind="timezone">
+                        <optgroup label="United States">
+                            <option value="America/New_York">Eastern Time (ET)</option>
+                            <option value="America/Chicago">Central Time (CT)</option>
+                            <option value="America/Denver">Mountain Time (MT)</option>
+                            <option value="America/Phoenix">Arizona (MST - No DST)</option>
+                            <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                            <option value="America/Anchorage">Alaska Time (AKT)</option>
+                            <option value="Pacific/Honolulu">Hawaii Time (HST)</option>
+                        </optgroup>
+                        <optgroup label="Other Common Timezones">
+                            <option value="UTC">UTC (Coordinated Universal Time)</option>
+                            <option value="Europe/London">London (GMT/BST)</option>
+                            <option value="Europe/Paris">Paris (CET/CEST)</option>
+                            <option value="Europe/Berlin">Berlin (CET/CEST)</option>
+                            <option value="Asia/Tokyo">Tokyo (JST)</option>
+                            <option value="Asia/Shanghai">Shanghai (CST)</option>
+                            <option value="Asia/Dubai">Dubai (GST)</option>
+                            <option value="Australia/Sydney">Sydney (AEDT/AEST)</option>
+                            <option value="America/Toronto">Toronto (ET)</option>
+                            <option value="America/Mexico_City">Mexico City (CST)</option>
+                        </optgroup>
+                    </select>
+                    <div class="form-text">Your preferred timezone for displaying dates and times.</div>
+                </div>
+
+                <!-- Country -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Country</label>
+                    <select class="form-select" @bind="country">
+                        <option value="US">United States of America</option>
+                        <option value="CA">Canada</option>
+                        <option value="GB">United Kingdom</option>
+                        <option value="AU">Australia</option>
+                        <option value="DE">Germany</option>
+                        <option value="FR">France</option>
+                        <option value="IT">Italy</option>
+                        <option value="ES">Spain</option>
+                        <option value="MX">Mexico</option>
+                        <option value="BR">Brazil</option>
+                        <option value="AR">Argentina</option>
+                        <option value="JP">Japan</option>
+                        <option value="CN">China</option>
+                        <option value="IN">India</option>
+                        <option value="KR">South Korea</option>
+                        <option value="NL">Netherlands</option>
+                        <option value="BE">Belgium</option>
+                        <option value="CH">Switzerland</option>
+                        <option value="SE">Sweden</option>
+                        <option value="NO">Norway</option>
+                        <option value="DK">Denmark</option>
+                        <option value="FI">Finland</option>
+                        <option value="PL">Poland</option>
+                        <option value="RU">Russia</option>
+                        <option value="ZA">South Africa</option>
+                    </select>
+                    <div class="form-text">Your country or region.</div>
+                </div>
+
+                <!-- Language -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Language</label>
+                    <select class="form-select" @bind="language">
+                        <option value="en">English</option>
+                        <option value="es">Español (Spanish)</option>
+                        <option value="fr">Français (French)</option>
+                        <option value="de">Deutsch (German)</option>
+                        <option value="it">Italiano (Italian)</option>
+                        <option value="pt">Português (Portuguese)</option>
+                        <option value="ru">Русский (Russian)</option>
+                        <option value="ja">日本語 (Japanese)</option>
+                        <option value="zh">中文 (Chinese)</option>
+                        <option value="ko">한국어 (Korean)</option>
+                        <option value="ar">العربية (Arabic)</option>
+                        <option value="hi">हिन्दी (Hindi)</option>
+                        <option value="nl">Nederlands (Dutch)</option>
+                        <option value="sv">Svenska (Swedish)</option>
+                        <option value="pl">Polski (Polish)</option>
+                    </select>
+                    <div class="form-text">Your preferred language for the user interface.</div>
                 </div>
 
                 <!-- Notification Expiration -->
@@ -138,6 +227,9 @@
     private string colorScheme = "default";
     private NameDisplayType nameDisplay = NameDisplayType.FullName;
     private AudienceType defaultAudienceType = AudienceType.Public;
+    private string timezone = "America/New_York";
+    private string country = "US";
+    private string language = "en";
     private int expirationPostLiked = 15;
     private int expirationPostComment = 15;
     private int expirationCommentReply = 15;
@@ -167,12 +259,16 @@
             var preferences = await PreferenceService.GetAllPreferencesAsync(UserId!);
 
             colorScheme = preferences.GetValueOrDefault(PreferenceType.ColorScheme, "default");
-            
+
             if (Enum.TryParse<NameDisplayType>(preferences.GetValueOrDefault(PreferenceType.NameDisplay), out var nd))
                 nameDisplay = nd;
-            
+
             if (Enum.TryParse<AudienceType>(preferences.GetValueOrDefault(PreferenceType.DefaultAudienceType), out var at))
                 defaultAudienceType = at;
+
+            timezone = preferences.GetValueOrDefault(PreferenceType.Timezone, "America/New_York");
+            country = preferences.GetValueOrDefault(PreferenceType.Country, "US");
+            language = preferences.GetValueOrDefault(PreferenceType.Language, "en");
 
             expirationPostLiked = int.Parse(preferences.GetValueOrDefault(PreferenceType.NotificationExpiration_PostLiked, "15"));
             expirationPostComment = int.Parse(preferences.GetValueOrDefault(PreferenceType.NotificationExpiration_PostComment, "15"));
@@ -193,6 +289,9 @@
         }
     }
 
+    /// <summary>
+    /// Saves the user's preferences to the database.
+    /// </summary>
     private async Task SavePreferences()
     {
         isSaving = true;
@@ -205,6 +304,9 @@
                 { PreferenceType.ColorScheme, colorScheme },
                 { PreferenceType.NameDisplay, nameDisplay.ToString() },
                 { PreferenceType.DefaultAudienceType, defaultAudienceType.ToString() },
+                { PreferenceType.Timezone, timezone },
+                { PreferenceType.Country, country },
+                { PreferenceType.Language, language },
                 { PreferenceType.NotificationExpiration_PostLiked, expirationPostLiked.ToString() },
                 { PreferenceType.NotificationExpiration_PostComment, expirationPostComment.ToString() },
                 { PreferenceType.NotificationExpiration_CommentReply, expirationCommentReply.ToString() },
@@ -221,16 +323,28 @@
             {
                 // Apply theme immediately
                 await ThemeService.SetThemeAsync(colorScheme);
+
+                // Log the preference change to audit log
+                await AuditLogRepository.LogActionAsync(UserId!, ActionCategory.UserPreference, new UserPreferenceDetails
+                {
+                    PreferenceCategory = "All",
+                    SettingName = "BulkUpdate",
+                    NewValue = "Multiple preferences updated"
+                });
+
                 statusMessage = "✓ Preferences saved successfully!";
+                AlertService.ShowSuccess("Your preferences have been saved.");
             }
             else
             {
                 statusMessage = "Error saving preferences. Please try again.";
+                AlertService.ShowError("Failed to save preferences. Please try again.");
             }
         }
         catch (Exception ex)
         {
             statusMessage = $"Error: {ex.Message}";
+            AlertService.ShowError($"An error occurred while saving preferences.");
         }
         finally
         {
@@ -238,11 +352,17 @@
         }
     }
 
+    /// <summary>
+    /// Resets all preferences to their default values and saves them.
+    /// </summary>
     private async Task ResetToDefaults()
     {
         colorScheme = "default";
         nameDisplay = NameDisplayType.FullName;
         defaultAudienceType = AudienceType.FriendsOnly;
+        timezone = "America/New_York";
+        country = "US";
+        language = "en";
         expirationPostLiked = 15;
         expirationPostComment = 15;
         expirationCommentReply = 15;
@@ -251,6 +371,14 @@
         expirationFriendAccepted = 15;
         expirationMention = 30;
         expirationSystem = 30;
+
+        // Log the reset action to audit log
+        await AuditLogRepository.LogActionAsync(UserId!, ActionCategory.UserPreference, new UserPreferenceDetails
+        {
+            PreferenceCategory = "All",
+            SettingName = "ResetToDefaults",
+            NewValue = "All preferences reset to defaults"
+        });
 
         await SavePreferences();
     }
