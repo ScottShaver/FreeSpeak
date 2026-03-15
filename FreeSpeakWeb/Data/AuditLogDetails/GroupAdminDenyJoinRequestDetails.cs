@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for group admin deny join request audit log entries.
     /// Tracks when administrators deny user join requests.
     /// </summary>
-    public class GroupAdminDenyJoinRequestDetails
+    public class GroupAdminDenyJoinRequestDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the unique identifier of the group.

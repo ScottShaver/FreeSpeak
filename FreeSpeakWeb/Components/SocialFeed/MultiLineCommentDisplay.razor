@@ -2,6 +2,7 @@
 @inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
 @inject HtmlSanitizationService HtmlSanitizationService
 @using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Components.Shared
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
 @implements IAsyncDisposable
@@ -21,19 +22,61 @@
     </div>
     
     <div class="comment-content">
-        <div class="comment-bubble">
-            <div class="comment-author">@UserName</div>
-            <div class="comment-text">@((MarkupString)FormatContentWithLineBreaks(CommentText))</div>
-        </div>
-        
-        @if (!string.IsNullOrEmpty(ImageUrl))
+        @if (isEditMode)
+        {
+            <!-- Inline Edit Mode -->
+            <div class="comment-edit-container">
+                <div class="comment-edit-wrapper">
+                    <MultiLineCommentEditor @ref="commentEditor" @bind-CommentText="editedCommentText" OnCommentSubmitted="@HandleEditSubmitted" />
+                </div>
+                <div class="comment-edit-actions">
+                    <button type="button" class="btn btn-sm btn-secondary" @onclick="CancelEdit">
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-sm btn-primary" @onclick="SaveEdit" disabled="@(!CanSaveEdit)">
+                        Save
+                    </button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- Normal Display Mode -->
+            <div class="comment-bubble-container">
+                <div class="comment-bubble">
+                    <div class="comment-author">@UserName</div>
+                    <div class="comment-text">@((MarkupString)FormatContentWithLineBreaks(CommentText))</div>
+                </div>
+                @if (!string.IsNullOrEmpty(CurrentUserId))
+                {
+                    <div class="comment-menu-container" style="position: relative;">
+                        <button type="button" 
+                                class="comment-menu-button" 
+                                @onclick="ToggleCommentMenu"
+                                title="More options">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                            </svg>
+                        </button>
+                        <PopupMenu IsVisible="@showCommentMenu" 
+                                   MenuItems="@commentMenuItems" 
+                                   OnClose="@CloseCommentMenu"
+                                   PositionStyle="position: absolute; top: 100%; right: 0;" />
+                    </div>
+                }
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(ImageUrl) && !isEditMode)
         {
             <div class="comment-image-container">
                 <img src="@ImageUrl" alt="Comment image" class="comment-image" @onclick="OnImageClick" />
             </div>
         }
 
-        <div class="comment-meta">
+        @if (!isEditMode)
+        {
+            <div class="comment-meta">
             <span class="comment-timestamp" title="@FullTimestamp">@FormattedTimestamp</span>
 
             @if (ShouldShowLikeButton)
@@ -83,8 +126,9 @@
                 </div>
             }
         </div>
+        }
 
-        @if (showReplyEditor)
+        @if (showReplyEditor && !isEditMode)
         {
             <div class="comment-reply-editor" @ref="replyEditorRef">
                 @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
@@ -103,7 +147,7 @@
             </div>
         }
 
-        @if (Replies != null && Replies.Any())
+        @if (Replies != null && Replies.Any() && !isEditMode)
         {
             @if (Depth == 0 && !showReplies)
             {
@@ -136,7 +180,11 @@
                             Depth="@(Depth + 1)"
                             OnReactionChanged="@OnReactionChanged"
                             OnRemoveReaction="@OnRemoveReaction"
-                            OnReplySubmitted="@OnReplySubmitted" />
+                            OnReplySubmitted="@OnReplySubmitted"
+                            OnDeleteComment="@OnDeleteComment"
+                            OnEditComment="@OnEditComment"
+                            OnCommentUpdated="@OnCommentUpdated"
+                            OnReportComment="@OnReportComment" />
                     }
                 </div>
                 @if (Depth == 0 && showReplies)
@@ -207,12 +255,41 @@
     [Parameter]
     public EventCallback<(int ParentCommentId, string Content)> OnReplySubmitted { get; set; }
 
+    /// <summary>
+    /// Event callback invoked when the user requests to delete their own comment.
+    /// </summary>
+    [Parameter]
+    public EventCallback<int> OnDeleteComment { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when the user requests to edit their own comment.
+    /// </summary>
+    [Parameter]
+    public EventCallback<(int CommentId, string CurrentContent)> OnEditComment { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when the comment is successfully updated with new content.
+    /// </summary>
+    [Parameter]
+    public EventCallback<(int CommentId, string NewContent)> OnCommentUpdated { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when the user requests to report another user's comment.
+    /// </summary>
+    [Parameter]
+    public EventCallback<int> OnReportComment { get; set; }
+
     private bool showReactionPicker = false;
     private bool showReplyEditor = false;
     private bool showReplies = false;
+    private bool showCommentMenu = false;
+    private bool isEditMode = false;
+    private string editedCommentText = "";
+    private List<PopupMenu.PopupMenuItem> commentMenuItems = new();
     private System.Threading.Timer? hideTimer;
     private ElementReference replyEditorRef;
     private IJSObjectReference? jsModule;
+    private MultiLineCommentEditor? commentEditor;
 
     private bool IsOwnComment => !string.IsNullOrEmpty(CurrentUserId) && !string.IsNullOrEmpty(CommentAuthorId) && CurrentUserId == CommentAuthorId;
 
@@ -221,6 +298,154 @@
 
     // Show reply button if: user is logged in AND depth hasn't reached the maximum
     private bool ShouldShowReplyButton => !string.IsNullOrEmpty(CurrentUserId) && Depth < SiteSettings.Value.MaxFeedPostCommentDepth;
+
+    // Can save edit if the text is not empty, not just whitespace, and different from original
+    private bool CanSaveEdit => !string.IsNullOrWhiteSpace(editedCommentText) && editedCommentText.Trim() != CommentText.Trim();
+
+    /// <summary>
+    /// Toggles the comment menu visibility and builds the menu items based on ownership.
+    /// </summary>
+    private void ToggleCommentMenu()
+    {
+        showCommentMenu = !showCommentMenu;
+        if (showCommentMenu)
+        {
+            BuildCommentMenuItems();
+        }
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the comment menu.
+    /// </summary>
+    private void CloseCommentMenu()
+    {
+        showCommentMenu = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Builds the menu items based on whether the current user owns the comment.
+    /// Owner sees: Delete My Comment, Edit My Comment
+    /// Non-owner sees: Report Comment
+    /// </summary>
+    private void BuildCommentMenuItems()
+    {
+        commentMenuItems.Clear();
+
+        if (IsOwnComment)
+        {
+            // Owner menu items
+            commentMenuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = "Delete My Comment",
+                Icon = "bi bi-trash",
+                OnClick = EventCallback.Factory.Create(this, HandleDeleteComment)
+            });
+            commentMenuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = "Edit My Comment",
+                Icon = "bi bi-pencil",
+                OnClick = EventCallback.Factory.Create(this, HandleEditComment)
+            });
+        }
+        else
+        {
+            // Non-owner menu items
+            commentMenuItems.Add(new PopupMenu.PopupMenuItem
+            {
+                Text = "Report Comment",
+                Icon = "bi bi-flag",
+                OnClick = EventCallback.Factory.Create(this, HandleReportComment)
+            });
+        }
+    }
+
+    /// <summary>
+    /// Handles the delete comment action by invoking the OnDeleteComment callback.
+    /// </summary>
+    private async Task HandleDeleteComment()
+    {
+        showCommentMenu = false;
+        if (OnDeleteComment.HasDelegate)
+        {
+            await OnDeleteComment.InvokeAsync(CommentId);
+        }
+    }
+
+    /// <summary>
+    /// Handles the edit comment action by activating inline edit mode.
+    /// </summary>
+    private async Task HandleEditComment()
+    {
+        showCommentMenu = false;
+        editedCommentText = CommentText;
+        isEditMode = true;
+        StateHasChanged();
+
+        // Wait for the editor to render, then focus it
+        await Task.Delay(100); // Small delay to ensure editor is rendered
+        if (commentEditor != null)
+        {
+            await commentEditor.FocusAsync();
+        }
+    }
+
+    /// <summary>
+    /// Saves the edited comment by invoking the OnCommentUpdated callback.
+    /// </summary>
+    private async Task SaveEdit()
+    {
+        // Get the latest text from the editor component
+        if (commentEditor != null)
+        {
+            editedCommentText = commentEditor.CommentText;
+        }
+
+        if (!CanSaveEdit) return;
+
+        if (OnCommentUpdated.HasDelegate)
+        {
+            await OnCommentUpdated.InvokeAsync((CommentId, editedCommentText));
+        }
+
+        isEditMode = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Cancels the edit and returns to normal display mode.
+    /// </summary>
+    private void CancelEdit()
+    {
+        isEditMode = false;
+        editedCommentText = "";
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles when the user submits via the editor (Enter key).
+    /// </summary>
+    private async Task HandleEditSubmitted(string content)
+    {
+        editedCommentText = content;
+        if (CanSaveEdit)
+        {
+            await SaveEdit();
+        }
+    }
+
+    /// <summary>
+    /// Handles the report comment action by invoking the OnReportComment callback.
+    /// </summary>
+    private async Task HandleReportComment()
+    {
+        showCommentMenu = false;
+        if (OnReportComment.HasDelegate)
+        {
+            await OnReportComment.InvokeAsync(CommentId);
+        }
+    }
 
     private void ShowReactionPicker()
     {
@@ -311,7 +536,7 @@
                 jsModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/GroupPostDetailModal.razor.js");
                 await jsModule.InvokeVoidAsync("scrollReplyEditorIntoView", replyEditorRef);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Silently fail - scrolling not critical
             }
@@ -324,6 +549,13 @@
         {
             await OnReplySubmitted.InvokeAsync((CommentId, content));
             showReplyEditor = false;
+
+            // Keep replies visible after submitting a reply at the top level
+            if (Depth == 0)
+            {
+                showReplies = true;
+            }
+
             StateHasChanged();
         }
     }

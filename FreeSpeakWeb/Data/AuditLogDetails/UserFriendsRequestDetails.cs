@@ -4,14 +4,8 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for user friend request audit log entries.
     /// Tracks when users send, receive, accept, or decline friend requests.
     /// </summary>
-    public class UserFriendsRequestDetails
+    public class UserFriendsRequestDetails : AuditLogDetailsBase
     {
-        /// <summary>
-        /// Gets or sets the type of friend request action.
-        /// Examples: "Sent", "Received", "Accepted", "Declined", "Cancelled".
-        /// </summary>
-        public string ActionType { get; set; } = string.Empty;
-
         /// <summary>
         /// Gets or sets the user ID of the other user involved in the friend request.
         /// </summary>

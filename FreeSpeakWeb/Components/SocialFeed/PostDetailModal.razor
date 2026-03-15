@@ -49,6 +49,10 @@
                 OnReplySubmitted="@HandleReplySubmitted"
                 OnCommentReactionChanged="@HandleCommentReactionChanged"
                 OnRemoveCommentReaction="@HandleRemoveCommentReaction"
+                OnDeleteComment="@OnDeleteComment"
+                OnEditComment="@OnEditComment"
+                OnCommentUpdated="@OnCommentUpdated"
+                OnReportComment="@OnReportComment"
                 IsModalView="true"
                 IsReadOnly="@IsReadOnly"
                 HideCommentEditor="true" />
@@ -165,6 +169,30 @@
     [Parameter]
     public EventCallback<int> OnRemoveCommentReaction { get; set; }
 
+    /// <summary>
+    /// Event callback invoked when a user requests to delete their own comment.
+    /// </summary>
+    [Parameter]
+    public EventCallback<int> OnDeleteComment { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when a user requests to edit their own comment.
+    /// </summary>
+    [Parameter]
+    public EventCallback<(int CommentId, string CurrentContent)> OnEditComment { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when a comment is successfully updated with new content via inline editing.
+    /// </summary>
+    [Parameter]
+    public EventCallback<(int CommentId, string NewContent)> OnCommentUpdated { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when a user requests to report another user's comment.
+    /// </summary>
+    [Parameter]
+    public EventCallback<int> OnReportComment { get; set; }
+
     [Parameter]
     public EventCallback OnClose { get; set; }
 
@@ -225,7 +253,7 @@
                     await jsModule.InvokeVoidAsync("scrollToAndHighlightComment", TargetCommentId.Value);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Silently fail - scrolling not critical
             }
@@ -250,7 +278,7 @@
 
             hasMoreComments = comments.Count == commentPageSize;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - comments will show empty
         }
@@ -291,7 +319,7 @@
                 hasMoreComments = false;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             currentCommentPage--;
         }
@@ -395,7 +423,7 @@
 
             StateHasChanged();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             await JS.InvokeVoidAsync("alert", "An error occurred while adding your reply.");
         }

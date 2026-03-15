@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for group moderator approve post audit log entries.
     /// Tracks when moderators approve posts in moderated groups.
     /// </summary>
-    public class GroupModeratorApprovePostDetails
+    public class GroupModeratorApprovePostDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the unique identifier of the group.

@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for user preference change audit log entries.
     /// Tracks changes to user settings such as theme, notifications, and other preferences.
     /// </summary>
-    public class UserPreferenceDetails
+    public class UserPreferenceDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the category of preference that was changed.

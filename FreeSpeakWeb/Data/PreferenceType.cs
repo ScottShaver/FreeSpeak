@@ -70,7 +70,28 @@ namespace FreeSpeakWeb.Data
         /// Number of days before System notifications expire and are auto-deleted.
         /// Default: 30 days.
         /// </summary>
-        NotificationExpiration_System = 107
+        NotificationExpiration_System = 107,
+
+        /// <summary>
+        /// User's preferred timezone for displaying dates and times.
+        /// Valid values: IANA timezone identifiers (e.g., "America/New_York", "Europe/London", "UTC").
+        /// Default: "America/New_York" (US Eastern Time).
+        /// </summary>
+        Timezone = 3,
+
+        /// <summary>
+        /// User's country or region.
+        /// Valid values: ISO 3166-1 alpha-2 country codes (e.g., "US", "GB", "CA").
+        /// Default: "US" (United States of America).
+        /// </summary>
+        Country = 4,
+
+        /// <summary>
+        /// User's preferred language for the user interface.
+        /// Valid values: ISO 639-1 language codes (e.g., "en", "es", "fr", "de").
+        /// Default: "en" (English).
+        /// </summary>
+        Language = 5
     }
 
     /// <summary>

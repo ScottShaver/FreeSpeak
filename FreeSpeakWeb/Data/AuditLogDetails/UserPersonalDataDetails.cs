@@ -4,14 +4,8 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for user personal data operation audit log entries.
     /// Tracks data export requests, data deletion, and privacy settings changes.
     /// </summary>
-    public class UserPersonalDataDetails
+    public class UserPersonalDataDetails : AuditLogDetailsBase
     {
-        /// <summary>
-        /// Gets or sets the type of personal data operation performed.
-        /// Examples: "DataExport", "DataDeletion", "PrivacySettingsChange", "DataDownload".
-        /// </summary>
-        public string OperationType { get; set; } = string.Empty;
-
         /// <summary>
         /// Gets or sets the specific data types affected by the operation.
         /// Examples: "Profile", "Posts", "Messages", "All".
@@ -27,10 +21,5 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
         /// Gets or sets any additional details or reason for the operation.
         /// </summary>
         public string? Reason { get; set; }
-
-        /// <summary>
-        /// Gets or sets the IP address from which the request was made.
-        /// </summary>
-        public string? IpAddress { get; set; }
     }
 }

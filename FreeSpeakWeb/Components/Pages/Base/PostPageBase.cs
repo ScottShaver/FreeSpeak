@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Data.AuditLogDetails;
+using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
 
 namespace FreeSpeakWeb.Components.Pages.Base;
 
@@ -16,6 +19,8 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
     where TComment : class
 {
     [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
+    [Inject] protected AlertService AlertService { get; set; } = default!;
+    [Inject] protected IAuditLogRepository AuditLogRepository { get; set; } = default!;
 
     // Dictionaries for managing post state
     protected Dictionary<int, int> postRefreshTriggers = new();
@@ -172,6 +177,48 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
     /// <returns>The post ID if found, null otherwise</returns>
     protected abstract Task<int?> FindPostIdForCommentAsync(int commentId);
 
+    /// <summary>
+    /// Deletes a comment from the post.
+    /// Implementation should call the appropriate service (PostService or GroupPostService).
+    /// </summary>
+    /// <param name="commentId">The ID of the comment to delete</param>
+    /// <param name="userId">The ID of the user requesting the deletion (must be the author)</param>
+    /// <returns>Tuple containing success status, optional error message, and the count of deleted comments (including nested replies)</returns>
+    protected abstract Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteCommentAsync(
+        int commentId,
+        string userId);
+
+    /// <summary>
+    /// Updates a comment's content.
+    /// Implementation should call the appropriate service (PostService or GroupPostService).
+    /// </summary>
+    /// <param name="commentId">The ID of the comment to update</param>
+    /// <param name="userId">The ID of the user requesting the update (must be the author)</param>
+    /// <param name="newContent">The new content for the comment</param>
+    /// <returns>Tuple containing success status and optional error message</returns>
+    protected abstract Task<(bool Success, string? ErrorMessage)> UpdateCommentAsync(
+        int commentId,
+        string userId,
+        string newContent);
+
+    /// <summary>
+    /// Reports a comment for moderation.
+    /// Implementation should call the appropriate service.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment to report</param>
+    /// <param name="userId">The ID of the user making the report</param>
+    /// <returns>Tuple containing success status and optional error message</returns>
+    protected abstract Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
+        int commentId,
+        string userId);
+
+    /// <summary>
+    /// Decrements the comment count for the specified post in the page's post list.
+    /// </summary>
+    /// <param name="postId">The ID of the post to update</param>
+    /// <param name="decrementBy">The number to decrement by (default 1)</param>
+    protected abstract void DecrementPostCommentCount(int postId, int decrementBy = 1);
+
     #endregion
 
     #region Shared Comment Handler Methods
@@ -193,16 +240,29 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
             {
                 IncrementPostCommentCount(args.PostId);
                 IncrementRefreshTrigger(args.PostId);
+
+                // Log comment creation to audit log
+                try
+                {
+                    await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserComment, new UserCommentDetails
+                    {
+                        CommentId = 0, // Will be set by the service
+                        PostId = args.PostId,
+                        OperationType = OperationTypeEnum.Create.ToString()
+                    });
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
                 StateHasChanged();
             }
             else
             {
-                await JSRuntime.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to add comment");
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to add comment.");
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            await JSRuntime.InvokeVoidAsync("alert", "An error occurred while adding your comment.");
+            AlertService.ShowError("An error occurred while adding your comment.");
         }
     }
 
@@ -229,17 +289,31 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
 
             if (!result.Success)
             {
-                await JSRuntime.InvokeVoidAsync("alert", result.ErrorMessage ?? "Failed to add reply");
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to add reply.");
                 return;
             }
 
             IncrementPostCommentCount(postId);
             IncrementRefreshTrigger(postId);
+
+            // Log reply creation to audit log
+            try
+            {
+                await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserComment, new UserCommentDetails
+                {
+                    CommentId = 0, // Will be set by the service
+                    PostId = postId,
+                    OperationType = OperationTypeEnum.Reply.ToString(),
+                    ParentCommentId = args.ParentCommentId
+                });
+            }
+            catch { /* Audit logging should not fail the operation */ }
+
             StateHasChanged();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            // Silently fail - UI will remain in previous state
+            AlertService.ShowError("An error occurred while adding your reply.");
         }
     }
 
@@ -276,10 +350,14 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
 
                 StateHasChanged();
             }
+            else
+            {
+                AlertService.ShowError("Failed to add reaction.");
+            }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            // Silently fail - UI will remain in previous state
+            AlertService.ShowError("An error occurred while adding your reaction.");
         }
     }
 
@@ -306,10 +384,14 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
 
                 StateHasChanged();
             }
+            else
+            {
+                AlertService.ShowError("Failed to remove reaction.");
+            }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            // Silently fail - UI will remain in previous state
+            AlertService.ShowError("An error occurred while removing your reaction.");
         }
     }
 
@@ -336,10 +418,14 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
 
                 StateHasChanged();
             }
+            else
+            {
+                AlertService.ShowError("Failed to add reaction.");
+            }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            // Silently fail - UI will remain in previous state
+            AlertService.ShowError("An error occurred while adding your reaction.");
         }
     }
 
@@ -366,10 +452,190 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
 
                 StateHasChanged();
             }
+            else
+            {
+                AlertService.ShowError("Failed to remove reaction.");
+            }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            // Silently fail - UI will remain in previous state
+            AlertService.ShowError("An error occurred while removing your reaction.");
+        }
+    }
+
+    /// <summary>
+    /// Handles when a user requests to delete their own comment.
+    /// Deletes the comment and all nested replies, updating the UI state.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment to delete</param>
+    protected async Task HandleDeleteComment(int commentId)
+    {
+        if (CurrentUserId == null) return;
+
+        try
+        {
+            // Find the post before deleting so we can refresh
+            var postId = await FindPostIdForCommentAsync(commentId);
+
+            var result = await DeleteCommentAsync(commentId, CurrentUserId);
+
+            if (result.Success)
+            {
+                if (postId.HasValue)
+                {
+                    // Decrement by the total number of deleted comments (including nested replies)
+                    DecrementPostCommentCount(postId.Value, result.DeletedCount);
+                    IncrementRefreshTrigger(postId.Value);
+                }
+
+                // Note: Audit logging for comment deletion is handled by the service/repository layer
+                // to ensure proper context (e.g., GroupId for group comments) is included.
+
+                StateHasChanged();
+            }
+            else
+            {
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to delete comment.");
+            }
+        }
+        catch (Exception)
+        {
+            AlertService.ShowError("An error occurred while deleting the comment.");
+        }
+    }
+
+    /// <summary>
+    /// Handles when a user requests to edit their own comment.
+    /// This method is kept for backward compatibility but is no longer used with inline editing.
+    /// The MultiLineCommentDisplay component now handles edit mode internally.
+    /// </summary>
+    /// <param name="args">Tuple containing the CommentId and CurrentContent</param>
+    [Obsolete("This method is deprecated. Inline editing is now handled by MultiLineCommentDisplay component.")]
+    protected virtual async Task HandleEditComment((int CommentId, string CurrentContent) args)
+    {
+        // This method is now obsolete as inline editing is handled by the MultiLineCommentDisplay component
+        // Kept for backward compatibility only
+        await Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Handles when a comment is updated via inline editing.
+    /// This is the new handler called by MultiLineCommentDisplay when save is clicked.
+    /// </summary>
+    /// <param name="args">Tuple containing the CommentId and NewContent</param>
+    protected async Task HandleCommentUpdated((int CommentId, string NewContent) args)
+    {
+        if (CurrentUserId == null) return;
+
+        try
+        {
+            var result = await UpdateCommentAsync(args.CommentId, CurrentUserId, args.NewContent);
+
+            if (result.Success)
+            {
+                var postId = await FindPostIdForCommentAsync(args.CommentId);
+
+                if (postId.HasValue)
+                {
+                    IncrementRefreshTrigger(postId.Value);
+                }
+
+                // Log comment update to audit log
+                try
+                {
+                    await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserComment, new UserCommentDetails
+                    {
+                        CommentId = args.CommentId,
+                        PostId = postId ?? 0,
+                        OperationType = OperationTypeEnum.Edit.ToString()
+                    });
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
+                StateHasChanged();
+            }
+            else
+            {
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to update comment.");
+            }
+        }
+        catch (Exception)
+        {
+            AlertService.ShowError("An error occurred while updating the comment.");
+        }
+    }
+
+    /// <summary>
+    /// Handles the actual update of a comment's content.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment to update</param>
+    /// <param name="newContent">The new content for the comment</param>
+    protected async Task HandleUpdateComment(int commentId, string newContent)
+    {
+        if (CurrentUserId == null) return;
+
+        try
+        {
+            var result = await UpdateCommentAsync(commentId, CurrentUserId, newContent);
+
+            if (result.Success)
+            {
+                var postId = await FindPostIdForCommentAsync(commentId);
+
+                if (postId.HasValue)
+                {
+                    IncrementRefreshTrigger(postId.Value);
+                }
+
+                // Log comment update to audit log
+                try
+                {
+                    await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserComment, new UserCommentDetails
+                    {
+                        CommentId = commentId,
+                        PostId = postId ?? 0,
+                        OperationType = OperationTypeEnum.Edit.ToString()
+                    });
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
+                StateHasChanged();
+            }
+            else
+            {
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to update comment.");
+            }
+        }
+        catch (Exception)
+        {
+            AlertService.ShowError("An error occurred while updating the comment.");
+        }
+    }
+
+    /// <summary>
+    /// Handles when a user requests to report another user's comment.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment to report</param>
+    protected async Task HandleReportComment(int commentId)
+    {
+        if (CurrentUserId == null) return;
+
+        try
+        {
+            var result = await ReportCommentAsync(commentId, CurrentUserId);
+
+            if (result.Success)
+            {
+                // Report submitted successfully - no alert needed
+            }
+            else
+            {
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to submit report.");
+            }
+        }
+        catch (Exception)
+        {
+            AlertService.ShowError("An error occurred while submitting the report.");
         }
     }
 

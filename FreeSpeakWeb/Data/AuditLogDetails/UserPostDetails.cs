@@ -2,12 +2,12 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
 {
     /// <summary>
     /// Contains details for user feed post audit log entries.
-    /// Tracks when users create personal or friends-only posts.
+    /// Tracks when users create, update, or delete personal or friends-only posts.
     /// </summary>
-    public class UserPostDetails
+    public class UserPostDetails : AuditLogDetailsBase
     {
         /// <summary>
-        /// Gets or sets the unique identifier of the created post.
+        /// Gets or sets the unique identifier of the post.
         /// </summary>
         public int PostId { get; set; }
 
@@ -16,11 +16,6 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
         /// Examples: "Public", "FriendsOnly", "Private".
         /// </summary>
         public string? Visibility { get; set; }
-
-        /// <summary>
-        /// Gets or sets a brief summary or excerpt of the post content.
-        /// </summary>
-        public string? ContentSummary { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the post contains media attachments.

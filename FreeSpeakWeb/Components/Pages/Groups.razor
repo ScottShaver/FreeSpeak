@@ -8,7 +8,9 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
 @using FreeSpeakWeb.DTOs
+@using FreeSpeakWeb.Repositories.Abstractions
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Components.Shared
@@ -30,7 +32,7 @@
 @inject NavigationStateService NavigationState
 @inject UserPreferenceService UserPreferenceService
 @inject HtmlSanitizationService HtmlSanitizationService
-@inject AlertService AlertService
+@inject FreeSpeakWeb.Repositories.Abstractions.IGroupCommentRepository GroupCommentRepository
 
 <PageTitle>@SiteSettings.Value.SiteName - Groups</PageTitle>
 
@@ -139,6 +141,9 @@
                             OnReplySubmitted="@HandleGroupPostReplySubmitted"
                             OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
                             OnRemoveCommentReaction="@HandleRemoveGroupPostCommentReaction"
+                            OnDeleteComment="@HandleDeleteComment"
+                            OnCommentUpdated="@HandleCommentUpdated"
+                            OnReportComment="@HandleReportComment"
                             OnShowPostDetail="@(() => ShowGroupPostDetail(post))"
                             OnShowComments="@(() => ShowGroupPostDetail(post))">
                             <ArticleContent>
@@ -234,6 +239,9 @@
                             OnReplySubmitted="@HandleGroupPostReplySubmitted"
                             OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
                             OnRemoveCommentReaction="@HandleRemoveGroupPostCommentReaction"
+                            OnDeleteComment="@HandleDeleteComment"
+                            OnCommentUpdated="@HandleCommentUpdated"
+                            OnReportComment="@HandleReportComment"
                             OnShowPostDetail="@(() => ShowGroupPostDetail(post))"
                             OnShowComments="@(() => ShowGroupPostDetail(post))">
                             <ArticleContent>
@@ -442,6 +450,9 @@
         OnReplySubmitted="@HandleGroupPostReplySubmitted"
         OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
         OnRemoveCommentReaction="@HandleRemoveGroupPostCommentReaction"
+        OnDeleteComment="@HandleDeleteComment"
+        OnCommentUpdated="@HandleCommentUpdated"
+        OnReportComment="@HandleReportComment"
         OnClose="@CloseGroupPostDetailModal">
         <ArticleContent>
             @((MarkupString)FormatContentWithLineBreaks(selectedGroupPost.Content))
@@ -569,7 +580,7 @@
                 dotNetHelper = DotNetObjectReference.Create(this);
                 await jsModule.InvokeVoidAsync("initializeInfiniteScroll", (object?)null, dotNetHelper);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Silently fail - infinite scroll not critical
             }
@@ -599,7 +610,7 @@
 
             userGroups = uniqueGroups;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - user groups list optional
         }
@@ -641,7 +652,7 @@
             // Load additional data for posts (reactions, pinned status, mute status)
             await LoadGroupPostDataAsync(groupPosts);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - feed will show empty
         }
@@ -695,7 +706,7 @@
                 hasMoreGroupPosts = false;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - pagination will stop
         }
@@ -833,7 +844,7 @@
                 pinnedPosts[post.Id] = true;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - pinned feed will show empty
         }
@@ -915,7 +926,7 @@
                 hasMorePinnedPosts = false;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - pagination will stop
         }
@@ -950,7 +961,7 @@
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - join requests will show empty
         }
@@ -975,7 +986,7 @@
             groupJoinRequests = await GroupMemberService.GetUserJoinRequestsAsync(currentUserId);
             StateHasChanged();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - badge will not show
         }
@@ -1039,7 +1050,7 @@
         {
             suggestedGroups = await GroupService.GetSuggestedGroupsAsync(currentUserId, 20);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - suggested groups will show empty
         }
@@ -1084,7 +1095,7 @@
         {
             searchedGroups = await GroupService.SearchGroupsAsync(groupSearchQuery, 0, 20, currentUserId);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // Silently fail - search results will show empty
         }
@@ -1163,7 +1174,17 @@
 
                 if (success)
                 {
-                    AlertService.ShowSuccess("Join request sent successfully!");
+                    // Log group join request to audit log
+                    try
+                    {
+                        await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserGroupRequests, new UserGroupRequestsDetails
+                        {
+                            GroupId = group.Id,
+                            GroupName = group.Name,
+                            OperationType = OperationTypeEnum.JoinRequestSent.ToString()
+                        });
+                    }
+                    catch { /* Audit logging should not fail the operation */ }
 
                     // Remove from both lists since request was sent
                     suggestedGroups.RemoveAll(g => g.Id == group.Id);
@@ -1182,7 +1203,18 @@
 
                 if (success)
                 {
-                    AlertService.ShowSuccess($"You've joined {group.Name}!");
+                    // Log direct group join to audit log
+                    try
+                    {
+                        await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserGroupRequests, new UserGroupRequestsDetails
+                        {
+                            GroupId = group.Id,
+                            GroupName = group.Name,
+                            OperationType = OperationTypeEnum.DirectJoin.ToString()
+                        });
+                    }
+                    catch { /* Audit logging should not fail the operation */ }
+
                     // Navigate to the group page with force reload to refresh nav menu
                     NavigationManager.NavigateTo($"/group/{group.Id}", forceLoad: true);
                 }
@@ -1194,7 +1226,7 @@
         }
         catch (Exception ex)
         {
-            AlertService.ShowError("An error occurred while joining the group.");
+            AlertService.ShowError("An error occurred while joining the group. " + ex.GetType());
         }
     }
 
@@ -1213,10 +1245,25 @@
 
             if (success)
             {
+                // Log join request cancellation to audit log
+                try
+                {
+                    var request = groupJoinRequests.FirstOrDefault(r => r.Id == requestId);
+                    if (request != null)
+                    {
+                        await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserGroupRequests, new UserGroupRequestsDetails
+                        {
+                            GroupId = request.GroupId,
+                            GroupName = request.Group?.Name ?? "Unknown",
+                            OperationType = OperationTypeEnum.JoinRequestCanceled.ToString()
+                        });
+                    }
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
                 // Remove from the list
                 groupJoinRequests.RemoveAll(r => r.Id == requestId);
                 StateHasChanged();
-                AlertService.ShowSuccess("Join request cancelled successfully.");
             }
             else
             {
@@ -1225,7 +1272,7 @@
         }
         catch (Exception ex)
         {
-            AlertService.ShowError("An error occurred while cancelling the join request.");
+            AlertService.ShowError("An error occurred while cancelling the join request. " + ex.GetType());
         }
     }
 
@@ -1266,7 +1313,23 @@
         if (success)
         {
             pinnedPosts[postId] = true;
+
+            // Log group post pin to audit log
+            try
+            {
+                await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserGroupPost, new UserPinPostDetails
+                {
+                    PostId = postId,
+                    OperationType = OperationTypeEnum.Pin.ToString()
+                });
+            }
+            catch { /* Audit logging should not fail the operation */ }
+
             StateHasChanged();
+        }
+        else
+        {
+            AlertService.ShowError(errorMessage ?? "Failed to pin post.");
         }
     }
 
@@ -1285,7 +1348,23 @@
         {
             pinnedPosts[postId] = false;
             pinnedGroupPostsList.RemoveAll(p => p.Id == postId);
+
+            // Log group post unpin to audit log
+            try
+            {
+                await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserGroupPost, new UserPinPostDetails
+                {
+                    PostId = postId,
+                    OperationType = OperationTypeEnum.Unpin.ToString()
+                });
+            }
+            catch { /* Audit logging should not fail the operation */ }
+
             StateHasChanged();
+        }
+        else
+        {
+            AlertService.ShowError(errorMessage ?? "Failed to unpin post.");
         }
     }
 
@@ -1713,6 +1792,69 @@
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Deletes a comment from the group post.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment to delete.</param>
+    /// <param name="userId">The ID of the user requesting the deletion.</param>
+    /// <returns>A tuple indicating success, an optional error message, and the count of deleted comments.</returns>
+    protected override async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteCommentAsync(
+        int commentId, string userId)
+    {
+        var result = await GroupCommentRepository.DeleteAsync(commentId, userId);
+        return (result.Success, result.ErrorMessage, result.DeletedCount);
+    }
+
+    /// <summary>
+    /// Updates a comment's content.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment to update.</param>
+    /// <param name="userId">The ID of the user requesting the update.</param>
+    /// <param name="newContent">The new content for the comment.</param>
+    /// <returns>A tuple indicating success and an optional error message.</returns>
+    protected override async Task<(bool Success, string? ErrorMessage)> UpdateCommentAsync(
+        int commentId, string userId, string newContent)
+    {
+        var result = await GroupCommentRepository.UpdateAsync(commentId, userId, newContent);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    /// <summary>
+    /// Reports a comment for moderation.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment to report.</param>
+    /// <param name="userId">The ID of the user making the report.</param>
+    /// <returns>A tuple indicating success and an optional error message.</returns>
+    protected override async Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
+        int commentId, string userId)
+    {
+        // TODO: Implement comment reporting when report system is available
+        await Task.CompletedTask;
+        return (true, null);
+    }
+
+    /// <summary>
+    /// Decrements the comment count for a post in the UI.
+    /// Updates both the main feed and pinned posts list.
+    /// </summary>
+    /// <param name="postId">The ID of the post.</param>
+    /// <param name="decrementBy">The number to decrement by.</param>
+    protected override void DecrementPostCommentCount(int postId, int decrementBy = 1)
+    {
+        var post = groupPosts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.CommentCount = Math.Max(0, post.CommentCount - decrementBy);
+        }
+
+        // Also update pinnedGroupPostsList if post exists there
+        var pinnedPost = pinnedGroupPostsList.FirstOrDefault(p => p.Id == postId);
+        if (pinnedPost != null)
+        {
+            pinnedPost.CommentCount = Math.Max(0, pinnedPost.CommentCount - decrementBy);
+        }
     }
 
     #endregion

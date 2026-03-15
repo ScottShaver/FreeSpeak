@@ -65,7 +65,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         {
             return new FeedCommentRepository(
                 _contextFactory,
-                CreateMockLogger<FeedCommentRepository>());
+                CreateMockLogger<FeedCommentRepository>(),
+                CreateMockAuditLogRepository());
         }
 
         /// <summary>
@@ -161,7 +162,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         {
             return new GroupCommentRepository(
                 _contextFactory,
-                CreateMockLogger<GroupCommentRepository>());
+                CreateMockLogger<GroupCommentRepository>(),
+                CreateMockAuditLogRepository());
         }
 
         /// <summary>
@@ -240,6 +242,15 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         private static ILogger<T> CreateMockLogger<T>()
         {
             return new Mock<ILogger<T>>().Object;
+        }
+
+        /// <summary>
+        /// Creates a mock IAuditLogRepository for testing.
+        /// </summary>
+        /// <returns>A mock IAuditLogRepository instance.</returns>
+        private static IAuditLogRepository CreateMockAuditLogRepository()
+        {
+            return new Mock<IAuditLogRepository>().Object;
         }
     }
 }

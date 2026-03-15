@@ -7,6 +7,8 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
+@using FreeSpeakWeb.Repositories.Abstractions
 @using FreeSpeakWeb.Services
 
 @inject UserManager<ApplicationUser> UserManager
@@ -18,6 +20,7 @@
 @inject IdentityRedirectManager RedirectManager
 @inject NavigationStateService NavigationState
 @inject IOptions<SiteSettings> SiteSettings
+@inject IAuditLogRepository AuditLogRepository
 
 <PageTitle>@SiteSettings.Value.SiteName - Register</PageTitle>
 
@@ -76,6 +79,9 @@
 @code {
     private IEnumerable<IdentityError>? identityErrors;
 
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = default!;
 
@@ -129,6 +135,18 @@
         Logger.LogInformation("User created a new account with password.");
 
         var userId = await UserManager.GetUserIdAsync(user);
+
+        // Log registration to audit log
+        await AuditLogRepository.LogActionAsync(userId, ActionCategory.UserRegister, new UserRegisterDetails
+        {
+            RegistrationMethod = "Local",
+            Email = Input.Email,
+            UserName = Input.UserName,
+            IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString(),
+            UserAgent = HttpContext.Request.Headers.UserAgent.ToString(),
+            RequiresEmailConfirmation = UserManager.Options.SignIn.RequireConfirmedAccount
+        });
+
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         var callbackUrl = NavigationManager.GetUriWithQueryParameters(

@@ -31,7 +31,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
         private class NullNotificationService : NotificationService
         {
             public NullNotificationService()
-                : base(null!, new NullDbContextFactory(), new NullLogger(), new NullServiceScopeFactory())
+                : base(null!, new NullDbContextFactory(), new NullLogger(), new NullServiceScopeFactory(), MockRepositories.CreateMockAuditLogRepository().Object)
             {
             }
 

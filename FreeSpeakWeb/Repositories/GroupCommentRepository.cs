@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,13 +12,22 @@ namespace FreeSpeakWeb.Repositories
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupCommentRepository> _logger;
+        private readonly IAuditLogRepository _auditLogRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupCommentRepository"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording repository operations.</param>
+        /// <param name="auditLogRepository">Repository for audit log operations.</param>
         public GroupCommentRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<GroupCommentRepository> logger)
+            ILogger<GroupCommentRepository> logger,
+            IAuditLogRepository auditLogRepository)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _auditLogRepository = auditLogRepository;
         }
 
         public async Task<GroupPostComment?> GetByIdAsync(int commentId, bool includeAuthor = true, bool includeReplies = false)
@@ -117,7 +127,14 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
-        public async Task<(bool Success, string? ErrorMessage)> DeleteAsync(int commentId, string userId)
+        /// <summary>
+        /// Deletes a group comment and all its nested replies recursively, updating the post's comment count.
+        /// Also deletes all associated likes (handled by cascade delete in database).
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment to delete.</param>
+        /// <param name="userId">The ID of the user attempting the deletion (must be comment author or post author).</param>
+        /// <returns>A tuple containing success status, error message if any, and the count of deleted comments.</returns>
+        public async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteAsync(int commentId, string userId)
         {
             try
             {
@@ -125,47 +142,122 @@ namespace FreeSpeakWeb.Repositories
 
                 var comment = await context.GroupPostComments
                     .Include(c => c.Post)
-                    .Include(c => c.Replies)
                     .FirstOrDefaultAsync(c => c.Id == commentId);
 
                 if (comment == null)
-                    return (false, "Comment not found.");
+                    return (false, "Comment not found.", 0);
 
                 // Check if user can delete (author or post author)
                 if (comment.AuthorId != userId && comment.Post.AuthorId != userId)
-                    return (false, "You are not authorized to delete this comment.");
+                    return (false, "You are not authorized to delete this comment.", 0);
 
-                // Delete recursively (all replies)
-                await DeleteCommentRecursivelyAsync(context, comment);
+                // Store values for audit log before deletion
+                var postId = comment.PostId;
+                var groupId = comment.Post.GroupId;
+                var parentCommentId = comment.ParentCommentId;
+
+                // Collect all comment IDs to delete (parent + all nested replies)
+                var commentsToDelete = await CollectCommentAndRepliesAsync(context, commentId);
+                var totalDeletedCount = commentsToDelete.Count;
+
+                // Delete all comments (EF Core will handle cascade for likes)
+                context.GroupPostComments.RemoveRange(commentsToDelete);
+
+                // Update post comment count
+                comment.Post.CommentCount = Math.Max(0, comment.Post.CommentCount - totalDeletedCount);
+
                 await context.SaveChangesAsync();
 
-                _logger.LogInformation("Group comment {CommentId} and its replies deleted by user {UserId}", commentId, userId);
-                return (true, null);
+                // Log group comment deletion to audit log
+                try
+                {
+                    await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserComment, new UserGroupCommentDetails
+                    {
+                        CommentId = commentId,
+                        PostId = postId,
+                        GroupId = groupId,
+                        OperationType = OperationTypeEnum.Delete.ToString(),
+                        ParentCommentId = parentCommentId
+                    });
+                }
+                catch
+                {
+                    // Audit logging should not fail the operation
+                }
+
+                _logger.LogInformation("Group comment {CommentId} and {ReplyCount} nested replies deleted by user {UserId}", 
+                    commentId, totalDeletedCount - 1, userId);
+                return (true, null, totalDeletedCount);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting group comment {CommentId}", commentId);
-                return (false, "An error occurred while deleting the comment.");
+                return (false, "An error occurred while deleting the comment.", 0);
             }
         }
 
-        private async Task DeleteCommentRecursivelyAsync(ApplicationDbContext context, GroupPostComment comment)
+        /// <summary>
+        /// Recursively counts a group comment and all its nested replies.
+        /// </summary>
+        /// <param name="context">The database context.</param>
+        /// <param name="commentId">The ID of the comment to count.</param>
+        /// <returns>The total count including the comment itself and all nested replies.</returns>
+        private async Task<int> CountCommentAndRepliesAsync(ApplicationDbContext context, int commentId)
         {
-            // Load all replies if not loaded
-            if (!context.Entry(comment).Collection(c => c.Replies).IsLoaded)
+            int count = 1; // Count the comment itself
+
+            var replyIds = await context.GroupPostComments
+                .Where(c => c.ParentCommentId == commentId)
+                .Select(c => c.Id)
+                .ToListAsync();
+
+            foreach (var replyId in replyIds)
             {
-                await context.Entry(comment).Collection(c => c.Replies).LoadAsync();
+                count += await CountCommentAndRepliesAsync(context, replyId);
             }
 
-            // Recursively delete all replies
-            foreach (var reply in comment.Replies.ToList())
-            {
-                await DeleteCommentRecursivelyAsync(context, reply);
-            }
-
-            context.GroupPostComments.Remove(comment);
+            return count;
         }
 
+        /// <summary>
+        /// Recursively collects a group comment and all its nested replies for deletion.
+        /// </summary>
+        /// <param name="context">The database context.</param>
+        /// <param name="commentId">The ID of the root comment to collect.</param>
+        /// <returns>A list of all comments to delete, including the root comment and all nested replies.</returns>
+        private async Task<List<GroupPostComment>> CollectCommentAndRepliesAsync(ApplicationDbContext context, int commentId)
+        {
+            var result = new List<GroupPostComment>();
+
+            var comment = await context.GroupPostComments.FindAsync(commentId);
+            if (comment == null)
+                return result;
+
+            // First, recursively collect all replies
+            var replyIds = await context.GroupPostComments
+                .Where(c => c.ParentCommentId == commentId)
+                .Select(c => c.Id)
+                .ToListAsync();
+
+            foreach (var replyId in replyIds)
+            {
+                var nestedReplies = await CollectCommentAndRepliesAsync(context, replyId);
+                result.AddRange(nestedReplies);
+            }
+
+            // Add the current comment last (so children are deleted first)
+            result.Add(comment);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Determines whether a user has permission to delete a specific group comment.
+        /// A user can delete a comment if they are the comment author or the post author.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment.</param>
+        /// <param name="userId">The ID of the user to check permissions for.</param>
+        /// <returns>True if the user can delete the comment; otherwise, false.</returns>
         public async Task<bool> CanUserDeleteAsync(int commentId, string userId)
         {
             try

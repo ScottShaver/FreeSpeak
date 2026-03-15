@@ -56,6 +56,9 @@
     }
 
     [Parameter]
+    public EventCallback<string> CommentTextChanged { get; set; }
+
+    [Parameter]
     public EventCallback<string> OnCommentSubmitted { get; set; }
 
     private bool CanSubmit => !string.IsNullOrWhiteSpace(CommentText);
@@ -93,6 +96,12 @@
         if (module is not null)
         {
             await module.InvokeVoidAsync("resizeTextarea", textareaElement);
+        }
+
+        // Notify parent of text change
+        if (CommentTextChanged.HasDelegate)
+        {
+            await CommentTextChanged.InvokeAsync(CommentText);
         }
 
         // If content changed due to emoji replacement, update the UI
@@ -163,7 +172,7 @@
                 // Resize the textarea
                 await module.InvokeVoidAsync("resizeTextarea", textareaElement);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Fallback to appending
                 CommentText += emoji;
@@ -222,6 +231,24 @@
             if (!_disposed)
             {
                 StateHasChanged();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Focuses the textarea element and moves the cursor to the end.
+    /// </summary>
+    public async Task FocusAsync()
+    {
+        if (module is not null && !_disposed)
+        {
+            try
+            {
+                await module.InvokeVoidAsync("focusTextarea", textareaElement);
+            }
+            catch (Exception)
+            {
+                // Silently fail if focus fails
             }
         }
     }

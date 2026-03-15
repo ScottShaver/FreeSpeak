@@ -7,6 +7,8 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
+@using FreeSpeakWeb.Repositories.Abstractions
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.Friends
 @using Microsoft.EntityFrameworkCore
@@ -19,6 +21,8 @@
 @inject ILogger<FriendsList> Logger
 @inject NavigationStateService NavigationState
 @inject NavigationManager NavigationManager
+@inject AlertService AlertService
+@inject IAuditLogRepository AuditLogRepository
 
 <PageTitle>@SiteSettings.Value.SiteName - Friends</PageTitle>
 
@@ -539,6 +543,7 @@
         if (result.Success)
         {
             statusMessage = $"Friend request sent to {GetDisplayName(user)}.";
+            AlertService.ShowSuccess($"Friend request sent to {GetDisplayName(user)}.");
             // Remove from search results
             searchResults = searchResults.Where(u => u.Id != user.Id).ToList();
             // Update sent requests count
@@ -548,6 +553,7 @@
         else
         {
             errorMessage = result.ErrorMessage ?? "Failed to send friend request.";
+            AlertService.ShowError(result.ErrorMessage ?? "Failed to send friend request.");
         }
     }
 
@@ -562,6 +568,7 @@
             if (result.Success)
             {
                 statusMessage = $"Removed {GetDisplayName(friend)} from your friends.";
+                AlertService.ShowSuccess($"Removed {GetDisplayName(friend)} from your friends.");
                 await LoadFriendsAsync();
                 // Update suggestions count as it may change
                 peopleYouMayKnowCount = await FriendsService.GetPeopleYouMayKnowCountAsync(currentUserId);
@@ -570,6 +577,7 @@
             else
             {
                 errorMessage = result.ErrorMessage ?? "Failed to remove friend.";
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to remove friend.");
             }
         }
     }
@@ -582,6 +590,7 @@
         if (result.Success)
         {
             statusMessage = $"Friend request sent to {GetDisplayName(user)}.";
+            AlertService.ShowSuccess($"Friend request sent to {GetDisplayName(user)}.");
             // Remove from suggestions
             peopleYouMayKnow = peopleYouMayKnow.Where(p => p.User.Id != user.Id).ToList();
             peopleYouMayKnowCount = peopleYouMayKnow.Count;
@@ -592,6 +601,7 @@
         else
         {
             errorMessage = result.ErrorMessage ?? "Failed to send friend request.";
+            AlertService.ShowError(result.ErrorMessage ?? "Failed to send friend request.");
         }
     }
 
@@ -614,6 +624,20 @@
             if (result.Success)
             {
                 statusMessage = $"You are now friends with {GetDisplayName(requester)}.";
+
+                // Log friend request acceptance to audit log
+                try
+                {
+                    await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
+                    {
+                        OperationType = OperationTypeEnum.Accept.ToString(),
+                        TargetUserId = requester.Id,
+                        TargetUserDisplayName = GetDisplayName(requester),
+                        IsInitiator = false
+                    });
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
                 await LoadPendingRequestsAsync();
                 // Update friends count and suggestions count as well
                 friendsCount = await FriendsService.GetFriendsCountAsync(currentUserId);
@@ -623,6 +647,7 @@
             else
             {
                 errorMessage = result.ErrorMessage ?? "Failed to accept friend request.";
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to accept friend request.");
             }
         }
     }
@@ -638,12 +663,27 @@
             if (result.Success)
             {
                 statusMessage = $"Declined friend request from {GetDisplayName(requester)}.";
+
+                // Log friend request rejection to audit log
+                try
+                {
+                    await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
+                    {
+                        OperationType = OperationTypeEnum.Decline.ToString(),
+                        TargetUserId = requester.Id,
+                        TargetUserDisplayName = GetDisplayName(requester),
+                        IsInitiator = false
+                    });
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
                 await LoadPendingRequestsAsync();
                 StateHasChanged();
             }
             else
             {
                 errorMessage = result.ErrorMessage ?? "Failed to decline friend request.";
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to decline friend request.");
             }
         }
     }
@@ -659,12 +699,27 @@
             if (result.Success)
             {
                 statusMessage = $"Cancelled friend request to {GetDisplayName(addressee)}.";
+
+                // Log friend request cancellation to audit log
+                try
+                {
+                    await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
+                    {
+                        OperationType = OperationTypeEnum.Cancel.ToString(),
+                        TargetUserId = addressee.Id,
+                        TargetUserDisplayName = GetDisplayName(addressee),
+                        IsInitiator = true
+                    });
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
                 await LoadSentRequestsAsync();
                 StateHasChanged();
             }
             else
             {
                 errorMessage = result.ErrorMessage ?? "Failed to cancel friend request.";
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to cancel friend request.");
             }
         }
     }

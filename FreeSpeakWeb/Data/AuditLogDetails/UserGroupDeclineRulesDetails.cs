@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for user decline group rules audit log entries.
     /// Tracks when users decline to accept a group's rules.
     /// </summary>
-    public class UserGroupDeclineRulesDetails
+    public class UserGroupDeclineRulesDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the unique identifier of the group.

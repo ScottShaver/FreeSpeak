@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for user friend search audit log entries.
     /// Tracks when users search for friends or view friend suggestions.
     /// </summary>
-    public class UserFriendsFindDetails
+    public class UserFriendsFindDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the search query used to find friends, if applicable.

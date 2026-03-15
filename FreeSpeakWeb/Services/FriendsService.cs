@@ -117,7 +117,7 @@ namespace FreeSpeakWeb.Services
             // Log friend request sent to audit log
             await _auditLogRepository.LogActionAsync(requesterId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
             {
-                ActionType = "Sent",
+                OperationType = OperationTypeEnum.Send.ToString(),
                 TargetUserId = addresseeId,
                 IsInitiator = true
             });
@@ -189,7 +189,7 @@ namespace FreeSpeakWeb.Services
             // Log friend request accepted to audit log
             await _auditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
             {
-                ActionType = "Accepted",
+                OperationType = OperationTypeEnum.Accept.ToString(),
                 TargetUserId = friendship.RequesterId,
                 IsInitiator = false
             });
@@ -230,7 +230,7 @@ namespace FreeSpeakWeb.Services
             // Log friend request declined to audit log
             await _auditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
             {
-                ActionType = "Declined",
+                OperationType = OperationTypeEnum.Decline.ToString(),
                 TargetUserId = friendship.RequesterId,
                 IsInitiator = false
             });
@@ -263,6 +263,17 @@ namespace FreeSpeakWeb.Services
 
             // PERFORMANCE: Invalidate friend list cache for both users
             _friendshipCache.InvalidateFriendshipCache(friendship.RequesterId, friendship.AddresseeId);
+
+            // Determine the other user involved in the friendship
+            var targetUserId = friendship.RequesterId == currentUserId ? friendship.AddresseeId : friendship.RequesterId;
+
+            // Log friendship removal to audit log
+            await _auditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
+            {
+                OperationType = OperationTypeEnum.Remove.ToString(),
+                TargetUserId = targetUserId,
+                IsInitiator = true
+            });
 
             return (true, null);
         }
@@ -302,6 +313,14 @@ namespace FreeSpeakWeb.Services
 
                 await _friendshipRepository.AddAsync(friendship);
             }
+
+            // Log user block to audit log
+            await _auditLogRepository.LogActionAsync(blockerId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
+            {
+                OperationType = OperationTypeEnum.Blocked.ToString(),
+                TargetUserId = blockedUserId,
+                IsInitiator = true
+            });
 
             return (true, null);
         }

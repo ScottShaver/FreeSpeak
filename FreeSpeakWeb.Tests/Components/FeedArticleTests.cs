@@ -39,7 +39,7 @@ namespace FreeSpeakWeb.Tests.Components
             // Mock NotificationService
             var mockNotificationLogger = new Mock<ILogger<NotificationService>>();
             var mockScopeFactory = new Mock<IServiceScopeFactory>();
-            var mockNotificationRepo = MockRepositories.CreateMockNotificationRepository();            var notificationService = new NotificationService(mockNotificationRepo.Object, mockDbContextFactory.Object, mockNotificationLogger.Object, mockScopeFactory.Object);
+            var mockNotificationRepo = MockRepositories.CreateMockNotificationRepository();            var notificationService = new NotificationService(mockNotificationRepo.Object, mockDbContextFactory.Object, mockNotificationLogger.Object, mockScopeFactory.Object, MockRepositories.CreateMockAuditLogRepository().Object);
 
             // Mock UserPreferenceService
             var mockUserPreferenceLogger = new Mock<ILogger<UserPreferenceService>>();

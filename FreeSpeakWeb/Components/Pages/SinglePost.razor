@@ -12,6 +12,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject UserManager<ApplicationUser> UserManager
+@inject FreeSpeakWeb.Repositories.FeedCommentRepository FeedCommentRepository
 @attribute [AllowAnonymous]
 
 <PageTitle>@pageTitle</PageTitle>
@@ -69,6 +70,9 @@
                 OnReplySubmitted="@HandleReplySubmitted"
                 OnCommentReactionChanged="@HandleCommentReactionChanged"
                 OnRemoveCommentReaction="@HandleRemoveCommentReaction"
+                OnDeleteComment="@HandleDeleteComment"
+                OnCommentUpdated="@HandleCommentUpdated"
+                OnReportComment="@HandleReportComment"
                 OnPinPost="@HandlePinPostWrapper"
                 OnUnpinPost="@HandleUnpinPostWrapper">
                 <ArticleContent>
@@ -128,7 +132,7 @@
                 errorMessage = result.ErrorMessage ?? "Sorry, this post is no longer available.";
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             errorMessage = "An error occurred while loading this post.";
         }
@@ -272,5 +276,35 @@
     {
         var comment = await PostService.GetCommentByIdAsync(commentId);
         return comment?.PostId;
+    }
+
+    // Service bridge methods for comment management
+    protected override async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteCommentAsync(
+        int commentId, string userId)
+    {
+        var result = await PostService.DeleteCommentAsync(commentId, userId);
+        if (result.Success) await ReloadPost();
+        return (result.Success, result.ErrorMessage, result.DeletedCount);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> UpdateCommentAsync(
+        int commentId, string userId, string newContent)
+    {
+        var result = await FeedCommentRepository.UpdateAsync(commentId, userId, newContent);
+        if (result.Success) await ReloadPost();
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
+        int commentId, string userId)
+    {
+        // TODO: Implement comment reporting when report system is available
+        await Task.CompletedTask;
+        return (true, null);
+    }
+
+    protected override void DecrementPostCommentCount(int postId, int decrementBy = 1)
+    {
+        // Single post page reloads entire post, no need to decrement manually
     }
 }

@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for group admin change member role audit log entries.
     /// Tracks when administrators change member roles within groups.
     /// </summary>
-    public class GroupAdminChangeMemberRoleDetails
+    public class GroupAdminChangeMemberRoleDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the unique identifier of the group.

@@ -184,6 +184,36 @@ namespace FreeSpeakWeb.Data
         /// Action when a user declines a group's rules.
         /// Tracks user declining to accept group rules.
         /// </summary>
-        UserGroupDeclineRules = 29
+        UserGroupDeclineRules = 29,
+
+        /// <summary>
+        /// Action when a new user registers an account.
+        /// Tracks new user account creation events.
+        /// </summary>
+        UserRegister = 30,
+
+        /// <summary>
+        /// Action related to email confirmation operations.
+        /// Includes resending confirmation emails and confirming email addresses.
+        /// </summary>
+        UserEmailConfirmation = 31,
+
+        /// <summary>
+        /// Action when a user adds, edits, or deletes a comment on a post.
+        /// Tracks comment creation, modification, and deletion events.
+        /// </summary>
+        UserComment = 32,
+
+        /// <summary>
+        /// Action when a user adds, changes, or removes a reaction on a post or comment.
+        /// Tracks reaction interactions including likes and other reaction types.
+        /// </summary>
+        UserReaction = 33,
+
+        /// <summary>
+        /// Action when a user pins or unpins a post.
+        /// Tracks post pinning activities for user profiles.
+        /// </summary>
+        UserPinPost = 34
     }
 }

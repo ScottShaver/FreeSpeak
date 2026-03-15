@@ -2,6 +2,8 @@
 
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
+@using FreeSpeakWeb.Repositories.Abstractions
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.JSInterop
@@ -11,6 +13,8 @@
 @inject UserPreferenceService PreferenceService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+@inject IAuditLogRepository AuditLogRepository
+@inject AlertService AlertService
 @implements IAsyncDisposable
 
 <div class="theme-selector" @ref="themeSelectorRef">
@@ -118,6 +122,14 @@
             {
                 // Save to database so it persists across sessions
                 await PreferenceService.SetColorSchemeAsync(userId, themeName);
+
+                // Log theme change to audit log
+                await AuditLogRepository.LogActionAsync(userId, ActionCategory.UserPreference, new UserPreferenceDetails
+                {
+                    PreferenceCategory = "Theme",
+                    SettingName = "ColorScheme",
+                    NewValue = themeName
+                });
             }
         }
         catch

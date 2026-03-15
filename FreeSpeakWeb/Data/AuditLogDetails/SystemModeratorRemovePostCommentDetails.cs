@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for system moderator remove post comment audit log entries.
     /// Tracks when system-level moderators remove comments for policy violations.
     /// </summary>
-    public class SystemModeratorRemovePostCommentDetails
+    public class SystemModeratorRemovePostCommentDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the unique identifier of the post containing the comment.

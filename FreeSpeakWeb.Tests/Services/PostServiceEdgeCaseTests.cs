@@ -42,7 +42,7 @@ namespace FreeSpeakWeb.Tests.Services
             var logger = new Mock<ILogger<NotificationService>>();
             var scopeFactory = new Mock<IServiceScopeFactory>();
             var notificationRepo = new NotificationRepository(contextFactory, new Mock<ILogger<NotificationRepository>>().Object);
-            return new NotificationService(notificationRepo, contextFactory, logger.Object, scopeFactory.Object);
+            return new NotificationService(notificationRepo, contextFactory, logger.Object, scopeFactory.Object, MockRepositories.CreateMockAuditLogRepository().Object);
         }
 
         /// <summary>
@@ -279,7 +279,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             // Act - Delete parent comment
-            var (success, errorMessage) = await service.DeleteCommentAsync(parentCommentId, "user1");
+            var (success, errorMessage, deletedCount) = await service.DeleteCommentAsync(parentCommentId, "user1");
 
             // Assert
             success.Should().BeTrue();

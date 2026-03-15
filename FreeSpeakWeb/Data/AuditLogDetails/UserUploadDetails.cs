@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for user file upload audit log entries.
     /// Tracks when users upload files or media to the system.
     /// </summary>
-    public class UserUploadDetails
+    public class UserUploadDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the type of upload.

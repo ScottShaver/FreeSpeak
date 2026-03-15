@@ -94,7 +94,7 @@ namespace FreeSpeakWeb.Services
                 // Log join request to audit log
                 await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserGroupRequests, new UserGroupRequestsDetails
                 {
-                    ActionType = "RequestSubmitted",
+                    OperationType = OperationTypeEnum.RequestSubmit.ToString(),
                     GroupId = groupId,
                     GroupName = group.Name,
                     RequiresApproval = true
@@ -292,6 +292,7 @@ namespace FreeSpeakWeb.Services
                 using var context = await _contextFactory.CreateDbContextAsync();
 
                 var request = await context.GroupJoinRequests
+                    .Include(jr => jr.Group)
                     .FirstOrDefaultAsync(jr => jr.Id == requestId && jr.UserId == userId);
 
                 if (request == null)
@@ -299,8 +300,21 @@ namespace FreeSpeakWeb.Services
                     return (false, "Join request not found.");
                 }
 
+                // Capture details before removing
+                var groupId = request.GroupId;
+                var groupName = request.Group?.Name ?? string.Empty;
+
                 context.GroupJoinRequests.Remove(request);
                 await context.SaveChangesAsync();
+
+                // Log cancel join request to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserGroupRequests, new UserGroupRequestsDetails
+                {
+                    OperationType = OperationTypeEnum.RequestCancel.ToString(),
+                    GroupId = groupId,
+                    GroupName = groupName,
+                    RequiresApproval = true
+                });
 
                 _logger.LogInformation("Join request {RequestId} cancelled by user {UserId}", requestId, userId);
                 return (true, null);
@@ -410,7 +424,7 @@ namespace FreeSpeakWeb.Services
                     // Log direct group join to audit log
                     await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserGroupRequests, new UserGroupRequestsDetails
                     {
-                        ActionType = "DirectJoin",
+                        OperationType = OperationTypeEnum.DirectJoin.ToString(),
                         GroupId = groupId,
                         GroupName = group.Name,
                         RequiresApproval = false
@@ -900,6 +914,14 @@ namespace FreeSpeakWeb.Services
                 }
 
                 await context.SaveChangesAsync();
+
+                // Log member removal to audit log (logged from removed user's perspective)
+                await _auditLogRepository.LogActionAsync(targetUserId, ActionCategory.UserGroupLeave, new UserGroupLeaveDetails
+                {
+                    LeaveType = "RemovedByAdmin",
+                    GroupId = groupId,
+                    GroupName = group.Name
+                });
 
                 _logger.LogInformation("User {TargetUserId} removed from group {GroupId} by {RequesterId}", 
                     targetUserId, groupId, requesterId);

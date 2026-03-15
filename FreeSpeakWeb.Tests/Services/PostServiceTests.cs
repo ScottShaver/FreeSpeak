@@ -36,7 +36,7 @@ namespace FreeSpeakWeb.Tests.Services
             var logger = new Mock<ILogger<NotificationService>>();
             var scopeFactory = new Mock<IServiceScopeFactory>();
             var notificationRepo = new TestRepositoryFactory(contextFactory).CreateNotificationRepository();
-            return new NotificationService(notificationRepo, contextFactory, logger.Object, scopeFactory.Object);
+            return new NotificationService(notificationRepo, contextFactory, logger.Object, scopeFactory.Object, MockRepositories.CreateMockAuditLogRepository().Object);
         }
 
         private UserPreferenceService CreateUserPreferenceService(IDbContextFactory<ApplicationDbContext> contextFactory)
@@ -491,7 +491,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             // Act
-            var (success, errorMessage) = await service.DeleteCommentAsync(commentId, "user1");
+            var (success, errorMessage, deletedCount) = await service.DeleteCommentAsync(commentId, "user1");
 
             // Assert
             success.Should().BeTrue();
