@@ -5,6 +5,7 @@
 @using FreeSpeakWeb.Repositories.Abstractions
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Helpers
+@using Microsoft.Extensions.Localization
 @inject IJSRuntime JS
 @inject PostService PostService
 @inject UserPreferenceService UserPreferenceService
@@ -12,6 +13,7 @@
 @inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
 @inject AlertService AlertService
 @inject IAuditLogRepository AuditLogRepository
+@inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.FeedArticle> Localizer
 @implements IAsyncDisposable
 
 <div class="feed-article @(showMenu ? "menu-open" : "")">
@@ -76,7 +78,7 @@
     {
         <div class="more-comments-indicator">
             <button type="button" class="more-comments-button" @onclick="OnCommentClick">
-                View more comments
+                @Localizer["ViewMoreComments"]
             </button>
         </div>
     }
@@ -495,7 +497,7 @@
                 // Pin/Unpin Post
                 menuItems.Add(new PopupMenu.PopupMenuItem
                 {
-                    Text = currentIsPinned ? "Unpin Post" : "Pin Post",
+                    Text = currentIsPinned ? Localizer["UnpinPost"] : Localizer["PinPost"],
                     Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
                     OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
                 });
@@ -505,7 +507,7 @@
                 {
                     menuItems.Add(new PopupMenu.PopupMenuItem
                     {
-                        Text = "Copy Link",
+                        Text = Localizer["CopyLink"],
                         Icon = "bi bi-link-45deg",
                         OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
                     });
@@ -516,7 +518,7 @@
                 // Menu items for user's own posts in regular feed view
                 menuItems.Add(new PopupMenu.PopupMenuItem
                 {
-                    Text = "Edit Post",
+                    Text = Localizer["EditPost"],
                     Icon = "bi bi-pencil",
                     OnClick = EventCallback.Factory.Create(this, async () => await HandleEditPostClick())
                 });
@@ -524,28 +526,28 @@
                 // Pin/Unpin Post - changes based on current state
                 menuItems.Add(new PopupMenu.PopupMenuItem
                 {
-                    Text = currentIsPinned ? "Unpin Post" : "Pin Post",
+                    Text = currentIsPinned ? Localizer["UnpinPost"] : Localizer["PinPost"],
                     Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
                     OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
                 });
 
                 menuItems.Add(new PopupMenu.PopupMenuItem
                 {
-                    Text = "Change Post Audience",
+                    Text = Localizer["ChangePostAudience"],
                     Icon = "bi bi-globe",
                     OnClick = EventCallback.Factory.Create(this, async () => await HandleChangeAudienceClick())
                 });
 
                 menuItems.Add(new PopupMenu.PopupMenuItem
                 {
-                    Text = isNotificationMuted ? "Turn On Notifications" : "Turn Off Notifications",
+                    Text = isNotificationMuted ? Localizer["TurnOnNotifications"] : Localizer["TurnOffNotifications"],
                     Icon = isNotificationMuted ? "bi bi-bell" : "bi bi-bell-slash",
                     OnClick = EventCallback.Factory.Create(this, async () => await HandleToggleNotificationsClick())
                 });
 
                 menuItems.Add(new PopupMenu.PopupMenuItem
                 {
-                    Text = "Delete Post",
+                    Text = Localizer["DeletePost"],
                     Icon = "bi bi-trash",
                     OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
                 });
@@ -555,7 +557,7 @@
                 {
                     menuItems.Add(new PopupMenu.PopupMenuItem
                     {
-                        Text = "Copy Link",
+                        Text = Localizer["CopyLink"],
                         Icon = "bi bi-link-45deg",
                         OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
                     });
@@ -569,14 +571,14 @@
             // Pin/Unpin Post - available for all posts
             menuItems.Add(new PopupMenu.PopupMenuItem
             {
-                Text = currentIsPinned ? "Unpin Post" : "Pin Post",
+                Text = currentIsPinned ? Localizer["UnpinPost"] : Localizer["PinPost"],
                 Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
                 OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
             });
 
             menuItems.Add(new PopupMenu.PopupMenuItem
             {
-                Text = "Report Post",
+                Text = Localizer["ReportPost"],
                 Icon = "bi bi-flag",
                 OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Report Post"))
             });
@@ -586,7 +588,7 @@
             {
                 menuItems.Add(new PopupMenu.PopupMenuItem
                 {
-                    Text = "Copy Link",
+                    Text = Localizer["CopyLink"],
                     Icon = "bi bi-link-45deg",
                     OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
                 });
@@ -599,7 +601,7 @@
             {
                 menuItems.Add(new PopupMenu.PopupMenuItem
                 {
-                    Text = "Copy Link",
+                    Text = Localizer["CopyLink"],
                     Icon = "bi bi-link-45deg",
                     OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
                 });
@@ -619,21 +621,21 @@
 
         audienceMenuItems.Add(new PopupMenu.PopupMenuItem
         {
-            Text = "Public",
+            Text = Localizer["Public"],
             Icon = "bi bi-globe",
             OnClick = EventCallback.Factory.Create(this, () => SelectAudienceType(AudienceType.Public))
         });
 
         audienceMenuItems.Add(new PopupMenu.PopupMenuItem
         {
-            Text = "Friends Only",
+            Text = Localizer["FriendsOnly"],
             Icon = "bi bi-people",
             OnClick = EventCallback.Factory.Create(this, () => SelectAudienceType(AudienceType.FriendsOnly))
         });
 
         audienceMenuItems.Add(new PopupMenu.PopupMenuItem
         {
-            Text = "Only Me",
+            Text = Localizer["OnlyMe"],
             Icon = "bi bi-lock",
             OnClick = EventCallback.Factory.Create(this, () => SelectAudienceType(AudienceType.MeOnly))
         });

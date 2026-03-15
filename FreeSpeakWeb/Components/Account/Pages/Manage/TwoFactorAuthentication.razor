@@ -3,17 +3,19 @@
 @using Microsoft.AspNetCore.Http.Features
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
 @using FreeSpeakWeb.Data
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
 @inject IOptions<SiteSettings> SiteSettings
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Account.Pages.Manage.ManageAccount> Localizer
 
-<PageTitle>@SiteSettings.Value.SiteName - Two-factor authentication (2FA)</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["TwoFactorAuthentication"]</PageTitle>
 
 <StatusMessage />
-<h3>Two-factor authentication (2FA)</h3>
+<h3>@Localizer["TwoFactorAuthentication"]</h3>
 @if (canTrack)
 {
     if (is2faEnabled)
@@ -35,7 +37,7 @@
         else if (recoveryCodesLeft <= 3)
         {
             <div class="alert alert-warning">
-                <strong>You have @recoveryCodesLeft recovery codes left.</strong>
+                <strong>@string.Format(Localizer["RecoveryCodesLeft"], recoveryCodesLeft)</strong>
                 <p>You should <a href="Account/Manage/GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
             </div>
         }
@@ -48,8 +50,8 @@
             </form>
         }
 
-        <a href="Account/Manage/Disable2fa" class="btn btn-primary">Disable 2FA</a>
-        <a href="Account/Manage/GenerateRecoveryCodes" class="btn btn-primary">Reset recovery codes</a>
+        <a href="Account/Manage/Disable2fa" class="btn btn-primary">@Localizer["Disable2FA"]</a>
+        <a href="Account/Manage/GenerateRecoveryCodes" class="btn btn-primary">@Localizer["ResetRecoveryCodes"]</a>
     }
 
     <h4>Authenticator app</h4>
@@ -59,8 +61,8 @@
     }
     else
     {
-        <a href="Account/Manage/EnableAuthenticator" class="btn btn-primary">Set up authenticator app</a>
-        <a href="Account/Manage/ResetAuthenticator" class="btn btn-primary">Reset authenticator app</a>
+        <a href="Account/Manage/EnableAuthenticator" class="btn btn-primary">@Localizer["SetupAuthenticatorApp"]</a>
+        <a href="Account/Manage/ResetAuthenticator" class="btn btn-primary">@Localizer["ResetAuthenticatorKey"]</a>
     }
 }
 else

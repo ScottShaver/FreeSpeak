@@ -80,9 +80,10 @@ namespace FreeSpeakWeb.Data
         Timezone = 3,
 
         /// <summary>
-        /// User's country or region.
+        /// User's country or region for non-localization purposes (e.g., regional content).
         /// Valid values: ISO 3166-1 alpha-2 country codes (e.g., "US", "GB", "CA").
         /// Default: "US" (United States of America).
+        /// Note: For UI localization, use Culture instead.
         /// </summary>
         Country = 4,
 
@@ -90,8 +91,18 @@ namespace FreeSpeakWeb.Data
         /// User's preferred language for the user interface.
         /// Valid values: ISO 639-1 language codes (e.g., "en", "es", "fr", "de").
         /// Default: "en" (English).
+        /// Note: This is deprecated. Use Culture instead for localization.
         /// </summary>
-        Language = 5
+        [Obsolete("Use Culture instead for UI localization.")]
+        Language = 5,
+
+        /// <summary>
+        /// User's preferred culture for UI localization (language and regional formatting).
+        /// Valid values: .NET culture identifiers (e.g., "en-US", "fr-FR", "es-ES", "de-DE").
+        /// Default: "en-US" (English - United States).
+        /// This determines both the UI language and regional formatting (dates, numbers, etc.).
+        /// </summary>
+        Culture = 6
     }
 
     /// <summary>

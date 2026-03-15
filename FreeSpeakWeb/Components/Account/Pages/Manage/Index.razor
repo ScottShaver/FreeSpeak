@@ -3,6 +3,7 @@
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Data.AuditLogDetails
 @using FreeSpeakWeb.Repositories.Abstractions
@@ -18,10 +19,11 @@
 @inject ILogger<Index> Logger
 @inject NavigationStateService NavigationState
 @inject IAuditLogRepository AuditLogRepository
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Account.Pages.Manage.ManageAccount> Localizer
 
-<PageTitle>@SiteSettings.Value.SiteName - Profile</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["Profile"]</PageTitle>
 
-<h3>Profile</h3>
+<h3>@Localizer["Profile"]</h3>
 <StatusMessage Message="@statusMessage" />
 
 <div class="row">
@@ -29,11 +31,11 @@
         <!-- Profile Picture Section -->
         <EditForm Model="@this" FormName="profilePicture" OnValidSubmit="OnProfilePictureSubmitAsync" method="post" enctype="multipart/form-data">
             <div class="mb-4">
-                <label class="form-label">Profile Picture</label>
+                <label class="form-label">@Localizer["ProfilePicture"]</label>
                 <div class="d-flex align-items-center gap-3">
                     @if (!string.IsNullOrEmpty(user?.ProfilePictureUrl))
                     {
-                        <img src="@user.ProfilePictureUrl" alt="Profile Picture" class="rounded-circle" style="width: 168px; height: 168px; object-fit: cover;" />
+                        <img src="@user.ProfilePictureUrl" alt="@Localizer["ProfilePicture"]" class="rounded-circle" style="width: 168px; height: 168px; object-fit: cover;" />
                     }
                     else
                     {
@@ -44,7 +46,7 @@
                     <div class="flex-grow-1">
                         <InputFile OnChange="OnFileSelected" class="form-control" accept="image/*" />
                         <div class="form-text">
-                            Upload an image (max 5MB). Image will be resized to 168x168 pixels.
+                            @Localizer["ProfilePictureHelpText"]
                         </div>
                         @if (!string.IsNullOrEmpty(profilePictureError))
                         {
@@ -52,7 +54,7 @@
                         }
                     </div>
                 </div>
-                <button type="submit" class="btn btn-theme-primary mt-3" disabled="@(selectedFile is null)">Upload new profile picture</button>
+                <button type="submit" class="btn btn-theme-primary mt-3" disabled="@(selectedFile is null)">@Localizer["UploadNewProfilePicture"]</button>
             </div>
         </EditForm>
 
@@ -61,48 +63,48 @@
             <ValidationSummary class="text-danger" role="alert" />
 
             <div class="form-floating mb-3">
-                <input type="text" value="@username" id="username" class="form-control" placeholder="Choose your username." disabled />
-                <label for="username" class="form-label">Username</label>
+                <input type="text" value="@username" id="username" class="form-control" placeholder="@Localizer["Username"]" disabled />
+                <label for="username" class="form-label">@Localizer["Username"]</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" value="@user?.FirstName" id="firstName" class="form-control" placeholder="First name" disabled />
-                <label for="firstName" class="form-label">First Name</label>
+                <input type="text" value="@user?.FirstName" id="firstName" class="form-control" placeholder="@Localizer["FirstName"]" disabled />
+                <label for="firstName" class="form-label">@Localizer["FirstName"]</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" value="@user?.LastName" id="lastName" class="form-control" placeholder="Last name" disabled />
-                <label for="lastName" class="form-label">Last Name</label>
+                <input type="text" value="@user?.LastName" id="lastName" class="form-control" placeholder="@Localizer["LastName"]" disabled />
+                <label for="lastName" class="form-label">@Localizer["LastName"]</label>
             </div>
             <div class="form-floating mb-3">
                 <InputText @bind-Value="Input.NameSuffix" id="Input.NameSuffix" class="form-control" placeholder="Jr., Sr., III, etc." />
-                <label for="Input.NameSuffix" class="form-label">Name Suffix</label>
+                <label for="Input.NameSuffix" class="form-label">@Localizer["NameSuffix"]</label>
                 <ValidationMessage For="() => Input.NameSuffix" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
                 <InputDate @bind-Value="Input.DateOfBirth" id="Input.DateOfBirth" class="form-control" />
-                <label for="Input.DateOfBirth" class="form-label">Date of Birth</label>
+                <label for="Input.DateOfBirth" class="form-label">@Localizer["DateOfBirth"]</label>
                 <ValidationMessage For="() => Input.DateOfBirth" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.City" id="Input.City" class="form-control" placeholder="Enter your city" />
-                <label for="Input.City" class="form-label">City</label>
+                <InputText @bind-Value="Input.City" id="Input.City" class="form-control" placeholder="@Localizer["City"]" />
+                <label for="Input.City" class="form-label">@Localizer["City"]</label>
                 <ValidationMessage For="() => Input.City" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.State" id="Input.State" class="form-control" placeholder="Enter your state" />
-                <label for="Input.State" class="form-label">State</label>
+                <InputText @bind-Value="Input.State" id="Input.State" class="form-control" placeholder="@Localizer["State"]" />
+                <label for="Input.State" class="form-label">@Localizer["State"]</label>
                 <ValidationMessage For="() => Input.State" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Occupation" id="Input.Occupation" class="form-control" placeholder="Enter your occupation" />
-                <label for="Input.Occupation" class="form-label">Occupation</label>
+                <InputText @bind-Value="Input.Occupation" id="Input.Occupation" class="form-control" placeholder="@Localizer["Occupation"]" />
+                <label for="Input.Occupation" class="form-label">@Localizer["Occupation"]</label>
                 <ValidationMessage For="() => Input.Occupation" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.PhoneNumber" id="Input.PhoneNumber" class="form-control" placeholder="Enter your phone number" />
-                <label for="Input.PhoneNumber" class="form-label">Phone number</label>
+                <InputText @bind-Value="Input.PhoneNumber" id="Input.PhoneNumber" class="form-control" placeholder="@Localizer["PhoneNumber"]" />
+                <label for="Input.PhoneNumber" class="form-label">@Localizer["PhoneNumber"]</label>
                 <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-theme-primary">Save</button>
+            <button type="submit" class="w-100 btn btn-lg btn-theme-primary">@Localizer["Save"]</button>
         </EditForm>
     </div>
 </div>

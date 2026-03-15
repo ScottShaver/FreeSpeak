@@ -1,7 +1,9 @@
 @using FreeSpeakWeb.Services
+@using Microsoft.Extensions.Localization
 @implements IDisposable
 @rendermode InteractiveServer
 @inject AlertService AlertService
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.AlertContainer> Localizer
 
 <div class="alert-container">
     @foreach (var alert in alerts)
@@ -25,7 +27,7 @@
                 }
                 <span class="alert-text">@alert.Message</span>
             </div>
-            <button class="alert-close" @onclick="() => DismissAlert(alert.Id)">
+            <button class="alert-close" @onclick="() => DismissAlert(alert.Id)" aria-label="@Localizer["DismissAlert"]">
                 <span class="bi bi-x"></span>
             </button>
         </div>

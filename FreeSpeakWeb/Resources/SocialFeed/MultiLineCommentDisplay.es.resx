@@ -58,79 +58,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ViewMoreComments" xml:space="preserve">
-    <value>Voir plus de commentaires</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="MoreOptions" xml:space="preserve">
+    <value>Más opciones</value>
   </data>
   <data name="Like" xml:space="preserve">
-    <value>J'aime</value>
+    <value>Me gusta</value>
   </data>
-  <data name="Comment" xml:space="preserve">
-    <value>Commenter</value>
+  <data name="Reply" xml:space="preserve">
+    <value>Responder</value>
   </data>
-  <data name="Share" xml:space="preserve">
-    <value>Partager</value>
+  <data name="NoMoreRepliesAllowed" xml:space="preserve">
+    <value>No se permiten más respuestas</value>
   </data>
-  <data name="PinPost" xml:space="preserve">
-    <value>Épingler la publication</value>
+  <data name="ViewReplies" xml:space="preserve">
+    <value>Ver respuestas ({0})</value>
   </data>
-  <data name="UnpinPost" xml:space="preserve">
-    <value>Désépingler la publication</value>
+  <data name="HideReplies" xml:space="preserve">
+    <value>Ocultar respuestas</value>
   </data>
-  <data name="CopyLink" xml:space="preserve">
-    <value>Copier le lien</value>
+  <data name="DeleteMyComment" xml:space="preserve">
+    <value>Eliminar mi comentario</value>
   </data>
-  <data name="EditPost" xml:space="preserve">
-    <value>Modifier la publication</value>
+  <data name="EditMyComment" xml:space="preserve">
+    <value>Editar mi comentario</value>
   </data>
-  <data name="ChangePostAudience" xml:space="preserve">
-    <value>Modifier l'audience</value>
+  <data name="ReportComment" xml:space="preserve">
+    <value>Reportar comentario</value>
   </data>
-  <data name="TurnOnNotifications" xml:space="preserve">
-    <value>Activer les notifications</value>
+  <data name="Love" xml:space="preserve">
+    <value>Me encanta</value>
   </data>
-  <data name="TurnOffNotifications" xml:space="preserve">
-    <value>Désactiver les notifications</value>
+  <data name="Care" xml:space="preserve">
+    <value>Me importa</value>
   </data>
-  <data name="DeletePost" xml:space="preserve">
-    <value>Supprimer la publication</value>
+  <data name="Haha" xml:space="preserve">
+    <value>Jaja</value>
   </data>
-  <data name="ReportPost" xml:space="preserve">
-    <value>Signaler la publication</value>
+  <data name="Wow" xml:space="preserve">
+    <value>Asombrado</value>
   </data>
-  <data name="Public" xml:space="preserve">
-    <value>Public</value>
+  <data name="Sad" xml:space="preserve">
+    <value>Triste</value>
   </data>
-  <data name="FriendsOnly" xml:space="preserve">
-    <value>Amis uniquement</value>
-  </data>
-  <data name="OnlyMe" xml:space="preserve">
-    <value>Moi uniquement</value>
-  </data>
-  <data name="WriteComment" xml:space="preserve">
-    <value>Écrire un commentaire...</value>
-  </data>
-  <data name="DeletePostConfirmTitle" xml:space="preserve">
-    <value>Supprimer la publication ?</value>
-  </data>
-  <data name="DeletePostConfirmMessage" xml:space="preserve">
-    <value>Êtes-vous sûr de vouloir supprimer cette publication ? Cette action est irréversible.</value>
-  </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Annuler</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Supprimer</value>
-  </data>
-  <data name="LinkCopied" xml:space="preserve">
-    <value>Lien copié !</value>
-  </data>
-  <data name="ChangeToPublicTitle" xml:space="preserve">
-    <value>Rendre publique ?</value>
-  </data>
-  <data name="ChangeToPublicMessage" xml:space="preserve">
-    <value>Rendre cette publication publique signifie que n'importe qui sur Internet peut la voir. Êtes-vous sûr de vouloir continuer ?</value>
-  </data>
-  <data name="MakePublic" xml:space="preserve">
-    <value>Oui, rendre publique</value>
+  <data name="Angry" xml:space="preserve">
+    <value>Enojado</value>
   </data>
 </root>

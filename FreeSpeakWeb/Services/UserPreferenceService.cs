@@ -15,6 +15,7 @@ namespace FreeSpeakWeb.Services
         /// <summary>
         /// Default values for all preference types used when a user has not set a preference.
         /// </summary>
+#pragma warning disable CS0618 // Type or member is obsolete (Language is deprecated but still needs default)
         private static readonly Dictionary<PreferenceType, string> DefaultPreferences = new()
         {
             { PreferenceType.ColorScheme, "default" },
@@ -30,8 +31,10 @@ namespace FreeSpeakWeb.Services
             { PreferenceType.NotificationExpiration_System, "30" },
             { PreferenceType.Timezone, "America/New_York" },
             { PreferenceType.Country, "US" },
-            { PreferenceType.Language, "en" }
+            { PreferenceType.Language, "en" },  // Deprecated: Use Culture instead
+            { PreferenceType.Culture, "en-US" }
         };
+#pragma warning restore CS0618
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserPreferenceService"/> class.

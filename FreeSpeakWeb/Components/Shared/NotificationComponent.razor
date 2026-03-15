@@ -1,8 +1,10 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
 @using System.Text.Json
+@using Microsoft.Extensions.Localization
 
 @inject HtmlSanitizationService HtmlSanitizationService
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.NotificationComponent> Localizer
 
 <div class="notification-item @(Notification.IsRead ? "read" : "unread")" @onclick="HandleClick">
     <div class="notification-avatar">
@@ -63,7 +65,7 @@
             @FormatTimeAgo(Notification.CreatedAt)
             @if (Notification.ExpiresAt.HasValue)
             {
-                <span class="notification-expiration" title="@($"Expires: {Notification.ExpiresAt.Value:g}")">
+                <span class="notification-expiration" title="@($"{Localizer["Expires"]}: {Notification.ExpiresAt.Value:g}")">
                     · @FormatExpirationTime(Notification.ExpiresAt.Value)
                 </span>
             }
@@ -71,9 +73,9 @@
     </div>
     @if (!Notification.IsRead)
     {
-        <div class="notification-unread-indicator" @onclick="HandleMarkAsReadClick" @onclick:stopPropagation="true" title="Mark as read"></div>
+        <div class="notification-unread-indicator" @onclick="HandleMarkAsReadClick" @onclick:stopPropagation="true" title="@Localizer["MarkAsRead"]"></div>
     }
-    <button class="notification-delete-btn" @onclick="HandleDeleteClick" @onclick:stopPropagation="true" title="Delete notification">
+    <button class="notification-delete-btn" @onclick="HandleDeleteClick" @onclick:stopPropagation="true" title="@Localizer["DeleteNotification"]">
         <span class="bi bi-trash"></span>
     </button>
 </div>

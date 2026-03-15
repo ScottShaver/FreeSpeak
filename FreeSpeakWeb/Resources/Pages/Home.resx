@@ -67,4 +67,22 @@
   <data name="PinnedPosts" xml:space="preserve">
     <value>Pinned Posts</value>
   </data>
+  <data name="LoadingFeed" xml:space="preserve">
+    <value>Loading your feed...</value>
+  </data>
+  <data name="EmptyFeed" xml:space="preserve">
+    <value>No posts to display. Start connecting with friends to see their posts!</value>
+  </data>
+  <data name="LoadingMore" xml:space="preserve">
+    <value>Loading more posts...</value>
+  </data>
+  <data name="NoMorePosts" xml:space="preserve">
+    <value>No more posts at this time</value>
+  </data>
+  <data name="LoadingPinnedPosts" xml:space="preserve">
+    <value>Loading your pinned posts...</value>
+  </data>
+  <data name="EmptyPinnedPosts" xml:space="preserve">
+    <value>You haven't pinned any posts yet. Pin posts from your feed to see them here!</value>
+  </data>
 </root>

@@ -18,6 +18,7 @@
 @using FreeSpeakWeb.Components.Pages.Base
 @using System.Security.Claims
 @using Microsoft.JSInterop
+@using Microsoft.Extensions.Localization
 
 @implements IAsyncDisposable
 
@@ -33,20 +34,21 @@
 @inject UserPreferenceService UserPreferenceService
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject FreeSpeakWeb.Repositories.Abstractions.IGroupCommentRepository GroupCommentRepository
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.Groups> Localizer
 
-<PageTitle>@SiteSettings.Value.SiteName - Groups</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
 
 <div class="home-container">
     <!-- Tabbed Interface -->
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="group-feed-tab" data-bs-toggle="tab" data-bs-target="#group-feed-content" type="button" role="tab" aria-controls="group-feed-content" aria-selected="true" @onclick="OnGroupFeedTabClick">
-                    My Group Feed
+                    @Localizer["MyGroupFeed"]
                 </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="pinned-group-tab" data-bs-toggle="tab" data-bs-target="#pinned-group-content" type="button" role="tab" aria-controls="pinned-group-content" aria-selected="false" @onclick="OnPinnedTabClick">
-                Pinned Group Posts
+                @Localizer["PinnedGroupPosts"]
             </button>
         </li>
         <li class="nav-item" role="presentation">

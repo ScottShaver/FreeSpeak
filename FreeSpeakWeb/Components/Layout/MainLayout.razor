@@ -1,5 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @using FreeSpeakWeb.Components.Shared
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Layout.MainLayout> Localizer
 
 <NavigationGuard />
 <ThemeInitializer />
@@ -23,7 +25,7 @@
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
+    @Localizer["ErrorMessage"]
+    <a href="." class="reload">@Localizer["Reload"]</a>
     <span class="dismiss">🗙</span>
 </div>

@@ -70,4 +70,67 @@
   <data name="Share" xml:space="preserve">
     <value>Share</value>
   </data>
+  <data name="PinPost" xml:space="preserve">
+    <value>Pin Post</value>
+  </data>
+  <data name="UnpinPost" xml:space="preserve">
+    <value>Unpin Post</value>
+  </data>
+  <data name="CopyLink" xml:space="preserve">
+    <value>Copy Link</value>
+  </data>
+  <data name="EditPost" xml:space="preserve">
+    <value>Edit Post</value>
+  </data>
+  <data name="ChangePostAudience" xml:space="preserve">
+    <value>Change Post Audience</value>
+  </data>
+  <data name="TurnOnNotifications" xml:space="preserve">
+    <value>Turn On Notifications</value>
+  </data>
+  <data name="TurnOffNotifications" xml:space="preserve">
+    <value>Turn Off Notifications</value>
+  </data>
+  <data name="DeletePost" xml:space="preserve">
+    <value>Delete Post</value>
+  </data>
+  <data name="ReportPost" xml:space="preserve">
+    <value>Report Post</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>Public</value>
+  </data>
+  <data name="FriendsOnly" xml:space="preserve">
+    <value>Friends Only</value>
+  </data>
+  <data name="OnlyMe" xml:space="preserve">
+    <value>Only Me</value>
+  </data>
+  <data name="WriteComment" xml:space="preserve">
+    <value>Write a comment...</value>
+  </data>
+  <data name="DeletePostConfirmTitle" xml:space="preserve">
+    <value>Delete Post?</value>
+  </data>
+  <data name="DeletePostConfirmMessage" xml:space="preserve">
+    <value>Are you sure you want to delete this post? This action cannot be undone.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="LinkCopied" xml:space="preserve">
+    <value>Link copied to clipboard!</value>
+  </data>
+  <data name="ChangeToPublicTitle" xml:space="preserve">
+    <value>Change to Public?</value>
+  </data>
+  <data name="ChangeToPublicMessage" xml:space="preserve">
+    <value>Making this post public means anyone on the internet can see it. Are you sure you want to continue?</value>
+  </data>
+  <data name="MakePublic" xml:space="preserve">
+    <value>Yes, Make Public</value>
+  </data>
 </root>

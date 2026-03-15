@@ -97,4 +97,10 @@
   <data name="PublicPostWarning" xml:space="preserve">
     <value>Public posts are visible to everyone — not just your friends.</value>
   </data>
+  <data name="ConfirmPublicQuestion" xml:space="preserve">
+    <value>Are you sure you want to make this post public?</value>
+  </data>
+  <data name="MakePublicButton" xml:space="preserve">
+    <value>Yes, Make it Public</value>
+  </data>
 </root>

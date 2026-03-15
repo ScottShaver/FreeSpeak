@@ -10,6 +10,7 @@
 @inject ThemeService ThemeService
 @inject IAuditLogRepository AuditLogRepository
 @inject AlertService AlertService
+@inject NavigationManager navigationManager
 
 <div class="card mb-4">
     <div class="card-header">
@@ -124,27 +125,46 @@
                     <div class="form-text">Your country or region.</div>
                 </div>
 
-                <!-- Language -->
+                <!-- Culture (Language & Region) -->
                 <div class="mb-4">
-                    <label class="form-label fw-bold">Language</label>
-                    <select class="form-select" @bind="language">
-                        <option value="en">English</option>
-                        <option value="es">Español (Spanish)</option>
-                        <option value="fr">Français (French)</option>
-                        <option value="de">Deutsch (German)</option>
-                        <option value="it">Italiano (Italian)</option>
-                        <option value="pt">Português (Portuguese)</option>
-                        <option value="ru">Русский (Russian)</option>
-                        <option value="ja">日本語 (Japanese)</option>
-                        <option value="zh">中文 (Chinese)</option>
-                        <option value="ko">한국어 (Korean)</option>
-                        <option value="ar">العربية (Arabic)</option>
-                        <option value="hi">हिन्दी (Hindi)</option>
-                        <option value="nl">Nederlands (Dutch)</option>
-                        <option value="sv">Svenska (Swedish)</option>
-                        <option value="pl">Polski (Polish)</option>
+                    <label class="form-label fw-bold">Language &amp; Region</label>
+                    <select class="form-select" @bind="culture">
+                        <optgroup label="English">
+                            <option value="en-US">English (United States)</option>
+                            <option value="en-GB">English (United Kingdom)</option>
+                            <option value="en-AU">English (Australia)</option>
+                            <option value="en-CA">English (Canada)</option>
+                        </optgroup>
+                        <optgroup label="Español (Spanish)">
+                            <option value="es-ES">Español (España)</option>
+                            <option value="es-MX">Español (México)</option>
+                            <option value="es-AR">Español (Argentina)</option>
+                        </optgroup>
+                        <optgroup label="Français (French)">
+                            <option value="fr-FR">Français (France)</option>
+                            <option value="fr-CA">Français (Canada)</option>
+                            <option value="fr-BE">Français (Belgique)</option>
+                        </optgroup>
+                        <optgroup label="Deutsch (German)">
+                            <option value="de-DE">Deutsch (Deutschland)</option>
+                            <option value="de-AT">Deutsch (Österreich)</option>
+                            <option value="de-CH">Deutsch (Schweiz)</option>
+                        </optgroup>
+                        <optgroup label="Other Languages">
+                            <option value="it-IT">Italiano (Italia)</option>
+                            <option value="pt-BR">Português (Brasil)</option>
+                            <option value="pt-PT">Português (Portugal)</option>
+                            <option value="nl-NL">Nederlands (Nederland)</option>
+                            <option value="pl-PL">Polski (Polska)</option>
+                            <option value="ru-RU">Русский (Россия)</option>
+                            <option value="ja-JP">日本語 (日本)</option>
+                            <option value="zh-CN">中文 (中国)</option>
+                            <option value="zh-TW">中文 (台灣)</option>
+                            <option value="ko-KR">한국어 (대한민국)</option>
+                            <option value="ar-SA">العربية (السعودية)</option>
+                        </optgroup>
                     </select>
-                    <div class="form-text">Your preferred language for the user interface.</div>
+                    <div class="form-text">Your preferred language and regional format for the user interface.</div>
                 </div>
 
                 <!-- Notification Expiration -->
@@ -229,7 +249,7 @@
     private AudienceType defaultAudienceType = AudienceType.Public;
     private string timezone = "America/New_York";
     private string country = "US";
-    private string language = "en";
+    private string culture = "en-US";
     private int expirationPostLiked = 15;
     private int expirationPostComment = 15;
     private int expirationCommentReply = 15;
@@ -268,7 +288,7 @@
 
             timezone = preferences.GetValueOrDefault(PreferenceType.Timezone, "America/New_York");
             country = preferences.GetValueOrDefault(PreferenceType.Country, "US");
-            language = preferences.GetValueOrDefault(PreferenceType.Language, "en");
+            culture = preferences.GetValueOrDefault(PreferenceType.Culture, "en-US");
 
             expirationPostLiked = int.Parse(preferences.GetValueOrDefault(PreferenceType.NotificationExpiration_PostLiked, "15"));
             expirationPostComment = int.Parse(preferences.GetValueOrDefault(PreferenceType.NotificationExpiration_PostComment, "15"));
@@ -299,6 +319,10 @@
 
         try
         {
+            // Get current preferences to detect culture changes
+            var currentPrefs = await PreferenceService.GetAllPreferencesAsync(UserId!);
+            var oldCulture = currentPrefs.GetValueOrDefault(PreferenceType.Culture, "en-US");
+
             var preferences = new Dictionary<PreferenceType, string>
             {
                 { PreferenceType.ColorScheme, colorScheme },
@@ -306,7 +330,7 @@
                 { PreferenceType.DefaultAudienceType, defaultAudienceType.ToString() },
                 { PreferenceType.Timezone, timezone },
                 { PreferenceType.Country, country },
-                { PreferenceType.Language, language },
+                { PreferenceType.Culture, culture },
                 { PreferenceType.NotificationExpiration_PostLiked, expirationPostLiked.ToString() },
                 { PreferenceType.NotificationExpiration_PostComment, expirationPostComment.ToString() },
                 { PreferenceType.NotificationExpiration_CommentReply, expirationCommentReply.ToString() },
@@ -332,8 +356,23 @@
                     NewValue = "Multiple preferences updated"
                 });
 
-                statusMessage = "✓ Preferences saved successfully!";
-                AlertService.ShowSuccess("Your preferences have been saved.");
+                // Check if culture changed - requires page reload to apply new localization
+                bool cultureChanged = oldCulture != culture;
+
+                if (cultureChanged)
+                {
+                    statusMessage = "✓ Preferences saved successfully! Reloading page to apply language changes...";
+                    AlertService.ShowSuccess("Preferences saved. Reloading page to apply language changes...");
+
+                    // Reload the page after a short delay to apply new culture
+                    await Task.Delay(1500);
+                    navigationManager.NavigateTo(navigationManager.Uri, forceLoad: true);
+                }
+                else
+                {
+                    statusMessage = "✓ Preferences saved successfully!";
+                    AlertService.ShowSuccess("Your preferences have been saved.");
+                }
             }
             else
             {
@@ -362,7 +401,7 @@
         defaultAudienceType = AudienceType.FriendsOnly;
         timezone = "America/New_York";
         country = "US";
-        language = "en";
+        culture = "en-US";
         expirationPostLiked = 15;
         expirationPostComment = 15;
         expirationCommentReply = 15;

@@ -9,6 +9,7 @@
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Components.Shared
 @using Microsoft.JSInterop
+@using Microsoft.Extensions.Localization
 
 @inject IOptions<SiteSettings> SiteSettings
 @inject NavigationManager NavigationManager
@@ -17,32 +18,33 @@
 @inject UserPreferenceService UserPreferenceService
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject IJSRuntime JSRuntime
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.PublicHome> Localizer
 
-<PageTitle>@SiteSettings.Value.SiteName - Discover</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
 
 <div class="public-home-container">
     <div class="welcome-section">
-        <h1>Welcome to @SiteSettings.Value.SiteName</h1>
-        <p class="lead">Connect with friends and share your thoughts</p>
+        <h1>@Localizer["WelcomeTitle", SiteSettings.Value.SiteName]</h1>
+        <p class="lead">@Localizer["WelcomeSubtitle"]</p>
         <div class="action-buttons">
-            <button class="btn btn-primary btn-lg" @onclick="@(() => NavigateToPage("/Account/Register"))">Sign Up</button>
-            <button class="btn btn-outline-primary btn-lg" @onclick="@(() => NavigateToPage("/Account/Login"))">Log In</button>
+            <button class="btn btn-primary btn-lg" @onclick="@(() => NavigateToPage("/Account/Register"))">@Localizer["SignUp"]</button>
+            <button class="btn btn-outline-primary btn-lg" @onclick="@(() => NavigateToPage("/Account/Login"))">@Localizer["LogIn"]</button>
         </div>
     </div>
 
     <div class="public-feed-section">
-        <h2>Recent Public Posts</h2>
-        
+        <h2>@Localizer["RecentPublicPosts"]</h2>
+
         @if (isLoading && !posts.Any())
         {
             <div class="loading-indicator">
-                <p>Loading posts...</p>
+                <p>@Localizer["LoadingPosts"]</p>
             </div>
         }
         else if (!posts.Any() && !isLoading)
         {
             <div class="empty-feed">
-                <p>No public posts to display yet. Be the first to share something!</p>
+                <p>@Localizer["NoPosts"]</p>
             </div>
         }
         else
