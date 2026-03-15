@@ -1,0 +1,66 @@
+.rule-item {
+    background-color: var(--bs-light);
+    transition: background-color 0.2s ease;
+}
+
+.rule-item:hover {
+    background-color: var(--bs-gray-200);
+}
+
+.rule-number .badge {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.rule-content h6 {
+    color: var(--bs-dark);
+}
+
+.rule-content p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.agreement-section {
+    border-top: 1px solid var(--bs-border-color);
+    padding-top: 1rem;
+}
+
+.agreement-section .form-check-input {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.125rem;
+}
+
+.agreement-section .form-check-label {
+    font-size: 1rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.rules-intro {
+    background-color: var(--bs-light);
+    padding: 1rem;
+    border-radius: 0.375rem;
+    border-left: 4px solid var(--bs-primary);
+}
+
+.modal-body {
+    max-height: 70vh;
+}
+
+@media (max-width: 768px) {
+    .rule-number .badge {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 0.875rem;
+    }
+
+    .rule-content h6 {
+        font-size: 0.95rem;
+    }
+
+    .rule-content p {
+        font-size: 0.875rem;
+    }
+}

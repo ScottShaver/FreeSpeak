@@ -1,0 +1,42 @@
+.member-level-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.member-level-badge i {
+    font-size: 1rem;
+}
+
+/* Animation for icon on hover */
+.member-level-badge:hover i {
+    animation: pulse-badge 0.5s ease-in-out;
+}
+
+@keyframes pulse-badge {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Larger badges for special contexts */
+.member-level-badge.badge-lg {
+    font-size: 1rem;
+}
+
+.member-level-badge.badge-lg i {
+    font-size: 1.25rem;
+}
+
+/* Inline badge styling for tight spaces */
+.member-level-badge.badge-sm {
+    font-size: 0.75rem;
+}
+
+.member-level-badge.badge-sm i {
+    font-size: 0.875rem;
+}

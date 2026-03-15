@@ -549,6 +549,10 @@ namespace FreeSpeakWeb.Repositories
                         p.LikeCount,
                         p.CommentCount,
                         p.ShareCount,
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.GroupPoints)
+                            .FirstOrDefault(),
                         p.Images
                             .OrderBy(i => i.DisplayOrder)
                             .Select(i => new PostImageDto(i.Id, i.ImageUrl, i.DisplayOrder))
@@ -593,6 +597,10 @@ namespace FreeSpeakWeb.Repositories
                         p.LikeCount,
                         p.CommentCount,
                         p.ShareCount,
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.GroupPoints)
+                            .FirstOrDefault(),
                         p.Images
                             .OrderBy(i => i.DisplayOrder)
                             .Select(i => new PostImageDto(i.Id, i.ImageUrl, i.DisplayOrder))
@@ -650,6 +658,10 @@ namespace FreeSpeakWeb.Repositories
                         p.LikeCount,
                         p.CommentCount,
                         p.ShareCount,
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.GroupPoints)
+                            .FirstOrDefault(),
                         p.Images
                             .OrderBy(i => i.DisplayOrder)
                             .Select(i => new PostImageDto(i.Id, i.ImageUrl, i.DisplayOrder))
@@ -698,6 +710,10 @@ namespace FreeSpeakWeb.Repositories
                         p.LikeCount,
                         p.CommentCount,
                         p.ShareCount,
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.GroupPoints)
+                            .FirstOrDefault(),
                         p.Images
                             .OrderBy(i => i.DisplayOrder)
                             .Select(i => new PostImageDto(i.Id, i.ImageUrl, i.DisplayOrder))

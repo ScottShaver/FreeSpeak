@@ -57,6 +57,9 @@ namespace FreeSpeakWeb.Tests.Services
         private GroupPostService CreateGroupPostService(TestRepositoryFactory repoFactory)
         {
             var logger = CreateMockLogger<GroupPostService>();
+            var pointsLogger = CreateMockLogger<GroupPointsService>();
+            var groupPointsService = new GroupPointsService(repoFactory.ContextFactory, pointsLogger);
+
             return new GroupPostService(
                 repoFactory.ContextFactory,
                 repoFactory.CreateGroupPostRepository(),
@@ -71,7 +74,8 @@ namespace FreeSpeakWeb.Tests.Services
                 CreateMockWebHostEnvironment(),
                 CreatePostNotificationHelper(repoFactory.ContextFactory),
                 repoFactory.CreateGroupAccessValidator(),
-                MockRepositories.CreateMockAuditLogRepository().Object);
+                MockRepositories.CreateMockAuditLogRepository().Object,
+                groupPointsService);
         }
 
         #region Post Operations Tests

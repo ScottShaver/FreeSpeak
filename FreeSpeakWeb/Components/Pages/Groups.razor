@@ -8,9 +8,11 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.DTOs
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Components.Shared
+@using FreeSpeakWeb.Components.Groups
 @using FreeSpeakWeb.Components.Pages.Base
 @using System.Security.Claims
 @using Microsoft.JSInterop
@@ -101,18 +103,17 @@
                         var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
                         var userReaction = postUserReactions.ContainsKey(post.Id) ? postUserReactions[post.Id] : null;
                         var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
-                        var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
-                        var groupName = groupNames.ContainsKey(post.GroupId) ? groupNames[post.GroupId] : "Unknown Group";
                         var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
                         var isMuted = postMuteStatus.ContainsKey(post.Id) ? postMuteStatus[post.Id] : (bool?)null;
 
                         <GroupPostArticle 
                             PostId="@post.Id"
                             GroupId="@post.GroupId"
-                            GroupName="@groupName"
+                            GroupName="@post.GroupName"
                             AuthorId="@post.AuthorId"
-                            AuthorName="@authorName"
-                            AuthorImageUrl="@post.Author?.ProfilePictureUrl"
+                            AuthorName="@post.AuthorName"
+                            AuthorImageUrl="@post.AuthorImageUrl"
+                            AuthorGroupPoints="@post.AuthorGroupPoints"
                             CreatedAt="@post.CreatedAt"
                             LikeCount="@post.LikeCount"
                             CommentCount="@post.CommentCount"
@@ -127,7 +128,7 @@
                             UserReaction="@userReaction"
                             IsPinned="@isPinned"
                             IsMuted="@isMuted"
-                            Images="@ConvertGroupPostImagesToPostImages(post.Images)"
+                            Images="@ConvertPostImageDtosToPostImages(post.Images)"
                             OnReactionChanged="@(async (reactionType) => await HandleGroupPostReactionChanged(post.Id, reactionType))"
                             OnRemoveReaction="@(async () => await HandleRemoveGroupPostReaction(post.Id))"
                             OnPinPost="@HandlePinGroupPost"
@@ -197,18 +198,17 @@
                         var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
                         var userReaction = postUserReactions.ContainsKey(post.Id) ? postUserReactions[post.Id] : null;
                         var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
-                        var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
-                        var groupName = groupNames.ContainsKey(post.GroupId) ? groupNames[post.GroupId] : "Unknown Group";
                         var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
                         var isMuted = postMuteStatus.ContainsKey(post.Id) ? postMuteStatus[post.Id] : (bool?)null;
 
                         <GroupPostArticle 
                             PostId="@post.Id"
                             GroupId="@post.GroupId"
-                            GroupName="@groupName"
+                            GroupName="@post.GroupName"
                             AuthorId="@post.AuthorId"
-                            AuthorName="@authorName"
-                            AuthorImageUrl="@post.Author?.ProfilePictureUrl"
+                            AuthorName="@post.AuthorName"
+                            AuthorImageUrl="@post.AuthorImageUrl"
+                            AuthorGroupPoints="@post.AuthorGroupPoints"
                             CreatedAt="@post.CreatedAt"
                             LikeCount="@post.LikeCount"
                             CommentCount="@post.CommentCount"
@@ -223,7 +223,7 @@
                             UserReaction="@userReaction"
                             IsPinned="@isPinned"
                             IsMuted="@isMuted"
-                            Images="@ConvertGroupPostImagesToPostImages(post.Images)"
+                            Images="@ConvertPostImageDtosToPostImages(post.Images)"
                             OnReactionChanged="@(async (reactionType) => await HandleGroupPostReactionChanged(post.Id, reactionType))"
                             OnRemoveReaction="@(async () => await HandleRemoveGroupPostReaction(post.Id))"
                             OnPinPost="@HandlePinGroupPost"
@@ -413,16 +413,14 @@
     var postReactions = postReactionData.ContainsKey(selectedGroupPost.Id) ? postReactionData[selectedGroupPost.Id] : new Dictionary<LikeType, int>();
     var userReaction = postUserReactions.ContainsKey(selectedGroupPost.Id) ? postUserReactions[selectedGroupPost.Id] : null;
     var isPinned = pinnedPosts.ContainsKey(selectedGroupPost.Id) && pinnedPosts[selectedGroupPost.Id];
-    var authorName = postAuthorNames.ContainsKey(selectedGroupPost.Id) ? postAuthorNames[selectedGroupPost.Id] : "Unknown";
-    var groupName = groupNames.ContainsKey(selectedGroupPost.GroupId) ? groupNames[selectedGroupPost.GroupId] : "Unknown Group";
 
     <GroupPostDetailModal 
         PostId="@selectedGroupPost.Id"
         GroupId="@selectedGroupPost.GroupId"
-        GroupName="@groupName"
+        GroupName="@selectedGroupPost.GroupName"
         AuthorId="@selectedGroupPost.AuthorId"
-        AuthorName="@authorName"
-        AuthorImageUrl="@selectedGroupPost.Author?.ProfilePictureUrl"
+        AuthorName="@selectedGroupPost.AuthorName"
+        AuthorImageUrl="@selectedGroupPost.AuthorImageUrl"
         CurrentUserId="@currentUserId"
         CreatedAt="@selectedGroupPost.CreatedAt"
         LikeCount="@selectedGroupPost.LikeCount"
@@ -433,7 +431,7 @@
         ReactionBreakdown="@postReactions"
         UserReaction="@userReaction"
         IsPinned="@isPinned"
-        Images="@ConvertGroupPostImagesToPostImages(selectedGroupPost.Images)"
+        Images="@ConvertPostImageDtosToPostImages(selectedGroupPost.Images)"
         OnReactionChanged="@(async (reactionType) => await HandleGroupPostReactionChanged(selectedGroupPost.Id, reactionType))"
         OnRemoveReaction="@(async () => await HandleRemoveGroupPostReaction(selectedGroupPost.Id))"
         OnPinPost="@HandlePinGroupPost"
@@ -451,13 +449,23 @@
     </GroupPostDetailModal>
 }
 
+@* Rules Acceptance Modal *@
+@if (showRulesModal && selectedGroupForJoin != null)
+{
+    <RulesAcceptanceModal 
+        Group="@selectedGroupForJoin"
+        AgreeButtonText="@(selectedGroupForJoin.RequiresJoinApproval ? "Submit Request" : "Join Group")"
+        OnClose="CloseRulesModal"
+        OnAgree="HandleRulesAgreed" />
+}
+
 @code {
     private string? currentUserId;
     private string? currentUserImageUrl;
     private string? currentUserName;
 
     // Group Feed state
-    private List<GroupPost> groupPosts = new();
+    private List<GroupPostViewModel> groupPosts = new();
     private bool isLoadingGroupFeed = false;
     private bool isLoadingMoreGroupPosts = false;
     private bool? hasMoreGroupPosts = null;
@@ -480,7 +488,7 @@
     private DotNetObjectReference<Groups>? dotNetHelper;
 
     // Pinned Group Posts state
-    private List<GroupPost> pinnedGroupPostsList = new();
+    private List<GroupPostViewModel> pinnedGroupPostsList = new();
     private bool isLoadingPinnedGroupPosts = false;
 
     // Group Join Requests state
@@ -496,6 +504,10 @@
     // Suggested Groups state
     private List<Group> suggestedGroups = new();
     private bool isLoadingSuggestedGroups = false;
+
+    // Rules acceptance modal state
+    private bool showRulesModal = false;
+    private Group? selectedGroupForJoin = null;
 
     // Group-specific data dictionaries (rename to use base class naming)
     // Base class provides: postRefreshTriggers, postReactionData, postUserReactions, pinnedPosts, postAuthorNames
@@ -610,24 +622,24 @@
         try
         {
             currentGroupPage = 1;
-            List<GroupPost> loadedPosts;
+            List<GroupPostListDto> loadedDtos;
 
             if (selectedGroupId.HasValue)
             {
                 // Load posts from specific group
-                loadedPosts = await GroupPostService.GetGroupPostsAsync(selectedGroupId.Value, 0, groupPageSize);
+                loadedDtos = await GroupPostService.GetGroupPostsAsProjectionAsync(selectedGroupId.Value, 0, groupPageSize);
             }
             else
             {
                 // Load posts from all user's groups
-                loadedPosts = await GroupPostService.GetAllGroupPostsForUserAsync(currentUserId, 0, groupPageSize);
+                loadedDtos = await GroupPostService.GetAllGroupPostsForUserAsProjectionAsync(currentUserId, 0, groupPageSize);
             }
 
-            groupPosts = loadedPosts;
-            hasMoreGroupPosts = loadedPosts.Count >= groupPageSize;
+            groupPosts = GroupPostViewModel.FromDtos(loadedDtos);
+            hasMoreGroupPosts = loadedDtos.Count >= groupPageSize;
 
-            // Load additional data for posts
-            await LoadGroupPostDataAsync(loadedPosts);
+            // Load additional data for posts (reactions, pinned status, mute status)
+            await LoadGroupPostDataAsync(groupPosts);
         }
         catch (Exception ex)
         {
@@ -656,26 +668,27 @@
         {
             currentGroupPage++;
             var skip = (currentGroupPage - 1) * groupPageSize;
-            List<GroupPost> loadedPosts;
+            List<GroupPostListDto> loadedDtos;
 
             if (selectedGroupId.HasValue)
             {
                 // Load more posts from specific group
-                loadedPosts = await GroupPostService.GetGroupPostsAsync(selectedGroupId.Value, skip, groupPageSize);
+                loadedDtos = await GroupPostService.GetGroupPostsAsProjectionAsync(selectedGroupId.Value, skip, groupPageSize);
             }
             else
             {
                 // Load more posts from all user's groups
-                loadedPosts = await GroupPostService.GetAllGroupPostsForUserAsync(currentUserId, skip, groupPageSize);
+                loadedDtos = await GroupPostService.GetAllGroupPostsForUserAsProjectionAsync(currentUserId, skip, groupPageSize);
             }
 
-            if (loadedPosts.Any())
+            if (loadedDtos.Any())
             {
-                groupPosts.AddRange(loadedPosts);
-                hasMoreGroupPosts = loadedPosts.Count >= groupPageSize;
+                var newPosts = GroupPostViewModel.FromDtos(loadedDtos);
+                groupPosts.AddRange(newPosts);
+                hasMoreGroupPosts = loadedDtos.Count >= groupPageSize;
 
                 // Load additional data for new posts
-                await LoadGroupPostDataAsync(loadedPosts);
+                await LoadGroupPostDataAsync(newPosts);
             }
             else
             {
@@ -694,27 +707,14 @@
     }
 
     /// <summary>
-    /// Loads additional data for a list of group posts, including reactions, author names, pinned status, and mute status.
+    /// Loads additional data for a list of group post view models, including reactions, pinned status, and mute status.
     /// Uses batch queries where possible to optimize performance.
+    /// Note: Author names and group names are already included in the ViewModel from the DTO projection.
     /// </summary>
-    /// <param name="posts">The list of group posts to load data for.</param>
-    private async Task LoadGroupPostDataAsync(List<GroupPost> posts)
+    /// <param name="posts">The list of group post view models to load data for.</param>
+    private async Task LoadGroupPostDataAsync(List<GroupPostViewModel> posts)
     {
         if (!posts.Any()) return;
-
-        // Populate group names and author names
-        foreach (var post in posts)
-        {
-            if (!groupNames.ContainsKey(post.GroupId) && post.Group != null)
-            {
-                groupNames[post.GroupId] = post.Group.Name;
-            }
-
-            if (!postAuthorNames.ContainsKey(post.Id) && post.Author != null)
-            {
-                postAuthorNames[post.Id] = $"{post.Author.FirstName} {post.Author.LastName}";
-            }
-        }
 
         // Get post IDs that need reaction data loaded
         var postIdsNeedingReactions = posts
@@ -811,20 +811,20 @@
         {
             currentPinnedPage = 1;
 
-            // Get all pinned posts (PinnedGroupPostService doesn't support pagination yet)
-            var allPinnedPosts = await PinnedGroupPostService.GetPinnedGroupPostsAsync(currentUserId);
+            // Get all pinned posts as projections
+            var allPinnedDtos = await PinnedGroupPostService.GetPinnedGroupPostsAsProjectionAsync(currentUserId);
 
             // Apply group filter if selected
             if (selectedPinnedGroupId.HasValue)
             {
-                allPinnedPosts = allPinnedPosts.Where(p => p.GroupId == selectedPinnedGroupId.Value).ToList();
+                allPinnedDtos = allPinnedDtos.Where(p => p.GroupId == selectedPinnedGroupId.Value).ToList();
             }
 
-            // Take first page
-            pinnedGroupPostsList = allPinnedPosts.Take(pinnedPageSize).ToList();
-            hasMorePinnedPosts = allPinnedPosts.Count > pinnedPageSize;
+            // Take first page and convert to ViewModels
+            pinnedGroupPostsList = GroupPostViewModel.FromDtos(allPinnedDtos.Take(pinnedPageSize));
+            hasMorePinnedPosts = allPinnedDtos.Count > pinnedPageSize;
 
-            // Load additional data for pinned posts
+            // Load additional data for pinned posts (reactions, mute status)
             await LoadGroupPostDataAsync(pinnedGroupPostsList);
 
             // Mark as pinned
@@ -882,29 +882,30 @@
         {
             currentPinnedPage++;
 
-            // Get all pinned posts
-            var allPinnedPosts = await PinnedGroupPostService.GetPinnedGroupPostsAsync(currentUserId);
+            // Get all pinned posts as projections
+            var allPinnedDtos = await PinnedGroupPostService.GetPinnedGroupPostsAsProjectionAsync(currentUserId);
 
             // Apply group filter if selected
             if (selectedPinnedGroupId.HasValue)
             {
-                allPinnedPosts = allPinnedPosts.Where(p => p.GroupId == selectedPinnedGroupId.Value).ToList();
+                allPinnedDtos = allPinnedDtos.Where(p => p.GroupId == selectedPinnedGroupId.Value).ToList();
             }
 
             // Calculate pagination
             var skip = (currentPinnedPage - 1) * pinnedPageSize;
-            var loadedPosts = allPinnedPosts.Skip(skip).Take(pinnedPageSize).ToList();
+            var loadedDtos = allPinnedDtos.Skip(skip).Take(pinnedPageSize).ToList();
 
-            if (loadedPosts.Any())
+            if (loadedDtos.Any())
             {
-                pinnedGroupPostsList.AddRange(loadedPosts);
-                hasMorePinnedPosts = allPinnedPosts.Count > (currentPinnedPage * pinnedPageSize);
+                var newPosts = GroupPostViewModel.FromDtos(loadedDtos);
+                pinnedGroupPostsList.AddRange(newPosts);
+                hasMorePinnedPosts = allPinnedDtos.Count > (currentPinnedPage * pinnedPageSize);
 
                 // Load additional data for new posts
-                await LoadGroupPostDataAsync(loadedPosts);
+                await LoadGroupPostDataAsync(newPosts);
 
                 // Mark as pinned
-                foreach (var post in loadedPosts)
+                foreach (var post in newPosts)
                 {
                     pinnedPosts[post.Id] = true;
                 }
@@ -1096,10 +1097,60 @@
 
     /// <summary>
     /// Handles the user's request to join a group.
-    /// If the group requires approval, creates a join request; otherwise, joins the group immediately.
+    /// If the group requires rules acceptance, shows the rules modal first.
+    /// Otherwise, if the group requires approval, creates a join request; otherwise, joins the group immediately.
     /// </summary>
     /// <param name="group">The group to join.</param>
     private async Task JoinGroup(Group group)
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        // Check if group requires rules acceptance
+        if (group.RequireAcceptRules)
+        {
+            selectedGroupForJoin = group;
+            showRulesModal = true;
+            StateHasChanged();
+            return;
+        }
+
+        // Proceed with join without rules requirement
+        await ProcessJoinGroup(group, hasAgreedToRules: false);
+    }
+
+    /// <summary>
+    /// Closes the rules acceptance modal.
+    /// </summary>
+    private void CloseRulesModal()
+    {
+        showRulesModal = false;
+        selectedGroupForJoin = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles the user agreeing to group rules.
+    /// Proceeds with the join process with rules agreement flag set to true.
+    /// </summary>
+    private async Task HandleRulesAgreed()
+    {
+        if (selectedGroupForJoin == null) return;
+
+        var group = selectedGroupForJoin;
+
+        // Close the modal
+        CloseRulesModal();
+
+        // Proceed with join with rules agreement
+        await ProcessJoinGroup(group, hasAgreedToRules: true);
+    }
+
+    /// <summary>
+    /// Processes the actual group join or join request.
+    /// </summary>
+    /// <param name="group">The group to join.</param>
+    /// <param name="hasAgreedToRules">Whether the user has agreed to the group rules.</param>
+    private async Task ProcessJoinGroup(Group group, bool hasAgreedToRules)
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
 
@@ -1108,7 +1159,7 @@
             if (group.RequiresJoinApproval)
             {
                 // Send join request
-                var (success, errorMessage, request) = await GroupMemberService.CreateJoinRequestAsync(group.Id, currentUserId);
+                var (success, errorMessage, request) = await GroupMemberService.CreateJoinRequestAsync(group.Id, currentUserId, hasAgreedToRules);
 
                 if (success)
                 {
@@ -1127,7 +1178,7 @@
             else
             {
                 // Join immediately
-                var (success, errorMessage) = await GroupMemberService.JoinGroupAsync(group.Id, currentUserId);
+                var (success, errorMessage) = await GroupMemberService.JoinGroupAsync(group.Id, currentUserId, hasAgreedToRules);
 
                 if (success)
                 {
@@ -1314,13 +1365,13 @@
 
     // Modal state
     private bool showGroupPostDetailModal = false;
-    private GroupPost? selectedGroupPost = null;
+    private GroupPostViewModel? selectedGroupPost = null;
 
     /// <summary>
     /// Shows the detailed view modal for a group post.
     /// </summary>
-    /// <param name="post">The group post to display in detail.</param>
-    private async Task ShowGroupPostDetail(GroupPost post)
+    /// <param name="post">The group post view model to display in detail.</param>
+    private async Task ShowGroupPostDetail(GroupPostViewModel post)
     {
         selectedGroupPost = post;
         showGroupPostDetailModal = true;
@@ -1384,23 +1435,22 @@
     }
 
     /// <summary>
-    /// Converts a collection of GroupPostImage objects to PostImage objects.
+    /// Converts a collection of PostImageDto objects to PostImage objects.
     /// This is needed for compatibility with shared components that expect PostImage type.
     /// </summary>
-    /// <param name="groupImages">The collection of group post images to convert.</param>
+    /// <param name="imageDtos">The collection of post image DTOs to convert.</param>
     /// <returns>A list of PostImage objects, or null if the input is null or empty.</returns>
-    private List<PostImage>? ConvertGroupPostImagesToPostImages(ICollection<GroupPostImage>? groupImages)
+    private List<PostImage>? ConvertPostImageDtosToPostImages(IReadOnlyList<PostImageDto>? imageDtos)
     {
-        if (groupImages == null || !groupImages.Any())
+        if (imageDtos == null || !imageDtos.Any())
             return null;
 
-        return groupImages.Select(gi => new PostImage
+        return imageDtos.Select(dto => new PostImage
         {
-            Id = gi.Id,
-            PostId = gi.PostId,
-            ImageUrl = gi.ImageUrl,
-            DisplayOrder = gi.DisplayOrder,
-            UploadedAt = gi.UploadedAt
+            Id = dto.Id,
+            PostId = 0, // Not used for display; set to 0 for DTO-based rendering
+            ImageUrl = dto.ImageUrl,
+            DisplayOrder = dto.DisplayOrder
         }).ToList();
     }
 

@@ -1,5 +1,7 @@
 @using FreeSpeakWeb.Components.Shared
+@using FreeSpeakWeb.Components.Groups
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
 
 <div class="article-header @GetAudienceHeaderClass()">
     @if (!string.IsNullOrEmpty(AuthorImageUrl))
@@ -15,6 +17,15 @@
     <div class="author-info">
         <div class="author-name-container">
             <span class="author-name">@AuthorName</span>
+            @if (GroupId.HasValue && AuthorGroupPoints.HasValue)
+            {
+                <MemberLevelBadge 
+                    Level="@GroupPointsService.GetMemberLevel(AuthorGroupPoints.Value)"
+                    Points="@AuthorGroupPoints"
+                    ShowText="false"
+                    ShowPoints="false"
+                    CssClass="ms-1 badge-sm" />
+            }
         </div>
         <div class="article-timestamp-container">
             <span class="article-timestamp" title="@FullTimestamp">@FormattedTimestamp</span>
@@ -185,6 +196,12 @@
 
     [Parameter]
     public EventCallback OnCloseMenu { get; set; }
+
+    [Parameter]
+    public int? GroupId { get; set; }
+
+    [Parameter]
+    public int? AuthorGroupPoints { get; set; }
 
     private string FormattedTimestamp => FormatTimestamp(CreatedAt);
     private string FullTimestamp => CreatedAt.ToLocalTime().ToString("MMMM d, yyyy 'at' h:mm:ss tt");

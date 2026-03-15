@@ -141,10 +141,14 @@ namespace FreeSpeakWeb.Repositories
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
 
+                // Convert local dates to UTC for comparison with UTC timestamps in database
+                var startDateUtc = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Local).ToUniversalTime();
+                var endDateUtc = DateTime.SpecifyKind(endDate.Date.AddDays(1), DateTimeKind.Local).ToUniversalTime();
+
                 return await context.AuditLogs
                     .Where(a => a.UserId == userId 
-                             && a.ActionStamp >= startDate 
-                             && a.ActionStamp <= endDate)
+                             && a.ActionStamp >= startDateUtc 
+                             && a.ActionStamp < endDateUtc)
                     .OrderByDescending(a => a.ActionStamp)
                     .AsNoTracking()
                     .ToListAsync();
@@ -217,16 +221,19 @@ namespace FreeSpeakWeb.Repositories
                 }
 
                 // Apply start date filter if provided
+                // Convert local date to UTC for comparison with UTC timestamps in database
                 if (startDate.HasValue)
                 {
-                    query = query.Where(a => a.ActionStamp >= startDate.Value);
+                    var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Local).ToUniversalTime();
+                    query = query.Where(a => a.ActionStamp >= startDateUtc);
                 }
 
                 // Apply end date filter if provided
+                // Convert local date to UTC for comparison with UTC timestamps in database
                 if (endDate.HasValue)
                 {
                     // Include the entire end date by adding one day and using less than comparison
-                    var endDateInclusive = endDate.Value.Date.AddDays(1);
+                    var endDateInclusive = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1), DateTimeKind.Local).ToUniversalTime();
                     query = query.Where(a => a.ActionStamp < endDateInclusive);
                 }
 

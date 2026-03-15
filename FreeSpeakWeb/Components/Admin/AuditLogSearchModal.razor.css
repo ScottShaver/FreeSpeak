@@ -27,3 +27,8 @@
     width: auto;
     min-width: 200px;
 }
+
+/* Pagination controls in footer */
+.pagination-controls {
+    margin-right: auto;
+}

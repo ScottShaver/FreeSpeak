@@ -87,6 +87,9 @@ namespace FreeSpeakWeb.Tests.Services
 
         private GroupPostService CreateGroupPostService(IDbContextFactory<ApplicationDbContext> dbFactory)
         {
+            var pointsLogger = CreateMockLogger<GroupPointsService>();
+            var groupPointsService = new GroupPointsService(dbFactory, pointsLogger);
+
             return new GroupPostService(
                 dbFactory,
                 MockRepositories.CreateMockGroupPostRepository().Object,
@@ -101,7 +104,8 @@ namespace FreeSpeakWeb.Tests.Services
                 CreateMockWebHostEnvironment(),
                 CreateMockPostNotificationHelper(),
                 CreateMockGroupAccessValidator(dbFactory),
-                MockRepositories.CreateMockAuditLogRepository().Object);
+                MockRepositories.CreateMockAuditLogRepository().Object,
+                groupPointsService);
         }
 
         private static UserNotification CreateTestNotification(

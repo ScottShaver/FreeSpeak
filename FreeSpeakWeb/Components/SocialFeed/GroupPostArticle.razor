@@ -29,7 +29,9 @@
         MenuItems="@menuItems"
         MenuPositionStyle="@menuPositionStyle"
         OnToggleMenu="@ToggleMenu"
-        OnCloseMenu="@CloseMenu" />
+        OnCloseMenu="@CloseMenu"
+        GroupId="@GroupId"
+        AuthorGroupPoints="@AuthorGroupPoints" />
 
     <!-- 2. Main Content Area -->
     <FeedArticleContent 
@@ -163,6 +165,9 @@
 
     [Parameter]
     public string? AuthorImageUrl { get; set; }
+
+    [Parameter]
+    public int? AuthorGroupPoints { get; set; }
 
     [Parameter]
     public string? CurrentUserId { get; set; }

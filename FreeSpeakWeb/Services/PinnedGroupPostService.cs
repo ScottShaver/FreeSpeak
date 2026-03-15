@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
@@ -259,6 +260,74 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogError(ex, "Error counting pinned group posts for user {UserId}", userId);
                 return 0;
+            }
+        }
+
+        /// <summary>
+        /// Retrieves all pinned group posts for a user as projection DTOs with pagination.
+        /// Uses database-side projection to reduce data transfer.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <param name="skip">Number of posts to skip for pagination.</param>
+        /// <param name="take">Number of posts to return.</param>
+        /// <returns>A list of pinned group posts as GroupPostListDto ordered by most recently pinned first.</returns>
+        public async Task<List<GroupPostListDto>> GetPinnedGroupPostsAsProjectionAsync(string userId, int skip = 0, int take = 20)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var pinnedPostIds = await context.PinnedGroupPosts
+                    .Where(pp => pp.UserId == userId)
+                    .OrderByDescending(pp => pp.PinnedAt)
+                    .Skip(skip)
+                    .Take(take)
+                    .Select(pp => pp.PostId)
+                    .ToListAsync();
+
+                if (!pinnedPostIds.Any())
+                {
+                    return new List<GroupPostListDto>();
+                }
+
+                var posts = await context.GroupPosts
+                    .Where(p => pinnedPostIds.Contains(p.Id))
+                    .Select(p => new GroupPostListDto(
+                        p.Id,
+                        p.GroupId,
+                        p.Group != null ? p.Group.Name : "Unknown Group",
+                        p.AuthorId,
+                        p.Author != null ? $"{p.Author.FirstName} {p.Author.LastName}" : "Unknown",
+                        p.Author != null ? p.Author.ProfilePictureUrl : null,
+                        p.Content,
+                        p.CreatedAt,
+                        p.UpdatedAt,
+                        p.LikeCount,
+                        p.CommentCount,
+                        p.ShareCount,
+                        context.GroupUsers
+                            .Where(gu => gu.GroupId == p.GroupId && gu.UserId == p.AuthorId)
+                            .Select(gu => gu.GroupPoints)
+                            .FirstOrDefault(),
+                        p.Images.OrderBy(i => i.DisplayOrder).Select(i => new PostImageDto(
+                            i.Id,
+                            i.ImageUrl,
+                            i.DisplayOrder
+                        )).ToList()
+                    ))
+                    .ToListAsync();
+
+                // Maintain the order from pinnedPostIds
+                return pinnedPostIds
+                    .Select(id => posts.FirstOrDefault(p => p.Id == id))
+                    .Where(p => p != null)
+                    .Cast<GroupPostListDto>()
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving pinned group posts as projection for user {UserId}", userId);
+                return new List<GroupPostListDto>();
             }
         }
     }

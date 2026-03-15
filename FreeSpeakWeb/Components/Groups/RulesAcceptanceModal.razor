@@ -1,0 +1,163 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@inject GroupRuleService GroupRuleService
+@inject ILogger<RulesAcceptanceModal> Logger
+
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-clipboard-check me-2"></i>
+                    Group Rules - @Group?.Name
+                </h5>
+                <button type="button" class="btn-close" @onclick="OnClose" disabled="@isLoading"></button>
+            </div>
+            <div class="modal-body">
+                @if (isLoading)
+                {
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading rules...</span>
+                        </div>
+                        <p class="text-muted mt-2">Loading group rules...</p>
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                    </div>
+                }
+                else if (rules.Count == 0)
+                {
+                    <div class="alert alert-info" role="alert">
+                        <i class="bi bi-info-circle me-2"></i>
+                        This group has no rules defined yet.
+                    </div>
+                }
+                else
+                {
+                    <div class="rules-intro mb-4">
+                        <p class="fw-bold mb-2">Before joining this group, please read and agree to the following rules:</p>
+                        <p class="text-muted small">These rules help maintain a positive and respectful community environment.</p>
+                    </div>
+
+                    <div class="rules-list">
+                        @foreach (var rule in rules.OrderBy(r => r.Order))
+                        {
+                            <div class="rule-item mb-4 p-3 border rounded">
+                                <div class="d-flex align-items-start">
+                                    <div class="rule-number me-3">
+                                        <div class="badge bg-primary rounded-circle d-flex align-items-center justify-content-center" 
+                                             style="width: 32px; height: 32px;">
+                                            @rule.Order
+                                        </div>
+                                    </div>
+                                    <div class="rule-content flex-grow-1">
+                                        <h6 class="fw-bold mb-2">@rule.Title</h6>
+                                        <p class="text-muted mb-0">@rule.Description</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="agreement-section mt-4">
+                        <div class="form-check">
+                            <input class="form-check-input" 
+                                   type="checkbox" 
+                                   id="agreeToRules" 
+                                   @bind="hasAgreed" />
+                            <label class="form-check-label fw-bold" for="agreeToRules">
+                                I have read and agree to abide by these rules
+                            </label>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="OnClose" disabled="@isLoading">
+                    Cancel
+                </button>
+                @if (rules.Count > 0)
+                {
+                    <button type="button" 
+                            class="btn btn-primary" 
+                            @onclick="HandleAgree" 
+                            disabled="@(!hasAgreed || isLoading)">
+                        <i class="bi bi-check-circle me-1"></i>
+                        @AgreeButtonText
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// The group whose rules are being displayed.
+    /// </summary>
+    [Parameter]
+    public Group? Group { get; set; }
+
+    /// <summary>
+    /// Text to display on the agree button (e.g., "Join Group" or "Submit Request").
+    /// </summary>
+    [Parameter]
+    public string AgreeButtonText { get; set; } = "Continue";
+
+    /// <summary>
+    /// Callback invoked when the modal is closed without agreeing.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    /// <summary>
+    /// Callback invoked when the user agrees to the rules.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnAgree { get; set; }
+
+    private List<GroupRule> rules = new();
+    private bool hasAgreed = false;
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    /// <summary>
+    /// Loads the group rules when the component is initialized.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        if (Group == null)
+        {
+            errorMessage = "Group information is missing.";
+            isLoading = false;
+            return;
+        }
+
+        try
+        {
+            rules = await GroupRuleService.GetGroupRulesAsync(Group.Id);
+            isLoading = false;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading rules for group {GroupId}", Group.Id);
+            errorMessage = "An error occurred while loading the group rules.";
+            isLoading = false;
+        }
+    }
+
+    /// <summary>
+    /// Handles the user clicking the agree button.
+    /// </summary>
+    private async Task HandleAgree()
+    {
+        if (hasAgreed)
+        {
+            await OnAgree.InvokeAsync();
+        }
+    }
+}
