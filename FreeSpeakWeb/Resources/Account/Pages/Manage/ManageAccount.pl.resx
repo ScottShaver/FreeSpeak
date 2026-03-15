@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <!-- Profile Page -->
+  <data name="Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="ProfilePicture" xml:space="preserve">
+    <value>Zdjęcie profilowe</value>
+  </data>
+  <data name="ProfilePictureHelpText" xml:space="preserve">
+    <value>Prześlij obraz (maks. 5MB). Obraz zostanie zmieniony do rozmiaru 168x168 pikseli.</value>
+  </data>
+  <data name="UploadNewProfilePicture" xml:space="preserve">
+    <value>Prześlij nowe zdjęcie profilowe</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Nazwa użytkownika</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Imię</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Nazwisko</value>
+  </data>
+  <data name="NameSuffix" xml:space="preserve">
+    <value>Przyrostek imienia</value>
+  </data>
+  <data name="DateOfBirth" xml:space="preserve">
+    <value>Data urodzenia</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Miasto</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>Województwo</value>
+  </data>
+  <data name="Occupation" xml:space="preserve">
+    <value>Zawód</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Numer telefonu</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
+  <!-- Email Page -->
+  <data name="Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="ManageEmail" xml:space="preserve">
+    <value>Zarządzaj e-mailem</value>
+  </data>
+  <data name="YourEmailIsConfirmed" xml:space="preserve">
+    <value>Twój e-mail został potwierdzony.</value>
+  </data>
+  <data name="PleaseConfirmYourEmail" xml:space="preserve">
+    <value>Proszę potwierdź swój e-mail.</value>
+  </data>
+  <data name="SendVerificationEmail" xml:space="preserve">
+    <value>Wyślij e-mail weryfikacyjny</value>
+  </data>
+  <data name="NewEmail" xml:space="preserve">
+    <value>Nowy e-mail</value>
+  </data>
+  <data name="ChangeEmail" xml:space="preserve">
+    <value>Zmień e-mail</value>
+  </data>
+  <!-- Password Pages -->
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Zmień hasło</value>
+  </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>Aktualne hasło</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>Nowe hasło</value>
+  </data>
+  <data name="ConfirmNewPassword" xml:space="preserve">
+    <value>Potwierdź nowe hasło</value>
+  </data>
+  <data name="UpdatePassword" xml:space="preserve">
+    <value>Zaktualizuj hasło</value>
+  </data>
+  <data name="SetPassword" xml:space="preserve">
+    <value>Ustaw hasło</value>
+  </data>
+  <data name="SetYourPassword" xml:space="preserve">
+    <value>Ustaw swoje hasło</value>
+  </data>
+  <data name="YouDoNotHaveLocalPassword" xml:space="preserve">
+    <value>Nie masz lokalnej nazwy użytkownika/hasła dla tej strony. Dodaj konto lokalne, aby móc logować się bez logowania zewnętrznego.</value>
+  </data>
+</root>

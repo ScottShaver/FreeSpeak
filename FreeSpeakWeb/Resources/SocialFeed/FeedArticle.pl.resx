@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ViewMoreComments" xml:space="preserve">
+    <value>Zobacz więcej komentarzy</value>
+  </data>
+  <data name="Like" xml:space="preserve">
+    <value>Lubię to</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Komentarz</value>
+  </data>
+  <data name="Share" xml:space="preserve">
+    <value>Udostępnij</value>
+  </data>
+  <data name="PinPost" xml:space="preserve">
+    <value>Przypnij post</value>
+  </data>
+  <data name="UnpinPost" xml:space="preserve">
+    <value>Odepnij post</value>
+  </data>
+  <data name="CopyLink" xml:space="preserve">
+    <value>Kopiuj link</value>
+  </data>
+  <data name="EditPost" xml:space="preserve">
+    <value>Edytuj post</value>
+  </data>
+  <data name="ChangePostAudience" xml:space="preserve">
+    <value>Zmień odbiorców posta</value>
+  </data>
+  <data name="TurnOnNotifications" xml:space="preserve">
+    <value>Włącz powiadomienia</value>
+  </data>
+  <data name="TurnOffNotifications" xml:space="preserve">
+    <value>Wyłącz powiadomienia</value>
+  </data>
+  <data name="DeletePost" xml:space="preserve">
+    <value>Usuń post</value>
+  </data>
+  <data name="ReportPost" xml:space="preserve">
+    <value>Zgłoś post</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>Publiczny</value>
+  </data>
+  <data name="FriendsOnly" xml:space="preserve">
+    <value>Tylko znajomi</value>
+  </data>
+  <data name="OnlyMe" xml:space="preserve">
+    <value>Tylko ja</value>
+  </data>
+  <data name="WriteComment" xml:space="preserve">
+    <value>Napisz komentarz...</value>
+  </data>
+  <data name="DeletePostConfirmTitle" xml:space="preserve">
+    <value>Usunąć post?</value>
+  </data>
+  <data name="DeletePostConfirmMessage" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć ten post? Tej operacji nie można cofnąć.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="LinkCopied" xml:space="preserve">
+    <value>Link skopiowany do schowka!</value>
+  </data>
+  <data name="ChangeToPublicTitle" xml:space="preserve">
+    <value>Zmienić na publiczny?</value>
+  </data>
+  <data name="ChangeToPublicMessage" xml:space="preserve">
+    <value>Uczynienie tego posta publicznym oznacza, że każdy w internecie może go zobaczyć. Czy na pewno chcesz kontynuować?</value>
+  </data>
+  <data name="MakePublic" xml:space="preserve">
+    <value>Tak, upublicznij</value>
+  </data>
+</root>
