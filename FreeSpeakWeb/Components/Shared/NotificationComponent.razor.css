@@ -107,6 +107,12 @@
     align-self: flex-start;
 }
 
+.notification-expiration {
+    color: var(--bs-warning-text-emphasis);
+    font-size: 11px;
+    opacity: 0.85;
+}
+
 .notification-unread-indicator {
     width: 8px;
     height: 8px;

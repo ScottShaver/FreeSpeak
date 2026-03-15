@@ -1,8 +1,10 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Repositories.Abstractions
 @using System.Text.Json
+@using Microsoft.JSInterop
 @inject IAuditLogRepository AuditLogRepository
 @inject ILogger<AuditLogSearchModal> Logger
+@inject IJSRuntime JSRuntime
 
 <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -106,12 +108,12 @@
                 {
                     <div class="audit-log-section">
                         <div class="table-responsive">
-                            <table class="table table-hover table-sm">
+                            <table class="table table-hover table-sm resizable-table">
                                 <thead>
                                     <tr>
-                                        <th style="width: 180px;">Date/Time</th>
-                                        <th style="width: 200px;">User ID</th>
-                                        <th style="width: 150px;">Category</th>
+                                        <th class="resizable-col">Date/Time</th>
+                                        <th class="resizable-col">User ID</th>
+                                        <th class="resizable-col">Category</th>
                                         <th>Details</th>
                                     </tr>
                                 </thead>
@@ -151,26 +153,7 @@
                             </table>
                         </div>
 
-                        <!-- Pagination Controls -->
-                        @if (totalPages > 1)
-                        {
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <button type="button" 
-                                        class="btn btn-sm btn-outline-secondary" 
-                                        @onclick="LoadPreviousPage"
-                                        disabled="@(currentPage <= 1)">
-                                    <i class="bi bi-chevron-left me-1"></i>Previous
-                                </button>
-                                <span class="text-muted small">Page @currentPage of @totalPages</span>
-                                <button type="button" 
-                                        class="btn btn-sm btn-outline-secondary" 
-                                        @onclick="LoadNextPage"
-                                        disabled="@(currentPage >= totalPages)">
-                                    Next<i class="bi bi-chevron-right ms-1"></i>
-                                </button>
-                            </div>
-                        }
-                    </div>
+                        </div>
                 }
                 else
                 {
@@ -181,6 +164,24 @@
                 }
             </div>
             <div class="modal-footer">
+                @if (totalPages > 1)
+                {
+                    <div class="pagination-controls d-flex align-items-center">
+                        <button type="button" 
+                                class="btn btn-sm btn-outline-secondary" 
+                                @onclick="LoadPreviousPage"
+                                disabled="@(currentPage <= 1)">
+                            <i class="bi bi-chevron-left me-1"></i>Previous
+                        </button>
+                        <span class="text-muted small mx-3">Page @currentPage of @totalPages</span>
+                        <button type="button" 
+                                class="btn btn-sm btn-outline-secondary" 
+                                @onclick="LoadNextPage"
+                                disabled="@(currentPage >= totalPages)">
+                            Next<i class="bi bi-chevron-right ms-1"></i>
+                        </button>
+                    </div>
+                }
                 <button type="button" class="btn btn-secondary" @onclick="Close">Close</button>
             </div>
         </div>
@@ -352,5 +353,54 @@
     private async Task Close()
     {
         await OnClose.InvokeAsync();
+    }
+
+    // Resizable column state
+    private ElementReference tableRef;
+    private bool isResizing = false;
+    private int resizingColumnIndex = -1;
+    private double startX = 0;
+    private double startWidth = 0;
+    private double[] columnWidths = { 180, 200, 150 }; // Initial widths for Date/Time, User ID, Category
+
+    /// <summary>
+    /// Starts the column resize operation when the user begins dragging a resize handle.
+    /// </summary>
+    /// <param name="e">The mouse event arguments containing the starting position.</param>
+    /// <param name="columnIndex">The index of the column being resized.</param>
+    private async Task StartResize(MouseEventArgs e, int columnIndex)
+    {
+        isResizing = true;
+        resizingColumnIndex = columnIndex;
+        startX = e.ClientX;
+        startWidth = columnWidths[columnIndex];
+
+        // Register global mouse events via JS interop
+        await JSRuntime.InvokeVoidAsync("eval", $@"
+            window._auditLogResizeHandler = function(e) {{
+                DotNet.invokeMethodAsync('FreeSpeakWeb', 'OnResizeMove', e.clientX);
+            }};
+            window._auditLogResizeEndHandler = function(e) {{
+                DotNet.invokeMethodAsync('FreeSpeakWeb', 'OnResizeEnd');
+                document.removeEventListener('mousemove', window._auditLogResizeHandler);
+                document.removeEventListener('mouseup', window._auditLogResizeEndHandler);
+            }};
+            document.addEventListener('mousemove', window._auditLogResizeHandler);
+            document.addEventListener('mouseup', window._auditLogResizeEndHandler);
+        ");
+    }
+
+    /// <summary>
+    /// Gets the inline style for a resizable column header.
+    /// </summary>
+    /// <param name="columnIndex">The index of the column.</param>
+    /// <returns>The CSS style string with the column width.</returns>
+    private string GetColumnStyle(int columnIndex)
+    {
+        if (columnIndex >= 0 && columnIndex < columnWidths.Length)
+        {
+            return $"width: {columnWidths[columnIndex]}px; min-width: 80px;";
+        }
+        return "";
     }
 }

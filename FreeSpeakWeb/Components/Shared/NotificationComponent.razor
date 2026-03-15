@@ -59,7 +59,15 @@
     </div>
     <div class="notification-content">
         <div class="notification-message">@((MarkupString)HtmlSanitizationService.Sanitize(Notification.Message))</div>
-        <div class="notification-time">@FormatTimeAgo(Notification.CreatedAt)</div>
+        <div class="notification-time">
+            @FormatTimeAgo(Notification.CreatedAt)
+            @if (Notification.ExpiresAt.HasValue)
+            {
+                <span class="notification-expiration" title="@($"Expires: {Notification.ExpiresAt.Value:g}")">
+                    · @FormatExpirationTime(Notification.ExpiresAt.Value)
+                </span>
+            }
+        </div>
     </div>
     @if (!Notification.IsRead)
     {
@@ -191,6 +199,29 @@
             return $"{(int)(timeSpan.TotalDays / 30)}mo ago";
 
         return dateTime.ToString("MMM d, yyyy");
+    }
+
+    /// <summary>
+    /// Formats the expiration timestamp as a relative time until expiration.
+    /// </summary>
+    /// <param name="expiresAt">The expiration date and time.</param>
+    /// <returns>A human-readable string indicating when the notification will expire.</returns>
+    private string FormatExpirationTime(DateTime expiresAt)
+    {
+        var timeUntilExpiry = expiresAt - DateTime.UtcNow;
+
+        if (timeUntilExpiry.TotalMinutes <= 0)
+            return "expires soon";
+        if (timeUntilExpiry.TotalMinutes < 60)
+            return $"expires in {(int)timeUntilExpiry.TotalMinutes}m";
+        if (timeUntilExpiry.TotalHours < 24)
+            return $"expires in {(int)timeUntilExpiry.TotalHours}h";
+        if (timeUntilExpiry.TotalDays < 7)
+            return $"expires in {(int)timeUntilExpiry.TotalDays}d";
+        if (timeUntilExpiry.TotalDays < 30)
+            return $"expires in {(int)(timeUntilExpiry.TotalDays / 7)}w";
+
+        return $"expires {expiresAt:MMM d}";
     }
 
     // Helper class to deserialize notification data
