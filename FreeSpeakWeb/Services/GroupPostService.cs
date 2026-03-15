@@ -144,7 +144,7 @@ namespace FreeSpeakWeb.Services
                 {
                     GroupId = groupId,
                     PostId = result.Post.Id,
-                    ContentSummary = content?.Length > 100 ? content.Substring(0, 100) + "..." : content,
+                    OperationType = OperationTypeEnum.Create.ToString(),
                     HasMedia = imageUrls != null && imageUrls.Any()
                 });
 
@@ -442,6 +442,15 @@ namespace FreeSpeakWeb.Services
                 context.GroupPosts.Remove(post);
                 await context.SaveChangesAsync();
 
+                // Log group post deletion to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserGroupPost, new UserGroupPostDetails
+                {
+                    GroupId = post.GroupId,
+                    PostId = postId,
+                    OperationType = OperationTypeEnum.Delete.ToString(),
+                    HasMedia = post.Images.Any()
+                });
+
                 _logger.LogInformation("Group post {PostId} deleted by user {UserId}", postId, userId);
                 return (true, null);
             }
@@ -655,6 +664,16 @@ namespace FreeSpeakWeb.Services
 
                 _logger.LogInformation("Comment added to group post {PostId} by user {AuthorId}", postId, authorId);
 
+                // Log group comment creation to audit log
+                await _auditLogRepository.LogActionAsync(authorId, ActionCategory.UserComment, new UserGroupCommentDetails
+                {
+                    CommentId = comment.Id,
+                    PostId = postId,
+                    GroupId = post.GroupId,
+                    OperationType = parentCommentId.HasValue ? OperationTypeEnum.Reply.ToString() : OperationTypeEnum.Create.ToString(),
+                    ParentCommentId = parentCommentId
+                });
+
                 // Award points for commenting on another user's post
                 try
                 {
@@ -759,6 +778,16 @@ namespace FreeSpeakWeb.Services
                 post.CommentCount -= commentCount;
 
                 await context.SaveChangesAsync();
+
+                // Log group comment deletion to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserComment, new UserGroupCommentDetails
+                {
+                    CommentId = commentId,
+                    PostId = post.Id,
+                    GroupId = post.GroupId,
+                    OperationType = OperationTypeEnum.Delete.ToString(),
+                    ParentCommentId = comment.ParentCommentId
+                });
 
                 _logger.LogInformation("Group post comment {CommentId} deleted by user {UserId}", commentId, userId);
                 return (true, null);
@@ -897,6 +926,16 @@ namespace FreeSpeakWeb.Services
                     );
                 }
 
+                // Log group post reaction to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserReaction, new UserReactionDetails
+                {
+                    PostId = postId,
+                    CommentId = null,
+                    OperationType = isNewReaction ? OperationTypeEnum.Add.ToString() : OperationTypeEnum.Update.ToString(),
+                    ReactionType = type.ToString(),
+                    IsCommentReaction = false
+                });
+
                 _logger.LogInformation("User {UserId} liked group post {PostId}", userId, postId);
                 return (true, null);
             }
@@ -932,6 +971,16 @@ namespace FreeSpeakWeb.Services
 
                 // Update post like count
                 await _postRepository.DecrementLikeCountAsync(postId);
+
+                // Log group post reaction removal to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserReaction, new UserReactionDetails
+                {
+                    PostId = postId,
+                    CommentId = null,
+                    OperationType = OperationTypeEnum.Remove.ToString(),
+                    ReactionType = existingLike.Type.ToString(),
+                    IsCommentReaction = false
+                });
 
                 _logger.LogInformation("User {UserId} unliked group post {PostId}", userId, postId);
                 return (true, null);
@@ -1028,6 +1077,16 @@ namespace FreeSpeakWeb.Services
                     }
                 }
 
+                // Log group comment reaction to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserReaction, new UserReactionDetails
+                {
+                    PostId = comment.PostId,
+                    CommentId = commentId,
+                    OperationType = isNewReaction ? OperationTypeEnum.Add.ToString() : OperationTypeEnum.Update.ToString(),
+                    ReactionType = type.ToString(),
+                    IsCommentReaction = true
+                });
+
                 _logger.LogInformation("User {UserId} liked group post comment {CommentId}", userId, commentId);
                 return (true, null);
             }
@@ -1055,10 +1114,26 @@ namespace FreeSpeakWeb.Services
                     return (false, "Like not found.");
                 }
 
+                // Get comment to retrieve PostId for audit log
+                var comment = await _commentRepository.GetByIdAsync(commentId, includeAuthor: false, includeReplies: false);
+
                 var result = await _commentLikeRepository.RemoveAsync(commentId, userId);
                 if (!result.Success)
                 {
                     return (false, result.ErrorMessage);
+                }
+
+                // Log group comment reaction removal to audit log
+                if (comment != null)
+                {
+                    await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserReaction, new UserReactionDetails
+                    {
+                        PostId = comment.PostId,
+                        CommentId = commentId,
+                        OperationType = OperationTypeEnum.Remove.ToString(),
+                        ReactionType = existingLike.Type.ToString(),
+                        IsCommentReaction = true
+                    });
                 }
 
                 _logger.LogInformation("User {UserId} unliked group post comment {CommentId}", userId, commentId);

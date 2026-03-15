@@ -129,17 +129,17 @@ namespace FreeSpeakWeb.Services
 
                 _logger.LogInformation("Post created by user {AuthorId}: Post ID {PostId}", authorId, result.Post.Id);
 
-                                // Log post creation to audit log
-                                await _auditLogRepository.LogActionAsync(authorId, ActionCategory.UserPost, new UserPostDetails
-                                {
-                                    PostId = result.Post.Id,
-                                    Visibility = audienceType.ToString(),
-                                    ContentSummary = content?.Length > 100 ? content.Substring(0, 100) + "..." : content,
-                                    HasMedia = imageUrls != null && imageUrls.Any(),
-                                    MediaType = imageUrls != null && imageUrls.Any() ? "Image" : null
-                                });
+                // Log post creation to audit log
+                await _auditLogRepository.LogActionAsync(authorId, ActionCategory.UserPost, new UserPostDetails
+                {
+                    PostId = result.Post.Id,
+                    Visibility = audienceType.ToString(),
+                    OperationType = OperationTypeEnum.Create.ToString(),
+                    HasMedia = imageUrls != null && imageUrls.Any(),
+                    MediaType = imageUrls != null && imageUrls.Any() ? "Image" : null
+                });
 
-                                return (true, null, result.Post);
+                return (true, null, result.Post);
             }
             catch (Exception ex)
             {
@@ -429,7 +429,7 @@ namespace FreeSpeakWeb.Services
                 {
                     PostId = postId,
                     Visibility = post.AudienceType.ToString(),
-                    ContentSummary = "[DELETED] " + (post.Content?.Length > 80 ? post.Content.Substring(0, 80) + "..." : post.Content),
+                    OperationType = OperationTypeEnum.Delete.ToString(),
                     HasMedia = post.Images.Any()
                 });
 
@@ -753,6 +753,15 @@ namespace FreeSpeakWeb.Services
 
                 _logger.LogInformation("Comment added to post {PostId} by user {AuthorId}", postId, authorId);
 
+                // Log comment creation to audit log
+                await _auditLogRepository.LogActionAsync(authorId, ActionCategory.UserComment, new UserCommentDetails
+                {
+                    CommentId = comment.Id,
+                    PostId = postId,
+                    OperationType = parentCommentId.HasValue ? OperationTypeEnum.Reply.ToString() : OperationTypeEnum.Create.ToString(),
+                    ParentCommentId = parentCommentId
+                });
+
                 // Send notifications using helper
                 if (parentCommentId.HasValue && parentComment != null)
                 {
@@ -826,6 +835,15 @@ namespace FreeSpeakWeb.Services
                 post.CommentCount = Math.Max(0, post.CommentCount - totalCommentCount);
 
                 await context.SaveChangesAsync();
+
+                // Log comment deletion to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserComment, new UserCommentDetails
+                {
+                    CommentId = commentId,
+                    PostId = post.Id,
+                    OperationType = OperationTypeEnum.Delete.ToString(),
+                    ParentCommentId = comment.ParentCommentId
+                });
 
                 _logger.LogInformation("Comment {CommentId} and {ReplyCount} nested replies deleted by user {UserId}", 
                     commentId, totalCommentCount - 1, userId);
@@ -1205,6 +1223,16 @@ namespace FreeSpeakWeb.Services
 
                 await context.SaveChangesAsync();
 
+                // Log reaction to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserReaction, new UserReactionDetails
+                {
+                    PostId = postId,
+                    CommentId = null,
+                    OperationType = isNewReaction ? OperationTypeEnum.Add.ToString() : OperationTypeEnum.Update.ToString(),
+                    ReactionType = reactionType.ToString(),
+                    IsCommentReaction = false
+                });
+
                 // Create notification for new reactions only (not for changing reactions)
                 if (isNewReaction)
                 {
@@ -1339,6 +1367,16 @@ namespace FreeSpeakWeb.Services
                     context.Likes.Remove(existingLike);
                     post.LikeCount = Math.Max(0, post.LikeCount - 1); // Ensure count doesn't go negative
                     await context.SaveChangesAsync();
+
+                    // Log reaction removal to audit log
+                    await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserReaction, new UserReactionDetails
+                    {
+                        PostId = postId,
+                        CommentId = null,
+                        OperationType = OperationTypeEnum.Remove.ToString(),
+                        ReactionType = existingLike.Type.ToString(),
+                        IsCommentReaction = false
+                    });
 
                     _logger.LogInformation("User {UserId} removed reaction from post {PostId}", userId, postId);
                     return (true, null);
@@ -1555,6 +1593,16 @@ namespace FreeSpeakWeb.Services
 
                 await context.SaveChangesAsync();
 
+                // Log comment reaction to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserReaction, new UserReactionDetails
+                {
+                    PostId = comment.PostId,
+                    CommentId = commentId,
+                    OperationType = isNewReaction ? OperationTypeEnum.Add.ToString() : OperationTypeEnum.Update.ToString(),
+                    ReactionType = reactionType.ToString(),
+                    IsCommentReaction = true
+                });
+
                 // Create notification for new reactions only (not for changing reactions)
                 if (isNewReaction)
                 {
@@ -1602,6 +1650,16 @@ namespace FreeSpeakWeb.Services
                 {
                     context.CommentLikes.Remove(existingLike);
                     await context.SaveChangesAsync();
+
+                    // Log comment reaction removal to audit log
+                    await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserReaction, new UserReactionDetails
+                    {
+                        PostId = comment.PostId,
+                        CommentId = commentId,
+                        OperationType = OperationTypeEnum.Remove.ToString(),
+                        ReactionType = existingLike.Type.ToString(),
+                        IsCommentReaction = true
+                    });
 
                     _logger.LogInformation("User {UserId} removed reaction from comment {CommentId}", userId, commentId);
                     return (true, null);
@@ -1809,6 +1867,13 @@ namespace FreeSpeakWeb.Services
                 context.PinnedPosts.Add(pinnedPost);
                 await context.SaveChangesAsync();
 
+                // Log pin post to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserPinPost, new UserPinPostDetails
+                {
+                    PostId = postId,
+                    OperationType = OperationTypeEnum.Pin.ToString()
+                });
+
                 return (true, null);
             }
             catch (Exception ex)
@@ -1840,6 +1905,13 @@ namespace FreeSpeakWeb.Services
 
                 context.PinnedPosts.Remove(pinnedPost);
                 await context.SaveChangesAsync();
+
+                // Log unpin post to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserPinPost, new UserPinPostDetails
+                {
+                    PostId = postId,
+                    OperationType = OperationTypeEnum.Unpin.ToString()
+                });
 
                 return (true, null);
             }

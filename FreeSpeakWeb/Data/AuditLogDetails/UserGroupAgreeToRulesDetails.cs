@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for user agree to group rules audit log entries.
     /// Tracks when users agree to a group's rules to participate.
     /// </summary>
-    public class UserGroupAgreeToRulesDetails
+    public class UserGroupAgreeToRulesDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the unique identifier of the group.

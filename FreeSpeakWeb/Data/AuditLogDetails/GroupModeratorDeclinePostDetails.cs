@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for group moderator decline post audit log entries.
     /// Tracks when moderators decline posts in moderated groups.
     /// </summary>
-    public class GroupModeratorDeclinePostDetails
+    public class GroupModeratorDeclinePostDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the unique identifier of the group.

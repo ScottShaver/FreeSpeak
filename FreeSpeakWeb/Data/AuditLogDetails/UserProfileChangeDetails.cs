@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for user profile change audit log entries.
     /// Tracks modifications to user profile information such as bio, display name, and location.
     /// </summary>
-    public class UserProfileChangeDetails
+    public class UserProfileChangeDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the name of the profile field that was changed.

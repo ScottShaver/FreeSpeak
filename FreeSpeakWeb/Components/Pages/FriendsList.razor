@@ -7,6 +7,8 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
+@using FreeSpeakWeb.Repositories.Abstractions
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.Friends
 @using Microsoft.EntityFrameworkCore
@@ -20,6 +22,7 @@
 @inject NavigationStateService NavigationState
 @inject NavigationManager NavigationManager
 @inject AlertService AlertService
+@inject IAuditLogRepository AuditLogRepository
 
 <PageTitle>@SiteSettings.Value.SiteName - Friends</PageTitle>
 
@@ -621,7 +624,20 @@
             if (result.Success)
             {
                 statusMessage = $"You are now friends with {GetDisplayName(requester)}.";
-                AlertService.ShowSuccess($"You are now friends with {GetDisplayName(requester)}.");
+
+                // Log friend request acceptance to audit log
+                try
+                {
+                    await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
+                    {
+                        OperationType = OperationTypeEnum.Accept.ToString(),
+                        TargetUserId = requester.Id,
+                        TargetUserDisplayName = GetDisplayName(requester),
+                        IsInitiator = false
+                    });
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
                 await LoadPendingRequestsAsync();
                 // Update friends count and suggestions count as well
                 friendsCount = await FriendsService.GetFriendsCountAsync(currentUserId);
@@ -647,7 +663,20 @@
             if (result.Success)
             {
                 statusMessage = $"Declined friend request from {GetDisplayName(requester)}.";
-                AlertService.ShowSuccess($"Declined friend request from {GetDisplayName(requester)}.");
+
+                // Log friend request rejection to audit log
+                try
+                {
+                    await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
+                    {
+                        OperationType = OperationTypeEnum.Decline.ToString(),
+                        TargetUserId = requester.Id,
+                        TargetUserDisplayName = GetDisplayName(requester),
+                        IsInitiator = false
+                    });
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
                 await LoadPendingRequestsAsync();
                 StateHasChanged();
             }
@@ -670,7 +699,20 @@
             if (result.Success)
             {
                 statusMessage = $"Cancelled friend request to {GetDisplayName(addressee)}.";
-                AlertService.ShowSuccess($"Cancelled friend request to {GetDisplayName(addressee)}.");
+
+                // Log friend request cancellation to audit log
+                try
+                {
+                    await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
+                    {
+                        OperationType = OperationTypeEnum.Cancel.ToString(),
+                        TargetUserId = addressee.Id,
+                        TargetUserDisplayName = GetDisplayName(addressee),
+                        IsInitiator = true
+                    });
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
                 await LoadSentRequestsAsync();
                 StateHasChanged();
             }

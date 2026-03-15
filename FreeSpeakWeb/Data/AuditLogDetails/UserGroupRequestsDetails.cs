@@ -4,14 +4,8 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for user group join request audit log entries.
     /// Tracks when users join groups or submit join requests.
     /// </summary>
-    public class UserGroupRequestsDetails
+    public class UserGroupRequestsDetails : AuditLogDetailsBase
     {
-        /// <summary>
-        /// Gets or sets the type of group join action.
-        /// Examples: "DirectJoin", "RequestSubmitted", "RequestApproved", "RequestDenied", "InviteAccepted".
-        /// </summary>
-        public string ActionType { get; set; } = string.Empty;
-
         /// <summary>
         /// Gets or sets the unique identifier of the group.
         /// </summary>

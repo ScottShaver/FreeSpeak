@@ -8,7 +8,9 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
 @using FreeSpeakWeb.DTOs
+@using FreeSpeakWeb.Repositories.Abstractions
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Components.Shared
@@ -1172,7 +1174,17 @@
 
                 if (success)
                 {
-                    AlertService.ShowSuccess("Join request sent successfully!");
+                    // Log group join request to audit log
+                    try
+                    {
+                        await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserGroupRequests, new UserGroupRequestsDetails
+                        {
+                            GroupId = group.Id,
+                            GroupName = group.Name,
+                            OperationType = OperationTypeEnum.JoinRequestSent.ToString()
+                        });
+                    }
+                    catch { /* Audit logging should not fail the operation */ }
 
                     // Remove from both lists since request was sent
                     suggestedGroups.RemoveAll(g => g.Id == group.Id);
@@ -1191,7 +1203,18 @@
 
                 if (success)
                 {
-                    AlertService.ShowSuccess($"You've joined {group.Name}!");
+                    // Log direct group join to audit log
+                    try
+                    {
+                        await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserGroupRequests, new UserGroupRequestsDetails
+                        {
+                            GroupId = group.Id,
+                            GroupName = group.Name,
+                            OperationType = OperationTypeEnum.DirectJoin.ToString()
+                        });
+                    }
+                    catch { /* Audit logging should not fail the operation */ }
+
                     // Navigate to the group page with force reload to refresh nav menu
                     NavigationManager.NavigateTo($"/group/{group.Id}", forceLoad: true);
                 }
@@ -1222,10 +1245,25 @@
 
             if (success)
             {
+                // Log join request cancellation to audit log
+                try
+                {
+                    var request = groupJoinRequests.FirstOrDefault(r => r.Id == requestId);
+                    if (request != null)
+                    {
+                        await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserGroupRequests, new UserGroupRequestsDetails
+                        {
+                            GroupId = request.GroupId,
+                            GroupName = request.Group?.Name ?? "Unknown",
+                            OperationType = OperationTypeEnum.JoinRequestCanceled.ToString()
+                        });
+                    }
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
                 // Remove from the list
                 groupJoinRequests.RemoveAll(r => r.Id == requestId);
                 StateHasChanged();
-                AlertService.ShowSuccess("Join request cancelled successfully.");
             }
             else
             {
@@ -1275,7 +1313,18 @@
         if (success)
         {
             pinnedPosts[postId] = true;
-            AlertService.ShowSuccess("Post pinned successfully.");
+
+            // Log group post pin to audit log
+            try
+            {
+                await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserGroupPost, new UserPinPostDetails
+                {
+                    PostId = postId,
+                    OperationType = OperationTypeEnum.Pin.ToString()
+                });
+            }
+            catch { /* Audit logging should not fail the operation */ }
+
             StateHasChanged();
         }
         else
@@ -1299,7 +1348,18 @@
         {
             pinnedPosts[postId] = false;
             pinnedGroupPostsList.RemoveAll(p => p.Id == postId);
-            AlertService.ShowSuccess("Post unpinned successfully.");
+
+            // Log group post unpin to audit log
+            try
+            {
+                await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserGroupPost, new UserPinPostDetails
+                {
+                    PostId = postId,
+                    OperationType = OperationTypeEnum.Unpin.ToString()
+                });
+            }
+            catch { /* Audit logging should not fail the operation */ }
+
             StateHasChanged();
         }
         else

@@ -8,7 +8,9 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
 @using FreeSpeakWeb.DTOs
+@using FreeSpeakWeb.Repositories.Abstractions
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Components.Shared
@@ -558,7 +560,18 @@
         if (success)
         {
             pinnedPosts[postId] = true;
-            AlertService.ShowSuccess("Post pinned successfully.");
+
+            // Log group post pin to audit log
+            try
+            {
+                await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserGroupPost, new UserPinPostDetails
+                {
+                    PostId = postId,
+                    OperationType = OperationTypeEnum.Pin.ToString()
+                });
+            }
+            catch { /* Audit logging should not fail the operation */ }
+
             StateHasChanged();
         }
         else
@@ -576,7 +589,18 @@
         if (success)
         {
             pinnedPosts[postId] = false;
-            AlertService.ShowSuccess("Post unpinned successfully.");
+
+            // Log group post unpin to audit log
+            try
+            {
+                await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserGroupPost, new UserPinPostDetails
+                {
+                    PostId = postId,
+                    OperationType = OperationTypeEnum.Unpin.ToString()
+                });
+            }
+            catch { /* Audit logging should not fail the operation */ }
+
             StateHasChanged();
         }
         else
@@ -670,7 +694,7 @@
                 showUploadProgress = false;
                 StateHasChanged();
 
-                AlertService.ShowSuccess("Post created successfully!");
+                // Note: Audit logging for group post creation is handled by GroupPostService.CreateGroupPostAsync
 
                 // Update statistics
                 totalPosts++;

@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,13 +12,22 @@ namespace FreeSpeakWeb.Repositories
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupCommentRepository> _logger;
+        private readonly IAuditLogRepository _auditLogRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupCommentRepository"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording repository operations.</param>
+        /// <param name="auditLogRepository">Repository for audit log operations.</param>
         public GroupCommentRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<GroupCommentRepository> logger)
+            ILogger<GroupCommentRepository> logger,
+            IAuditLogRepository auditLogRepository)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _auditLogRepository = auditLogRepository;
         }
 
         public async Task<GroupPostComment?> GetByIdAsync(int commentId, bool includeAuthor = true, bool includeReplies = false)
@@ -141,6 +151,11 @@ namespace FreeSpeakWeb.Repositories
                 if (comment.AuthorId != userId && comment.Post.AuthorId != userId)
                     return (false, "You are not authorized to delete this comment.", 0);
 
+                // Store values for audit log before deletion
+                var postId = comment.PostId;
+                var groupId = comment.Post.GroupId;
+                var parentCommentId = comment.ParentCommentId;
+
                 // Collect all comment IDs to delete (parent + all nested replies)
                 var commentsToDelete = await CollectCommentAndRepliesAsync(context, commentId);
                 var totalDeletedCount = commentsToDelete.Count;
@@ -152,6 +167,23 @@ namespace FreeSpeakWeb.Repositories
                 comment.Post.CommentCount = Math.Max(0, comment.Post.CommentCount - totalDeletedCount);
 
                 await context.SaveChangesAsync();
+
+                // Log group comment deletion to audit log
+                try
+                {
+                    await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserComment, new UserGroupCommentDetails
+                    {
+                        CommentId = commentId,
+                        PostId = postId,
+                        GroupId = groupId,
+                        OperationType = OperationTypeEnum.Delete.ToString(),
+                        ParentCommentId = parentCommentId
+                    });
+                }
+                catch
+                {
+                    // Audit logging should not fail the operation
+                }
 
                 _logger.LogInformation("Group comment {CommentId} and {ReplyCount} nested replies deleted by user {UserId}", 
                     commentId, totalDeletedCount - 1, userId);

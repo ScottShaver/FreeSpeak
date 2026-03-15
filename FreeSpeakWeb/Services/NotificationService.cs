@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
@@ -16,6 +17,7 @@ namespace FreeSpeakWeb.Services
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<NotificationService> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IAuditLogRepository _auditLogRepository;
 
         /// <summary>
         /// Maximum number of recipients allowed per bulk notification operation to prevent resource exhaustion.
@@ -29,16 +31,19 @@ namespace FreeSpeakWeb.Services
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording service operations.</param>
         /// <param name="scopeFactory">Factory for creating service scopes.</param>
+        /// <param name="auditLogRepository">Repository for audit log operations.</param>
         public NotificationService(
             INotificationRepository notificationRepository,
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<NotificationService> logger,
-            IServiceScopeFactory scopeFactory)
+            IServiceScopeFactory scopeFactory,
+            IAuditLogRepository auditLogRepository)
         {
             _notificationRepository = notificationRepository;
             _contextFactory = contextFactory;
             _logger = logger;
             _scopeFactory = scopeFactory;
+            _auditLogRepository = auditLogRepository;
         }
 
         #region Create Notifications
@@ -316,6 +321,17 @@ namespace FreeSpeakWeb.Services
                 {
                     notification.IsRead = true;
                     await context.SaveChangesAsync();
+
+                    // Log notification mark as read to audit log
+                    await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserNotification, new UserNotificationDetails
+                    {
+                        OperationType = OperationTypeEnum.Read.ToString(),
+                        NotificationType = notification.Type.ToString(),
+                        NotificationId = notificationId,
+                        DeliveryChannel = "InApp",
+                        DeliverySuccess = true
+                    });
+
                     _logger.LogInformation("Notification {NotificationId} marked as read by user {UserId}", notificationId, userId);
                 }
 
@@ -351,6 +367,17 @@ namespace FreeSpeakWeb.Services
                     }
 
                     await context.SaveChangesAsync();
+
+                    // Log bulk mark as read to audit log
+                    await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserNotification, new UserNotificationDetails
+                    {
+                        OperationType = OperationTypeEnum.BulkRead.ToString(), 
+                        NotificationType = "Multiple",
+                        ContentSummary = $"Marked {unreadNotifications.Count} notifications as read",
+                        DeliveryChannel = "InApp",
+                        DeliverySuccess = true
+                    });
+
                     _logger.LogInformation("Marked {Count} notifications as read for user {UserId}", unreadNotifications.Count, userId);
                 }
 
@@ -387,8 +414,21 @@ namespace FreeSpeakWeb.Services
                     return (false, "Notification not found.");
                 }
 
+                // Capture details before deletion
+                var notificationType = notification.Type.ToString();
+
                 context.UserNotifications.Remove(notification);
                 await context.SaveChangesAsync();
+
+                // Log notification deletion to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserNotification, new UserNotificationDetails
+                {
+                    OperationType = OperationTypeEnum.Delete.ToString(),
+                    NotificationType = notificationType,
+                    NotificationId = notificationId,
+                    DeliveryChannel = "InApp",
+                    DeliverySuccess = true
+                });
 
                 _logger.LogInformation("Notification {NotificationId} deleted by user {UserId}", notificationId, userId);
                 return (true, null);
@@ -419,6 +459,17 @@ namespace FreeSpeakWeb.Services
                 {
                     context.UserNotifications.RemoveRange(readNotifications);
                     await context.SaveChangesAsync();
+
+                    // Log bulk notification deletion to audit log
+                    await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserNotification, new UserNotificationDetails
+                    {
+                        OperationType = OperationTypeEnum.BulkDeleted.ToString(),
+                        NotificationType = "Multiple",
+                        ContentSummary = $"Deleted {readNotifications.Count} read notifications",
+                        DeliveryChannel = "InApp",
+                        DeliverySuccess = true
+                    });
+
                     _logger.LogInformation("Deleted {Count} read notifications for user {UserId}", readNotifications.Count, userId);
                 }
 

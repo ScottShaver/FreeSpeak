@@ -67,7 +67,8 @@ namespace Microsoft.AspNetCore.Routing
                     await auditLogRepository.LogActionAsync(appUser.Id, ActionCategory.UserLogout, new UserLogoutDetails
                     {
                         LogoutMethod = "Manual",
-                        IpAddress = context.Connection.RemoteIpAddress?.ToString()
+                        IpAddress = context.Connection.RemoteIpAddress?.ToString(),
+                        UserAgent = context.Request.Headers.UserAgent.ToString(),
                     });
                 }
 
@@ -154,12 +155,13 @@ namespace Microsoft.AspNetCore.Routing
                 // Log the personal data download to audit log
                 await auditLogRepository.LogActionAsync(userId, ActionCategory.UserPersonalData, new UserPersonalDataDetails
                 {
-                    OperationType = "DataDownload",
+                    OperationType = OperationTypeEnum.Download.ToString(),
                     DataScope = "All",
                     Success = true,
-                    IpAddress = context.Connection.RemoteIpAddress?.ToString()
+                    IpAddress = context.Connection.RemoteIpAddress?.ToString(),
+                    UserAgent = context.Request.Headers.UserAgent.ToString(),
                 });
-
+                
                 // Only include personal data for download
                 var personalData = new Dictionary<string, string>();
                 var personalDataProps = typeof(ApplicationUser).GetProperties().Where(

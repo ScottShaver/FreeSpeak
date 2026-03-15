@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for group admin close group audit log entries.
     /// Tracks when administrators close or delete groups.
     /// </summary>
-    public class GroupAdminCloseGroupDetails
+    public class GroupAdminCloseGroupDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the unique identifier of the closed group.

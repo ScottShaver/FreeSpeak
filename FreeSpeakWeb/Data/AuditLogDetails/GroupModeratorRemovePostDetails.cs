@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for group moderator remove post audit log entries.
     /// Tracks when moderators remove existing posts from groups.
     /// </summary>
-    public class GroupModeratorRemovePostDetails
+    public class GroupModeratorRemovePostDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the unique identifier of the group.

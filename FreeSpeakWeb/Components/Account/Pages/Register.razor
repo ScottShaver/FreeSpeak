@@ -143,6 +143,7 @@
             Email = Input.Email,
             UserName = Input.UserName,
             IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString(),
+            UserAgent = HttpContext.Request.Headers.UserAgent.ToString(),
             RequiresEmailConfirmation = UserManager.Options.SignIn.RequireConfirmedAccount
         });
 

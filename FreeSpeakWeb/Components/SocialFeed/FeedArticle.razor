@@ -1,6 +1,8 @@
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Components.Shared
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
+@using FreeSpeakWeb.Repositories.Abstractions
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Helpers
 @inject IJSRuntime JS
@@ -9,6 +11,7 @@
 @inject NavigationManager NavigationManager
 @inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
 @inject AlertService AlertService
+@inject IAuditLogRepository AuditLogRepository
 @implements IAsyncDisposable
 
 <div class="feed-article @(showMenu ? "menu-open" : "")">
@@ -716,7 +719,17 @@
                 await OnAudienceTypeChanged.InvokeAsync(newAudienceType);
             }
 
-            AlertService.ShowSuccess("Post visibility updated.");
+            // Log post visibility update to audit log
+            try
+            {
+                await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserPost, new UserPostDetails
+                {
+                    PostId = PostId,
+                    Visibility = newAudienceType.ToString(),
+                    OperationType = OperationTypeEnum.Update.ToString()
+                });
+            }
+            catch { /* Audit logging should not fail the operation */ }
 
             // Force an immediate re-render to show the new state
             StateHasChanged();
@@ -761,7 +774,16 @@
 
         if (result.Success)
         {
-            AlertService.ShowSuccess("Post deleted successfully.");
+            // Log post deletion to audit log
+            try
+            {
+                await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserPost, new UserPostDetails
+                {
+                    PostId = PostId,
+                    OperationType = OperationTypeEnum.Delete.ToString()
+                });
+            }
+            catch { /* Audit logging should not fail the operation */ }
 
             // Notify parent component that the post was deleted
             if (OnPostDeleted.HasDelegate)
@@ -818,7 +840,17 @@
 
             // Copy to clipboard using JavaScript
             await JS.InvokeVoidAsync("navigator.clipboard.writeText", postUrl);
-            AlertService.ShowSuccess("Link copied to clipboard.");
+
+            // Log link copy to audit log
+            try
+            {
+                await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserPost, new UserPostDetails
+                {
+                    PostId = PostId,
+                    OperationType = OperationTypeEnum.CopyLink.ToString()
+                });
+            }
+            catch { /* Audit logging should not fail the operation */ }
         }
         catch (Exception)
         {
@@ -844,7 +876,18 @@
                 if (result.Success)
                 {
                     isNotificationMuted = false;
-                    AlertService.ShowSuccess("Notifications unmuted for this post.");
+
+                    // Log notification unmute to audit log
+                    try
+                    {
+                        await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserNotification, new UserNotificationDetails
+                        {
+                            OperationType = OperationTypeEnum.UnmutePost.ToString(),
+                            ContentSummary = $"Unmuted notifications for post {PostId}"
+                        });
+                    }
+                    catch { /* Audit logging should not fail the operation */ }
+
                     StateHasChanged();
                 }
             }
@@ -855,7 +898,18 @@
                 if (result.Success)
                 {
                     isNotificationMuted = true;
-                    AlertService.ShowSuccess("Notifications muted for this post.");
+
+                    // Log notification mute to audit log
+                    try
+                    {
+                        await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserNotification, new UserNotificationDetails
+                        {
+                            OperationType = OperationTypeEnum.MutePost.ToString(),
+                            ContentSummary = $"Muted notifications for post {PostId}"
+                        });
+                    }
+                    catch { /* Audit logging should not fail the operation */ }
+
                     StateHasChanged();
                 }
             }

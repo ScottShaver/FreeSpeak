@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for group admin approve join request audit log entries.
     /// Tracks when administrators approve user join requests.
     /// </summary>
-    public class GroupAdminApproveJoinRequestDetails
+    public class GroupAdminApproveJoinRequestDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the unique identifier of the group.

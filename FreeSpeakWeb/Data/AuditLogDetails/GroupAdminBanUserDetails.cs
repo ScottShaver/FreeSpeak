@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for group admin ban user audit log entries.
     /// Tracks when administrators ban users from groups.
     /// </summary>
-    public class GroupAdminBanUserDetails
+    public class GroupAdminBanUserDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the unique identifier of the group.

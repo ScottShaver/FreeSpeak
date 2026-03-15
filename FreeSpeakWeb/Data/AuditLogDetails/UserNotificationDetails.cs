@@ -4,14 +4,8 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for user notification audit log entries.
     /// Tracks notification creation, delivery, and user interaction with notifications.
     /// </summary>
-    public class UserNotificationDetails
+    public class UserNotificationDetails : AuditLogDetailsBase
     {
-        /// <summary>
-        /// Gets or sets the type of notification action.
-        /// Examples: "Created", "Delivered", "Read", "Dismissed", "Clicked".
-        /// </summary>
-        public string ActionType { get; set; } = string.Empty;
-
         /// <summary>
         /// Gets or sets the type of notification.
         /// Examples: "FriendRequest", "GroupInvite", "PostLike", "Comment", "System".

@@ -8,6 +8,7 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
 @using FreeSpeakWeb.Helpers
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.SocialFeed
@@ -640,7 +641,17 @@
                 // Reload pinned posts list to include the newly pinned post
                 await LoadPinnedPosts();
 
-                AlertService.ShowSuccess("Post pinned successfully.");
+                // Log post pin to audit log
+                try
+                {
+                    await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserPost, new UserPinPostDetails
+                    {
+                        PostId = postId,
+                        OperationType = OperationTypeEnum.Pin.ToString()
+                    });
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
                 StateHasChanged();
             }
             else
@@ -669,7 +680,17 @@
                 // Reload pinned posts list to remove the unpinned post
                 await LoadPinnedPosts();
 
-                AlertService.ShowSuccess("Post unpinned successfully.");
+                // Log post unpin to audit log
+                try
+                {
+                    await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserPost, new UserPinPostDetails
+                    {
+                        PostId = postId,
+                        OperationType = OperationTypeEnum.Unpin.ToString()
+                    });
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
                 StateHasChanged();
             }
             else
@@ -864,7 +885,7 @@
                 showUploadProgress = false;
                 StateHasChanged();
 
-                AlertService.ShowSuccess("Post created successfully!");
+                // Note: Audit logging for post creation is handled by PostService.CreatePostAsync
 
                 // Reload the feed to include the new post
                 await LoadInitialPosts();

@@ -2,9 +2,9 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
 {
     /// <summary>
     /// Contains details for user group post audit log entries.
-    /// Tracks when users create posts within groups.
+    /// Tracks when users create, update, or delete posts within groups.
     /// </summary>
-    public class UserGroupPostDetails
+    public class UserGroupPostDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the unique identifier of the group where the post was created.
@@ -17,14 +17,9 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
         public string? GroupName { get; set; }
 
         /// <summary>
-        /// Gets or sets the unique identifier of the created post.
+        /// Gets or sets the unique identifier of the post.
         /// </summary>
         public int PostId { get; set; }
-
-        /// <summary>
-        /// Gets or sets a brief summary or excerpt of the post content.
-        /// </summary>
-        public string? ContentSummary { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the post contains media attachments.

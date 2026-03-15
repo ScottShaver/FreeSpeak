@@ -4,6 +4,8 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
+@using FreeSpeakWeb.Repositories.Abstractions
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.Shared
 @using FreeSpeakWeb.Components.SocialFeed
@@ -22,6 +24,7 @@
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject NotificationBadgeService NotificationBadgeService
 @inject AlertService AlertService
+@inject IAuditLogRepository AuditLogRepository
 
 <PageTitle>Notifications - FreeSpeak</PageTitle>
 
@@ -341,10 +344,11 @@
                 unreadCount = Math.Max(0, unreadCount - 1);
             }
 
+            // Note: Audit logging for notification deletion is handled by NotificationService.DeleteNotificationAsync
+
             // Refresh the badge service to update navigation badges
             await NotificationBadgeService.RefreshUnreadCountAsync();
 
-            AlertService.ShowSuccess("Notification deleted.");
             StateHasChanged();
         }
         else
@@ -801,10 +805,19 @@
             }
             unreadCount = 0;
 
+            // Log mark all as read to audit log
+            try
+            {
+                await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserNotification, new UserNotificationDetails
+                {
+                    OperationType = OperationTypeEnum.MarkAllAsRead.ToString(),
+                    ContentSummary = $"Marked {updatedCount} notifications as read"
+                });
+            }
+            catch { /* Audit logging should not fail the operation */ }
+
             // Refresh the badge service to update navigation badges
             await NotificationBadgeService.RefreshUnreadCountAsync();
-
-            AlertService.ShowSuccess($"Marked {updatedCount} notifications as read.");
         }
         else
         {
@@ -827,14 +840,23 @@
             // Remove read notifications from the list
             notifications.RemoveAll(n => n.IsRead);
 
+            // Log delete all read to audit log
+            try
+            {
+                await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserNotification, new UserNotificationDetails
+                {
+                    OperationType = OperationTypeEnum.DeleteAllRead.ToString(),
+                    ContentSummary = $"Deleted {deletedCount} read notifications"
+                });
+            }
+            catch { /* Audit logging should not fail the operation */ }
+
             // Refresh both counts
             unreadCount = await NotificationService.GetUnreadCountAsync(currentUserId);
             allNotificationsCount = await NotificationService.GetTotalCountAsync(currentUserId);
 
             // Refresh the badge service to update navigation badges
             await NotificationBadgeService.RefreshUnreadCountAsync();
-
-            AlertService.ShowSuccess($"Deleted {deletedCount} read notifications.");
         }
         else
         {

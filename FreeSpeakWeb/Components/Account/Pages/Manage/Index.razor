@@ -18,7 +18,6 @@
 @inject ILogger<Index> Logger
 @inject NavigationStateService NavigationState
 @inject IAuditLogRepository AuditLogRepository
-@inject AlertService AlertService
 
 <PageTitle>@SiteSettings.Value.SiteName - Profile</PageTitle>
 
@@ -186,21 +185,18 @@
                 });
 
                 statusMessage = "Your profile picture has been updated";
-                AlertService.ShowSuccess("Your profile picture has been updated successfully.");
                 selectedFile = null;
                 profilePictureError = null;
             }
             else
             {
                 profilePictureError = result.ErrorMessage;
-                AlertService.ShowError($"Failed to upload profile picture: {result.ErrorMessage}");
             }
         }
         catch (IOException ex)
         {
             Logger.LogError(ex, "[{ExceptionType}] IOException while uploading profile picture for user {UserId}. File size may exceed limit. Exception: {ExceptionMessage}", ex.GetType().Name, user.Id, ex.Message);
             profilePictureError = "The file is too large. Maximum size is 5MB.";
-            AlertService.ShowError("The file is too large. Maximum size is 5MB.");
         }
     }
 
@@ -223,25 +219,21 @@
         if (Input.NameSuffix?.Length > 75)
         {
             statusMessage = "Error: Name Suffix cannot exceed 75 characters.";
-            AlertService.ShowError("Name Suffix cannot exceed 75 characters.");
             return;
         }
         if (Input.City?.Length > 75)
         {
             statusMessage = "Error: City cannot exceed 75 characters.";
-            AlertService.ShowError("City cannot exceed 75 characters.");
             return;
         }
         if (Input.State?.Length > 75)
         {
             statusMessage = "Error: State cannot exceed 75 characters.";
-            AlertService.ShowError("State cannot exceed 75 characters.");
             return;
         }
         if (Input.Occupation?.Length > 75)
         {
             statusMessage = "Error: Occupation cannot exceed 75 characters.";
-            AlertService.ShowError("Occupation cannot exceed 75 characters.");
             return;
         }
 
@@ -254,7 +246,6 @@
             if (!setPhoneResult.Succeeded)
             {
                 statusMessage = "Error: Failed to set phone number.";
-                AlertService.ShowError("Failed to set phone number.");
                 return;
             }
             hasChanges = true;
@@ -297,7 +288,6 @@
             if (!updateResult.Succeeded)
             {
                 statusMessage = "Error: Failed to update profile.";
-                AlertService.ShowError("Failed to update profile.");
                 return;
             }
 
@@ -309,7 +299,6 @@
             });
 
             statusMessage = "Your profile has been updated";
-            AlertService.ShowSuccess("Your profile has been updated successfully.");
         }
     }
 

@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for group admin create group audit log entries.
     /// Tracks when administrators create new groups with initial settings.
     /// </summary>
-    public class GroupAdminCreateGroupDetails
+    public class GroupAdminCreateGroupDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the unique identifier of the created group.

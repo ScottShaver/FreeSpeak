@@ -632,8 +632,22 @@ namespace FreeSpeakWeb.Services
                     return (false, "Only the group creator can delete the group.");
                 }
 
+                // Capture details before deletion for audit log
+                var groupName = group.Name;
+                var memberCount = group.MemberCount;
+
                 context.Groups.Remove(group);
                 await context.SaveChangesAsync();
+
+                // Log group deletion to audit log
+                await _auditLogRepository.LogActionAsync(userId, ActionCategory.GroupAdminCloseGroup, new GroupAdminCloseGroupDetails
+                {
+                    GroupId = groupId,
+                    GroupName = groupName,
+                    MemberCountAtClosure = memberCount,
+                    CloseType = "Deleted",
+                    Reason = "Group deleted by creator"
+                });
 
                 _logger.LogInformation("Group {GroupId} deleted by creator {UserId}", groupId, userId);
                 return (true, null);

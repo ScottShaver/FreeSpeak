@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for user registration audit log entries.
     /// Tracks new user account creation events.
     /// </summary>
-    public class UserRegisterDetails
+    public class UserRegisterDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the registration method used.
@@ -21,11 +21,6 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
         /// Gets or sets the username chosen during registration.
         /// </summary>
         public string UserName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the IP address from which the registration occurred.
-        /// </summary>
-        public string? IpAddress { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether email confirmation is required.

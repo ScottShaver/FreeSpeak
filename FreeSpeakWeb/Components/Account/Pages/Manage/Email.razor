@@ -1,4 +1,4 @@
-﻿@page "/Account/Manage/Email"
+@page "/Account/Manage/Email"
 
 @using System.ComponentModel.DataAnnotations
 @using System.Text
@@ -17,7 +17,6 @@
 @inject IdentityRedirectManager RedirectManager
 @inject IOptions<SiteSettings> SiteSettings
 @inject IAuditLogRepository AuditLogRepository
-@inject AlertService AlertService
 
 <PageTitle>@SiteSettings.Value.SiteName - Manage email</PageTitle>
 
@@ -54,7 +53,7 @@
                 <div class="form-floating mb-3 input-group">
                     <input type="text" value="@email" id="email" class="form-control" placeholder="Enter your email" disabled />
                     <div class="input-group-append">
-                        <span class="h-100 input-group-text text-success font-weight-bold">✓</span>
+                        <span class="h-100 input-group-text text-success font-weight-bold">?</span>
                     </div>
                     <label for="email" class="form-label">Email</label>
                 </div>
@@ -113,7 +112,6 @@
         if (Input.NewEmail is null || Input.NewEmail == email)
         {
             message = "Your email is unchanged.";
-            AlertService.ShowInfo("Your email is unchanged.");
             return;
         }
 
@@ -131,7 +129,10 @@
             FieldName = "Email",
             NewValue = Input.NewEmail,
             OldValue = email,
-            Notes = "Email change requested - pending confirmation"
+            Notes = "Email change requested - pending confirmation",
+            OperationType = OperationTypeEnum.Update.ToString(),
+            IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString(),
+            UserAgent = HttpContext.Request.Headers.UserAgent.ToString()
         });
 
         var code = await UserManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
@@ -145,13 +146,11 @@
             // Once you add a real email sender, you should remove this code that lets you confirm the email change
             emailChangeLink = callbackUrl;
             message = "Click the link above to confirm your email change.";
-            AlertService.ShowInfo("Click the link above to confirm your email change.");
         }
         else
         {
             await EmailSender.SendConfirmationLinkAsync(user, Input.NewEmail, HtmlEncoder.Default.Encode(callbackUrl));
             message = "Confirmation link to change email sent. Please check your email.";
-            AlertService.ShowSuccess("Confirmation link sent to your new email address.");
         }
     }
 
@@ -173,9 +172,10 @@
         // Log email verification request to audit log
         await AuditLogRepository.LogActionAsync(userId, ActionCategory.UserEmailConfirmation, new UserEmailConfirmationDetails
         {
-            OperationType = "SendVerification",
+            OperationType = OperationTypeEnum.SendVerification.ToString(),
             Email = email,
             IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString(),
+            UserAgent = HttpContext.Request.Headers.UserAgent.ToString(),
             Success = true
         });
 
@@ -190,13 +190,11 @@
             // Once you add a real email sender, you should remove this code that lets you confirm the account
             emailVerificationLink = callbackUrl;
             message = "Click the link above to verify your email.";
-            AlertService.ShowInfo("Click the link above to verify your email.");
         }
         else
         {
             await EmailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(callbackUrl));
             message = "Verification email sent. Please check your email.";
-            AlertService.ShowSuccess("Verification email sent. Please check your email.");
         }
     }
 

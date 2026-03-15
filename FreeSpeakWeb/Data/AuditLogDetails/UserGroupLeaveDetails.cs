@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for user group leave audit log entries.
     /// Tracks when users leave groups voluntarily or are removed.
     /// </summary>
-    public class UserGroupLeaveDetails
+    public class UserGroupLeaveDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the type of group leave action.

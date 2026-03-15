@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Data.AuditLogDetails;
+using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services;
 
 namespace FreeSpeakWeb.Components.Pages.Base;
@@ -18,6 +20,7 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
 {
     [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
     [Inject] protected AlertService AlertService { get; set; } = default!;
+    [Inject] protected IAuditLogRepository AuditLogRepository { get; set; } = default!;
 
     // Dictionaries for managing post state
     protected Dictionary<int, int> postRefreshTriggers = new();
@@ -237,6 +240,19 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
             {
                 IncrementPostCommentCount(args.PostId);
                 IncrementRefreshTrigger(args.PostId);
+
+                // Log comment creation to audit log
+                try
+                {
+                    await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserComment, new UserCommentDetails
+                    {
+                        CommentId = 0, // Will be set by the service
+                        PostId = args.PostId,
+                        OperationType = OperationTypeEnum.Create.ToString()
+                    });
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
                 StateHasChanged();
             }
             else
@@ -279,6 +295,20 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
 
             IncrementPostCommentCount(postId);
             IncrementRefreshTrigger(postId);
+
+            // Log reply creation to audit log
+            try
+            {
+                await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserComment, new UserCommentDetails
+                {
+                    CommentId = 0, // Will be set by the service
+                    PostId = postId,
+                    OperationType = OperationTypeEnum.Reply.ToString(),
+                    ParentCommentId = args.ParentCommentId
+                });
+            }
+            catch { /* Audit logging should not fail the operation */ }
+
             StateHasChanged();
         }
         catch (Exception)
@@ -458,7 +488,9 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
                     IncrementRefreshTrigger(postId.Value);
                 }
 
-                AlertService.ShowSuccess("Comment deleted.");
+                // Note: Audit logging for comment deletion is handled by the service/repository layer
+                // to ensure proper context (e.g., GroupId for group comments) is included.
+
                 StateHasChanged();
             }
             else
@@ -508,7 +540,18 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
                     IncrementRefreshTrigger(postId.Value);
                 }
 
-                AlertService.ShowSuccess("Comment updated.");
+                // Log comment update to audit log
+                try
+                {
+                    await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserComment, new UserCommentDetails
+                    {
+                        CommentId = args.CommentId,
+                        PostId = postId ?? 0,
+                        OperationType = OperationTypeEnum.Edit.ToString()
+                    });
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
                 StateHasChanged();
             }
             else
@@ -544,7 +587,18 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
                     IncrementRefreshTrigger(postId.Value);
                 }
 
-                AlertService.ShowSuccess("Comment updated.");
+                // Log comment update to audit log
+                try
+                {
+                    await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserComment, new UserCommentDetails
+                    {
+                        CommentId = commentId,
+                        PostId = postId ?? 0,
+                        OperationType = OperationTypeEnum.Edit.ToString()
+                    });
+                }
+                catch { /* Audit logging should not fail the operation */ }
+
                 StateHasChanged();
             }
             else
@@ -572,7 +626,7 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
 
             if (result.Success)
             {
-                AlertService.ShowSuccess("Thank you for your report. Our moderation team will review this comment.");
+                // Report submitted successfully - no alert needed
             }
             else
             {

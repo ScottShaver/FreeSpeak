@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for user group search audit log entries.
     /// Tracks when users search for groups or browse group listings.
     /// </summary>
-    public class UserGroupFindDetails
+    public class UserGroupFindDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the search query used to find groups, if applicable.

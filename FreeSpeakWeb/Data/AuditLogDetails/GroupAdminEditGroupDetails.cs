@@ -4,7 +4,7 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
     /// Contains details for group admin edit group audit log entries.
     /// Tracks modifications to group settings by administrators.
     /// </summary>
-    public class GroupAdminEditGroupDetails
+    public class GroupAdminEditGroupDetails : AuditLogDetailsBase
     {
         /// <summary>
         /// Gets or sets the unique identifier of the edited group.

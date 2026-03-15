@@ -17,7 +17,6 @@
 @inject IdentityRedirectManager RedirectManager
 @inject IOptions<SiteSettings> SiteSettings
 @inject NavigationStateService NavigationState
-@inject AlertService AlertService
 
 <PageTitle>@SiteSettings.Value.SiteName - Log in</PageTitle>
 
@@ -130,7 +129,6 @@
                     IsNewDevice = false,
                     RememberMe = Input.RememberMe
                 });
-                AlertService.ShowSuccess("Welcome back! You have successfully logged in.");
             }
             Logger.LogInformation("User {UserName} logged in successfully.", Input.UserName);
             RedirectManager.RedirectTo("/home");
