@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>好友</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>好友</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>加载中...</value>
+  </data>
+  <data name="YourFriends" xml:space="preserve">
+    <value>你的好友</value>
+  </data>
+  <data name="PeopleYouMayKnow" xml:space="preserve">
+    <value>你可能认识的人</value>
+  </data>
+  <data name="FriendRequests" xml:space="preserve">
+    <value>好友请求</value>
+  </data>
+  <data name="SentRequests" xml:space="preserve">
+    <value>已发送的请求</value>
+  </data>
+  <data name="FindPeople" xml:space="preserve">
+    <value>查找用户</value>
+  </data>
+  <data name="NoFriends" xml:space="preserve">
+    <value>你还没有好友。开始与他人建立联系吧！</value>
+  </data>
+  <data name="NoSuggestions" xml:space="preserve">
+    <value>目前没有可用的建议。</value>
+  </data>
+  <data name="NoPendingRequests" xml:space="preserve">
+    <value>你没有待处理的好友请求。</value>
+  </data>
+  <data name="NoSentRequests" xml:space="preserve">
+    <value>你没有待处理的已发送请求。</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>按用户名搜索...</value>
+  </data>
+  <data name="NoSearchResults" xml:space="preserve">
+    <value>未找到与"{0}"匹配的用户。</value>
+    <comment>{0} is the search term</comment>
+  </data>
+  <data name="SearchPrompt" xml:space="preserve">
+    <value>输入用户名以搜索用户。</value>
+  </data>
+</root>

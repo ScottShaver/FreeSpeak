@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ViewMoreComments" xml:space="preserve">
+    <value>查看更多评论</value>
+  </data>
+  <data name="Like" xml:space="preserve">
+    <value>赞</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>评论</value>
+  </data>
+  <data name="Share" xml:space="preserve">
+    <value>分享</value>
+  </data>
+  <data name="PinPost" xml:space="preserve">
+    <value>置顶帖子</value>
+  </data>
+  <data name="UnpinPost" xml:space="preserve">
+    <value>取消置顶</value>
+  </data>
+  <data name="CopyLink" xml:space="preserve">
+    <value>复制链接</value>
+  </data>
+  <data name="EditPost" xml:space="preserve">
+    <value>编辑帖子</value>
+  </data>
+  <data name="ChangePostAudience" xml:space="preserve">
+    <value>更改帖子可见范围</value>
+  </data>
+  <data name="TurnOnNotifications" xml:space="preserve">
+    <value>开启通知</value>
+  </data>
+  <data name="TurnOffNotifications" xml:space="preserve">
+    <value>关闭通知</value>
+  </data>
+  <data name="DeletePost" xml:space="preserve">
+    <value>删除帖子</value>
+  </data>
+  <data name="ReportPost" xml:space="preserve">
+    <value>举报帖子</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>公开</value>
+  </data>
+  <data name="FriendsOnly" xml:space="preserve">
+    <value>仅好友可见</value>
+  </data>
+  <data name="OnlyMe" xml:space="preserve">
+    <value>仅自己可见</value>
+  </data>
+  <data name="WriteComment" xml:space="preserve">
+    <value>写下评论...</value>
+  </data>
+  <data name="DeletePostConfirmTitle" xml:space="preserve">
+    <value>删除帖子？</value>
+  </data>
+  <data name="DeletePostConfirmMessage" xml:space="preserve">
+    <value>你确定要删除这篇帖子吗？此操作无法撤销。</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="LinkCopied" xml:space="preserve">
+    <value>链接已复制到剪贴板！</value>
+  </data>
+  <data name="ChangeToPublicTitle" xml:space="preserve">
+    <value>更改为公开？</value>
+  </data>
+  <data name="ChangeToPublicMessage" xml:space="preserve">
+    <value>将此帖子设为公开意味着互联网上的任何人都可以看到它。你确定要继续吗？</value>
+  </data>
+  <data name="MakePublic" xml:space="preserve">
+    <value>是的，设为公开</value>
+  </data>
+</root>
