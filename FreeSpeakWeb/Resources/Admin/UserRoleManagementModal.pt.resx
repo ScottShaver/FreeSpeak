@@ -58,50 +58,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="PageTitle" xml:space="preserve">
-    <value>Amigos</value>
+  <data name="TitleFormat" xml:space="preserve">
+    <value>Gerenciar Funções para {0}</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Amigos</value>
+  <data name="LoadingRoles" xml:space="preserve">
+    <value>Carregando funções...</value>
   </data>
-  <data name="Loading" xml:space="preserve">
-    <value>Cargando...</value>
+  <data name="LoadingAvailableRoles" xml:space="preserve">
+    <value>Carregando funções disponíveis...</value>
   </data>
-  <data name="YourFriends" xml:space="preserve">
-    <value>Tus Amigos</value>
+  <data name="NoRolesAvailable" xml:space="preserve">
+    <value>Nenhuma função disponível no sistema.</value>
   </data>
-  <data name="PeopleYouMayKnow" xml:space="preserve">
-    <value>Personas que Quizás Conozcas</value>
+  <data name="AvailableRoles" xml:space="preserve">
+    <value>Funções Disponíveis</value>
   </data>
-  <data name="FriendRequests" xml:space="preserve">
-    <value>Solicitudes de Amistad</value>
+  <data name="RolesDescription" xml:space="preserve">
+    <value>Selecione ou desmarque funções para atribuí-las ou removê-las deste usuário.</value>
   </data>
-  <data name="SentRequests" xml:space="preserve">
-    <value>Solicitudes Enviadas</value>
+  <data name="UnsavedChanges" xml:space="preserve">
+    <value>Você tem alterações não salvas. Clique em "Salvar Alterações" para aplicá-las.</value>
   </data>
-  <data name="FindPeople" xml:space="preserve">
-    <value>Buscar Personas</value>
+  <data name="Saving" xml:space="preserve">
+    <value>Salvando...</value>
   </data>
-  <data name="NoFriends" xml:space="preserve">
-    <value>Aún no tienes amigos. ¡Empieza a conectar con personas!</value>
+  <data name="SavingRoleChanges" xml:space="preserve">
+    <value>Salvando alterações de funções...</value>
   </data>
-  <data name="NoSuggestions" xml:space="preserve">
-    <value>No hay sugerencias disponibles en este momento.</value>
+  <data name="Close" xml:space="preserve">
+    <value>Fechar</value>
   </data>
-  <data name="NoPendingRequests" xml:space="preserve">
-    <value>No tienes solicitudes de amistad pendientes.</value>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Salvar Alterações</value>
   </data>
-  <data name="NoSentRequests" xml:space="preserve">
-    <value>No tienes solicitudes enviadas pendientes.</value>
+  <data name="RoleSystemAdministrator" xml:space="preserve">
+    <value>Acesso completo ao sistema com todos os privilégios administrativos</value>
   </data>
-  <data name="SearchPlaceholder" xml:space="preserve">
-    <value>Buscar por nombre de usuario...</value>
+  <data name="RoleSystemModerator" xml:space="preserve">
+    <value>Pode moderar conteúdo em toda a plataforma</value>
   </data>
-  <data name="NoSearchResults" xml:space="preserve">
-    <value>No se encontraron usuarios que coincidan con "{0}".</value>
-    <comment>{0} is the search term</comment>
-  </data>
-  <data name="SearchPrompt" xml:space="preserve">
-    <value>Ingresa un nombre de usuario para buscar personas.</value>
+  <data name="RoleUser" xml:space="preserve">
+    <value>Usuário padrão com acesso básico</value>
   </data>
 </root>

@@ -58,50 +58,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="PageTitle" xml:space="preserve">
-    <value>Amigos</value>
+  <data name="TitleFormat" xml:space="preserve">
+    <value>إدارة الأدوار لـ {0}</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Amigos</value>
+  <data name="LoadingRoles" xml:space="preserve">
+    <value>جارٍ تحميل الأدوار...</value>
   </data>
-  <data name="Loading" xml:space="preserve">
-    <value>Cargando...</value>
+  <data name="LoadingAvailableRoles" xml:space="preserve">
+    <value>جارٍ تحميل الأدوار المتاحة...</value>
   </data>
-  <data name="YourFriends" xml:space="preserve">
-    <value>Tus Amigos</value>
+  <data name="NoRolesAvailable" xml:space="preserve">
+    <value>لا توجد أدوار متاحة في النظام.</value>
   </data>
-  <data name="PeopleYouMayKnow" xml:space="preserve">
-    <value>Personas que Quizás Conozcas</value>
+  <data name="AvailableRoles" xml:space="preserve">
+    <value>الأدوار المتاحة</value>
   </data>
-  <data name="FriendRequests" xml:space="preserve">
-    <value>Solicitudes de Amistad</value>
+  <data name="RolesDescription" xml:space="preserve">
+    <value>حدد أو ألغِ تحديد الأدوار لتعيينها أو إزالتها من هذا المستخدم.</value>
   </data>
-  <data name="SentRequests" xml:space="preserve">
-    <value>Solicitudes Enviadas</value>
+  <data name="UnsavedChanges" xml:space="preserve">
+    <value>لديك تغييرات غير محفوظة. انقر على "حفظ التغييرات" لتطبيقها.</value>
   </data>
-  <data name="FindPeople" xml:space="preserve">
-    <value>Buscar Personas</value>
+  <data name="Saving" xml:space="preserve">
+    <value>جارٍ الحفظ...</value>
   </data>
-  <data name="NoFriends" xml:space="preserve">
-    <value>Aún no tienes amigos. ¡Empieza a conectar con personas!</value>
+  <data name="SavingRoleChanges" xml:space="preserve">
+    <value>جارٍ حفظ تغييرات الأدوار...</value>
   </data>
-  <data name="NoSuggestions" xml:space="preserve">
-    <value>No hay sugerencias disponibles en este momento.</value>
+  <data name="Close" xml:space="preserve">
+    <value>إغلاق</value>
   </data>
-  <data name="NoPendingRequests" xml:space="preserve">
-    <value>No tienes solicitudes de amistad pendientes.</value>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>حفظ التغييرات</value>
   </data>
-  <data name="NoSentRequests" xml:space="preserve">
-    <value>No tienes solicitudes enviadas pendientes.</value>
+  <data name="RoleSystemAdministrator" xml:space="preserve">
+    <value>وصول كامل للنظام مع جميع صلاحيات الإدارة</value>
   </data>
-  <data name="SearchPlaceholder" xml:space="preserve">
-    <value>Buscar por nombre de usuario...</value>
+  <data name="RoleSystemModerator" xml:space="preserve">
+    <value>يمكنه الإشراف على المحتوى عبر المنصة بأكملها</value>
   </data>
-  <data name="NoSearchResults" xml:space="preserve">
-    <value>No se encontraron usuarios que coincidan con "{0}".</value>
-    <comment>{0} is the search term</comment>
-  </data>
-  <data name="SearchPrompt" xml:space="preserve">
-    <value>Ingresa un nombre de usuario para buscar personas.</value>
+  <data name="RoleUser" xml:space="preserve">
+    <value>مستخدم عادي بوصول أساسي</value>
   </data>
 </root>

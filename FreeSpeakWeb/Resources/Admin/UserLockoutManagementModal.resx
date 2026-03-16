@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="TitleFormat" xml:space="preserve">
+    <value>Lockout Management for {0}</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="LoadingLockoutStatus" xml:space="preserve">
+    <value>Loading lockout status...</value>
+  </data>
+  <data name="LoadingLockoutInfo" xml:space="preserve">
+    <value>Loading lockout information...</value>
+  </data>
+  <data name="CurrentLockoutStatus" xml:space="preserve">
+    <value>Current Lockout Status</value>
+  </data>
+  <data name="PermanentlyLockedOut" xml:space="preserve">
+    <value>Permanently Locked Out</value>
+  </data>
+  <data name="PermanentlyLockedMessage" xml:space="preserve">
+    <value>This account has been permanently disabled and cannot log in.</value>
+  </data>
+  <data name="CurrentlyLockedOut" xml:space="preserve">
+    <value>Currently Locked Out</value>
+  </data>
+  <data name="LockedUntil" xml:space="preserve">
+    <value>Locked Until:</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Time Remaining:</value>
+  </data>
+  <data name="NotLockedOut" xml:space="preserve">
+    <value>Not Locked Out</value>
+  </data>
+  <data name="NotLockedOutMessage" xml:space="preserve">
+    <value>This user is not currently locked out and can log in normally.</value>
+  </data>
+  <data name="FailedLoginAttempts" xml:space="preserve">
+    <value>Failed Login Attempts: {0} / 5</value>
+    <comment>{0} is the count of failed attempts</comment>
+  </data>
+  <data name="LockoutActions" xml:space="preserve">
+    <value>Lockout Actions</value>
+  </data>
+  <data name="RemoveLockout" xml:space="preserve">
+    <value>Remove Lockout</value>
+  </data>
+  <data name="RemoveLockoutDescription" xml:space="preserve">
+    <value>Clear any active lockout and reset failed login attempts to zero.</value>
+  </data>
+  <data name="RemoveLockoutResetButton" xml:space="preserve">
+    <value>Remove Lockout &amp; Reset Failed Attempts</value>
+  </data>
+  <data name="PermanentLockout" xml:space="preserve">
+    <value>Permanent Lockout</value>
+  </data>
+  <data name="PermanentLockoutDescription" xml:space="preserve">
+    <value>Permanently disable this account. This action can be reversed by using the "Remove Lockout" option above.</value>
+  </data>
+  <data name="SetPermanentLockout" xml:space="preserve">
+    <value>Set Permanent Lockout</value>
+  </data>
+  <data name="AlreadyPermanentlyLocked" xml:space="preserve">
+    <value>Already Permanently Locked</value>
+  </data>
+  <data name="TemporaryLockoutDuration" xml:space="preserve">
+    <value>Temporary Lockout (Duration)</value>
+  </data>
+  <data name="TemporaryLockoutDurationDescription" xml:space="preserve">
+    <value>Lock out the user for a specific duration starting from now.</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>Hours</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="UserLockedUntil" xml:space="preserve">
+    <value>User will be locked out until: {0}</value>
+    <comment>{0} is the date/time</comment>
+  </data>
+  <data name="SetTemporaryLockout" xml:space="preserve">
+    <value>Set Temporary Lockout</value>
+  </data>
+  <data name="TemporaryLockoutSpecificDate" xml:space="preserve">
+    <value>Temporary Lockout (Specific Date)</value>
+  </data>
+  <data name="TemporaryLockoutSpecificDateDescription" xml:space="preserve">
+    <value>Lock out the user until a specific date and time.</value>
+  </data>
+  <data name="LockoutUntil" xml:space="preserve">
+    <value>Lockout Until</value>
+  </data>
+  <data name="LockoutUntilHint" xml:space="preserve">
+    <value>User will be able to log in after this date and time.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+</root>

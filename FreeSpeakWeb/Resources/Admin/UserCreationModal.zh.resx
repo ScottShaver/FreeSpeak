@@ -58,50 +58,100 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="PageTitle" xml:space="preserve">
-    <value>Amigos</value>
-  </data>
   <data name="Title" xml:space="preserve">
-    <value>Amigos</value>
+    <value>创建新用户</value>
   </data>
-  <data name="Loading" xml:space="preserve">
-    <value>Cargando...</value>
+  <data name="CreatingUser" xml:space="preserve">
+    <value>正在创建用户...</value>
   </data>
-  <data name="YourFriends" xml:space="preserve">
-    <value>Tus Amigos</value>
+  <data name="CreatingUserAccount" xml:space="preserve">
+    <value>正在创建用户账户...</value>
   </data>
-  <data name="PeopleYouMayKnow" xml:space="preserve">
-    <value>Personas que Quizás Conozcas</value>
+  <data name="AccountInformation" xml:space="preserve">
+    <value>账户信息</value>
   </data>
-  <data name="FriendRequests" xml:space="preserve">
-    <value>Solicitudes de Amistad</value>
+  <data name="Username" xml:space="preserve">
+    <value>用户名</value>
   </data>
-  <data name="SentRequests" xml:space="preserve">
-    <value>Solicitudes Enviadas</value>
+  <data name="EnterUsername" xml:space="preserve">
+    <value>输入用户名</value>
   </data>
-  <data name="FindPeople" xml:space="preserve">
-    <value>Buscar Personas</value>
+  <data name="Email" xml:space="preserve">
+    <value>电子邮件</value>
   </data>
-  <data name="NoFriends" xml:space="preserve">
-    <value>Aún no tienes amigos. ¡Empieza a conectar con personas!</value>
+  <data name="EnterEmailAddress" xml:space="preserve">
+    <value>输入电子邮件地址</value>
   </data>
-  <data name="NoSuggestions" xml:space="preserve">
-    <value>No hay sugerencias disponibles en este momento.</value>
+  <data name="Password" xml:space="preserve">
+    <value>密码</value>
   </data>
-  <data name="NoPendingRequests" xml:space="preserve">
-    <value>No tienes solicitudes de amistad pendientes.</value>
+  <data name="EnterPassword" xml:space="preserve">
+    <value>输入密码</value>
   </data>
-  <data name="NoSentRequests" xml:space="preserve">
-    <value>No tienes solicitudes enviadas pendientes.</value>
+  <data name="PasswordRequirement" xml:space="preserve">
+    <value>必须至少6个字符。</value>
   </data>
-  <data name="SearchPlaceholder" xml:space="preserve">
-    <value>Buscar por nombre de usuario...</value>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>确认密码</value>
   </data>
-  <data name="NoSearchResults" xml:space="preserve">
-    <value>No se encontraron usuarios que coincidan con "{0}".</value>
-    <comment>{0} is the search term</comment>
+  <data name="PersonalInformation" xml:space="preserve">
+    <value>个人信息</value>
   </data>
-  <data name="SearchPrompt" xml:space="preserve">
-    <value>Ingresa un nombre de usuario para buscar personas.</value>
+  <data name="FirstName" xml:space="preserve">
+    <value>名</value>
+  </data>
+  <data name="EnterFirstName" xml:space="preserve">
+    <value>输入名</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>姓</value>
+  </data>
+  <data name="EnterLastName" xml:space="preserve">
+    <value>输入姓</value>
+  </data>
+  <data name="NameSuffix" xml:space="preserve">
+    <value>名称后缀</value>
+  </data>
+  <data name="NameSuffixPlaceholder" xml:space="preserve">
+    <value>Jr., Sr., III 等</value>
+  </data>
+  <data name="DateOfBirth" xml:space="preserve">
+    <value>出生日期</value>
+  </data>
+  <data name="Occupation" xml:space="preserve">
+    <value>职业</value>
+  </data>
+  <data name="EnterOccupation" xml:space="preserve">
+    <value>输入职业</value>
+  </data>
+  <data name="LocationInformation" xml:space="preserve">
+    <value>位置信息</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>城市</value>
+  </data>
+  <data name="EnterCity" xml:space="preserve">
+    <value>输入城市</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>省/州</value>
+  </data>
+  <data name="EnterState" xml:space="preserve">
+    <value>输入省/州</value>
+  </data>
+  <data name="MarkEmailConfirmed" xml:space="preserve">
+    <value>标记电子邮件为已确认</value>
+  </data>
+  <data name="EmailConfirmedHint" xml:space="preserve">
+    <value>如果勾选，用户将不需要验证其电子邮件地址。</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="CreateUser" xml:space="preserve">
+    <value>创建用户</value>
   </data>
 </root>

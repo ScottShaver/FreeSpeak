@@ -58,50 +58,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="PageTitle" xml:space="preserve">
-    <value>Amigos</value>
+  <data name="Remove" xml:space="preserve">
+    <value>Удалить</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Amigos</value>
+  <data name="Like" xml:space="preserve">
+    <value>Нравится</value>
   </data>
-  <data name="Loading" xml:space="preserve">
-    <value>Cargando...</value>
+  <data name="Love" xml:space="preserve">
+    <value>Супер</value>
   </data>
-  <data name="YourFriends" xml:space="preserve">
-    <value>Tus Amigos</value>
+  <data name="Care" xml:space="preserve">
+    <value>Сочувствую</value>
   </data>
-  <data name="PeopleYouMayKnow" xml:space="preserve">
-    <value>Personas que Quizás Conozcas</value>
+  <data name="Haha" xml:space="preserve">
+    <value>Ха-ха</value>
   </data>
-  <data name="FriendRequests" xml:space="preserve">
-    <value>Solicitudes de Amistad</value>
+  <data name="Wow" xml:space="preserve">
+    <value>Ого</value>
   </data>
-  <data name="SentRequests" xml:space="preserve">
-    <value>Solicitudes Enviadas</value>
+  <data name="Sad" xml:space="preserve">
+    <value>Грустно</value>
   </data>
-  <data name="FindPeople" xml:space="preserve">
-    <value>Buscar Personas</value>
-  </data>
-  <data name="NoFriends" xml:space="preserve">
-    <value>Aún no tienes amigos. ¡Empieza a conectar con personas!</value>
-  </data>
-  <data name="NoSuggestions" xml:space="preserve">
-    <value>No hay sugerencias disponibles en este momento.</value>
-  </data>
-  <data name="NoPendingRequests" xml:space="preserve">
-    <value>No tienes solicitudes de amistad pendientes.</value>
-  </data>
-  <data name="NoSentRequests" xml:space="preserve">
-    <value>No tienes solicitudes enviadas pendientes.</value>
-  </data>
-  <data name="SearchPlaceholder" xml:space="preserve">
-    <value>Buscar por nombre de usuario...</value>
-  </data>
-  <data name="NoSearchResults" xml:space="preserve">
-    <value>No se encontraron usuarios que coincidan con "{0}".</value>
-    <comment>{0} is the search term</comment>
-  </data>
-  <data name="SearchPrompt" xml:space="preserve">
-    <value>Ingresa un nombre de usuario para buscar personas.</value>
+  <data name="Angry" xml:space="preserve">
+    <value>Возмутительно</value>
   </data>
 </root>

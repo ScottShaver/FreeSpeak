@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="TitleFormat" xml:space="preserve">
+    <value>{0} 的锁定管理</value>
+  </data>
+  <data name="LoadingLockoutStatus" xml:space="preserve">
+    <value>正在加载锁定状态...</value>
+  </data>
+  <data name="LoadingLockoutInfo" xml:space="preserve">
+    <value>正在加载锁定信息...</value>
+  </data>
+  <data name="CurrentLockoutStatus" xml:space="preserve">
+    <value>当前锁定状态</value>
+  </data>
+  <data name="PermanentlyLockedOut" xml:space="preserve">
+    <value>永久锁定</value>
+  </data>
+  <data name="PermanentlyLockedMessage" xml:space="preserve">
+    <value>此帐户已被永久禁用，无法登录。</value>
+  </data>
+  <data name="CurrentlyLockedOut" xml:space="preserve">
+    <value>当前已锁定</value>
+  </data>
+  <data name="LockedUntil" xml:space="preserve">
+    <value>锁定至：</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>剩余时间：</value>
+  </data>
+  <data name="NotLockedOut" xml:space="preserve">
+    <value>未锁定</value>
+  </data>
+  <data name="NotLockedOutMessage" xml:space="preserve">
+    <value>此用户当前未被锁定，可以正常登录。</value>
+  </data>
+  <data name="FailedLoginAttempts" xml:space="preserve">
+    <value>登录失败次数：{0} / 5</value>
+  </data>
+  <data name="LockoutActions" xml:space="preserve">
+    <value>锁定操作</value>
+  </data>
+  <data name="RemoveLockout" xml:space="preserve">
+    <value>解除锁定</value>
+  </data>
+  <data name="RemoveLockoutDescription" xml:space="preserve">
+    <value>清除任何活动锁定并将登录失败次数重置为零。</value>
+  </data>
+  <data name="RemoveLockoutResetButton" xml:space="preserve">
+    <value>解除锁定并重置失败次数</value>
+  </data>
+  <data name="PermanentLockout" xml:space="preserve">
+    <value>永久锁定</value>
+  </data>
+  <data name="PermanentLockoutDescription" xml:space="preserve">
+    <value>永久禁用此帐户。此操作可以通过使用上面的"解除锁定"选项来撤销。</value>
+  </data>
+  <data name="SetPermanentLockout" xml:space="preserve">
+    <value>设置永久锁定</value>
+  </data>
+  <data name="AlreadyPermanentlyLocked" xml:space="preserve">
+    <value>已永久锁定</value>
+  </data>
+  <data name="TemporaryLockoutDuration" xml:space="preserve">
+    <value>临时锁定（时长）</value>
+  </data>
+  <data name="TemporaryLockoutDurationDescription" xml:space="preserve">
+    <value>从现在开始锁定用户指定的时长。</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>分钟</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>小时</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>天</value>
+  </data>
+  <data name="UserLockedUntil" xml:space="preserve">
+    <value>用户将被锁定至：{0}</value>
+  </data>
+  <data name="SetTemporaryLockout" xml:space="preserve">
+    <value>设置临时锁定</value>
+  </data>
+  <data name="TemporaryLockoutSpecificDate" xml:space="preserve">
+    <value>临时锁定（特定日期）</value>
+  </data>
+  <data name="TemporaryLockoutSpecificDateDescription" xml:space="preserve">
+    <value>锁定用户直到特定的日期和时间。</value>
+  </data>
+  <data name="LockoutUntil" xml:space="preserve">
+    <value>锁定至</value>
+  </data>
+  <data name="LockoutUntilHint" xml:space="preserve">
+    <value>用户将在此日期和时间之后能够登录。</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+</root>

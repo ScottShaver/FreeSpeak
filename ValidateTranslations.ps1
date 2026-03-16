@@ -97,6 +97,28 @@ $ResourceGroups = @{
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
 
+    # Admin Resources
+    "UserCreationModal" = @{
+        BasePath = "FreeSpeakWeb\Resources\Admin\UserCreationModal.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "AuditLogSearchModal" = @{
+        BasePath = "FreeSpeakWeb\Resources\Admin\AuditLogSearchModal.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "UserAuditLogModal" = @{
+        BasePath = "FreeSpeakWeb\Resources\Admin\UserAuditLogModal.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "UserLockoutManagementModal" = @{
+        BasePath = "FreeSpeakWeb\Resources\Admin\UserLockoutManagementModal.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "UserRoleManagementModal" = @{
+        BasePath = "FreeSpeakWeb\Resources\Admin\UserRoleManagementModal.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+
     # Social Feed Resources
     "FeedArticle" = @{
         BasePath = "FreeSpeakWeb\Resources\SocialFeed\FeedArticle.resx"
@@ -120,6 +142,10 @@ $ResourceGroups = @{
     }
     "MultiLineCommentEditor" = @{
         BasePath = "FreeSpeakWeb\Resources\SocialFeed\MultiLineCommentEditor.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "ReactionPicker" = @{
+        BasePath = "FreeSpeakWeb\Resources\SocialFeed\ReactionPicker.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
     "PostCreator" = @{

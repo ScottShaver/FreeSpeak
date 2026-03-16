@@ -58,50 +58,67 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="PageTitle" xml:space="preserve">
-    <value>Amigos</value>
-  </data>
   <data name="Title" xml:space="preserve">
-    <value>Amigos</value>
+    <value>Rechercher les Journaux d'Audit</value>
   </data>
-  <data name="Loading" xml:space="preserve">
-    <value>Cargando...</value>
+  <data name="UserIdLabel" xml:space="preserve">
+    <value>ID Utilisateur (Correspondance Exacte)</value>
   </data>
-  <data name="YourFriends" xml:space="preserve">
-    <value>Tus Amigos</value>
+  <data name="UserIdPlaceholder" xml:space="preserve">
+    <value>Entrez le GUID utilisateur...</value>
   </data>
-  <data name="PeopleYouMayKnow" xml:space="preserve">
-    <value>Personas que Quizás Conozcas</value>
+  <data name="ActionCategory" xml:space="preserve">
+    <value>Catégorie d'Action</value>
   </data>
-  <data name="FriendRequests" xml:space="preserve">
-    <value>Solicitudes de Amistad</value>
+  <data name="AllCategories" xml:space="preserve">
+    <value>Toutes les Catégories</value>
   </data>
-  <data name="SentRequests" xml:space="preserve">
-    <value>Solicitudes Enviadas</value>
+  <data name="StartDate" xml:space="preserve">
+    <value>Date de Début</value>
   </data>
-  <data name="FindPeople" xml:space="preserve">
-    <value>Buscar Personas</value>
+  <data name="EndDate" xml:space="preserve">
+    <value>Date de Fin</value>
   </data>
-  <data name="NoFriends" xml:space="preserve">
-    <value>Aún no tienes amigos. ¡Empieza a conectar con personas!</value>
+  <data name="Search" xml:space="preserve">
+    <value>Rechercher</value>
   </data>
-  <data name="NoSuggestions" xml:space="preserve">
-    <value>No hay sugerencias disponibles en este momento.</value>
+  <data name="FoundResults" xml:space="preserve">
+    <value>{0} résultat(s) trouvé(s)</value>
   </data>
-  <data name="NoPendingRequests" xml:space="preserve">
-    <value>No tienes solicitudes de amistad pendientes.</value>
+  <data name="LimitedToMaximum" xml:space="preserve">
+    <value>(Limité à 500 maximum)</value>
   </data>
-  <data name="NoSentRequests" xml:space="preserve">
-    <value>No tienes solicitudes enviadas pendientes.</value>
+  <data name="SearchingAuditLogs" xml:space="preserve">
+    <value>Recherche dans les journaux d'audit...</value>
   </data>
-  <data name="SearchPlaceholder" xml:space="preserve">
-    <value>Buscar por nombre de usuario...</value>
+  <data name="NoEntriesFound" xml:space="preserve">
+    <value>Aucune entrée de journal d'audit ne correspond à vos critères de recherche.</value>
   </data>
-  <data name="NoSearchResults" xml:space="preserve">
-    <value>No se encontraron usuarios que coincidan con "{0}".</value>
-    <comment>{0} is the search term</comment>
+  <data name="DateTime" xml:space="preserve">
+    <value>Date/Heure</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>ID Utilisateur</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Catégorie</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Détails</value>
   </data>
   <data name="SearchPrompt" xml:space="preserve">
-    <value>Ingresa un nombre de usuario para buscar personas.</value>
+    <value>Utilisez les filtres de recherche ci-dessus pour trouver des entrées du journal d'audit.</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Précédent</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Suivant</value>
+  </data>
+  <data name="PageOfPages" xml:space="preserve">
+    <value>Page {0} sur {1}</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Fermer</value>
   </data>
 </root>

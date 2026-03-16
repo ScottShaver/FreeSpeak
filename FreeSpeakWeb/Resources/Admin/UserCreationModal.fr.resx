@@ -58,82 +58,100 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ViewMoreComments" xml:space="preserve">
-    <value>Ver más comentarios</value>
+  <data name="Title" xml:space="preserve">
+    <value>Créer un Nouvel Utilisateur</value>
   </data>
-  <data name="ClickToSeeFullPost" xml:space="preserve">
-    <value>... Haz clic para ver la publicación completa</value>
+  <data name="CreatingUser" xml:space="preserve">
+    <value>Création de l'utilisateur...</value>
   </data>
-  <data name="Like" xml:space="preserve">
-    <value>Me gusta</value>
+  <data name="CreatingUserAccount" xml:space="preserve">
+    <value>Création du compte utilisateur...</value>
   </data>
-  <data name="Comment" xml:space="preserve">
-    <value>Comentar</value>
+  <data name="AccountInformation" xml:space="preserve">
+    <value>Informations du Compte</value>
   </data>
-  <data name="Share" xml:space="preserve">
-    <value>Compartir</value>
+  <data name="Username" xml:space="preserve">
+    <value>Nom d'utilisateur</value>
   </data>
-  <data name="PinPost" xml:space="preserve">
-    <value>Fijar Publicación</value>
+  <data name="EnterUsername" xml:space="preserve">
+    <value>Entrez le nom d'utilisateur</value>
   </data>
-  <data name="UnpinPost" xml:space="preserve">
-    <value>Desfijar Publicación</value>
+  <data name="Email" xml:space="preserve">
+    <value>E-mail</value>
   </data>
-  <data name="CopyLink" xml:space="preserve">
-    <value>Copiar Enlace</value>
+  <data name="EnterEmailAddress" xml:space="preserve">
+    <value>Entrez l'adresse e-mail</value>
   </data>
-  <data name="EditPost" xml:space="preserve">
-    <value>Editar Publicación</value>
+  <data name="Password" xml:space="preserve">
+    <value>Mot de passe</value>
   </data>
-  <data name="ChangePostAudience" xml:space="preserve">
-    <value>Cambiar Audiencia de la Publicación</value>
+  <data name="EnterPassword" xml:space="preserve">
+    <value>Entrez le mot de passe</value>
   </data>
-  <data name="TurnOnNotifications" xml:space="preserve">
-    <value>Activar Notificaciones</value>
+  <data name="PasswordRequirement" xml:space="preserve">
+    <value>Doit contenir au moins 6 caractères.</value>
   </data>
-  <data name="TurnOffNotifications" xml:space="preserve">
-    <value>Desactivar Notificaciones</value>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirmer le Mot de Passe</value>
   </data>
-  <data name="DeletePost" xml:space="preserve">
-    <value>Eliminar Publicación</value>
+  <data name="PersonalInformation" xml:space="preserve">
+    <value>Informations Personnelles</value>
   </data>
-  <data name="ReportPost" xml:space="preserve">
-    <value>Reportar Publicación</value>
+  <data name="FirstName" xml:space="preserve">
+    <value>Prénom</value>
   </data>
-  <data name="Public" xml:space="preserve">
-    <value>Público</value>
+  <data name="EnterFirstName" xml:space="preserve">
+    <value>Entrez le prénom</value>
   </data>
-  <data name="FriendsOnly" xml:space="preserve">
-    <value>Solo Amigos</value>
+  <data name="LastName" xml:space="preserve">
+    <value>Nom de Famille</value>
   </data>
-  <data name="OnlyMe" xml:space="preserve">
-    <value>Solo Yo</value>
+  <data name="EnterLastName" xml:space="preserve">
+    <value>Entrez le nom de famille</value>
   </data>
-  <data name="WriteComment" xml:space="preserve">
-    <value>Escribe un comentario...</value>
+  <data name="NameSuffix" xml:space="preserve">
+    <value>Suffixe du Nom</value>
   </data>
-  <data name="DeletePostConfirmTitle" xml:space="preserve">
-    <value>¿Eliminar Publicación?</value>
+  <data name="NameSuffixPlaceholder" xml:space="preserve">
+    <value>Jr., Sr., III, etc.</value>
   </data>
-  <data name="DeletePostConfirmMessage" xml:space="preserve">
-    <value>¿Estás seguro de que quieres eliminar esta publicación? Esta acción no se puede deshacer.</value>
+  <data name="DateOfBirth" xml:space="preserve">
+    <value>Date de Naissance</value>
+  </data>
+  <data name="Occupation" xml:space="preserve">
+    <value>Profession</value>
+  </data>
+  <data name="EnterOccupation" xml:space="preserve">
+    <value>Entrez la profession</value>
+  </data>
+  <data name="LocationInformation" xml:space="preserve">
+    <value>Informations de Localisation</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Ville</value>
+  </data>
+  <data name="EnterCity" xml:space="preserve">
+    <value>Entrez la ville</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>État/Région</value>
+  </data>
+  <data name="EnterState" xml:space="preserve">
+    <value>Entrez l'état/région</value>
+  </data>
+  <data name="MarkEmailConfirmed" xml:space="preserve">
+    <value>Marquer l'e-mail comme confirmé</value>
+  </data>
+  <data name="EmailConfirmedHint" xml:space="preserve">
+    <value>Si coché, l'utilisateur n'aura pas besoin de vérifier son adresse e-mail.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Fermer</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
+    <value>Annuler</value>
   </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Eliminar</value>
-  </data>
-  <data name="LinkCopied" xml:space="preserve">
-    <value>¡Enlace copiado al portapapeles!</value>
-  </data>
-  <data name="ChangeToPublicTitle" xml:space="preserve">
-    <value>¿Cambiar a Público?</value>
-  </data>
-  <data name="ChangeToPublicMessage" xml:space="preserve">
-    <value>Hacer pública esta publicación significa que cualquiera en internet puede verla. ¿Estás seguro de que quieres continuar?</value>
-  </data>
-  <data name="MakePublic" xml:space="preserve">
-    <value>Sí, Hacer Público</value>
+  <data name="CreateUser" xml:space="preserve">
+    <value>Créer l'Utilisateur</value>
   </data>
 </root>

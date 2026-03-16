@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="TitleFormat" xml:space="preserve">
+    <value>{0}의 잠금 관리</value>
+  </data>
+  <data name="LoadingLockoutStatus" xml:space="preserve">
+    <value>잠금 상태 로드 중...</value>
+  </data>
+  <data name="LoadingLockoutInfo" xml:space="preserve">
+    <value>잠금 정보 로드 중...</value>
+  </data>
+  <data name="CurrentLockoutStatus" xml:space="preserve">
+    <value>현재 잠금 상태</value>
+  </data>
+  <data name="PermanentlyLockedOut" xml:space="preserve">
+    <value>영구 잠금됨</value>
+  </data>
+  <data name="PermanentlyLockedMessage" xml:space="preserve">
+    <value>이 계정은 영구적으로 비활성화되었으며 로그인할 수 없습니다.</value>
+  </data>
+  <data name="CurrentlyLockedOut" xml:space="preserve">
+    <value>현재 잠금됨</value>
+  </data>
+  <data name="LockedUntil" xml:space="preserve">
+    <value>잠금 기한:</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>남은 시간:</value>
+  </data>
+  <data name="NotLockedOut" xml:space="preserve">
+    <value>잠금되지 않음</value>
+  </data>
+  <data name="NotLockedOutMessage" xml:space="preserve">
+    <value>이 사용자는 현재 잠금되어 있지 않으며 정상적으로 로그인할 수 있습니다.</value>
+  </data>
+  <data name="FailedLoginAttempts" xml:space="preserve">
+    <value>로그인 실패 횟수: {0} / 5</value>
+  </data>
+  <data name="LockoutActions" xml:space="preserve">
+    <value>잠금 작업</value>
+  </data>
+  <data name="RemoveLockout" xml:space="preserve">
+    <value>잠금 해제</value>
+  </data>
+  <data name="RemoveLockoutDescription" xml:space="preserve">
+    <value>활성 잠금을 해제하고 로그인 실패 횟수를 0으로 재설정합니다.</value>
+  </data>
+  <data name="RemoveLockoutResetButton" xml:space="preserve">
+    <value>잠금 해제 및 실패 횟수 재설정</value>
+  </data>
+  <data name="PermanentLockout" xml:space="preserve">
+    <value>영구 잠금</value>
+  </data>
+  <data name="PermanentLockoutDescription" xml:space="preserve">
+    <value>이 계정을 영구적으로 비활성화합니다. 이 작업은 위의 "잠금 해제" 옵션을 사용하여 되돌릴 수 있습니다.</value>
+  </data>
+  <data name="SetPermanentLockout" xml:space="preserve">
+    <value>영구 잠금 설정</value>
+  </data>
+  <data name="AlreadyPermanentlyLocked" xml:space="preserve">
+    <value>이미 영구 잠금됨</value>
+  </data>
+  <data name="TemporaryLockoutDuration" xml:space="preserve">
+    <value>임시 잠금 (기간)</value>
+  </data>
+  <data name="TemporaryLockoutDurationDescription" xml:space="preserve">
+    <value>지금부터 특정 기간 동안 사용자를 잠급니다.</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>분</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>시간</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>일</value>
+  </data>
+  <data name="UserLockedUntil" xml:space="preserve">
+    <value>사용자는 다음까지 잠금됩니다: {0}</value>
+  </data>
+  <data name="SetTemporaryLockout" xml:space="preserve">
+    <value>임시 잠금 설정</value>
+  </data>
+  <data name="TemporaryLockoutSpecificDate" xml:space="preserve">
+    <value>임시 잠금 (특정 날짜)</value>
+  </data>
+  <data name="TemporaryLockoutSpecificDateDescription" xml:space="preserve">
+    <value>특정 날짜와 시간까지 사용자를 잠급니다.</value>
+  </data>
+  <data name="LockoutUntil" xml:space="preserve">
+    <value>잠금 기한</value>
+  </data>
+  <data name="LockoutUntilHint" xml:space="preserve">
+    <value>사용자는 이 날짜와 시간 이후에 로그인할 수 있습니다.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>닫기</value>
+  </data>
+</root>

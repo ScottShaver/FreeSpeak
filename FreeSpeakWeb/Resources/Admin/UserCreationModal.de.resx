@@ -58,50 +58,100 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="PageTitle" xml:space="preserve">
-    <value>Amigos</value>
-  </data>
   <data name="Title" xml:space="preserve">
-    <value>Amigos</value>
+    <value>Neuen Benutzer erstellen</value>
   </data>
-  <data name="Loading" xml:space="preserve">
-    <value>Cargando...</value>
+  <data name="CreatingUser" xml:space="preserve">
+    <value>Benutzer wird erstellt...</value>
   </data>
-  <data name="YourFriends" xml:space="preserve">
-    <value>Tus Amigos</value>
+  <data name="CreatingUserAccount" xml:space="preserve">
+    <value>Benutzerkonto wird erstellt...</value>
   </data>
-  <data name="PeopleYouMayKnow" xml:space="preserve">
-    <value>Personas que Quizás Conozcas</value>
+  <data name="AccountInformation" xml:space="preserve">
+    <value>Kontoinformationen</value>
   </data>
-  <data name="FriendRequests" xml:space="preserve">
-    <value>Solicitudes de Amistad</value>
+  <data name="Username" xml:space="preserve">
+    <value>Benutzername</value>
   </data>
-  <data name="SentRequests" xml:space="preserve">
-    <value>Solicitudes Enviadas</value>
+  <data name="EnterUsername" xml:space="preserve">
+    <value>Benutzername eingeben</value>
   </data>
-  <data name="FindPeople" xml:space="preserve">
-    <value>Buscar Personas</value>
+  <data name="Email" xml:space="preserve">
+    <value>E-Mail</value>
   </data>
-  <data name="NoFriends" xml:space="preserve">
-    <value>Aún no tienes amigos. ¡Empieza a conectar con personas!</value>
+  <data name="EnterEmailAddress" xml:space="preserve">
+    <value>E-Mail-Adresse eingeben</value>
   </data>
-  <data name="NoSuggestions" xml:space="preserve">
-    <value>No hay sugerencias disponibles en este momento.</value>
+  <data name="Password" xml:space="preserve">
+    <value>Passwort</value>
   </data>
-  <data name="NoPendingRequests" xml:space="preserve">
-    <value>No tienes solicitudes de amistad pendientes.</value>
+  <data name="EnterPassword" xml:space="preserve">
+    <value>Passwort eingeben</value>
   </data>
-  <data name="NoSentRequests" xml:space="preserve">
-    <value>No tienes solicitudes enviadas pendientes.</value>
+  <data name="PasswordRequirement" xml:space="preserve">
+    <value>Muss mindestens 6 Zeichen lang sein.</value>
   </data>
-  <data name="SearchPlaceholder" xml:space="preserve">
-    <value>Buscar por nombre de usuario...</value>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Passwort bestätigen</value>
   </data>
-  <data name="NoSearchResults" xml:space="preserve">
-    <value>No se encontraron usuarios que coincidan con "{0}".</value>
-    <comment>{0} is the search term</comment>
+  <data name="PersonalInformation" xml:space="preserve">
+    <value>Persönliche Informationen</value>
   </data>
-  <data name="SearchPrompt" xml:space="preserve">
-    <value>Ingresa un nombre de usuario para buscar personas.</value>
+  <data name="FirstName" xml:space="preserve">
+    <value>Vorname</value>
+  </data>
+  <data name="EnterFirstName" xml:space="preserve">
+    <value>Vorname eingeben</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Nachname</value>
+  </data>
+  <data name="EnterLastName" xml:space="preserve">
+    <value>Nachname eingeben</value>
+  </data>
+  <data name="NameSuffix" xml:space="preserve">
+    <value>Namenszusatz</value>
+  </data>
+  <data name="NameSuffixPlaceholder" xml:space="preserve">
+    <value>Jr., Sr., III, usw.</value>
+  </data>
+  <data name="DateOfBirth" xml:space="preserve">
+    <value>Geburtsdatum</value>
+  </data>
+  <data name="Occupation" xml:space="preserve">
+    <value>Beruf</value>
+  </data>
+  <data name="EnterOccupation" xml:space="preserve">
+    <value>Beruf eingeben</value>
+  </data>
+  <data name="LocationInformation" xml:space="preserve">
+    <value>Standortinformationen</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Stadt</value>
+  </data>
+  <data name="EnterCity" xml:space="preserve">
+    <value>Stadt eingeben</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>Bundesland</value>
+  </data>
+  <data name="EnterState" xml:space="preserve">
+    <value>Bundesland eingeben</value>
+  </data>
+  <data name="MarkEmailConfirmed" xml:space="preserve">
+    <value>E-Mail als bestätigt markieren</value>
+  </data>
+  <data name="EmailConfirmedHint" xml:space="preserve">
+    <value>Wenn aktiviert, muss der Benutzer seine E-Mail-Adresse nicht verifizieren.</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="CreateUser" xml:space="preserve">
+    <value>Benutzer erstellen</value>
   </data>
 </root>
