@@ -61,6 +61,9 @@
   <data name="ViewMoreComments" xml:space="preserve">
     <value>더 많은 댓글 보기</value>
   </data>
+  <data name="ClickToSeeFullPost" xml:space="preserve">
+    <value>... 클릭하여 전체 게시물 보기</value>
+  </data>
   <data name="Like" xml:space="preserve">
     <value>좋아요</value>
   </data>

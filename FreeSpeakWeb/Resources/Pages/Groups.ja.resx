@@ -67,4 +67,91 @@
   <data name="PinnedGroupPosts" xml:space="preserve">
     <value>固定されたグループ投稿</value>
   </data>
+  <data name="GroupJoinRequests" xml:space="preserve">
+    <value>グループ参加リクエスト</value>
+  </data>
+  <data name="FindGroups" xml:space="preserve">
+    <value>グループを探す</value>
+  </data>
+  <data name="GroupsYouMightLike" xml:space="preserve">
+    <value>おすすめのグループ</value>
+  </data>
+  <data name="ShowPostsFrom" xml:space="preserve">
+    <value>投稿を表示:</value>
+  </data>
+  <data name="AllGroups" xml:space="preserve">
+    <value>すべてのグループ</value>
+  </data>
+  <data name="LoadingGroupFeed" xml:space="preserve">
+    <value>グループフィードを読み込み中...</value>
+  </data>
+  <data name="NoGroupPosts" xml:space="preserve">
+    <value>表示するグループ投稿がありません。グループに参加して投稿を見ましょう！</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>さらに投稿を読み込み中...</value>
+  </data>
+  <data name="NoMorePosts" xml:space="preserve">
+    <value>これ以上の投稿はありません</value>
+  </data>
+  <data name="ShowPinnedPostsFrom" xml:space="preserve">
+    <value>固定投稿を表示:</value>
+  </data>
+  <data name="LoadingPinnedPosts" xml:space="preserve">
+    <value>固定されたグループ投稿を読み込み中...</value>
+  </data>
+  <data name="NoPinnedPosts" xml:space="preserve">
+    <value>まだグループ投稿を固定していません。グループの投稿を固定してここに表示しましょう！</value>
+  </data>
+  <data name="NoMorePinnedPosts" xml:space="preserve">
+    <value>これ以上の固定投稿はありません</value>
+  </data>
+  <data name="LoadingJoinRequests" xml:space="preserve">
+    <value>参加リクエストを読み込み中...</value>
+  </data>
+  <data name="NoPendingJoinRequests" xml:space="preserve">
+    <value>保留中のグループ参加リクエストはありません。</value>
+  </data>
+  <data name="UnknownGroup" xml:space="preserve">
+    <value>不明なグループ</value>
+  </data>
+  <data name="Requested" xml:space="preserve">
+    <value>リクエスト済み</value>
+  </data>
+  <data name="CancelRequest" xml:space="preserve">
+    <value>リクエストをキャンセル</value>
+  </data>
+  <data name="SearchForGroups" xml:space="preserve">
+    <value>グループを検索...</value>
+  </data>
+  <data name="SearchingGroups" xml:space="preserve">
+    <value>グループを検索中...</value>
+  </data>
+  <data name="NoGroupsFound" xml:space="preserve">
+    <value>「{0}」に一致するグループが見つかりません</value>
+  </data>
+  <data name="Members" xml:space="preserve">
+    <value>メンバー</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>公開</value>
+  </data>
+  <data name="Private" xml:space="preserve">
+    <value>非公開</value>
+  </data>
+  <data name="RequestToJoin" xml:space="preserve">
+    <value>参加をリクエスト</value>
+  </data>
+  <data name="JoinNow" xml:space="preserve">
+    <value>今すぐ参加</value>
+  </data>
+  <data name="SearchToJoin" xml:space="preserve">
+    <value>グループを検索して参加しましょう！</value>
+  </data>
+  <data name="LoadingSuggestions" xml:space="preserve">
+    <value>おすすめのグループを読み込み中...</value>
+  </data>
+  <data name="NoSuggestions" xml:space="preserve">
+    <value>現在おすすめのグループはありません。</value>
+  </data>
 </root>

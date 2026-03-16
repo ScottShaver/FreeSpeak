@@ -148,4 +148,125 @@
   <data name="YouDoNotHaveLocalPassword" xml:space="preserve">
     <value>이 사이트에 대한 로컬 사용자 이름/비밀번호가 없습니다. 외부 로그인 없이 로그인할 수 있도록 로컬 계정을 추가하세요.</value>
   </data>
+  <!-- Two-Factor Authentication -->
+  <data name="TwoFactorAuthentication" xml:space="preserve">
+    <value>이중 인증</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>활성화됨</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>비활성화됨</value>
+  </data>
+  <data name="Disable2FA" xml:space="preserve">
+    <value>이중 인증 비활성화</value>
+  </data>
+  <data name="ResetRecoveryCodes" xml:space="preserve">
+    <value>복구 코드 재설정</value>
+  </data>
+  <data name="SetupAuthenticatorApp" xml:space="preserve">
+    <value>인증 앱 설정</value>
+  </data>
+  <data name="ResetAuthenticatorKey" xml:space="preserve">
+    <value>인증 키 재설정</value>
+  </data>
+  <data name="RecoveryCodes" xml:space="preserve">
+    <value>복구 코드</value>
+  </data>
+  <data name="RecoveryCodesLeft" xml:space="preserve">
+    <value>{0}개의 복구 코드가 남았습니다</value>
+  </data>
+  <data name="GenerateNewRecoveryCodes" xml:space="preserve">
+    <value>새 복구 코드 생성</value>
+  </data>
+  <!-- Personal Data -->
+  <data name="PersonalData" xml:space="preserve">
+    <value>개인 데이터</value>
+  </data>
+  <data name="DownloadYourData" xml:space="preserve">
+    <value>데이터 다운로드</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>다운로드</value>
+  </data>
+  <data name="DeleteYourData" xml:space="preserve">
+    <value>데이터 삭제</value>
+  </data>
+  <data name="DeleteAccount" xml:space="preserve">
+    <value>계정 삭제</value>
+  </data>
+  <data name="DeleteAccountWarning" xml:space="preserve">
+    <value>이 데이터를 삭제하면 계정이 영구적으로 제거되며 복구할 수 없습니다.</value>
+  </data>
+  <data name="DisableAccount" xml:space="preserve">
+    <value>계정 비활성화</value>
+  </data>
+  <data name="DisableAccountWarning" xml:space="preserve">
+    <value>계정을 비활성화하면 영구적으로 잠기며 복구할 수 없습니다.</value>
+  </data>
+  <data name="DisableMyAccount" xml:space="preserve">
+    <value>내 계정 비활성화</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>비밀번호</value>
+  </data>
+  <data name="IncorrectPassword" xml:space="preserve">
+    <value>오류: 비밀번호가 올바르지 않습니다.</value>
+  </data>
+  <!-- Navigation Menu -->
+  <data name="Account" xml:space="preserve">
+    <value>계정</value>
+  </data>
+  <data name="SecuritySettings" xml:space="preserve">
+    <value>보안 설정</value>
+  </data>
+  <data name="ExternalLogins" xml:space="preserve">
+    <value>외부 로그인</value>
+  </data>
+  <!-- LikesModal -->
+  <data name="PeopleWhoReacted" xml:space="preserve">
+    <value>반응한 사람들</value>
+  </data>
+  <data name="AllReactions" xml:space="preserve">
+    <value>모든 반응</value>
+  </data>
+  <data name="NoReactionsYet" xml:space="preserve">
+    <value>아직 반응이 없습니다</value>
+  </data>
+  <!-- Comment Editor -->
+  <data name="WriteAComment" xml:space="preserve">
+    <value>댓글을 작성하세요...</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>게시</value>
+  </data>
+  <!-- Preferences -->
+  <data name="Preferences" xml:space="preserve">
+    <value>환경설정</value>
+  </data>
+  <!-- Common -->
+  <data name="Cancel" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>확인</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>제출</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>닫기</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>예</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>아니오</value>
+  </data>
+  <data name="ManageYourAccount" xml:space="preserve">
+    <value>계정 관리</value>
+  </data>
+  <data name="ChangeYourAccountSettings" xml:space="preserve">
+    <value>계정 설정 변경</value>
+  </data>
 </root>

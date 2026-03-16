@@ -148,4 +148,125 @@
   <data name="YouDoNotHaveLocalPassword" xml:space="preserve">
     <value>Você não possui um nome de usuário/senha local para este site. Adicione uma conta local para poder fazer login sem um login externo.</value>
   </data>
+  <!-- Two-Factor Authentication -->
+  <data name="TwoFactorAuthentication" xml:space="preserve">
+    <value>Autenticação de dois fatores</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Habilitada</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Desabilitada</value>
+  </data>
+  <data name="Disable2FA" xml:space="preserve">
+    <value>Desabilitar 2FA</value>
+  </data>
+  <data name="ResetRecoveryCodes" xml:space="preserve">
+    <value>Redefinir códigos de recuperação</value>
+  </data>
+  <data name="SetupAuthenticatorApp" xml:space="preserve">
+    <value>Configurar app autenticador</value>
+  </data>
+  <data name="ResetAuthenticatorKey" xml:space="preserve">
+    <value>Redefinir chave do autenticador</value>
+  </data>
+  <data name="RecoveryCodes" xml:space="preserve">
+    <value>Códigos de recuperação</value>
+  </data>
+  <data name="RecoveryCodesLeft" xml:space="preserve">
+    <value>{0} códigos de recuperação restantes</value>
+  </data>
+  <data name="GenerateNewRecoveryCodes" xml:space="preserve">
+    <value>Gerar novos códigos de recuperação</value>
+  </data>
+  <!-- Personal Data -->
+  <data name="PersonalData" xml:space="preserve">
+    <value>Dados pessoais</value>
+  </data>
+  <data name="DownloadYourData" xml:space="preserve">
+    <value>Baixar seus dados</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Baixar</value>
+  </data>
+  <data name="DeleteYourData" xml:space="preserve">
+    <value>Excluir seus dados</value>
+  </data>
+  <data name="DeleteAccount" xml:space="preserve">
+    <value>Excluir conta</value>
+  </data>
+  <data name="DeleteAccountWarning" xml:space="preserve">
+    <value>A exclusão destes dados removerá permanentemente sua conta e não poderá ser recuperada.</value>
+  </data>
+  <data name="DisableAccount" xml:space="preserve">
+    <value>Desabilitar conta</value>
+  </data>
+  <data name="DisableAccountWarning" xml:space="preserve">
+    <value>Desabilitar sua conta irá bloqueá-lo permanentemente e não poderá ser recuperado.</value>
+  </data>
+  <data name="DisableMyAccount" xml:space="preserve">
+    <value>Desabilitar minha conta</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Senha</value>
+  </data>
+  <data name="IncorrectPassword" xml:space="preserve">
+    <value>Erro: Senha incorreta.</value>
+  </data>
+  <!-- Navigation Menu -->
+  <data name="Account" xml:space="preserve">
+    <value>Conta</value>
+  </data>
+  <data name="SecuritySettings" xml:space="preserve">
+    <value>Configurações de segurança</value>
+  </data>
+  <data name="ExternalLogins" xml:space="preserve">
+    <value>Logins externos</value>
+  </data>
+  <!-- LikesModal -->
+  <data name="PeopleWhoReacted" xml:space="preserve">
+    <value>Pessoas que reagiram</value>
+  </data>
+  <data name="AllReactions" xml:space="preserve">
+    <value>Todas as reações</value>
+  </data>
+  <data name="NoReactionsYet" xml:space="preserve">
+    <value>Ainda não há reações</value>
+  </data>
+  <!-- Comment Editor -->
+  <data name="WriteAComment" xml:space="preserve">
+    <value>Escreva um comentário...</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Publicar</value>
+  </data>
+  <!-- Preferences -->
+  <data name="Preferences" xml:space="preserve">
+    <value>Preferências</value>
+  </data>
+  <!-- Common -->
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Fechar</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Sim</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Não</value>
+  </data>
+  <data name="ManageYourAccount" xml:space="preserve">
+    <value>Gerencie sua conta</value>
+  </data>
+  <data name="ChangeYourAccountSettings" xml:space="preserve">
+    <value>Altere as configurações da sua conta</value>
+  </data>
 </root>

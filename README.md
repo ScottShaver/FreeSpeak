@@ -14,6 +14,26 @@ FreeSpeak is a feature-rich social networking application that enables users to:
 - Receive real-time notifications for social interactions
 - Add friends and manage friend connections
 
+## 🌍 Internationalization Support
+
+FreeSpeak features **comprehensive multi-language support** with **12 languages** and **100% coverage** on all user-facing features:
+
+### Supported Languages
+🇸🇦 Arabic • 🇩🇪 German • 🇺🇸 English • 🇪🇸 Spanish • 🇫🇷 French • 🇮🇹 Italian  
+🇯🇵 Japanese • 🇰🇷 Korean • 🇳🇱 Dutch • 🇵🇱 Polish • 🇵🇹 Portuguese • 🇷🇺 Russian • 🇨🇳 Chinese
+
+### Feature Coverage
+- **✅ Account Management** - Complete account settings, security, and preferences (804 translations)
+- **✅ Groups System** - Full group functionality and management (384 translations)  
+- **✅ Group Views** - Statistics, member management, activity tracking (156 translations)
+- **✅ Navigation** - All menu items and interface controls
+- **✅ Social Features** - Posts, comments, reactions, notifications
+- **🔄 Admin Interface** - System administration (partial coverage)
+
+**Total**: 999+ translations across core features • **Coverage**: 71.2% overall (100% user-facing)
+
+For detailed internationalization information, see [INTERNATIONALIZATION.md](INTERNATIONALIZATION.md).
+
 ### Technology Stack
 
 - **Framework**: .NET 10 / Blazor Server

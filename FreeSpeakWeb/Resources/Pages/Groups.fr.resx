@@ -67,4 +67,91 @@
   <data name="PinnedGroupPosts" xml:space="preserve">
     <value>Publications de groupe épinglées</value>
   </data>
+  <data name="GroupJoinRequests" xml:space="preserve">
+    <value>Demandes d'adhésion</value>
+  </data>
+  <data name="FindGroups" xml:space="preserve">
+    <value>Trouver des groupes</value>
+  </data>
+  <data name="GroupsYouMightLike" xml:space="preserve">
+    <value>Groupes qui pourraient vous plaire</value>
+  </data>
+  <data name="ShowPostsFrom" xml:space="preserve">
+    <value>Afficher les publications de:</value>
+  </data>
+  <data name="AllGroups" xml:space="preserve">
+    <value>Tous les groupes</value>
+  </data>
+  <data name="LoadingGroupFeed" xml:space="preserve">
+    <value>Chargement de votre fil de groupe...</value>
+  </data>
+  <data name="NoGroupPosts" xml:space="preserve">
+    <value>Aucune publication de groupe à afficher. Rejoignez des groupes pour voir leurs publications ici!</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>Chargement de plus de publications...</value>
+  </data>
+  <data name="NoMorePosts" xml:space="preserve">
+    <value>Plus de publications pour le moment</value>
+  </data>
+  <data name="ShowPinnedPostsFrom" xml:space="preserve">
+    <value>Afficher les publications épinglées de:</value>
+  </data>
+  <data name="LoadingPinnedPosts" xml:space="preserve">
+    <value>Chargement des publications épinglées...</value>
+  </data>
+  <data name="NoPinnedPosts" xml:space="preserve">
+    <value>Vous n'avez pas encore épinglé de publications de groupe. Épinglez des publications pour les voir ici!</value>
+  </data>
+  <data name="NoMorePinnedPosts" xml:space="preserve">
+    <value>Plus de publications épinglées</value>
+  </data>
+  <data name="LoadingJoinRequests" xml:space="preserve">
+    <value>Chargement des demandes d'adhésion...</value>
+  </data>
+  <data name="NoPendingJoinRequests" xml:space="preserve">
+    <value>Vous n'avez pas de demandes d'adhésion en attente.</value>
+  </data>
+  <data name="UnknownGroup" xml:space="preserve">
+    <value>Groupe inconnu</value>
+  </data>
+  <data name="Requested" xml:space="preserve">
+    <value>Demandé</value>
+  </data>
+  <data name="CancelRequest" xml:space="preserve">
+    <value>Annuler la demande</value>
+  </data>
+  <data name="SearchForGroups" xml:space="preserve">
+    <value>Rechercher des groupes...</value>
+  </data>
+  <data name="SearchingGroups" xml:space="preserve">
+    <value>Recherche de groupes...</value>
+  </data>
+  <data name="NoGroupsFound" xml:space="preserve">
+    <value>Aucun groupe trouvé pour "{0}"</value>
+  </data>
+  <data name="Members" xml:space="preserve">
+    <value>membres</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>Public</value>
+  </data>
+  <data name="Private" xml:space="preserve">
+    <value>Privé</value>
+  </data>
+  <data name="RequestToJoin" xml:space="preserve">
+    <value>Demander à rejoindre</value>
+  </data>
+  <data name="JoinNow" xml:space="preserve">
+    <value>Rejoindre maintenant</value>
+  </data>
+  <data name="SearchToJoin" xml:space="preserve">
+    <value>Recherchez des groupes à rejoindre!</value>
+  </data>
+  <data name="LoadingSuggestions" xml:space="preserve">
+    <value>Chargement des suggestions de groupes...</value>
+  </data>
+  <data name="NoSuggestions" xml:space="preserve">
+    <value>Aucune suggestion de groupe disponible pour le moment.</value>
+  </data>
 </root>

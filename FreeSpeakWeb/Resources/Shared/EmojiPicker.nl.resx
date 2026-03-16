@@ -58,40 +58,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SearchEmojis" xml:space="preserve">
-    <value>Emoji's zoeken...</value>
+  <data name="Smileys" xml:space="preserve">
+    <value>Smileys</value>
   </data>
-  <data name="FrequentlyUsed" xml:space="preserve">
-    <value>Vaak gebruikt</value>
+  <data name="Gestures" xml:space="preserve">
+    <value>Gebaren</value>
   </data>
-  <data name="SmileysEmotion" xml:space="preserve">
-    <value>Smileys en emotie</value>
-  </data>
-  <data name="PeopleBody" xml:space="preserve">
-    <value>Mensen en lichaam</value>
-  </data>
-  <data name="AnimalsNature" xml:space="preserve">
-    <value>Dieren en natuur</value>
-  </data>
-  <data name="FoodDrink" xml:space="preserve">
-    <value>Eten en drinken</value>
-  </data>
-  <data name="TravelPlaces" xml:space="preserve">
-    <value>Reizen en plaatsen</value>
-  </data>
-  <data name="Activities" xml:space="preserve">
-    <value>Activiteiten</value>
+  <data name="Hearts" xml:space="preserve">
+    <value>Harten</value>
   </data>
   <data name="Objects" xml:space="preserve">
     <value>Objecten</value>
   </data>
-  <data name="Symbols" xml:space="preserve">
-    <value>Symbolen</value>
-  </data>
-  <data name="Flags" xml:space="preserve">
-    <value>Vlaggen</value>
-  </data>
-  <data name="NoEmojisFound" xml:space="preserve">
-    <value>Geen emoji's gevonden</value>
+  <data name="Food" xml:space="preserve">
+    <value>Eten</value>
   </data>
 </root>

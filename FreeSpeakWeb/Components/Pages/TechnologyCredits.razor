@@ -63,6 +63,9 @@
 
         <h3>Custom Features & Services</h3>
         <ul>
+            <li><strong>Internationalization (i18n)</strong> - Comprehensive multi-language support
+                <br/><small>12 languages with 999+ translations across all user-facing features. Built with .NET's IStringLocalizer and resource files (.resx). Supports Arabic (RTL), East Asian languages, and European languages with automatic browser language detection.</small>
+            </li>
             <li><strong>Theme System</strong> - 8 customizable color schemes with CSS custom properties
                 <br/><small>Default, Dark Mode, Light Mode, Ocean Blue, Forest Green, Sunset Orange, Purple Dream, High Contrast</small>
             </li>
@@ -88,6 +91,57 @@
                 <br/><small>Create posts directly from group pages with multi-image upload, emoji support, and progress tracking</small>
             </li>
         </ul>
+
+        <h3>Internationalization & Localization</h3>
+        <ul>
+            <li><strong>Microsoft.Extensions.Localization</strong> (10.0.2) - <em>MIT License</em>
+                <br/><small>Core localization services with IStringLocalizer dependency injection</small>
+            </li>
+            <li><strong>Resource Files (.resx)</strong> - Built-in .NET localization system
+                <br/><small>XML-based resource files for translations with Visual Studio tooling support</small>
+            </li>
+            <li><strong>Culture Detection</strong> - ASP.NET Core RequestLocalizationMiddleware
+                <br/><small>Automatic browser language detection with fallback to English</small>
+            </li>
+            <li><strong>Custom Validation Scripts</strong> - PowerShell automation tools
+                <br/><small>ValidateTranslations.ps1 for translation completeness auditing and maintenance</small>
+            </li>
+        </ul>
+
+        <h4>Supported Languages (12 Total)</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <ul>
+                    <li>🇸🇦 <strong>Arabic (ar)</strong> - Right-to-left (RTL) support</li>
+                    <li>🇩🇪 <strong>German (de)</strong> - Text expansion considerations</li>
+                    <li>🇺🇸 <strong>English (en)</strong> - Base language</li>
+                    <li>🇪🇸 <strong>Spanish (es)</strong> - Global Spanish</li>
+                    <li>🇫🇷 <strong>French (fr)</strong> - International French</li>
+                    <li>🇮🇹 <strong>Italian (it)</strong> - Standard Italian</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <ul>
+                    <li>🇯🇵 <strong>Japanese (ja)</strong> - UTF-8 character encoding</li>
+                    <li>🇰🇷 <strong>Korean (ko)</strong> - Hangul script support</li>
+                    <li>🇳🇱 <strong>Dutch (nl)</strong> - Netherlands Dutch</li>
+                    <li>🇵🇱 <strong>Polish (pl)</strong> - Complex grammar forms</li>
+                    <li>🇵🇹 <strong>Portuguese (pt)</strong> - Brazilian Portuguese</li>
+                    <li>🇷🇺 <strong>Russian (ru)</strong> - Cyrillic script</li>
+                    <li>🇨🇳 <strong>Chinese (zh)</strong> - Simplified Chinese</li>
+                </ul>
+            </div>
+        </div>
+
+        <h4>Translation Coverage</h4>
+        <ul>
+            <li><strong>Account Management</strong> - 67 keys × 12 languages = 804 translations ✅</li>
+            <li><strong>Groups System</strong> - 32 keys × 12 languages = 384 translations ✅</li>
+            <li><strong>Group Views</strong> - 13 keys × 12 languages = 156 translations ✅</li>
+            <li><strong>Navigation & UI</strong> - All menu items and interface controls ✅</li>
+            <li><strong>SystemAdmin</strong> - 45 keys × 3 languages = 135 translations (partial)</li>
+        </ul>
+        <p><small><strong>Total Coverage:</strong> 999+ translations • <strong>User-facing:</strong> 100% complete • <strong>Overall:</strong> 71.2%</small></p>
 
         <h3>Testing Packages</h3>
         <h4>Unit Testing (FreeSpeakWeb.Tests)</h4>

@@ -88,4 +88,10 @@
   <data name="TechnologyCredits" xml:space="preserve">
     <value>الاعتمادات التقنية</value>
   </data>
+  <data name="SystemAdministration" xml:space="preserve">
+    <value>إدارة النظام</value>
+  </data>
+  <data name="SystemModerator" xml:space="preserve">
+    <value>مشرف النظام</value>
+  </data>
 </root>

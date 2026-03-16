@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>시스템 관리 기능</value>
+  </data>
+  <data name="WelcomeMessage" xml:space="preserve">
+    <value>환영합니다, 시스템 관리자!</value>
+  </data>
+  <data name="WelcomeDescription" xml:space="preserve">
+    <value>이 페이지는 SystemAdministrator 역할을 가진 사용자만 액세스할 수 있습니다.</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>역할</value>
+  </data>
+  <data name="UserManagement" xml:space="preserve">
+    <value>사용자 관리</value>
+  </data>
+  <data name="SystemConfiguration" xml:space="preserve">
+    <value>시스템 설정</value>
+  </data>
+  <data name="SiteWideContentModeration" xml:space="preserve">
+    <value>사이트 전체 콘텐츠 관리</value>
+  </data>
+  <data name="AnalyticsAndReporting" xml:space="preserve">
+    <value>분석 및 보고서</value>
+  </data>
+  <data name="DatabaseMaintenanceTools" xml:space="preserve">
+    <value>데이터베이스 유지 관리 도구</value>
+  </data>
+  <data name="UserManagementDescription" xml:space="preserve">
+    <value>시스템 전체의 사용자 계정, 역할, 권한을 관리합니다.</value>
+  </data>
+  <data name="SearchUsers" xml:space="preserve">
+    <value>사용자 검색</value>
+  </data>
+  <data name="SearchUsersDescription" xml:space="preserve">
+    <value>사용자명, 이메일, 이름, 도시, 주, 직업으로 검색할 수 있습니다.</value>
+  </data>
+  <data name="SearchUsersPlaceholder" xml:space="preserve">
+    <value>입력하여 사용자 검색...</value>
+  </data>
+  <data name="Searching" xml:space="preserve">
+    <value>검색 중...</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>사용자명</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>이름</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>이메일</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>위치</value>
+  </data>
+  <data name="Occupation" xml:space="preserve">
+    <value>직업</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>작업</value>
+  </data>
+  <data name="CopyUserId" xml:space="preserve">
+    <value>사용자 ID 복사</value>
+  </data>
+  <data name="EditRoles" xml:space="preserve">
+    <value>역할 편집</value>
+  </data>
+  <data name="LockoutInfo" xml:space="preserve">
+    <value>잠금 정보</value>
+  </data>
+  <data name="AuditLog" xml:space="preserve">
+    <value>감사 로그</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>프로필 보기</value>
+  </data>
+  <data name="SuspendUser" xml:space="preserve">
+    <value>사용자 정지</value>
+  </data>
+  <data name="SendMessage" xml:space="preserve">
+    <value>메시지 보내기</value>
+  </data>
+  <data name="SearchAuditLogs" xml:space="preserve">
+    <value>감사 로그 검색</value>
+  </data>
+  <data name="UserIdExactMatch" xml:space="preserve">
+    <value>사용자 ID (정확 일치)</value>
+  </data>
+  <data name="EnterUserGuid" xml:space="preserve">
+    <value>사용자 GUID 입력...</value>
+  </data>
+  <data name="ActionCategory" xml:space="preserve">
+    <value>작업 카테고리</value>
+  </data>
+  <data name="AllCategories" xml:space="preserve">
+    <value>모든 카테고리</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>시작 날짜</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>종료 날짜</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>검색</value>
+  </data>
+  <data name="FoundResults" xml:space="preserve">
+    <value>{0}개의 결과를 찾았습니다</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>날짜/시간</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>사용자 ID</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>카테고리</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>세부 사항</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>이전</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>다음</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>닫기</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>페이지</value>
+  </data>
+  <data name="Of" xml:space="preserve">
+    <value>의</value>
+  </data>
+</root>

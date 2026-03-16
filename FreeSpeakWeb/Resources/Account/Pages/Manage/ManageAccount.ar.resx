@@ -148,4 +148,125 @@
   <data name="YouDoNotHaveLocalPassword" xml:space="preserve">
     <value>ليس لديك اسم مستخدم/كلمة مرور محلية لهذا الموقع. أضف حسابًا محليًا حتى تتمكن من تسجيل الدخول بدون تسجيل دخول خارجي.</value>
   </data>
+  <!-- Two-Factor Authentication -->
+  <data name="TwoFactorAuthentication" xml:space="preserve">
+    <value>المصادقة الثنائية</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>مُفعل</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>معطل</value>
+  </data>
+  <data name="Disable2FA" xml:space="preserve">
+    <value>تعطيل المصادقة الثنائية</value>
+  </data>
+  <data name="ResetRecoveryCodes" xml:space="preserve">
+    <value>إعادة تعيين رموز الاسترداد</value>
+  </data>
+  <data name="SetupAuthenticatorApp" xml:space="preserve">
+    <value>إعداد تطبيق المصادقة</value>
+  </data>
+  <data name="ResetAuthenticatorKey" xml:space="preserve">
+    <value>إعادة تعيين مفتاح المصادقة</value>
+  </data>
+  <data name="RecoveryCodes" xml:space="preserve">
+    <value>رموز الاسترداد</value>
+  </data>
+  <data name="RecoveryCodesLeft" xml:space="preserve">
+    <value>متبقي {0} رمز استرداد</value>
+  </data>
+  <data name="GenerateNewRecoveryCodes" xml:space="preserve">
+    <value>إنشاء رموز استرداد جديدة</value>
+  </data>
+  <!-- Personal Data -->
+  <data name="PersonalData" xml:space="preserve">
+    <value>البيانات الشخصية</value>
+  </data>
+  <data name="DownloadYourData" xml:space="preserve">
+    <value>تحميل بياناتك</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>تحميل</value>
+  </data>
+  <data name="DeleteYourData" xml:space="preserve">
+    <value>حذف بياناتك</value>
+  </data>
+  <data name="DeleteAccount" xml:space="preserve">
+    <value>حذف الحساب</value>
+  </data>
+  <data name="DeleteAccountWarning" xml:space="preserve">
+    <value>حذف هذه البيانات سيزيل حسابك نهائياً ولا يمكن استرداده.</value>
+  </data>
+  <data name="DisableAccount" xml:space="preserve">
+    <value>تعطيل الحساب</value>
+  </data>
+  <data name="DisableAccountWarning" xml:space="preserve">
+    <value>تعطيل حسابك سيحجبك نهائياً ولا يمكن استرداده.</value>
+  </data>
+  <data name="DisableMyAccount" xml:space="preserve">
+    <value>تعطيل حسابي</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>كلمة المرور</value>
+  </data>
+  <data name="IncorrectPassword" xml:space="preserve">
+    <value>خطأ: كلمة مرور غير صحيحة.</value>
+  </data>
+  <!-- Navigation Menu -->
+  <data name="Account" xml:space="preserve">
+    <value>الحساب</value>
+  </data>
+  <data name="SecuritySettings" xml:space="preserve">
+    <value>إعدادات الأمان</value>
+  </data>
+  <data name="ExternalLogins" xml:space="preserve">
+    <value>تسجيل الدخول الخارجي</value>
+  </data>
+  <!-- LikesModal -->
+  <data name="PeopleWhoReacted" xml:space="preserve">
+    <value>الأشخاص الذين تفاعلوا</value>
+  </data>
+  <data name="AllReactions" xml:space="preserve">
+    <value>جميع التفاعلات</value>
+  </data>
+  <data name="NoReactionsYet" xml:space="preserve">
+    <value>لا توجد تفاعلات بعد</value>
+  </data>
+  <!-- Comment Editor -->
+  <data name="WriteAComment" xml:space="preserve">
+    <value>اكتب تعليقاً...</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>نشر</value>
+  </data>
+  <!-- Preferences -->
+  <data name="Preferences" xml:space="preserve">
+    <value>التفضيلات</value>
+  </data>
+  <!-- Common -->
+  <data name="Cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>تأكيد</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>إرسال</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>نعم</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>لا</value>
+  </data>
+  <data name="ManageYourAccount" xml:space="preserve">
+    <value>إدارة حسابك</value>
+  </data>
+  <data name="ChangeYourAccountSettings" xml:space="preserve">
+    <value>تغيير إعدادات حسابك</value>
+  </data>
 </root>

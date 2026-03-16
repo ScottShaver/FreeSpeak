@@ -88,4 +88,10 @@
   <data name="TechnologyCredits" xml:space="preserve">
     <value>技术致谢</value>
   </data>
+  <data name="SystemAdministration" xml:space="preserve">
+    <value>系统管理</value>
+  </data>
+  <data name="SystemModerator" xml:space="preserve">
+    <value>系统管理员</value>
+  </data>
 </root>

@@ -148,4 +148,125 @@
   <data name="YouDoNotHaveLocalPassword" xml:space="preserve">
     <value>Du hast keinen lokalen Benutzernamen/Passwort für diese Seite. Füge ein lokales Konto hinzu, damit du dich ohne externe Anmeldung einloggen kannst.</value>
   </data>
+  <data name="ManageYourAccount" xml:space="preserve">
+    <value>Ihr Konto verwalten</value>
+  </data>
+  <data name="ChangeYourAccountSettings" xml:space="preserve">
+    <value>Ändern Sie Ihre Kontoeinstellungen</value>
+  </data>
+  <!-- Two-Factor Authentication -->
+  <data name="TwoFactorAuthentication" xml:space="preserve">
+    <value>Zwei-Faktor-Authentifizierung</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Aktiviert</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Deaktiviert</value>
+  </data>
+  <data name="Disable2FA" xml:space="preserve">
+    <value>2FA deaktivieren</value>
+  </data>
+  <data name="ResetRecoveryCodes" xml:space="preserve">
+    <value>Wiederherstellungscodes zurücksetzen</value>
+  </data>
+  <data name="SetupAuthenticatorApp" xml:space="preserve">
+    <value>Authenticator-App einrichten</value>
+  </data>
+  <data name="ResetAuthenticatorKey" xml:space="preserve">
+    <value>Authenticator-Schlüssel zurücksetzen</value>
+  </data>
+  <data name="RecoveryCodes" xml:space="preserve">
+    <value>Wiederherstellungscodes</value>
+  </data>
+  <data name="RecoveryCodesLeft" xml:space="preserve">
+    <value>{0} Wiederherstellungscodes übrig</value>
+  </data>
+  <data name="GenerateNewRecoveryCodes" xml:space="preserve">
+    <value>Neue Wiederherstellungscodes generieren</value>
+  </data>
+  <!-- Personal Data -->
+  <data name="PersonalData" xml:space="preserve">
+    <value>Persönliche Daten</value>
+  </data>
+  <data name="DownloadYourData" xml:space="preserve">
+    <value>Ihre Daten herunterladen</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Herunterladen</value>
+  </data>
+  <data name="DeleteYourData" xml:space="preserve">
+    <value>Ihre Daten löschen</value>
+  </data>
+  <data name="DeleteAccount" xml:space="preserve">
+    <value>Konto löschen</value>
+  </data>
+  <data name="DeleteAccountWarning" xml:space="preserve">
+    <value>Das Löschen dieser Daten wird Ihr Konto dauerhaft entfernen und kann nicht wiederhergestellt werden.</value>
+  </data>
+  <data name="DisableAccount" xml:space="preserve">
+    <value>Konto deaktivieren</value>
+  </data>
+  <data name="DisableAccountWarning" xml:space="preserve">
+    <value>Die Deaktivierung Ihres Kontos wird Sie dauerhaft sperren und kann nicht wiederhergestellt werden.</value>
+  </data>
+  <data name="DisableMyAccount" xml:space="preserve">
+    <value>Mein Konto deaktivieren</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="IncorrectPassword" xml:space="preserve">
+    <value>Fehler: Falsches Passwort.</value>
+  </data>
+  <!-- Navigation Menu -->
+  <data name="Account" xml:space="preserve">
+    <value>Konto</value>
+  </data>
+  <data name="SecuritySettings" xml:space="preserve">
+    <value>Sicherheitseinstellungen</value>
+  </data>
+  <data name="ExternalLogins" xml:space="preserve">
+    <value>Externe Anmeldungen</value>
+  </data>
+  <!-- LikesModal -->
+  <data name="PeopleWhoReacted" xml:space="preserve">
+    <value>Personen, die reagiert haben</value>
+  </data>
+  <data name="AllReactions" xml:space="preserve">
+    <value>Alle Reaktionen</value>
+  </data>
+  <data name="NoReactionsYet" xml:space="preserve">
+    <value>Noch keine Reaktionen</value>
+  </data>
+  <!-- Comment Editor -->
+  <data name="WriteAComment" xml:space="preserve">
+    <value>Einen Kommentar schreiben...</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Veröffentlichen</value>
+  </data>
+  <!-- Preferences -->
+  <data name="Preferences" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <!-- Common -->
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Bestätigen</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Absenden</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nein</value>
+  </data>
 </root>

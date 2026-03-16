@@ -58,40 +58,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SearchEmojis" xml:space="preserve">
-    <value>이모지 검색...</value>
+  <data name="Smileys" xml:space="preserve">
+    <value>스마일리</value>
   </data>
-  <data name="FrequentlyUsed" xml:space="preserve">
-    <value>자주 사용</value>
+  <data name="Gestures" xml:space="preserve">
+    <value>제스처</value>
   </data>
-  <data name="SmileysEmotion" xml:space="preserve">
-    <value>스마일리 &amp; 감정</value>
-  </data>
-  <data name="PeopleBody" xml:space="preserve">
-    <value>사람 &amp; 신체</value>
-  </data>
-  <data name="AnimalsNature" xml:space="preserve">
-    <value>동물 &amp; 자연</value>
-  </data>
-  <data name="FoodDrink" xml:space="preserve">
-    <value>음식 &amp; 음료</value>
-  </data>
-  <data name="TravelPlaces" xml:space="preserve">
-    <value>여행 &amp; 장소</value>
-  </data>
-  <data name="Activities" xml:space="preserve">
-    <value>활동</value>
+  <data name="Hearts" xml:space="preserve">
+    <value>하트</value>
   </data>
   <data name="Objects" xml:space="preserve">
     <value>사물</value>
   </data>
-  <data name="Symbols" xml:space="preserve">
-    <value>기호</value>
-  </data>
-  <data name="Flags" xml:space="preserve">
-    <value>깃발</value>
-  </data>
-  <data name="NoEmojisFound" xml:space="preserve">
-    <value>이모지를 찾을 수 없습니다</value>
+  <data name="Food" xml:space="preserve">
+    <value>음식</value>
   </data>
 </root>

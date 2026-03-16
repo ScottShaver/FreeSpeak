@@ -58,40 +58,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SearchEmojis" xml:space="preserve">
-    <value>絵文字を検索...</value>
+  <data name="Smileys" xml:space="preserve">
+    <value>スマイリー</value>
   </data>
-  <data name="FrequentlyUsed" xml:space="preserve">
-    <value>よく使う</value>
+  <data name="Gestures" xml:space="preserve">
+    <value>ジェスチャー</value>
   </data>
-  <data name="SmileysEmotion" xml:space="preserve">
-    <value>スマイリーと感情</value>
-  </data>
-  <data name="PeopleBody" xml:space="preserve">
-    <value>人物と身体</value>
-  </data>
-  <data name="AnimalsNature" xml:space="preserve">
-    <value>動物と自然</value>
-  </data>
-  <data name="FoodDrink" xml:space="preserve">
-    <value>食べ物と飲み物</value>
-  </data>
-  <data name="TravelPlaces" xml:space="preserve">
-    <value>旅行と場所</value>
-  </data>
-  <data name="Activities" xml:space="preserve">
-    <value>アクティビティ</value>
+  <data name="Hearts" xml:space="preserve">
+    <value>ハート</value>
   </data>
   <data name="Objects" xml:space="preserve">
     <value>物</value>
   </data>
-  <data name="Symbols" xml:space="preserve">
-    <value>記号</value>
-  </data>
-  <data name="Flags" xml:space="preserve">
-    <value>旗</value>
-  </data>
-  <data name="NoEmojisFound" xml:space="preserve">
-    <value>絵文字が見つかりません</value>
+  <data name="Food" xml:space="preserve">
+    <value>食べ物</value>
   </data>
 </root>

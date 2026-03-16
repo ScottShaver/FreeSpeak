@@ -148,4 +148,125 @@
   <data name="YouDoNotHaveLocalPassword" xml:space="preserve">
     <value>你没有此网站的本地用户名/密码。添加本地账户后，你可以在不使用外部登录的情况下登录。</value>
   </data>
+  <!-- Two-Factor Authentication -->
+  <data name="TwoFactorAuthentication" xml:space="preserve">
+    <value>双重身份验证</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>已启用</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>已禁用</value>
+  </data>
+  <data name="Disable2FA" xml:space="preserve">
+    <value>禁用双重验证</value>
+  </data>
+  <data name="ResetRecoveryCodes" xml:space="preserve">
+    <value>重置恢复代码</value>
+  </data>
+  <data name="SetupAuthenticatorApp" xml:space="preserve">
+    <value>设置身份验证器应用</value>
+  </data>
+  <data name="ResetAuthenticatorKey" xml:space="preserve">
+    <value>重置身份验证器密钥</value>
+  </data>
+  <data name="RecoveryCodes" xml:space="preserve">
+    <value>恢复代码</value>
+  </data>
+  <data name="RecoveryCodesLeft" xml:space="preserve">
+    <value>剩余 {0} 个恢复代码</value>
+  </data>
+  <data name="GenerateNewRecoveryCodes" xml:space="preserve">
+    <value>生成新的恢复代码</value>
+  </data>
+  <!-- Personal Data -->
+  <data name="PersonalData" xml:space="preserve">
+    <value>个人数据</value>
+  </data>
+  <data name="DownloadYourData" xml:space="preserve">
+    <value>下载您的数据</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>下载</value>
+  </data>
+  <data name="DeleteYourData" xml:space="preserve">
+    <value>删除您的数据</value>
+  </data>
+  <data name="DeleteAccount" xml:space="preserve">
+    <value>删除账户</value>
+  </data>
+  <data name="DeleteAccountWarning" xml:space="preserve">
+    <value>删除此数据将永久移除您的账户，且无法恢复。</value>
+  </data>
+  <data name="DisableAccount" xml:space="preserve">
+    <value>禁用账户</value>
+  </data>
+  <data name="DisableAccountWarning" xml:space="preserve">
+    <value>禁用您的账户将永久锁定您的访问，且无法恢复。</value>
+  </data>
+  <data name="DisableMyAccount" xml:space="preserve">
+    <value>禁用我的账户</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="IncorrectPassword" xml:space="preserve">
+    <value>错误：密码不正确。</value>
+  </data>
+  <!-- Navigation Menu -->
+  <data name="Account" xml:space="preserve">
+    <value>账户</value>
+  </data>
+  <data name="SecuritySettings" xml:space="preserve">
+    <value>安全设置</value>
+  </data>
+  <data name="ExternalLogins" xml:space="preserve">
+    <value>外部登录</value>
+  </data>
+  <!-- LikesModal -->
+  <data name="PeopleWhoReacted" xml:space="preserve">
+    <value>互动的用户</value>
+  </data>
+  <data name="AllReactions" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="NoReactionsYet" xml:space="preserve">
+    <value>还没有互动</value>
+  </data>
+  <!-- Comment Editor -->
+  <data name="WriteAComment" xml:space="preserve">
+    <value>写评论...</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>发布</value>
+  </data>
+  <!-- Preferences -->
+  <data name="Preferences" xml:space="preserve">
+    <value>首选项</value>
+  </data>
+  <!-- Common -->
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>确认</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>提交</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>不</value>
+  </data>
+  <data name="ManageYourAccount" xml:space="preserve">
+    <value>管理您的账户</value>
+  </data>
+  <data name="ChangeYourAccountSettings" xml:space="preserve">
+    <value>更改您的账户设置</value>
+  </data>
 </root>

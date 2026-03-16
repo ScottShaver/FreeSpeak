@@ -58,40 +58,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SearchEmojis" xml:space="preserve">
-    <value>Szukaj emoji...</value>
+  <data name="Smileys" xml:space="preserve">
+    <value>Buźki</value>
   </data>
-  <data name="FrequentlyUsed" xml:space="preserve">
-    <value>Często używane</value>
+  <data name="Gestures" xml:space="preserve">
+    <value>Gesty</value>
   </data>
-  <data name="SmileysEmotion" xml:space="preserve">
-    <value>Buźki i emocje</value>
-  </data>
-  <data name="PeopleBody" xml:space="preserve">
-    <value>Ludzie i ciało</value>
-  </data>
-  <data name="AnimalsNature" xml:space="preserve">
-    <value>Zwierzęta i natura</value>
-  </data>
-  <data name="FoodDrink" xml:space="preserve">
-    <value>Jedzenie i napoje</value>
-  </data>
-  <data name="TravelPlaces" xml:space="preserve">
-    <value>Podróże i miejsca</value>
-  </data>
-  <data name="Activities" xml:space="preserve">
-    <value>Aktywności</value>
+  <data name="Hearts" xml:space="preserve">
+    <value>Serca</value>
   </data>
   <data name="Objects" xml:space="preserve">
     <value>Przedmioty</value>
   </data>
-  <data name="Symbols" xml:space="preserve">
-    <value>Symbole</value>
-  </data>
-  <data name="Flags" xml:space="preserve">
-    <value>Flagi</value>
-  </data>
-  <data name="NoEmojisFound" xml:space="preserve">
-    <value>Nie znaleziono emoji</value>
+  <data name="Food" xml:space="preserve">
+    <value>Jedzenie</value>
   </data>
 </root>

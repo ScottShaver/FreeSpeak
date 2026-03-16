@@ -61,6 +61,9 @@
   <data name="ViewMoreComments" xml:space="preserve">
     <value>Meer reacties bekijken</value>
   </data>
+  <data name="ClickToSeeFullPost" xml:space="preserve">
+    <value>... Klik om het volledige bericht te bekijken</value>
+  </data>
   <data name="Like" xml:space="preserve">
     <value>Vind ik leuk</value>
   </data>

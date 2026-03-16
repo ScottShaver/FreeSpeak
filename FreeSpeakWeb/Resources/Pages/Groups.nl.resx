@@ -67,4 +67,91 @@
   <data name="PinnedGroupPosts" xml:space="preserve">
     <value>Vastgepinde groepsberichten</value>
   </data>
+  <data name="GroupJoinRequests" xml:space="preserve">
+    <value>Lidmaatschapsverzoeken</value>
+  </data>
+  <data name="FindGroups" xml:space="preserve">
+    <value>Groepen zoeken</value>
+  </data>
+  <data name="GroupsYouMightLike" xml:space="preserve">
+    <value>Groepen die je misschien leuk vindt</value>
+  </data>
+  <data name="ShowPostsFrom" xml:space="preserve">
+    <value>Berichten tonen van:</value>
+  </data>
+  <data name="AllGroups" xml:space="preserve">
+    <value>Alle groepen</value>
+  </data>
+  <data name="LoadingGroupFeed" xml:space="preserve">
+    <value>Groepsfeed laden...</value>
+  </data>
+  <data name="NoGroupPosts" xml:space="preserve">
+    <value>Geen groepsberichten om weer te geven. Word lid van groepen om hun berichten hier te zien!</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>Meer berichten laden...</value>
+  </data>
+  <data name="NoMorePosts" xml:space="preserve">
+    <value>Geen berichten meer op dit moment</value>
+  </data>
+  <data name="ShowPinnedPostsFrom" xml:space="preserve">
+    <value>Vastgepinde berichten tonen van:</value>
+  </data>
+  <data name="LoadingPinnedPosts" xml:space="preserve">
+    <value>Vastgepinde berichten laden...</value>
+  </data>
+  <data name="NoPinnedPosts" xml:space="preserve">
+    <value>Je hebt nog geen groepsberichten vastgepind. Pin berichten vast om ze hier te zien!</value>
+  </data>
+  <data name="NoMorePinnedPosts" xml:space="preserve">
+    <value>Geen vastgepinde berichten meer</value>
+  </data>
+  <data name="LoadingJoinRequests" xml:space="preserve">
+    <value>Lidmaatschapsverzoeken laden...</value>
+  </data>
+  <data name="NoPendingJoinRequests" xml:space="preserve">
+    <value>Je hebt geen openstaande lidmaatschapsverzoeken.</value>
+  </data>
+  <data name="UnknownGroup" xml:space="preserve">
+    <value>Onbekende groep</value>
+  </data>
+  <data name="Requested" xml:space="preserve">
+    <value>Aangevraagd</value>
+  </data>
+  <data name="CancelRequest" xml:space="preserve">
+    <value>Verzoek annuleren</value>
+  </data>
+  <data name="SearchForGroups" xml:space="preserve">
+    <value>Zoek naar groepen...</value>
+  </data>
+  <data name="SearchingGroups" xml:space="preserve">
+    <value>Groepen zoeken...</value>
+  </data>
+  <data name="NoGroupsFound" xml:space="preserve">
+    <value>Geen groepen gevonden voor "{0}"</value>
+  </data>
+  <data name="Members" xml:space="preserve">
+    <value>leden</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>Openbaar</value>
+  </data>
+  <data name="Private" xml:space="preserve">
+    <value>Privé</value>
+  </data>
+  <data name="RequestToJoin" xml:space="preserve">
+    <value>Lidmaatschap aanvragen</value>
+  </data>
+  <data name="JoinNow" xml:space="preserve">
+    <value>Nu lid worden</value>
+  </data>
+  <data name="SearchToJoin" xml:space="preserve">
+    <value>Zoek groepen om lid van te worden!</value>
+  </data>
+  <data name="LoadingSuggestions" xml:space="preserve">
+    <value>Groepssuggesties laden...</value>
+  </data>
+  <data name="NoSuggestions" xml:space="preserve">
+    <value>Momenteel geen groepssuggesties beschikbaar.</value>
+  </data>
 </root>

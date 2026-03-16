@@ -88,4 +88,10 @@
   <data name="TechnologyCredits" xml:space="preserve">
     <value>Créditos tecnológicos</value>
   </data>
+  <data name="SystemAdministration" xml:space="preserve">
+    <value>Administración del sistema</value>
+  </data>
+  <data name="SystemModerator" xml:space="preserve">
+    <value>Moderador del sistema</value>
+  </data>
 </root>

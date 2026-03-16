@@ -67,4 +67,91 @@
   <data name="PinnedGroupPosts" xml:space="preserve">
     <value>Закреплённые публикации групп</value>
   </data>
+  <data name="GroupJoinRequests" xml:space="preserve">
+    <value>Заявки на вступление</value>
+  </data>
+  <data name="FindGroups" xml:space="preserve">
+    <value>Найти группы</value>
+  </data>
+  <data name="GroupsYouMightLike" xml:space="preserve">
+    <value>Группы, которые могут вам понравиться</value>
+  </data>
+  <data name="ShowPostsFrom" xml:space="preserve">
+    <value>Показать публикации от:</value>
+  </data>
+  <data name="AllGroups" xml:space="preserve">
+    <value>Все группы</value>
+  </data>
+  <data name="LoadingGroupFeed" xml:space="preserve">
+    <value>Загрузка ленты групп...</value>
+  </data>
+  <data name="NoGroupPosts" xml:space="preserve">
+    <value>Нет публикаций групп для отображения. Вступите в группы, чтобы видеть их публикации здесь!</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>Загрузка больше публикаций...</value>
+  </data>
+  <data name="NoMorePosts" xml:space="preserve">
+    <value>Больше публикаций нет</value>
+  </data>
+  <data name="ShowPinnedPostsFrom" xml:space="preserve">
+    <value>Показать закреплённые публикации от:</value>
+  </data>
+  <data name="LoadingPinnedPosts" xml:space="preserve">
+    <value>Загрузка закреплённых публикаций...</value>
+  </data>
+  <data name="NoPinnedPosts" xml:space="preserve">
+    <value>Вы ещё не закрепили публикации групп. Закрепите публикации, чтобы видеть их здесь!</value>
+  </data>
+  <data name="NoMorePinnedPosts" xml:space="preserve">
+    <value>Больше закреплённых публикаций нет</value>
+  </data>
+  <data name="LoadingJoinRequests" xml:space="preserve">
+    <value>Загрузка заявок на вступление...</value>
+  </data>
+  <data name="NoPendingJoinRequests" xml:space="preserve">
+    <value>У вас нет ожидающих заявок на вступление.</value>
+  </data>
+  <data name="UnknownGroup" xml:space="preserve">
+    <value>Неизвестная группа</value>
+  </data>
+  <data name="Requested" xml:space="preserve">
+    <value>Запрошено</value>
+  </data>
+  <data name="CancelRequest" xml:space="preserve">
+    <value>Отменить заявку</value>
+  </data>
+  <data name="SearchForGroups" xml:space="preserve">
+    <value>Поиск групп...</value>
+  </data>
+  <data name="SearchingGroups" xml:space="preserve">
+    <value>Поиск групп...</value>
+  </data>
+  <data name="NoGroupsFound" xml:space="preserve">
+    <value>Группы по запросу "{0}" не найдены</value>
+  </data>
+  <data name="Members" xml:space="preserve">
+    <value>участников</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>Публичная</value>
+  </data>
+  <data name="Private" xml:space="preserve">
+    <value>Закрытая</value>
+  </data>
+  <data name="RequestToJoin" xml:space="preserve">
+    <value>Подать заявку</value>
+  </data>
+  <data name="JoinNow" xml:space="preserve">
+    <value>Вступить</value>
+  </data>
+  <data name="SearchToJoin" xml:space="preserve">
+    <value>Ищите группы, чтобы вступить!</value>
+  </data>
+  <data name="LoadingSuggestions" xml:space="preserve">
+    <value>Загрузка рекомендаций групп...</value>
+  </data>
+  <data name="NoSuggestions" xml:space="preserve">
+    <value>На данный момент нет рекомендаций групп.</value>
+  </data>
 </root>

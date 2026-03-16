@@ -148,4 +148,125 @@
   <data name="YouDoNotHaveLocalPassword" xml:space="preserve">
     <value>このサイトのローカルユーザー名/パスワードがありません。外部ログインなしでログインできるようにローカルアカウントを追加してください。</value>
   </data>
+  <data name="ManageYourAccount" xml:space="preserve">
+    <value>アカウントを管理</value>
+  </data>
+  <data name="ChangeYourAccountSettings" xml:space="preserve">
+    <value>アカウント設定を変更</value>
+  </data>
+  <!-- Two-Factor Authentication -->
+  <data name="TwoFactorAuthentication" xml:space="preserve">
+    <value>二要素認証</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>有効</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>無効</value>
+  </data>
+  <data name="Disable2FA" xml:space="preserve">
+    <value>2FAを無効にする</value>
+  </data>
+  <data name="ResetRecoveryCodes" xml:space="preserve">
+    <value>回復コードをリセット</value>
+  </data>
+  <data name="SetupAuthenticatorApp" xml:space="preserve">
+    <value>認証アプリを設定</value>
+  </data>
+  <data name="ResetAuthenticatorKey" xml:space="preserve">
+    <value>認証キーをリセット</value>
+  </data>
+  <data name="RecoveryCodes" xml:space="preserve">
+    <value>回復コード</value>
+  </data>
+  <data name="RecoveryCodesLeft" xml:space="preserve">
+    <value>残り{0}個の回復コード</value>
+  </data>
+  <data name="GenerateNewRecoveryCodes" xml:space="preserve">
+    <value>新しい回復コードを生成</value>
+  </data>
+  <!-- Personal Data -->
+  <data name="PersonalData" xml:space="preserve">
+    <value>個人データ</value>
+  </data>
+  <data name="DownloadYourData" xml:space="preserve">
+    <value>データをダウンロード</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>ダウンロード</value>
+  </data>
+  <data name="DeleteYourData" xml:space="preserve">
+    <value>データを削除</value>
+  </data>
+  <data name="DeleteAccount" xml:space="preserve">
+    <value>アカウントを削除</value>
+  </data>
+  <data name="DeleteAccountWarning" xml:space="preserve">
+    <value>このデータを削除すると、アカウントが永続的に削除され、復元できません。</value>
+  </data>
+  <data name="DisableAccount" xml:space="preserve">
+    <value>アカウントを無効にする</value>
+  </data>
+  <data name="DisableAccountWarning" xml:space="preserve">
+    <value>アカウントを無効にすると、永続的にロックされ、復元できません。</value>
+  </data>
+  <data name="DisableMyAccount" xml:space="preserve">
+    <value>私のアカウントを無効にする</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>パスワード</value>
+  </data>
+  <data name="IncorrectPassword" xml:space="preserve">
+    <value>エラー：パスワードが正しくありません。</value>
+  </data>
+  <!-- Navigation Menu -->
+  <data name="Account" xml:space="preserve">
+    <value>アカウント</value>
+  </data>
+  <data name="SecuritySettings" xml:space="preserve">
+    <value>セキュリティ設定</value>
+  </data>
+  <data name="ExternalLogins" xml:space="preserve">
+    <value>外部ログイン</value>
+  </data>
+  <!-- LikesModal -->
+  <data name="PeopleWhoReacted" xml:space="preserve">
+    <value>反応した人</value>
+  </data>
+  <data name="AllReactions" xml:space="preserve">
+    <value>すべての反応</value>
+  </data>
+  <data name="NoReactionsYet" xml:space="preserve">
+    <value>まだ反応がありません</value>
+  </data>
+  <!-- Comment Editor -->
+  <data name="WriteAComment" xml:space="preserve">
+    <value>コメントを入力...</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>投稿</value>
+  </data>
+  <!-- Preferences -->
+  <data name="Preferences" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <!-- Common -->
+  <data name="Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>確認</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>送信</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>はい</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>いいえ</value>
+  </data>
 </root>

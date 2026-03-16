@@ -263,4 +263,10 @@
   <data name="No" xml:space="preserve">
     <value>Non</value>
   </data>
+  <data name="ManageYourAccount" xml:space="preserve">
+    <value>Gérer votre compte</value>
+  </data>
+  <data name="ChangeYourAccountSettings" xml:space="preserve">
+    <value>Modifier les paramètres de votre compte</value>
+  </data>
 </root>

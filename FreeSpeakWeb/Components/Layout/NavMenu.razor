@@ -107,7 +107,7 @@
                 {
                     <div class="nav-item px-3">
                         <a class="nav-link @(GetActiveMenuItemFromUrl() == "system-admin" ? "active" : "")" href="system-admin" data-enhance-nav="false">
-                            <span class="bi bi-shield-lock-fill" aria-hidden="true"></span> System Administration
+                            <span class="bi bi-shield-lock-fill" aria-hidden="true"></span> @Localizer["SystemAdministration"]
                         </a>
                     </div>
                 }
@@ -116,7 +116,7 @@
                 {
                     <div class="nav-item px-3">
                         <a class="nav-link @(GetActiveMenuItemFromUrl() == "system-moderator" ? "active" : "")" href="system-moderator" data-enhance-nav="false">
-                            <span class="bi bi-shield-check" aria-hidden="true"></span> System Moderator
+                            <span class="bi bi-shield-check" aria-hidden="true"></span> @Localizer["SystemModerator"]
                         </a>
                     </div>
                 }

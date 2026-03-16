@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>システム管理機能</value>
+  </data>
+  <data name="WelcomeMessage" xml:space="preserve">
+    <value>ようこそ、システム管理者！</value>
+  </data>
+  <data name="WelcomeDescription" xml:space="preserve">
+    <value>このページはSystemAdministratorロールを持つユーザーのみアクセス可能です。</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>ロール</value>
+  </data>
+  <data name="UserManagement" xml:space="preserve">
+    <value>ユーザー管理</value>
+  </data>
+  <data name="SystemConfiguration" xml:space="preserve">
+    <value>システム設定</value>
+  </data>
+  <data name="SiteWideContentModeration" xml:space="preserve">
+    <value>サイト全体のコンテンツモデレーション</value>
+  </data>
+  <data name="AnalyticsAndReporting" xml:space="preserve">
+    <value>分析とレポート</value>
+  </data>
+  <data name="DatabaseMaintenanceTools" xml:space="preserve">
+    <value>データベースメンテナンスツール</value>
+  </data>
+  <data name="UserManagementDescription" xml:space="preserve">
+    <value>システム全体のユーザーアカウント、ロール、権限を管理します。</value>
+  </data>
+  <data name="SearchUsers" xml:space="preserve">
+    <value>ユーザー検索</value>
+  </data>
+  <data name="SearchUsersDescription" xml:space="preserve">
+    <value>ユーザー名、メール、名前、市区町村、都道府県、職業で検索できます。</value>
+  </data>
+  <data name="SearchUsersPlaceholder" xml:space="preserve">
+    <value>入力してユーザーを検索...</value>
+  </data>
+  <data name="Searching" xml:space="preserve">
+    <value>検索中...</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>ユーザー名</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>名前</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>メールアドレス</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>場所</value>
+  </data>
+  <data name="Occupation" xml:space="preserve">
+    <value>職業</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>アクション</value>
+  </data>
+  <data name="CopyUserId" xml:space="preserve">
+    <value>ユーザーIDをコピー</value>
+  </data>
+  <data name="EditRoles" xml:space="preserve">
+    <value>ロールを編集</value>
+  </data>
+  <data name="LockoutInfo" xml:space="preserve">
+    <value>ロックアウト情報</value>
+  </data>
+  <data name="AuditLog" xml:space="preserve">
+    <value>監査ログ</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>プロフィールを表示</value>
+  </data>
+  <data name="SuspendUser" xml:space="preserve">
+    <value>ユーザーを停止</value>
+  </data>
+  <data name="SendMessage" xml:space="preserve">
+    <value>メッセージを送信</value>
+  </data>
+  <data name="SearchAuditLogs" xml:space="preserve">
+    <value>監査ログを検索</value>
+  </data>
+  <data name="UserIdExactMatch" xml:space="preserve">
+    <value>ユーザーID（完全一致）</value>
+  </data>
+  <data name="EnterUserGuid" xml:space="preserve">
+    <value>ユーザーGUIDを入力...</value>
+  </data>
+  <data name="ActionCategory" xml:space="preserve">
+    <value>アクションカテゴリ</value>
+  </data>
+  <data name="AllCategories" xml:space="preserve">
+    <value>すべてのカテゴリ</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>開始日</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>終了日</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>検索</value>
+  </data>
+  <data name="FoundResults" xml:space="preserve">
+    <value>{0}件の結果が見つかりました</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>日時</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>ユーザーID</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>カテゴリ</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>詳細</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>前へ</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>次へ</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>ページ</value>
+  </data>
+  <data name="Of" xml:space="preserve">
+    <value>の</value>
+  </data>
+</root>

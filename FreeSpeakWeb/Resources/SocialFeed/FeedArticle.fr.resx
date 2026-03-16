@@ -61,6 +61,9 @@
   <data name="ViewMoreComments" xml:space="preserve">
     <value>Voir plus de commentaires</value>
   </data>
+  <data name="ClickToSeeFullPost" xml:space="preserve">
+    <value>... Cliquez pour voir la publication complète</value>
+  </data>
   <data name="Like" xml:space="preserve">
     <value>J'aime</value>
   </data>

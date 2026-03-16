@@ -148,4 +148,125 @@
   <data name="YouDoNotHaveLocalPassword" xml:space="preserve">
     <value>У вас нет локального имени пользователя/пароля для этого сайта. Добавьте локальную учётную запись, чтобы входить без внешней авторизации.</value>
   </data>
+  <!-- Two-Factor Authentication -->
+  <data name="TwoFactorAuthentication" xml:space="preserve">
+    <value>Двухфакторная аутентификация</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Включена</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Отключена</value>
+  </data>
+  <data name="Disable2FA" xml:space="preserve">
+    <value>Отключить 2FA</value>
+  </data>
+  <data name="ResetRecoveryCodes" xml:space="preserve">
+    <value>Сбросить коды восстановления</value>
+  </data>
+  <data name="SetupAuthenticatorApp" xml:space="preserve">
+    <value>Настроить приложение аутентификатор</value>
+  </data>
+  <data name="ResetAuthenticatorKey" xml:space="preserve">
+    <value>Сбросить ключ аутентификатора</value>
+  </data>
+  <data name="RecoveryCodes" xml:space="preserve">
+    <value>Коды восстановления</value>
+  </data>
+  <data name="RecoveryCodesLeft" xml:space="preserve">
+    <value>Осталось {0} кодов восстановления</value>
+  </data>
+  <data name="GenerateNewRecoveryCodes" xml:space="preserve">
+    <value>Создать новые коды восстановления</value>
+  </data>
+  <!-- Personal Data -->
+  <data name="PersonalData" xml:space="preserve">
+    <value>Персональные данные</value>
+  </data>
+  <data name="DownloadYourData" xml:space="preserve">
+    <value>Скачать ваши данные</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Скачать</value>
+  </data>
+  <data name="DeleteYourData" xml:space="preserve">
+    <value>Удалить ваши данные</value>
+  </data>
+  <data name="DeleteAccount" xml:space="preserve">
+    <value>Удалить аккаунт</value>
+  </data>
+  <data name="DeleteAccountWarning" xml:space="preserve">
+    <value>Удаление этих данных навсегда удалит ваш аккаунт и не может быть восстановлено.</value>
+  </data>
+  <data name="DisableAccount" xml:space="preserve">
+    <value>Отключить аккаунт</value>
+  </data>
+  <data name="DisableAccountWarning" xml:space="preserve">
+    <value>Отключение вашего аккаунта навсегда заблокирует вас и не может быть восстановлено.</value>
+  </data>
+  <data name="DisableMyAccount" xml:space="preserve">
+    <value>Отключить мой аккаунт</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="IncorrectPassword" xml:space="preserve">
+    <value>Ошибка: Неверный пароль.</value>
+  </data>
+  <!-- Navigation Menu -->
+  <data name="Account" xml:space="preserve">
+    <value>Аккаунт</value>
+  </data>
+  <data name="SecuritySettings" xml:space="preserve">
+    <value>Настройки безопасности</value>
+  </data>
+  <data name="ExternalLogins" xml:space="preserve">
+    <value>Внешние входы</value>
+  </data>
+  <!-- LikesModal -->
+  <data name="PeopleWhoReacted" xml:space="preserve">
+    <value>Люди, которые отреагировали</value>
+  </data>
+  <data name="AllReactions" xml:space="preserve">
+    <value>Все реакции</value>
+  </data>
+  <data name="NoReactionsYet" xml:space="preserve">
+    <value>Реакций пока нет</value>
+  </data>
+  <!-- Comment Editor -->
+  <data name="WriteAComment" xml:space="preserve">
+    <value>Написать комментарий...</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Опубликовать</value>
+  </data>
+  <!-- Preferences -->
+  <data name="Preferences" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <!-- Common -->
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Подтвердить</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Отправить</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Нет</value>
+  </data>
+  <data name="ManageYourAccount" xml:space="preserve">
+    <value>Управление аккаунтом</value>
+  </data>
+  <data name="ChangeYourAccountSettings" xml:space="preserve">
+    <value>Изменить настройки аккаунта</value>
+  </data>
 </root>

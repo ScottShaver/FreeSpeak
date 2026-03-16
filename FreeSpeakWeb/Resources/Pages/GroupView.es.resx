@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Members" xml:space="preserve">
+    <value>Miembros</value>
+  </data>
+  <data name="TotalPosts" xml:space="preserve">
+    <value>Total de publicaciones</value>
+  </data>
+  <data name="PostsThisWeek" xml:space="preserve">
+    <value>Publicaciones esta semana</value>
+  </data>
+  <data name="PostsToday" xml:space="preserve">
+    <value>Publicaciones hoy</value>
+  </data>
+  <data name="LastActivity" xml:space="preserve">
+    <value>Última actividad</value>
+  </data>
+  <data name="RecentPosts" xml:space="preserve">
+    <value>Publicaciones recientes</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Configuración</value>
+  </data>
+  <data name="LoadingGroupInformation" xml:space="preserve">
+    <value>Cargando información del grupo...</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>Grupo no encontrado</value>
+  </data>
+  <data name="GroupNotFoundMessage" xml:space="preserve">
+    <value>El grupo que buscas no existe o no tienes acceso a él.</value>
+  </data>
+  <data name="GoToGroups" xml:space="preserve">
+    <value>Ir a grupos</value>
+  </data>
+  <data name="LoadingPosts" xml:space="preserve">
+    <value>Cargando publicaciones...</value>
+  </data>
+  <data name="NoPostsYet" xml:space="preserve">
+    <value>Aún no hay publicaciones en este grupo. ¡Sé el primero en publicar!</value>
+  </data>
+</root>
