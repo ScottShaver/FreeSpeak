@@ -1,16 +1,18 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
 
 @inject GroupService GroupService
 @inject ILogger<GroupSettingsModal> Logger
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Groups.GroupSettingsModal> Localizer
 
 <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0, 0, 0, 0.5);">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <i class="bi bi-gear me-2"></i>Group Settings
+                    <i class="bi bi-gear me-2"></i>@Localizer["Title"]
                 </h5>
                 <button type="button" class="btn-close" @onclick="OnClose" aria-label="Close"></button>
             </div>
@@ -19,7 +21,7 @@
                 {
                     <div class="text-center py-4">
                         <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
+                            <span class="visually-hidden">@Localizer["Loading"]</span>
                         </div>
                     </div>
                 }
@@ -27,12 +29,12 @@
                 {
                     <form>
                         <div class="mb-3">
-                            <label for="groupName" class="form-label">Group Name</label>
+                            <label for="groupName" class="form-label">@Localizer["GroupName"]</label>
                             <input type="text" class="form-control" id="groupName" @bind="groupName" />
                         </div>
 
                         <div class="mb-3">
-                            <label for="groupDescription" class="form-label">Description</label>
+                            <label for="groupDescription" class="form-label">@Localizer["Description"]</label>
                             <textarea class="form-control" id="groupDescription" rows="3" @bind="groupDescription"></textarea>
                         </div>
 
@@ -40,9 +42,9 @@
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" id="isPublic" @bind="isPublic" />
                                 <label class="form-check-label" for="isPublic">
-                                    Public Group
+                                    @Localizer["PublicGroup"]
                                 </label>
-                                <div class="form-text">Public groups are visible to all users.</div>
+                                <div class="form-text">@Localizer["PublicGroupHelp"]</div>
                             </div>
                         </div>
 
@@ -50,9 +52,9 @@
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" id="isHidden" @bind="isHidden" />
                                 <label class="form-check-label" for="isHidden">
-                                    Hidden from Discovery
+                                    @Localizer["HiddenFromDiscovery"]
                                 </label>
-                                <div class="form-text">Hidden groups don't appear in search results.</div>
+                                <div class="form-text">@Localizer["HiddenFromDiscoveryHelp"]</div>
                             </div>
                         </div>
 
@@ -60,9 +62,9 @@
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" id="requiresJoinApproval" @bind="requiresJoinApproval" />
                                 <label class="form-check-label" for="requiresJoinApproval">
-                                    Require Join Approval
+                                    @Localizer["RequireJoinApproval"]
                                 </label>
-                                <div class="form-text">New members must be approved before joining.</div>
+                                <div class="form-text">@Localizer["RequireJoinApprovalHelp"]</div>
                             </div>
                         </div>
 
@@ -70,10 +72,10 @@
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" id="enablePointsSystem" @bind="enablePointsSystem" />
                                 <label class="form-check-label" for="enablePointsSystem">
-                                    <i class="bi bi-trophy me-1"></i>Enable Points System
+                                    <i class="bi bi-trophy me-1"></i>@Localizer["EnablePointsSystem"]
                                 </label>
                                 <div class="form-text">
-                                    Members earn points for posts, comments, and likes. Members can achieve Rising Contributor, Top Contributor, and All-star Contributor badges.
+                                    @Localizer["EnablePointsSystemHelp"]
                                 </div>
                             </div>
                         </div>
@@ -96,14 +98,18 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" @onclick="OnClose" disabled="@isSaving">
-                    Cancel
+                    @Localizer["Cancel"]
                 </button>
                 <button type="button" class="btn btn-primary" @onclick="SaveSettings" disabled="@(isSaving || isLoading)">
                     @if (isSaving)
                     {
                         <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        @Localizer["Saving"]
                     }
-                    Save Changes
+                    else
+                    {
+                        @Localizer["SaveChanges"]
+                    }
                 </button>
             </div>
         </div>

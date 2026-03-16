@@ -300,6 +300,28 @@ For detailed security audit results, see:
 - [docs/SECURITY_AUDIT_RESULTS.md](docs/SECURITY_AUDIT_RESULTS.md) - XSS and SQL injection audit
 - [docs/DOS_DDOS_AUDIT_RESULTS.md](docs/DOS_DDOS_AUDIT_RESULTS.md) - DOS/DDOS vulnerability audit
 
+### Localization
+
+FreeSpeak supports multiple languages through the ASP.NET Core localization framework:
+
+**Supported Languages (13):**
+- English (default), Korean, German, Spanish, French, Italian, Japanese
+- Chinese (Simplified), Arabic, Dutch, Polish, Portuguese, Russian
+
+**Features:**
+- User preference-based language selection (stored in database)
+- Cookie-based fallback for non-authenticated users
+- Strongly-typed resource access via IStringLocalizer
+- Organized resource files by component location
+
+**Technical Implementation:**
+- Resource files (.resx) for each component with language variants
+- Custom `UserPreferenceCultureProvider` for user-specific culture
+- Auto-generated Designer.cs files for compile-time safety
+
+For detailed localization documentation, see:
+- [docs/LOCALIZATION.md](docs/LOCALIZATION.md) - Full localization guide and best practices
+
 ## Contributing
 
 1. Fork the repository

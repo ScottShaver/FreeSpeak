@@ -1,3 +1,7 @@
+@using Microsoft.Extensions.Localization
+
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.EmojiPicker> Localizer
+
 @if (IsVisible)
 {
     <div class="emoji-picker-backdrop" @onclick="Close"></div>
@@ -8,7 +12,7 @@
                 <button type="button" 
                         class="emoji-category-btn @(selectedCategory == category.Key ? "active" : "")"
                         @onclick="() => SelectCategory(category.Key)"
-                        title="@category.Key">
+                        title="@Localizer[category.Key]">
                     @category.Value.FirstOrDefault()
                 </button>
             }

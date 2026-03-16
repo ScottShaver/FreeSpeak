@@ -1,23 +1,27 @@
+@using Microsoft.Extensions.Localization
+
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.UploadProgressModal> Localizer
+
 @if (IsVisible)
 {
     <div class="upload-progress-backdrop">
         <div class="upload-progress-modal">
             <div class="progress-header">
-                <h3>@Title</h3>
+                <h3>@DisplayTitle</h3>
             </div>
-            
+
             <div class="progress-body">
-                <p class="progress-message">@Message</p>
-                
+                <p class="progress-message">@DisplayMessage</p>
+
                 <div class="progress-bar-container">
                     <div class="progress-bar" style="width: @(Progress)%">
                         <span class="progress-text">@Progress%</span>
                     </div>
                 </div>
-                
+
                 @if (CurrentStep > 0 && TotalSteps > 0)
                 {
-                    <p class="progress-step">Step @CurrentStep of @TotalSteps</p>
+                    <p class="progress-step">@string.Format(Localizer["StepOfSteps"].Value, CurrentStep, TotalSteps)</p>
                 }
             </div>
         </div>
@@ -29,10 +33,10 @@
     public bool IsVisible { get; set; }
 
     [Parameter]
-    public string Title { get; set; } = "Uploading...";
+    public string? Title { get; set; }
 
     [Parameter]
-    public string Message { get; set; } = "Please wait while we process your request";
+    public string? Message { get; set; }
 
     [Parameter]
     public int Progress { get; set; } = 0;
@@ -42,4 +46,24 @@
 
     [Parameter]
     public int TotalSteps { get; set; } = 0;
+
+    /// <summary>
+    /// Gets the localized default title for the upload progress modal.
+    /// </summary>
+    public string DefaultTitle => Localizer["DefaultTitle"].Value;
+
+    /// <summary>
+    /// Gets the localized default message for the upload progress modal.
+    /// </summary>
+    public string DefaultMessage => Localizer["DefaultMessage"].Value;
+
+    /// <summary>
+    /// Gets the title to display, using the localized default if not specified.
+    /// </summary>
+    private string DisplayTitle => Title ?? DefaultTitle;
+
+    /// <summary>
+    /// Gets the message to display, using the localized default if not specified.
+    /// </summary>
+    private string DisplayMessage => Message ?? DefaultMessage;
 }

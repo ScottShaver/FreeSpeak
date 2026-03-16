@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>Gruppeneinstellungen</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Wird geladen...</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Gruppenname</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+  <data name="PublicGroup" xml:space="preserve">
+    <value>Öffentliche Gruppe</value>
+  </data>
+  <data name="PublicGroupHelp" xml:space="preserve">
+    <value>Öffentliche Gruppen sind für alle Benutzer sichtbar.</value>
+  </data>
+  <data name="HiddenFromDiscovery" xml:space="preserve">
+    <value>Aus Entdeckung ausblenden</value>
+  </data>
+  <data name="HiddenFromDiscoveryHelp" xml:space="preserve">
+    <value>Versteckte Gruppen erscheinen nicht in Suchergebnissen.</value>
+  </data>
+  <data name="RequireJoinApproval" xml:space="preserve">
+    <value>Beitrittsgenehmigung erforderlich</value>
+  </data>
+  <data name="RequireJoinApprovalHelp" xml:space="preserve">
+    <value>Neue Mitglieder müssen vor dem Beitritt genehmigt werden.</value>
+  </data>
+  <data name="EnablePointsSystem" xml:space="preserve">
+    <value>Punktesystem aktivieren</value>
+  </data>
+  <data name="EnablePointsSystemHelp" xml:space="preserve">
+    <value>Mitglieder sammeln Punkte für Beiträge, Kommentare und Likes. Mitglieder können Abzeichen als Aufsteigender Beitragender, Top-Beitragender und Allstar-Beitragender erhalten.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Änderungen speichern</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Wird gespeichert...</value>
+  </data>
+</root>

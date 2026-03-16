@@ -5,17 +5,21 @@
 @using FreeSpeakWeb.Components.Shared
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject PostService PostService
 @inject IJSRuntime JS
+@inject IOptions<SiteSettings> SiteSettings
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.MyUploads> Localizer
 @attribute [Authorize]
 
-<PageTitle>My Uploads - FreeSpeak</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
 
 <div class="my-uploads-container">
     <div class="page-header">
-        <h2>My Uploads</h2>
+        <h2>@Localizer["Title"]</h2>
     </div>
 
     <div class="tabs-container">
@@ -25,20 +29,20 @@
                     <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
                     <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
                 </svg>
-                Pictures (@totalPictures)
+                @Localizer["Pictures"] (@totalPictures)
             </button>
             <button class="tab-button @(activeTab == "videos" ? "active" : "")" @onclick='() => SwitchTab("videos")'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                     <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
                 </svg>
-                Videos (@totalVideos)
+                @Localizer["Videos"] (@totalVideos)
             </button>
             <button class="tab-button @(activeTab == "other" ? "active" : "")" @onclick='() => SwitchTab("other")'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
                 </svg>
-                Other
+                @Localizer["Other"]
             </button>
         </div>
 
@@ -50,7 +54,7 @@
                     {
                         <div class="loading-spinner">
                             <div class="spinner"></div>
-                            <p>Loading your pictures...</p>
+                            <p>@Localizer["LoadingPictures"]</p>
                         </div>
                     }
                     else if (!pictures.Any() && !isLoadingPictures)
@@ -60,8 +64,8 @@
                                 <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
                                 <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
                             </svg>
-                            <h3>No pictures yet</h3>
-                            <p>Pictures you upload with your posts will appear here.</p>
+                            <h3>@Localizer["NoPicturesYet"]</h3>
+                            <p>@Localizer["NoPicturesDescription"]</p>
                         </div>
                     }
                     else
@@ -84,14 +88,14 @@
                         {
                             <div class="loading-more">
                                 <div class="spinner-small"></div>
-                                <span>Loading more...</span>
+                                <span>@Localizer["LoadingMore"]</span>
                             </div>
                         }
 
                         @if (!hasMorePictures && pictures.Any())
                         {
                             <div class="end-message">
-                                <p>You've reached the end of your pictures</p>
+                                <p>@Localizer["EndOfPictures"]</p>
                             </div>
                         }
                     }
@@ -104,7 +108,7 @@
                     {
                         <div class="loading-spinner">
                             <div class="spinner"></div>
-                            <p>Loading your videos...</p>
+                            <p>@Localizer["LoadingVideos"]</p>
                         </div>
                     }
                     else if (!videos.Any() && !isLoadingVideos)
@@ -114,8 +118,8 @@
                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                                 <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
                             </svg>
-                            <h3>No videos yet</h3>
-                            <p>Videos you upload with your posts will appear here.</p>
+                            <h3>@Localizer["NoVideosYet"]</h3>
+                            <p>@Localizer["NoVideosDescription"]</p>
                         </div>
                     }
                     else
@@ -143,14 +147,14 @@
                         {
                             <div class="loading-more">
                                 <div class="spinner-small"></div>
-                                <span>Loading more...</span>
+                                <span>@Localizer["LoadingMore"]</span>
                             </div>
                         }
 
                         @if (!hasMoreVideos && videos.Any())
                         {
                             <div class="end-message">
-                                <p>You've reached the end of your videos</p>
+                                <p>@Localizer["EndOfVideos"]</p>
                             </div>
                         }
                     }
@@ -163,8 +167,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
                         </svg>
-                        <h3>Coming Soon</h3>
-                        <p>Other file types will appear here in the future.</p>
+                        <h3>@Localizer["ComingSoon"]</h3>
+                        <p>@Localizer["OtherFilesDescription"]</p>
                     </div>
                 </div>
             }
