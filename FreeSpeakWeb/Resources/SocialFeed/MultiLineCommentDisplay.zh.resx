@@ -98,4 +98,16 @@
   <data name="Care" xml:space="preserve">
     <value>关心</value>
   </data>
+  <data name="Haha" xml:space="preserve">
+    <value>哈哈</value>
+  </data>
+  <data name="Wow" xml:space="preserve">
+    <value>哇</value>
+  </data>
+  <data name="Sad" xml:space="preserve">
+    <value>难过</value>
+  </data>
+  <data name="Angry" xml:space="preserve">
+    <value>生气</value>
+  </data>
 </root>

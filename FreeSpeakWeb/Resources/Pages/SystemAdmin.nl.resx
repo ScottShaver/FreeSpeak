@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Systeembeheer Functies</value>
+  </data>
+  <data name="WelcomeMessage" xml:space="preserve">
+    <value>Welkom, Systeembeheerder!</value>
+  </data>
+  <data name="WelcomeDescription" xml:space="preserve">
+    <value>Deze pagina is alleen toegankelijk voor gebruikers met de rol Systeembeheerder.</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Rollen</value>
+  </data>
+  <data name="UserManagement" xml:space="preserve">
+    <value>Gebruikersbeheer</value>
+  </data>
+  <data name="SystemConfiguration" xml:space="preserve">
+    <value>Systeemconfiguratie</value>
+  </data>
+  <data name="SiteWideContentModeration" xml:space="preserve">
+    <value>Sitebrede Inhoudsmoderatie</value>
+  </data>
+  <data name="AnalyticsAndReporting" xml:space="preserve">
+    <value>Analyses en Rapportage</value>
+  </data>
+  <data name="DatabaseMaintenanceTools" xml:space="preserve">
+    <value>Database Onderhoudstools</value>
+  </data>
+  <data name="UserManagementDescription" xml:space="preserve">
+    <value>Beheer gebruikersaccounts, rollen en machtigingen in het hele systeem.</value>
+  </data>
+  <data name="SearchUsers" xml:space="preserve">
+    <value>Gebruikers Zoeken</value>
+  </data>
+  <data name="SearchUsersDescription" xml:space="preserve">
+    <value>Zoeken in gebruikersnaam, e-mail, naam, stad, provincie en beroep.</value>
+  </data>
+  <data name="SearchUsersPlaceholder" xml:space="preserve">
+    <value>Begin met typen om gebruikers te zoeken...</value>
+  </data>
+  <data name="Searching" xml:space="preserve">
+    <value>Zoeken...</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Gebruikersnaam</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Naam</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Locatie</value>
+  </data>
+  <data name="Occupation" xml:space="preserve">
+    <value>Beroep</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Acties</value>
+  </data>
+  <data name="CopyUserId" xml:space="preserve">
+    <value>Gebruikers-ID Kopiëren</value>
+  </data>
+  <data name="EditRoles" xml:space="preserve">
+    <value>Rollen Bewerken</value>
+  </data>
+  <data name="LockoutInfo" xml:space="preserve">
+    <value>Vergrendelingsinfo</value>
+  </data>
+  <data name="AuditLog" xml:space="preserve">
+    <value>Auditlog</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>Profiel Bekijken</value>
+  </data>
+  <data name="SuspendUser" xml:space="preserve">
+    <value>Gebruiker Opschorten</value>
+  </data>
+  <data name="SendMessage" xml:space="preserve">
+    <value>Bericht Verzenden</value>
+  </data>
+  <data name="SearchAuditLogs" xml:space="preserve">
+    <value>Auditlogs Doorzoeken</value>
+  </data>
+  <data name="UserIdExactMatch" xml:space="preserve">
+    <value>Gebruikers-ID (exacte overeenkomst)</value>
+  </data>
+  <data name="EnterUserGuid" xml:space="preserve">
+    <value>Voer gebruikers-GUID in...</value>
+  </data>
+  <data name="ActionCategory" xml:space="preserve">
+    <value>Actiecategorie</value>
+  </data>
+  <data name="AllCategories" xml:space="preserve">
+    <value>Alle Categorieën</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Startdatum</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>Einddatum</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Zoeken</value>
+  </data>
+  <data name="FoundResults" xml:space="preserve">
+    <value>{0} resultaat/resultaten gevonden</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>Datum/Tijd</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>Gebruikers-ID</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Categorie</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Vorige</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Volgende</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Sluiten</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Pagina</value>
+  </data>
+  <data name="Of" xml:space="preserve">
+    <value>van</value>
+  </data>
+</root>

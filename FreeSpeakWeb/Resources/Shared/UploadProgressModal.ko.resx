@@ -82,4 +82,14 @@
   <data name="Retry" xml:space="preserve">
     <value>다시 시도</value>
   </data>
+  <data name="DefaultTitle" xml:space="preserve">
+    <value>업로드 중...</value>
+  </data>
+  <data name="DefaultMessage" xml:space="preserve">
+    <value>요청을 처리하는 동안 기다려 주세요</value>
+  </data>
+  <data name="StepOfSteps" xml:space="preserve">
+    <value>단계 {0} / {1}</value>
+    <comment>{0} is current step, {1} is total steps</comment>
+  </data>
 </root>

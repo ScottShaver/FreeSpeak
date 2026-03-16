@@ -106,4 +106,7 @@
   <data name="OtherFilesDescription" xml:space="preserve">
     <value>Andere bestandstypen verschijnen hier in de toekomst.</value>
   </data>
+  <data name="Uploaded" xml:space="preserve">
+    <value>Geüpload</value>
+  </data>
 </root>

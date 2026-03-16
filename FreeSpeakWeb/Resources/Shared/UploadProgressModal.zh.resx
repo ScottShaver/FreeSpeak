@@ -82,4 +82,14 @@
   <data name="Retry" xml:space="preserve">
     <value>重试</value>
   </data>
+  <data name="DefaultTitle" xml:space="preserve">
+    <value>上传中...</value>
+  </data>
+  <data name="DefaultMessage" xml:space="preserve">
+    <value>请等待我们处理您的请求</value>
+  </data>
+  <data name="StepOfSteps" xml:space="preserve">
+    <value>步骤 {0} / {1}</value>
+    <comment>{0} is current step, {1} is total steps</comment>
+  </data>
 </root>

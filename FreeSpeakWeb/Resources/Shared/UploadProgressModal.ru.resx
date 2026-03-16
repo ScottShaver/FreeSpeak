@@ -82,4 +82,14 @@
   <data name="Retry" xml:space="preserve">
     <value>Повторить</value>
   </data>
+  <data name="DefaultTitle" xml:space="preserve">
+    <value>Загрузка...</value>
+  </data>
+  <data name="DefaultMessage" xml:space="preserve">
+    <value>Пожалуйста, подождите, пока мы обрабатываем ваш запрос</value>
+  </data>
+  <data name="StepOfSteps" xml:space="preserve">
+    <value>Шаг {0} из {1}</value>
+    <comment>{0} is current step, {1} is total steps</comment>
+  </data>
 </root>

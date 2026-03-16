@@ -59,33 +59,45 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Title" xml:space="preserve">
-    <value>上传图片</value>
+    <value>添加图片</value>
   </data>
-  <data name="DropImageHere" xml:space="preserve">
-    <value>将图片拖到此处或</value>
+  <data name="DropAreaText" xml:space="preserve">
+    <value>点击选择图片或拖放</value>
   </data>
-  <data name="ClickToSelect" xml:space="preserve">
-    <value>点击选择</value>
+  <data name="UploadHint" xml:space="preserve">
+    <value>最多{0}张图片 • PNG、JPG、GIF • 每张最大{1}MB</value>
+    <comment>{0} is max images, {1} is max file size</comment>
   </data>
-  <data name="MaxFileSize" xml:space="preserve">
-    <value>最大文件大小：{0}MB</value>
+  <data name="SelectedImages" xml:space="preserve">
+    <value>已选图片</value>
   </data>
-  <data name="SupportedFormats" xml:space="preserve">
-    <value>支持的格式：JPEG、PNG、GIF、WebP</value>
+  <data name="ClearAll" xml:space="preserve">
+    <value>全部清除</value>
+  </data>
+  <data name="RemoveImage" xml:space="preserve">
+    <value>删除图片</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>取消</value>
   </data>
-  <data name="Upload" xml:space="preserve">
-    <value>上传</value>
+  <data name="AddImage" xml:space="preserve">
+    <value>添加{0}张图片</value>
+    <comment>{0} is the count</comment>
   </data>
-  <data name="Uploading" xml:space="preserve">
-    <value>正在上传...</value>
+  <data name="AddImages" xml:space="preserve">
+    <value>添加{0}张图片</value>
+    <comment>{0} is the count</comment>
   </data>
-  <data name="FileTooLarge" xml:space="preserve">
-    <value>文件太大。最大大小为{0}MB。</value>
+  <data name="MaxImagesError" xml:space="preserve">
+    <value>最多允许{0}张图片。</value>
+    <comment>{0} is the max image count</comment>
   </data>
-  <data name="InvalidFileType" xml:space="preserve">
-    <value>无效的文件类型。请仅上传JPEG、PNG、GIF或WebP图片。</value>
+  <data name="TooManyFilesError" xml:space="preserve">
+    <value>您选择的文件太多了。请选择最多{0}张图片。</value>
+    <comment>{0} is the remaining slots</comment>
+  </data>
+  <data name="NotAnImageError" xml:space="preserve">
+    <value>文件{0}不是图片。</value>
+    <comment>{0} is the filename</comment>
   </data>
 </root>

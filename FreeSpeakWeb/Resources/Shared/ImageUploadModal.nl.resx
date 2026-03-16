@@ -59,33 +59,45 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Title" xml:space="preserve">
-    <value>Afbeelding uploaden</value>
+    <value>Afbeeldingen Toevoegen</value>
   </data>
-  <data name="DropImageHere" xml:space="preserve">
-    <value>Sleep afbeelding hierheen of</value>
+  <data name="DropAreaText" xml:space="preserve">
+    <value>Klik om afbeeldingen te selecteren of sleep ze hiernaartoe</value>
   </data>
-  <data name="ClickToSelect" xml:space="preserve">
-    <value>klik om te selecteren</value>
+  <data name="UploadHint" xml:space="preserve">
+    <value>Tot {0} afbeeldingen • PNG, JPG, GIF • Max {1}MB elk</value>
+    <comment>{0} is max images, {1} is max file size</comment>
   </data>
-  <data name="MaxFileSize" xml:space="preserve">
-    <value>Maximale bestandsgrootte: {0}MB</value>
+  <data name="SelectedImages" xml:space="preserve">
+    <value>Geselecteerde Afbeeldingen</value>
   </data>
-  <data name="SupportedFormats" xml:space="preserve">
-    <value>Ondersteunde formaten: JPEG, PNG, GIF, WebP</value>
+  <data name="ClearAll" xml:space="preserve">
+    <value>Alles Wissen</value>
+  </data>
+  <data name="RemoveImage" xml:space="preserve">
+    <value>Afbeelding verwijderen</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annuleren</value>
   </data>
-  <data name="Upload" xml:space="preserve">
-    <value>Uploaden</value>
+  <data name="AddImage" xml:space="preserve">
+    <value>{0} Afbeelding Toevoegen</value>
+    <comment>{0} is the count</comment>
   </data>
-  <data name="Uploading" xml:space="preserve">
-    <value>Uploaden...</value>
+  <data name="AddImages" xml:space="preserve">
+    <value>{0} Afbeeldingen Toevoegen</value>
+    <comment>{0} is the count</comment>
   </data>
-  <data name="FileTooLarge" xml:space="preserve">
-    <value>Bestand is te groot. De maximale grootte is {0}MB.</value>
+  <data name="MaxImagesError" xml:space="preserve">
+    <value>Maximaal {0} afbeeldingen toegestaan.</value>
+    <comment>{0} is the max image count</comment>
   </data>
-  <data name="InvalidFileType" xml:space="preserve">
-    <value>Ongeldig bestandstype. Upload alleen JPEG, PNG, GIF of WebP afbeeldingen.</value>
+  <data name="TooManyFilesError" xml:space="preserve">
+    <value>Je hebt te veel bestanden geselecteerd. Selecteer tot {0} afbeelding(en).</value>
+    <comment>{0} is the remaining slots</comment>
+  </data>
+  <data name="NotAnImageError" xml:space="preserve">
+    <value>Bestand {0} is geen afbeelding.</value>
+    <comment>{0} is the filename</comment>
   </data>
 </root>

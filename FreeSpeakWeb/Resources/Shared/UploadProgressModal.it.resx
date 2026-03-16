@@ -82,4 +82,14 @@
   <data name="Retry" xml:space="preserve">
     <value>Riprova</value>
   </data>
+  <data name="DefaultTitle" xml:space="preserve">
+    <value>Caricamento...</value>
+  </data>
+  <data name="DefaultMessage" xml:space="preserve">
+    <value>Attendere mentre elaboriamo la richiesta</value>
+  </data>
+  <data name="StepOfSteps" xml:space="preserve">
+    <value>Passo {0} di {1}</value>
+    <comment>{0} is current step, {1} is total steps</comment>
+  </data>
 </root>

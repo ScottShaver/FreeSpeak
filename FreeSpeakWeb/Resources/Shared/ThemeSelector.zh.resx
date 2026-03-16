@@ -70,4 +70,10 @@
   <data name="Theme" xml:space="preserve">
     <value>主题</value>
   </data>
+  <data name="ChangeTheme" xml:space="preserve">
+    <value>更改主题</value>
+  </data>
+  <data name="ChooseTheme" xml:space="preserve">
+    <value>选择主题</value>
+  </data>
 </root>

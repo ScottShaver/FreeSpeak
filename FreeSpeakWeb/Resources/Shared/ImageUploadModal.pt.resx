@@ -59,33 +59,45 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Title" xml:space="preserve">
-    <value>Enviar Imagem</value>
+    <value>Adicionar Imagens</value>
   </data>
-  <data name="DropImageHere" xml:space="preserve">
-    <value>Arraste a imagem aqui ou</value>
+  <data name="DropAreaText" xml:space="preserve">
+    <value>Clique para selecionar imagens ou arraste e solte</value>
   </data>
-  <data name="ClickToSelect" xml:space="preserve">
-    <value>clique para selecionar</value>
+  <data name="UploadHint" xml:space="preserve">
+    <value>Até {0} imagens • PNG, JPG, GIF • Máx {1}MB cada</value>
+    <comment>{0} is max images, {1} is max file size</comment>
   </data>
-  <data name="MaxFileSize" xml:space="preserve">
-    <value>Tamanho máximo: {0}MB</value>
+  <data name="SelectedImages" xml:space="preserve">
+    <value>Imagens Selecionadas</value>
   </data>
-  <data name="SupportedFormats" xml:space="preserve">
-    <value>Formatos suportados: JPEG, PNG, GIF, WebP</value>
+  <data name="ClearAll" xml:space="preserve">
+    <value>Limpar Tudo</value>
+  </data>
+  <data name="RemoveImage" xml:space="preserve">
+    <value>Remover imagem</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancelar</value>
   </data>
-  <data name="Upload" xml:space="preserve">
-    <value>Enviar</value>
+  <data name="AddImage" xml:space="preserve">
+    <value>Adicionar {0} Imagem</value>
+    <comment>{0} is the count</comment>
   </data>
-  <data name="Uploading" xml:space="preserve">
-    <value>Enviando...</value>
+  <data name="AddImages" xml:space="preserve">
+    <value>Adicionar {0} Imagens</value>
+    <comment>{0} is the count</comment>
   </data>
-  <data name="FileTooLarge" xml:space="preserve">
-    <value>O arquivo é muito grande. O tamanho máximo é {0}MB.</value>
+  <data name="MaxImagesError" xml:space="preserve">
+    <value>Máximo de {0} imagens permitidas.</value>
+    <comment>{0} is the max image count</comment>
   </data>
-  <data name="InvalidFileType" xml:space="preserve">
-    <value>Tipo de arquivo inválido. Envie apenas imagens JPEG, PNG, GIF ou WebP.</value>
+  <data name="TooManyFilesError" xml:space="preserve">
+    <value>Você selecionou muitos arquivos. Selecione até {0} imagem(ns).</value>
+    <comment>{0} is the remaining slots</comment>
+  </data>
+  <data name="NotAnImageError" xml:space="preserve">
+    <value>O arquivo {0} não é uma imagem.</value>
+    <comment>{0} is the filename</comment>
   </data>
 </root>

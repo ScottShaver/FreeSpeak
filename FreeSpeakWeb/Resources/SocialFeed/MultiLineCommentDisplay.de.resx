@@ -98,4 +98,16 @@
   <data name="Care" xml:space="preserve">
     <value>Mitgefühl</value>
   </data>
+  <data name="Haha" xml:space="preserve">
+    <value>Haha</value>
+  </data>
+  <data name="Wow" xml:space="preserve">
+    <value>Wow</value>
+  </data>
+  <data name="Sad" xml:space="preserve">
+    <value>Traurig</value>
+  </data>
+  <data name="Angry" xml:space="preserve">
+    <value>Wütend</value>
+  </data>
 </root>

@@ -82,4 +82,14 @@
   <data name="Retry" xml:space="preserve">
     <value>Ponów</value>
   </data>
+  <data name="DefaultTitle" xml:space="preserve">
+    <value>Przesyłanie...</value>
+  </data>
+  <data name="DefaultMessage" xml:space="preserve">
+    <value>Proszę czekać, przetwarzamy Twoje żądanie</value>
+  </data>
+  <data name="StepOfSteps" xml:space="preserve">
+    <value>Krok {0} z {1}</value>
+    <comment>{0} is current step, {1} is total steps</comment>
+  </data>
 </root>

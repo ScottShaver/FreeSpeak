@@ -59,33 +59,45 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Title" xml:space="preserve">
-    <value>تحميل صورة</value>
+    <value>إضافة صور</value>
   </data>
-  <data name="DropImageHere" xml:space="preserve">
-    <value>أسقط الصورة هنا أو</value>
+  <data name="DropAreaText" xml:space="preserve">
+    <value>انقر لاختيار الصور أو اسحب وأفلت</value>
   </data>
-  <data name="ClickToSelect" xml:space="preserve">
-    <value>انقر للاختيار</value>
+  <data name="UploadHint" xml:space="preserve">
+    <value>حتى {0} صور • PNG، JPG، GIF • حد أقصى {1}ميجابايت لكل منها</value>
+    <comment>{0} is max images, {1} is max file size</comment>
   </data>
-  <data name="MaxFileSize" xml:space="preserve">
-    <value>الحجم الأقصى: {0} ميجابايت</value>
+  <data name="SelectedImages" xml:space="preserve">
+    <value>الصور المحددة</value>
   </data>
-  <data name="SupportedFormats" xml:space="preserve">
-    <value>الصيغ المدعومة: JPEG، PNG، GIF، WebP</value>
+  <data name="ClearAll" xml:space="preserve">
+    <value>مسح الكل</value>
+  </data>
+  <data name="RemoveImage" xml:space="preserve">
+    <value>إزالة الصورة</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>إلغاء</value>
   </data>
-  <data name="Upload" xml:space="preserve">
-    <value>تحميل</value>
+  <data name="AddImage" xml:space="preserve">
+    <value>إضافة {0} صورة</value>
+    <comment>{0} is the count</comment>
   </data>
-  <data name="Uploading" xml:space="preserve">
-    <value>جاري التحميل...</value>
+  <data name="AddImages" xml:space="preserve">
+    <value>إضافة {0} صور</value>
+    <comment>{0} is the count</comment>
   </data>
-  <data name="FileTooLarge" xml:space="preserve">
-    <value>الملف كبير جداً. الحجم الأقصى هو {0} ميجابايت.</value>
+  <data name="MaxImagesError" xml:space="preserve">
+    <value>الحد الأقصى {0} صور مسموح.</value>
+    <comment>{0} is the max image count</comment>
   </data>
-  <data name="InvalidFileType" xml:space="preserve">
-    <value>نوع ملف غير صالح. يرجى تحميل صور JPEG أو PNG أو GIF أو WebP فقط.</value>
+  <data name="TooManyFilesError" xml:space="preserve">
+    <value>لقد حددت عدداً كبيراً جداً من الملفات. يرجى تحديد ما يصل إلى {0} صورة.</value>
+    <comment>{0} is the remaining slots</comment>
+  </data>
+  <data name="NotAnImageError" xml:space="preserve">
+    <value>الملف {0} ليس صورة.</value>
+    <comment>{0} is the filename</comment>
   </data>
 </root>

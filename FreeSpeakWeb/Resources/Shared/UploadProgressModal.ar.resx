@@ -82,4 +82,14 @@
   <data name="Retry" xml:space="preserve">
     <value>إعادة المحاولة</value>
   </data>
+  <data name="DefaultTitle" xml:space="preserve">
+    <value>جاري الرفع...</value>
+  </data>
+  <data name="DefaultMessage" xml:space="preserve">
+    <value>يرجى الانتظار أثناء معالجة طلبك</value>
+  </data>
+  <data name="StepOfSteps" xml:space="preserve">
+    <value>الخطوة {0} من {1}</value>
+    <comment>{0} is current step, {1} is total steps</comment>
+  </data>
 </root>

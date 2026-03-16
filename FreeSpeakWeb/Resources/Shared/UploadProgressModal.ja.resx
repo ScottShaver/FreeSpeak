@@ -82,4 +82,14 @@
   <data name="Retry" xml:space="preserve">
     <value>再試行</value>
   </data>
+  <data name="DefaultTitle" xml:space="preserve">
+    <value>アップロード中...</value>
+  </data>
+  <data name="DefaultMessage" xml:space="preserve">
+    <value>リクエストを処理していますのでお待ちください</value>
+  </data>
+  <data name="StepOfSteps" xml:space="preserve">
+    <value>ステップ {0} / {1}</value>
+    <comment>{0} is current step, {1} is total steps</comment>
+  </data>
 </root>

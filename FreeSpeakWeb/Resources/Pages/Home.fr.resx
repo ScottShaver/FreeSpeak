@@ -67,4 +67,22 @@
   <data name="PinnedPosts" xml:space="preserve">
     <value>Publications épinglées</value>
   </data>
+  <data name="LoadingFeed" xml:space="preserve">
+    <value>Chargement de votre fil...</value>
+  </data>
+  <data name="EmptyFeed" xml:space="preserve">
+    <value>Aucune publication à afficher. Commencez à vous connecter avec des amis pour voir leurs publications !</value>
+  </data>
+  <data name="LoadingMore" xml:space="preserve">
+    <value>Chargement de plus de publications...</value>
+  </data>
+  <data name="NoMorePosts" xml:space="preserve">
+    <value>Plus de publications pour le moment</value>
+  </data>
+  <data name="LoadingPinnedPosts" xml:space="preserve">
+    <value>Chargement de vos publications épinglées...</value>
+  </data>
+  <data name="EmptyPinnedPosts" xml:space="preserve">
+    <value>Vous n'avez pas encore épinglé de publications. Épinglez des publications depuis votre fil pour les voir ici !</value>
+  </data>
 </root>

@@ -82,4 +82,14 @@
   <data name="Retry" xml:space="preserve">
     <value>Opnieuw proberen</value>
   </data>
+  <data name="DefaultTitle" xml:space="preserve">
+    <value>Uploaden...</value>
+  </data>
+  <data name="DefaultMessage" xml:space="preserve">
+    <value>Wacht terwijl we je verzoek verwerken</value>
+  </data>
+  <data name="StepOfSteps" xml:space="preserve">
+    <value>Stap {0} van {1}</value>
+    <comment>{0} is current step, {1} is total steps</comment>
+  </data>
 </root>

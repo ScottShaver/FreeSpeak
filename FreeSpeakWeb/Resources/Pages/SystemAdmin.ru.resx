@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Функции Администрирования Системы</value>
+  </data>
+  <data name="WelcomeMessage" xml:space="preserve">
+    <value>Добро пожаловать, Системный Администратор!</value>
+  </data>
+  <data name="WelcomeDescription" xml:space="preserve">
+    <value>Эта страница доступна только для пользователей с ролью Системного Администратора.</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Роли</value>
+  </data>
+  <data name="UserManagement" xml:space="preserve">
+    <value>Управление Пользователями</value>
+  </data>
+  <data name="SystemConfiguration" xml:space="preserve">
+    <value>Конфигурация Системы</value>
+  </data>
+  <data name="SiteWideContentModeration" xml:space="preserve">
+    <value>Модерация Контента Сайта</value>
+  </data>
+  <data name="AnalyticsAndReporting" xml:space="preserve">
+    <value>Аналитика и Отчетность</value>
+  </data>
+  <data name="DatabaseMaintenanceTools" xml:space="preserve">
+    <value>Инструменты Обслуживания Базы Данных</value>
+  </data>
+  <data name="UserManagementDescription" xml:space="preserve">
+    <value>Управляйте учетными записями пользователей, ролями и разрешениями во всей системе.</value>
+  </data>
+  <data name="SearchUsers" xml:space="preserve">
+    <value>Поиск Пользователей</value>
+  </data>
+  <data name="SearchUsersDescription" xml:space="preserve">
+    <value>Поиск по имени пользователя, электронной почте, имени, городу, области и профессии.</value>
+  </data>
+  <data name="SearchUsersPlaceholder" xml:space="preserve">
+    <value>Начните вводить для поиска пользователей...</value>
+  </data>
+  <data name="Searching" xml:space="preserve">
+    <value>Поиск...</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Имя пользователя</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Электронная почта</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Местоположение</value>
+  </data>
+  <data name="Occupation" xml:space="preserve">
+    <value>Профессия</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Действия</value>
+  </data>
+  <data name="CopyUserId" xml:space="preserve">
+    <value>Копировать ID Пользователя</value>
+  </data>
+  <data name="EditRoles" xml:space="preserve">
+    <value>Редактировать Роли</value>
+  </data>
+  <data name="LockoutInfo" xml:space="preserve">
+    <value>Информация о Блокировке</value>
+  </data>
+  <data name="AuditLog" xml:space="preserve">
+    <value>Журнал Аудита</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>Просмотреть Профиль</value>
+  </data>
+  <data name="SuspendUser" xml:space="preserve">
+    <value>Приостановить Пользователя</value>
+  </data>
+  <data name="SendMessage" xml:space="preserve">
+    <value>Отправить Сообщение</value>
+  </data>
+  <data name="SearchAuditLogs" xml:space="preserve">
+    <value>Поиск в Журналах Аудита</value>
+  </data>
+  <data name="UserIdExactMatch" xml:space="preserve">
+    <value>ID Пользователя (точное совпадение)</value>
+  </data>
+  <data name="EnterUserGuid" xml:space="preserve">
+    <value>Введите GUID пользователя...</value>
+  </data>
+  <data name="ActionCategory" xml:space="preserve">
+    <value>Категория Действия</value>
+  </data>
+  <data name="AllCategories" xml:space="preserve">
+    <value>Все Категории</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Дата Начала</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>Дата Окончания</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="FoundResults" xml:space="preserve">
+    <value>Найдено {0} результат(ов)</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>Дата/Время</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>ID Пользователя</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Категория</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Подробности</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Предыдущая</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Следующая</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Страница</value>
+  </data>
+  <data name="Of" xml:space="preserve">
+    <value>из</value>
+  </data>
+</root>

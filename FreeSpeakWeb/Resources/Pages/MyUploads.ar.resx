@@ -106,4 +106,7 @@
   <data name="OtherFilesDescription" xml:space="preserve">
     <value>ستظهر أنواع الملفات الأخرى هنا في المستقبل.</value>
   </data>
+  <data name="Uploaded" xml:space="preserve">
+    <value>تم الرفع</value>
+  </data>
 </root>

@@ -67,4 +67,22 @@
   <data name="PinnedPosts" xml:space="preserve">
     <value>Publicaciones fijadas</value>
   </data>
+  <data name="LoadingFeed" xml:space="preserve">
+    <value>Cargando tu feed...</value>
+  </data>
+  <data name="EmptyFeed" xml:space="preserve">
+    <value>No hay publicaciones para mostrar. ¡Empieza a conectar con amigos para ver sus publicaciones!</value>
+  </data>
+  <data name="LoadingMore" xml:space="preserve">
+    <value>Cargando más publicaciones...</value>
+  </data>
+  <data name="NoMorePosts" xml:space="preserve">
+    <value>No hay más publicaciones en este momento</value>
+  </data>
+  <data name="LoadingPinnedPosts" xml:space="preserve">
+    <value>Cargando tus publicaciones fijadas...</value>
+  </data>
+  <data name="EmptyPinnedPosts" xml:space="preserve">
+    <value>Aún no has fijado ninguna publicación. ¡Fija publicaciones desde tu feed para verlas aquí!</value>
+  </data>
 </root>

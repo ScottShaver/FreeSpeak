@@ -59,33 +59,45 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Title" xml:space="preserve">
-    <value>Bild hochladen</value>
+    <value>Bilder hinzufügen</value>
   </data>
-  <data name="DropImageHere" xml:space="preserve">
-    <value>Bild hier ablegen oder</value>
+  <data name="DropAreaText" xml:space="preserve">
+    <value>Klicken Sie, um Bilder auszuwählen, oder ziehen Sie sie hierher</value>
   </data>
-  <data name="ClickToSelect" xml:space="preserve">
-    <value>klicken zum Auswählen</value>
+  <data name="UploadHint" xml:space="preserve">
+    <value>Bis zu {0} Bilder • PNG, JPG, GIF • Max. {1}MB pro Bild</value>
+    <comment>{0} is max images, {1} is max file size</comment>
   </data>
-  <data name="MaxFileSize" xml:space="preserve">
-    <value>Maximale Dateigröße: {0}MB</value>
+  <data name="SelectedImages" xml:space="preserve">
+    <value>Ausgewählte Bilder</value>
   </data>
-  <data name="SupportedFormats" xml:space="preserve">
-    <value>Unterstützte Formate: JPEG, PNG, GIF, WebP</value>
+  <data name="ClearAll" xml:space="preserve">
+    <value>Alle löschen</value>
+  </data>
+  <data name="RemoveImage" xml:space="preserve">
+    <value>Bild entfernen</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Abbrechen</value>
   </data>
-  <data name="Upload" xml:space="preserve">
-    <value>Hochladen</value>
+  <data name="AddImage" xml:space="preserve">
+    <value>{0} Bild hinzufügen</value>
+    <comment>{0} is the count</comment>
   </data>
-  <data name="Uploading" xml:space="preserve">
-    <value>Wird hochgeladen...</value>
+  <data name="AddImages" xml:space="preserve">
+    <value>{0} Bilder hinzufügen</value>
+    <comment>{0} is the count</comment>
   </data>
-  <data name="FileTooLarge" xml:space="preserve">
-    <value>Datei ist zu groß. Die maximale Größe beträgt {0}MB.</value>
+  <data name="MaxImagesError" xml:space="preserve">
+    <value>Maximal {0} Bilder erlaubt.</value>
+    <comment>{0} is the max image count</comment>
   </data>
-  <data name="InvalidFileType" xml:space="preserve">
-    <value>Ungültiger Dateityp. Bitte laden Sie nur JPEG-, PNG-, GIF- oder WebP-Bilder hoch.</value>
+  <data name="TooManyFilesError" xml:space="preserve">
+    <value>Sie haben zu viele Dateien ausgewählt. Bitte wählen Sie bis zu {0} Bild(er) aus.</value>
+    <comment>{0} is the remaining slots</comment>
+  </data>
+  <data name="NotAnImageError" xml:space="preserve">
+    <value>Datei {0} ist kein Bild.</value>
+    <comment>{0} is the filename</comment>
   </data>
 </root>
