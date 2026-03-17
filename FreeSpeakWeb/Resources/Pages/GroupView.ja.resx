@@ -97,4 +97,40 @@
   <data name="NoPostsYet" xml:space="preserve">
     <value>このグループにはまだ投稿がありません。最初の投稿をしましょう！</value>
   </data>
+  <data name="GroupAdministration" xml:space="preserve">
+    <value>グループ管理</value>
+  </data>
+  <data name="GroupModeration" xml:space="preserve">
+    <value>グループモデレーション</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>作成者</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>管理者</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>モデレーター</value>
+  </data>
+  <data name="YouAreGroupCreator" xml:space="preserve">
+    <value>あなたはこのグループの作成者です</value>
+  </data>
+  <data name="YouAreGroupAdmin" xml:space="preserve">
+    <value>あなたはこのグループの管理者です</value>
+  </data>
+  <data name="YouAreGroupModerator" xml:space="preserve">
+    <value>あなたはこのグループのモデレーターです</value>
+  </data>
+  <data name="PostPending" xml:space="preserve">
+    <value>承認待ち</value>
+  </data>
+  <data name="PostPendingDescription" xml:space="preserve">
+    <value>この投稿は他のメンバーに表示される前にモデレーターの承認を待っています。</value>
+  </data>
+  <data name="PostDeclined" xml:space="preserve">
+    <value>投稿が拒否されました</value>
+  </data>
+  <data name="PostDeclinedDescription" xml:space="preserve">
+    <value>この投稿はモデレーターによって拒否されました。編集して再送信できます。</value>
+  </data>
 </root>

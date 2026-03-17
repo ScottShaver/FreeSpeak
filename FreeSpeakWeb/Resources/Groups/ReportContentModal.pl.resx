@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="0" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ReportPost" xml:space="preserve">
+    <value>Zgłoś post</value>
+  </data>
+  <data name="ReportComment" xml:space="preserve">
+    <value>Zgłoś komentarz</value>
+  </data>
+  <data name="ReportDescription" xml:space="preserve">
+    <value>Pomóż nam zrozumieć, co jest nie tak z tą treścią. Twoje zgłoszenie zostanie rozpatrzone przez moderatorów grupy.</value>
+  </data>
+  <data name="SelectReason" xml:space="preserve">
+    <value>Dlaczego zgłaszasz tę treść?</value>
+  </data>
+  <data name="SelectViolatedRule" xml:space="preserve">
+    <value>Którą zasadę grupy narusza ta treść?</value>
+  </data>
+  <data name="AdditionalDetails" xml:space="preserve">
+    <value>Dodatkowe szczegóły (Opcjonalnie)</value>
+  </data>
+  <data name="AdditionalDetailsDescription" xml:space="preserve">
+    <value>Podaj dodatkowy kontekst, który może pomóc moderatorom w rozpatrzeniu tego zgłoszenia.</value>
+  </data>
+  <data name="DescriptionPlaceholder" xml:space="preserve">
+    <value>Wprowadź dodatkowe szczegóły dotyczące zgłaszania tej treści...</value>
+  </data>
+  <data name="ReasonViolatesGroupRule" xml:space="preserve">
+    <value>Narusza zasadę grupy</value>
+  </data>
+  <data name="ReasonSpam" xml:space="preserve">
+    <value>Spam lub niechciana treść</value>
+  </data>
+  <data name="ReasonHarassment" xml:space="preserve">
+    <value>Nękanie lub zastraszanie</value>
+  </data>
+  <data name="ReasonHateSpeech" xml:space="preserve">
+    <value>Mowa nienawiści</value>
+  </data>
+  <data name="ReasonMisinformation" xml:space="preserve">
+    <value>Dezinformacja lub fałszywe informacje</value>
+  </data>
+  <data name="ReasonAdultContent" xml:space="preserve">
+    <value>Nagość lub treści seksualne</value>
+  </data>
+  <data name="ReasonViolence" xml:space="preserve">
+    <value>Przemoc lub treści graficzne</value>
+  </data>
+  <data name="ReasonCopyright" xml:space="preserve">
+    <value>Naruszenie praw autorskich lub własności intelektualnej</value>
+  </data>
+  <data name="ReasonOffTopic" xml:space="preserve">
+    <value>Treść nie na temat lub nieistotna</value>
+  </data>
+  <data name="ReasonPrivacy" xml:space="preserve">
+    <value>Naruszenie prywatności</value>
+  </data>
+  <data name="ReasonSelfHarm" xml:space="preserve">
+    <value>Treści dotyczące samookaleczenia lub samobójstwa</value>
+  </data>
+  <data name="ReasonIllegal" xml:space="preserve">
+    <value>Nielegalna działalność</value>
+  </data>
+  <data name="ReasonOther" xml:space="preserve">
+    <value>Inne</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Ładowanie...</value>
+  </data>
+  <data name="NoGroupRules" xml:space="preserve">
+    <value>Ta grupa nie ma zdefiniowanych zasad. Wybierz inny powód zgłoszenia.</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Wstecz</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="ReportingFor" xml:space="preserve">
+    <value>Zgłaszanie:</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Dalej</value>
+  </data>
+  <data name="SubmitReport" xml:space="preserve">
+    <value>Wyślij zgłoszenie</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Zamknij</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Dziękujemy za zgłoszenie. Nasi moderatorzy przejrzą tę treść i podejmą odpowiednie działania.</value>
+  </data>
+  <data name="SelectReasonError" xml:space="preserve">
+    <value>Wybierz powód zgłoszenia.</value>
+  </data>
+  <data name="SelectRuleError" xml:space="preserve">
+    <value>Wybierz, która zasada grupy została naruszona.</value>
+  </data>
+  <data name="ErrorSubmitting" xml:space="preserve">
+    <value>Wystąpił błąd podczas wysyłania zgłoszenia. Spróbuj ponownie.</value>
+  </data>
+</root>

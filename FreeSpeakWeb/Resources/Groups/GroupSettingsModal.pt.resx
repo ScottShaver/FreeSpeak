@@ -103,4 +103,31 @@
   <data name="Saving" xml:space="preserve">
     <value>Salvando...</value>
   </data>
+  <data name="RequireAcceptRules" xml:space="preserve">
+    <value>Exigir aceitação das regras do grupo</value>
+  </data>
+  <data name="RequireAcceptRulesHelp" xml:space="preserve">
+    <value>Os usuários devem aceitar as regras do grupo antes de entrar ou enviar uma solicitação de entrada.</value>
+  </data>
+  <data name="RequiresPostApproval" xml:space="preserve">
+    <value>Exigir aprovação de publicações</value>
+  </data>
+  <data name="RequiresPostApprovalHelp" xml:space="preserve">
+    <value>Novas publicações devem ser aprovadas por um moderador antes de serem visíveis para outros membros.</value>
+  </data>
+  <data name="GroupStatusSection" xml:space="preserve">
+    <value>Status do grupo</value>
+  </data>
+  <data name="IsActive" xml:space="preserve">
+    <value>O grupo está ativo</value>
+  </data>
+  <data name="IsActiveHelp" xml:space="preserve">
+    <value>Quando ativo, o grupo está pronto para aceitar usuários e conteúdo. Grupos inativos são visíveis apenas para administradores.</value>
+  </data>
+  <data name="IsClosed" xml:space="preserve">
+    <value>O grupo está permanentemente fechado</value>
+  </data>
+  <data name="IsClosedHelp" xml:space="preserve">
+    <value>Aviso: Fechar um grupo é permanente. Nenhuma alteração pode ser feita após o fechamento, nem mesmo por administradores.</value>
+  </data>
 </root>

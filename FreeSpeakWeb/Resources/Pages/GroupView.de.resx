@@ -97,4 +97,40 @@
   <data name="NoPostsYet" xml:space="preserve">
     <value>Noch keine Beiträge in dieser Gruppe. Seien Sie der Erste!</value>
   </data>
+  <data name="GroupAdministration" xml:space="preserve">
+    <value>Gruppenverwaltung</value>
+  </data>
+  <data name="GroupModeration" xml:space="preserve">
+    <value>Gruppenmoderation</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>Ersteller</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>Moderator</value>
+  </data>
+  <data name="YouAreGroupCreator" xml:space="preserve">
+    <value>Sie sind der Ersteller dieser Gruppe</value>
+  </data>
+  <data name="YouAreGroupAdmin" xml:space="preserve">
+    <value>Sie sind Administrator dieser Gruppe</value>
+  </data>
+  <data name="YouAreGroupModerator" xml:space="preserve">
+    <value>Sie sind Moderator dieser Gruppe</value>
+  </data>
+  <data name="PostPending" xml:space="preserve">
+    <value>Genehmigung ausstehend</value>
+  </data>
+  <data name="PostPendingDescription" xml:space="preserve">
+    <value>Dieser Beitrag wartet auf die Genehmigung eines Moderators, bevor er für andere sichtbar wird.</value>
+  </data>
+  <data name="PostDeclined" xml:space="preserve">
+    <value>Beitrag abgelehnt</value>
+  </data>
+  <data name="PostDeclinedDescription" xml:space="preserve">
+    <value>Dieser Beitrag wurde von einem Moderator abgelehnt. Sie können ihn bearbeiten und erneut einreichen.</value>
+  </data>
 </root>

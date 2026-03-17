@@ -103,4 +103,31 @@
   <data name="Saving" xml:space="preserve">
     <value>Сохранение...</value>
   </data>
+  <data name="RequireAcceptRules" xml:space="preserve">
+    <value>Требуется согласие с правилами группы</value>
+  </data>
+  <data name="RequireAcceptRulesHelp" xml:space="preserve">
+    <value>Пользователи должны согласиться с правилами группы перед вступлением или отправкой заявки на вступление.</value>
+  </data>
+  <data name="RequiresPostApproval" xml:space="preserve">
+    <value>Требуется одобрение публикаций</value>
+  </data>
+  <data name="RequiresPostApprovalHelp" xml:space="preserve">
+    <value>Новые публикации должны быть одобрены модератором, прежде чем они станут видны другим участникам.</value>
+  </data>
+  <data name="GroupStatusSection" xml:space="preserve">
+    <value>Статус группы</value>
+  </data>
+  <data name="IsActive" xml:space="preserve">
+    <value>Группа активна</value>
+  </data>
+  <data name="IsActiveHelp" xml:space="preserve">
+    <value>Когда группа активна, она готова принимать пользователей и контент. Неактивные группы видны только администраторам.</value>
+  </data>
+  <data name="IsClosed" xml:space="preserve">
+    <value>Группа закрыта навсегда</value>
+  </data>
+  <data name="IsClosedHelp" xml:space="preserve">
+    <value>Предупреждение: Закрытие группы необратимо. После закрытия никакие изменения невозможны, даже для администраторов.</value>
+  </data>
 </root>

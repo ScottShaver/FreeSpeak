@@ -97,4 +97,40 @@
   <data name="NoPostsYet" xml:space="preserve">
     <value>В этой группе пока нет сообщений. Станьте первым, кто опубликует!</value>
   </data>
+  <data name="GroupAdministration" xml:space="preserve">
+    <value>Администрирование группы</value>
+  </data>
+  <data name="GroupModeration" xml:space="preserve">
+    <value>Модерация группы</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>Создатель</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Админ</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>Модератор</value>
+  </data>
+  <data name="YouAreGroupCreator" xml:space="preserve">
+    <value>Вы создатель этой группы</value>
+  </data>
+  <data name="YouAreGroupAdmin" xml:space="preserve">
+    <value>Вы администратор этой группы</value>
+  </data>
+  <data name="YouAreGroupModerator" xml:space="preserve">
+    <value>Вы модератор этой группы</value>
+  </data>
+  <data name="PostPending" xml:space="preserve">
+    <value>Ожидает одобрения</value>
+  </data>
+  <data name="PostPendingDescription" xml:space="preserve">
+    <value>Эта публикация ожидает одобрения модератора, прежде чем станет видна другим.</value>
+  </data>
+  <data name="PostDeclined" xml:space="preserve">
+    <value>Публикация отклонена</value>
+  </data>
+  <data name="PostDeclinedDescription" xml:space="preserve">
+    <value>Эта публикация была отклонена модератором. Вы можете отредактировать и отправить её повторно.</value>
+  </data>
 </root>

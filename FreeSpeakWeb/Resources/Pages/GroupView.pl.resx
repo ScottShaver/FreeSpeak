@@ -97,4 +97,40 @@
   <data name="NoPostsYet" xml:space="preserve">
     <value>Jeszcze nie ma postów w tej grupie. Bądź pierwszą osobą, która opublikuje!</value>
   </data>
+  <data name="GroupAdministration" xml:space="preserve">
+    <value>Administracja grupą</value>
+  </data>
+  <data name="GroupModeration" xml:space="preserve">
+    <value>Moderacja grupy</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>Twórca</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>Moderator</value>
+  </data>
+  <data name="YouAreGroupCreator" xml:space="preserve">
+    <value>Jesteś twórcą tej grupy</value>
+  </data>
+  <data name="YouAreGroupAdmin" xml:space="preserve">
+    <value>Jesteś administratorem tej grupy</value>
+  </data>
+  <data name="YouAreGroupModerator" xml:space="preserve">
+    <value>Jesteś moderatorem tej grupy</value>
+  </data>
+  <data name="PostPending" xml:space="preserve">
+    <value>Oczekuje na zatwierdzenie</value>
+  </data>
+  <data name="PostPendingDescription" xml:space="preserve">
+    <value>Ten post oczekuje na zatwierdzenie przez moderatora, zanim będzie widoczny dla innych.</value>
+  </data>
+  <data name="PostDeclined" xml:space="preserve">
+    <value>Post odrzucony</value>
+  </data>
+  <data name="PostDeclinedDescription" xml:space="preserve">
+    <value>Ten post został odrzucony przez moderatora. Możesz go edytować i przesłać ponownie.</value>
+  </data>
 </root>

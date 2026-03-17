@@ -103,4 +103,31 @@
   <data name="Saving" xml:space="preserve">
     <value>저장 중...</value>
   </data>
+  <data name="RequireAcceptRules" xml:space="preserve">
+    <value>그룹 규칙 동의 필요</value>
+  </data>
+  <data name="RequireAcceptRulesHelp" xml:space="preserve">
+    <value>사용자는 가입하거나 가입 요청을 제출하기 전에 그룹 규칙에 동의해야 합니다.</value>
+  </data>
+  <data name="RequiresPostApproval" xml:space="preserve">
+    <value>게시물 승인 필요</value>
+  </data>
+  <data name="RequiresPostApprovalHelp" xml:space="preserve">
+    <value>새 게시물은 다른 멤버에게 표시되기 전에 운영자의 승인이 필요합니다.</value>
+  </data>
+  <data name="GroupStatusSection" xml:space="preserve">
+    <value>그룹 상태</value>
+  </data>
+  <data name="IsActive" xml:space="preserve">
+    <value>그룹이 활성화됨</value>
+  </data>
+  <data name="IsActiveHelp" xml:space="preserve">
+    <value>활성화되면 그룹은 사용자와 콘텐츠를 받을 준비가 됩니다. 비활성 그룹은 관리자에게만 표시됩니다.</value>
+  </data>
+  <data name="IsClosed" xml:space="preserve">
+    <value>그룹이 영구적으로 폐쇄됨</value>
+  </data>
+  <data name="IsClosedHelp" xml:space="preserve">
+    <value>경고: 그룹 폐쇄는 영구적입니다. 폐쇄 후에는 관리자라도 변경할 수 없습니다.</value>
+  </data>
 </root>

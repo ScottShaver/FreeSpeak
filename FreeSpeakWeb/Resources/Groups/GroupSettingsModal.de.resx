@@ -103,4 +103,31 @@
   <data name="Saving" xml:space="preserve">
     <value>Wird gespeichert...</value>
   </data>
+  <data name="RequireAcceptRules" xml:space="preserve">
+    <value>Zustimmung zu Gruppenregeln erforderlich</value>
+  </data>
+  <data name="RequireAcceptRulesHelp" xml:space="preserve">
+    <value>Benutzer müssen den Gruppenregeln zustimmen, bevor sie beitreten oder eine Beitrittsanfrage stellen können.</value>
+  </data>
+  <data name="RequiresPostApproval" xml:space="preserve">
+    <value>Beitragsgenehmigung erforderlich</value>
+  </data>
+  <data name="RequiresPostApprovalHelp" xml:space="preserve">
+    <value>Neue Beiträge müssen von einem Moderator genehmigt werden, bevor sie für andere Mitglieder sichtbar sind.</value>
+  </data>
+  <data name="GroupStatusSection" xml:space="preserve">
+    <value>Gruppenstatus</value>
+  </data>
+  <data name="IsActive" xml:space="preserve">
+    <value>Gruppe ist aktiv</value>
+  </data>
+  <data name="IsActiveHelp" xml:space="preserve">
+    <value>Wenn aktiv, ist die Gruppe bereit, Benutzer und Inhalte zu akzeptieren. Inaktive Gruppen sind nur für Administratoren sichtbar.</value>
+  </data>
+  <data name="IsClosed" xml:space="preserve">
+    <value>Gruppe ist dauerhaft geschlossen</value>
+  </data>
+  <data name="IsClosedHelp" xml:space="preserve">
+    <value>Warnung: Das Schließen einer Gruppe ist endgültig. Nach dem Schließen können keine Änderungen mehr vorgenommen werden, auch nicht von Administratoren.</value>
+  </data>
 </root>

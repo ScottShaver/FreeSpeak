@@ -103,4 +103,31 @@
   <data name="Saving" xml:space="preserve">
     <value>Opslaan...</value>
   </data>
+  <data name="RequireAcceptRules" xml:space="preserve">
+    <value>Akkoord met groepsregels vereist</value>
+  </data>
+  <data name="RequireAcceptRulesHelp" xml:space="preserve">
+    <value>Gebruikers moeten akkoord gaan met de groepsregels voordat ze kunnen toetreden of een toetredingsverzoek kunnen indienen.</value>
+  </data>
+  <data name="RequiresPostApproval" xml:space="preserve">
+    <value>Goedkeuring van berichten vereist</value>
+  </data>
+  <data name="RequiresPostApprovalHelp" xml:space="preserve">
+    <value>Nieuwe berichten moeten worden goedgekeurd door een moderator voordat ze zichtbaar zijn voor andere leden.</value>
+  </data>
+  <data name="GroupStatusSection" xml:space="preserve">
+    <value>Groepsstatus</value>
+  </data>
+  <data name="IsActive" xml:space="preserve">
+    <value>Groep is actief</value>
+  </data>
+  <data name="IsActiveHelp" xml:space="preserve">
+    <value>Wanneer actief, is de groep klaar om gebruikers en content te accepteren. Inactieve groepen zijn alleen zichtbaar voor beheerders.</value>
+  </data>
+  <data name="IsClosed" xml:space="preserve">
+    <value>Groep is permanent gesloten</value>
+  </data>
+  <data name="IsClosedHelp" xml:space="preserve">
+    <value>Waarschuwing: Het sluiten van een groep is permanent. Er kunnen geen wijzigingen worden aangebracht na sluiting, zelfs niet door beheerders.</value>
+  </data>
 </root>

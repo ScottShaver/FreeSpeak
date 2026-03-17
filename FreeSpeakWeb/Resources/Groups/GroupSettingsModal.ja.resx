@@ -103,4 +103,31 @@
   <data name="Saving" xml:space="preserve">
     <value>保存中...</value>
   </data>
+  <data name="RequireAcceptRules" xml:space="preserve">
+    <value>グループルールへの同意を必須にする</value>
+  </data>
+  <data name="RequireAcceptRulesHelp" xml:space="preserve">
+    <value>ユーザーは参加または参加リクエストを送信する前にグループルールに同意する必要があります。</value>
+  </data>
+  <data name="RequiresPostApproval" xml:space="preserve">
+    <value>投稿の承認を必須にする</value>
+  </data>
+  <data name="RequiresPostApprovalHelp" xml:space="preserve">
+    <value>新しい投稿は他のメンバーに表示される前にモデレーターの承認が必要です。</value>
+  </data>
+  <data name="GroupStatusSection" xml:space="preserve">
+    <value>グループステータス</value>
+  </data>
+  <data name="IsActive" xml:space="preserve">
+    <value>グループはアクティブです</value>
+  </data>
+  <data name="IsActiveHelp" xml:space="preserve">
+    <value>アクティブの場合、グループはユーザーとコンテンツを受け入れる準備ができています。非アクティブなグループは管理者のみに表示されます。</value>
+  </data>
+  <data name="IsClosed" xml:space="preserve">
+    <value>グループは完全に閉鎖されています</value>
+  </data>
+  <data name="IsClosedHelp" xml:space="preserve">
+    <value>警告：グループの閉鎖は永続的です。閉鎖後は管理者でも変更を加えることはできません。</value>
+  </data>
 </root>

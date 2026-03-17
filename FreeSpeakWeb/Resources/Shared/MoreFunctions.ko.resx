@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>추가 기능</value>
+  </data>
+  <data name="CreateGroup" xml:space="preserve">
+    <value>그룹 만들기</value>
+  </data>
+  <data name="CreateGroupTooltip" xml:space="preserve">
+    <value>새 그룹 만들기</value>
+  </data>
+  <data name="NoFunctionsAvailable" xml:space="preserve">
+    <value>사용 가능한 추가 기능이 없습니다.</value>
+  </data>
+  <data name="CreateNewGroup" xml:space="preserve">
+    <value>새 그룹 만들기</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>그룹 이름</value>
+  </data>
+  <data name="GroupDescription" xml:space="preserve">
+    <value>설명</value>
+  </data>
+  <data name="PublicGroup" xml:space="preserve">
+    <value>공개 그룹</value>
+  </data>
+  <data name="PublicGroupHelp" xml:space="preserve">
+    <value>공개 그룹은 모든 사용자에게 표시되며 검색에서 찾을 수 있습니다.</value>
+  </data>
+  <data name="HiddenGroup" xml:space="preserve">
+    <value>숨겨진 그룹</value>
+  </data>
+  <data name="HiddenGroupHelp" xml:space="preserve">
+    <value>숨겨진 그룹은 검색에서 찾을 수 없습니다. 그룹 관리자만 멤버를 추가할 수 있습니다.</value>
+  </data>
+  <data name="RequireJoinApproval" xml:space="preserve">
+    <value>가입 승인 필요</value>
+  </data>
+  <data name="RequireJoinApprovalHelp" xml:space="preserve">
+    <value>새 멤버는 가입 전에 관리자의 승인이 필요합니다.</value>
+  </data>
+  <data name="RequireAcceptRules" xml:space="preserve">
+    <value>그룹 규칙 동의 필요</value>
+  </data>
+  <data name="RequireAcceptRulesHelp" xml:space="preserve">
+    <value>사용자는 가입하거나 가입 요청을 제출하기 전에 그룹 규칙에 동의해야 합니다.</value>
+  </data>
+  <data name="RequiresPostApproval" xml:space="preserve">
+    <value>게시물 승인 필요</value>
+  </data>
+  <data name="RequiresPostApprovalHelp" xml:space="preserve">
+    <value>새 게시물은 다른 멤버에게 표시되기 전에 운영자의 승인이 필요합니다.</value>
+  </data>
+  <data name="EnablePointsSystem" xml:space="preserve">
+    <value>포인트 시스템 활성화</value>
+  </data>
+  <data name="EnablePointsSystemHelp" xml:space="preserve">
+    <value>멤버는 게시물, 댓글 및 좋아요로 포인트를 얻습니다. 멤버는 떠오르는 기여자, 최고 기여자 및 올스타 기여자 배지를 얻을 수 있습니다.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="Creating" xml:space="preserve">
+    <value>만드는 중...</value>
+  </data>
+  <data name="NotAuthenticated" xml:space="preserve">
+    <value>그룹을 만들려면 로그인해야 합니다.</value>
+  </data>
+  <data name="GroupNameRequired" xml:space="preserve">
+    <value>그룹 이름은 필수입니다.</value>
+  </data>
+  <data name="GroupDescriptionRequired" xml:space="preserve">
+    <value>그룹 설명은 필수입니다.</value>
+  </data>
+  <data name="GroupCreatedSuccess" xml:space="preserve">
+    <value>그룹 "{0}"이(가) 성공적으로 만들어졌습니다!</value>
+  </data>
+  <data name="GroupCreationFailed" xml:space="preserve">
+    <value>그룹을 만드는 중 오류가 발생했습니다.</value>
+  </data>
+</root>

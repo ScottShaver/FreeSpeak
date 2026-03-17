@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>Altre funzioni</value>
+  </data>
+  <data name="CreateGroup" xml:space="preserve">
+    <value>Crea gruppo</value>
+  </data>
+  <data name="CreateGroupTooltip" xml:space="preserve">
+    <value>Crea un nuovo gruppo</value>
+  </data>
+  <data name="NoFunctionsAvailable" xml:space="preserve">
+    <value>Nessuna funzione aggiuntiva disponibile.</value>
+  </data>
+  <data name="CreateNewGroup" xml:space="preserve">
+    <value>Crea nuovo gruppo</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Nome del gruppo</value>
+  </data>
+  <data name="GroupDescription" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="PublicGroup" xml:space="preserve">
+    <value>Gruppo pubblico</value>
+  </data>
+  <data name="PublicGroupHelp" xml:space="preserve">
+    <value>I gruppi pubblici sono visibili a tutti gli utenti e possono essere trovati nella ricerca.</value>
+  </data>
+  <data name="HiddenGroup" xml:space="preserve">
+    <value>Gruppo nascosto</value>
+  </data>
+  <data name="HiddenGroupHelp" xml:space="preserve">
+    <value>I gruppi nascosti non possono essere trovati nelle ricerche. Solo gli amministratori del gruppo possono aggiungere membri.</value>
+  </data>
+  <data name="RequireJoinApproval" xml:space="preserve">
+    <value>Richiedi approvazione per l'iscrizione</value>
+  </data>
+  <data name="RequireJoinApprovalHelp" xml:space="preserve">
+    <value>I nuovi membri devono essere approvati da un amministratore prima di poter iscriversi.</value>
+  </data>
+  <data name="RequireAcceptRules" xml:space="preserve">
+    <value>Richiedi accettazione delle regole del gruppo</value>
+  </data>
+  <data name="RequireAcceptRulesHelp" xml:space="preserve">
+    <value>Gli utenti devono accettare le regole del gruppo prima di iscriversi o inviare una richiesta di iscrizione.</value>
+  </data>
+  <data name="RequiresPostApproval" xml:space="preserve">
+    <value>Richiedi approvazione dei post</value>
+  </data>
+  <data name="RequiresPostApprovalHelp" xml:space="preserve">
+    <value>I nuovi post devono essere approvati da un moderatore prima di essere visibili agli altri membri.</value>
+  </data>
+  <data name="EnablePointsSystem" xml:space="preserve">
+    <value>Abilita sistema punti</value>
+  </data>
+  <data name="EnablePointsSystemHelp" xml:space="preserve">
+    <value>I membri guadagnano punti per post, commenti e mi piace. I membri possono ottenere i badge Contributore Emergente, Top Contributore e Contributore All-star.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
+  <data name="Creating" xml:space="preserve">
+    <value>Creazione in corso...</value>
+  </data>
+  <data name="NotAuthenticated" xml:space="preserve">
+    <value>Devi essere connesso per creare un gruppo.</value>
+  </data>
+  <data name="GroupNameRequired" xml:space="preserve">
+    <value>Il nome del gruppo è obbligatorio.</value>
+  </data>
+  <data name="GroupDescriptionRequired" xml:space="preserve">
+    <value>La descrizione del gruppo è obbligatoria.</value>
+  </data>
+  <data name="GroupCreatedSuccess" xml:space="preserve">
+    <value>Il gruppo "{0}" è stato creato con successo!</value>
+  </data>
+  <data name="GroupCreationFailed" xml:space="preserve">
+    <value>Si è verificato un errore durante la creazione del gruppo.</value>
+  </data>
+</root>

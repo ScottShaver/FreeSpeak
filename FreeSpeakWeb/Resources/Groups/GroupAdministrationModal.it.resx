@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>Amministrazione del gruppo</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Caricamento...</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Chiudi</value>
+  </data>
+  <data name="ErrorLoadingData" xml:space="preserve">
+    <value>Si è verificato un errore durante il caricamento dei dati di amministrazione.</value>
+  </data>
+  <data name="MemberManagement" xml:space="preserve">
+    <value>Membri</value>
+  </data>
+  <data name="MemberManagementDescription" xml:space="preserve">
+    <value>Visualizza e gestisci i membri del gruppo.</value>
+  </data>
+  <data name="MemberManagementPlaceholder" xml:space="preserve">
+    <value>Le funzionalità di gestione dei membri saranno disponibili in un aggiornamento futuro. Potrai visualizzare i membri, rimuoverli e gestire i loro ruoli.</value>
+  </data>
+  <data name="JoinRequests" xml:space="preserve">
+    <value>Richieste di iscrizione</value>
+  </data>
+  <data name="JoinRequestsDescription" xml:space="preserve">
+    <value>Esamina e approva le richieste di iscrizione in sospeso.</value>
+  </data>
+  <data name="JoinRequestsPlaceholder" xml:space="preserve">
+    <value>Le funzionalità di gestione delle richieste di iscrizione saranno disponibili in un aggiornamento futuro. Potrai approvare o rifiutare le richieste di iscrizione in sospeso.</value>
+  </data>
+  <data name="RoleManagement" xml:space="preserve">
+    <value>Ruoli</value>
+  </data>
+  <data name="RoleManagementDescription" xml:space="preserve">
+    <value>Assegna ruoli di amministratore e moderatore ai membri.</value>
+  </data>
+  <data name="RoleManagementPlaceholder" xml:space="preserve">
+    <value>Le funzionalità di gestione dei ruoli saranno disponibili in un aggiornamento futuro. Potrai promuovere i membri ad amministratori o moderatori.</value>
+  </data>
+  <data name="BannedMembers" xml:space="preserve">
+    <value>Bannati</value>
+  </data>
+  <data name="BannedMembersDescription" xml:space="preserve">
+    <value>Visualizza e gestisci i membri bannati.</value>
+  </data>
+  <data name="BannedMembersPlaceholder" xml:space="preserve">
+    <value>Le funzionalità di gestione dei membri bannati saranno disponibili in un aggiornamento futuro. Potrai visualizzare i membri bannati e riammetterli se necessario.</value>
+  </data>
+  <data name="GroupSettings" xml:space="preserve">
+    <value>Impostazioni</value>
+  </data>
+  <data name="GroupSettingsDescription" xml:space="preserve">
+    <value>Opzioni di configurazione avanzate del gruppo.</value>
+  </data>
+  <data name="GroupSettingsPlaceholder" xml:space="preserve">
+    <value>Le funzionalità delle impostazioni avanzate saranno disponibili in un aggiornamento futuro. Potrai configurare le regole del gruppo, le opzioni di visibilità e altro ancora.</value>
+  </data>
+  <data name="GroupRules" xml:space="preserve">
+    <value>Regole del gruppo</value>
+  </data>
+  <data name="GroupRulesDescription" xml:space="preserve">
+    <value>Definisci le regole che i membri devono seguire in questo gruppo.</value>
+  </data>
+  <data name="AddDefaultRules" xml:space="preserve">
+    <value>Aggiungi regole predefinite</value>
+  </data>
+  <data name="AddRule" xml:space="preserve">
+    <value>Aggiungi regola</value>
+  </data>
+  <data name="AddNewRule" xml:space="preserve">
+    <value>Aggiungi nuova regola</value>
+  </data>
+  <data name="EditRule" xml:space="preserve">
+    <value>Modifica regola</value>
+  </data>
+  <data name="DeleteRule" xml:space="preserve">
+    <value>Elimina regola</value>
+  </data>
+  <data name="RuleTitle" xml:space="preserve">
+    <value>Titolo della regola</value>
+  </data>
+  <data name="RuleTitlePlaceholder" xml:space="preserve">
+    <value>Inserisci un titolo breve e chiaro per questa regola</value>
+  </data>
+  <data name="RuleDescription" xml:space="preserve">
+    <value>Descrizione della regola</value>
+  </data>
+  <data name="RuleDescriptionPlaceholder" xml:space="preserve">
+    <value>Spiega lo scopo della regola e quale comportamento è previsto o vietato</value>
+  </data>
+  <data name="SaveRule" xml:space="preserve">
+    <value>Salva regola</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Salvataggio...</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Elimina</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Modifica</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>Su</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>Giù</value>
+  </data>
+  <data name="NoRulesYet" xml:space="preserve">
+    <value>Non sono ancora state definite regole per questo gruppo.</value>
+  </data>
+  <data name="NoRulesYetHint" xml:space="preserve">
+    <value>Clicca su "Aggiungi regole predefinite" per iniziare con regole comuni, o "Aggiungi regola" per crearne di tue.</value>
+  </data>
+  <data name="ConfirmDeleteRule" xml:space="preserve">
+    <value>Eliminare la regola?</value>
+  </data>
+  <data name="ConfirmDeleteRuleMessage" xml:space="preserve">
+    <value>Sei sicuro di voler eliminare questa regola? Questa azione non può essere annullata.</value>
+  </data>
+  <data name="RuleTitleRequired" xml:space="preserve">
+    <value>Il titolo della regola è obbligatorio.</value>
+  </data>
+  <data name="RuleDescriptionRequired" xml:space="preserve">
+    <value>La descrizione della regola è obbligatoria.</value>
+  </data>
+  <data name="RuleCreated" xml:space="preserve">
+    <value>Regola creata con successo.</value>
+  </data>
+  <data name="RuleUpdated" xml:space="preserve">
+    <value>Regola aggiornata con successo.</value>
+  </data>
+  <data name="RuleDeleted" xml:space="preserve">
+    <value>Regola eliminata con successo.</value>
+  </data>
+  <data name="DefaultRulesAdded" xml:space="preserve">
+    <value>Le regole predefinite sono state aggiunte. Ora puoi modificarle per adattarle alle esigenze del tuo gruppo.</value>
+  </data>
+  <data name="CannotAddDefaultRulesExist" xml:space="preserve">
+    <value>Impossibile aggiungere regole predefinite quando esistono già delle regole. Elimina prima le regole esistenti.</value>
+  </data>
+  <data name="ErrorLoadingRules" xml:space="preserve">
+    <value>Si è verificato un errore durante il caricamento delle regole.</value>
+  </data>
+  <data name="ErrorCreatingRule" xml:space="preserve">
+    <value>Si è verificato un errore durante la creazione della regola.</value>
+  </data>
+  <data name="ErrorUpdatingRule" xml:space="preserve">
+    <value>Si è verificato un errore durante l'aggiornamento della regola.</value>
+  </data>
+  <data name="ErrorDeletingRule" xml:space="preserve">
+    <value>Si è verificato un errore durante l'eliminazione della regola.</value>
+  </data>
+  <data name="ErrorSavingRule" xml:space="preserve">
+    <value>Si è verificato un errore durante il salvataggio della regola.</value>
+  </data>
+  <data name="ErrorReorderingRules" xml:space="preserve">
+    <value>Si è verificato un errore durante il riordinamento delle regole.</value>
+  </data>
+  <data name="ErrorAddingDefaultRules" xml:space="preserve">
+    <value>Si è verificato un errore durante l'aggiunta delle regole predefinite.</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Aggiorna</value>
+  </data>
+  <data name="ApproveRequest" xml:space="preserve">
+    <value>Approva questa richiesta di iscrizione</value>
+  </data>
+  <data name="DenyRequest" xml:space="preserve">
+    <value>Rifiuta questa richiesta di iscrizione</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Approva</value>
+  </data>
+  <data name="Deny" xml:space="preserve">
+    <value>Rifiuta</value>
+  </data>
+  <data name="RequestedOn" xml:space="preserve">
+    <value>Richiesto il</value>
+  </data>
+  <data name="TotalPendingRequests" xml:space="preserve">
+    <value>{0} richiesta/e in sospeso</value>
+  </data>
+  <data name="NoJoinRequests" xml:space="preserve">
+    <value>Nessuna richiesta di iscrizione in sospeso al momento.</value>
+  </data>
+  <data name="ConfirmDenyRequest" xml:space="preserve">
+    <value>Rifiutare la richiesta di iscrizione?</value>
+  </data>
+  <data name="ConfirmDenyRequestMessage" xml:space="preserve">
+    <value>Sei sicuro di voler rifiutare questa richiesta di iscrizione? L'utente non verrà notificato ma potrà inviare un'altra richiesta in seguito.</value>
+  </data>
+  <data name="RequestApproved" xml:space="preserve">
+    <value>{0} è stato approvato e aggiunto al gruppo.</value>
+  </data>
+  <data name="RequestDenied" xml:space="preserve">
+    <value>La richiesta di iscrizione di {0} è stata rifiutata.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Utente sconosciuto</value>
+  </data>
+  <data name="ErrorLoadingRequests" xml:space="preserve">
+    <value>Si è verificato un errore durante il caricamento delle richieste di iscrizione.</value>
+  </data>
+  <data name="ErrorApprovingRequest" xml:space="preserve">
+    <value>Si è verificato un errore durante l'approvazione della richiesta.</value>
+  </data>
+  <data name="ErrorDenyingRequest" xml:space="preserve">
+    <value>Si è verificato un errore durante il rifiuto della richiesta.</value>
+  </data>
+</root>
