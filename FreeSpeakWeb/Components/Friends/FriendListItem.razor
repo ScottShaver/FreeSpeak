@@ -1,9 +1,11 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Extensions.Localization
 
 @inject FriendsService FriendsService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Friends.FriendListItem> Localizer
 
 <div class="friend-list-item text-center">
     @if (!string.IsNullOrEmpty(User.ProfilePictureUrl))
@@ -27,7 +29,7 @@
     {
         <p class="text-muted mb-2 friend-mutual-text">
             <button class="btn btn-link p-0 text-muted friend-mutual-btn" @onclick="ShowMutualFriends" style="text-decoration: none;">
-                <i class="bi bi-people-fill"></i> @MutualFriendsCount mutual @(MutualFriendsCount == 1 ? "friend" : "friends")
+                <i class="bi bi-people-fill"></i> @MutualFriendsCount @(MutualFriendsCount == 1 ? Localizer["MutualFriend"] : Localizer["MutualFriends"])
             </button>
         </p>
     }
@@ -40,7 +42,7 @@
                 {
                     <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                 }
-                Accept
+                @Localizer["Accept"]
             </button>
         }
 
@@ -51,7 +53,7 @@
                 {
                     <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                 }
-                Decline
+                @Localizer["Decline"]
             </button>
         }
 
@@ -62,7 +64,7 @@
                 {
                     <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                 }
-                Add Friend
+                @Localizer["AddFriend"]
             </button>
         }
 
@@ -73,7 +75,7 @@
                 {
                     <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                 }
-                Cancel Request
+                @Localizer["CancelRequest"]
             </button>
         }
 
@@ -84,7 +86,7 @@
                 {
                     <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                 }
-                Remove
+                @Localizer["Remove"]
             </button>
         }
     </div>

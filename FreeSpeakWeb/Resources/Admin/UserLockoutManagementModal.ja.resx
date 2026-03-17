@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="TitleFormat" xml:space="preserve">
+    <value>{0} のロックアウト管理</value>
+  </data>
+  <data name="LoadingLockoutStatus" xml:space="preserve">
+    <value>ロックアウト状態を読み込み中...</value>
+  </data>
+  <data name="LoadingLockoutInfo" xml:space="preserve">
+    <value>ロックアウト情報を読み込み中...</value>
+  </data>
+  <data name="CurrentLockoutStatus" xml:space="preserve">
+    <value>現在のロックアウト状態</value>
+  </data>
+  <data name="PermanentlyLockedOut" xml:space="preserve">
+    <value>永久にロックアウト</value>
+  </data>
+  <data name="PermanentlyLockedMessage" xml:space="preserve">
+    <value>このアカウントは永久に無効化されており、ログインできません。</value>
+  </data>
+  <data name="CurrentlyLockedOut" xml:space="preserve">
+    <value>現在ロックアウト中</value>
+  </data>
+  <data name="LockedUntil" xml:space="preserve">
+    <value>ロック期限:</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>残り時間:</value>
+  </data>
+  <data name="NotLockedOut" xml:space="preserve">
+    <value>ロックアウトされていません</value>
+  </data>
+  <data name="NotLockedOutMessage" xml:space="preserve">
+    <value>このユーザーは現在ロックアウトされておらず、通常どおりログインできます。</value>
+  </data>
+  <data name="FailedLoginAttempts" xml:space="preserve">
+    <value>ログイン失敗回数: {0} / 5</value>
+  </data>
+  <data name="LockoutActions" xml:space="preserve">
+    <value>ロックアウトアクション</value>
+  </data>
+  <data name="RemoveLockout" xml:space="preserve">
+    <value>ロックアウトを解除</value>
+  </data>
+  <data name="RemoveLockoutDescription" xml:space="preserve">
+    <value>アクティブなロックアウトをクリアし、ログイン失敗回数をゼロにリセットします。</value>
+  </data>
+  <data name="RemoveLockoutResetButton" xml:space="preserve">
+    <value>ロックアウトを解除して失敗回数をリセット</value>
+  </data>
+  <data name="PermanentLockout" xml:space="preserve">
+    <value>永久ロックアウト</value>
+  </data>
+  <data name="PermanentLockoutDescription" xml:space="preserve">
+    <value>このアカウントを永久に無効化します。このアクションは上の「ロックアウトを解除」オプションで元に戻せます。</value>
+  </data>
+  <data name="SetPermanentLockout" xml:space="preserve">
+    <value>永久ロックアウトを設定</value>
+  </data>
+  <data name="AlreadyPermanentlyLocked" xml:space="preserve">
+    <value>既に永久にロック済み</value>
+  </data>
+  <data name="TemporaryLockoutDuration" xml:space="preserve">
+    <value>一時的ロックアウト（期間）</value>
+  </data>
+  <data name="TemporaryLockoutDurationDescription" xml:space="preserve">
+    <value>今から特定の期間、ユーザーをロックアウトします。</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>分</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>時間</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>日</value>
+  </data>
+  <data name="UserLockedUntil" xml:space="preserve">
+    <value>ユーザーは以下までロックアウトされます: {0}</value>
+  </data>
+  <data name="SetTemporaryLockout" xml:space="preserve">
+    <value>一時的ロックアウトを設定</value>
+  </data>
+  <data name="TemporaryLockoutSpecificDate" xml:space="preserve">
+    <value>一時的ロックアウト（特定の日付）</value>
+  </data>
+  <data name="TemporaryLockoutSpecificDateDescription" xml:space="preserve">
+    <value>特定の日時までユーザーをロックアウトします。</value>
+  </data>
+  <data name="LockoutUntil" xml:space="preserve">
+    <value>ロックアウト期限</value>
+  </data>
+  <data name="LockoutUntilHint" xml:space="preserve">
+    <value>ユーザーはこの日時以降にログインできるようになります。</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+</root>

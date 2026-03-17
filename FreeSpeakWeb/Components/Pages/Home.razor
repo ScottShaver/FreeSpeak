@@ -17,6 +17,7 @@
 @using FreeSpeakWeb.Repositories.Abstractions
 @using System.Security.Claims
 @using Microsoft.JSInterop
+@using Microsoft.Extensions.Localization
 
 @implements IAsyncDisposable
 
@@ -30,20 +31,21 @@
 @inject UserPreferenceService UserPreferenceService
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject IFeedCommentRepository FeedCommentRepository
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.Home> Localizer
 
-<PageTitle>@SiteSettings.Value.SiteName - Home</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
 
 <div class="home-container">
             <!-- Tabbed Interface -->
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="feed-tab" data-bs-toggle="tab" data-bs-target="#feed-content" type="button" role="tab" aria-controls="feed-content" aria-selected="true">
-                        My Feed
+                        @Localizer["MyFeed"]
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="pinned-tab" data-bs-toggle="tab" data-bs-target="#pinned-content" type="button" role="tab" aria-controls="pinned-content" aria-selected="false">
-                        Pinned Posts
+                        @Localizer["PinnedPosts"]
                     </button>
                 </li>
             </ul>
@@ -64,13 +66,13 @@
                         @if (isLoading && !posts.Any())
                         {
                             <div class="loading-indicator">
-                                <p>Loading your feed...</p>
+                                <p>@Localizer["LoadingFeed"]</p>
                             </div>
                         }
                         else if (!posts.Any() && !isLoading)
                         {
                             <div class="empty-feed">
-                                <p>No posts to display. Start connecting with friends to see their posts!</p>
+                                <p>@Localizer["EmptyFeed"]</p>
                             </div>
                         }
                         else
@@ -129,14 +131,14 @@
                             @if (isLoadingMore)
                             {
                                 <div class="loading-more">
-                                    <p>Loading more posts...</p>
+                                    <p>@Localizer["LoadingMore"]</p>
                                 </div>
                             }
 
                             @if (hasMorePosts == false && posts.Any())
                             {
                                 <div class="no-more-posts">
-                                    <p>No more posts at this time</p>
+                                    <p>@Localizer["NoMorePosts"]</p>
                                 </div>
                             }
                         }
@@ -149,13 +151,13 @@
                         @if (isLoadingPinnedPosts && !pinnedPostsList.Any())
                         {
                             <div class="loading-indicator">
-                                <p>Loading your pinned posts...</p>
+                                <p>@Localizer["LoadingPinnedPosts"]</p>
                             </div>
                         }
                         else if (!pinnedPostsList.Any() && !isLoadingPinnedPosts)
                         {
                             <div class="empty-feed">
-                                <p>You haven't pinned any posts yet. Pin posts from your feed to see them here!</p>
+                                <p>@Localizer["EmptyPinnedPosts"]</p>
                             </div>
                         }
                         else

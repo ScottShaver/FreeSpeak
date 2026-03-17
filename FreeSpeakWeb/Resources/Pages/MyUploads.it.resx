@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>I Miei Caricamenti</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>I Miei Caricamenti</value>
+  </data>
+  <data name="Pictures" xml:space="preserve">
+    <value>Immagini</value>
+  </data>
+  <data name="Videos" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Altro</value>
+  </data>
+  <data name="LoadingPictures" xml:space="preserve">
+    <value>Caricamento delle tue immagini...</value>
+  </data>
+  <data name="NoPicturesYet" xml:space="preserve">
+    <value>Nessuna immagine ancora</value>
+  </data>
+  <data name="NoPicturesDescription" xml:space="preserve">
+    <value>Le immagini che carichi con i tuoi post appariranno qui.</value>
+  </data>
+  <data name="LoadingMore" xml:space="preserve">
+    <value>Caricamento...</value>
+  </data>
+  <data name="EndOfPictures" xml:space="preserve">
+    <value>Hai raggiunto la fine delle tue immagini</value>
+  </data>
+  <data name="LoadingVideos" xml:space="preserve">
+    <value>Caricamento dei tuoi video...</value>
+  </data>
+  <data name="NoVideosYet" xml:space="preserve">
+    <value>Nessun video ancora</value>
+  </data>
+  <data name="NoVideosDescription" xml:space="preserve">
+    <value>I video che carichi con i tuoi post appariranno qui.</value>
+  </data>
+  <data name="EndOfVideos" xml:space="preserve">
+    <value>Hai raggiunto la fine dei tuoi video</value>
+  </data>
+  <data name="ComingSoon" xml:space="preserve">
+    <value>Prossimamente</value>
+  </data>
+  <data name="OtherFilesDescription" xml:space="preserve">
+    <value>Altri tipi di file appariranno qui in futuro.</value>
+  </data>
+  <data name="Uploaded" xml:space="preserve">
+    <value>Caricato</value>
+  </data>
+</root>

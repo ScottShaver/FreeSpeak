@@ -7,6 +7,7 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.Shared
+@using Microsoft.Extensions.Localization
 
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JS
@@ -17,13 +18,14 @@
 @inject NotificationBadgeService NotificationBadgeService
 @inject UserPreferenceService UserPreferenceService
 @inject GroupMemberService GroupMemberService
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Layout.NavMenu> Localizer
 
 <!-- Always visible header across the top -->
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid d-flex align-items-center" style="width: 100%; flex-wrap: nowrap;">
         <div class="d-flex align-items-center gap-2" style="flex: 1;">
             <ThemeSelector />
-            <button class="navbar-toggler" @onclick="ToggleNavMenu" type="button" title="Toggle navigation menu" aria-label="Toggle navigation">
+            <button class="navbar-toggler" @onclick="ToggleNavMenu" type="button" title="@Localizer["ToggleNavigation"]" aria-label="@Localizer["ToggleNavigation"]">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <a class="navbar-brand" href="" data-enhance-nav="false">@SiteSettings.Value.SiteName</a>
@@ -32,23 +34,23 @@
         <div class="d-flex align-items-center gap-3 justify-content-center" style="">
             <AuthorizeView>
                 <Authorized>
-                    <a href="/home" title="Home" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/home" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/home" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="/home" title="@Localizer["Home"]" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/home" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/home" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-house-door-fill-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
 
-                    <a href="friends" title="Friends" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "friends" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "friends" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="friends" title="@Localizer["Friends"]" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "friends" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "friends" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-people-fill-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
 
-                    <a href="groups" title="Groups" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "groups" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "groups" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="groups" title="@Localizer["Groups"]" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "groups" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "groups" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-diagram-3-fill-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
 
-                    <a href="my-uploads" title="My Uploads" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "my-uploads" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "my-uploads" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="my-uploads" title="@Localizer["MyUploads"]" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "my-uploads" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "my-uploads" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-images-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
 
-                    <a href="notifications" title="Notifications" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "notifications" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; position: relative; @(GetActiveMenuItemFromUrl() == "notifications" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="notifications" title="@Localizer["Notifications"]" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "notifications" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; position: relative; @(GetActiveMenuItemFromUrl() == "notifications" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-bell-fill-nav-menu" style="margin: 0; top: 0;"></span>
                         @if (unreadNotificationCount > 0)
                         {
@@ -70,23 +72,23 @@
                     <form action="Account/Logout" method="post" style="display: inline-flex; align-items: center; margin: 0; padding: 0; line-height: 1;">
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="nav-icon-link btn-link" title="Logout" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; margin: 0; border: none; background-color: transparent;">
+                        <button type="submit" class="nav-icon-link btn-link" title="@Localizer["Logout"]" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; margin: 0; border: none; background-color: transparent;">
                             <span class="bi bi-arrow-bar-left-nav-menu" style="margin: 0; top: 0;"></span>
                         </button>
                     </form>
                 </Authorized>
                 <NotAuthorized>
-                    <a href="/Account/Register" title="Register" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Register" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Register" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="/Account/Register" title="@Localizer["Register"]" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Register" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Register" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-person-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
 
-                    <a href="/Account/Login" title="Login" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Login" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Login" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                    <a href="/Account/Login" title="@Localizer["Login"]" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "/Account/Login" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "/Account/Login" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-person-badge-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
                 </NotAuthorized>
             </AuthorizeView>
 
-            <a href="technology-credits" title="Technology Credits" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "technology-credits" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "technology-credits" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+            <a href="technology-credits" title="@Localizer["TechnologyCredits"]" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "technology-credits" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "technology-credits" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                 <span class="bi bi-info-circle-nav-menu" style="margin: 0; top: 0;"></span>
             </a>
         </div>
@@ -105,7 +107,7 @@
                 {
                     <div class="nav-item px-3">
                         <a class="nav-link @(GetActiveMenuItemFromUrl() == "system-admin" ? "active" : "")" href="system-admin" data-enhance-nav="false">
-                            <span class="bi bi-shield-lock-fill" aria-hidden="true"></span> System Administration
+                            <span class="bi bi-shield-lock-fill" aria-hidden="true"></span> @Localizer["SystemAdministration"]
                         </a>
                     </div>
                 }
@@ -114,7 +116,7 @@
                 {
                     <div class="nav-item px-3">
                         <a class="nav-link @(GetActiveMenuItemFromUrl() == "system-moderator" ? "active" : "")" href="system-moderator" data-enhance-nav="false">
-                            <span class="bi bi-shield-check" aria-hidden="true"></span> System Moderator
+                            <span class="bi bi-shield-check" aria-hidden="true"></span> @Localizer["SystemModerator"]
                         </a>
                     </div>
                 }
@@ -126,31 +128,31 @@
 
                 <div class="nav-item px-3">
                     <a class="nav-link @(GetActiveMenuItemFromUrl() == "/home" ? "active" : "")" href="/home" data-enhance-nav="false">
-                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> @Localizer["Home"]
                     </a>
                 </div>
 
                 <div class="nav-item px-3">
                     <a class="nav-link @(GetActiveMenuItemFromUrl() == "friends" ? "active" : "")" href="friends" data-enhance-nav="false">
-                        <span class="bi bi-people-fill-nav-menu" aria-hidden="true"></span> Friends
+                        <span class="bi bi-people-fill-nav-menu" aria-hidden="true"></span> @Localizer["Friends"]
                     </a>
                 </div>
 
                 <div class="nav-item px-3">
                     <a class="nav-link @(GetActiveMenuItemFromUrl() == "groups" ? "active" : "")" href="groups" data-enhance-nav="false">
-                        <span class="bi bi-diagram-3-fill-nav-menu" aria-hidden="true"></span> Groups
+                        <span class="bi bi-diagram-3-fill-nav-menu" aria-hidden="true"></span> @Localizer["Groups"]
                     </a>
                 </div>
 
                 <div class="nav-item px-3">
                     <a class="nav-link @(GetActiveMenuItemFromUrl() == "my-uploads" ? "active" : "")" href="my-uploads" data-enhance-nav="false">
-                        <span class="bi bi-images-nav-menu" aria-hidden="true"></span> My Uploads
+                        <span class="bi bi-images-nav-menu" aria-hidden="true"></span> @Localizer["MyUploads"]
                     </a>
                 </div>
 
                 <div class="nav-item px-3">
                     <a class="nav-link @(GetActiveMenuItemFromUrl() == "notifications" ? "active" : "")" href="notifications" data-enhance-nav="false" style="position: relative;">
-                        <span class="bi bi-bell-fill-nav-menu" aria-hidden="true"></span> Notifications
+                        <span class="bi bi-bell-fill-nav-menu" aria-hidden="true"></span> @Localizer["Notifications"]
                         @if (unreadNotificationCount > 0)
                         {
                             <span class="notification-badge-sidebar">@(unreadNotificationCount > 99 ? "99+" : unreadNotificationCount.ToString())</span>
@@ -176,7 +178,7 @@
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="@currentUrl" />
                         <button type="submit" class="nav-link">
-                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
+                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> @Localizer["Logout"]
                         </button>
                     </form>
                 </div>
@@ -198,12 +200,12 @@
             <NotAuthorized>
                 <div class="nav-item px-3">
                     <a class="nav-link @(GetActiveMenuItemFromUrl() == "/Account/Register" ? "active" : "")" href="/Account/Register" data-enhance-nav="false">
-                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
+                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> @Localizer["Register"]
                     </a>
                 </div>
                 <div class="nav-item px-3">
                     <a class="nav-link @(GetActiveMenuItemFromUrl() == "/Account/Login" ? "active" : "")" href="/Account/Login" data-enhance-nav="false">
-                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
+                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> @Localizer["Login"]
                     </a>
                 </div>
             </NotAuthorized>
@@ -213,7 +215,7 @@
 
         <div class="nav-item px-3">
             <a class="nav-link @(GetActiveMenuItemFromUrl() == "technology-credits" ? "active" : "")" href="technology-credits" data-enhance-nav="false">
-                <span class="bi bi-info-circle-nav-menu" aria-hidden="true"></span> Technology Credits
+                <span class="bi bi-info-circle-nav-menu" aria-hidden="true"></span> @Localizer["TechnologyCredits"]
             </a>
         </div>
     </nav>

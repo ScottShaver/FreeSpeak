@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="TitleFormat" xml:space="preserve">
+    <value>Gerenciar Funções para {0}</value>
+  </data>
+  <data name="LoadingRoles" xml:space="preserve">
+    <value>Carregando funções...</value>
+  </data>
+  <data name="LoadingAvailableRoles" xml:space="preserve">
+    <value>Carregando funções disponíveis...</value>
+  </data>
+  <data name="NoRolesAvailable" xml:space="preserve">
+    <value>Nenhuma função disponível no sistema.</value>
+  </data>
+  <data name="AvailableRoles" xml:space="preserve">
+    <value>Funções Disponíveis</value>
+  </data>
+  <data name="RolesDescription" xml:space="preserve">
+    <value>Selecione ou desmarque funções para atribuí-las ou removê-las deste usuário.</value>
+  </data>
+  <data name="UnsavedChanges" xml:space="preserve">
+    <value>Você tem alterações não salvas. Clique em "Salvar Alterações" para aplicá-las.</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Salvando...</value>
+  </data>
+  <data name="SavingRoleChanges" xml:space="preserve">
+    <value>Salvando alterações de funções...</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Fechar</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Salvar Alterações</value>
+  </data>
+  <data name="RoleSystemAdministrator" xml:space="preserve">
+    <value>Acesso completo ao sistema com todos os privilégios administrativos</value>
+  </data>
+  <data name="RoleSystemModerator" xml:space="preserve">
+    <value>Pode moderar conteúdo em toda a plataforma</value>
+  </data>
+  <data name="RoleUser" xml:space="preserve">
+    <value>Usuário padrão com acesso básico</value>
+  </data>
+</root>

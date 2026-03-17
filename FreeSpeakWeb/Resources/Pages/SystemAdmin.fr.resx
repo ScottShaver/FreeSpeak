@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Fonctions d'Administration Système</value>
+  </data>
+  <data name="WelcomeMessage" xml:space="preserve">
+    <value>Bienvenue, Administrateur Système !</value>
+  </data>
+  <data name="WelcomeDescription" xml:space="preserve">
+    <value>Cette page n'est accessible qu'aux utilisateurs ayant le rôle SystemAdministrator.</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Rôles</value>
+  </data>
+  <data name="UserManagement" xml:space="preserve">
+    <value>Gestion des Utilisateurs</value>
+  </data>
+  <data name="SystemConfiguration" xml:space="preserve">
+    <value>Configuration Système</value>
+  </data>
+  <data name="SiteWideContentModeration" xml:space="preserve">
+    <value>Modération de Contenu du Site</value>
+  </data>
+  <data name="AnalyticsAndReporting" xml:space="preserve">
+    <value>Analyses et Rapports</value>
+  </data>
+  <data name="DatabaseMaintenanceTools" xml:space="preserve">
+    <value>Outils de Maintenance de Base de Données</value>
+  </data>
+  <data name="UserManagementDescription" xml:space="preserve">
+    <value>Gérer les comptes utilisateur, les rôles et les permissions dans tout le système.</value>
+  </data>
+  <data name="SearchUsers" xml:space="preserve">
+    <value>Rechercher des Utilisateurs</value>
+  </data>
+  <data name="SearchUsersDescription" xml:space="preserve">
+    <value>Rechercher dans nom d'utilisateur, email, nom, ville, état et profession.</value>
+  </data>
+  <data name="SearchUsersPlaceholder" xml:space="preserve">
+    <value>Commencez à taper pour rechercher des utilisateurs...</value>
+  </data>
+  <data name="Searching" xml:space="preserve">
+    <value>Recherche en cours...</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Nom d'utilisateur</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Emplacement</value>
+  </data>
+  <data name="Occupation" xml:space="preserve">
+    <value>Profession</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="CopyUserId" xml:space="preserve">
+    <value>Copier l'ID Utilisateur</value>
+  </data>
+  <data name="EditRoles" xml:space="preserve">
+    <value>Modifier les Rôles</value>
+  </data>
+  <data name="LockoutInfo" xml:space="preserve">
+    <value>Info de Verrouillage</value>
+  </data>
+  <data name="AuditLog" xml:space="preserve">
+    <value>Journal d'Audit</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>Voir le Profil</value>
+  </data>
+  <data name="SuspendUser" xml:space="preserve">
+    <value>Suspendre l'Utilisateur</value>
+  </data>
+  <data name="SendMessage" xml:space="preserve">
+    <value>Envoyer un Message</value>
+  </data>
+  <data name="SearchAuditLogs" xml:space="preserve">
+    <value>Rechercher les Journaux d'Audit</value>
+  </data>
+  <data name="UserIdExactMatch" xml:space="preserve">
+    <value>ID Utilisateur (correspondance exacte)</value>
+  </data>
+  <data name="EnterUserGuid" xml:space="preserve">
+    <value>Entrez le GUID utilisateur...</value>
+  </data>
+  <data name="ActionCategory" xml:space="preserve">
+    <value>Catégorie d'Action</value>
+  </data>
+  <data name="AllCategories" xml:space="preserve">
+    <value>Toutes les Catégories</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Date de Début</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>Date de Fin</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="FoundResults" xml:space="preserve">
+    <value>{0} résultat(s) trouvé(s)</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>Date/Heure</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>ID Utilisateur</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Catégorie</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Détails</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Précédent</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Suivant</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="Of" xml:space="preserve">
+    <value>de</value>
+  </data>
+</root>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>وظائف إدارة النظام</value>
+  </data>
+  <data name="WelcomeMessage" xml:space="preserve">
+    <value>مرحباً، مدير النظام!</value>
+  </data>
+  <data name="WelcomeDescription" xml:space="preserve">
+    <value>هذه الصفحة متاحة فقط للمستخدمين الذين لديهم دور مدير النظام.</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>الأدوار</value>
+  </data>
+  <data name="UserManagement" xml:space="preserve">
+    <value>إدارة المستخدمين</value>
+  </data>
+  <data name="SystemConfiguration" xml:space="preserve">
+    <value>تكوين النظام</value>
+  </data>
+  <data name="SiteWideContentModeration" xml:space="preserve">
+    <value>إدارة المحتوى على مستوى الموقع</value>
+  </data>
+  <data name="AnalyticsAndReporting" xml:space="preserve">
+    <value>التحليلات والتقارير</value>
+  </data>
+  <data name="DatabaseMaintenanceTools" xml:space="preserve">
+    <value>أدوات صيانة قاعدة البيانات</value>
+  </data>
+  <data name="UserManagementDescription" xml:space="preserve">
+    <value>إدارة حسابات المستخدمين والأدوار والصلاحيات عبر النظام.</value>
+  </data>
+  <data name="SearchUsers" xml:space="preserve">
+    <value>البحث عن المستخدمين</value>
+  </data>
+  <data name="SearchUsersDescription" xml:space="preserve">
+    <value>البحث في اسم المستخدم والبريد الإلكتروني والاسم والمدينة والولاية والمهنة.</value>
+  </data>
+  <data name="SearchUsersPlaceholder" xml:space="preserve">
+    <value>ابدأ الكتابة للبحث عن المستخدمين...</value>
+  </data>
+  <data name="Searching" xml:space="preserve">
+    <value>جاري البحث...</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>اسم المستخدم</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>الموقع</value>
+  </data>
+  <data name="Occupation" xml:space="preserve">
+    <value>المهنة</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="CopyUserId" xml:space="preserve">
+    <value>نسخ معرف المستخدم</value>
+  </data>
+  <data name="EditRoles" xml:space="preserve">
+    <value>تحرير الأدوار</value>
+  </data>
+  <data name="LockoutInfo" xml:space="preserve">
+    <value>معلومات الحظر</value>
+  </data>
+  <data name="AuditLog" xml:space="preserve">
+    <value>سجل التدقيق</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>عرض الملف الشخصي</value>
+  </data>
+  <data name="SuspendUser" xml:space="preserve">
+    <value>تعليق المستخدم</value>
+  </data>
+  <data name="SendMessage" xml:space="preserve">
+    <value>إرسال رسالة</value>
+  </data>
+  <data name="SearchAuditLogs" xml:space="preserve">
+    <value>البحث في سجلات التدقيق</value>
+  </data>
+  <data name="UserIdExactMatch" xml:space="preserve">
+    <value>معرف المستخدم (مطابقة تامة)</value>
+  </data>
+  <data name="EnterUserGuid" xml:space="preserve">
+    <value>أدخل معرف المستخدم الفريد...</value>
+  </data>
+  <data name="ActionCategory" xml:space="preserve">
+    <value>فئة الإجراء</value>
+  </data>
+  <data name="AllCategories" xml:space="preserve">
+    <value>جميع الفئات</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>تاريخ البداية</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>تاريخ النهاية</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>بحث</value>
+  </data>
+  <data name="FoundResults" xml:space="preserve">
+    <value>تم العثور على {0} نتيجة</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>التاريخ/الوقت</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>معرف المستخدم</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>الفئة</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>السابق</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>التالي</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>صفحة</value>
+  </data>
+  <data name="Of" xml:space="preserve">
+    <value>من</value>
+  </data>
+</root>

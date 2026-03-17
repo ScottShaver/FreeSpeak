@@ -177,6 +177,9 @@ namespace FreeSpeakWeb
             // Add UserPreferenceService for managing user preferences
             builder.Services.AddScoped<UserPreferenceService>();
 
+            // Add Localization services
+            builder.Services.AddLocalization();
+
             // SECURITY: Add FileSignatureValidator for magic byte validation
             builder.Services.AddSingleton<IFileSignatureValidator, FileSignatureValidator>();
 
@@ -296,6 +299,36 @@ namespace FreeSpeakWeb
                 });
             });
 
+            // Configure Request Localization with supported cultures
+            var supportedCultures = new[]
+            {
+                new System.Globalization.CultureInfo("en-US"),
+                new System.Globalization.CultureInfo("es-ES"),
+                new System.Globalization.CultureInfo("fr-FR"),
+                new System.Globalization.CultureInfo("de-DE"),
+                new System.Globalization.CultureInfo("it-IT"),
+                new System.Globalization.CultureInfo("pt-BR"),
+                new System.Globalization.CultureInfo("ja-JP"),
+                new System.Globalization.CultureInfo("zh-CN"),
+                new System.Globalization.CultureInfo("ar-SA"),
+                new System.Globalization.CultureInfo("ru-RU")
+            };
+
+            var localizationOptions = new Microsoft.AspNetCore.Builder.RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en-US"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            };
+
+            // Add culture providers: User Preferences (highest priority), Cookie, Accept-Language header
+            localizationOptions.RequestCultureProviders = new List<Microsoft.AspNetCore.Localization.IRequestCultureProvider>
+            {
+                new UserPreferenceCultureProvider(),
+                new Microsoft.AspNetCore.Localization.CookieRequestCultureProvider(),
+                new Microsoft.AspNetCore.Localization.AcceptLanguageHeaderRequestCultureProvider()
+            };
+
             var app = builder.Build();
 
             // Seed test users and migrate data in development environment
@@ -381,6 +414,9 @@ namespace FreeSpeakWeb
 
             // SECURITY: Enable rate limiting
             app.UseRateLimiter();
+
+            // Apply request localization middleware
+            app.UseRequestLocalization(localizationOptions);
 
             app.UseAntiforgery();
 

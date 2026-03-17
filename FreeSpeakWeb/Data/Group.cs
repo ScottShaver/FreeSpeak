@@ -70,6 +70,18 @@ namespace FreeSpeakWeb.Data
         public bool EnablePointsSystem { get; set; } = false;
 
         /// <summary>
+        /// Gets or sets whether the group is active and ready to accept users and content.
+        /// When false, the group is in setup mode and not visible to non-admin users. Defaults to false.
+        /// </summary>
+        public bool IsActive { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets whether the group has been permanently closed.
+        /// When true, the group is completely shut down and no changes can be made, even by administrators. Defaults to false.
+        /// </summary>
+        public bool IsClosed { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets the ID of the user who created this group.
         /// The creator typically has full administrative permissions.
         /// </summary>

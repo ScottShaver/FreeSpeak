@@ -18,6 +18,7 @@
 @using FreeSpeakWeb.Components.Pages.Base
 @using System.Security.Claims
 @using Microsoft.JSInterop
+@using Microsoft.Extensions.Localization
 
 @implements IAsyncDisposable
 
@@ -33,25 +34,26 @@
 @inject UserPreferenceService UserPreferenceService
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject FreeSpeakWeb.Repositories.Abstractions.IGroupCommentRepository GroupCommentRepository
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.Groups> Localizer
 
-<PageTitle>@SiteSettings.Value.SiteName - Groups</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
 
 <div class="home-container">
     <!-- Tabbed Interface -->
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="group-feed-tab" data-bs-toggle="tab" data-bs-target="#group-feed-content" type="button" role="tab" aria-controls="group-feed-content" aria-selected="true" @onclick="OnGroupFeedTabClick">
-                    My Group Feed
+                    @Localizer["MyGroupFeed"]
                 </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="pinned-group-tab" data-bs-toggle="tab" data-bs-target="#pinned-group-content" type="button" role="tab" aria-controls="pinned-group-content" aria-selected="false" @onclick="OnPinnedTabClick">
-                Pinned Group Posts
+                @Localizer["PinnedGroupPosts"]
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="join-requests-tab" data-bs-toggle="tab" data-bs-target="#join-requests-content" type="button" role="tab" aria-controls="join-requests-content" aria-selected="false" @onclick="OnJoinRequestsTabClick">
-                Group Join Requests
+                @Localizer["GroupJoinRequests"]
                 @if (groupJoinRequests.Count > 0)
                 {
                     <span class="badge bg-warning ms-1">@groupJoinRequests.Count</span>
@@ -60,12 +62,12 @@
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="find-groups-tab" data-bs-toggle="tab" data-bs-target="#find-groups-content" type="button" role="tab" aria-controls="find-groups-content" aria-selected="false">
-                Find Groups
+                @Localizer["FindGroups"]
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="suggested-groups-tab" data-bs-toggle="tab" data-bs-target="#suggested-groups-content" type="button" role="tab" aria-controls="suggested-groups-content" aria-selected="false" @onclick="OnSuggestedGroupsTabClick">
-                Groups You Might Like
+                @Localizer["GroupsYouMightLike"]
             </button>
         </li>
     </ul>
@@ -76,9 +78,9 @@
             <div class="feed-section">
                 <!-- Group Filter Dropdown -->
                 <div class="group-filter-section">
-                    <label for="groupFilter" class="form-label">Show posts from:</label>
+                    <label for="groupFilter" class="form-label">@Localizer["ShowPostsFrom"]</label>
                     <select id="groupFilter" class="form-select" @onchange="OnGroupFilterChanged">
-                        <option value="">All Groups</option>
+                        <option value="">@Localizer["AllGroups"]</option>
                         @foreach (var group in userGroups)
                         {
                             <option value="@group.Id" selected="@(selectedGroupId == group.Id)">@group.Name</option>
@@ -89,13 +91,13 @@
                 @if (isLoadingGroupFeed && !groupPosts.Any())
                 {
                     <div class="loading-indicator">
-                        <p>Loading your group feed...</p>
+                        <p>@Localizer["LoadingGroupFeed"]</p>
                     </div>
                 }
                 else if (!groupPosts.Any() && !isLoadingGroupFeed)
                 {
                     <div class="empty-feed">
-                        <p>No group posts to display. Join groups to see their posts here!</p>
+                        <p>@Localizer["NoGroupPosts"]</p>
                     </div>
                 }
                 else
@@ -155,14 +157,14 @@
                     @if (isLoadingMoreGroupPosts)
                     {
                         <div class="loading-more">
-                            <p>Loading more posts...</p>
+                            <p>@Localizer["LoadingMorePosts"]</p>
                         </div>
                     }
 
                     @if (hasMoreGroupPosts == false && groupPosts.Any())
                     {
                         <div class="no-more-posts">
-                            <p>No more posts at this time</p>
+                            <p>@Localizer["NoMorePosts"]</p>
                         </div>
                     }
                 }
@@ -174,9 +176,9 @@
             <div class="feed-section">
                 <!-- Group Filter Dropdown for Pinned Posts -->
                 <div class="group-filter-section">
-                    <label for="pinnedGroupFilter" class="form-label">Show pinned posts from:</label>
+                    <label for="pinnedGroupFilter" class="form-label">@Localizer["ShowPinnedPostsFrom"]</label>
                     <select id="pinnedGroupFilter" class="form-select" @onchange="OnPinnedGroupFilterChanged">
-                        <option value="">All Groups</option>
+                        <option value="">@Localizer["AllGroups"]</option>
                         @foreach (var group in userGroups)
                         {
                             <option value="@group.Id" selected="@(selectedPinnedGroupId == group.Id)">@group.Name</option>
@@ -187,13 +189,13 @@
                 @if (isLoadingPinnedGroupPosts && !pinnedGroupPostsList.Any())
                 {
                     <div class="loading-indicator">
-                        <p>Loading your pinned group posts...</p>
+                        <p>@Localizer["LoadingPinnedPosts"]</p>
                     </div>
                 }
                 else if (!pinnedGroupPostsList.Any() && !isLoadingPinnedGroupPosts)
                 {
                     <div class="empty-feed">
-                        <p>You haven't pinned any group posts yet. Pin posts from groups to see them here!</p>
+                        <p>@Localizer["NoPinnedPosts"]</p>
                     </div>
                 }
                 else
@@ -253,14 +255,14 @@
                     @if (isLoadingMorePinnedPosts)
                     {
                         <div class="loading-more">
-                            <p>Loading more posts...</p>
+                            <p>@Localizer["LoadingMorePosts"]</p>
                         </div>
                     }
 
                     @if (hasMorePinnedPosts == false && pinnedGroupPostsList.Any())
                     {
                         <div class="no-more-posts">
-                            <p>No more pinned posts at this time</p>
+                            <p>@Localizer["NoMorePinnedPosts"]</p>
                         </div>
                     }
                 }
@@ -273,13 +275,13 @@
                 @if (isLoadingJoinRequests && !groupJoinRequests.Any())
                 {
                     <div class="loading-indicator">
-                        <p>Loading your join requests...</p>
+                        <p>@Localizer["LoadingJoinRequests"]</p>
                     </div>
                 }
                 else if (!groupJoinRequests.Any() && !isLoadingJoinRequests)
                 {
                     <div class="empty-feed">
-                        <p>You have no pending group join requests.</p>
+                        <p>@Localizer["NoPendingJoinRequests"]</p>
                     </div>
                 }
                 else
@@ -287,14 +289,14 @@
                     <div class="join-requests-list">
                         @foreach (var request in groupJoinRequests)
                         {
-                            var groupName = groupNames.ContainsKey(request.GroupId) ? groupNames[request.GroupId] : "Unknown Group";
+                            var groupName = groupNames.ContainsKey(request.GroupId) ? groupNames[request.GroupId] : Localizer["UnknownGroup"].Value;
                             <div class="join-request-card">
                                 <div class="request-info">
                                     <strong>@groupName</strong>
-                                    <span class="request-date">Requested @GetRelativeTime(request.RequestedAt)</span>
+                                    <span class="request-date">@Localizer["Requested"] @GetRelativeTime(request.RequestedAt)</span>
                                 </div>
                                 <button type="button" class="btn btn-sm btn-danger" @onclick="() => CancelJoinRequest(request.Id)">
-                                    Cancel Request
+                                    @Localizer["CancelRequest"]
                                 </button>
                             </div>
                         }
@@ -309,7 +311,7 @@
                 <div class="search-section">
                     <input type="text" 
                            class="form-control" 
-                           placeholder="Search for groups..." 
+                           placeholder="@Localizer["SearchForGroups"]" 
                            @bind="groupSearchQuery" 
                            @bind:event="oninput" 
                            @onkeyup="OnGroupSearchKeyUp" />
@@ -318,13 +320,13 @@
                 @if (isSearchingGroups)
                 {
                     <div class="loading-indicator">
-                        <p>Searching groups...</p>
+                        <p>@Localizer["SearchingGroups"]</p>
                     </div>
                 }
                 else if (!string.IsNullOrWhiteSpace(groupSearchQuery) && !searchedGroups.Any())
                 {
                     <div class="empty-feed">
-                        <p>No groups found matching "@groupSearchQuery"</p>
+                        <p>@string.Format(Localizer["NoGroupsFound"].Value, groupSearchQuery)</p>
                     </div>
                 }
                 else if (searchedGroups.Any())
@@ -337,20 +339,20 @@
                                     <h4>@group.Name</h4>
                                     <p>@group.Description</p>
                                     <div class="group-meta">
-                                        <span><i class="bi bi-people-fill"></i> @group.MemberCount members</span>
+                                        <span><i class="bi bi-people-fill"></i> @group.MemberCount @Localizer["Members"]</span>
                                         @if (group.IsPublic)
                                         {
-                                            <span class="badge bg-success">Public</span>
+                                            <span class="badge bg-success">@Localizer["Public"]</span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-warning">Private</span>
+                                            <span class="badge bg-warning">@Localizer["Private"]</span>
                                         }
                                     </div>
                                 </div>
                                 <div class="group-actions">
                                     <button type="button" class="btn btn-primary" @onclick="() => JoinGroup(group)">
-                                        @(group.RequiresJoinApproval ? "Request to Join" : "Join Now")
+                                        @(group.RequiresJoinApproval ? Localizer["RequestToJoin"] : Localizer["JoinNow"])
                                     </button>
                                 </div>
                             </div>
@@ -360,7 +362,7 @@
                 else
                 {
                     <div class="empty-feed">
-                        <p>Search for groups to join!</p>
+                        <p>@Localizer["SearchToJoin"]</p>
                     </div>
                 }
             </div>
@@ -372,13 +374,13 @@
                 @if (isLoadingSuggestedGroups && !suggestedGroups.Any())
                 {
                     <div class="loading-indicator">
-                        <p>Loading group suggestions...</p>
+                        <p>@Localizer["LoadingSuggestions"]</p>
                     </div>
                 }
                 else if (!suggestedGroups.Any() && !isLoadingSuggestedGroups)
                 {
                     <div class="empty-feed">
-                        <p>No group suggestions available at this time.</p>
+                        <p>@Localizer["NoSuggestions"]</p>
                     </div>
                 }
                 else
@@ -391,20 +393,20 @@
                                     <h4>@group.Name</h4>
                                     <p>@group.Description</p>
                                     <div class="group-meta">
-                                        <span><i class="bi bi-people-fill"></i> @group.MemberCount members</span>
+                                        <span><i class="bi bi-people-fill"></i> @group.MemberCount @Localizer["Members"]</span>
                                         @if (group.IsPublic)
                                         {
-                                            <span class="badge bg-success">Public</span>
+                                            <span class="badge bg-success">@Localizer["Public"]</span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-warning">Private</span>
+                                            <span class="badge bg-warning">@Localizer["Private"]</span>
                                         }
                                     </div>
                                 </div>
                                 <div class="group-actions">
                                     <button type="button" class="btn btn-primary" @onclick="() => JoinGroup(group)">
-                                        @(group.RequiresJoinApproval ? "Request to Join" : "Join Now")
+                                        @(group.RequiresJoinApproval ? Localizer["RequestToJoin"] : Localizer["JoinNow"])
                                     </button>
                                 </div>
                             </div>

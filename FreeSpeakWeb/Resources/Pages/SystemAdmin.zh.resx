@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>系统管理功能</value>
+  </data>
+  <data name="WelcomeMessage" xml:space="preserve">
+    <value>欢迎，系统管理员！</value>
+  </data>
+  <data name="WelcomeDescription" xml:space="preserve">
+    <value>此页面仅供具有系统管理员角色的用户访问。</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>角色</value>
+  </data>
+  <data name="UserManagement" xml:space="preserve">
+    <value>用户管理</value>
+  </data>
+  <data name="SystemConfiguration" xml:space="preserve">
+    <value>系统配置</value>
+  </data>
+  <data name="SiteWideContentModeration" xml:space="preserve">
+    <value>站点内容审核</value>
+  </data>
+  <data name="AnalyticsAndReporting" xml:space="preserve">
+    <value>分析与报告</value>
+  </data>
+  <data name="DatabaseMaintenanceTools" xml:space="preserve">
+    <value>数据库维护工具</value>
+  </data>
+  <data name="UserManagementDescription" xml:space="preserve">
+    <value>管理系统中的用户账户、角色和权限。</value>
+  </data>
+  <data name="SearchUsers" xml:space="preserve">
+    <value>搜索用户</value>
+  </data>
+  <data name="SearchUsersDescription" xml:space="preserve">
+    <value>按用户名、邮箱、姓名、城市、州和职业搜索。</value>
+  </data>
+  <data name="SearchUsersPlaceholder" xml:space="preserve">
+    <value>开始输入以搜索用户...</value>
+  </data>
+  <data name="Searching" xml:space="preserve">
+    <value>搜索中...</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>姓名</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>邮箱</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>位置</value>
+  </data>
+  <data name="Occupation" xml:space="preserve">
+    <value>职业</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>操作</value>
+  </data>
+  <data name="CopyUserId" xml:space="preserve">
+    <value>复制用户ID</value>
+  </data>
+  <data name="EditRoles" xml:space="preserve">
+    <value>编辑角色</value>
+  </data>
+  <data name="LockoutInfo" xml:space="preserve">
+    <value>锁定信息</value>
+  </data>
+  <data name="AuditLog" xml:space="preserve">
+    <value>审计日志</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>查看资料</value>
+  </data>
+  <data name="SuspendUser" xml:space="preserve">
+    <value>暂停用户</value>
+  </data>
+  <data name="SendMessage" xml:space="preserve">
+    <value>发送消息</value>
+  </data>
+  <data name="SearchAuditLogs" xml:space="preserve">
+    <value>搜索审计日志</value>
+  </data>
+  <data name="UserIdExactMatch" xml:space="preserve">
+    <value>用户ID（精确匹配）</value>
+  </data>
+  <data name="EnterUserGuid" xml:space="preserve">
+    <value>输入用户GUID...</value>
+  </data>
+  <data name="ActionCategory" xml:space="preserve">
+    <value>操作类别</value>
+  </data>
+  <data name="AllCategories" xml:space="preserve">
+    <value>所有类别</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>开始日期</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>结束日期</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="FoundResults" xml:space="preserve">
+    <value>找到 {0} 个结果</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>日期/时间</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>用户ID</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>类别</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>详情</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>上一页</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>下一页</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>页</value>
+  </data>
+  <data name="Of" xml:space="preserve">
+    <value>共</value>
+  </data>
+</root>

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -22,6 +22,147 @@
 
   <ItemGroup>
     <Folder Include="ViewModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Account\Pages\Login.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Login.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Account\Pages\Manage\ChangePassword.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ChangePassword.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Account\Pages\Register.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Register.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Layout\MainLayout.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MainLayout.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Layout\NavMenu.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NavMenu.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Pages\Error.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Error.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Pages\FriendsList.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FriendsList.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Pages\Groups.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Groups.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Pages\Home.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Home.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Pages\PublicHome.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PublicHome.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Shared\AlertContainer.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AlertContainer.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Shared\NotificationComponent.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NotificationComponent.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\SocialFeed\FeedArticle.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FeedArticle.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\SocialFeed\PostCreator.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PostCreator.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Layout Resources -->
+    <EmbeddedResource Update="Resources\Layout\MainLayout.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>MainLayout.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Layout\NavMenu.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>NavMenu.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+
+    <!-- Page Resources -->
+    <EmbeddedResource Update="Resources\Pages\Home.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Home.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Pages\PublicHome.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>PublicHome.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Pages\FriendsList.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>FriendsList.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Pages\Groups.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Groups.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Pages\Error.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Error.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+
+    <!-- Account Resources -->
+    <EmbeddedResource Update="Resources\Account\Pages\Login.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Login.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Account\Pages\Register.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Register.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Account\Pages\Manage\ChangePassword.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ChangePassword.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+
+    <!-- Shared Component Resources -->
+    <EmbeddedResource Update="Resources\Shared\AlertContainer.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AlertContainer.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Shared\NotificationComponent.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>NotificationComponent.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+
+    <!-- SocialFeed Component Resources -->
+    <EmbeddedResource Update="Resources\SocialFeed\PostCreator.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>PostCreator.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SocialFeed\FeedArticle.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>FeedArticle.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

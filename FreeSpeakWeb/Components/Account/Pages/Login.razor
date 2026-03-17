@@ -8,6 +8,7 @@
 @using FreeSpeakWeb.Data.AuditLogDetails
 @using FreeSpeakWeb.Repositories.Abstractions
 @using FreeSpeakWeb.Services
+@using Microsoft.Extensions.Localization
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IAuditLogRepository AuditLogRepository
@@ -17,48 +18,49 @@
 @inject IdentityRedirectManager RedirectManager
 @inject IOptions<SiteSettings> SiteSettings
 @inject NavigationStateService NavigationState
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Account.Pages.Login> Localizer
 
-<PageTitle>@SiteSettings.Value.SiteName - Log in</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
 
-<h1>Log in</h1>
+<h1>@Localizer["Title"]</h1>
 <div class="row">
     <div class="col-lg-6">
         <section>
             <StatusMessage Message="@errorMessage" />
             <EditForm EditContext="editContext" method="post" OnSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator />
-                <h2>Use a local account to log in.</h2>
+                <h2>@Localizer["LocalAccountTitle"]</h2>
                 <hr />
                 <ValidationSummary class="text-danger" role="alert" />
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="Input.UserName" id="Input.UserName" class="form-control" autocomplete="username webauthn" aria-required="true" placeholder="username" />
-                    <label for="Input.UserName" class="form-label">User Name</label>
+                    <label for="Input.UserName" class="form-label">@Localizer["UserName"]</label>
                     <ValidationMessage For="() => Input.UserName" class="text-danger" />
                 </div>
                 <div class="form-floating mb-3">
                     <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label for="Input.Password" class="form-label">Password</label>
+                    <label for="Input.Password" class="form-label">@Localizer["Password"]</label>
                     <ValidationMessage For="() => Input.Password" class="text-danger" />
                 </div>
                 <div class="checkbox mb-3">
                     <label class="form-label">
                         <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                        Remember me
+                        @Localizer["RememberMe"]
                     </label>
                 </div>
                 <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                    <button type="submit" class="w-100 btn btn-lg btn-primary">@Localizer["LoginButton"]</button>
                 </div>
                 <hr />
                 <div>
                     <p>
-                        <a href="Account/ForgotPassword" data-enhance-nav="false">Forgot your password?</a>
+                        <a href="Account/ForgotPassword" data-enhance-nav="false">@Localizer["ForgotPassword"]</a>
                     </p>
                     <p>
-                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))" data-enhance-nav="false">Register as a new user</a>
+                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))" data-enhance-nav="false">@Localizer["RegisterNewUser"]</a>
                     </p>
                     <p>
-                        <a href="Account/ResendEmailConfirmation" data-enhance-nav="false">Resend email confirmation</a>
+                        <a href="Account/ResendEmailConfirmation" data-enhance-nav="false">@Localizer["ResendEmailConfirmation"]</a>
                     </p>
                 </div>
             </EditForm>
@@ -66,7 +68,7 @@
     </div>
     <div class="col-lg-4 col-lg-offset-2">
         <section>
-            <h3>Use another service to log in.</h3>
+            <h3>@Localizer["ExternalLoginTitle"]</h3>
             <hr />
             <ExternalLoginPicker />
         </section>

@@ -13,6 +13,7 @@
 @using FreeSpeakWeb.Components.Friends
 @using Microsoft.EntityFrameworkCore
 @using System.Security.Claims
+@using Microsoft.Extensions.Localization
 
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -23,10 +24,11 @@
 @inject NavigationManager NavigationManager
 @inject AlertService AlertService
 @inject IAuditLogRepository AuditLogRepository
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.FriendsList> Localizer
 
-<PageTitle>@SiteSettings.Value.SiteName - Friends</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
 
-<h3>Friends</h3>
+<h3>@Localizer["Title"]</h3>
 
 @if (!string.IsNullOrEmpty(statusMessage))
 {
@@ -48,7 +50,7 @@
     <div class="col-12">
         @if (isLoading)
         {
-            <p><em>Loading...</em></p>
+            <p><em>@Localizer["Loading"]</em></p>
         }
         else
         {
@@ -56,12 +58,12 @@
             <ul class="nav nav-tabs mb-4" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link @(activeTab == "friends" ? "active" : "")" type="button" @onclick="HandleFriendsTabClick">
-                        Your Friends (@friendsCount)
+                        @Localizer["YourFriends"] (@friendsCount)
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link @(activeTab == "suggestions" ? "active" : "")" type="button" @onclick="HandleSuggestionsTabClick">
-                        People You May Know
+                        @Localizer["PeopleYouMayKnow"]
                         @if (peopleYouMayKnowCount > 0)
                         {
                             <span class="badge bg-primary ms-1">@peopleYouMayKnowCount</span>
@@ -70,7 +72,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link @(activeTab == "requests" ? "active" : "")" type="button" @onclick="HandleRequestsTabClick">
-                        Friend Requests
+                        @Localizer["FriendRequests"]
                         @if (pendingRequestsCount > 0)
                         {
                             <span class="badge bg-danger ms-1">@pendingRequestsCount</span>
@@ -79,7 +81,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link @(activeTab == "sent" ? "active" : "")" type="button" @onclick="HandleSentTabClick">
-                        Sent Requests
+                        @Localizer["SentRequests"]
                         @if (sentRequestsCount > 0)
                         {
                             <span class="badge bg-warning ms-1">@sentRequestsCount</span>
@@ -88,7 +90,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link @(activeTab == "search" ? "active" : "")" type="button" @onclick="HandleSearchTabClick">
-                        Find People
+                        @Localizer["FindPeople"]
                     </button>
                 </li>
             </ul>
@@ -100,7 +102,7 @@
                     @if (friends.Count == 0)
                     {
                         <div class="alert alert-info" role="alert">
-                            <p class="mb-0">You don't have any friends yet. Start connecting with people!</p>
+                            <p class="mb-0">@Localizer["NoFriends"]</p>
                         </div>
                     }
                     else
@@ -124,7 +126,7 @@
                     @if (peopleYouMayKnow.Count == 0)
                     {
                         <div class="alert alert-info" role="alert">
-                            <p class="mb-0">No suggestions available at this time.</p>
+                            <p class="mb-0">@Localizer["NoSuggestions"]</p>
                         </div>
                     }
                     else
@@ -152,7 +154,7 @@
                     @if (pendingRequests.Count == 0)
                     {
                         <div class="alert alert-info" role="alert">
-                            <p class="mb-0">You have no pending friend requests.</p>
+                            <p class="mb-0">@Localizer["NoPendingRequests"]</p>
                         </div>
                     }
                     else
@@ -181,7 +183,7 @@
                     @if (sentRequests.Count == 0)
                     {
                         <div class="alert alert-info" role="alert">
-                            <p class="mb-0">You have no pending sent requests.</p>
+                            <p class="mb-0">@Localizer["NoSentRequests"]</p>
                         </div>
                     }
                     else
@@ -208,7 +210,7 @@
                     <div class="search-section mb-3">
                         <input type="text" 
                                class="form-control" 
-                               placeholder="Search by username..." 
+                               placeholder="@Localizer["SearchPlaceholder"]" 
                                @bind="searchTerm"
                                @bind:event="oninput"
                                @onkeyup="HandleSearchKeyUp" />
@@ -231,13 +233,13 @@
                     else if (hasSearched && !isSearching)
                     {
                         <div class="alert alert-info" role="alert">
-                            <p class="mb-0">No users found matching "@searchTerm".</p>
+                            <p class="mb-0">@Localizer["NoSearchResults", searchTerm]</p>
                         </div>
                     }
                     else if (!hasSearched)
                     {
                         <div class="alert alert-info" role="alert">
-                            <p class="mb-0">Enter a username to search for people.</p>
+                            <p class="mb-0">@Localizer["SearchPrompt"]</p>
                         </div>
                     }
                 </div>

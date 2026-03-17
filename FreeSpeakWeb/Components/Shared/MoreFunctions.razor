@@ -1,0 +1,311 @@
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using System.Security.Claims
+@using Microsoft.Extensions.Localization
+
+@inject IOptions<SiteSettings> SiteSettings
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> UserManager
+@inject GroupService GroupService
+@inject NavigationManager NavigationManager
+@inject AlertService AlertService
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.MoreFunctions> Localizer
+
+@* Only show for authenticated users *@
+@if (isAuthenticated)
+{
+    <div class="more-functions-panel">
+        <h5 class="panel-title">
+            <i class="bi bi-grid-3x3-gap me-2"></i>@Localizer["Title"]
+        </h5>
+
+        <div class="functions-list">
+            @if (canCreateGroup)
+            {
+                <button type="button" class="function-button" @onclick="OpenCreateGroupModal" title="@Localizer["CreateGroupTooltip"]">
+                    <i class="bi bi-people-fill"></i>
+                    <span>@Localizer["CreateGroup"]</span>
+                </button>
+            }
+
+            @* Placeholder for future functions *@
+            @if (!canCreateGroup)
+            {
+                <p class="text-muted small">@Localizer["NoFunctionsAvailable"]</p>
+            }
+        </div>
+    </div>
+}
+
+@if (showCreateGroupModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-people-fill me-2"></i>@Localizer["CreateNewGroup"]
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="CloseCreateGroupModal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="groupName" class="form-label">@Localizer["GroupName"]</label>
+                        <input type="text" class="form-control" id="groupName" @bind="newGroupName" maxlength="100" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="groupDescription" class="form-label">@Localizer["GroupDescription"]</label>
+                        <textarea class="form-control" id="groupDescription" rows="3" @bind="newGroupDescription" maxlength="500"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="isPublic" 
+                                   checked="@newGroupIsPublic" 
+                                   @onchange="OnIsPublicChanged" />
+                            <label class="form-check-label" for="isPublic">
+                                @Localizer["PublicGroup"]
+                            </label>
+                            <div class="form-text">@Localizer["PublicGroupHelp"]</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="isHidden" 
+                                   checked="@newGroupIsHidden" 
+                                   @onchange="OnIsHiddenChanged" />
+                            <label class="form-check-label" for="isHidden">
+                                @Localizer["HiddenGroup"]
+                            </label>
+                            <div class="form-text">@Localizer["HiddenGroupHelp"]</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="requiresApproval" @bind="newGroupRequiresApproval" />
+                            <label class="form-check-label" for="requiresApproval">
+                                @Localizer["RequireJoinApproval"]
+                            </label>
+                            <div class="form-text">@Localizer["RequireJoinApprovalHelp"]</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="requireAcceptRules" @bind="newGroupRequireAcceptRules" />
+                            <label class="form-check-label" for="requireAcceptRules">
+                                @Localizer["RequireAcceptRules"]
+                            </label>
+                            <div class="form-text">@Localizer["RequireAcceptRulesHelp"]</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="enablePointsSystem" @bind="newGroupEnablePointsSystem" />
+                            <label class="form-check-label" for="enablePointsSystem">
+                                <i class="bi bi-trophy me-1"></i>@Localizer["EnablePointsSystem"]
+                            </label>
+                            <div class="form-text">@Localizer["EnablePointsSystemHelp"]</div>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseCreateGroupModal" disabled="@isCreating">
+                        @Localizer["Cancel"]
+                    </button>
+                    <button type="button" class="btn btn-primary" @onclick="CreateGroup" disabled="@isCreating">
+                        @if (isCreating)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            @Localizer["Creating"]
+                        }
+                        else
+                        {
+                            @Localizer["CreateGroup"]
+                        }
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private string? currentUserId;
+    private bool isAuthenticated = false;
+    private bool canCreateGroup = false;
+
+    // Create group modal state
+    private bool showCreateGroupModal = false;
+    private string newGroupName = string.Empty;
+    private string newGroupDescription = string.Empty;
+    private bool newGroupIsPublic = true;
+    private bool newGroupIsHidden = false;
+    private bool newGroupRequiresApproval = false;
+    private bool newGroupRequireAcceptRules = false;
+    private bool newGroupEnablePointsSystem = false;
+    private bool isCreating = false;
+    private string? errorMessage;
+
+    /// <summary>
+    /// Initializes the component and determines user permissions.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        isAuthenticated = user.Identity?.IsAuthenticated == true;
+
+        if (isAuthenticated)
+        {
+            currentUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            // Determine if user can create groups
+            if (SiteSettings.Value.AllowOpenGroupCreation)
+            {
+                // Any authenticated user can create groups
+                canCreateGroup = true;
+            }
+            else
+            {
+                // Only SystemAdministrator or GroupAdministrator roles can create groups
+                canCreateGroup = user.IsInRole("SystemAdministrator") || user.IsInRole("GroupAdministrator");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Opens the create group modal dialog.
+    /// </summary>
+    private void OpenCreateGroupModal()
+    {
+        showCreateGroupModal = true;
+        newGroupName = string.Empty;
+        newGroupDescription = string.Empty;
+        newGroupIsPublic = true;
+        newGroupIsHidden = false;
+        newGroupRequiresApproval = false;
+        newGroupRequireAcceptRules = false;
+        newGroupEnablePointsSystem = false;
+        errorMessage = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles the IsPublic switch change. If turned on, automatically turns off IsHidden.
+    /// </summary>
+    private void OnIsPublicChanged(ChangeEventArgs e)
+    {
+        newGroupIsPublic = (bool)(e.Value ?? false);
+        if (newGroupIsPublic)
+        {
+            newGroupIsHidden = false;
+        }
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles the IsHidden switch change. If turned on, automatically turns off IsPublic.
+    /// </summary>
+    private void OnIsHiddenChanged(ChangeEventArgs e)
+    {
+        newGroupIsHidden = (bool)(e.Value ?? false);
+        if (newGroupIsHidden)
+        {
+            newGroupIsPublic = false;
+        }
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the create group modal dialog.
+    /// </summary>
+    private void CloseCreateGroupModal()
+    {
+        showCreateGroupModal = false;
+        errorMessage = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Creates a new group with the specified settings.
+    /// </summary>
+    private async Task CreateGroup()
+    {
+        if (string.IsNullOrWhiteSpace(currentUserId))
+        {
+            errorMessage = Localizer["NotAuthenticated"];
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(newGroupName))
+        {
+            errorMessage = Localizer["GroupNameRequired"];
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(newGroupDescription))
+        {
+            errorMessage = Localizer["GroupDescriptionRequired"];
+            return;
+        }
+
+        isCreating = true;
+        errorMessage = null;
+        StateHasChanged();
+
+        try
+        {
+            var (success, error, group) = await GroupService.CreateGroupAsync(
+                currentUserId,
+                newGroupName.Trim(),
+                newGroupDescription.Trim(),
+                newGroupIsPublic,
+                newGroupIsHidden,
+                newGroupRequiresApproval,
+                newGroupRequireAcceptRules,
+                newGroupEnablePointsSystem
+            );
+
+            if (success && group != null)
+            {
+                CloseCreateGroupModal();
+                AlertService.ShowSuccess(string.Format(Localizer["GroupCreatedSuccess"].Value, group.Name));
+
+                // Navigate to the new group
+                NavigationManager.NavigateTo($"/group/{group.Id}");
+            }
+            else
+            {
+                errorMessage = error ?? Localizer["GroupCreationFailed"];
+            }
+        }
+        catch (Exception)
+        {
+            errorMessage = Localizer["GroupCreationFailed"];
+        }
+        finally
+        {
+            isCreating = false;
+            StateHasChanged();
+        }
+    }
+}

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>Rechercher les Journaux d'Audit</value>
+  </data>
+  <data name="UserIdLabel" xml:space="preserve">
+    <value>ID Utilisateur (Correspondance Exacte)</value>
+  </data>
+  <data name="UserIdPlaceholder" xml:space="preserve">
+    <value>Entrez le GUID utilisateur...</value>
+  </data>
+  <data name="ActionCategory" xml:space="preserve">
+    <value>Catégorie d'Action</value>
+  </data>
+  <data name="AllCategories" xml:space="preserve">
+    <value>Toutes les Catégories</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Date de Début</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>Date de Fin</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="FoundResults" xml:space="preserve">
+    <value>{0} résultat(s) trouvé(s)</value>
+  </data>
+  <data name="LimitedToMaximum" xml:space="preserve">
+    <value>(Limité à 500 maximum)</value>
+  </data>
+  <data name="SearchingAuditLogs" xml:space="preserve">
+    <value>Recherche dans les journaux d'audit...</value>
+  </data>
+  <data name="NoEntriesFound" xml:space="preserve">
+    <value>Aucune entrée de journal d'audit ne correspond à vos critères de recherche.</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>Date/Heure</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>ID Utilisateur</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Catégorie</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Détails</value>
+  </data>
+  <data name="SearchPrompt" xml:space="preserve">
+    <value>Utilisez les filtres de recherche ci-dessus pour trouver des entrées du journal d'audit.</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Précédent</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Suivant</value>
+  </data>
+  <data name="PageOfPages" xml:space="preserve">
+    <value>Page {0} sur {1}</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+</root>

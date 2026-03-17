@@ -8,26 +8,28 @@
 @using Microsoft.JSInterop
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Repositories.Abstractions
+@using Microsoft.Extensions.Localization
 
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IUserRepository UserRepository
 @inject ILogger<SystemAdmin> Logger
 @inject IJSRuntime JSRuntime
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.SystemAdmin> Localizer
 
-<PageTitle>System Administration Functions</PageTitle>
+<PageTitle>@Localizer["PageTitle"]</PageTitle>
 
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col-12">
             <h1 class="mb-4">
                 <i class="bi bi-shield-lock-fill me-2"></i>
-                System Administration Functions
+                @Localizer["PageTitle"]
             </h1>
 
             <div class="alert alert-info" role="alert">
                 <i class="bi bi-info-circle me-2"></i>
-                <strong>Welcome, System Administrator!</strong> This page is only accessible to users with the SystemAdministrator role.
+                <strong>@Localizer["WelcomeMessage"]</strong> @Localizer["WelcomeDescription"]
             </div>
 
             @if (!string.IsNullOrEmpty(currentUserName))
@@ -38,7 +40,7 @@
                             <i class="bi bi-person-circle fs-3"></i>
                             <div>
                                 <p class="mb-1"><strong>@currentUserName</strong> (@currentUserEmail)</p>
-                                <p class="mb-0 text-muted">Roles: @string.Join(", ", userRoles)</p>
+                                <p class="mb-0 text-muted">@Localizer["Roles"]: @string.Join(", ", userRoles)</p>
                             </div>
                         </div>
                     </div>
@@ -49,27 +51,27 @@
             <ul class="nav nav-tabs" id="adminTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="user-management-tab" data-bs-toggle="tab" data-bs-target="#user-management" type="button" role="tab" aria-controls="user-management" aria-selected="true">
-                        <i class="bi bi-people me-2"></i>User Management
+                        <i class="bi bi-people me-2"></i>@Localizer["UserManagement"]
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="system-config-tab" data-bs-toggle="tab" data-bs-target="#system-config" type="button" role="tab" aria-controls="system-config" aria-selected="false">
-                        <i class="bi bi-gear me-2"></i>System Configuration
+                        <i class="bi bi-gear me-2"></i>@Localizer["SystemConfiguration"]
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="content-moderation-tab" data-bs-toggle="tab" data-bs-target="#content-moderation" type="button" role="tab" aria-controls="content-moderation" aria-selected="false">
-                        <i class="bi bi-shield-check me-2"></i>Site-wide Content Moderation
+                        <i class="bi bi-shield-check me-2"></i>@Localizer["SiteWideContentModeration"]
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="analytics-tab" data-bs-toggle="tab" data-bs-target="#analytics" type="button" role="tab" aria-controls="analytics" aria-selected="false">
-                        <i class="bi bi-graph-up me-2"></i>Analytics and Reporting
+                        <i class="bi bi-graph-up me-2"></i>@Localizer["AnalyticsAndReporting"]
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="database-tab" data-bs-toggle="tab" data-bs-target="#database" type="button" role="tab" aria-controls="database" aria-selected="false">
-                        <i class="bi bi-database me-2"></i>Database Maintenance Tools
+                        <i class="bi bi-database me-2"></i>@Localizer["DatabaseMaintenanceTools"]
                     </button>
                 </li>
             </ul>
@@ -78,20 +80,20 @@
                 <!-- User Management Tab -->
                 <div class="tab-pane fade show active" id="user-management" role="tabpanel" aria-labelledby="user-management-tab">
                     <h3 class="mb-3">
-                        <i class="bi bi-people me-2"></i>User Management
+                        <i class="bi bi-people me-2"></i>@Localizer["UserManagement"]
                     </h3>
-                    <p class="text-muted">Manage user accounts, roles, and permissions across the system.</p>
+                    <p class="text-muted">@Localizer["UserManagementDescription"]</p>
 
                     <!-- User Search Section -->
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h5 class="card-title"><i class="bi bi-search me-2"></i>Search Users</h5>
-                            <p class="card-text text-muted">Search across username, email, name, city, state, and occupation.</p>
+                            <h5 class="card-title"><i class="bi bi-search me-2"></i>@Localizer["SearchUsers"]</h5>
+                            <p class="card-text text-muted">@Localizer["SearchUsersDescription"]</p>
 
                             <div class="search-section mb-3">
                                 <input type="text" 
                                        class="form-control" 
-                                       placeholder="Start typing to search users..." 
+                                       placeholder="@Localizer["SearchUsersPlaceholder"]" 
                                        @bind="searchTerm"
                                        @bind:event="oninput"
                                        @onkeyup="HandleSearchKeyUp" />
@@ -101,7 +103,7 @@
                             {
                                 <div class="text-center py-3">
                                     <div class="spinner-border text-primary" role="status">
-                                        <span class="visually-hidden">Searching...</span>
+                                        <span class="visually-hidden">@Localizer["Searching"]</span>
                                     </div>
                                 </div>
                             }
@@ -111,12 +113,12 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
-                                                <th>Username</th>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Location</th>
-                                                <th>Occupation</th>
-                                                <th>Actions</th>
+                                                <th>@Localizer["Username"]</th>
+                                                <th>@Localizer["Name"]</th>
+                                                <th>@Localizer["Email"]</th>
+                                                <th>@Localizer["Location"]</th>
+                                                <th>@Localizer["Occupation"]</th>
+                                                <th>@Localizer["Actions"]</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -159,39 +161,39 @@
                                                             <ul class="dropdown-menu" aria-labelledby="userActions-@user.Id" style="z-index: 1060;">
                                                                 <li>
                                                                     <button type="button" class="dropdown-item" @onclick="() => CopyUserIdToClipboard(user.Id)">
-                                                                        <i class="bi bi-clipboard me-2"></i>Copy User ID
+                                                                        <i class="bi bi-clipboard me-2"></i>@Localizer["CopyUserId"]
                                                                     </button>
                                                                 </li>
                                                                 <li><hr class="dropdown-divider" /></li>
                                                                 <li>
                                                                     <button type="button" class="dropdown-item" @onclick="() => OpenRoleModal(user)">
-                                                                        <i class="bi bi-person-badge me-2"></i>Edit Roles
+                                                                        <i class="bi bi-person-badge me-2"></i>@Localizer["EditRoles"]
                                                                     </button>
                                                                 </li>
                                                                 <li>
                                                                     <button type="button" class="dropdown-item" @onclick="() => OpenLockoutModal(user)">
-                                                                        <i class="bi bi-lock me-2"></i>Lockout Info
+                                                                        <i class="bi bi-lock me-2"></i>@Localizer["LockoutInfo"]
                                                                     </button>
                                                                 </li>
                                                                 <li>
                                                                     <button type="button" class="dropdown-item" @onclick="() => OpenAuditLogModal(user)">
-                                                                        <i class="bi bi-clock-history me-2"></i>Audit Log
+                                                                        <i class="bi bi-clock-history me-2"></i>@Localizer["AuditLog"]
                                                                     </button>
                                                                 </li>
                                                                 <li><hr class="dropdown-divider" /></li>
                                                                 <li>
                                                                     <button type="button" class="dropdown-item" disabled>
-                                                                        <i class="bi bi-eye me-2"></i>View Profile
+                                                                        <i class="bi bi-eye me-2"></i>@Localizer["ViewProfile"]
                                                                     </button>
                                                                 </li>
                                                                 <li>
                                                                     <button type="button" class="dropdown-item" disabled>
-                                                                        <i class="bi bi-person-x me-2"></i>Suspend User
+                                                                        <i class="bi bi-person-x me-2"></i>@Localizer["SuspendUser"]
                                                                     </button>
                                                                 </li>
                                                                 <li>
                                                                     <button type="button" class="dropdown-item" disabled>
-                                                                        <i class="bi bi-envelope me-2"></i>Send Message
+                                                                        <i class="bi bi-envelope me-2"></i>@Localizer["SendMessage"]
                                                                     </button>
                                                                 </li>
                                                             </ul>
@@ -417,33 +419,6 @@
                                 <div class="card-body">
                                     <h5 class="card-title"><i class="bi bi-chat-dots me-2"></i>Content Analytics</h5>
                                     <p class="card-text">Track posts, comments, and content trends.</p>
-                                    <button class="btn btn-primary" disabled>Coming Soon</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 mb-3">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title"><i class="bi bi-diagram-3 me-2"></i>Group Analytics</h5>
-                                    <p class="card-text">Analyze group activity and member participation.</p>
-                                    <button class="btn btn-primary" disabled>Coming Soon</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 mb-3">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title"><i class="bi bi-file-earmark-bar-graph me-2"></i>Custom Reports</h5>
-                                    <p class="card-text">Generate custom reports with specific criteria.</p>
-                                    <button class="btn btn-primary" disabled>Coming Soon</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 mb-3">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title"><i class="bi bi-download me-2"></i>Export Data</h5>
-                                    <p class="card-text">Export analytics data to CSV or Excel format.</p>
                                     <button class="btn btn-primary" disabled>Coming Soon</button>
                                 </div>
                             </div>

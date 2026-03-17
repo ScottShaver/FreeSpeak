@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <!-- Profile Page -->
+  <data name="Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="ProfilePicture" xml:space="preserve">
+    <value>Profilbild</value>
+  </data>
+  <data name="ProfilePictureHelpText" xml:space="preserve">
+    <value>Lade ein Bild hoch (max. 5 MB). Das Bild wird auf 168x168 Pixel skaliert.</value>
+  </data>
+  <data name="UploadNewProfilePicture" xml:space="preserve">
+    <value>Neues Profilbild hochladen</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Vorname</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Nachname</value>
+  </data>
+  <data name="NameSuffix" xml:space="preserve">
+    <value>Namenszusatz</value>
+  </data>
+  <data name="DateOfBirth" xml:space="preserve">
+    <value>Geburtsdatum</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Stadt</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>Bundesland</value>
+  </data>
+  <data name="Occupation" xml:space="preserve">
+    <value>Beruf</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Telefonnummer</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <!-- Email Page -->
+  <data name="Email" xml:space="preserve">
+    <value>E-Mail</value>
+  </data>
+  <data name="ManageEmail" xml:space="preserve">
+    <value>E-Mail verwalten</value>
+  </data>
+  <data name="YourEmailIsConfirmed" xml:space="preserve">
+    <value>Deine E-Mail ist bestätigt.</value>
+  </data>
+  <data name="PleaseConfirmYourEmail" xml:space="preserve">
+    <value>Bitte bestätige deine E-Mail.</value>
+  </data>
+  <data name="SendVerificationEmail" xml:space="preserve">
+    <value>Bestätigungs-E-Mail senden</value>
+  </data>
+  <data name="NewEmail" xml:space="preserve">
+    <value>Neue E-Mail</value>
+  </data>
+  <data name="ChangeEmail" xml:space="preserve">
+    <value>E-Mail ändern</value>
+  </data>
+  <!-- Password Pages -->
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Passwort ändern</value>
+  </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>Aktuelles Passwort</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>Neues Passwort</value>
+  </data>
+  <data name="ConfirmNewPassword" xml:space="preserve">
+    <value>Neues Passwort bestätigen</value>
+  </data>
+  <data name="UpdatePassword" xml:space="preserve">
+    <value>Passwort aktualisieren</value>
+  </data>
+  <data name="SetPassword" xml:space="preserve">
+    <value>Passwort festlegen</value>
+  </data>
+  <data name="SetYourPassword" xml:space="preserve">
+    <value>Lege dein Passwort fest</value>
+  </data>
+  <data name="YouDoNotHaveLocalPassword" xml:space="preserve">
+    <value>Du hast keinen lokalen Benutzernamen/Passwort für diese Seite. Füge ein lokales Konto hinzu, damit du dich ohne externe Anmeldung einloggen kannst.</value>
+  </data>
+  <data name="ManageYourAccount" xml:space="preserve">
+    <value>Ihr Konto verwalten</value>
+  </data>
+  <data name="ChangeYourAccountSettings" xml:space="preserve">
+    <value>Ändern Sie Ihre Kontoeinstellungen</value>
+  </data>
+  <!-- Two-Factor Authentication -->
+  <data name="TwoFactorAuthentication" xml:space="preserve">
+    <value>Zwei-Faktor-Authentifizierung</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Aktiviert</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Deaktiviert</value>
+  </data>
+  <data name="Disable2FA" xml:space="preserve">
+    <value>2FA deaktivieren</value>
+  </data>
+  <data name="ResetRecoveryCodes" xml:space="preserve">
+    <value>Wiederherstellungscodes zurücksetzen</value>
+  </data>
+  <data name="SetupAuthenticatorApp" xml:space="preserve">
+    <value>Authenticator-App einrichten</value>
+  </data>
+  <data name="ResetAuthenticatorKey" xml:space="preserve">
+    <value>Authenticator-Schlüssel zurücksetzen</value>
+  </data>
+  <data name="RecoveryCodes" xml:space="preserve">
+    <value>Wiederherstellungscodes</value>
+  </data>
+  <data name="RecoveryCodesLeft" xml:space="preserve">
+    <value>{0} Wiederherstellungscodes übrig</value>
+  </data>
+  <data name="GenerateNewRecoveryCodes" xml:space="preserve">
+    <value>Neue Wiederherstellungscodes generieren</value>
+  </data>
+  <!-- Personal Data -->
+  <data name="PersonalData" xml:space="preserve">
+    <value>Persönliche Daten</value>
+  </data>
+  <data name="DownloadYourData" xml:space="preserve">
+    <value>Ihre Daten herunterladen</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Herunterladen</value>
+  </data>
+  <data name="DeleteYourData" xml:space="preserve">
+    <value>Ihre Daten löschen</value>
+  </data>
+  <data name="DeleteAccount" xml:space="preserve">
+    <value>Konto löschen</value>
+  </data>
+  <data name="DeleteAccountWarning" xml:space="preserve">
+    <value>Das Löschen dieser Daten wird Ihr Konto dauerhaft entfernen und kann nicht wiederhergestellt werden.</value>
+  </data>
+  <data name="DisableAccount" xml:space="preserve">
+    <value>Konto deaktivieren</value>
+  </data>
+  <data name="DisableAccountWarning" xml:space="preserve">
+    <value>Die Deaktivierung Ihres Kontos wird Sie dauerhaft sperren und kann nicht wiederhergestellt werden.</value>
+  </data>
+  <data name="DisableMyAccount" xml:space="preserve">
+    <value>Mein Konto deaktivieren</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="IncorrectPassword" xml:space="preserve">
+    <value>Fehler: Falsches Passwort.</value>
+  </data>
+  <!-- Navigation Menu -->
+  <data name="Account" xml:space="preserve">
+    <value>Konto</value>
+  </data>
+  <data name="SecuritySettings" xml:space="preserve">
+    <value>Sicherheitseinstellungen</value>
+  </data>
+  <data name="ExternalLogins" xml:space="preserve">
+    <value>Externe Anmeldungen</value>
+  </data>
+  <!-- LikesModal -->
+  <data name="PeopleWhoReacted" xml:space="preserve">
+    <value>Personen, die reagiert haben</value>
+  </data>
+  <data name="AllReactions" xml:space="preserve">
+    <value>Alle Reaktionen</value>
+  </data>
+  <data name="NoReactionsYet" xml:space="preserve">
+    <value>Noch keine Reaktionen</value>
+  </data>
+  <!-- Comment Editor -->
+  <data name="WriteAComment" xml:space="preserve">
+    <value>Einen Kommentar schreiben...</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Veröffentlichen</value>
+  </data>
+  <!-- Preferences -->
+  <data name="Preferences" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <!-- Common -->
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Bestätigen</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Absenden</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nein</value>
+  </data>
+  <!-- New Preferences Keys -->
+  <data name="ColorScheme" xml:space="preserve">
+    <value>Farbschema</value>
+  </data>
+  <data name="ColorSchemeHelp" xml:space="preserve">
+    <value>Wählen Sie Ihr bevorzugtes Farbthema für die Website.</value>
+  </data>
+  <data name="NameDisplay" xml:space="preserve">
+    <value>Namenanzeige</value>
+  </data>
+  <data name="NameDisplayHelp" xml:space="preserve">
+    <value>Wie Ihr Name anderen Benutzern auf der Website angezeigt wird.</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>Vollständiger Name</value>
+  </data>
+  <data name="FirstNameOnly" xml:space="preserve">
+    <value>Nur Vorname</value>
+  </data>
+  <data name="UsernameOnly" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="FirstNameLastInitial" xml:space="preserve">
+    <value>Vorname + Nachnamen-Initial</value>
+  </data>
+  <data name="DefaultPostVisibility" xml:space="preserve">
+    <value>Standard-Sichtbarkeit von Beiträgen</value>
+  </data>
+  <data name="DefaultPostVisibilityHelp" xml:space="preserve">
+    <value>Standard-Sichtbarkeit für neue Beiträge. Sie können dies beim Erstellen eines Beitrags ändern.</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>Öffentlich</value>
+  </data>
+  <data name="PublicHelp" xml:space="preserve">
+    <value>Jeder kann sehen</value>
+  </data>
+  <data name="FriendsOnly" xml:space="preserve">
+    <value>Nur Freunde</value>
+  </data>
+  <data name="OnlyMe" xml:space="preserve">
+    <value>Nur ich</value>
+  </data>
+  <data name="OnlyMeHelp" xml:space="preserve">
+    <value>Privat</value>
+  </data>
+  <data name="Timezone" xml:space="preserve">
+    <value>Zeitzone</value>
+  </data>
+  <data name="TimezoneHelp" xml:space="preserve">
+    <value>Ihre bevorzugte Zeitzone für die Anzeige von Datum und Zeit.</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Land</value>
+  </data>
+  <data name="CountryHelp" xml:space="preserve">
+    <value>Ihr Land oder Ihre Region.</value>
+  </data>
+  <data name="LanguageAndRegion" xml:space="preserve">
+    <value>Sprache und Region</value>
+  </data>
+  <data name="LanguageAndRegionHelp" xml:space="preserve">
+    <value>Ihre bevorzugte Sprache und regionale Formatierung für Datum, Zahlen usw.</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Wird geladen...</value>
+  </data>
+  <data name="UnitedStates" xml:space="preserve">
+    <value>Vereinigte Staaten</value>
+  </data>
+  <data name="OtherCommonTimezones" xml:space="preserve">
+    <value>Andere häufige Zeitzonen</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>Englisch</value>
+  </data>
+  <data name="Spanish" xml:space="preserve">
+    <value>Spanisch</value>
+  </data>
+  <data name="French" xml:space="preserve">
+    <value>Französisch</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>Deutsch</value>
+  </data>
+  <data name="Italian" xml:space="preserve">
+    <value>Italienisch</value>
+  </data>
+  <data name="Portuguese" xml:space="preserve">
+    <value>Portugiesisch</value>
+  </data>
+  <data name="Japanese" xml:space="preserve">
+    <value>Japanisch</value>
+  </data>
+  <data name="Chinese" xml:space="preserve">
+    <value>Chinesisch</value>
+  </data>
+  <data name="Korean" xml:space="preserve">
+    <value>Koreanisch</value>
+  </data>
+  <data name="Dutch" xml:space="preserve">
+    <value>Niederländisch</value>
+  </data>
+  <data name="Polish" xml:space="preserve">
+    <value>Polnisch</value>
+  </data>
+  <data name="Russian" xml:space="preserve">
+    <value>Russisch</value>
+  </data>
+  <data name="Arabic" xml:space="preserve">
+    <value>Arabisch</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Andere</value>
+  </data>
+  <data name="NotificationAutoExpiration" xml:space="preserve">
+    <value>Automatisches Ablaufen von Benachrichtigungen (in Tagen)</value>
+  </data>
+  <data name="PostReactions" xml:space="preserve">
+    <value>Beitrag-Reaktionen</value>
+  </data>
+  <data name="PostComments" xml:space="preserve">
+    <value>Beitrag-Kommentare</value>
+  </data>
+  <data name="CommentReplies" xml:space="preserve">
+    <value>Kommentar-Antworten</value>
+  </data>
+  <data name="CommentReactions" xml:space="preserve">
+    <value>Kommentar-Reaktionen</value>
+  </data>
+  <data name="FriendRequests" xml:space="preserve">
+    <value>Freundschaftsanfragen</value>
+  </data>
+  <data name="FriendAccepted" xml:space="preserve">
+    <value>Freund akzeptiert</value>
+  </data>
+  <data name="Mentions" xml:space="preserve">
+    <value>Erwähnungen</value>
+  </data>
+  <data name="SystemNotifications" xml:space="preserve">
+    <value>System-Benachrichtigungen</value>
+  </data>
+  <data name="NotificationExpirationHelp" xml:space="preserve">
+    <value>Benachrichtigungen, die älter sind als diese Anzahl von Tagen, laufen automatisch ab und können bereinigt werden. Stellen Sie auf 365 Tage ein, um sie ein Jahr lang aufzubewahren.</value>
+  </data>
+  <data name="ResetToDefaults" xml:space="preserve">
+    <value>Auf Standardwerte zurücksetzen</value>
+  </data>
+  <data name="SavePreferences" xml:space="preserve">
+    <value>Einstellungen speichern</value>
+  </data>
+</root>

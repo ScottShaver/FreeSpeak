@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <!-- Profile Page -->
+  <data name="Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="ProfilePicture" xml:space="preserve">
+    <value>Photo de profil</value>
+  </data>
+  <data name="ProfilePictureHelpText" xml:space="preserve">
+    <value>Téléchargez une image (max 5 Mo). L'image sera redimensionnée à 168x168 pixels.</value>
+  </data>
+  <data name="UploadNewProfilePicture" xml:space="preserve">
+    <value>Télécharger une nouvelle photo de profil</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Nom d'utilisateur</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Prénom</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Nom de famille</value>
+  </data>
+  <data name="NameSuffix" xml:space="preserve">
+    <value>Suffixe du nom</value>
+  </data>
+  <data name="DateOfBirth" xml:space="preserve">
+    <value>Date de naissance</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Ville</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>État/Région</value>
+  </data>
+  <data name="Occupation" xml:space="preserve">
+    <value>Profession</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Numéro de téléphone</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <!-- Email Page -->
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="ManageEmail" xml:space="preserve">
+    <value>Gérer l'email</value>
+  </data>
+  <data name="YourEmailIsConfirmed" xml:space="preserve">
+    <value>Votre email est confirmé.</value>
+  </data>
+  <data name="PleaseConfirmYourEmail" xml:space="preserve">
+    <value>Veuillez confirmer votre email.</value>
+  </data>
+  <data name="SendVerificationEmail" xml:space="preserve">
+    <value>Envoyer un email de vérification</value>
+  </data>
+  <data name="NewEmail" xml:space="preserve">
+    <value>Nouvel email</value>
+  </data>
+  <data name="ChangeEmail" xml:space="preserve">
+    <value>Changer l'email</value>
+  </data>
+  <!-- Password Pages -->
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Changer le mot de passe</value>
+  </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>Mot de passe actuel</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>Nouveau mot de passe</value>
+  </data>
+  <data name="ConfirmNewPassword" xml:space="preserve">
+    <value>Confirmer le nouveau mot de passe</value>
+  </data>
+  <data name="UpdatePassword" xml:space="preserve">
+    <value>Mettre à jour le mot de passe</value>
+  </data>
+  <data name="SetPassword" xml:space="preserve">
+    <value>Définir le mot de passe</value>
+  </data>
+  <data name="SetYourPassword" xml:space="preserve">
+    <value>Définir votre mot de passe</value>
+  </data>
+  <data name="YouDoNotHaveLocalPassword" xml:space="preserve">
+    <value>Vous n'avez pas de nom d'utilisateur/mot de passe local pour ce site. Ajoutez un compte local pour pouvoir vous connecter sans connexion externe.</value>
+  </data>
+  <!-- Two-Factor Authentication -->
+  <data name="TwoFactorAuthentication" xml:space="preserve">
+    <value>Authentification à deux facteurs</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Activé</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Désactivé</value>
+  </data>
+  <data name="Disable2FA" xml:space="preserve">
+    <value>Désactiver l'authentification à deux facteurs</value>
+  </data>
+  <data name="ResetRecoveryCodes" xml:space="preserve">
+    <value>Réinitialiser les codes de récupération</value>
+  </data>
+  <data name="SetupAuthenticatorApp" xml:space="preserve">
+    <value>Configurer l'application d'authentification</value>
+  </data>
+  <data name="ResetAuthenticatorKey" xml:space="preserve">
+    <value>Réinitialiser la clé d'authentification</value>
+  </data>
+  <data name="RecoveryCodes" xml:space="preserve">
+    <value>Codes de récupération</value>
+  </data>
+  <data name="RecoveryCodesLeft" xml:space="preserve">
+    <value>{0} codes de récupération restants</value>
+  </data>
+  <data name="GenerateNewRecoveryCodes" xml:space="preserve">
+    <value>Générer de nouveaux codes de récupération</value>
+  </data>
+  <!-- Personal Data -->
+  <data name="PersonalData" xml:space="preserve">
+    <value>Données personnelles</value>
+  </data>
+  <data name="DownloadYourData" xml:space="preserve">
+    <value>Télécharger vos données</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Télécharger</value>
+  </data>
+  <data name="DeleteYourData" xml:space="preserve">
+    <value>Supprimer vos données</value>
+  </data>
+  <data name="DeleteAccount" xml:space="preserve">
+    <value>Supprimer le compte</value>
+  </data>
+  <data name="DeleteAccountWarning" xml:space="preserve">
+    <value>La suppression de ces données supprimera définitivement votre compte, et cette action ne peut pas être annulée.</value>
+  </data>
+  <data name="DisableAccount" xml:space="preserve">
+    <value>Désactiver le compte</value>
+  </data>
+  <data name="DisableAccountWarning" xml:space="preserve">
+    <value>La désactivation de votre compte vous bloquera définitivement, et cette action ne peut pas être annulée.</value>
+  </data>
+  <data name="DisableMyAccount" xml:space="preserve">
+    <value>Désactiver mon compte</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="IncorrectPassword" xml:space="preserve">
+    <value>Erreur : Mot de passe incorrect.</value>
+  </data>
+  <!-- Navigation Menu -->
+  <data name="Account" xml:space="preserve">
+    <value>Compte</value>
+  </data>
+  <data name="SecuritySettings" xml:space="preserve">
+    <value>Paramètres de sécurité</value>
+  </data>
+  <data name="ExternalLogins" xml:space="preserve">
+    <value>Connexions externes</value>
+  </data>
+  <!-- LikesModal -->
+  <data name="PeopleWhoReacted" xml:space="preserve">
+    <value>Personnes qui ont réagi</value>
+  </data>
+  <data name="AllReactions" xml:space="preserve">
+    <value>Tous</value>
+  </data>
+  <data name="NoReactionsYet" xml:space="preserve">
+    <value>Aucune réaction pour le moment</value>
+  </data>
+  <!-- Comment Editor -->
+  <data name="WriteAComment" xml:space="preserve">
+    <value>Écrire un commentaire...</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Publier</value>
+  </data>
+  <!-- Preferences -->
+  <data name="Preferences" xml:space="preserve">
+    <value>Préférences</value>
+  </data>
+  <!-- Common -->
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirmer</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Soumettre</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Oui</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Non</value>
+  </data>
+  <data name="ManageYourAccount" xml:space="preserve">
+    <value>Gérer votre compte</value>
+  </data>
+  <data name="ChangeYourAccountSettings" xml:space="preserve">
+    <value>Modifier les paramètres de votre compte</value>
+  </data>
+</root>

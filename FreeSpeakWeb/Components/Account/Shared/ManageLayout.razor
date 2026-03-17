@@ -1,10 +1,12 @@
 ﻿@inherits LayoutComponentBase
 @layout FreeSpeakWeb.Components.Layout.MainLayout
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Account.Pages.Manage.ManageAccount> Localizer
 
-<h1>Manage your account</h1>
+<h1>@Localizer["ManageYourAccount"]</h1>
 
 <div>
-    <h2>Change your account settings</h2>
+    <h2>@Localizer["ChangeYourAccountSettings"]</h2>
     <hr />
     <div class="row">
         <div class="col-lg-3">

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="TitleFormat" xml:space="preserve">
+    <value>Gestisci Ruoli per {0}</value>
+  </data>
+  <data name="LoadingRoles" xml:space="preserve">
+    <value>Caricamento ruoli...</value>
+  </data>
+  <data name="LoadingAvailableRoles" xml:space="preserve">
+    <value>Caricamento ruoli disponibili...</value>
+  </data>
+  <data name="NoRolesAvailable" xml:space="preserve">
+    <value>Nessun ruolo disponibile nel sistema.</value>
+  </data>
+  <data name="AvailableRoles" xml:space="preserve">
+    <value>Ruoli Disponibili</value>
+  </data>
+  <data name="RolesDescription" xml:space="preserve">
+    <value>Seleziona o deseleziona i ruoli per assegnarli o rimuoverli da questo utente.</value>
+  </data>
+  <data name="UnsavedChanges" xml:space="preserve">
+    <value>Hai modifiche non salvate. Clicca su "Salva Modifiche" per applicarle.</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Salvataggio...</value>
+  </data>
+  <data name="SavingRoleChanges" xml:space="preserve">
+    <value>Salvataggio modifiche ruoli...</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Chiudi</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Salva Modifiche</value>
+  </data>
+  <data name="RoleSystemAdministrator" xml:space="preserve">
+    <value>Accesso completo al sistema con tutti i privilegi amministrativi</value>
+  </data>
+  <data name="RoleSystemModerator" xml:space="preserve">
+    <value>Può moderare i contenuti su tutta la piattaforma</value>
+  </data>
+  <data name="RoleUser" xml:space="preserve">
+    <value>Utente standard con accesso base</value>
+  </data>
+</root>

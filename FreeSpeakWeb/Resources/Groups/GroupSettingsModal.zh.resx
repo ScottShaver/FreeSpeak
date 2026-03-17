@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>群组设置</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>加载中...</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>群组名称</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="PublicGroup" xml:space="preserve">
+    <value>公开群组</value>
+  </data>
+  <data name="PublicGroupHelp" xml:space="preserve">
+    <value>公开群组对所有用户可见。</value>
+  </data>
+  <data name="HiddenFromDiscovery" xml:space="preserve">
+    <value>从发现中隐藏</value>
+  </data>
+  <data name="HiddenFromDiscoveryHelp" xml:space="preserve">
+    <value>隐藏的群组不会出现在搜索结果中。</value>
+  </data>
+  <data name="RequireJoinApproval" xml:space="preserve">
+    <value>需要加入审批</value>
+  </data>
+  <data name="RequireJoinApprovalHelp" xml:space="preserve">
+    <value>新成员必须在加入前获得批准。</value>
+  </data>
+  <data name="EnablePointsSystem" xml:space="preserve">
+    <value>启用积分系统</value>
+  </data>
+  <data name="EnablePointsSystemHelp" xml:space="preserve">
+    <value>成员通过帖子、评论和点赞获得积分。成员可以获得新星贡献者、顶级贡献者和全明星贡献者徽章。</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>保存更改</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>保存中...</value>
+  </data>
+</root>

@@ -3,6 +3,8 @@
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
+@using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Data.AuditLogDetails
 @using FreeSpeakWeb.Repositories.Abstractions
@@ -25,12 +27,14 @@
 @inject NotificationBadgeService NotificationBadgeService
 @inject AlertService AlertService
 @inject IAuditLogRepository AuditLogRepository
+@inject IOptions<SiteSettings> SiteSettings
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.Notifications> Localizer
 
-<PageTitle>Notifications - FreeSpeak</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
 
 <div class="notifications-container">
     <div class="notifications-header">
-        <h3>Notifications</h3>
+        <h3>@Localizer["Title"]</h3>
         <div class="notifications-actions">
             @if (unreadCount > 0)
             {
@@ -39,7 +43,7 @@
                     {
                         <span class="spinner-border spinner-border-sm me-1"></span>
                     }
-                    Mark all as read
+                    @Localizer["MarkAllAsRead"]
                 </button>
             }
             @if (notifications.Any(n => n.IsRead))
@@ -49,7 +53,7 @@
                     {
                         <span class="spinner-border spinner-border-sm me-1"></span>
                     }
-                    Clear read
+                    @Localizer["ClearRead"]
                 </button>
             }
         </div>
@@ -57,10 +61,10 @@
 
     <div class="notifications-tabs">
         <button class="tab-button @(showOnlyUnread ? "" : "active")" @onclick="() => ShowAll()">
-            All (@allNotificationsCount)
+            @Localizer["All"] (@allNotificationsCount)
         </button>
         <button class="tab-button @(showOnlyUnread ? "active" : "")" @onclick="() => ShowUnread()">
-            Unread (@unreadCount)
+            @Localizer["Unread"] (@unreadCount)
         </button>
     </div>
 
@@ -69,16 +73,16 @@
         {
             <div class="loading-container">
                 <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                    <span class="visually-hidden">@Localizer["Loading"]</span>
                 </div>
-                <p class="mt-3">Loading notifications...</p>
+                <p class="mt-3">@Localizer["LoadingNotifications"]</p>
             </div>
         }
         else if (!notifications.Any())
         {
             <div class="empty-state">
                 <span class="bi bi-bell-slash" style="font-size: 48px; color: var(--bs-secondary-color);"></span>
-                <p class="mt-3">@(showOnlyUnread ? "No unread notifications" : "No notifications yet")</p>
+                <p class="mt-3">@(showOnlyUnread ? Localizer["NoUnreadNotifications"] : Localizer["NoNotificationsYet"])</p>
             </div>
         }
         else
@@ -100,7 +104,7 @@
                         {
                             <span class="spinner-border spinner-border-sm me-1"></span>
                         }
-                        Load more
+                        @Localizer["LoadMore"]
                     </button>
                 </div>
             }

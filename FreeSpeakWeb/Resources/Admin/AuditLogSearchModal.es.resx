@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>Buscar Registros de Auditoría</value>
+  </data>
+  <data name="UserIdLabel" xml:space="preserve">
+    <value>ID de Usuario (Coincidencia Exacta)</value>
+  </data>
+  <data name="UserIdPlaceholder" xml:space="preserve">
+    <value>Ingrese GUID de usuario...</value>
+  </data>
+  <data name="ActionCategory" xml:space="preserve">
+    <value>Categoría de Acción</value>
+  </data>
+  <data name="AllCategories" xml:space="preserve">
+    <value>Todas las Categorías</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Fecha de Inicio</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>Fecha de Fin</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
+  <data name="FoundResults" xml:space="preserve">
+    <value>Se encontraron {0} resultado(s)</value>
+  </data>
+  <data name="LimitedToMaximum" xml:space="preserve">
+    <value>(Limitado a 500 máximo)</value>
+  </data>
+  <data name="SearchingAuditLogs" xml:space="preserve">
+    <value>Buscando registros de auditoría...</value>
+  </data>
+  <data name="NoEntriesFound" xml:space="preserve">
+    <value>No se encontraron entradas de registro de auditoría que coincidan con sus criterios de búsqueda.</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>Fecha/Hora</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>ID de Usuario</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Categoría</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Detalles</value>
+  </data>
+  <data name="SearchPrompt" xml:space="preserve">
+    <value>Use los filtros de búsqueda de arriba para encontrar entradas del registro de auditoría.</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Anterior</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Siguiente</value>
+  </data>
+  <data name="PageOfPages" xml:space="preserve">
+    <value>Página {0} de {1}</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+</root>

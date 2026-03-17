@@ -2,29 +2,28 @@
 
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
 @using FreeSpeakWeb.Data
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
 @inject IOptions<SiteSettings> SiteSettings
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Account.Pages.Manage.ManageAccount> Localizer
 
-<PageTitle>@SiteSettings.Value.SiteName - Personal Data</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["PersonalData"]</PageTitle>
 
 <StatusMessage />
-<h3>Personal Data</h3>
+<h3>@Localizer["PersonalData"]</h3>
 
 <div class="row">
     <div class="col-md-6">
-        <p>Your account contains personal data that you have given us. This page allows you to download that data or permanently disable your account.</p>
-        <p>
-            <strong>Disabling your account will PERMANENTLY disable your account, and this cannot be recovered.</strong>
-        </p>
+        <p>@Localizer["DeleteAccountWarning"]</p>
         <form action="Account/Manage/DownloadPersonalData" method="post">
             <AntiforgeryToken />
-            <button class="btn btn-primary" type="submit">Download</button>
+            <button class="btn btn-primary" type="submit">@Localizer["Download"]</button>
         </form>
         <p>
-            <a href="Account/Manage/DeletePersonalData" class="btn btn-danger">Permanently Disable My Account</a>
+            <a href="Account/Manage/DeletePersonalData" class="btn btn-danger">@Localizer["DeleteAccount"]</a>
         </p>
     </div>
 </div>

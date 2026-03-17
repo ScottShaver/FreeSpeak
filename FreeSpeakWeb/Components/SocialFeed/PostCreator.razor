@@ -1,8 +1,10 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Components.Shared
 @using FreeSpeakWeb.Services
+@using Microsoft.Extensions.Localization
 @inject IJSRuntime JS
 @inject UserPreferenceService UserPreferenceService
+@inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.PostCreator> Localizer
 
 @implements IAsyncDisposable
 
@@ -20,7 +22,7 @@
         }
 
         <div class="textarea-container">
-            <button type="button" class="emoji-button-inline" @onclick="ToggleEmojiPicker" @onmousedown:preventDefault="true" @ref="emojiButtonElement" title="Add emoji">
+            <button type="button" class="emoji-button-inline" @onclick="ToggleEmojiPicker" @onmousedown:preventDefault="true" @ref="emojiButtonElement" title="@Localizer["AddEmoji"]">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                     <path d="M4.285 9.567a.5.5 0 0 1 .683.183A3.498 3.498 0 0 0 8 11.5a3.498 3.498 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.498 4.498 0 0 1 8 12.5a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z"/>
@@ -37,7 +39,7 @@
                 @bind:after="HandleInputAfter"
                 @ref="textareaElement"
                 @onkeydown="HandleKeyDown"
-                placeholder="What's on your mind?"
+                placeholder="@Localizer["Placeholder"]"
                 rows="1"
                 class="post-textarea"
                 @onfocus="OnFocus"
@@ -51,21 +53,21 @@
                     @if (SelectedAudienceType == AudienceType.Public)
                     {
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <title>Public</title>
+                            <title>@Localizer["Public"]</title>
                             <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0ZM2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484-.08.08-.162.158-.242.234-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"/>
                         </svg>
                     }
                     else if (SelectedAudienceType == AudienceType.FriendsOnly)
                     {
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <title>Friends Only</title>
+                            <title>@Localizer["FriendsOnly"]</title>
                             <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
                         </svg>
                     }
                     else if (SelectedAudienceType == AudienceType.MeOnly)
                     {
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <title>Only Me</title>
+                            <title>@Localizer["OnlyMe"]</title>
                             <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
                         </svg>
                     }
@@ -84,8 +86,8 @@
         {
             <div class="post-images-preview">
                 <div class="images-preview-header">
-                    <span>@selectedImages.Count @(selectedImages.Count == 1 ? "image" : "images")</span>
-                    <button type="button" class="edit-images-button" @onclick="OpenImageUpload" @onmousedown:preventDefault="true">Edit Images</button>
+                    <span>@selectedImages.Count @(selectedImages.Count == 1 ? Localizer["Image"] : Localizer["Images"])</span>
+                    <button type="button" class="edit-images-button" @onclick="OpenImageUpload" @onmousedown:preventDefault="true">@Localizer["EditImages"]</button>
                 </div>
                 <div class="images-preview-grid">
                     @foreach (var image in selectedImages.Take(4))
@@ -103,22 +105,22 @@
         }
 
         <div class="post-creator-actions">
-            <button type="button" class="image-upload-button" @onclick="OpenImageUpload" @onmousedown:preventDefault="true" title="Add images">
+            <button type="button" class="image-upload-button" @onclick="OpenImageUpload" @onmousedown:preventDefault="true" title="@Localizer["AddImages"]">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
                     <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
                 </svg>
-                <span>Images</span>
+                <span>@Localizer["Images"]</span>
             </button>
             <div style="flex: 1;"></div>
-            <button type="button" class="cancel-button" @onclick="Cancel" @onmousedown:preventDefault="true">Cancel</button>
+            <button type="button" class="cancel-button" @onclick="Cancel" @onmousedown:preventDefault="true">@Localizer["Cancel"]</button>
             <button 
                 type="button" 
                 class="submit-button @(CanSubmit ? "active" : "disabled")"
                 disabled="@(!CanSubmit)"
                 @onclick="OnSubmitPost"
                 @onmousedown:preventDefault="true">
-                Post
+                @Localizer["Post"]
             </button>
         </div>
     }
@@ -136,7 +138,7 @@
         <div class="confirmation-backdrop" @onclick="CancelPublicConfirmation">
             <div class="confirmation-modal" @onclick:stopPropagation="true">
                 <div class="confirmation-header">
-                    <h5>Change Post to Public?</h5>
+                    <h5>@Localizer["ChangePostToPublic"]</h5>
                     <button type="button" class="close-button" @onclick="CancelPublicConfirmation">×</button>
                 </div>
                 <div class="confirmation-body">
@@ -147,16 +149,15 @@
                         </svg>
                     </div>
                     <p class="confirmation-message">
-                        <strong>Public posts are visible to everyone</strong> — not just your friends. 
-                        Anyone on the internet can see, share, and comment on your public post.
+                        @((MarkupString)Localizer["PublicPostWarning"].Value)
                     </p>
                     <p class="confirmation-question">
-                        Are you sure you want to make this post public?
+                        @Localizer["ConfirmPublicQuestion"]
                     </p>
                 </div>
                 <div class="confirmation-footer">
-                    <button type="button" class="btn-secondary" @onclick="CancelPublicConfirmation">Cancel</button>
-                    <button type="button" class="btn-warning" @onclick="ConfirmPublicAudience">Yes, Make it Public</button>
+                    <button type="button" class="btn-secondary" @onclick="CancelPublicConfirmation">@Localizer["Cancel"]</button>
+                    <button type="button" class="btn-warning" @onclick="ConfirmPublicAudience">@Localizer["MakePublicButton"]</button>
                 </div>
             </div>
         </div>
@@ -450,21 +451,21 @@
 
         audienceMenuItems.Add(new PopupMenu.PopupMenuItem
         {
-            Text = "Public",
+            Text = Localizer["Public"],
             Icon = "bi bi-globe",
             OnClick = EventCallback.Factory.Create(this, () => SelectAudienceType(AudienceType.Public))
         });
 
         audienceMenuItems.Add(new PopupMenu.PopupMenuItem
         {
-            Text = "Friends Only",
+            Text = Localizer["FriendsOnly"],
             Icon = "bi bi-people",
             OnClick = EventCallback.Factory.Create(this, () => SelectAudienceType(AudienceType.FriendsOnly))
         });
 
         audienceMenuItems.Add(new PopupMenu.PopupMenuItem
         {
-            Text = "Only Me",
+            Text = Localizer["OnlyMe"],
             Icon = "bi bi-lock",
             OnClick = EventCallback.Factory.Create(this, () => SelectAudienceType(AudienceType.MeOnly))
         });

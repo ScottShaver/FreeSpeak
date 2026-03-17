@@ -1,16 +1,18 @@
 @page "/Account/Manage/Preferences"
 
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Components.Account.Shared
 
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Account.Pages.Manage.ManageAccount> Localizer
 
-<PageTitle>Preferences</PageTitle>
+<PageTitle>@Localizer["Preferences"]</PageTitle>
 
-<h3>Preferences</h3>
+<h3>@Localizer["Preferences"]</h3>
 
 <StatusMessage />
 

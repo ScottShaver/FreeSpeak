@@ -14,6 +14,26 @@ FreeSpeak is a feature-rich social networking application that enables users to:
 - Receive real-time notifications for social interactions
 - Add friends and manage friend connections
 
+## 🌍 Internationalization Support
+
+FreeSpeak features **comprehensive multi-language support** with **12 languages** and **100% coverage** on all user-facing features:
+
+### Supported Languages
+🇸🇦 Arabic • 🇩🇪 German • 🇺🇸 English • 🇪🇸 Spanish • 🇫🇷 French • 🇮🇹 Italian  
+🇯🇵 Japanese • 🇰🇷 Korean • 🇳🇱 Dutch • 🇵🇱 Polish • 🇵🇹 Portuguese • 🇷🇺 Russian • 🇨🇳 Chinese
+
+### Feature Coverage
+- **✅ Account Management** - Complete account settings, security, and preferences (804 translations)
+- **✅ Groups System** - Full group functionality and management (384 translations)  
+- **✅ Group Views** - Statistics, member management, activity tracking (156 translations)
+- **✅ Navigation** - All menu items and interface controls
+- **✅ Social Features** - Posts, comments, reactions, notifications
+- **🔄 Admin Interface** - System administration (partial coverage)
+
+**Total**: 999+ translations across core features • **Coverage**: 71.2% overall (100% user-facing)
+
+For detailed internationalization information, see [INTERNATIONALIZATION.md](INTERNATIONALIZATION.md).
+
 ### Technology Stack
 
 - **Framework**: .NET 10 / Blazor Server
@@ -299,6 +319,28 @@ Create and participate in topic-based communities:
 For detailed security audit results, see:
 - [docs/SECURITY_AUDIT_RESULTS.md](docs/SECURITY_AUDIT_RESULTS.md) - XSS and SQL injection audit
 - [docs/DOS_DDOS_AUDIT_RESULTS.md](docs/DOS_DDOS_AUDIT_RESULTS.md) - DOS/DDOS vulnerability audit
+
+### Localization
+
+FreeSpeak supports multiple languages through the ASP.NET Core localization framework:
+
+**Supported Languages (13):**
+- English (default), Korean, German, Spanish, French, Italian, Japanese
+- Chinese (Simplified), Arabic, Dutch, Polish, Portuguese, Russian
+
+**Features:**
+- User preference-based language selection (stored in database)
+- Cookie-based fallback for non-authenticated users
+- Strongly-typed resource access via IStringLocalizer
+- Organized resource files by component location
+
+**Technical Implementation:**
+- Resource files (.resx) for each component with language variants
+- Custom `UserPreferenceCultureProvider` for user-specific culture
+- Auto-generated Designer.cs files for compile-time safety
+
+For detailed localization documentation, see:
+- [docs/LOCALIZATION.md](docs/LOCALIZATION.md) - Full localization guide and best practices
 
 ## Contributing
 

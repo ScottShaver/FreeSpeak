@@ -5,7 +5,10 @@
 @using FreeSpeakWeb.Components.Shared
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
+@using Microsoft.Extensions.Localization
 @implements IAsyncDisposable
+
+@inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.MultiLineCommentDisplay> Localizer
 
 <div class="comment-display" data-comment-id="@CommentId">
     <div class="comment-avatar">
@@ -31,10 +34,10 @@
                 </div>
                 <div class="comment-edit-actions">
                     <button type="button" class="btn btn-sm btn-secondary" @onclick="CancelEdit">
-                        Cancel
+                        @Localizer["Cancel"]
                     </button>
                     <button type="button" class="btn btn-sm btn-primary" @onclick="SaveEdit" disabled="@(!CanSaveEdit)">
-                        Save
+                        @Localizer["Save"]
                     </button>
                 </div>
             </div>
@@ -53,7 +56,7 @@
                         <button type="button" 
                                 class="comment-menu-button" 
                                 @onclick="ToggleCommentMenu"
-                                title="More options">
+                                title="@Localizer["MoreOptions"]">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
                             </svg>
@@ -90,7 +93,7 @@
                         }
                         else
                         {
-                            <span>Like</span>
+                            <span>@Localizer["Like"]</span>
                         }
                     </button>
                     @if (showReactionPicker)
@@ -102,12 +105,12 @@
             @if (ShouldShowReplyButton)
             {
                 <button type="button" class="comment-reply-button" @onclick="ToggleReplyEditor">
-                    <span>Reply</span>
+                    <span>@Localizer["Reply"]</span>
                 </button>
             }
             else if (!string.IsNullOrEmpty(CurrentUserId) && Depth >= SiteSettings.Value.MaxFeedPostCommentDepth)
             {
-                <span class="comment-reply-disabled">No more replies allowed</span>
+                <span class="comment-reply-disabled">@Localizer["NoMoreRepliesAllowed"]</span>
             }
 
             @if (LikeCount > 0)
@@ -153,7 +156,7 @@
             {
                 <div class="comment-view-replies">
                     <button type="button" class="view-replies-button" @onclick="ToggleReplies">
-                        View replies (@CountAllReplies(Replies))
+                        @string.Format(Localizer["ViewReplies"], CountAllReplies(Replies))
                     </button>
                 </div>
             }
@@ -191,7 +194,7 @@
                 {
                     <div class="comment-hide-replies">
                         <button type="button" class="hide-replies-button" @onclick="ToggleReplies">
-                            Hide replies
+                            @Localizer["HideReplies"]
                         </button>
                     </div>
                 }
@@ -338,13 +341,13 @@
             // Owner menu items
             commentMenuItems.Add(new PopupMenu.PopupMenuItem
             {
-                Text = "Delete My Comment",
+                Text = Localizer["DeleteMyComment"],
                 Icon = "bi bi-trash",
                 OnClick = EventCallback.Factory.Create(this, HandleDeleteComment)
             });
             commentMenuItems.Add(new PopupMenu.PopupMenuItem
             {
-                Text = "Edit My Comment",
+                Text = Localizer["EditMyComment"],
                 Icon = "bi bi-pencil",
                 OnClick = EventCallback.Factory.Create(this, HandleEditComment)
             });
@@ -354,7 +357,7 @@
             // Non-owner menu items
             commentMenuItems.Add(new PopupMenu.PopupMenuItem
             {
-                Text = "Report Comment",
+                Text = Localizer["ReportComment"],
                 Icon = "bi bi-flag",
                 OnClick = EventCallback.Factory.Create(this, HandleReportComment)
             });
@@ -619,14 +622,14 @@
     {
         return reactionType switch
         {
-            LikeType.Like => "Like",
-            LikeType.Love => "Love",
-            LikeType.Care => "Care",
-            LikeType.Haha => "Haha",
-            LikeType.Wow => "Wow",
-            LikeType.Sad => "Sad",
-            LikeType.Angry => "Angry",
-            _ => "Like"
+            LikeType.Like => Localizer["Like"],
+            LikeType.Love => Localizer["Love"],
+            LikeType.Care => Localizer["Care"],
+            LikeType.Haha => Localizer["Haha"],
+            LikeType.Wow => Localizer["Wow"],
+            LikeType.Sad => Localizer["Sad"],
+            LikeType.Angry => Localizer["Angry"],
+            _ => Localizer["Like"]
         };
     }
 

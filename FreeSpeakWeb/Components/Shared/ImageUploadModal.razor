@@ -1,12 +1,14 @@
 @using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Extensions.Localization
 @inject IJSRuntime JS
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.ImageUploadModal> Localizer
 
 @if (IsVisible)
 {
     <div class="image-upload-backdrop" @onclick="Close"></div>
     <div class="image-upload-modal" @onclick:stopPropagation="true">
         <div class="modal-header">
-            <h3>Add Images</h3>
+            <h3>@Localizer["Title"]</h3>
             <button type="button" class="close-button" @onclick="Close">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
@@ -21,8 +23,8 @@
                         <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
                         <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
                     </svg>
-                    <p>Click to select images or drag and drop</p>
-                    <p class="upload-hint">Up to @MaxImages images • PNG, JPG, GIF • Max @(MaxFileSizeMB)MB each</p>
+                    <p>@Localizer["DropAreaText"]</p>
+                    <p class="upload-hint">@string.Format(Localizer["UploadHint"].Value, MaxImages, MaxFileSizeMB)</p>
                     <InputFile OnChange="HandleFileSelected" multiple accept="image/*" MaxFileCount="@MaxImages" class="file-input" id="imageFileInput" />
                 </label>
             </div>
@@ -31,10 +33,10 @@
             {
                 <div class="images-list-container">
                     <div class="images-list-header">
-                        <span>Selected Images (@selectedImages.Count/@MaxImages)</span>
+                        <span>@Localizer["SelectedImages"] (@selectedImages.Count/@MaxImages)</span>
                         @if (selectedImages.Count > 0)
                         {
-                            <button type="button" class="clear-all-button" @onclick="ClearAll">Clear All</button>
+                            <button type="button" class="clear-all-button" @onclick="ClearAll">@Localizer["ClearAll"]</button>
                         }
                     </div>
                     <div class="images-list">
@@ -42,7 +44,7 @@
                         {
                             <div class="image-item">
                                 <img src="@image.DataUrl" alt="Selected image" />
-                                <button type="button" class="remove-image-button" @onclick="() => RemoveImage(image)" title="Remove image">
+                                <button type="button" class="remove-image-button" @onclick="() => RemoveImage(image)" title="@Localizer["RemoveImage"]">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                         <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
                                     </svg>
@@ -61,12 +63,12 @@
         </div>
 
         <div class="modal-footer">
-            <button type="button" class="cancel-button" @onclick="Close">Cancel</button>
+            <button type="button" class="cancel-button" @onclick="Close">@Localizer["Cancel"]</button>
             <button type="button" 
                     class="submit-button @(selectedImages.Any() ? "active" : "disabled")"
                     disabled="@(!selectedImages.Any())"
                     @onclick="SubmitImages">
-                Add @selectedImages.Count @(selectedImages.Count == 1 ? "Image" : "Images")
+                @(selectedImages.Count == 1 ? string.Format(Localizer["AddImage"].Value, selectedImages.Count) : string.Format(Localizer["AddImages"].Value, selectedImages.Count))
             </button>
         </div>
     </div>

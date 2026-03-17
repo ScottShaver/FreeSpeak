@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <!-- Profile Page -->
+  <data name="Profile" xml:space="preserve">
+    <value>プロフィール</value>
+  </data>
+  <data name="ProfilePicture" xml:space="preserve">
+    <value>プロフィール画像</value>
+  </data>
+  <data name="ProfilePictureHelpText" xml:space="preserve">
+    <value>画像をアップロード（最大5MB）。画像は168x168ピクセルにリサイズされます。</value>
+  </data>
+  <data name="UploadNewProfilePicture" xml:space="preserve">
+    <value>新しいプロフィール画像をアップロード</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>ユーザー名</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>名</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>姓</value>
+  </data>
+  <data name="NameSuffix" xml:space="preserve">
+    <value>敬称</value>
+  </data>
+  <data name="DateOfBirth" xml:space="preserve">
+    <value>生年月日</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>市区町村</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>都道府県</value>
+  </data>
+  <data name="Occupation" xml:space="preserve">
+    <value>職業</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>電話番号</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <!-- Email Page -->
+  <data name="Email" xml:space="preserve">
+    <value>メールアドレス</value>
+  </data>
+  <data name="ManageEmail" xml:space="preserve">
+    <value>メールを管理</value>
+  </data>
+  <data name="YourEmailIsConfirmed" xml:space="preserve">
+    <value>メールアドレスは確認済みです。</value>
+  </data>
+  <data name="PleaseConfirmYourEmail" xml:space="preserve">
+    <value>メールアドレスを確認してください。</value>
+  </data>
+  <data name="SendVerificationEmail" xml:space="preserve">
+    <value>確認メールを送信</value>
+  </data>
+  <data name="NewEmail" xml:space="preserve">
+    <value>新しいメールアドレス</value>
+  </data>
+  <data name="ChangeEmail" xml:space="preserve">
+    <value>メールアドレスを変更</value>
+  </data>
+  <!-- Password Pages -->
+  <data name="ChangePassword" xml:space="preserve">
+    <value>パスワードを変更</value>
+  </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>現在のパスワード</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>新しいパスワード</value>
+  </data>
+  <data name="ConfirmNewPassword" xml:space="preserve">
+    <value>新しいパスワードの確認</value>
+  </data>
+  <data name="UpdatePassword" xml:space="preserve">
+    <value>パスワードを更新</value>
+  </data>
+  <data name="SetPassword" xml:space="preserve">
+    <value>パスワードを設定</value>
+  </data>
+  <data name="SetYourPassword" xml:space="preserve">
+    <value>パスワードを設定してください</value>
+  </data>
+  <data name="YouDoNotHaveLocalPassword" xml:space="preserve">
+    <value>このサイトのローカルユーザー名/パスワードがありません。外部ログインなしでログインできるようにローカルアカウントを追加してください。</value>
+  </data>
+  <data name="ManageYourAccount" xml:space="preserve">
+    <value>アカウントを管理</value>
+  </data>
+  <data name="ChangeYourAccountSettings" xml:space="preserve">
+    <value>アカウント設定を変更</value>
+  </data>
+  <!-- Two-Factor Authentication -->
+  <data name="TwoFactorAuthentication" xml:space="preserve">
+    <value>二要素認証</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>有効</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>無効</value>
+  </data>
+  <data name="Disable2FA" xml:space="preserve">
+    <value>2FAを無効にする</value>
+  </data>
+  <data name="ResetRecoveryCodes" xml:space="preserve">
+    <value>回復コードをリセット</value>
+  </data>
+  <data name="SetupAuthenticatorApp" xml:space="preserve">
+    <value>認証アプリを設定</value>
+  </data>
+  <data name="ResetAuthenticatorKey" xml:space="preserve">
+    <value>認証キーをリセット</value>
+  </data>
+  <data name="RecoveryCodes" xml:space="preserve">
+    <value>回復コード</value>
+  </data>
+  <data name="RecoveryCodesLeft" xml:space="preserve">
+    <value>残り{0}個の回復コード</value>
+  </data>
+  <data name="GenerateNewRecoveryCodes" xml:space="preserve">
+    <value>新しい回復コードを生成</value>
+  </data>
+  <!-- Personal Data -->
+  <data name="PersonalData" xml:space="preserve">
+    <value>個人データ</value>
+  </data>
+  <data name="DownloadYourData" xml:space="preserve">
+    <value>データをダウンロード</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>ダウンロード</value>
+  </data>
+  <data name="DeleteYourData" xml:space="preserve">
+    <value>データを削除</value>
+  </data>
+  <data name="DeleteAccount" xml:space="preserve">
+    <value>アカウントを削除</value>
+  </data>
+  <data name="DeleteAccountWarning" xml:space="preserve">
+    <value>このデータを削除すると、アカウントが永続的に削除され、復元できません。</value>
+  </data>
+  <data name="DisableAccount" xml:space="preserve">
+    <value>アカウントを無効にする</value>
+  </data>
+  <data name="DisableAccountWarning" xml:space="preserve">
+    <value>アカウントを無効にすると、永続的にロックされ、復元できません。</value>
+  </data>
+  <data name="DisableMyAccount" xml:space="preserve">
+    <value>私のアカウントを無効にする</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>パスワード</value>
+  </data>
+  <data name="IncorrectPassword" xml:space="preserve">
+    <value>エラー：パスワードが正しくありません。</value>
+  </data>
+  <!-- Navigation Menu -->
+  <data name="Account" xml:space="preserve">
+    <value>アカウント</value>
+  </data>
+  <data name="SecuritySettings" xml:space="preserve">
+    <value>セキュリティ設定</value>
+  </data>
+  <data name="ExternalLogins" xml:space="preserve">
+    <value>外部ログイン</value>
+  </data>
+  <!-- LikesModal -->
+  <data name="PeopleWhoReacted" xml:space="preserve">
+    <value>反応した人</value>
+  </data>
+  <data name="AllReactions" xml:space="preserve">
+    <value>すべての反応</value>
+  </data>
+  <data name="NoReactionsYet" xml:space="preserve">
+    <value>まだ反応がありません</value>
+  </data>
+  <!-- Comment Editor -->
+  <data name="WriteAComment" xml:space="preserve">
+    <value>コメントを入力...</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>投稿</value>
+  </data>
+  <!-- Preferences -->
+  <data name="Preferences" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <!-- Common -->
+  <data name="Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>確認</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>送信</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>はい</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>いいえ</value>
+  </data>
+</root>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Groups</value>
+  </data>
+  <data name="MyGroupFeed" xml:space="preserve">
+    <value>My Group Feed</value>
+  </data>
+  <data name="PinnedGroupPosts" xml:space="preserve">
+    <value>Pinned Group Posts</value>
+  </data>
+  <data name="GroupJoinRequests" xml:space="preserve">
+    <value>Group Join Requests</value>
+  </data>
+  <data name="FindGroups" xml:space="preserve">
+    <value>Find Groups</value>
+  </data>
+  <data name="GroupsYouMightLike" xml:space="preserve">
+    <value>Groups You Might Like</value>
+  </data>
+  <data name="ShowPostsFrom" xml:space="preserve">
+    <value>Show posts from:</value>
+  </data>
+  <data name="AllGroups" xml:space="preserve">
+    <value>All Groups</value>
+  </data>
+  <data name="LoadingGroupFeed" xml:space="preserve">
+    <value>Loading your group feed...</value>
+  </data>
+  <data name="NoGroupPosts" xml:space="preserve">
+    <value>No group posts to display. Join groups to see their posts here!</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>Loading more posts...</value>
+  </data>
+  <data name="NoMorePosts" xml:space="preserve">
+    <value>No more posts at this time</value>
+  </data>
+  <data name="ShowPinnedPostsFrom" xml:space="preserve">
+    <value>Show pinned posts from:</value>
+  </data>
+  <data name="LoadingPinnedPosts" xml:space="preserve">
+    <value>Loading your pinned group posts...</value>
+  </data>
+  <data name="NoPinnedPosts" xml:space="preserve">
+    <value>You haven't pinned any group posts yet. Pin posts from groups to see them here!</value>
+  </data>
+  <data name="NoMorePinnedPosts" xml:space="preserve">
+    <value>No more pinned posts at this time</value>
+  </data>
+  <data name="LoadingJoinRequests" xml:space="preserve">
+    <value>Loading your join requests...</value>
+  </data>
+  <data name="NoPendingJoinRequests" xml:space="preserve">
+    <value>You have no pending group join requests.</value>
+  </data>
+  <data name="UnknownGroup" xml:space="preserve">
+    <value>Unknown Group</value>
+  </data>
+  <data name="Requested" xml:space="preserve">
+    <value>Requested</value>
+  </data>
+  <data name="CancelRequest" xml:space="preserve">
+    <value>Cancel Request</value>
+  </data>
+  <data name="SearchForGroups" xml:space="preserve">
+    <value>Search for groups...</value>
+  </data>
+  <data name="SearchingGroups" xml:space="preserve">
+    <value>Searching groups...</value>
+  </data>
+  <data name="NoGroupsFound" xml:space="preserve">
+    <value>No groups found matching "{0}"</value>
+    <comment>{0} is the search query</comment>
+  </data>
+  <data name="Members" xml:space="preserve">
+    <value>members</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>Public</value>
+  </data>
+  <data name="Private" xml:space="preserve">
+    <value>Private</value>
+  </data>
+  <data name="RequestToJoin" xml:space="preserve">
+    <value>Request to Join</value>
+  </data>
+  <data name="JoinNow" xml:space="preserve">
+    <value>Join Now</value>
+  </data>
+  <data name="SearchToJoin" xml:space="preserve">
+    <value>Search for groups to join!</value>
+  </data>
+  <data name="LoadingSuggestions" xml:space="preserve">
+    <value>Loading group suggestions...</value>
+  </data>
+  <data name="NoSuggestions" xml:space="preserve">
+    <value>No group suggestions available at this time.</value>
+  </data>
+</root>

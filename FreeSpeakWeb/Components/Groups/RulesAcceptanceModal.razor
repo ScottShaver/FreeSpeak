@@ -1,7 +1,9 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
+@using Microsoft.Extensions.Localization
 @inject GroupRuleService GroupRuleService
 @inject ILogger<RulesAcceptanceModal> Logger
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Groups.RulesAcceptanceModal> Localizer
 
 <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
@@ -9,7 +11,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">
                     <i class="bi bi-clipboard-check me-2"></i>
-                    Group Rules - @Group?.Name
+                    @Localizer["Title"] - @Group?.Name
                 </h5>
                 <button type="button" class="btn-close" @onclick="OnClose" disabled="@isLoading"></button>
             </div>
@@ -18,9 +20,9 @@
                 {
                     <div class="text-center py-4">
                         <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading rules...</span>
+                            <span class="visually-hidden">@Localizer["LoadingRules"]</span>
                         </div>
-                        <p class="text-muted mt-2">Loading group rules...</p>
+                        <p class="text-muted mt-2">@Localizer["LoadingGroupRules"]</p>
                     </div>
                 }
                 else if (!string.IsNullOrEmpty(errorMessage))
@@ -33,14 +35,14 @@
                 {
                     <div class="alert alert-info" role="alert">
                         <i class="bi bi-info-circle me-2"></i>
-                        This group has no rules defined yet.
+                        @Localizer["NoRulesDefined"]
                     </div>
                 }
                 else
                 {
                     <div class="rules-intro mb-4">
-                        <p class="fw-bold mb-2">Before joining this group, please read and agree to the following rules:</p>
-                        <p class="text-muted small">These rules help maintain a positive and respectful community environment.</p>
+                        <p class="fw-bold mb-2">@Localizer["RulesIntro"]</p>
+                        <p class="text-muted small">@Localizer["RulesHelp"]</p>
                     </div>
 
                     <div class="rules-list">
@@ -70,7 +72,7 @@
                                    id="agreeToRules" 
                                    @bind="hasAgreed" />
                             <label class="form-check-label fw-bold" for="agreeToRules">
-                                I have read and agree to abide by these rules
+                                @Localizer["AgreeToRules"]
                             </label>
                         </div>
                     </div>
@@ -78,7 +80,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" @onclick="OnClose" disabled="@isLoading">
-                    Cancel
+                    @Localizer["Cancel"]
                 </button>
                 @if (rules.Count > 0)
                 {

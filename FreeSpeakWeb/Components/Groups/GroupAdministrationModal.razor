@@ -1,0 +1,228 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
+
+@inject GroupService GroupService
+@inject GroupMemberService GroupMemberService
+@inject ILogger<GroupAdministrationModal> Logger
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Groups.GroupAdministrationModal> Localizer
+
+<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-shield-lock me-2"></i>@Localizer["Title"]
+                </h5>
+                <button type="button" class="btn-close" @onclick="OnClose" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (isLoading)
+                {
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">@Localizer["Loading"]</span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <!-- Tab Navigation -->
+                    <ul class="nav nav-tabs mb-4" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link @(activeTab == "members" ? "active" : "")" 
+                                    type="button" 
+                                    @onclick="@(() => SetActiveTab("members"))">
+                                <i class="bi bi-people me-1"></i>@Localizer["MemberManagement"]
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link @(activeTab == "requests" ? "active" : "")" 
+                                    type="button" 
+                                    @onclick="@(() => SetActiveTab("requests"))">
+                                <i class="bi bi-person-plus me-1"></i>@Localizer["JoinRequests"]
+                                @if (pendingRequestsCount > 0)
+                                {
+                                    <span class="badge bg-danger ms-1">@pendingRequestsCount</span>
+                                }
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link @(activeTab == "roles" ? "active" : "")" 
+                                    type="button" 
+                                    @onclick="@(() => SetActiveTab("roles"))">
+                                <i class="bi bi-person-badge me-1"></i>@Localizer["RoleManagement"]
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link @(activeTab == "banned" ? "active" : "")" 
+                                    type="button" 
+                                    @onclick="@(() => SetActiveTab("banned"))">
+                                <i class="bi bi-slash-circle me-1"></i>@Localizer["BannedMembers"]
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link @(activeTab == "settings" ? "active" : "")" 
+                                    type="button" 
+                                    @onclick="@(() => SetActiveTab("settings"))">
+                                <i class="bi bi-gear me-1"></i>@Localizer["GroupSettings"]
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content">
+                        @if (activeTab == "members")
+                        {
+                            <div class="tab-pane fade show active">
+                                <h6 class="mb-3">@Localizer["MemberManagementDescription"]</h6>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>@Localizer["MemberManagementPlaceholder"]
+                                </div>
+                                <!-- Future: Member list with search, remove, and role assignment -->
+                            </div>
+                        }
+                        else if (activeTab == "requests")
+                        {
+                            <div class="tab-pane fade show active">
+                                <h6 class="mb-3">@Localizer["JoinRequestsDescription"]</h6>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>@Localizer["JoinRequestsPlaceholder"]
+                                </div>
+                                <!-- Future: Pending join requests with approve/deny actions -->
+                            </div>
+                        }
+                        else if (activeTab == "roles")
+                        {
+                            <div class="tab-pane fade show active">
+                                <h6 class="mb-3">@Localizer["RoleManagementDescription"]</h6>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>@Localizer["RoleManagementPlaceholder"]
+                                </div>
+                                <!-- Future: Assign admin/moderator roles to members -->
+                            </div>
+                        }
+                        else if (activeTab == "banned")
+                        {
+                            <div class="tab-pane fade show active">
+                                <h6 class="mb-3">@Localizer["BannedMembersDescription"]</h6>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>@Localizer["BannedMembersPlaceholder"]
+                                </div>
+                                <!-- Future: List of banned members with unban option -->
+                            </div>
+                        }
+                        else if (activeTab == "settings")
+                        {
+                            <div class="tab-pane fade show active">
+                                <h6 class="mb-3">@Localizer["GroupSettingsDescription"]</h6>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>@Localizer["GroupSettingsPlaceholder"]
+                                </div>
+                                <!-- Future: Advanced group settings (rules, visibility, etc.) -->
+                            </div>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger mt-3" role="alert">
+                            <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(successMessage))
+                    {
+                        <div class="alert alert-success mt-3" role="alert">
+                            <i class="bi bi-check-circle me-2"></i>@successMessage
+                        </div>
+                    }
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="OnClose">
+                    @Localizer["Close"]
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// The group to administer.
+    /// </summary>
+    [Parameter]
+    public Group Group { get; set; } = null!;
+
+    /// <summary>
+    /// The current user's ID.
+    /// </summary>
+    [Parameter]
+    public string CurrentUserId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Callback invoked when the modal is closed.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    /// <summary>
+    /// Callback invoked when any administration action is performed.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnAdministrationActionPerformed { get; set; }
+
+    private string activeTab = "members";
+    private bool isLoading = false;
+    private string? errorMessage;
+    private string? successMessage;
+    private int pendingRequestsCount = 0;
+
+    /// <summary>
+    /// Initializes the component by loading initial data.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    /// <summary>
+    /// Loads the initial data for all tabs.
+    /// </summary>
+    private async Task LoadDataAsync()
+    {
+        isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            // Load pending join requests count
+            var pendingRequests = await GroupMemberService.GetPendingJoinRequestsAsync(Group.Id);
+            pendingRequestsCount = pendingRequests.Count;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading group administration data for group {GroupId}", Group.Id);
+            errorMessage = Localizer["ErrorLoadingData"];
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Sets the active tab.
+    /// </summary>
+    /// <param name="tabName">The name of the tab to activate.</param>
+    private void SetActiveTab(string tabName)
+    {
+        activeTab = tabName;
+        errorMessage = null;
+        successMessage = null;
+        StateHasChanged();
+    }
+}

@@ -300,6 +300,12 @@ namespace FreeSpeakWeb.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsClosed")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsHidden")
                         .HasColumnType("boolean");
 

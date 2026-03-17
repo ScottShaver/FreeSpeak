@@ -8,7 +8,7 @@
 {
     <div class="expand-post-section">
         <button type="button" class="expand-post-button" @onclick="OnShowPostDetail">
-            ... Click to see full post
+            @ClickToSeeFullPostText
         </button>
     </div>
 }
@@ -31,6 +31,12 @@
 
     [Parameter]
     public EventCallback<ElementReference> OnContentElementRendered { get; set; }
+
+    /// <summary>
+    /// Localized text for the "Click to see full post" button.
+    /// </summary>
+    [Parameter]
+    public string ClickToSeeFullPostText { get; set; } = "... Click to see full post";
 
     private ElementReference contentElementRef;
 
