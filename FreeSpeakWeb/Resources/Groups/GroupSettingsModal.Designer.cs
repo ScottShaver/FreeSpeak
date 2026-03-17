@@ -187,6 +187,69 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Require Agreement to Group Rules.
+        /// </summary>
+        public static string RequireAcceptRules {
+            get {
+                return ResourceManager.GetString("RequireAcceptRules", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Users must agree to the group rules before joining or submitting a join request..
+        /// </summary>
+        public static string RequireAcceptRulesHelp {
+            get {
+                return ResourceManager.GetString("RequireAcceptRulesHelp", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group Status.
+        /// </summary>
+        public static string GroupStatusSection {
+            get {
+                return ResourceManager.GetString("GroupStatusSection", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group is Active.
+        /// </summary>
+        public static string IsActive {
+            get {
+                return ResourceManager.GetString("IsActive", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to When active, the group is ready to accept users and content. Inactive groups are only visible to administrators..
+        /// </summary>
+        public static string IsActiveHelp {
+            get {
+                return ResourceManager.GetString("IsActiveHelp", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group is Permanently Closed.
+        /// </summary>
+        public static string IsClosed {
+            get {
+                return ResourceManager.GetString("IsClosed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Warning: Closing a group is permanent. No changes can be made once closed, even by administrators..
+        /// </summary>
+        public static string IsClosedHelp {
+            get {
+                return ResourceManager.GetString("IsClosedHelp", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Group Settings.
         /// </summary>
         public static string Title {

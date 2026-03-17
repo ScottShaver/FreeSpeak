@@ -97,4 +97,10 @@
   <data name="NoPostsYet" xml:space="preserve">
     <value>No posts in this group yet. Be the first to post!</value>
   </data>
+  <data name="GroupAdministration" xml:space="preserve">
+    <value>Group Administration</value>
+  </data>
+  <data name="GroupModeration" xml:space="preserve">
+    <value>Group Moderation</value>
+  </data>
 </root>

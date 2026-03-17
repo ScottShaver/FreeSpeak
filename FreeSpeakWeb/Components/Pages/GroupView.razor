@@ -66,15 +66,29 @@
             <div class="group-header-content">
                 <div class="d-flex justify-content-between align-items-start mb-2">
                     <h1>@group.Name</h1>
-                    @if (!string.IsNullOrEmpty(currentUserId) && group.CreatorId == currentUserId)
-                    {
-                        <button class="btn btn-outline-secondary btn-sm" @onclick="OpenGroupSettings" title="Group Settings">
-                            <i class="bi bi-gear me-1"></i>@Localizer["Settings"]
-                        </button>
-                    }
+                    <div class="group-header-actions d-flex gap-2">
+                        @if (CanAccessGroupAdministration)
+                        {
+                            <button class="btn btn-outline-primary btn-sm" @onclick="OpenGroupAdministration" title="@Localizer["GroupAdministration"]">
+                                <i class="bi bi-shield-lock me-1"></i>@Localizer["GroupAdministration"]
+                            </button>
+                        }
+                        @if (CanAccessGroupModeration)
+                        {
+                            <button class="btn btn-outline-secondary btn-sm" @onclick="OpenGroupModeration" title="@Localizer["GroupModeration"]">
+                                <i class="bi bi-shield-check me-1"></i>@Localizer["GroupModeration"]
+                            </button>
+                        }
+                        @if (!string.IsNullOrEmpty(currentUserId) && group.CreatorId == currentUserId)
+                        {
+                            <button class="btn btn-outline-secondary btn-sm" @onclick="OpenGroupSettings" title="Group Settings">
+                                <i class="bi bi-gear me-1"></i>@Localizer["Settings"]
+                            </button>
+                        }
+                    </div>
                 </div>
                 <p class="group-description">@group.Description</p>
-                
+
                 <div class="group-stats">
                     <div class="stat-item">
                         <span class="stat-label">@Localizer["Members"]</span>
@@ -258,6 +272,24 @@
         OnSettingsSaved="HandleGroupSettingsSaved" />
 }
 
+@if (showGroupAdministration && group != null)
+{
+    <FreeSpeakWeb.Components.Groups.GroupAdministrationModal 
+        Group="@group"
+        CurrentUserId="@currentUserId"
+        OnClose="CloseGroupAdministration"
+        OnAdministrationActionPerformed="HandleAdministrationActionPerformed" />
+}
+
+@if (showGroupModeration && group != null)
+{
+    <FreeSpeakWeb.Components.Groups.GroupModerationModal 
+        Group="@group"
+        CurrentUserId="@currentUserId"
+        OnClose="CloseGroupModeration"
+        OnModerationActionPerformed="HandleModerationActionPerformed" />
+}
+
 @code {
     [Parameter]
     public int GroupId { get; set; }
@@ -274,6 +306,14 @@
     private int postsThisWeek = 0;
     private int postsToday = 0;
     private DateTime? lastActivity;
+
+    // Admin/Moderator permissions
+    private bool isGroupAdmin = false;
+    private bool isGroupModerator = false;
+    private bool isSystemAdmin = false;
+    private bool isSystemModerator = false;
+    private bool showGroupAdministration = false;
+    private bool showGroupModeration = false;
 
     // Posts state
     private List<GroupPostViewModel> groupPosts = new();
@@ -308,6 +348,10 @@
         {
             currentUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            // Check system-level roles
+            isSystemAdmin = user.IsInRole("SystemAdministrator");
+            isSystemModerator = user.IsInRole("SystemModerator");
+
             if (!string.IsNullOrEmpty(currentUserId))
             {
                 var appUser = await UserManager.FindByIdAsync(currentUserId);
@@ -319,6 +363,13 @@
 
                 await LoadGroupInformation();
                 await LoadGroupPosts();
+
+                // Check group-level permissions after group is loaded
+                if (group != null)
+                {
+                    isGroupAdmin = await GroupMemberService.IsAdminAsync(GroupId, currentUserId);
+                    isGroupModerator = await GroupMemberService.IsModeratorAsync(GroupId, currentUserId);
+                }
             }
         }
     }
@@ -1049,6 +1100,78 @@
         {
             post.CommentCount = Math.Max(0, post.CommentCount - decrementBy);
         }
+    }
+
+    #endregion
+
+    #region Group Administration and Moderation
+
+    /// <summary>
+    /// Determines if the current user can access group administration functions.
+    /// Returns true if user is a group admin, group creator, or system administrator.
+    /// </summary>
+    private bool CanAccessGroupAdministration =>
+        isGroupAdmin || isSystemAdmin || (group != null && group.CreatorId == currentUserId);
+
+    /// <summary>
+    /// Determines if the current user can access group moderation functions.
+    /// Returns true if user is a group moderator, group admin, group creator, system administrator, or system moderator.
+    /// </summary>
+    private bool CanAccessGroupModeration =>
+        isGroupModerator || isGroupAdmin || isSystemModerator || isSystemAdmin || (group != null && group.CreatorId == currentUserId);
+
+    /// <summary>
+    /// Opens the group administration modal.
+    /// </summary>
+    private void OpenGroupAdministration()
+    {
+        showGroupAdministration = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the group administration modal.
+    /// </summary>
+    private void CloseGroupAdministration()
+    {
+        showGroupAdministration = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles when an administration action is performed, refreshing data as needed.
+    /// </summary>
+    private async Task HandleAdministrationActionPerformed()
+    {
+        await LoadGroupInformation();
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Opens the group moderation modal.
+    /// </summary>
+    private void OpenGroupModeration()
+    {
+        showGroupModeration = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the group moderation modal.
+    /// </summary>
+    private void CloseGroupModeration()
+    {
+        showGroupModeration = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles when a moderation action is performed, refreshing data as needed.
+    /// </summary>
+    private async Task HandleModerationActionPerformed()
+    {
+        await LoadGroupPosts();
+        StateHasChanged();
     }
 
     #endregion

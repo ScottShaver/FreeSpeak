@@ -21,4 +21,11 @@ public class SiteSettings
     /// Gets or sets the maximum number of direct (top-level) comments allowed on a single post.
     /// </summary>
     public int MaxFeedPostDirectCommentCount { get; set; } = 1000;
+
+    /// <summary>
+    /// Gets or sets whether any authenticated user can create a new group.
+    /// When true, all users can create groups. When false, only users with
+    /// SystemAdministrator or GroupAdministrator roles can create groups.
+    /// </summary>
+    public bool AllowOpenGroupCreation { get; set; } = true;
 }

@@ -96,6 +96,10 @@ $ResourceGroups = @{
         BasePath = "FreeSpeakWeb\Resources\Shared\UploadProgressModal.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
+    "MoreFunctions" = @{
+        BasePath = "FreeSpeakWeb\Resources\Shared\MoreFunctions.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
 
     # Admin Resources
     "UserCreationModal" = @{
@@ -166,6 +170,14 @@ $ResourceGroups = @{
     # Groups Resources
     "GroupSettingsModal" = @{
         BasePath = "FreeSpeakWeb\Resources\Groups\GroupSettingsModal.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "GroupAdministrationModal" = @{
+        BasePath = "FreeSpeakWeb\Resources\Groups\GroupAdministrationModal.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "GroupModerationModal" = @{
+        BasePath = "FreeSpeakWeb\Resources\Groups\GroupModerationModal.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
     "RulesAcceptanceModal" = @{

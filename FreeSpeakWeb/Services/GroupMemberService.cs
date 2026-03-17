@@ -526,6 +526,52 @@ namespace FreeSpeakWeb.Services
             }
         }
 
+        /// <summary>
+        /// Check if a user is an admin of a group.
+        /// </summary>
+        /// <param name="groupId">The ID of the group.</param>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>True if the user is an admin; otherwise, false.</returns>
+        public async Task<bool> IsAdminAsync(int groupId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var membership = await context.GroupUsers
+                    .FirstOrDefaultAsync(gu => gu.GroupId == groupId && gu.UserId == userId);
+                return membership?.IsAdmin == true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking admin status for user {UserId} in group {GroupId}", userId, groupId);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Check if a user is a moderator of a group.
+        /// </summary>
+        /// <param name="groupId">The ID of the group.</param>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>True if the user is a moderator; otherwise, false.</returns>
+        public async Task<bool> IsModeratorAsync(int groupId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var membership = await context.GroupUsers
+                    .FirstOrDefaultAsync(gu => gu.GroupId == groupId && gu.UserId == userId);
+                return membership?.IsModerator == true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking moderator status for user {UserId} in group {GroupId}", userId, groupId);
+                return false;
+            }
+        }
+
         #endregion
 
         #region Update Members

@@ -50,6 +50,8 @@ namespace FreeSpeakWeb.Services
         /// <param name="isPublic">Whether the group is publicly visible.</param>
         /// <param name="isHidden">Whether the group is hidden from searches.</param>
         /// <param name="requiresJoinApproval">Whether join requests require approval.</param>
+        /// <param name="requireAcceptRules">Whether users must accept group rules before joining.</param>
+        /// <param name="enablePointsSystem">Whether the group points system is enabled.</param>
         /// <param name="headerImageUrl">Optional URL for the group's header image.</param>
         /// <param name="verticalHeaderImageUrl">Optional URL for the vertical header image.</param>
         /// <param name="websiteUrl">Optional website URL for the group.</param>
@@ -61,6 +63,8 @@ namespace FreeSpeakWeb.Services
             bool isPublic = true,
             bool isHidden = false,
             bool requiresJoinApproval = false,
+            bool requireAcceptRules = false,
+            bool enablePointsSystem = false,
             string? headerImageUrl = null,
             string? verticalHeaderImageUrl = null,
             string? websiteUrl = null)
@@ -106,15 +110,33 @@ namespace FreeSpeakWeb.Services
                     IsPublic = isPublic,
                     IsHidden = isHidden,
                     RequiresJoinApproval = requiresJoinApproval,
+                    RequireAcceptRules = requireAcceptRules,
+                    EnablePointsSystem = enablePointsSystem,
                     HeaderImageUrl = headerImageUrl,
                     VerticalHeaderImageUrl = verticalHeaderImageUrl,
                     WebsiteUrl = websiteUrl,
                     CreatedAt = DateTime.UtcNow,
                     LastActiveAt = DateTime.UtcNow,
-                    MemberCount = 0
+                    MemberCount = 1  // Creator is the first member
                 };
 
                 context.Groups.Add(group);
+                await context.SaveChangesAsync();
+
+                // Add the creator as a member with admin privileges
+                var creatorMembership = new GroupUser
+                {
+                    GroupId = group.Id,
+                    UserId = creatorId,
+                    JoinedAt = DateTime.UtcNow,
+                    LastActiveAt = DateTime.UtcNow,
+                    IsAdmin = true,
+                    IsModerator = true,
+                    HasAgreedToRules = true,  // Creator implicitly agrees to their own rules
+                    PostCount = 0,
+                    GroupPoints = 0
+                };
+                context.GroupUsers.Add(creatorMembership);
                 await context.SaveChangesAsync();
 
                 _logger.LogInformation("Group created: {GroupId} '{GroupName}' by user {CreatorId}", 
@@ -382,7 +404,10 @@ namespace FreeSpeakWeb.Services
         /// <param name="isPublic">Optional new public visibility setting.</param>
         /// <param name="isHidden">Optional new hidden setting.</param>
         /// <param name="requiresJoinApproval">Optional new join approval requirement.</param>
+        /// <param name="requireAcceptRules">Optional setting for whether users must accept group rules before joining.</param>
         /// <param name="enablePointsSystem">Optional setting to enable or disable the points system for this group.</param>
+        /// <param name="isActive">Optional setting to indicate if the group is active and ready for users.</param>
+        /// <param name="isClosed">Optional setting to indicate if the group has been permanently closed.</param>
         /// <param name="headerImageUrl">Optional new header image URL.</param>
         /// <param name="verticalHeaderImageUrl">Optional new vertical header image URL.</param>
         /// <param name="websiteUrl">Optional new website URL.</param>
@@ -395,7 +420,10 @@ namespace FreeSpeakWeb.Services
             bool? isPublic = null,
             bool? isHidden = null,
             bool? requiresJoinApproval = null,
+            bool? requireAcceptRules = null,
             bool? enablePointsSystem = null,
+            bool? isActive = null,
+            bool? isClosed = null,
             string? headerImageUrl = null,
             string? verticalHeaderImageUrl = null,
             string? websiteUrl = null)
@@ -403,6 +431,7 @@ namespace FreeSpeakWeb.Services
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
+
 
                 var group = await context.Groups
                     .FirstOrDefaultAsync(g => g.Id == groupId);
@@ -483,6 +512,33 @@ namespace FreeSpeakWeb.Services
                         changedFields.Add("EnablePointsSystem");
                     }
                     group.EnablePointsSystem = enablePointsSystem.Value;
+                }
+
+                if (requireAcceptRules.HasValue)
+                {
+                    if (group.RequireAcceptRules != requireAcceptRules.Value)
+                    {
+                        changedFields.Add("RequireAcceptRules");
+                    }
+                    group.RequireAcceptRules = requireAcceptRules.Value;
+                }
+
+                if (isActive.HasValue)
+                {
+                    if (group.IsActive != isActive.Value)
+                    {
+                        changedFields.Add("IsActive");
+                    }
+                    group.IsActive = isActive.Value;
+                }
+
+                if (isClosed.HasValue)
+                {
+                    if (group.IsClosed != isClosed.Value)
+                    {
+                        changedFields.Add("IsClosed");
+                    }
+                    group.IsClosed = isClosed.Value;
                 }
 
                 if (headerImageUrl != null)

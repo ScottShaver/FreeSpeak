@@ -1,0 +1,218 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
+
+@inject GroupService GroupService
+@inject GroupMemberService GroupMemberService
+@inject GroupPostService GroupPostService
+@inject ILogger<GroupModerationModal> Logger
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Groups.GroupModerationModal> Localizer
+
+<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-shield-check me-2"></i>@Localizer["Title"]
+                </h5>
+                <button type="button" class="btn-close" @onclick="OnClose" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (isLoading)
+                {
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">@Localizer["Loading"]</span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <!-- Tab Navigation -->
+                    <ul class="nav nav-tabs mb-4" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link @(activeTab == "reported" ? "active" : "")" 
+                                    type="button" 
+                                    @onclick="@(() => SetActiveTab("reported"))">
+                                <i class="bi bi-flag me-1"></i>@Localizer["ReportedContent"]
+                                @if (reportedContentCount > 0)
+                                {
+                                    <span class="badge bg-warning ms-1">@reportedContentCount</span>
+                                }
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link @(activeTab == "pending" ? "active" : "")" 
+                                    type="button" 
+                                    @onclick="@(() => SetActiveTab("pending"))">
+                                <i class="bi bi-hourglass-split me-1"></i>@Localizer["PendingApproval"]
+                                @if (pendingPostsCount > 0)
+                                {
+                                    <span class="badge bg-info ms-1">@pendingPostsCount</span>
+                                }
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link @(activeTab == "recent" ? "active" : "")" 
+                                    type="button" 
+                                    @onclick="@(() => SetActiveTab("recent"))">
+                                <i class="bi bi-clock-history me-1"></i>@Localizer["RecentPosts"]
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link @(activeTab == "modlog" ? "active" : "")" 
+                                    type="button" 
+                                    @onclick="@(() => SetActiveTab("modlog"))">
+                                <i class="bi bi-journal-text me-1"></i>@Localizer["ModerationLog"]
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content">
+                        @if (activeTab == "reported")
+                        {
+                            <div class="tab-pane fade show active">
+                                <h6 class="mb-3">@Localizer["ReportedContentDescription"]</h6>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>@Localizer["ReportedContentPlaceholder"]
+                                </div>
+                                <!-- Future: List of reported posts and comments with actions -->
+                            </div>
+                        }
+                        else if (activeTab == "pending")
+                        {
+                            <div class="tab-pane fade show active">
+                                <h6 class="mb-3">@Localizer["PendingApprovalDescription"]</h6>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>@Localizer["PendingApprovalPlaceholder"]
+                                </div>
+                                <!-- Future: Posts pending moderator approval -->
+                            </div>
+                        }
+                        else if (activeTab == "recent")
+                        {
+                            <div class="tab-pane fade show active">
+                                <h6 class="mb-3">@Localizer["RecentPostsDescription"]</h6>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>@Localizer["RecentPostsPlaceholder"]
+                                </div>
+                                <!-- Future: Recent posts for quick moderation review -->
+                            </div>
+                        }
+                        else if (activeTab == "modlog")
+                        {
+                            <div class="tab-pane fade show active">
+                                <h6 class="mb-3">@Localizer["ModerationLogDescription"]</h6>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>@Localizer["ModerationLogPlaceholder"]
+                                </div>
+                                <!-- Future: Log of moderation actions taken -->
+                            </div>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger mt-3" role="alert">
+                            <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(successMessage))
+                    {
+                        <div class="alert alert-success mt-3" role="alert">
+                            <i class="bi bi-check-circle me-2"></i>@successMessage
+                        </div>
+                    }
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="OnClose">
+                    @Localizer["Close"]
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// The group to moderate.
+    /// </summary>
+    [Parameter]
+    public Group Group { get; set; } = null!;
+
+    /// <summary>
+    /// The current user's ID.
+    /// </summary>
+    [Parameter]
+    public string CurrentUserId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Callback invoked when the modal is closed.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    /// <summary>
+    /// Callback invoked when any moderation action is performed.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnModerationActionPerformed { get; set; }
+
+    private string activeTab = "reported";
+    private bool isLoading = false;
+    private string? errorMessage;
+    private string? successMessage;
+    private int reportedContentCount = 0;
+    private int pendingPostsCount = 0;
+
+    /// <summary>
+    /// Initializes the component by loading initial data.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    /// <summary>
+    /// Loads the initial data for all tabs.
+    /// </summary>
+    private async Task LoadDataAsync()
+    {
+        isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            // Future: Load reported content count and pending posts count
+            // For now, these remain at 0 as placeholders
+            reportedContentCount = 0;
+            pendingPostsCount = 0;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading group moderation data for group {GroupId}", Group.Id);
+            errorMessage = Localizer["ErrorLoadingData"];
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Sets the active tab.
+    /// </summary>
+    /// <param name="tabName">The name of the tab to activate.</param>
+    private void SetActiveTab(string tabName)
+    {
+        activeTab = tabName;
+        errorMessage = null;
+        successMessage = null;
+        StateHasChanged();
+    }
+}

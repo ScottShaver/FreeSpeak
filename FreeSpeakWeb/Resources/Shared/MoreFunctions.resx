@@ -59,34 +59,49 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Title" xml:space="preserve">
-    <value>Group Settings</value>
+    <value>More Functions</value>
   </data>
-  <data name="Loading" xml:space="preserve">
-    <value>Loading...</value>
+  <data name="CreateGroup" xml:space="preserve">
+    <value>Create Group</value>
+  </data>
+  <data name="CreateGroupTooltip" xml:space="preserve">
+    <value>Create a new group</value>
+  </data>
+  <data name="NoFunctionsAvailable" xml:space="preserve">
+    <value>No additional functions available.</value>
+  </data>
+  <data name="CreateNewGroup" xml:space="preserve">
+    <value>Create New Group</value>
   </data>
   <data name="GroupName" xml:space="preserve">
     <value>Group Name</value>
   </data>
-  <data name="Description" xml:space="preserve">
+  <data name="GroupDescription" xml:space="preserve">
     <value>Description</value>
   </data>
   <data name="PublicGroup" xml:space="preserve">
     <value>Public Group</value>
   </data>
   <data name="PublicGroupHelp" xml:space="preserve">
-    <value>Public groups are visible to all users.</value>
+    <value>Public groups are visible to all users and can be found in search.</value>
   </data>
-  <data name="HiddenFromDiscovery" xml:space="preserve">
-    <value>Hidden from Discovery</value>
+  <data name="HiddenGroup" xml:space="preserve">
+    <value>Hidden Group</value>
   </data>
-  <data name="HiddenFromDiscoveryHelp" xml:space="preserve">
-    <value>Hidden groups don't appear in search results.</value>
+  <data name="HiddenGroupHelp" xml:space="preserve">
+    <value>Hidden groups cannot be found in searches. Members can only be added by group administrators.</value>
   </data>
   <data name="RequireJoinApproval" xml:space="preserve">
     <value>Require Join Approval</value>
   </data>
   <data name="RequireJoinApprovalHelp" xml:space="preserve">
-    <value>New members must be approved before joining.</value>
+    <value>New members must be approved by an administrator before joining.</value>
+  </data>
+  <data name="RequireAcceptRules" xml:space="preserve">
+    <value>Require Agreement to Group Rules</value>
+  </data>
+  <data name="RequireAcceptRulesHelp" xml:space="preserve">
+    <value>Users must agree to the group rules before joining or submitting a join request.</value>
   </data>
   <data name="EnablePointsSystem" xml:space="preserve">
     <value>Enable Points System</value>
@@ -97,31 +112,22 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="SaveChanges" xml:space="preserve">
-    <value>Save Changes</value>
+  <data name="Creating" xml:space="preserve">
+    <value>Creating...</value>
   </data>
-  <data name="Saving" xml:space="preserve">
-    <value>Saving...</value>
+  <data name="NotAuthenticated" xml:space="preserve">
+    <value>You must be logged in to create a group.</value>
   </data>
-  <data name="RequireAcceptRules" xml:space="preserve">
-    <value>Require Agreement to Group Rules</value>
+  <data name="GroupNameRequired" xml:space="preserve">
+    <value>Group name is required.</value>
   </data>
-  <data name="RequireAcceptRulesHelp" xml:space="preserve">
-    <value>Users must agree to the group rules before joining or submitting a join request.</value>
+  <data name="GroupDescriptionRequired" xml:space="preserve">
+    <value>Group description is required.</value>
   </data>
-  <data name="GroupStatusSection" xml:space="preserve">
-    <value>Group Status</value>
+  <data name="GroupCreatedSuccess" xml:space="preserve">
+    <value>Group "{0}" has been created successfully!</value>
   </data>
-  <data name="IsActive" xml:space="preserve">
-    <value>Group is Active</value>
-  </data>
-  <data name="IsActiveHelp" xml:space="preserve">
-    <value>When active, the group is ready to accept users and content. Inactive groups are only visible to administrators.</value>
-  </data>
-  <data name="IsClosed" xml:space="preserve">
-    <value>Group is Permanently Closed</value>
-  </data>
-  <data name="IsClosedHelp" xml:space="preserve">
-    <value>Warning: Closing a group is permanent. No changes can be made once closed, even by administrators.</value>
+  <data name="GroupCreationFailed" xml:space="preserve">
+    <value>An error occurred while creating the group.</value>
   </data>
 </root>

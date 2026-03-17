@@ -1,0 +1,66 @@
+.more-functions-panel {
+    background: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.panel-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--bs-heading-color, inherit);
+    display: flex;
+    align-items: center;
+}
+
+.functions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.function-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.375rem;
+    background: var(--bs-tertiary-bg);
+    color: var(--bs-body-color);
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    width: 100%;
+}
+
+.function-button:hover {
+    background: var(--bs-primary);
+    color: white;
+    border-color: var(--bs-primary);
+}
+
+.function-button:hover i {
+    color: white;
+}
+
+.function-button i {
+    font-size: 1.25rem;
+    color: var(--bs-primary);
+    transition: color 0.15s ease-in-out;
+}
+
+.function-button span {
+    font-weight: 500;
+}
+
+/* Modal adjustments */
+::deep .modal-body .form-label {
+    font-weight: 500;
+}
+
+::deep .modal-body .form-text {
+    font-size: 0.85rem;
+}
