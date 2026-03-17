@@ -20,6 +20,7 @@ Stores posts made within groups.
 - `LikeCount` (int) - Cached count of likes
 - `CommentCount` (int) - Cached count of comments (includes nested replies)
 - `ShareCount` (int) - Cached count of shares
+- `Status` (PostStatus enum) - Approval status: Pending (0), Posted (1), Declined (2)
 
 **Indexes:**
 - `GroupId`
@@ -154,13 +155,20 @@ Tracks users banned from groups.
 Comprehensive service for managing group posts and interactions.
 
 **Post Operations:**
-- `CreateGroupPostAsync` - Create new group post
-- `UpdateGroupPostAsync` - Update post content/images
+- `CreateGroupPostAsync` - Create new group post (status set based on group's RequiresPostApproval)
+- `UpdateGroupPostAsync` - Update post content/images (resets status to Pending for declined posts)
 - `DeleteGroupPostAsync` - Delete post (author, admin, or moderator)
 - `GetGroupPostByIdAsync` - Retrieve specific post
-- `GetGroupPostsAsync` - Get paginated posts for a group
+- `GetGroupPostsAsync` - Get paginated posts for a group (only Posted status)
 - `GetUserGroupPostsAsync` - Get posts by specific user in group
 - `GetGroupPostCountAsync` - Get total post count
+
+**Post Approval Operations:**
+- `ApprovePostAsync` - Approve pending post (moderator/admin only)
+- `DeclinePostAsync` - Decline pending post (moderator/admin only)
+- `GetPendingPostsAsync` - Get posts awaiting approval
+- `GetPendingPostCountAsync` - Get count of pending posts
+- `GetUserPostsIncludingAllStatusesAsync` - Get user's own posts with any status
 
 **Comment Operations:**
 - `AddCommentAsync` - Add comment or reply
@@ -206,15 +214,59 @@ Service for managing group bans.
 
 ## Business Rules
 
+### Post Approval System
+
+Groups can enable post approval via the `RequiresPostApproval` setting:
+
+#### When Enabled:
+- New posts are created with `Status = Pending`
+- Pending posts are only visible to the post author
+- Moderators/admins see pending posts in the Moderation modal
+- Moderators can **Approve** (sets `Status = Posted`) or **Decline** (sets `Status = Declined`)
+- Approved posts become visible to all group members
+- Declined posts can be edited by the author, which resets status to Pending
+
+#### When Disabled:
+- Posts are created with `Status = Posted` (immediately visible)
+- All standard posting rules apply
+
+#### Status Transitions:
+```
+Creating Post:
+  RequiresPostApproval=false → Posted
+  RequiresPostApproval=true  → Pending
+
+Moderator Actions:
+  Pending → Posted (Approve)
+  Pending → Declined (Decline)
+
+Author Edits:
+  Pending  → Pending (no change)
+  Declined → Pending (resubmitted for review)
+  Posted   → Posted (no change)
+```
+
+#### Group Setting Changes:
+When `RequiresPostApproval` is changed from false to true:
+- All existing posts (except Declined) are automatically set to `Posted` status
+- This ensures existing content remains visible to members
+
 ### Access Control
 
 #### Posting
 - Users must be group members to create posts
 - Banned users cannot create posts
+- If group requires approval, posts start as Pending
 - Posts can be deleted by:
   - Post author
   - Group admins
   - Group moderators
+
+#### Post Approval
+- Only admins and moderators can approve/decline posts
+- Approval sets post status to Posted (visible to all)
+- Decline sets post status to Declined (only visible to author)
+- Authors can edit declined posts to resubmit for approval
 
 #### Commenting
 - Users must be group members to comment
@@ -282,6 +334,7 @@ When a **User** is banned:
 - `AddGroupPostTables` - Initial creation of group post tables
 - `AddGroupPostCommentAndLikeTables` - Added comment and like tables
 - `AddGroupPostNotificationMutes` - Added notification mute functionality
+- `AddPostApprovalSystem` - Added PostStatus column and RequiresPostApproval to Groups
 
 ## Testing
 
@@ -299,5 +352,5 @@ Potential areas for expansion:
 - Scheduled group posts
 - Group post templates
 - Rich media embeds (polls, events)
-- Post approval workflows for moderated groups
+- ~~Post approval workflows for moderated groups~~ ✅ Implemented
 - Group post search and filtering

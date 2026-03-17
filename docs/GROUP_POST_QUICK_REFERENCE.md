@@ -11,6 +11,9 @@
 
 ### Creating a Group Post
 ```csharp
+// Post status is automatically set based on group.RequiresPostApproval
+// If true: Status = Pending (awaits moderator approval)
+// If false: Status = Posted (immediately visible)
 var (success, errorMessage, post) = await _groupPostService.CreateGroupPostAsync(
     groupId: 1,
     authorId: "user123",
@@ -22,6 +25,43 @@ if (success)
 {
     // Post created successfully
     var postId = post.Id;
+    var status = post.Status; // Pending or Posted
+}
+```
+
+### Approving/Declining Pending Posts (Moderators Only)
+```csharp
+// Approve a pending post (makes it visible to all members)
+var (success, errorMessage) = await _groupPostService.ApprovePostAsync(
+    postId: 1,
+    moderatorId: "mod123"
+);
+
+// Decline a pending post (author can edit and resubmit)
+var (success, errorMessage) = await _groupPostService.DeclinePostAsync(
+    postId: 1,
+    moderatorId: "mod123"
+);
+
+// Get all pending posts for review
+var pendingPosts = await _groupPostService.GetPendingPostsAsync(groupId: 1);
+
+// Get count of pending posts (for badge display)
+var pendingCount = await _groupPostService.GetPendingPostCountAsync(groupId: 1);
+```
+
+### Getting User's Own Posts (Including Pending/Declined)
+```csharp
+// Users can see their own pending/declined posts
+var userPosts = await _groupPostService.GetUserPostsIncludingAllStatusesAsync(
+    groupId: 1,
+    userId: "user123"
+);
+
+foreach (var post in userPosts)
+{
+    Console.WriteLine($"Post {post.Id}: Status = {post.Status}");
+    // Status can be: Pending, Posted, or Declined
 }
 ```
 
@@ -128,9 +168,18 @@ var isMuted = await _groupPostService.IsPostNotificationMutedAsync(
 | `UpdateGroupPostAsync` | Update content/images | `(bool, string?, List<GroupPostImage>?)` |
 | `DeleteGroupPostAsync` | Delete post | `(bool, string?)` |
 | `GetGroupPostByIdAsync` | Get single post | `GroupPost?` |
-| `GetGroupPostsAsync` | Get paginated posts | `List<GroupPost>` |
+| `GetGroupPostsAsync` | Get paginated posts (Posted only) | `List<GroupPost>` |
 | `GetUserGroupPostsAsync` | Get user's posts in group | `List<GroupPost>` |
 | `GetGroupPostCountAsync` | Get total count | `int` |
+
+#### Post Approval Operations
+| Method | Purpose | Returns |
+|--------|---------|---------|
+| `ApprovePostAsync` | Approve pending post | `(bool, string?)` |
+| `DeclinePostAsync` | Decline pending post | `(bool, string?)` |
+| `GetPendingPostsAsync` | Get posts awaiting approval | `List<GroupPost>` |
+| `GetPendingPostCountAsync` | Count pending posts | `int` |
+| `GetUserPostsIncludingAllStatusesAsync` | Get user's posts (all statuses) | `List<GroupPost>` |
 
 #### Comment Operations
 | Method | Purpose | Returns |

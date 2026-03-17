@@ -24,8 +24,8 @@ This folder contains technical documentation for the FreeSpeak application.
 
 | Document | Description |
 |----------|-------------|
-| [GROUP_POST_SYSTEM.md](GROUP_POST_SYSTEM.md) | Database schema and entity documentation for the group post system |
-| [GROUP_POST_QUICK_REFERENCE.md](GROUP_POST_QUICK_REFERENCE.md) | Quick reference for GroupPostService API methods |
+| [GROUP_POST_SYSTEM.md](GROUP_POST_SYSTEM.md) | Database schema, entities, and post approval system documentation |
+| [GROUP_POST_QUICK_REFERENCE.md](GROUP_POST_QUICK_REFERENCE.md) | Quick reference for GroupPostService API methods including approval operations |
 | [GROUP_POST_EVENT_HANDLERS_USAGE.md](GROUP_POST_EVENT_HANDLERS_USAGE.md) | Usage guide for the shared GroupPostEventHandlers service |
 | [GROUP_POST_IMPLEMENTATION_SUMMARY.md](GROUP_POST_IMPLEMENTATION_SUMMARY.md) | Implementation summary including services and business logic |
 
