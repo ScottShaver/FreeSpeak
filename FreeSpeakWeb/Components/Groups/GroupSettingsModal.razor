@@ -94,6 +94,16 @@
                             </div>
                         </div>
 
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="requiresPostApproval" @bind="requiresPostApproval" />
+                                <label class="form-check-label" for="requiresPostApproval">
+                                    <i class="bi bi-shield-check me-1"></i>@Localizer["RequiresPostApproval"]
+                                </label>
+                                <div class="form-text">@Localizer["RequiresPostApprovalHelp"]</div>
+                            </div>
+                        </div>
+
                         <hr class="my-4" />
                         <h6 class="text-muted mb-3">@Localizer["GroupStatusSection"]</h6>
 
@@ -184,6 +194,7 @@
     private bool isHidden;
     private bool requiresJoinApproval;
     private bool requireAcceptRules;
+    private bool requiresPostApproval;
     private bool enablePointsSystem;
     private bool isActive;
     private bool isClosed;
@@ -206,6 +217,7 @@
             isHidden = Group.IsHidden;
             requiresJoinApproval = Group.RequiresJoinApproval;
             requireAcceptRules = Group.RequireAcceptRules;
+            requiresPostApproval = Group.RequiresPostApproval;
             enablePointsSystem = Group.EnablePointsSystem;
             isActive = Group.IsActive;
             isClosed = Group.IsClosed;
@@ -272,6 +284,7 @@
                 isHidden: isHidden,
                 requiresJoinApproval: requiresJoinApproval,
                 requireAcceptRules: requireAcceptRules,
+                requiresPostApproval: requiresPostApproval,
                 enablePointsSystem: enablePointsSystem,
                 isActive: isActive,
                 isClosed: isClosed
@@ -289,6 +302,7 @@
                 Group.IsHidden = isHidden;
                 Group.RequiresJoinApproval = requiresJoinApproval;
                 Group.RequireAcceptRules = requireAcceptRules;
+                Group.RequiresPostApproval = requiresPostApproval;
                 Group.EnablePointsSystem = enablePointsSystem;
                 Group.IsActive = isActive;
                 Group.IsClosed = isClosed;

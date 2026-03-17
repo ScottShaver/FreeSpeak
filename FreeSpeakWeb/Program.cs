@@ -208,6 +208,7 @@ namespace FreeSpeakWeb
             builder.Services.AddScoped<GroupBannedMemberService>();
             builder.Services.AddScoped<GroupPostEventHandlers>();
             builder.Services.AddScoped<GroupPointsService>();
+            builder.Services.AddScoped<GroupContentReportService>();
 
             // Add helper services for shared functionality
             builder.Services.AddScoped<PostNotificationHelper>();

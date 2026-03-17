@@ -6,6 +6,7 @@
 @inject GroupService GroupService
 @inject GroupMemberService GroupMemberService
 @inject GroupPostService GroupPostService
+@inject GroupContentReportService ReportService
 @inject ILogger<GroupModerationModal> Logger
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Groups.GroupModerationModal> Localizer
 
@@ -74,21 +75,315 @@
                         @if (activeTab == "reported")
                         {
                             <div class="tab-pane fade show active">
-                                <h6 class="mb-3">@Localizer["ReportedContentDescription"]</h6>
-                                <div class="alert alert-info">
-                                    <i class="bi bi-info-circle me-2"></i>@Localizer["ReportedContentPlaceholder"]
-                                </div>
-                                <!-- Future: List of reported posts and comments with actions -->
+                                @if (!showReportDetail)
+                                {
+                                    <h6 class="mb-3">@Localizer["ReportedContentDescription"]</h6>
+
+                                    @if (isLoadingReports)
+                                    {
+                                        <div class="text-center py-4">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">@Localizer["Loading"]</span>
+                                            </div>
+                                        </div>
+                                    }
+                                    else if (!pendingReports.Any())
+                                    {
+                                        <div class="alert alert-success">
+                                            <i class="bi bi-check-circle me-2"></i>@Localizer["NoReports"]
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="list-group">
+                                            @foreach (var report in pendingReports)
+                                            {
+                                                <button type="button" 
+                                                        class="list-group-item list-group-item-action"
+                                                        @onclick="@(() => ShowReportDetail(report))">
+                                                    <div class="d-flex justify-content-between align-items-start">
+                                                        <div class="flex-grow-1">
+                                                            <div class="d-flex align-items-center mb-2">
+                                                                <i class="@GetReasonIcon(report.Reason) text-danger me-2"></i>
+                                                                <strong>@GetReasonDisplayName(report.Reason)</strong>
+                                                                @if (report.Reason == ReportReason.ViolatesGroupRule && report.ViolatedRule != null)
+                                                                {
+                                                                    <span class="ms-2 badge bg-secondary">@report.ViolatedRule.Title</span>
+                                                                }
+                                                            </div>
+                                                            <div class="small text-muted mb-1">
+                                                                <i class="bi bi-person me-1"></i>
+                                                                <span>@Localizer["ReportedBy"] @GetReporterName(report)</span>
+                                                                <span class="mx-2">•</span>
+                                                                <i class="bi bi-clock me-1"></i>
+                                                                <span>@GetRelativeTime(report.CreatedAt)</span>
+                                                            </div>
+                                                            <div class="small">
+                                                                <span class="badge bg-info me-2">
+                                                                    @if (report.PostId.HasValue)
+                                                                    {
+                                                                        <i class="bi bi-file-text me-1"></i>@Localizer["Post"]
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <i class="bi bi-chat-left-text me-1"></i>@Localizer["Comment"]
+                                                                    }
+                                                                </span>
+                                                                <span class="text-muted">@GetContentPreview(report)</span>
+                                                            </div>
+                                                        </div>
+                                                        <i class="bi bi-chevron-right ms-3"></i>
+                                                    </div>
+                                                </button>
+                                            }
+                                        </div>
+                                    }
+                                }
+                                else if (selectedReport != null)
+                                {
+                                    <!-- Report Detail View -->
+                                    <div class="report-detail">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <button type="button" class="btn btn-link p-0" @onclick="CloseReportDetail">
+                                                <i class="bi bi-arrow-left me-1"></i>@Localizer["BackToList"]
+                                            </button>
+                                        </div>
+
+                                        <div class="card mb-3">
+                                            <div class="card-header bg-danger text-white">
+                                                <h6 class="mb-0">
+                                                    <i class="@GetReasonIcon(selectedReport.Reason) me-2"></i>
+                                                    @GetReasonDisplayName(selectedReport.Reason)
+                                                </h6>
+                                            </div>
+                                            <div class="card-body">
+                                                @if (selectedReport.Reason == ReportReason.ViolatesGroupRule && selectedReport.ViolatedRule != null)
+                                                {
+                                                    <div class="alert alert-warning mb-3">
+                                                        <strong>@Localizer["ViolatedRule"]</strong>
+                                                        <p class="mb-0">@selectedReport.ViolatedRule.Title</p>
+                                                        <small class="text-muted">@selectedReport.ViolatedRule.Description</small>
+                                                    </div>
+                                                }
+
+                                                <div class="mb-3">
+                                                    <strong>@Localizer["ReportedBy"]</strong>
+                                                    <p class="mb-0">@GetReporterName(selectedReport) • @GetRelativeTime(selectedReport.CreatedAt)</p>
+                                                </div>
+
+                                                @if (!string.IsNullOrEmpty(selectedReport.Description))
+                                                {
+                                                    <div class="mb-3">
+                                                        <strong>@Localizer["ReporterDescription"]</strong>
+                                                        <p class="mb-0">@selectedReport.Description</p>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <div class="card mb-3">
+                                            <div class="card-header">
+                                                <h6 class="mb-0">
+                                                    @if (selectedReport.PostId.HasValue)
+                                                    {
+                                                        <i class="bi bi-file-text me-2"></i>@Localizer["ReportedPost"]
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="bi bi-chat-left-text me-2"></i>@Localizer["ReportedComment"]
+                                                    }
+                                                </h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-2">
+                                                    <strong>@Localizer["Author"]</strong>
+                                                    <span class="ms-2">@GetContentAuthorName(selectedReport)</span>
+                                                </div>
+                                                <div class="content-preview p-3 bg-light rounded">
+                                                    @if (selectedReport.PostId.HasValue && selectedReport.Post != null)
+                                                    {
+                                                        <p class="mb-0">@selectedReport.Post.Content</p>
+                                                    }
+                                                    else if (selectedReport.CommentId.HasValue && selectedReport.Comment != null)
+                                                    {
+                                                        <p class="mb-0">@selectedReport.Comment.Content</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p class="mb-0 text-muted fst-italic">@Localizer["ContentDeleted"]</p>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h6 class="mb-0">@Localizer["ModeratorNotes"]</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <textarea class="form-control mb-3" 
+                                                          rows="3" 
+                                                          maxlength="2000"
+                                                          @bind="reviewerNotes"
+                                                          placeholder="@Localizer["NotesPlaceholder"]"></textarea>
+                                                <div class="d-flex gap-2 flex-wrap">
+                                                    <button type="button" 
+                                                            class="btn btn-success" 
+                                                            @onclick="DismissReport"
+                                                            disabled="@(processingReportId.HasValue)">
+                                                        @if (processingReportId == selectedReport.Id)
+                                                        {
+                                                            <span class="spinner-border spinner-border-sm me-1"></span>
+                                                        }
+                                                        <i class="bi bi-x-circle me-1"></i>@Localizer["DismissReport"]
+                                                    </button>
+                                                    <button type="button" 
+                                                            class="btn btn-danger" 
+                                                            @onclick="TakeActionOnReport"
+                                                            disabled="@(processingReportId.HasValue)">
+                                                        @if (processingReportId == selectedReport.Id)
+                                                        {
+                                                            <span class="spinner-border spinner-border-sm me-1"></span>
+                                                        }
+                                                        <i class="bi bi-shield-exclamation me-1"></i>@Localizer["TakeAction"]
+                                                    </button>
+                                                    <button type="button" 
+                                                            class="btn btn-secondary" 
+                                                            @onclick="ResolveReport"
+                                                            disabled="@(processingReportId.HasValue)">
+                                                        @if (processingReportId == selectedReport.Id)
+                                                        {
+                                                            <span class="spinner-border spinner-border-sm me-1"></span>
+                                                        }
+                                                        <i class="bi bi-check-circle me-1"></i>@Localizer["Resolve"]
+                                                    </button>
+                                                </div>
+                                                <div class="mt-2 small text-muted">
+                                                    <strong>@Localizer["ActionExplanation"]</strong><br/>
+                                                    <strong>@Localizer["DismissReport"]:</strong> @Localizer["DismissExplanation"]<br/>
+                                                    <strong>@Localizer["TakeAction"]:</strong> @Localizer["ActionExplanation2"]<br/>
+                                                    <strong>@Localizer["Resolve"]:</strong> @Localizer["ResolveExplanation"]
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         }
                         else if (activeTab == "pending")
                         {
                             <div class="tab-pane fade show active">
-                                <h6 class="mb-3">@Localizer["PendingApprovalDescription"]</h6>
-                                <div class="alert alert-info">
-                                    <i class="bi bi-info-circle me-2"></i>@Localizer["PendingApprovalPlaceholder"]
-                                </div>
-                                <!-- Future: Posts pending moderator approval -->
+                                @if (!Group.RequiresPostApproval)
+                                {
+                                    <div class="alert alert-info">
+                                        <i class="bi bi-info-circle me-2"></i>@Localizer["PostApprovalDisabled"]
+                                    </div>
+                                }
+                                else if (isLoadingPendingPosts)
+                                {
+                                    <div class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">@Localizer["Loading"]</span>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="mb-0">@Localizer["PendingApprovalDescription"]</h6>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="LoadPendingPostsAsync" disabled="@isLoadingPendingPosts">
+                                            <i class="bi bi-arrow-clockwise me-1"></i>@Localizer["Refresh"]
+                                        </button>
+                                    </div>
+
+                                    @if (!pendingPosts.Any())
+                                    {
+                                        <div class="alert alert-success">
+                                            <i class="bi bi-check-circle me-2"></i>@Localizer["NoPendingPosts"]
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-muted small mb-3">
+                                            <i class="bi bi-info-circle me-1"></i>@pendingPosts.Count @Localizer["PendingPostsCount"]
+                                        </div>
+
+                                        @foreach (var post in pendingPosts)
+                                        {
+                                            <div class="card mb-3">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-start">
+                                                        <div class="d-flex align-items-start flex-grow-1">
+                                                            <div class="me-3">
+                                                                @if (post.Author != null && !string.IsNullOrEmpty(post.Author.ProfilePictureUrl))
+                                                                {
+                                                                    <img src="@post.Author.ProfilePictureUrl" 
+                                                                         alt="@GetPostAuthorName(post)" 
+                                                                         class="rounded-circle" 
+                                                                         width="48" height="48" 
+                                                                         style="object-fit: cover;" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                                                        <span class="text-white fw-bold">@GetPostAuthorInitials(post)</span>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <h6 class="mb-1">@GetPostAuthorName(post)</h6>
+                                                                <small class="text-muted">
+                                                                    <i class="bi bi-clock me-1"></i>@Localizer["PostedAt"] @GetRelativeTime(post.CreatedAt)
+                                                                </small>
+                                                                <p class="mt-2 mb-2">@TruncateContent(post.Content, 300)</p>
+                                                                @if (post.Images != null && post.Images.Any())
+                                                                {
+                                                                    <div class="mb-2">
+                                                                        <span class="badge bg-secondary">
+                                                                            <i class="bi bi-image me-1"></i>@post.Images.Count @Localizer["Images"]
+                                                                        </span>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex gap-2 ms-3">
+                                                            <button type="button" 
+                                                                    class="btn btn-success btn-sm" 
+                                                                    @onclick="@(() => ApprovePost(post.Id))"
+                                                                    disabled="@(processingPostId == post.Id)"
+                                                                    title="@Localizer["ApprovePostTooltip"]">
+                                                                @if (processingPostId == post.Id)
+                                                                {
+                                                                    <span class="spinner-border spinner-border-sm me-1"></span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <i class="bi bi-check-lg me-1"></i>
+                                                                }
+                                                                @Localizer["Approve"]
+                                                            </button>
+                                                            <button type="button" 
+                                                                    class="btn btn-outline-danger btn-sm" 
+                                                                    @onclick="@(() => DeclinePost(post.Id))"
+                                                                    disabled="@(processingPostId == post.Id)"
+                                                                    title="@Localizer["DeclinePostTooltip"]">
+                                                                @if (processingPostId == post.Id)
+                                                                {
+                                                                    <span class="spinner-border spinner-border-sm me-1"></span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <i class="bi bi-x-lg me-1"></i>
+                                                                }
+                                                                @Localizer["Decline"]
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                }
                             </div>
                         }
                         else if (activeTab == "recent")
@@ -169,6 +464,19 @@
     private int reportedContentCount = 0;
     private int pendingPostsCount = 0;
 
+    // Reports state
+    private List<GroupContentReport> pendingReports = new();
+    private bool isLoadingReports = false;
+    private GroupContentReport? selectedReport = null;
+    private bool showReportDetail = false;
+    private int? processingReportId = null;
+    private string? reviewerNotes = null;
+
+    // Pending posts state
+    private List<GroupPost> pendingPosts = new();
+    private bool isLoadingPendingPosts = false;
+    private int? processingPostId = null;
+
     /// <summary>
     /// Initializes the component by loading initial data.
     /// </summary>
@@ -187,10 +495,21 @@
 
         try
         {
-            // Future: Load reported content count and pending posts count
-            // For now, these remain at 0 as placeholders
-            reportedContentCount = 0;
-            pendingPostsCount = 0;
+            // Load reported content count
+            reportedContentCount = await ReportService.GetPendingReportCountAsync(Group.Id);
+
+            // Load pending reports
+            pendingReports = await ReportService.GetPendingReportsAsync(Group.Id);
+
+            // Load pending posts count for approval
+            if (Group.RequiresPostApproval)
+            {
+                pendingPostsCount = await GroupPostService.GetPendingPostCountAsync(Group.Id);
+            }
+            else
+            {
+                pendingPostsCount = 0;
+            }
         }
         catch (Exception ex)
         {
@@ -208,11 +527,464 @@
     /// Sets the active tab.
     /// </summary>
     /// <param name="tabName">The name of the tab to activate.</param>
-    private void SetActiveTab(string tabName)
+    private async Task SetActiveTab(string tabName)
     {
         activeTab = tabName;
         errorMessage = null;
         successMessage = null;
+        showReportDetail = false;
+        selectedReport = null;
+
+        if (tabName == "reported")
+        {
+            await LoadReportsAsync();
+        }
+        else if (tabName == "pending")
+        {
+            await LoadPendingPostsAsync();
+        }
+
         StateHasChanged();
     }
+
+    /// <summary>
+    /// Loads the pending reports for the group.
+    /// </summary>
+    private async Task LoadReportsAsync()
+    {
+        isLoadingReports = true;
+        StateHasChanged();
+
+        try
+        {
+            pendingReports = await ReportService.GetPendingReportsAsync(Group.Id);
+            reportedContentCount = pendingReports.Count;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading reports for group {GroupId}", Group.Id);
+            errorMessage = Localizer["ErrorLoadingReports"];
+        }
+        finally
+        {
+            isLoadingReports = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Shows the detail view for a report.
+    /// </summary>
+    private async Task ShowReportDetail(GroupContentReport report)
+    {
+        // Load full report details
+        var fullReport = await ReportService.GetReportByIdAsync(report.Id);
+        if (fullReport != null)
+        {
+            selectedReport = fullReport;
+            showReportDetail = true;
+            reviewerNotes = null;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Closes the report detail view.
+    /// </summary>
+    private void CloseReportDetail()
+    {
+        showReportDetail = false;
+        selectedReport = null;
+        reviewerNotes = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Dismisses the selected report.
+    /// </summary>
+    private async Task DismissReport()
+    {
+        if (selectedReport == null) return;
+
+        processingReportId = selectedReport.Id;
+        StateHasChanged();
+
+        try
+        {
+            var (success, error) = await ReportService.DismissReportAsync(
+                selectedReport.Id, 
+                CurrentUserId, 
+                reviewerNotes);
+
+            if (success)
+            {
+                successMessage = Localizer["ReportDismissed"];
+                pendingReports.RemoveAll(r => r.Id == selectedReport.Id);
+                reportedContentCount = pendingReports.Count;
+                CloseReportDetail();
+                await OnModerationActionPerformed.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = error ?? Localizer["ErrorProcessingReport"];
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error dismissing report {ReportId}", selectedReport.Id);
+            errorMessage = Localizer["ErrorProcessingReport"];
+        }
+        finally
+        {
+            processingReportId = null;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Marks action taken on the selected report.
+    /// </summary>
+    private async Task TakeActionOnReport()
+    {
+        if (selectedReport == null) return;
+
+        processingReportId = selectedReport.Id;
+        StateHasChanged();
+
+        try
+        {
+            var (success, error) = await ReportService.MarkActionTakenAsync(
+                selectedReport.Id, 
+                CurrentUserId, 
+                reviewerNotes);
+
+            if (success)
+            {
+                successMessage = Localizer["ActionTaken"];
+                pendingReports.RemoveAll(r => r.Id == selectedReport.Id);
+                reportedContentCount = pendingReports.Count;
+                CloseReportDetail();
+                await OnModerationActionPerformed.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = error ?? Localizer["ErrorProcessingReport"];
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error marking action taken on report {ReportId}", selectedReport.Id);
+            errorMessage = Localizer["ErrorProcessingReport"];
+        }
+        finally
+        {
+            processingReportId = null;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Resolves the selected report without taking action.
+    /// </summary>
+    private async Task ResolveReport()
+    {
+        if (selectedReport == null) return;
+
+        processingReportId = selectedReport.Id;
+        StateHasChanged();
+
+        try
+        {
+            var (success, error) = await ReportService.ResolveReportAsync(
+                selectedReport.Id, 
+                CurrentUserId, 
+                reviewerNotes);
+
+            if (success)
+            {
+                successMessage = Localizer["ReportResolved"];
+                pendingReports.RemoveAll(r => r.Id == selectedReport.Id);
+                reportedContentCount = pendingReports.Count;
+                CloseReportDetail();
+                await OnModerationActionPerformed.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = error ?? Localizer["ErrorProcessingReport"];
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error resolving report {ReportId}", selectedReport.Id);
+            errorMessage = Localizer["ErrorProcessingReport"];
+        }
+        finally
+        {
+            processingReportId = null;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Gets the display name for a report reason.
+    /// </summary>
+    private string GetReasonDisplayName(ReportReason reason)
+    {
+        return reason switch
+        {
+            ReportReason.ViolatesGroupRule => Localizer["ReasonViolatesGroupRule"],
+            ReportReason.Spam => Localizer["ReasonSpam"],
+            ReportReason.HarassmentOrBullying => Localizer["ReasonHarassment"],
+            ReportReason.HateSpeech => Localizer["ReasonHateSpeech"],
+            ReportReason.Misinformation => Localizer["ReasonMisinformation"],
+            ReportReason.AdultContent => Localizer["ReasonAdultContent"],
+            ReportReason.ViolenceOrGraphicContent => Localizer["ReasonViolence"],
+            ReportReason.IntellectualPropertyViolation => Localizer["ReasonCopyright"],
+            ReportReason.OffTopic => Localizer["ReasonOffTopic"],
+            ReportReason.PrivacyViolation => Localizer["ReasonPrivacy"],
+            ReportReason.SelfHarmOrSuicide => Localizer["ReasonSelfHarm"],
+            ReportReason.IllegalActivity => Localizer["ReasonIllegal"],
+            ReportReason.Other => Localizer["ReasonOther"],
+            _ => reason.ToString()
+        };
+    }
+
+    /// <summary>
+    /// Gets the icon for a report reason.
+    /// </summary>
+    private string GetReasonIcon(ReportReason reason)
+    {
+        return reason switch
+        {
+            ReportReason.ViolatesGroupRule => "bi bi-list-check",
+            ReportReason.Spam => "bi bi-envelope-exclamation",
+            ReportReason.HarassmentOrBullying => "bi bi-person-x",
+            ReportReason.HateSpeech => "bi bi-chat-square-x",
+            ReportReason.Misinformation => "bi bi-exclamation-diamond",
+            ReportReason.AdultContent => "bi bi-eye-slash",
+            ReportReason.ViolenceOrGraphicContent => "bi bi-shield-exclamation",
+            ReportReason.IntellectualPropertyViolation => "bi bi-c-circle",
+            ReportReason.OffTopic => "bi bi-chat-left-dots",
+            ReportReason.PrivacyViolation => "bi bi-person-lock",
+            ReportReason.SelfHarmOrSuicide => "bi bi-heart-pulse",
+            ReportReason.IllegalActivity => "bi bi-slash-circle",
+            ReportReason.Other => "bi bi-three-dots",
+            _ => "bi bi-flag"
+        };
+    }
+
+    /// <summary>
+    /// Gets the reporter's display name.
+    /// </summary>
+    private string GetReporterName(GroupContentReport report)
+    {
+        if (report.Reporter == null) return Localizer["UnknownUser"];
+        var name = $"{report.Reporter.FirstName} {report.Reporter.LastName}".Trim();
+        return string.IsNullOrEmpty(name) ? report.Reporter.UserName ?? Localizer["UnknownUser"] : name;
+    }
+
+    /// <summary>
+    /// Gets the content author's display name.
+    /// </summary>
+    private string GetContentAuthorName(GroupContentReport report)
+    {
+        if (report.PostId.HasValue && report.Post?.Author != null)
+        {
+            var name = $"{report.Post.Author.FirstName} {report.Post.Author.LastName}".Trim();
+            return string.IsNullOrEmpty(name) ? report.Post.Author.UserName ?? Localizer["UnknownUser"] : name;
+        }
+        if (report.CommentId.HasValue && report.Comment?.Author != null)
+        {
+            var name = $"{report.Comment.Author.FirstName} {report.Comment.Author.LastName}".Trim();
+            return string.IsNullOrEmpty(name) ? report.Comment.Author.UserName ?? Localizer["UnknownUser"] : name;
+        }
+        return Localizer["UnknownUser"];
+    }
+
+    /// <summary>
+    /// Gets a preview of the reported content.
+    /// </summary>
+    private string GetContentPreview(GroupContentReport report, int maxLength = 100)
+    {
+        string? content = null;
+
+        if (report.PostId.HasValue && report.Post != null)
+        {
+            content = report.Post.Content;
+        }
+        else if (report.CommentId.HasValue && report.Comment != null)
+        {
+            content = report.Comment.Content;
+        }
+
+        if (string.IsNullOrEmpty(content)) return Localizer["ContentDeleted"];
+
+        if (content.Length <= maxLength) return content;
+        return content.Substring(0, maxLength).TrimEnd() + "...";
+    }
+
+    /// <summary>
+    /// Formats a relative time string.
+    /// </summary>
+    private string GetRelativeTime(DateTime dateTime)
+    {
+        var timeSpan = DateTime.UtcNow - dateTime;
+
+        if (timeSpan.TotalMinutes < 1)
+            return Localizer["JustNow"];
+        if (timeSpan.TotalMinutes < 60)
+            return string.Format(Localizer["MinutesAgo"], (int)timeSpan.TotalMinutes);
+        if (timeSpan.TotalHours < 24)
+            return string.Format(Localizer["HoursAgo"], (int)timeSpan.TotalHours);
+        if (timeSpan.TotalDays < 30)
+            return string.Format(Localizer["DaysAgo"], (int)timeSpan.TotalDays);
+
+        return dateTime.ToString("MMM dd, yyyy");
+    }
+
+    #region Pending Posts Methods
+
+    /// <summary>
+    /// Loads pending posts awaiting approval.
+    /// </summary>
+    private async Task LoadPendingPostsAsync()
+    {
+        if (!Group.RequiresPostApproval) return;
+
+        isLoadingPendingPosts = true;
+        StateHasChanged();
+
+        try
+        {
+            pendingPosts = await GroupPostService.GetPendingPostsAsync(Group.Id);
+            pendingPostsCount = pendingPosts.Count;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading pending posts for group {GroupId}", Group.Id);
+            errorMessage = Localizer["ErrorLoadingPendingPosts"];
+        }
+        finally
+        {
+            isLoadingPendingPosts = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Approves a pending post.
+    /// </summary>
+    private async Task ApprovePost(int postId)
+    {
+        processingPostId = postId;
+        StateHasChanged();
+
+        try
+        {
+            var (success, error) = await GroupPostService.ApprovePostAsync(postId, CurrentUserId);
+
+            if (success)
+            {
+                successMessage = Localizer["PostApproved"];
+                pendingPosts.RemoveAll(p => p.Id == postId);
+                pendingPostsCount = pendingPosts.Count;
+                await OnModerationActionPerformed.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = error ?? Localizer["ErrorProcessingPost"];
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error approving post {PostId}", postId);
+            errorMessage = Localizer["ErrorProcessingPost"];
+        }
+        finally
+        {
+            processingPostId = null;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Declines a pending post.
+    /// </summary>
+    private async Task DeclinePost(int postId)
+    {
+        processingPostId = postId;
+        StateHasChanged();
+
+        try
+        {
+            var (success, error) = await GroupPostService.DeclinePostAsync(postId, CurrentUserId);
+
+            if (success)
+            {
+                successMessage = Localizer["PostDeclined"];
+                pendingPosts.RemoveAll(p => p.Id == postId);
+                pendingPostsCount = pendingPosts.Count;
+                await OnModerationActionPerformed.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = error ?? Localizer["ErrorProcessingPost"];
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error declining post {PostId}", postId);
+            errorMessage = Localizer["ErrorProcessingPost"];
+        }
+        finally
+        {
+            processingPostId = null;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Gets the post author's display name.
+    /// </summary>
+    private string GetPostAuthorName(GroupPost post)
+    {
+        if (post.Author == null) return Localizer["UnknownUser"];
+        var name = $"{post.Author.FirstName} {post.Author.LastName}".Trim();
+        return string.IsNullOrEmpty(name) ? post.Author.UserName ?? Localizer["UnknownUser"] : name;
+    }
+
+    /// <summary>
+    /// Gets the post author's initials for avatar placeholder.
+    /// </summary>
+    private string GetPostAuthorInitials(GroupPost post)
+    {
+        if (post.Author == null) return "?";
+        var firstName = post.Author.FirstName ?? "";
+        var lastName = post.Author.LastName ?? "";
+        if (!string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName))
+        {
+            return $"{firstName[0]}{lastName[0]}".ToUpper();
+        }
+        if (!string.IsNullOrEmpty(firstName))
+        {
+            return firstName[0].ToString().ToUpper();
+        }
+        if (!string.IsNullOrEmpty(post.Author.UserName) && post.Author.UserName.Length > 0)
+        {
+            return post.Author.UserName[0].ToString().ToUpper();
+        }
+        return "?";
+    }
+
+    /// <summary>
+    /// Truncates content to specified length.
+    /// </summary>
+    private string TruncateContent(string content, int maxLength)
+    {
+        if (string.IsNullOrEmpty(content)) return string.Empty;
+        if (content.Length <= maxLength) return content;
+        return content.Substring(0, maxLength).TrimEnd() + "...";
+    }
+
+    #endregion
 }

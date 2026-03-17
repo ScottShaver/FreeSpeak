@@ -1,0 +1,24 @@
+.report-reasons .list-group-item {
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+.report-reasons .list-group-item:hover:not(.active) {
+    background-color: var(--bs-light);
+}
+
+.rule-selection .list-group-item {
+    cursor: pointer;
+}
+
+.rule-selection .rule-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.additional-details textarea {
+    resize: vertical;
+    min-height: 100px;
+}

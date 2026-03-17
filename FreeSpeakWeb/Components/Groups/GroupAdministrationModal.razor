@@ -31,6 +31,13 @@
                     <!-- Tab Navigation -->
                     <ul class="nav nav-tabs mb-4" role="tablist">
                         <li class="nav-item" role="presentation">
+                            <button class="nav-link @(activeTab == "rules" ? "active" : "")" 
+                                    type="button" 
+                                    @onclick="@(() => SetActiveTab("rules"))">
+                                <i class="bi bi-list-check me-1"></i>@Localizer["GroupRules"]
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
                             <button class="nav-link @(activeTab == "members" ? "active" : "")" 
                                     type="button" 
                                     @onclick="@(() => SetActiveTab("members"))">
@@ -73,7 +80,16 @@
 
                     <!-- Tab Content -->
                     <div class="tab-content">
-                        @if (activeTab == "members")
+                        @if (activeTab == "rules")
+                        {
+                            <div class="tab-pane fade show active">
+                                <GroupRulesTab 
+                                    Group="@Group" 
+                                    CurrentUserId="@CurrentUserId" 
+                                    OnRulesChanged="@HandleRulesChanged" />
+                            </div>
+                        }
+                        else if (activeTab == "members")
                         {
                             <div class="tab-pane fade show active">
                                 <h6 class="mb-3">@Localizer["MemberManagementDescription"]</h6>
@@ -86,11 +102,10 @@
                         else if (activeTab == "requests")
                         {
                             <div class="tab-pane fade show active">
-                                <h6 class="mb-3">@Localizer["JoinRequestsDescription"]</h6>
-                                <div class="alert alert-info">
-                                    <i class="bi bi-info-circle me-2"></i>@Localizer["JoinRequestsPlaceholder"]
-                                </div>
-                                <!-- Future: Pending join requests with approve/deny actions -->
+                                <JoinRequestsTab 
+                                    Group="@Group" 
+                                    CurrentUserId="@CurrentUserId" 
+                                    OnRequestProcessed="@HandleRequestProcessed" />
                             </div>
                         }
                         else if (activeTab == "roles")
@@ -174,7 +189,7 @@
     [Parameter]
     public EventCallback OnAdministrationActionPerformed { get; set; }
 
-    private string activeTab = "members";
+    private string activeTab = "rules";
     private bool isLoading = false;
     private string? errorMessage;
     private string? successMessage;
@@ -224,5 +239,26 @@
         errorMessage = null;
         successMessage = null;
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles when rules are changed.
+    /// </summary>
+    private async Task HandleRulesChanged()
+    {
+        await OnAdministrationActionPerformed.InvokeAsync();
+    }
+
+    /// <summary>
+    /// Handles when a join request is processed (approved or denied).
+    /// </summary>
+    private async Task HandleRequestProcessed()
+    {
+        // Update the pending requests count
+        var pendingRequests = await GroupMemberService.GetPendingJoinRequestsAsync(Group.Id);
+        pendingRequestsCount = pendingRequests.Count;
+        StateHasChanged();
+
+        await OnAdministrationActionPerformed.InvokeAsync();
     }
 }

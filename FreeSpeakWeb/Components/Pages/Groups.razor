@@ -472,6 +472,17 @@
         OnAgree="HandleRulesAgreed" />
 }
 
+@* Report Comment Modal *@
+@if (showReportCommentModal && reportingCommentId.HasValue && reportingGroupId.HasValue)
+{
+    <FreeSpeakWeb.Components.Groups.ReportContentModal
+        GroupId="@reportingGroupId.Value"
+        CommentId="@reportingCommentId"
+        ReporterId="@currentUserId"
+        OnClose="CloseReportCommentModal"
+        OnReportSubmitted="HandleCommentReportSubmitted" />
+}
+
 @code {
     private string? currentUserId;
     private string? currentUserImageUrl;
@@ -517,6 +528,11 @@
     // Suggested Groups state
     private List<Group> suggestedGroups = new();
     private bool isLoadingSuggestedGroups = false;
+
+    // Report comment modal state
+    private bool showReportCommentModal = false;
+    private int? reportingCommentId = null;
+    private int? reportingGroupId = null;
 
     // Rules acceptance modal state
     private bool showRulesModal = false;
@@ -1832,9 +1848,42 @@
     protected override async Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
         int commentId, string userId)
     {
-        // TODO: Implement comment reporting when report system is available
+        // Find which group this comment belongs to
+        var postId = await FindPostIdForCommentAsync(commentId);
+        if (postId.HasValue)
+        {
+            var post = groupPosts.FirstOrDefault(p => p.Id == postId.Value) 
+                ?? pinnedGroupPostsList.FirstOrDefault(p => p.Id == postId.Value);
+            if (post != null)
+            {
+                reportingGroupId = post.GroupId;
+                reportingCommentId = commentId;
+                showReportCommentModal = true;
+                StateHasChanged();
+            }
+        }
         await Task.CompletedTask;
         return (true, null);
+    }
+
+    /// <summary>
+    /// Closes the report comment modal.
+    /// </summary>
+    private void CloseReportCommentModal()
+    {
+        showReportCommentModal = false;
+        reportingCommentId = null;
+        reportingGroupId = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles when a comment report is successfully submitted.
+    /// </summary>
+    private Task HandleCommentReportSubmitted()
+    {
+        AlertService.ShowSuccess("Report submitted successfully. Thank you for helping keep our community safe.");
+        return Task.CompletedTask;
     }
 
     /// <summary>

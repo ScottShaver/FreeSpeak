@@ -84,6 +84,13 @@ namespace FreeSpeakWeb.Data
         /// </summary>
         public int ShareCount { get; set; } = 0;
 
+        /// <summary>
+        /// Gets or sets the approval status of this post.
+        /// Posts in groups requiring approval start as Pending and must be approved by a moderator.
+        /// Posts in groups without approval requirements are automatically set to Posted. Defaults to Posted.
+        /// </summary>
+        public PostStatus Status { get; set; } = PostStatus.Posted;
+
         #region Explicit Interface Implementation
         /// <summary>
         /// Explicit implementation of IGroupPostEntity.GroupId for interface contract.

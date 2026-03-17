@@ -103,4 +103,34 @@
   <data name="GroupModeration" xml:space="preserve">
     <value>Group Moderation</value>
   </data>
+  <data name="Creator" xml:space="preserve">
+    <value>Creator</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>Moderator</value>
+  </data>
+  <data name="YouAreGroupCreator" xml:space="preserve">
+    <value>You are the creator of this group</value>
+  </data>
+  <data name="YouAreGroupAdmin" xml:space="preserve">
+    <value>You are an administrator of this group</value>
+  </data>
+  <data name="YouAreGroupModerator" xml:space="preserve">
+    <value>You are a moderator of this group</value>
+  </data>
+  <data name="PostPending" xml:space="preserve">
+    <value>Pending Approval</value>
+  </data>
+  <data name="PostPendingDescription" xml:space="preserve">
+    <value>This post is awaiting moderator approval before it will be visible to others.</value>
+  </data>
+  <data name="PostDeclined" xml:space="preserve">
+    <value>Post Declined</value>
+  </data>
+  <data name="PostDeclinedDescription" xml:space="preserve">
+    <value>This post was declined by a moderator. You can edit and resubmit it.</value>
+  </data>
 </root>

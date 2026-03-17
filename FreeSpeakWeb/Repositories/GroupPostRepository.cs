@@ -420,7 +420,7 @@ namespace FreeSpeakWeb.Repositories
                     .AsSplitQuery()
                     .Include(p => p.Author)
                     .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
-                    .Where(p => p.GroupId == groupId)
+                    .Where(p => p.GroupId == groupId && p.Status == PostStatus.Posted)
                     .OrderByDescending(p => p.CreatedAt)
                     .Skip(skip)
                     .Take(take)
@@ -438,7 +438,7 @@ namespace FreeSpeakWeb.Repositories
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
-                return await context.GroupPosts.CountAsync(p => p.GroupId == groupId);
+                return await context.GroupPosts.CountAsync(p => p.GroupId == groupId && p.Status == PostStatus.Posted);
             }
             catch (Exception ex)
             {
@@ -458,7 +458,7 @@ namespace FreeSpeakWeb.Repositories
                     .AsSplitQuery()
                     .Include(p => p.Author)
                     .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
-                    .Where(p => p.GroupId == groupId && p.AuthorId == authorId)
+                    .Where(p => p.GroupId == groupId && p.AuthorId == authorId && p.Status == PostStatus.Posted)
                     .OrderByDescending(p => p.CreatedAt)
                     .Skip(skip)
                     .Take(take)
@@ -493,7 +493,7 @@ namespace FreeSpeakWeb.Repositories
                     .Include(p => p.Author)
                     .Include(p => p.Group)
                     .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
-                    .Where(p => userGroupIds.Contains(p.GroupId))
+                    .Where(p => userGroupIds.Contains(p.GroupId) && p.Status == PostStatus.Posted)
                     .OrderByDescending(p => p.CreatedAt)
                     .Skip(skip)
                     .Take(take)
@@ -532,7 +532,7 @@ namespace FreeSpeakWeb.Repositories
 
                 return await context.GroupPosts
                     .AsNoTracking()
-                    .Where(p => p.GroupId == groupId)
+                    .Where(p => p.GroupId == groupId && p.Status == PostStatus.Posted)
                     .OrderByDescending(p => p.CreatedAt)
                     .Skip(skip)
                     .Take(take)
@@ -641,7 +641,7 @@ namespace FreeSpeakWeb.Repositories
 
                 return await context.GroupPosts
                     .AsNoTracking()
-                    .Where(p => userGroupIds.Contains(p.GroupId))
+                    .Where(p => userGroupIds.Contains(p.GroupId) && p.Status == PostStatus.Posted)
                     .OrderByDescending(p => p.CreatedAt)
                     .Skip(skip)
                     .Take(take)

@@ -111,6 +111,16 @@
 
                     <div class="mb-3">
                         <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="requiresPostApproval" @bind="newGroupRequiresPostApproval" />
+                            <label class="form-check-label" for="requiresPostApproval">
+                                <i class="bi bi-shield-check me-1"></i>@Localizer["RequiresPostApproval"]
+                            </label>
+                            <div class="form-text">@Localizer["RequiresPostApprovalHelp"]</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="enablePointsSystem" @bind="newGroupEnablePointsSystem" />
                             <label class="form-check-label" for="enablePointsSystem">
                                 <i class="bi bi-trophy me-1"></i>@Localizer["EnablePointsSystem"]
@@ -160,6 +170,7 @@
     private bool newGroupIsHidden = false;
     private bool newGroupRequiresApproval = false;
     private bool newGroupRequireAcceptRules = false;
+    private bool newGroupRequiresPostApproval = false;
     private bool newGroupEnablePointsSystem = false;
     private bool isCreating = false;
     private string? errorMessage;
@@ -204,6 +215,7 @@
         newGroupIsHidden = false;
         newGroupRequiresApproval = false;
         newGroupRequireAcceptRules = false;
+        newGroupRequiresPostApproval = false;
         newGroupEnablePointsSystem = false;
         errorMessage = null;
         StateHasChanged();
@@ -282,6 +294,7 @@
                 newGroupIsHidden,
                 newGroupRequiresApproval,
                 newGroupRequireAcceptRules,
+                newGroupRequiresPostApproval,
                 newGroupEnablePointsSystem
             );
 

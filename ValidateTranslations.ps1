@@ -184,6 +184,10 @@ $ResourceGroups = @{
         BasePath = "FreeSpeakWeb\Resources\Groups\RulesAcceptanceModal.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
+    "ReportContentModal" = @{
+        BasePath = "FreeSpeakWeb\Resources\Groups\ReportContentModal.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
 }
 
 function Get-ResourceKeys {

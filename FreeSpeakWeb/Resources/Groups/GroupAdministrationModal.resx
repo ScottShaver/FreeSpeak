@@ -115,4 +115,160 @@
   <data name="GroupSettingsPlaceholder" xml:space="preserve">
     <value>Advanced settings features will be available in a future update. You will be able to configure group rules, visibility options, and more.</value>
   </data>
+  <data name="GroupRules" xml:space="preserve">
+    <value>Group Rules</value>
+  </data>
+  <data name="GroupRulesDescription" xml:space="preserve">
+    <value>Define the rules that members must follow in this group.</value>
+  </data>
+  <data name="AddDefaultRules" xml:space="preserve">
+    <value>Add Default Rules</value>
+  </data>
+  <data name="AddRule" xml:space="preserve">
+    <value>Add Rule</value>
+  </data>
+  <data name="AddNewRule" xml:space="preserve">
+    <value>Add New Rule</value>
+  </data>
+  <data name="EditRule" xml:space="preserve">
+    <value>Edit Rule</value>
+  </data>
+  <data name="DeleteRule" xml:space="preserve">
+    <value>Delete Rule</value>
+  </data>
+  <data name="RuleTitle" xml:space="preserve">
+    <value>Rule Title</value>
+  </data>
+  <data name="RuleTitlePlaceholder" xml:space="preserve">
+    <value>Enter a brief, clear title for this rule</value>
+  </data>
+  <data name="RuleDescription" xml:space="preserve">
+    <value>Rule Description</value>
+  </data>
+  <data name="RuleDescriptionPlaceholder" xml:space="preserve">
+    <value>Explain the rule's purpose and what behavior is expected or prohibited</value>
+  </data>
+  <data name="SaveRule" xml:space="preserve">
+    <value>Save Rule</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Saving...</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>Up</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>Down</value>
+  </data>
+  <data name="NoRulesYet" xml:space="preserve">
+    <value>No rules have been defined for this group yet.</value>
+  </data>
+  <data name="NoRulesYetHint" xml:space="preserve">
+    <value>Click "Add Default Rules" to start with common rules, or "Add Rule" to create your own.</value>
+  </data>
+  <data name="ConfirmDeleteRule" xml:space="preserve">
+    <value>Delete Rule?</value>
+  </data>
+  <data name="ConfirmDeleteRuleMessage" xml:space="preserve">
+    <value>Are you sure you want to delete this rule? This action cannot be undone.</value>
+  </data>
+  <data name="RuleTitleRequired" xml:space="preserve">
+    <value>Rule title is required.</value>
+  </data>
+  <data name="RuleDescriptionRequired" xml:space="preserve">
+    <value>Rule description is required.</value>
+  </data>
+  <data name="RuleCreated" xml:space="preserve">
+    <value>Rule created successfully.</value>
+  </data>
+  <data name="RuleUpdated" xml:space="preserve">
+    <value>Rule updated successfully.</value>
+  </data>
+  <data name="RuleDeleted" xml:space="preserve">
+    <value>Rule deleted successfully.</value>
+  </data>
+  <data name="DefaultRulesAdded" xml:space="preserve">
+    <value>Default rules have been added. You can now edit them to fit your group's needs.</value>
+  </data>
+  <data name="CannotAddDefaultRulesExist" xml:space="preserve">
+    <value>Cannot add default rules when rules already exist. Delete existing rules first.</value>
+  </data>
+  <data name="ErrorLoadingRules" xml:space="preserve">
+    <value>An error occurred while loading rules.</value>
+  </data>
+  <data name="ErrorCreatingRule" xml:space="preserve">
+    <value>An error occurred while creating the rule.</value>
+  </data>
+  <data name="ErrorUpdatingRule" xml:space="preserve">
+    <value>An error occurred while updating the rule.</value>
+  </data>
+  <data name="ErrorDeletingRule" xml:space="preserve">
+    <value>An error occurred while deleting the rule.</value>
+  </data>
+  <data name="ErrorSavingRule" xml:space="preserve">
+    <value>An error occurred while saving the rule.</value>
+  </data>
+  <data name="ErrorReorderingRules" xml:space="preserve">
+    <value>An error occurred while reordering rules.</value>
+  </data>
+  <data name="ErrorAddingDefaultRules" xml:space="preserve">
+    <value>An error occurred while adding default rules.</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="ApproveRequest" xml:space="preserve">
+    <value>Approve this join request</value>
+  </data>
+  <data name="DenyRequest" xml:space="preserve">
+    <value>Deny this join request</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="Deny" xml:space="preserve">
+    <value>Deny</value>
+  </data>
+  <data name="RequestedOn" xml:space="preserve">
+    <value>Requested on</value>
+  </data>
+  <data name="TotalPendingRequests" xml:space="preserve">
+    <value>{0} pending request(s)</value>
+  </data>
+  <data name="NoJoinRequests" xml:space="preserve">
+    <value>No pending join requests at this time.</value>
+  </data>
+  <data name="ConfirmDenyRequest" xml:space="preserve">
+    <value>Deny Join Request?</value>
+  </data>
+  <data name="ConfirmDenyRequestMessage" xml:space="preserve">
+    <value>Are you sure you want to deny this join request? The user will not be notified but can submit another request later.</value>
+  </data>
+  <data name="RequestApproved" xml:space="preserve">
+    <value>{0} has been approved and added to the group.</value>
+  </data>
+  <data name="RequestDenied" xml:space="preserve">
+    <value>Join request from {0} has been denied.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Unknown User</value>
+  </data>
+  <data name="ErrorLoadingRequests" xml:space="preserve">
+    <value>An error occurred while loading join requests.</value>
+  </data>
+  <data name="ErrorApprovingRequest" xml:space="preserve">
+    <value>An error occurred while approving the request.</value>
+  </data>
+  <data name="ErrorDenyingRequest" xml:space="preserve">
+    <value>An error occurred while denying the request.</value>
+  </data>
 </root>

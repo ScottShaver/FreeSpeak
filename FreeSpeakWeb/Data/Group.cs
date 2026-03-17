@@ -64,6 +64,12 @@ namespace FreeSpeakWeb.Data
         public bool RequireAcceptRules { get; set; } = false;
 
         /// <summary>
+        /// Gets or sets whether new posts require moderator approval before being visible to members.
+        /// When true, all new posts start with Pending status and must be approved by a moderator. Defaults to false.
+        /// </summary>
+        public bool RequiresPostApproval { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets whether the group points system is enabled for this group.
         /// When true, members earn points for posts, comments, likes, and milestones. Group admins can toggle this feature. Defaults to false.
         /// </summary>
