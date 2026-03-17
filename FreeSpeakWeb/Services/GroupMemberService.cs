@@ -12,19 +12,22 @@ namespace FreeSpeakWeb.Services
         private readonly IGroupRepository _groupRepository;
         private readonly ILogger<GroupMemberService> _logger;
         private readonly IAuditLogRepository _auditLogRepository;
+        private readonly NotificationService _notificationService;
 
         public GroupMemberService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             IGroupMemberRepository memberRepository,
             IGroupRepository groupRepository,
             ILogger<GroupMemberService> logger,
-            IAuditLogRepository auditLogRepository)
+            IAuditLogRepository auditLogRepository,
+            NotificationService notificationService)
         {
             _contextFactory = contextFactory;
             _memberRepository = memberRepository;
             _groupRepository = groupRepository;
             _logger = logger;
             _auditLogRepository = auditLogRepository;
+            _notificationService = notificationService;
         }
 
         #region Join Requests
@@ -207,6 +210,14 @@ namespace FreeSpeakWeb.Services
                     ApprovedUserDisplayName = request.User != null ? $"{request.User.FirstName} {request.User.LastName}" : null,
                     RequestedAt = request.RequestedAt
                 });
+
+                // Send notification to the user that their join request was approved
+                await _notificationService.CreateNotificationAsync(
+                    request.UserId,
+                    NotificationType.GroupJoinApproved,
+                    $"Your request to join '{request.Group.Name}' has been approved. You are now a member!",
+                    new { GroupId = request.GroupId, GroupName = request.Group.Name }
+                );
 
                 return (true, null);
             }

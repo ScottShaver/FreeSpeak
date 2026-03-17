@@ -51,6 +51,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="isHidden">Whether the group is hidden from searches.</param>
         /// <param name="requiresJoinApproval">Whether join requests require approval.</param>
         /// <param name="requireAcceptRules">Whether users must accept group rules before joining.</param>
+        /// <param name="requiresPostApproval">Whether new posts require moderator approval before being visible.</param>
         /// <param name="enablePointsSystem">Whether the group points system is enabled.</param>
         /// <param name="headerImageUrl">Optional URL for the group's header image.</param>
         /// <param name="verticalHeaderImageUrl">Optional URL for the vertical header image.</param>
@@ -64,6 +65,7 @@ namespace FreeSpeakWeb.Services
             bool isHidden = false,
             bool requiresJoinApproval = false,
             bool requireAcceptRules = false,
+            bool requiresPostApproval = false,
             bool enablePointsSystem = false,
             string? headerImageUrl = null,
             string? verticalHeaderImageUrl = null,
@@ -111,6 +113,7 @@ namespace FreeSpeakWeb.Services
                     IsHidden = isHidden,
                     RequiresJoinApproval = requiresJoinApproval,
                     RequireAcceptRules = requireAcceptRules,
+                    RequiresPostApproval = requiresPostApproval,
                     EnablePointsSystem = enablePointsSystem,
                     HeaderImageUrl = headerImageUrl,
                     VerticalHeaderImageUrl = verticalHeaderImageUrl,
@@ -405,6 +408,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="isHidden">Optional new hidden setting.</param>
         /// <param name="requiresJoinApproval">Optional new join approval requirement.</param>
         /// <param name="requireAcceptRules">Optional setting for whether users must accept group rules before joining.</param>
+        /// <param name="requiresPostApproval">Optional setting for whether new posts require moderator approval before being visible.</param>
         /// <param name="enablePointsSystem">Optional setting to enable or disable the points system for this group.</param>
         /// <param name="isActive">Optional setting to indicate if the group is active and ready for users.</param>
         /// <param name="isClosed">Optional setting to indicate if the group has been permanently closed.</param>
@@ -421,6 +425,7 @@ namespace FreeSpeakWeb.Services
             bool? isHidden = null,
             bool? requiresJoinApproval = null,
             bool? requireAcceptRules = null,
+            bool? requiresPostApproval = null,
             bool? enablePointsSystem = null,
             bool? isActive = null,
             bool? isClosed = null,
@@ -503,6 +508,41 @@ namespace FreeSpeakWeb.Services
                         changedFields.Add("RequiresJoinApproval");
                     }
                     group.RequiresJoinApproval = requiresJoinApproval.Value;
+                }
+
+                if (requireAcceptRules.HasValue)
+                {
+                    if (group.RequireAcceptRules != requireAcceptRules.Value)
+                    {
+                        changedFields.Add("RequireAcceptRules");
+                    }
+                    group.RequireAcceptRules = requireAcceptRules.Value;
+                }
+
+                if (requiresPostApproval.HasValue)
+                {
+                    if (group.RequiresPostApproval != requiresPostApproval.Value)
+                    {
+                        changedFields.Add("RequiresPostApproval");
+
+                        // If enabling post approval, set all existing non-Declined posts to Posted status
+                        // so they remain visible to members
+                        if (requiresPostApproval.Value == true && group.RequiresPostApproval == false)
+                        {
+                            var postsToUpdate = await context.GroupPosts
+                                .Where(p => p.GroupId == groupId && p.Status != PostStatus.Declined)
+                                .ToListAsync();
+
+                            foreach (var post in postsToUpdate)
+                            {
+                                post.Status = PostStatus.Posted;
+                            }
+
+                            _logger.LogInformation("Set {Count} existing posts to Posted status when enabling post approval for group {GroupId}", 
+                                postsToUpdate.Count, groupId);
+                        }
+                    }
+                    group.RequiresPostApproval = requiresPostApproval.Value;
                 }
 
                 if (enablePointsSystem.HasValue)

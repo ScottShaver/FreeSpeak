@@ -106,4 +106,175 @@
   <data name="ModerationLogPlaceholder" xml:space="preserve">
     <value>Moderation log features will be available in a future update. You will be able to view a history of all moderation actions taken in this group.</value>
   </data>
+  <data name="NoReports" xml:space="preserve">
+    <value>No pending reports. All reports have been reviewed!</value>
+  </data>
+  <data name="ReportedBy" xml:space="preserve">
+    <value>Reported by</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Post</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>Back to List</value>
+  </data>
+  <data name="ViolatedRule" xml:space="preserve">
+    <value>Violated Rule:</value>
+  </data>
+  <data name="ReporterDescription" xml:space="preserve">
+    <value>Reporter's Description:</value>
+  </data>
+  <data name="ReportedPost" xml:space="preserve">
+    <value>Reported Post</value>
+  </data>
+  <data name="ReportedComment" xml:space="preserve">
+    <value>Reported Comment</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Author:</value>
+  </data>
+  <data name="ContentDeleted" xml:space="preserve">
+    <value>Content has been deleted</value>
+  </data>
+  <data name="ModeratorNotes" xml:space="preserve">
+    <value>Moderator Notes (Optional)</value>
+  </data>
+  <data name="NotesPlaceholder" xml:space="preserve">
+    <value>Add notes about your decision or action taken...</value>
+  </data>
+  <data name="DismissReport" xml:space="preserve">
+    <value>Dismiss</value>
+  </data>
+  <data name="TakeAction" xml:space="preserve">
+    <value>Take Action</value>
+  </data>
+  <data name="Resolve" xml:space="preserve">
+    <value>Resolve</value>
+  </data>
+  <data name="ActionExplanation" xml:space="preserve">
+    <value>Action Guide:</value>
+  </data>
+  <data name="DismissExplanation" xml:space="preserve">
+    <value>No violation found, report is not valid</value>
+  </data>
+  <data name="ActionExplanation2" xml:space="preserve">
+    <value>Content violates rules, moderation action required</value>
+  </data>
+  <data name="ResolveExplanation" xml:space="preserve">
+    <value>Issue resolved, content edited or removed by author</value>
+  </data>
+  <data name="ReportDismissed" xml:space="preserve">
+    <value>Report dismissed successfully.</value>
+  </data>
+  <data name="ActionTaken" xml:space="preserve">
+    <value>Report marked as action taken.</value>
+  </data>
+  <data name="ReportResolved" xml:space="preserve">
+    <value>Report resolved successfully.</value>
+  </data>
+  <data name="ErrorProcessingReport" xml:space="preserve">
+    <value>An error occurred while processing the report.</value>
+  </data>
+  <data name="ErrorLoadingReports" xml:space="preserve">
+    <value>An error occurred while loading reports.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Unknown User</value>
+  </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>just now</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>{0}m ago</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>{0}h ago</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>{0}d ago</value>
+  </data>
+  <data name="ReasonViolatesGroupRule" xml:space="preserve">
+    <value>Violates group rule</value>
+  </data>
+  <data name="ReasonSpam" xml:space="preserve">
+    <value>Spam or unwanted content</value>
+  </data>
+  <data name="ReasonHarassment" xml:space="preserve">
+    <value>Harassment or bullying</value>
+  </data>
+  <data name="ReasonHateSpeech" xml:space="preserve">
+    <value>Hate speech</value>
+  </data>
+  <data name="ReasonMisinformation" xml:space="preserve">
+    <value>Misinformation</value>
+  </data>
+  <data name="ReasonAdultContent" xml:space="preserve">
+    <value>Adult content</value>
+  </data>
+  <data name="ReasonViolence" xml:space="preserve">
+    <value>Violence or graphic content</value>
+  </data>
+  <data name="ReasonCopyright" xml:space="preserve">
+    <value>Copyright violation</value>
+  </data>
+  <data name="ReasonOffTopic" xml:space="preserve">
+    <value>Off-topic content</value>
+  </data>
+  <data name="ReasonPrivacy" xml:space="preserve">
+    <value>Privacy violation</value>
+  </data>
+  <data name="ReasonSelfHarm" xml:space="preserve">
+    <value>Self-harm content</value>
+  </data>
+  <data name="ReasonIllegal" xml:space="preserve">
+    <value>Illegal activity</value>
+  </data>
+  <data name="ReasonOther" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="PostApprovalDisabled" xml:space="preserve">
+    <value>Post approval is not enabled for this group. Posts are published immediately when created.</value>
+  </data>
+  <data name="NoPendingPosts" xml:space="preserve">
+    <value>No pending posts. All posts have been reviewed!</value>
+  </data>
+  <data name="PostApproved" xml:space="preserve">
+    <value>Post approved and published successfully.</value>
+  </data>
+  <data name="PostDeclined" xml:space="preserve">
+    <value>Post declined successfully.</value>
+  </data>
+  <data name="ErrorLoadingPendingPosts" xml:space="preserve">
+    <value>An error occurred while loading pending posts.</value>
+  </data>
+  <data name="ErrorProcessingPost" xml:space="preserve">
+    <value>An error occurred while processing the post.</value>
+  </data>
+  <data name="Images" xml:space="preserve">
+    <value>image(s)</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="PendingPostsCount" xml:space="preserve">
+    <value>pending post(s)</value>
+  </data>
+  <data name="PostedAt" xml:space="preserve">
+    <value>Posted</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Decline</value>
+  </data>
+  <data name="ApprovePostTooltip" xml:space="preserve">
+    <value>Approve this post and make it visible to all members</value>
+  </data>
+  <data name="DeclinePostTooltip" xml:space="preserve">
+    <value>Decline this post - the author can edit and resubmit</value>
+  </data>
 </root>

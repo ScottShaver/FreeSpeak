@@ -158,6 +158,17 @@
     </div>
 }
 
+@* Report Post Modal *@
+@if (showReportModal)
+{
+    <FreeSpeakWeb.Components.Groups.ReportContentModal
+        GroupId="@GroupId"
+        PostId="@PostId"
+        ReporterId="@CurrentUserId"
+        OnClose="CloseReportModal"
+        OnReportSubmitted="HandleReportSubmitted" />
+}
+
 @code {
     [Parameter]
     public int PostId { get; set; }
@@ -332,6 +343,9 @@
     // Delete confirmation state
     private bool showDeleteConfirmation = false;
 
+    // Report modal state
+    private bool showReportModal = false;
+
     // Image viewer state
     private bool showImageViewer = false;
     private List<string> imageUrls = new();
@@ -504,7 +518,7 @@
                     {
                         Text = Localizer["ReportPost"],
                         Icon = "bi bi-flag",
-                        OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Report Post"))
+                        OnClick = EventCallback.Factory.Create(this, () => ShowReportModal())
                     });
 
                     menuItems.Add(new PopupMenu.PopupMenuItem
@@ -542,6 +556,34 @@
     {
         showDeleteConfirmation = false;
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// Shows the report post modal.
+    /// </summary>
+    private void ShowReportModal()
+    {
+        CloseMenu();
+        showReportModal = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the report post modal.
+    /// </summary>
+    private void CloseReportModal()
+    {
+        showReportModal = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles when a report is successfully submitted.
+    /// </summary>
+    private Task HandleReportSubmitted()
+    {
+        AlertService.ShowSuccess("Report submitted successfully. Thank you for helping keep our community safe.");
+        return Task.CompletedTask;
     }
 
     private async Task ConfirmDeletePost()

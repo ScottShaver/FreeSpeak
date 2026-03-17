@@ -1,0 +1,28 @@
+.join-requests-tab {
+    min-height: 200px;
+}
+
+.request-card {
+    transition: all 0.2s ease;
+}
+
+.request-card:hover {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar img {
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    font-size: 1.5rem;
+}
+
+.requests-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.request-actions .btn {
+    min-width: 80px;
+}

@@ -1,0 +1,478 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using Microsoft.Extensions.Localization
+
+@inject GroupContentReportService ReportService
+@inject GroupRuleService GroupRuleService
+@inject ILogger<ReportContentModal> Logger
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Groups.ReportContentModal> Localizer
+
+<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-flag text-warning me-2"></i>
+                    @if (IsCommentReport)
+                    {
+                        @Localizer["ReportComment"]
+                    }
+                    else
+                    {
+                        @Localizer["ReportPost"]
+                    }
+                </h5>
+                <button type="button" class="btn-close" @onclick="OnClose" aria-label="Close" disabled="@isSubmitting"></button>
+            </div>
+            <div class="modal-body">
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                        <button type="button" class="btn-close" @onclick="@(() => errorMessage = null)"></button>
+                    </div>
+                }
+
+                @if (showSuccess)
+                {
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle me-2"></i>@Localizer["ReportSubmitted"]
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-4">@Localizer["ReportDescription"]</p>
+
+                    @* Step 1: Select Reason *@
+                    @if (currentStep == 1)
+                    {
+                        <div class="report-reasons">
+                            <h6 class="mb-3">@Localizer["SelectReason"]</h6>
+                            <div class="list-group">
+                                @foreach (var reason in GetReportReasons())
+                                {
+                                    <button type="button" 
+                                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center @(selectedReason == reason.Value ? "active" : "")"
+                                            @onclick="@(() => SelectReason(reason.Value))">
+                                        <div>
+                                            <i class="@reason.Icon me-2"></i>
+                                            <span>@reason.Label</span>
+                                        </div>
+                                        @if (selectedReason == reason.Value)
+                                        {
+                                            <i class="bi bi-check-lg"></i>
+                                        }
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    @* Step 2: Select Rule (only if ViolatesGroupRule) *@
+                    @if (currentStep == 2 && selectedReason == ReportReason.ViolatesGroupRule)
+                    {
+                        <div class="rule-selection">
+                            <h6 class="mb-3">@Localizer["SelectViolatedRule"]</h6>
+                            @if (isLoadingRules)
+                            {
+                                <div class="text-center py-3">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="visually-hidden">@Localizer["Loading"]</span>
+                                    </div>
+                                </div>
+                            }
+                            else if (!groupRules.Any())
+                            {
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>@Localizer["NoGroupRules"]
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="list-group">
+                                    @foreach (var rule in groupRules)
+                                    {
+                                        <button type="button" 
+                                                class="list-group-item list-group-item-action @(selectedRuleId == rule.Id ? "active" : "")"
+                                                @onclick="@(() => SelectRule(rule.Id))">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <span class="badge bg-secondary me-2">@(rule.Order + 1)</span>
+                                                    <strong>@rule.Title</strong>
+                                                    <p class="mb-0 mt-1 small text-muted rule-description">@TruncateText(rule.Description, 150)</p>
+                                                </div>
+                                                @if (selectedRuleId == rule.Id)
+                                                {
+                                                    <i class="bi bi-check-lg ms-2"></i>
+                                                }
+                                            </div>
+                                        </button>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @* Step 3: Additional Details *@
+                    @if (currentStep == 3 || (currentStep == 2 && selectedReason != ReportReason.ViolatesGroupRule))
+                    {
+                        <div class="additional-details">
+                            @* Display selected reason summary *@
+                            <div class="selected-reason-summary mb-3 p-3 bg-light rounded">
+                                <div class="d-flex align-items-center">
+                                    <i class="@GetReasonIcon(selectedReason) text-primary me-2"></i>
+                                    <div>
+                                        <strong>@Localizer["ReportingFor"]</strong>
+                                        <span class="ms-1">@GetReasonLabel(selectedReason)</span>
+                                    </div>
+                                </div>
+                                @if (selectedReason == ReportReason.ViolatesGroupRule && selectedRuleId.HasValue)
+                                {
+                                    var selectedRule = groupRules.FirstOrDefault(r => r.Id == selectedRuleId.Value);
+                                    @if (selectedRule != null)
+                                    {
+                                        <div class="mt-2 ps-4 text-muted small">
+                                            <i class="bi bi-arrow-return-right me-1"></i>
+                                            <span>@selectedRule.Title</span>
+                                        </div>
+                                    }
+                                }
+                            </div>
+
+                            <h6 class="mb-3">@Localizer["AdditionalDetails"]</h6>
+                            <p class="text-muted small">@Localizer["AdditionalDetailsDescription"]</p>
+                            <textarea class="form-control" 
+                                      rows="4" 
+                                      maxlength="2000" 
+                                      @bind="additionalDescription" 
+                                      placeholder="@Localizer["DescriptionPlaceholder"]"></textarea>
+                            <div class="form-text text-end">@((additionalDescription?.Length ?? 0))/2000</div>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="modal-footer">
+                @if (!showSuccess)
+                {
+                    @if (currentStep > 1)
+                    {
+                        <button type="button" class="btn btn-outline-secondary" @onclick="GoBack" disabled="@isSubmitting">
+                            <i class="bi bi-arrow-left me-1"></i>@Localizer["Back"]
+                        </button>
+                    }
+                    <button type="button" class="btn btn-secondary" @onclick="OnClose" disabled="@isSubmitting">
+                        @Localizer["Cancel"]
+                    </button>
+                    @if (CanProceed())
+                    {
+                        @if (IsOnFinalStep())
+                        {
+                            <button type="button" class="btn btn-danger" @onclick="SubmitReport" disabled="@isSubmitting">
+                                @if (isSubmitting)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-1"></span>
+                                }
+                                <i class="bi bi-flag me-1"></i>@Localizer["SubmitReport"]
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-primary" @onclick="GoNext">
+                                @Localizer["Next"] <i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                        }
+                    }
+                }
+                else
+                {
+                    <button type="button" class="btn btn-secondary" @onclick="OnClose">
+                        @Localizer["Close"]
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// The ID of the group where the content exists.
+    /// </summary>
+    [Parameter]
+    public int GroupId { get; set; }
+
+    /// <summary>
+    /// The ID of the post being reported. Null if reporting a comment.
+    /// </summary>
+    [Parameter]
+    public int? PostId { get; set; }
+
+    /// <summary>
+    /// The ID of the comment being reported. Null if reporting a post.
+    /// </summary>
+    [Parameter]
+    public int? CommentId { get; set; }
+
+    /// <summary>
+    /// The ID of the user submitting the report.
+    /// </summary>
+    [Parameter]
+    public string ReporterId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Callback when the modal is closed.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    /// <summary>
+    /// Callback when the report is successfully submitted.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnReportSubmitted { get; set; }
+
+    private bool IsCommentReport => CommentId.HasValue;
+
+    private int currentStep = 1;
+    private ReportReason? selectedReason;
+    private int? selectedRuleId;
+    private string? additionalDescription;
+    private string? errorMessage;
+    private bool isSubmitting = false;
+    private bool isLoadingRules = false;
+    private bool showSuccess = false;
+
+    private List<GroupRule> groupRules = new();
+
+    /// <summary>
+    /// Gets the list of report reasons with their display information.
+    /// </summary>
+    private List<(ReportReason Value, string Label, string Icon)> GetReportReasons()
+    {
+        return new List<(ReportReason, string, string)>
+        {
+            (ReportReason.ViolatesGroupRule, Localizer["ReasonViolatesGroupRule"], "bi bi-list-check"),
+            (ReportReason.Spam, Localizer["ReasonSpam"], "bi bi-envelope-exclamation"),
+            (ReportReason.HarassmentOrBullying, Localizer["ReasonHarassment"], "bi bi-person-x"),
+            (ReportReason.HateSpeech, Localizer["ReasonHateSpeech"], "bi bi-chat-square-x"),
+            (ReportReason.Misinformation, Localizer["ReasonMisinformation"], "bi bi-exclamation-diamond"),
+            (ReportReason.AdultContent, Localizer["ReasonAdultContent"], "bi bi-eye-slash"),
+            (ReportReason.ViolenceOrGraphicContent, Localizer["ReasonViolence"], "bi bi-shield-exclamation"),
+            (ReportReason.IntellectualPropertyViolation, Localizer["ReasonCopyright"], "bi bi-c-circle"),
+            (ReportReason.OffTopic, Localizer["ReasonOffTopic"], "bi bi-chat-left-dots"),
+            (ReportReason.PrivacyViolation, Localizer["ReasonPrivacy"], "bi bi-person-lock"),
+            (ReportReason.SelfHarmOrSuicide, Localizer["ReasonSelfHarm"], "bi bi-heart-pulse"),
+            (ReportReason.IllegalActivity, Localizer["ReasonIllegal"], "bi bi-slash-circle"),
+            (ReportReason.Other, Localizer["ReasonOther"], "bi bi-three-dots")
+        };
+    }
+
+    /// <summary>
+    /// Gets the localized label for a report reason.
+    /// </summary>
+    private string GetReasonLabel(ReportReason? reason)
+    {
+        if (!reason.HasValue) return string.Empty;
+        var reasons = GetReportReasons();
+        return reasons.FirstOrDefault(r => r.Value == reason.Value).Label ?? reason.Value.ToString();
+    }
+
+    /// <summary>
+    /// Gets the icon class for a report reason.
+    /// </summary>
+    private string GetReasonIcon(ReportReason? reason)
+    {
+        if (!reason.HasValue) return "bi bi-flag";
+        var reasons = GetReportReasons();
+        return reasons.FirstOrDefault(r => r.Value == reason.Value).Icon ?? "bi bi-flag";
+    }
+
+    /// <summary>
+    /// Selects a report reason and advances to the next step.
+    /// </summary>
+    private async Task SelectReason(ReportReason reason)
+    {
+        selectedReason = reason;
+        selectedRuleId = null;
+
+        if (reason == ReportReason.ViolatesGroupRule)
+        {
+            await LoadGroupRules();
+            currentStep = 2;
+        }
+        else
+        {
+            currentStep = 2; // Go to additional details
+        }
+
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Loads the group rules for rule selection.
+    /// </summary>
+    private async Task LoadGroupRules()
+    {
+        isLoadingRules = true;
+        StateHasChanged();
+
+        try
+        {
+            groupRules = await GroupRuleService.GetGroupRulesAsync(GroupId);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading group rules for report");
+            groupRules = new List<GroupRule>();
+        }
+        finally
+        {
+            isLoadingRules = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Selects a violated rule.
+    /// </summary>
+    private void SelectRule(int ruleId)
+    {
+        selectedRuleId = ruleId;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Checks if the user can proceed to the next step.
+    /// </summary>
+    private bool CanProceed()
+    {
+        return currentStep switch
+        {
+            1 => selectedReason.HasValue,
+            2 => selectedReason != ReportReason.ViolatesGroupRule || selectedRuleId.HasValue,
+            _ => true
+        };
+    }
+
+    /// <summary>
+    /// Checks if the user is on the final step.
+    /// </summary>
+    private bool IsOnFinalStep()
+    {
+        if (selectedReason == ReportReason.ViolatesGroupRule)
+        {
+            return currentStep == 3;
+        }
+        return currentStep == 2;
+    }
+
+    /// <summary>
+    /// Advances to the next step.
+    /// </summary>
+    private void GoNext()
+    {
+        if (selectedReason == ReportReason.ViolatesGroupRule && currentStep == 2)
+        {
+            currentStep = 3;
+        }
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Goes back to the previous step.
+    /// </summary>
+    private void GoBack()
+    {
+        if (currentStep > 1)
+        {
+            currentStep--;
+            if (currentStep == 1)
+            {
+                selectedReason = null;
+                selectedRuleId = null;
+            }
+        }
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Submits the report.
+    /// </summary>
+    private async Task SubmitReport()
+    {
+        if (!selectedReason.HasValue)
+        {
+            errorMessage = Localizer["SelectReasonError"];
+            return;
+        }
+
+        if (selectedReason == ReportReason.ViolatesGroupRule && !selectedRuleId.HasValue)
+        {
+            errorMessage = Localizer["SelectRuleError"];
+            return;
+        }
+
+        isSubmitting = true;
+        errorMessage = null;
+        StateHasChanged();
+
+        try
+        {
+            (bool success, string? error, GroupContentReport? report) result;
+
+            if (IsCommentReport)
+            {
+                result = await ReportService.ReportCommentAsync(
+                    GroupId,
+                    CommentId!.Value,
+                    ReporterId,
+                    selectedReason.Value,
+                    selectedRuleId,
+                    additionalDescription
+                );
+            }
+            else
+            {
+                result = await ReportService.ReportPostAsync(
+                    GroupId,
+                    PostId!.Value,
+                    ReporterId,
+                    selectedReason.Value,
+                    selectedRuleId,
+                    additionalDescription
+                );
+            }
+
+            if (result.success)
+            {
+                showSuccess = true;
+                await OnReportSubmitted.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = result.error ?? Localizer["ErrorSubmitting"];
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error submitting report");
+            errorMessage = Localizer["ErrorSubmitting"];
+        }
+        finally
+        {
+            isSubmitting = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Truncates text to a maximum length with ellipsis.
+    /// </summary>
+    private string TruncateText(string text, int maxLength)
+    {
+        if (string.IsNullOrEmpty(text) || text.Length <= maxLength)
+            return text;
+
+        return text.Substring(0, maxLength).TrimEnd() + "...";
+    }
+}

@@ -64,6 +64,30 @@
                 <div class="group-header-image" style="background-image: url('@group.HeaderImageUrl');"></div>
             }
             <div class="group-header-content">
+                @* Role indicator row - shows if user is admin or moderator *@
+                @if (isGroupAdmin || isGroupModerator || group.CreatorId == currentUserId)
+                {
+                    <div class="group-role-indicators mb-2">
+                        @if (group.CreatorId == currentUserId)
+                        {
+                            <span class="badge bg-warning text-dark me-2" title="@Localizer["YouAreGroupCreator"]">
+                                <i class="bi bi-star-fill me-1"></i>@Localizer["Creator"]
+                            </span>
+                        }
+                        @if (isGroupAdmin)
+                        {
+                            <span class="badge bg-primary me-2" title="@Localizer["YouAreGroupAdmin"]">
+                                <i class="bi bi-shield-lock-fill me-1"></i>@Localizer["Admin"]
+                            </span>
+                        }
+                        @if (isGroupModerator && !isGroupAdmin)
+                        {
+                            <span class="badge bg-info text-dark me-2" title="@Localizer["YouAreGroupModerator"]">
+                                <i class="bi bi-shield-check me-1"></i>@Localizer["Moderator"]
+                            </span>
+                        }
+                    </div>
+                }
                 <div class="d-flex justify-content-between align-items-start mb-2">
                     <h1>@group.Name</h1>
                     <div class="group-header-actions d-flex gap-2">
@@ -148,8 +172,28 @@
                     var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
                     var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
                     var isMuted = postMuteStatus.ContainsKey(post.Id) ? postMuteStatus[post.Id] : (bool?)null;
+                    var postStatus = postStatuses.ContainsKey(post.Id) ? postStatuses[post.Id] : PostStatus.Posted;
 
-                    <GroupPostArticle 
+                    @* Show status banner for user's own pending/declined posts *@
+                    @if (post.AuthorId == currentUserId && postStatus != PostStatus.Posted)
+                    {
+                        <div class="post-status-banner mb-2 p-2 rounded @(postStatus == PostStatus.Pending ? "bg-warning bg-opacity-25 border border-warning" : "bg-danger bg-opacity-25 border border-danger")">
+                            @if (postStatus == PostStatus.Pending)
+                            {
+                                <i class="bi bi-hourglass-split text-warning me-2"></i>
+                                <span class="text-warning fw-bold">@Localizer["PostPending"]</span>
+                                <span class="text-muted small ms-2">@Localizer["PostPendingDescription"]</span>
+                            }
+                            else if (postStatus == PostStatus.Declined)
+                            {
+                                <i class="bi bi-x-circle text-danger me-2"></i>
+                                <span class="text-danger fw-bold">@Localizer["PostDeclined"]</span>
+                                <span class="text-muted small ms-2">@Localizer["PostDeclinedDescription"]</span>
+                            }
+                        </div>
+                    }
+
+                    <GroupPostArticle
                         PostId="@post.Id"
                         GroupId="@post.GroupId"
                         GroupName="@group.Name"
@@ -290,6 +334,17 @@
         OnModerationActionPerformed="HandleModerationActionPerformed" />
 }
 
+@* Report Comment Modal *@
+@if (showReportCommentModal && reportingCommentId.HasValue && group != null)
+{
+    <FreeSpeakWeb.Components.Groups.ReportContentModal
+        GroupId="@GroupId"
+        CommentId="@reportingCommentId"
+        ReporterId="@currentUserId"
+        OnClose="CloseReportCommentModal"
+        OnReportSubmitted="HandleCommentReportSubmitted" />
+}
+
 @code {
     [Parameter]
     public int GroupId { get; set; }
@@ -315,6 +370,10 @@
     private bool showGroupAdministration = false;
     private bool showGroupModeration = false;
 
+    // Report comment modal state
+    private bool showReportCommentModal = false;
+    private int? reportingCommentId = null;
+
     // Posts state
     private List<GroupPostViewModel> groupPosts = new();
     private bool isLoadingPosts = false;
@@ -323,6 +382,7 @@
     private int currentPage = 1;
     private const int pageSize = 20;
     private Dictionary<int, bool> postMuteStatus = new();
+    private Dictionary<int, PostStatus> postStatuses = new();
 
     // JavaScript interop
     private IJSObjectReference? jsModule;
@@ -469,6 +529,48 @@
             var loadedDtos = await GroupPostService.GetGroupPostsAsProjectionAsync(GroupId, 0, pageSize);
 
             groupPosts = GroupPostViewModel.FromDtos(loadedDtos);
+
+            // If this group requires post approval, also load the current user's posts with any status
+            // so they can see their own pending/declined posts
+            if (group.RequiresPostApproval && !string.IsNullOrEmpty(currentUserId))
+            {
+                var userPosts = await GroupPostService.GetUserPostsIncludingAllStatusesAsync(GroupId, currentUserId);
+
+                // Track post statuses for the user's posts
+                foreach (var userPost in userPosts)
+                {
+                    postStatuses[userPost.Id] = userPost.Status;
+                }
+
+                var userPostDtos = userPosts.Select(p => new GroupPostListDto(
+                    p.Id,
+                    p.GroupId,
+                    group.Name,
+                    p.AuthorId,
+                    $"{p.Author?.FirstName} {p.Author?.LastName}".Trim(),
+                    p.Author?.ProfilePictureUrl,
+                    p.Content,
+                    p.CreatedAt,
+                    p.UpdatedAt,
+                    p.LikeCount,
+                    p.CommentCount,
+                    p.ShareCount,
+                    0, // Group points - will be loaded separately
+                    p.Images?.Select(i => new PostImageDto(i.Id, i.ImageUrl, i.DisplayOrder)).ToList() ?? new List<PostImageDto>()
+                )).ToList();
+
+                var userPostViewModels = GroupPostViewModel.FromDtos(userPostDtos);
+
+                // Add user posts that aren't already in the list (non-Posted statuses)
+                foreach (var userPost in userPostViewModels)
+                {
+                    if (!groupPosts.Any(p => p.Id == userPost.Id))
+                    {
+                        groupPosts.Insert(0, userPost); // Insert at top so user sees their pending posts first
+                    }
+                }
+            }
+
             hasMorePosts = loadedDtos.Count >= pageSize;
 
             // Load additional data for posts (reactions, pinned status, mute status)
@@ -1088,9 +1190,31 @@
     protected override async Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
         int commentId, string userId)
     {
-        // TODO: Implement comment reporting when report system is available
+        // Show the report modal instead of submitting directly
+        reportingCommentId = commentId;
+        showReportCommentModal = true;
+        StateHasChanged();
         await Task.CompletedTask;
         return (true, null);
+    }
+
+    /// <summary>
+    /// Closes the report comment modal.
+    /// </summary>
+    private void CloseReportCommentModal()
+    {
+        showReportCommentModal = false;
+        reportingCommentId = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles when a comment report is successfully submitted.
+    /// </summary>
+    private Task HandleCommentReportSubmitted()
+    {
+        AlertService.ShowSuccess("Report submitted successfully. Thank you for helping keep our community safe.");
+        return Task.CompletedTask;
     }
 
     protected override void DecrementPostCommentCount(int postId, int decrementBy = 1)

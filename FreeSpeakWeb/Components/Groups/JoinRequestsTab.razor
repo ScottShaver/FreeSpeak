@@ -1,0 +1,362 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using Microsoft.Extensions.Localization
+
+@inject GroupMemberService GroupMemberService
+@inject ILogger<JoinRequestsTab> Logger
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Groups.GroupAdministrationModal> Localizer
+
+<div class="join-requests-tab">
+    @if (isLoading)
+    {
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">@Localizer["Loading"]</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="mb-0">@Localizer["JoinRequestsDescription"]</h6>
+            <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="LoadRequestsAsync" disabled="@isLoading">
+                <i class="bi bi-arrow-clockwise me-1"></i>@Localizer["Refresh"]
+            </button>
+        </div>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                <button type="button" class="btn-close" @onclick="@(() => errorMessage = null)"></button>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>@successMessage
+                <button type="button" class="btn-close" @onclick="@(() => successMessage = null)"></button>
+            </div>
+        }
+
+        @if (joinRequests.Any())
+        {
+            <div class="requests-list">
+                @foreach (var request in joinRequests)
+                {
+                    <div class="card mb-3 request-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="request-info d-flex align-items-center">
+                                    <div class="user-avatar me-3">
+                                        @if (!string.IsNullOrEmpty(request.User?.ProfilePictureUrl))
+                                        {
+                                            <img src="@request.User.ProfilePictureUrl" alt="@GetUserDisplayName(request.User)" class="rounded-circle" width="48" height="48" />
+                                        }
+                                        else
+                                        {
+                                            <div class="avatar-placeholder rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                                <span class="text-white fw-bold">@GetInitials(GetUserDisplayName(request.User))</span>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="user-details">
+                                        <h6 class="mb-0">@GetUserDisplayName(request.User)</h6>
+                                        <small class="text-muted">
+                                            <i class="bi bi-clock me-1"></i>@Localizer["RequestedOn"] @request.RequestedAt.ToString("MMM dd, yyyy 'at' h:mm tt")
+                                        </small>
+                                        @if (!string.IsNullOrEmpty(request.User?.UserName))
+                                        {
+                                            <br />
+                                            <small class="text-muted">@("@")@request.User.UserName</small>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="request-actions d-flex gap-2">
+                                    <button type="button" class="btn btn-success btn-sm" 
+                                            @onclick="@(() => ApproveRequest(request))"
+                                            disabled="@(processingRequestId == request.Id)"
+                                            title="@Localizer["ApproveRequest"]">
+                                        @if (processingRequestId == request.Id && isApproving)
+                                        {
+                                            <span class="spinner-border spinner-border-sm me-1"></span>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-check-lg me-1"></i>
+                                        }
+                                        @Localizer["Approve"]
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" 
+                                            @onclick="@(() => ConfirmDenyRequest(request))"
+                                            disabled="@(processingRequestId == request.Id)"
+                                            title="@Localizer["DenyRequest"]">
+                                        <i class="bi bi-x-lg me-1"></i>@Localizer["Deny"]
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="text-muted small mt-3">
+                <i class="bi bi-info-circle me-1"></i>
+                @string.Format(Localizer["TotalPendingRequests"].Value, joinRequests.Count)
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                <i class="bi bi-inbox me-2"></i>@Localizer["NoJoinRequests"]
+            </div>
+        }
+    }
+</div>
+
+@* Deny Confirmation Modal *@
+@if (showDenyConfirmation && requestToDeny != null)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-exclamation-triangle text-warning me-2"></i>@Localizer["ConfirmDenyRequest"]
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="CancelDeny"></button>
+                </div>
+                <div class="modal-body">
+                    <p>@Localizer["ConfirmDenyRequestMessage"]</p>
+                    <p class="fw-bold">@GetUserDisplayName(requestToDeny.User)</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CancelDeny">
+                        @Localizer["Cancel"]
+                    </button>
+                    <button type="button" class="btn btn-danger" @onclick="DenyRequest" disabled="@isDenying">
+                        @if (isDenying)
+                        {
+                            <span class="spinner-border spinner-border-sm me-1"></span>
+                        }
+                        <i class="bi bi-x-lg me-1"></i>@Localizer["Deny"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    /// <summary>
+    /// The group to manage join requests for.
+    /// </summary>
+    [Parameter]
+    public Group Group { get; set; } = null!;
+
+    /// <summary>
+    /// The current user's ID.
+    /// </summary>
+    [Parameter]
+    public string CurrentUserId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Callback invoked when a join request is processed.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnRequestProcessed { get; set; }
+
+    private List<GroupJoinRequest> joinRequests = new();
+    private bool isLoading = true;
+    private string? errorMessage;
+    private string? successMessage;
+
+    // Processing state
+    private int? processingRequestId = null;
+    private bool isApproving = false;
+    private bool isDenying = false;
+
+    // Deny confirmation state
+    private bool showDenyConfirmation = false;
+    private GroupJoinRequest? requestToDeny = null;
+
+    /// <summary>
+    /// Initializes the component by loading pending join requests.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRequestsAsync();
+    }
+
+    /// <summary>
+    /// Loads the pending join requests for the group.
+    /// </summary>
+    private async Task LoadRequestsAsync()
+    {
+        isLoading = true;
+        ClearMessages();
+        StateHasChanged();
+
+        try
+        {
+            joinRequests = await GroupMemberService.GetPendingJoinRequestsAsync(Group.Id);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading join requests for group {GroupId}", Group.Id);
+            errorMessage = Localizer["ErrorLoadingRequests"];
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Gets the display name for a user.
+    /// </summary>
+    private string GetUserDisplayName(ApplicationUser? user)
+    {
+        if (user == null) return Localizer["UnknownUser"];
+
+        var fullName = $"{user.FirstName} {user.LastName}".Trim();
+        return string.IsNullOrEmpty(fullName) ? user.UserName ?? Localizer["UnknownUser"] : fullName;
+    }
+
+    /// <summary>
+    /// Gets the initials from a display name for the avatar placeholder.
+    /// </summary>
+    private string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "?";
+
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 0)
+            return "?";
+
+        if (parts.Length == 1)
+        {
+            // For single word (username), try to get first 2 characters
+            var singleWord = parts[0];
+            if (singleWord.Length >= 2)
+                return singleWord.Substring(0, 2).ToUpper();
+            else
+                return singleWord.Substring(0, 1).ToUpper();
+        }
+
+        // Return first letter of first name + first letter of last name
+        return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
+    }
+
+    /// <summary>
+    /// Approves a join request.
+    /// </summary>
+    private async Task ApproveRequest(GroupJoinRequest request)
+    {
+        processingRequestId = request.Id;
+        isApproving = true;
+        ClearMessages();
+        StateHasChanged();
+
+        try
+        {
+            var (success, error) = await GroupMemberService.ApproveJoinRequestAsync(request.Id, CurrentUserId);
+
+            if (success)
+            {
+                successMessage = string.Format(Localizer["RequestApproved"].Value, GetUserDisplayName(request.User));
+                joinRequests.Remove(request);
+                await OnRequestProcessed.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = error ?? Localizer["ErrorApprovingRequest"];
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error approving join request {RequestId}", request.Id);
+            errorMessage = Localizer["ErrorApprovingRequest"];
+        }
+        finally
+        {
+            processingRequestId = null;
+            isApproving = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Shows the deny confirmation dialog.
+    /// </summary>
+    private void ConfirmDenyRequest(GroupJoinRequest request)
+    {
+        requestToDeny = request;
+        showDenyConfirmation = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Cancels the deny operation.
+    /// </summary>
+    private void CancelDeny()
+    {
+        showDenyConfirmation = false;
+        requestToDeny = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Denies the selected join request.
+    /// </summary>
+    private async Task DenyRequest()
+    {
+        if (requestToDeny == null) return;
+
+        processingRequestId = requestToDeny.Id;
+        isDenying = true;
+        StateHasChanged();
+
+        try
+        {
+            var (success, error) = await GroupMemberService.RejectJoinRequestAsync(requestToDeny.Id, CurrentUserId);
+
+            if (success)
+            {
+                successMessage = string.Format(Localizer["RequestDenied"].Value, GetUserDisplayName(requestToDeny.User));
+                joinRequests.Remove(requestToDeny);
+                await OnRequestProcessed.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = error ?? Localizer["ErrorDenyingRequest"];
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error denying join request {RequestId}", requestToDeny.Id);
+            errorMessage = Localizer["ErrorDenyingRequest"];
+        }
+        finally
+        {
+            processingRequestId = null;
+            isDenying = false;
+            showDenyConfirmation = false;
+            requestToDeny = null;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Clears all error and success messages.
+    /// </summary>
+    private void ClearMessages()
+    {
+        errorMessage = null;
+        successMessage = null;
+    }
+}

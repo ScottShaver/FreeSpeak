@@ -68,6 +68,12 @@ namespace FreeSpeakWeb.Data
         /// <summary>
         /// Notification that someone has liked a user's comment in a group.
         /// </summary>
-        GroupCommentLiked = 11
+        GroupCommentLiked = 11,
+
+        /// <summary>
+        /// Notification that a user's request to join a group has been approved.
+        /// Sent to the user who submitted the join request.
+        /// </summary>
+        GroupJoinApproved = 12
     }
 }

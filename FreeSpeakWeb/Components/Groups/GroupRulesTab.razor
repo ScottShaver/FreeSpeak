@@ -1,0 +1,574 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using Microsoft.Extensions.Localization
+
+@inject GroupRuleService GroupRuleService
+@inject ILogger<GroupRulesTab> Logger
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Groups.GroupAdministrationModal> Localizer
+
+<div class="group-rules-tab">
+    @if (isLoading)
+    {
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">@Localizer["Loading"]</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="mb-0">@Localizer["GroupRulesDescription"]</h6>
+            <div class="btn-group">
+                @if (!rules.Any())
+                {
+                    <button type="button" class="btn btn-outline-primary btn-sm" @onclick="AddDefaultRules">
+                        <i class="bi bi-magic me-1"></i>@Localizer["AddDefaultRules"]
+                    </button>
+                }
+                <button type="button" class="btn btn-primary btn-sm" @onclick="ShowAddRuleForm">
+                    <i class="bi bi-plus-lg me-1"></i>@Localizer["AddRule"]
+                </button>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                <button type="button" class="btn-close" @onclick="@(() => errorMessage = null)"></button>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>@successMessage
+                <button type="button" class="btn-close" @onclick="@(() => successMessage = null)"></button>
+            </div>
+        }
+
+        @* Add/Edit Rule Form *@
+        @if (showRuleForm)
+        {
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        @if (editingRule != null)
+                        {
+                            <i class="bi bi-pencil me-1"></i>@Localizer["EditRule"]
+                        }
+                        else
+                        {
+                            <i class="bi bi-plus-lg me-1"></i>@Localizer["AddNewRule"]
+                        }
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="ruleTitle" class="form-label">@Localizer["RuleTitle"]</label>
+                        <input type="text" class="form-control" id="ruleTitle" @bind="formTitle" maxlength="200" placeholder="@Localizer["RuleTitlePlaceholder"]" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="ruleDescription" class="form-label">@Localizer["RuleDescription"]</label>
+                        <textarea class="form-control" id="ruleDescription" rows="4" @bind="formDescription" maxlength="2000" placeholder="@Localizer["RuleDescriptionPlaceholder"]"></textarea>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-primary" @onclick="SaveRule" disabled="@isSaving">
+                            @if (isSaving)
+                            {
+                                <span class="spinner-border spinner-border-sm me-1"></span>
+                                @Localizer["Saving"]
+                            }
+                            else
+                            {
+                                <i class="bi bi-check-lg me-1"></i>@Localizer["SaveRule"]
+                            }
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" @onclick="CancelEdit" disabled="@isSaving">
+                            @Localizer["Cancel"]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @* Rules List *@
+        @if (rules.Any())
+        {
+            <div class="rules-list">
+                @{ var ruleIndex = 0; }
+                @foreach (var rule in rules.OrderBy(r => r.Order))
+                {
+                    ruleIndex++;
+                    var currentIndex = ruleIndex;
+                    <div class="card mb-3 rule-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="rule-content flex-grow-1">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-secondary me-2">@currentIndex</span>
+                                        <h6 class="mb-0 rule-title">@rule.Title</h6>
+                                    </div>
+                                    <p class="mb-0 rule-description text-muted">@rule.Description</p>
+                                </div>
+                                <div class="rule-actions d-flex flex-wrap gap-1 ms-3">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" 
+                                            @onclick="@(() => MoveRuleUp(rule))" 
+                                            disabled="@(currentIndex == 1)"
+                                            title="@Localizer["MoveUp"]">
+                                        <i class="bi bi-arrow-up me-1"></i>@Localizer["MoveUp"]
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" 
+                                            @onclick="@(() => MoveRuleDown(rule))"
+                                            disabled="@(currentIndex == rules.Count)"
+                                            title="@Localizer["MoveDown"]">
+                                        <i class="bi bi-arrow-down me-1"></i>@Localizer["MoveDown"]
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm" 
+                                            @onclick="@(() => EditRule(rule))"
+                                            title="@Localizer["EditRule"]">
+                                        <i class="bi bi-pencil me-1"></i>@Localizer["Edit"]
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" 
+                                            @onclick="@(() => ConfirmDeleteRule(rule))"
+                                            title="@Localizer["DeleteRule"]">
+                                        <i class="bi bi-trash me-1"></i>@Localizer["Delete"]
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else if (!showRuleForm)
+        {
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>@Localizer["NoRulesYet"]
+                <br /><small class="text-muted">@Localizer["NoRulesYetHint"]</small>
+            </div>
+        }
+    }
+</div>
+
+@* Delete Confirmation Modal *@
+@if (showDeleteConfirmation && ruleToDelete != null)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-exclamation-triangle text-warning me-2"></i>@Localizer["ConfirmDeleteRule"]
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="CancelDelete"></button>
+                </div>
+                <div class="modal-body">
+                    <p>@Localizer["ConfirmDeleteRuleMessage"]</p>
+                    <p class="fw-bold">@ruleToDelete.Title</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CancelDelete">
+                        @Localizer["Cancel"]
+                    </button>
+                    <button type="button" class="btn btn-danger" @onclick="DeleteRule" disabled="@isDeleting">
+                        @if (isDeleting)
+                        {
+                            <span class="spinner-border spinner-border-sm me-1"></span>
+                        }
+                        <i class="bi bi-trash me-1"></i>@Localizer["Delete"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    /// <summary>
+    /// The group to manage rules for.
+    /// </summary>
+    [Parameter]
+    public Group Group { get; set; } = null!;
+
+    /// <summary>
+    /// The current user's ID.
+    /// </summary>
+    [Parameter]
+    public string CurrentUserId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Callback invoked when rules are modified.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnRulesChanged { get; set; }
+
+    private List<GroupRule> rules = new();
+    private bool isLoading = true;
+    private bool isSaving = false;
+    private bool isDeleting = false;
+    private string? errorMessage;
+    private string? successMessage;
+
+    // Form state
+    private bool showRuleForm = false;
+    private GroupRule? editingRule = null;
+    private string formTitle = string.Empty;
+    private string formDescription = string.Empty;
+
+    // Delete confirmation state
+    private bool showDeleteConfirmation = false;
+    private GroupRule? ruleToDelete = null;
+
+    /// <summary>
+    /// Default rules that can be added to a new group.
+    /// </summary>
+    private static readonly List<(string Title, string Description)> DefaultRules = new()
+    {
+        ("Be kind and courteous / No hate speech or bullying",
+         "We're collectively striving to foster a welcoming atmosphere. It's crucial to extend respect to everyone. While engaging in healthy debates and offering constructive criticism is encouraged, it's imperative to maintain a spirit of kindness. Avoid disparaging the efforts of others, and ensure that everyone feels secure. Any form of bullying is strictly prohibited, and comments that demean aspects like race, religion, culture, sexual orientation, gender, or identity will not be tolerated."),
+
+        ("Keep Focused: No political/religious discussions",
+         "We are a VERY diverse group. This means not everyone will have the same views in religion or politics as you. These types of discussion are likely to cause a high level of controversy and conflict. We have ONE thing in common - our shared interest in this group's topic. Anything not related to the discussion of our group's topic is subject to deletion."),
+
+        ("Talk to the admin team",
+         "If you have any questions or concerns or are experiencing issues in the group, please turn to one of the admins for help. That's what we're here for! You are more than welcome to send us a direct message for quicker communication."),
+
+        ("Do not engage (Report posts/comments)",
+         "Do not engage with those who make abusive or inappropriate posts. If you feel that someone's posts are abusive or violate these rules, REPORT the post/comment and contact the group Admin. Do not fan the flames. Posts created solely to complain about disrespectful individuals will be removed to ensure a positive discussion environment, avoiding distractions from the group's focus. REPORTING helps to remove those individuals so they are not a problem anymore."),
+
+        ("Report Copyrighted Material to Admins",
+         "In this group, we value and respect the intellectual property of creators. If you come across any content that you believe infringes on your copyright, please promptly report it to the admins. We are committed to maintaining a community that upholds the rights of creators and ensures a fair and respectful environment for all.")
+    };
+
+    /// <summary>
+    /// Initializes the component by loading existing rules.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRulesAsync();
+    }
+
+    /// <summary>
+    /// Loads the group's rules from the database.
+    /// </summary>
+    private async Task LoadRulesAsync()
+    {
+        isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            rules = await GroupRuleService.GetGroupRulesAsync(Group.Id);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading rules for group {GroupId}", Group.Id);
+            errorMessage = Localizer["ErrorLoadingRules"];
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Shows the add rule form.
+    /// </summary>
+    private void ShowAddRuleForm()
+    {
+        editingRule = null;
+        formTitle = string.Empty;
+        formDescription = string.Empty;
+        showRuleForm = true;
+        ClearMessages();
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Populates the form for editing an existing rule.
+    /// </summary>
+    private void EditRule(GroupRule rule)
+    {
+        editingRule = rule;
+        formTitle = rule.Title;
+        formDescription = rule.Description;
+        showRuleForm = true;
+        ClearMessages();
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Cancels the current edit operation.
+    /// </summary>
+    private void CancelEdit()
+    {
+        showRuleForm = false;
+        editingRule = null;
+        formTitle = string.Empty;
+        formDescription = string.Empty;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Saves the current rule (create or update).
+    /// </summary>
+    private async Task SaveRule()
+    {
+        if (string.IsNullOrWhiteSpace(formTitle))
+        {
+            errorMessage = Localizer["RuleTitleRequired"];
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(formDescription))
+        {
+            errorMessage = Localizer["RuleDescriptionRequired"];
+            return;
+        }
+
+        isSaving = true;
+        ClearMessages();
+        StateHasChanged();
+
+        try
+        {
+            if (editingRule != null)
+            {
+                // Update existing rule
+                var (success, error) = await GroupRuleService.UpdateRuleAsync(
+                    editingRule.Id,
+                    CurrentUserId,
+                    formTitle.Trim(),
+                    formDescription.Trim()
+                );
+
+                if (success)
+                {
+                    successMessage = Localizer["RuleUpdated"];
+                    await LoadRulesAsync();
+                    CancelEdit();
+                    await OnRulesChanged.InvokeAsync();
+                }
+                else
+                {
+                    errorMessage = error ?? Localizer["ErrorUpdatingRule"];
+                }
+            }
+            else
+            {
+                // Create new rule
+                var (success, error, rule) = await GroupRuleService.CreateRuleAsync(
+                    Group.Id,
+                    CurrentUserId,
+                    formTitle.Trim(),
+                    formDescription.Trim()
+                );
+
+                if (success)
+                {
+                    successMessage = Localizer["RuleCreated"];
+                    await LoadRulesAsync();
+                    CancelEdit();
+                    await OnRulesChanged.InvokeAsync();
+                }
+                else
+                {
+                    errorMessage = error ?? Localizer["ErrorCreatingRule"];
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error saving rule for group {GroupId}", Group.Id);
+            errorMessage = Localizer["ErrorSavingRule"];
+        }
+        finally
+        {
+            isSaving = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Shows the delete confirmation dialog.
+    /// </summary>
+    private void ConfirmDeleteRule(GroupRule rule)
+    {
+        ruleToDelete = rule;
+        showDeleteConfirmation = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Cancels the delete operation.
+    /// </summary>
+    private void CancelDelete()
+    {
+        showDeleteConfirmation = false;
+        ruleToDelete = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Deletes the selected rule.
+    /// </summary>
+    private async Task DeleteRule()
+    {
+        if (ruleToDelete == null) return;
+
+        isDeleting = true;
+        StateHasChanged();
+
+        try
+        {
+            var (success, error) = await GroupRuleService.DeleteRuleAsync(ruleToDelete.Id, CurrentUserId);
+
+            if (success)
+            {
+                successMessage = Localizer["RuleDeleted"];
+                await LoadRulesAsync();
+                await OnRulesChanged.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = error ?? Localizer["ErrorDeletingRule"];
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error deleting rule {RuleId}", ruleToDelete.Id);
+            errorMessage = Localizer["ErrorDeletingRule"];
+        }
+        finally
+        {
+            isDeleting = false;
+            showDeleteConfirmation = false;
+            ruleToDelete = null;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Moves a rule up in the order.
+    /// </summary>
+    private async Task MoveRuleUp(GroupRule rule)
+    {
+        var orderedRules = rules.OrderBy(r => r.Order).ToList();
+        var currentIndex = orderedRules.FindIndex(r => r.Id == rule.Id);
+        if (currentIndex <= 0) return;
+
+        var newOrder = orderedRules.Select(r => r.Id).ToList();
+        newOrder.RemoveAt(currentIndex);
+        newOrder.Insert(currentIndex - 1, rule.Id);
+        await ReorderRules(newOrder);
+    }
+
+    /// <summary>
+    /// Moves a rule down in the order.
+    /// </summary>
+    private async Task MoveRuleDown(GroupRule rule)
+    {
+        var orderedRules = rules.OrderBy(r => r.Order).ToList();
+        var currentIndex = orderedRules.FindIndex(r => r.Id == rule.Id);
+        if (currentIndex < 0 || currentIndex >= orderedRules.Count - 1) return;
+
+        var newOrder = orderedRules.Select(r => r.Id).ToList();
+        newOrder.RemoveAt(currentIndex);
+        newOrder.Insert(currentIndex + 1, rule.Id);
+        await ReorderRules(newOrder);
+    }
+
+    /// <summary>
+    /// Reorders the rules based on the provided order.
+    /// </summary>
+    private async Task ReorderRules(List<int> ruleIds)
+    {
+        ClearMessages();
+
+        try
+        {
+            var (success, error) = await GroupRuleService.ReorderRulesAsync(Group.Id, CurrentUserId, ruleIds);
+
+            if (success)
+            {
+                await LoadRulesAsync();
+                await OnRulesChanged.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = error ?? Localizer["ErrorReorderingRules"];
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error reordering rules for group {GroupId}", Group.Id);
+            errorMessage = Localizer["ErrorReorderingRules"];
+        }
+    }
+
+    /// <summary>
+    /// Adds the default rules to the group.
+    /// </summary>
+    private async Task AddDefaultRules()
+    {
+        if (rules.Any())
+        {
+            errorMessage = Localizer["CannotAddDefaultRulesExist"];
+            return;
+        }
+
+        isSaving = true;
+        ClearMessages();
+        StateHasChanged();
+
+        try
+        {
+            int order = 0;
+            foreach (var (title, description) in DefaultRules)
+            {
+                var (success, error, rule) = await GroupRuleService.CreateRuleAsync(
+                    Group.Id,
+                    CurrentUserId,
+                    title,
+                    description,
+                    order++
+                );
+
+                if (!success)
+                {
+                    errorMessage = error ?? Localizer["ErrorAddingDefaultRules"];
+                    break;
+                }
+            }
+
+            if (string.IsNullOrEmpty(errorMessage))
+            {
+                successMessage = Localizer["DefaultRulesAdded"];
+                await LoadRulesAsync();
+                await OnRulesChanged.InvokeAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error adding default rules for group {GroupId}", Group.Id);
+            errorMessage = Localizer["ErrorAddingDefaultRules"];
+        }
+        finally
+        {
+            isSaving = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Clears all error and success messages.
+    /// </summary>
+    private void ClearMessages()
+    {
+        errorMessage = null;
+        successMessage = null;
+    }
+}

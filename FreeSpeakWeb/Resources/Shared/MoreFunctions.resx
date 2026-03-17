@@ -103,6 +103,12 @@
   <data name="RequireAcceptRulesHelp" xml:space="preserve">
     <value>Users must agree to the group rules before joining or submitting a join request.</value>
   </data>
+  <data name="RequiresPostApproval" xml:space="preserve">
+    <value>Require Post Approval</value>
+  </data>
+  <data name="RequiresPostApprovalHelp" xml:space="preserve">
+    <value>New posts must be approved by a moderator before they are visible to other members.</value>
+  </data>
   <data name="EnablePointsSystem" xml:space="preserve">
     <value>Enable Points System</value>
   </data>

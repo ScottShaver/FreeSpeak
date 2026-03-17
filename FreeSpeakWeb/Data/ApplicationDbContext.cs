@@ -121,6 +121,11 @@ namespace FreeSpeakWeb.Data
         public DbSet<GroupPostNotificationMute> GroupPostNotificationMutes { get; set; }
 
         /// <summary>
+        /// Gets or sets the DbSet for content reports submitted by users in groups.
+        /// </summary>
+        public DbSet<GroupContentReport> GroupContentReports { get; set; }
+
+        /// <summary>
         /// Gets or sets the DbSet for audit log entries tracking user actions and system events.
         /// </summary>
         public DbSet<AuditLog> AuditLogs { get; set; }
@@ -667,6 +672,51 @@ namespace FreeSpeakWeb.Data
                 entity.HasIndex(m => m.UserId);
                 // Unique constraint: a user can only mute a group post once
                 entity.HasIndex(m => new { m.PostId, m.UserId }).IsUnique();
+            });
+
+            // Configure GroupContentReport entity
+            modelBuilder.Entity<GroupContentReport>(entity =>
+            {
+                entity.HasKey(r => r.Id);
+
+                entity.HasOne(r => r.Group)
+                    .WithMany()
+                    .HasForeignKey(r => r.GroupId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(r => r.Post)
+                    .WithMany()
+                    .HasForeignKey(r => r.PostId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasOne(r => r.Comment)
+                    .WithMany()
+                    .HasForeignKey(r => r.CommentId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasOne(r => r.Reporter)
+                    .WithMany()
+                    .HasForeignKey(r => r.ReporterId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(r => r.ViolatedRule)
+                    .WithMany()
+                    .HasForeignKey(r => r.ViolatedRuleId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasOne(r => r.Reviewer)
+                    .WithMany()
+                    .HasForeignKey(r => r.ReviewerId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // Create indexes for efficient querying
+                entity.HasIndex(r => r.GroupId);
+                entity.HasIndex(r => r.PostId);
+                entity.HasIndex(r => r.CommentId);
+                entity.HasIndex(r => r.ReporterId);
+                entity.HasIndex(r => r.Status);
+                entity.HasIndex(r => r.CreatedAt);
+                entity.HasIndex(r => new { r.GroupId, r.Status });
             });
 
             // Configure AuditLog entity

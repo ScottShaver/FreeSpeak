@@ -1,0 +1,35 @@
+.group-rules-tab {
+    min-height: 300px;
+}
+
+.rule-card {
+    transition: all 0.2s ease;
+}
+
+.rule-card:hover {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+}
+
+.rule-title {
+    font-weight: 600;
+}
+
+.rule-description {
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+
+.rule-actions {
+    opacity: 1;
+    flex-shrink: 0;
+}
+
+.rule-actions .btn {
+    white-space: nowrap;
+}
+
+.rules-list {
+    max-height: 500px;
+    overflow-y: auto;
+}

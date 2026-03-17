@@ -110,12 +110,17 @@ namespace FreeSpeakWeb.Services
 
             try
             {
+                // Check if group requires post approval
+                var group = await _groupRepository.GetByIdAsync(groupId);
+                var requiresApproval = group?.RequiresPostApproval ?? false;
+
                 var post = new GroupPost
                 {
                     GroupId = groupId,
                     AuthorId = authorId,
                     Content = string.IsNullOrWhiteSpace(content) ? string.Empty : content.Trim(),
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    Status = requiresApproval ? PostStatus.Pending : PostStatus.Posted
                 };
 
                 var result = await _postRepository.CreateAsync(post);
@@ -207,6 +212,15 @@ namespace FreeSpeakWeb.Services
                 if (post.AuthorId != userId)
                 {
                     return (false, "You are not authorized to edit this post.", null);
+                }
+
+                // If the post is Pending or Declined and in a group requiring approval,
+                // reset status to Pending when edited
+                var group = await context.Groups.FindAsync(post.GroupId);
+                if (group != null && group.RequiresPostApproval && 
+                    (post.Status == PostStatus.Pending || post.Status == PostStatus.Declined))
+                {
+                    post.Status = PostStatus.Pending;
                 }
 
                 // Update content
@@ -458,6 +472,179 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogError(ex, "Error deleting group post {PostId} for user {UserId}", postId, userId);
                 return (false, "An error occurred while deleting the post.");
+            }
+        }
+
+        /// <summary>
+        /// Approves a pending group post, making it visible to all group members.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post to approve.</param>
+        /// <param name="moderatorId">The user ID of the moderator approving the post.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
+        public async Task<(bool Success, string? ErrorMessage)> ApprovePostAsync(int postId, string moderatorId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var post = await context.GroupPosts
+                    .Include(p => p.Group)
+                    .FirstOrDefaultAsync(p => p.Id == postId);
+
+                if (post == null)
+                {
+                    return (false, "Post not found.");
+                }
+
+                // Check if user is a group admin or moderator
+                var isModeratorOrAdmin = await context.GroupUsers
+                    .AnyAsync(gu => gu.GroupId == post.GroupId && 
+                                   gu.UserId == moderatorId && 
+                                   (gu.IsAdmin || gu.IsModerator));
+
+                if (!isModeratorOrAdmin)
+                {
+                    return (false, "You are not authorized to approve posts in this group.");
+                }
+
+                if (post.Status != PostStatus.Pending)
+                {
+                    return (false, "Only pending posts can be approved.");
+                }
+
+                post.Status = PostStatus.Posted;
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("Group post {PostId} approved by moderator {ModeratorId}", postId, moderatorId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error approving group post {PostId} by moderator {ModeratorId}", postId, moderatorId);
+                return (false, "An error occurred while approving the post.");
+            }
+        }
+
+        /// <summary>
+        /// Declines a pending group post, preventing it from being published.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post to decline.</param>
+        /// <param name="moderatorId">The user ID of the moderator declining the post.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
+        public async Task<(bool Success, string? ErrorMessage)> DeclinePostAsync(int postId, string moderatorId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var post = await context.GroupPosts
+                    .Include(p => p.Group)
+                    .FirstOrDefaultAsync(p => p.Id == postId);
+
+                if (post == null)
+                {
+                    return (false, "Post not found.");
+                }
+
+                // Check if user is a group admin or moderator
+                var isModeratorOrAdmin = await context.GroupUsers
+                    .AnyAsync(gu => gu.GroupId == post.GroupId && 
+                                   gu.UserId == moderatorId && 
+                                   (gu.IsAdmin || gu.IsModerator));
+
+                if (!isModeratorOrAdmin)
+                {
+                    return (false, "You are not authorized to decline posts in this group.");
+                }
+
+                if (post.Status != PostStatus.Pending)
+                {
+                    return (false, "Only pending posts can be declined.");
+                }
+
+                post.Status = PostStatus.Declined;
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("Group post {PostId} declined by moderator {ModeratorId}", postId, moderatorId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error declining group post {PostId} by moderator {ModeratorId}", postId, moderatorId);
+                return (false, "An error occurred while declining the post.");
+            }
+        }
+
+        /// <summary>
+        /// Gets all pending posts for a group that require moderator approval.
+        /// </summary>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <returns>A list of pending group posts.</returns>
+        public async Task<List<GroupPost>> GetPendingPostsAsync(int groupId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.GroupPosts
+                    .Include(p => p.Author)
+                    .Include(p => p.Images)
+                    .Where(p => p.GroupId == groupId && p.Status == PostStatus.Pending)
+                    .OrderBy(p => p.CreatedAt)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving pending posts for group {GroupId}", groupId);
+                return new List<GroupPost>();
+            }
+        }
+
+        /// <summary>
+        /// Gets the count of pending posts for a group.
+        /// </summary>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <returns>The number of pending posts.</returns>
+        public async Task<int> GetPendingPostCountAsync(int groupId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.GroupPosts
+                    .CountAsync(p => p.GroupId == groupId && p.Status == PostStatus.Pending);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error counting pending posts for group {GroupId}", groupId);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Gets all posts by a specific user in a group, including posts with any status.
+        /// This is used to allow users to see their own pending/declined posts.
+        /// </summary>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>A list of all posts by the user in the group, regardless of status.</returns>
+        public async Task<List<GroupPost>> GetUserPostsIncludingAllStatusesAsync(int groupId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.GroupPosts
+                    .Include(p => p.Author)
+                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
+                    .Where(p => p.GroupId == groupId && p.AuthorId == userId)
+                    .OrderByDescending(p => p.CreatedAt)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving user posts for user {UserId} in group {GroupId}", userId, groupId);
+                return new List<GroupPost>();
             }
         }
 
