@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>إشراف المجموعة</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>جاري التحميل...</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="ErrorLoadingData" xml:space="preserve">
+    <value>حدث خطأ أثناء تحميل بيانات الإشراف.</value>
+  </data>
+  <data name="ReportedContent" xml:space="preserve">
+    <value>المُبلَّغ عنه</value>
+  </data>
+  <data name="ReportedContentDescription" xml:space="preserve">
+    <value>مراجعة المحتوى الذي أبلغ عنه الأعضاء.</value>
+  </data>
+  <data name="ReportedContentPlaceholder" xml:space="preserve">
+    <value>ستتوفر ميزات المحتوى المُبلَّغ عنه في تحديث مستقبلي. ستتمكن من مراجعة واتخاذ إجراء بشأن المنشورات والتعليقات التي أبلغ عنها الأعضاء.</value>
+  </data>
+  <data name="PendingApproval" xml:space="preserve">
+    <value>قيد الانتظار</value>
+  </data>
+  <data name="PendingApprovalDescription" xml:space="preserve">
+    <value>مراجعة المنشورات التي تنتظر موافقة المشرف.</value>
+  </data>
+  <data name="PendingApprovalPlaceholder" xml:space="preserve">
+    <value>ستتوفر ميزات الموافقة المعلقة في تحديث مستقبلي. ستتمكن من الموافقة على المنشورات أو رفضها قبل نشرها.</value>
+  </data>
+  <data name="RecentPosts" xml:space="preserve">
+    <value>الأخيرة</value>
+  </data>
+  <data name="RecentPostsDescription" xml:space="preserve">
+    <value>تصفح المنشورات الأخيرة لمراجعة الإشراف.</value>
+  </data>
+  <data name="RecentPostsPlaceholder" xml:space="preserve">
+    <value>ستتوفر ميزات مراجعة المنشورات الأخيرة في تحديث مستقبلي. ستتمكن من مراجعة نشاط المجموعة الأخير والإشراف عليه بسرعة.</value>
+  </data>
+  <data name="ModerationLog" xml:space="preserve">
+    <value>سجل الإشراف</value>
+  </data>
+  <data name="ModerationLogDescription" xml:space="preserve">
+    <value>عرض سجل إجراءات الإشراف.</value>
+  </data>
+  <data name="ModerationLogPlaceholder" xml:space="preserve">
+    <value>ستتوفر ميزات سجل الإشراف في تحديث مستقبلي. ستتمكن من عرض سجل جميع إجراءات الإشراف المتخذة في هذه المجموعة.</value>
+  </data>
+  <data name="NoReports" xml:space="preserve">
+    <value>لا توجد بلاغات معلقة. تمت مراجعة جميع البلاغات!</value>
+  </data>
+  <data name="ReportedBy" xml:space="preserve">
+    <value>أبلغ عنه</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>منشور</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>تعليق</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>العودة إلى القائمة</value>
+  </data>
+  <data name="ViolatedRule" xml:space="preserve">
+    <value>القاعدة المنتهكة:</value>
+  </data>
+  <data name="ReporterDescription" xml:space="preserve">
+    <value>وصف المُبلِّغ:</value>
+  </data>
+  <data name="ReportedPost" xml:space="preserve">
+    <value>المنشور المُبلَّغ عنه</value>
+  </data>
+  <data name="ReportedComment" xml:space="preserve">
+    <value>التعليق المُبلَّغ عنه</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>الكاتب:</value>
+  </data>
+  <data name="ContentDeleted" xml:space="preserve">
+    <value>تم حذف المحتوى</value>
+  </data>
+  <data name="ModeratorNotes" xml:space="preserve">
+    <value>ملاحظات المشرف (اختياري)</value>
+  </data>
+  <data name="NotesPlaceholder" xml:space="preserve">
+    <value>أضف ملاحظات حول قرارك أو الإجراء المتخذ...</value>
+  </data>
+  <data name="DismissReport" xml:space="preserve">
+    <value>رفض</value>
+  </data>
+  <data name="TakeAction" xml:space="preserve">
+    <value>اتخاذ إجراء</value>
+  </data>
+  <data name="Resolve" xml:space="preserve">
+    <value>حل</value>
+  </data>
+  <data name="ActionExplanation" xml:space="preserve">
+    <value>دليل الإجراءات:</value>
+  </data>
+  <data name="DismissExplanation" xml:space="preserve">
+    <value>لم يتم العثور على انتهاك، البلاغ غير صالح</value>
+  </data>
+  <data name="ActionExplanation2" xml:space="preserve">
+    <value>المحتوى ينتهك القواعد، مطلوب إجراء إشرافي</value>
+  </data>
+  <data name="ResolveExplanation" xml:space="preserve">
+    <value>تم حل المشكلة، تم تعديل المحتوى أو إزالته بواسطة الكاتب</value>
+  </data>
+  <data name="ReportDismissed" xml:space="preserve">
+    <value>تم رفض البلاغ بنجاح.</value>
+  </data>
+  <data name="ActionTaken" xml:space="preserve">
+    <value>تم تحديد البلاغ كإجراء متخذ.</value>
+  </data>
+  <data name="ReportResolved" xml:space="preserve">
+    <value>تم حل البلاغ بنجاح.</value>
+  </data>
+  <data name="ErrorProcessingReport" xml:space="preserve">
+    <value>حدث خطأ أثناء معالجة البلاغ.</value>
+  </data>
+  <data name="ErrorLoadingReports" xml:space="preserve">
+    <value>حدث خطأ أثناء تحميل البلاغات.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>مستخدم غير معروف</value>
+  </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>الآن</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>منذ {0} د</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>منذ {0} س</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>منذ {0} ي</value>
+  </data>
+  <data name="ReasonViolatesGroupRule" xml:space="preserve">
+    <value>ينتهك قاعدة المجموعة</value>
+  </data>
+  <data name="ReasonSpam" xml:space="preserve">
+    <value>محتوى غير مرغوب فيه أو مزعج</value>
+  </data>
+  <data name="ReasonHarassment" xml:space="preserve">
+    <value>مضايقة أو تنمر</value>
+  </data>
+  <data name="ReasonHateSpeech" xml:space="preserve">
+    <value>خطاب كراهية</value>
+  </data>
+  <data name="ReasonMisinformation" xml:space="preserve">
+    <value>معلومات مضللة</value>
+  </data>
+  <data name="ReasonAdultContent" xml:space="preserve">
+    <value>محتوى للبالغين</value>
+  </data>
+  <data name="ReasonViolence" xml:space="preserve">
+    <value>عنف أو محتوى صادم</value>
+  </data>
+  <data name="ReasonCopyright" xml:space="preserve">
+    <value>انتهاك حقوق النشر</value>
+  </data>
+  <data name="ReasonOffTopic" xml:space="preserve">
+    <value>محتوى خارج الموضوع</value>
+  </data>
+  <data name="ReasonPrivacy" xml:space="preserve">
+    <value>انتهاك الخصوصية</value>
+  </data>
+  <data name="ReasonSelfHarm" xml:space="preserve">
+    <value>محتوى إيذاء النفس</value>
+  </data>
+  <data name="ReasonIllegal" xml:space="preserve">
+    <value>نشاط غير قانوني</value>
+  </data>
+  <data name="ReasonOther" xml:space="preserve">
+    <value>أخرى</value>
+  </data>
+  <data name="PostApprovalDisabled" xml:space="preserve">
+    <value>الموافقة على المنشورات غير مفعلة لهذه المجموعة. يتم نشر المنشورات فور إنشائها.</value>
+  </data>
+  <data name="NoPendingPosts" xml:space="preserve">
+    <value>لا توجد منشورات معلقة. تمت مراجعة جميع المنشورات!</value>
+  </data>
+  <data name="PostApproved" xml:space="preserve">
+    <value>تمت الموافقة على المنشور ونشره بنجاح.</value>
+  </data>
+  <data name="PostDeclined" xml:space="preserve">
+    <value>تم رفض المنشور بنجاح.</value>
+  </data>
+  <data name="ErrorLoadingPendingPosts" xml:space="preserve">
+    <value>حدث خطأ أثناء تحميل المنشورات المعلقة.</value>
+  </data>
+  <data name="ErrorProcessingPost" xml:space="preserve">
+    <value>حدث خطأ أثناء معالجة المنشور.</value>
+  </data>
+  <data name="Images" xml:space="preserve">
+    <value>صورة/صور</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="PendingPostsCount" xml:space="preserve">
+    <value>منشور(ات) معلقة</value>
+  </data>
+  <data name="PostedAt" xml:space="preserve">
+    <value>نُشر</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>موافقة</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>رفض</value>
+  </data>
+  <data name="ApprovePostTooltip" xml:space="preserve">
+    <value>الموافقة على هذا المنشور وجعله مرئيًا لجميع الأعضاء</value>
+  </data>
+  <data name="DeclinePostTooltip" xml:space="preserve">
+    <value>رفض هذا المنشور - يمكن للكاتب التعديل وإعادة الإرسال</value>
+  </data>
+</root>

@@ -97,4 +97,40 @@
   <data name="NoPostsYet" xml:space="preserve">
     <value>Ainda não há postagens neste grupo. Seja o primeiro a postar!</value>
   </data>
+  <data name="GroupAdministration" xml:space="preserve">
+    <value>Administração do grupo</value>
+  </data>
+  <data name="GroupModeration" xml:space="preserve">
+    <value>Moderação do grupo</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>Criador</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>Moderador</value>
+  </data>
+  <data name="YouAreGroupCreator" xml:space="preserve">
+    <value>Você é o criador deste grupo</value>
+  </data>
+  <data name="YouAreGroupAdmin" xml:space="preserve">
+    <value>Você é um administrador deste grupo</value>
+  </data>
+  <data name="YouAreGroupModerator" xml:space="preserve">
+    <value>Você é um moderador deste grupo</value>
+  </data>
+  <data name="PostPending" xml:space="preserve">
+    <value>Aguardando aprovação</value>
+  </data>
+  <data name="PostPendingDescription" xml:space="preserve">
+    <value>Esta postagem está aguardando aprovação de um moderador antes de ser visível para outros.</value>
+  </data>
+  <data name="PostDeclined" xml:space="preserve">
+    <value>Postagem recusada</value>
+  </data>
+  <data name="PostDeclinedDescription" xml:space="preserve">
+    <value>Esta postagem foi recusada por um moderador. Você pode editá-la e reenviá-la.</value>
+  </data>
 </root>

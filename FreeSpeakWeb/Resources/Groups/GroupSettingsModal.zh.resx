@@ -103,4 +103,31 @@
   <data name="Saving" xml:space="preserve">
     <value>保存中...</value>
   </data>
+  <data name="RequireAcceptRules" xml:space="preserve">
+    <value>需要同意群组规则</value>
+  </data>
+  <data name="RequireAcceptRulesHelp" xml:space="preserve">
+    <value>用户在加入或提交加入请求前必须同意群组规则。</value>
+  </data>
+  <data name="RequiresPostApproval" xml:space="preserve">
+    <value>需要帖子审批</value>
+  </data>
+  <data name="RequiresPostApprovalHelp" xml:space="preserve">
+    <value>新帖子必须经过版主批准后才能对其他成员可见。</value>
+  </data>
+  <data name="GroupStatusSection" xml:space="preserve">
+    <value>群组状态</value>
+  </data>
+  <data name="IsActive" xml:space="preserve">
+    <value>群组处于活跃状态</value>
+  </data>
+  <data name="IsActiveHelp" xml:space="preserve">
+    <value>活跃时，群组准备好接受用户和内容。非活跃群组仅对管理员可见。</value>
+  </data>
+  <data name="IsClosed" xml:space="preserve">
+    <value>群组已永久关闭</value>
+  </data>
+  <data name="IsClosedHelp" xml:space="preserve">
+    <value>警告：关闭群组是永久性的。关闭后无法进行任何更改，即使是管理员也不行。</value>
+  </data>
 </root>

@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>Moderação do grupo</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Carregando...</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Fechar</value>
+  </data>
+  <data name="ErrorLoadingData" xml:space="preserve">
+    <value>Ocorreu um erro ao carregar os dados de moderação.</value>
+  </data>
+  <data name="ReportedContent" xml:space="preserve">
+    <value>Denunciado</value>
+  </data>
+  <data name="ReportedContentDescription" xml:space="preserve">
+    <value>Revise conteúdo denunciado pelos membros.</value>
+  </data>
+  <data name="ReportedContentPlaceholder" xml:space="preserve">
+    <value>Os recursos de conteúdo denunciado estarão disponíveis em uma atualização futura. Você poderá revisar e tomar medidas sobre publicações e comentários denunciados pelos membros.</value>
+  </data>
+  <data name="PendingApproval" xml:space="preserve">
+    <value>Pendente</value>
+  </data>
+  <data name="PendingApprovalDescription" xml:space="preserve">
+    <value>Revise publicações aguardando aprovação do moderador.</value>
+  </data>
+  <data name="PendingApprovalPlaceholder" xml:space="preserve">
+    <value>Os recursos de aprovação pendente estarão disponíveis em uma atualização futura. Você poderá aprovar ou rejeitar publicações antes de serem publicadas.</value>
+  </data>
+  <data name="RecentPosts" xml:space="preserve">
+    <value>Recente</value>
+  </data>
+  <data name="RecentPostsDescription" xml:space="preserve">
+    <value>Navegue pelas publicações recentes para revisão de moderação.</value>
+  </data>
+  <data name="RecentPostsPlaceholder" xml:space="preserve">
+    <value>Os recursos de revisão de publicações recentes estarão disponíveis em uma atualização futura. Você poderá revisar e moderar rapidamente a atividade recente do grupo.</value>
+  </data>
+  <data name="ModerationLog" xml:space="preserve">
+    <value>Log Mod</value>
+  </data>
+  <data name="ModerationLogDescription" xml:space="preserve">
+    <value>Visualize o histórico de ações de moderação.</value>
+  </data>
+  <data name="ModerationLogPlaceholder" xml:space="preserve">
+    <value>Os recursos de log de moderação estarão disponíveis em uma atualização futura. Você poderá visualizar um histórico de todas as ações de moderação realizadas neste grupo.</value>
+  </data>
+  <data name="NoReports" xml:space="preserve">
+    <value>Sem denúncias pendentes. Todas as denúncias foram revisadas!</value>
+  </data>
+  <data name="ReportedBy" xml:space="preserve">
+    <value>Denunciado por</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Publicação</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Comentário</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>Voltar à lista</value>
+  </data>
+  <data name="ViolatedRule" xml:space="preserve">
+    <value>Regra violada:</value>
+  </data>
+  <data name="ReporterDescription" xml:space="preserve">
+    <value>Descrição do denunciante:</value>
+  </data>
+  <data name="ReportedPost" xml:space="preserve">
+    <value>Publicação denunciada</value>
+  </data>
+  <data name="ReportedComment" xml:space="preserve">
+    <value>Comentário denunciado</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Autor:</value>
+  </data>
+  <data name="ContentDeleted" xml:space="preserve">
+    <value>O conteúdo foi excluído</value>
+  </data>
+  <data name="ModeratorNotes" xml:space="preserve">
+    <value>Notas do moderador (Opcional)</value>
+  </data>
+  <data name="NotesPlaceholder" xml:space="preserve">
+    <value>Adicione notas sobre sua decisão ou ação tomada...</value>
+  </data>
+  <data name="DismissReport" xml:space="preserve">
+    <value>Descartar</value>
+  </data>
+  <data name="TakeAction" xml:space="preserve">
+    <value>Tomar ação</value>
+  </data>
+  <data name="Resolve" xml:space="preserve">
+    <value>Resolver</value>
+  </data>
+  <data name="ActionExplanation" xml:space="preserve">
+    <value>Guia de ações:</value>
+  </data>
+  <data name="DismissExplanation" xml:space="preserve">
+    <value>Nenhuma violação encontrada, denúncia não é válida</value>
+  </data>
+  <data name="ActionExplanation2" xml:space="preserve">
+    <value>Conteúdo viola regras, ação de moderação necessária</value>
+  </data>
+  <data name="ResolveExplanation" xml:space="preserve">
+    <value>Problema resolvido, conteúdo editado ou removido pelo autor</value>
+  </data>
+  <data name="ReportDismissed" xml:space="preserve">
+    <value>Denúncia descartada com sucesso.</value>
+  </data>
+  <data name="ActionTaken" xml:space="preserve">
+    <value>Denúncia marcada como ação tomada.</value>
+  </data>
+  <data name="ReportResolved" xml:space="preserve">
+    <value>Denúncia resolvida com sucesso.</value>
+  </data>
+  <data name="ErrorProcessingReport" xml:space="preserve">
+    <value>Ocorreu um erro ao processar a denúncia.</value>
+  </data>
+  <data name="ErrorLoadingReports" xml:space="preserve">
+    <value>Ocorreu um erro ao carregar as denúncias.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Usuário desconhecido</value>
+  </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>agora mesmo</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>há {0} min</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>há {0} h</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>há {0} d</value>
+  </data>
+  <data name="ReasonViolatesGroupRule" xml:space="preserve">
+    <value>Viola regra do grupo</value>
+  </data>
+  <data name="ReasonSpam" xml:space="preserve">
+    <value>Spam ou conteúdo indesejado</value>
+  </data>
+  <data name="ReasonHarassment" xml:space="preserve">
+    <value>Assédio ou bullying</value>
+  </data>
+  <data name="ReasonHateSpeech" xml:space="preserve">
+    <value>Discurso de ódio</value>
+  </data>
+  <data name="ReasonMisinformation" xml:space="preserve">
+    <value>Desinformação</value>
+  </data>
+  <data name="ReasonAdultContent" xml:space="preserve">
+    <value>Conteúdo adulto</value>
+  </data>
+  <data name="ReasonViolence" xml:space="preserve">
+    <value>Violência ou conteúdo gráfico</value>
+  </data>
+  <data name="ReasonCopyright" xml:space="preserve">
+    <value>Violação de direitos autorais</value>
+  </data>
+  <data name="ReasonOffTopic" xml:space="preserve">
+    <value>Conteúdo fora do tópico</value>
+  </data>
+  <data name="ReasonPrivacy" xml:space="preserve">
+    <value>Violação de privacidade</value>
+  </data>
+  <data name="ReasonSelfHarm" xml:space="preserve">
+    <value>Conteúdo de automutilação</value>
+  </data>
+  <data name="ReasonIllegal" xml:space="preserve">
+    <value>Atividade ilegal</value>
+  </data>
+  <data name="ReasonOther" xml:space="preserve">
+    <value>Outro</value>
+  </data>
+  <data name="PostApprovalDisabled" xml:space="preserve">
+    <value>A aprovação de publicações não está habilitada para este grupo. As publicações são publicadas imediatamente quando criadas.</value>
+  </data>
+  <data name="NoPendingPosts" xml:space="preserve">
+    <value>Sem publicações pendentes. Todas as publicações foram revisadas!</value>
+  </data>
+  <data name="PostApproved" xml:space="preserve">
+    <value>Publicação aprovada e publicada com sucesso.</value>
+  </data>
+  <data name="PostDeclined" xml:space="preserve">
+    <value>Publicação rejeitada com sucesso.</value>
+  </data>
+  <data name="ErrorLoadingPendingPosts" xml:space="preserve">
+    <value>Ocorreu um erro ao carregar as publicações pendentes.</value>
+  </data>
+  <data name="ErrorProcessingPost" xml:space="preserve">
+    <value>Ocorreu um erro ao processar a publicação.</value>
+  </data>
+  <data name="Images" xml:space="preserve">
+    <value>imagem(ns)</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Atualizar</value>
+  </data>
+  <data name="PendingPostsCount" xml:space="preserve">
+    <value>publicação(ões) pendente(s)</value>
+  </data>
+  <data name="PostedAt" xml:space="preserve">
+    <value>Publicado</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Aprovar</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Rejeitar</value>
+  </data>
+  <data name="ApprovePostTooltip" xml:space="preserve">
+    <value>Aprovar esta publicação e torná-la visível para todos os membros</value>
+  </data>
+  <data name="DeclinePostTooltip" xml:space="preserve">
+    <value>Rejeitar esta publicação - o autor pode editar e reenviar</value>
+  </data>
+</root>

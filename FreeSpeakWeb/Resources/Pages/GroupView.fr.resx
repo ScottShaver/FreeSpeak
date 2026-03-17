@@ -97,4 +97,40 @@
   <data name="NoPostsYet" xml:space="preserve">
     <value>Aucune publication dans ce groupe pour le moment. Soyez le premier à publier !</value>
   </data>
+  <data name="GroupAdministration" xml:space="preserve">
+    <value>Administration du groupe</value>
+  </data>
+  <data name="GroupModeration" xml:space="preserve">
+    <value>Modération du groupe</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>Créateur</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>Modérateur</value>
+  </data>
+  <data name="YouAreGroupCreator" xml:space="preserve">
+    <value>Vous êtes le créateur de ce groupe</value>
+  </data>
+  <data name="YouAreGroupAdmin" xml:space="preserve">
+    <value>Vous êtes administrateur de ce groupe</value>
+  </data>
+  <data name="YouAreGroupModerator" xml:space="preserve">
+    <value>Vous êtes modérateur de ce groupe</value>
+  </data>
+  <data name="PostPending" xml:space="preserve">
+    <value>En attente d'approbation</value>
+  </data>
+  <data name="PostPendingDescription" xml:space="preserve">
+    <value>Cette publication est en attente d'approbation par un modérateur avant d'être visible par les autres.</value>
+  </data>
+  <data name="PostDeclined" xml:space="preserve">
+    <value>Publication refusée</value>
+  </data>
+  <data name="PostDeclinedDescription" xml:space="preserve">
+    <value>Cette publication a été refusée par un modérateur. Vous pouvez la modifier et la soumettre à nouveau.</value>
+  </data>
 </root>

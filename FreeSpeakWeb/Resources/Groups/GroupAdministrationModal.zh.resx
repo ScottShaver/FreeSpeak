@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>群组管理</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>加载中...</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="ErrorLoadingData" xml:space="preserve">
+    <value>加载管理数据时发生错误。</value>
+  </data>
+  <data name="MemberManagement" xml:space="preserve">
+    <value>成员</value>
+  </data>
+  <data name="MemberManagementDescription" xml:space="preserve">
+    <value>查看和管理群组成员。</value>
+  </data>
+  <data name="MemberManagementPlaceholder" xml:space="preserve">
+    <value>成员管理功能将在未来更新中提供。届时您可以查看成员、移除成员和管理其角色。</value>
+  </data>
+  <data name="JoinRequests" xml:space="preserve">
+    <value>加入请求</value>
+  </data>
+  <data name="JoinRequestsDescription" xml:space="preserve">
+    <value>审核和批准待处理的加入请求。</value>
+  </data>
+  <data name="JoinRequestsPlaceholder" xml:space="preserve">
+    <value>加入请求管理功能将在未来更新中提供。届时您可以批准或拒绝待处理的成员资格请求。</value>
+  </data>
+  <data name="RoleManagement" xml:space="preserve">
+    <value>角色</value>
+  </data>
+  <data name="RoleManagementDescription" xml:space="preserve">
+    <value>向成员分配管理员和版主角色。</value>
+  </data>
+  <data name="RoleManagementPlaceholder" xml:space="preserve">
+    <value>角色管理功能将在未来更新中提供。届时您可以将成员提升为管理员或版主。</value>
+  </data>
+  <data name="BannedMembers" xml:space="preserve">
+    <value>已封禁</value>
+  </data>
+  <data name="BannedMembersDescription" xml:space="preserve">
+    <value>查看和管理被封禁的成员。</value>
+  </data>
+  <data name="BannedMembersPlaceholder" xml:space="preserve">
+    <value>封禁成员管理功能将在未来更新中提供。届时您可以查看被封禁的成员，并在需要时解除封禁。</value>
+  </data>
+  <data name="GroupSettings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="GroupSettingsDescription" xml:space="preserve">
+    <value>高级群组配置选项。</value>
+  </data>
+  <data name="GroupSettingsPlaceholder" xml:space="preserve">
+    <value>高级设置功能将在未来更新中提供。届时您可以配置群组规则、可见性选项等。</value>
+  </data>
+  <data name="GroupRules" xml:space="preserve">
+    <value>群组规则</value>
+  </data>
+  <data name="GroupRulesDescription" xml:space="preserve">
+    <value>定义成员在此群组中必须遵守的规则。</value>
+  </data>
+  <data name="AddDefaultRules" xml:space="preserve">
+    <value>添加默认规则</value>
+  </data>
+  <data name="AddRule" xml:space="preserve">
+    <value>添加规则</value>
+  </data>
+  <data name="AddNewRule" xml:space="preserve">
+    <value>添加新规则</value>
+  </data>
+  <data name="EditRule" xml:space="preserve">
+    <value>编辑规则</value>
+  </data>
+  <data name="DeleteRule" xml:space="preserve">
+    <value>删除规则</value>
+  </data>
+  <data name="RuleTitle" xml:space="preserve">
+    <value>规则标题</value>
+  </data>
+  <data name="RuleTitlePlaceholder" xml:space="preserve">
+    <value>为此规则输入简短、清晰的标题</value>
+  </data>
+  <data name="RuleDescription" xml:space="preserve">
+    <value>规则描述</value>
+  </data>
+  <data name="RuleDescriptionPlaceholder" xml:space="preserve">
+    <value>解释规则的目的以及期望或禁止的行为</value>
+  </data>
+  <data name="SaveRule" xml:space="preserve">
+    <value>保存规则</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>保存中...</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>上移</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>下移</value>
+  </data>
+  <data name="NoRulesYet" xml:space="preserve">
+    <value>此群组尚未定义任何规则。</value>
+  </data>
+  <data name="NoRulesYetHint" xml:space="preserve">
+    <value>点击"添加默认规则"以常见规则开始，或点击"添加规则"创建您自己的规则。</value>
+  </data>
+  <data name="ConfirmDeleteRule" xml:space="preserve">
+    <value>删除规则？</value>
+  </data>
+  <data name="ConfirmDeleteRuleMessage" xml:space="preserve">
+    <value>您确定要删除此规则吗？此操作无法撤销。</value>
+  </data>
+  <data name="RuleTitleRequired" xml:space="preserve">
+    <value>规则标题为必填项。</value>
+  </data>
+  <data name="RuleDescriptionRequired" xml:space="preserve">
+    <value>规则描述为必填项。</value>
+  </data>
+  <data name="RuleCreated" xml:space="preserve">
+    <value>规则创建成功。</value>
+  </data>
+  <data name="RuleUpdated" xml:space="preserve">
+    <value>规则更新成功。</value>
+  </data>
+  <data name="RuleDeleted" xml:space="preserve">
+    <value>规则删除成功。</value>
+  </data>
+  <data name="DefaultRulesAdded" xml:space="preserve">
+    <value>默认规则已添加。您现在可以编辑它们以适应您群组的需求。</value>
+  </data>
+  <data name="CannotAddDefaultRulesExist" xml:space="preserve">
+    <value>当规则已存在时无法添加默认规则。请先删除现有规则。</value>
+  </data>
+  <data name="ErrorLoadingRules" xml:space="preserve">
+    <value>加载规则时发生错误。</value>
+  </data>
+  <data name="ErrorCreatingRule" xml:space="preserve">
+    <value>创建规则时发生错误。</value>
+  </data>
+  <data name="ErrorUpdatingRule" xml:space="preserve">
+    <value>更新规则时发生错误。</value>
+  </data>
+  <data name="ErrorDeletingRule" xml:space="preserve">
+    <value>删除规则时发生错误。</value>
+  </data>
+  <data name="ErrorSavingRule" xml:space="preserve">
+    <value>保存规则时发生错误。</value>
+  </data>
+  <data name="ErrorReorderingRules" xml:space="preserve">
+    <value>重新排序规则时发生错误。</value>
+  </data>
+  <data name="ErrorAddingDefaultRules" xml:space="preserve">
+    <value>添加默认规则时发生错误。</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="ApproveRequest" xml:space="preserve">
+    <value>批准此加入请求</value>
+  </data>
+  <data name="DenyRequest" xml:space="preserve">
+    <value>拒绝此加入请求</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>批准</value>
+  </data>
+  <data name="Deny" xml:space="preserve">
+    <value>拒绝</value>
+  </data>
+  <data name="RequestedOn" xml:space="preserve">
+    <value>请求时间</value>
+  </data>
+  <data name="TotalPendingRequests" xml:space="preserve">
+    <value>{0} 个待处理请求</value>
+  </data>
+  <data name="NoJoinRequests" xml:space="preserve">
+    <value>目前没有待处理的加入请求。</value>
+  </data>
+  <data name="ConfirmDenyRequest" xml:space="preserve">
+    <value>拒绝加入请求？</value>
+  </data>
+  <data name="ConfirmDenyRequestMessage" xml:space="preserve">
+    <value>您确定要拒绝此加入请求吗？用户不会收到通知，但可以稍后提交另一个请求。</value>
+  </data>
+  <data name="RequestApproved" xml:space="preserve">
+    <value>{0} 已被批准并添加到群组。</value>
+  </data>
+  <data name="RequestDenied" xml:space="preserve">
+    <value>来自 {0} 的加入请求已被拒绝。</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>未知用户</value>
+  </data>
+  <data name="ErrorLoadingRequests" xml:space="preserve">
+    <value>加载加入请求时发生错误。</value>
+  </data>
+  <data name="ErrorApprovingRequest" xml:space="preserve">
+    <value>批准请求时发生错误。</value>
+  </data>
+  <data name="ErrorDenyingRequest" xml:space="preserve">
+    <value>拒绝请求时发生错误。</value>
+  </data>
+</root>

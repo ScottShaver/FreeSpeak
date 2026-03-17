@@ -97,4 +97,40 @@
   <data name="NoPostsYet" xml:space="preserve">
     <value>لا توجد منشورات في هذه المجموعة بعد. كن أول من ينشر!</value>
   </data>
+  <data name="GroupAdministration" xml:space="preserve">
+    <value>إدارة المجموعة</value>
+  </data>
+  <data name="GroupModeration" xml:space="preserve">
+    <value>الإشراف على المجموعة</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>المنشئ</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>مسؤول</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>مشرف</value>
+  </data>
+  <data name="YouAreGroupCreator" xml:space="preserve">
+    <value>أنت منشئ هذه المجموعة</value>
+  </data>
+  <data name="YouAreGroupAdmin" xml:space="preserve">
+    <value>أنت مسؤول في هذه المجموعة</value>
+  </data>
+  <data name="YouAreGroupModerator" xml:space="preserve">
+    <value>أنت مشرف في هذه المجموعة</value>
+  </data>
+  <data name="PostPending" xml:space="preserve">
+    <value>بانتظار الموافقة</value>
+  </data>
+  <data name="PostPendingDescription" xml:space="preserve">
+    <value>هذا المنشور ينتظر موافقة المشرف قبل أن يكون مرئياً للآخرين.</value>
+  </data>
+  <data name="PostDeclined" xml:space="preserve">
+    <value>تم رفض المنشور</value>
+  </data>
+  <data name="PostDeclinedDescription" xml:space="preserve">
+    <value>تم رفض هذا المنشور من قبل المشرف. يمكنك تعديله وإعادة إرساله.</value>
+  </data>
 </root>

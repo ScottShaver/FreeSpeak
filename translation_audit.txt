@@ -1,0 +1,590 @@
+﻿=== TRANSLATION AUDIT ===
+[PostDetailModal] - Base keys: 5
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[FriendListItem] - Base keys: 7
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[MultiLineCommentDisplay] - Base keys: 17
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[GroupSettingsModal] - Base keys: 24
+  MISSING ar.resx: 9 keys
+  MISSING de.resx: 9 keys
+  MISSING es.resx: 9 keys
+  MISSING fr.resx: 9 keys
+  MISSING it.resx: 9 keys
+  MISSING ja.resx: 9 keys
+  MISSING ko.resx: 9 keys
+  MISSING nl.resx: 9 keys
+  MISSING pl.resx: 9 keys
+  MISSING pt.resx: 9 keys
+  MISSING ru.resx: 9 keys
+  MISSING zh.resx: 9 keys
+  Status: 12/12 files, 108 missing translations
+[MyUploads] - Base keys: 17
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[ThemeSelector] - Base keys: 2
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[FriendsList] - Base keys: 15
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[GroupModerationModal] - Base keys: 73
+  FILE MISSING ar.resx
+  FILE MISSING de.resx
+  FILE MISSING es.resx
+  FILE MISSING fr.resx
+  FILE MISSING it.resx
+  FILE MISSING ja.resx
+  FILE MISSING ko.resx
+  FILE MISSING nl.resx
+  FILE MISSING pl.resx
+  FILE MISSING pt.resx
+  FILE MISSING ru.resx
+  FILE MISSING zh.resx
+  Status: 0/12 files, 876 missing translations
+[GroupView] - Base keys: 25
+  MISSING ar.resx: 12 keys
+  MISSING de.resx: 12 keys
+  MISSING es.resx: 12 keys
+  MISSING fr.resx: 12 keys
+  MISSING it.resx: 12 keys
+  MISSING ja.resx: 12 keys
+  MISSING ko.resx: 12 keys
+  MISSING nl.resx: 12 keys
+  MISSING pl.resx: 12 keys
+  MISSING pt.resx: 12 keys
+  MISSING ru.resx: 12 keys
+  MISSING zh.resx: 12 keys
+  Status: 12/12 files, 144 missing translations
+[RulesAcceptanceModal] - Base keys: 9
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[FeedArticle] - Base keys: 26
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[MoreFunctions] - Base keys: 26
+  FILE MISSING ar.resx
+  FILE MISSING de.resx
+  FILE MISSING es.resx
+  FILE MISSING fr.resx
+  FILE MISSING it.resx
+  FILE MISSING ja.resx
+  FILE MISSING ko.resx
+  FILE MISSING nl.resx
+  FILE MISSING pl.resx
+  FILE MISSING pt.resx
+  FILE MISSING ru.resx
+  FILE MISSING zh.resx
+  Status: 0/12 files, 312 missing translations
+[Groups] - Base keys: 32
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[FeedArticleHeader] - Base keys: 9
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[AuditLogSearchModal] - Base keys: 21
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[FeedArticleActions] - Base keys: 9
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[Error] - Base keys: 7
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[UploadProgressModal] - Base keys: 3
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[Register] - Base keys: 11
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[LikesModal] - Base keys: 11
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[UserAuditLogModal] - Base keys: 11
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[MultiLineCommentEditor] - Base keys: 2
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[GroupAdministrationModal] - Base keys: 71
+  FILE MISSING ar.resx
+  FILE MISSING de.resx
+  FILE MISSING es.resx
+  FILE MISSING fr.resx
+  FILE MISSING it.resx
+  FILE MISSING ja.resx
+  FILE MISSING ko.resx
+  FILE MISSING nl.resx
+  FILE MISSING pl.resx
+  FILE MISSING pt.resx
+  FILE MISSING ru.resx
+  FILE MISSING zh.resx
+  Status: 0/12 files, 852 missing translations
+[UserRoleManagementModal] - Base keys: 14
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[PostCreator] - Base keys: 15
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[MainLayout] - Base keys: 2
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[ReportContentModal] - Base keys: 33
+  FILE MISSING ar.resx
+  FILE MISSING de.resx
+  FILE MISSING es.resx
+  FILE MISSING fr.resx
+  FILE MISSING it.resx
+  FILE MISSING ja.resx
+  FILE MISSING ko.resx
+  FILE MISSING nl.resx
+  FILE MISSING pl.resx
+  FILE MISSING pt.resx
+  FILE MISSING ru.resx
+  FILE MISSING zh.resx
+  Status: 0/12 files, 396 missing translations
+[UserCreationModal] - Base keys: 32
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[ImageUploadModal] - Base keys: 12
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[EmojiPicker] - Base keys: 5
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[Login] - Base keys: 11
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[NotificationComponent] - Base keys: 3
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[NavMenu] - Base keys: 12
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[Home] - Base keys: 9
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[ChangePassword] - Base keys: 6
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[UserLockoutManagementModal] - Base keys: 32
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[AlertContainer] - Base keys: 1
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[PublicHome] - Base keys: 8
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[Notifications] - Base keys: 11
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[ManageAccount] - Base keys: 67
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[SystemAdmin] - Base keys: 45
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+[ReactionPicker] - Base keys: 8
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  COMPLETE fr.resx
+  COMPLETE it.resx
+  COMPLETE ja.resx
+  COMPLETE ko.resx
+  COMPLETE nl.resx
+  COMPLETE pl.resx
+  COMPLETE pt.resx
+  COMPLETE ru.resx
+  COMPLETE zh.resx
+  Status: 12/12 files, 0 missing translations
+TOTAL MISSING: 2688 translations

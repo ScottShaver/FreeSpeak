@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>Administración del grupo</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Cargando...</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="ErrorLoadingData" xml:space="preserve">
+    <value>Se produjo un error al cargar los datos de administración.</value>
+  </data>
+  <data name="MemberManagement" xml:space="preserve">
+    <value>Miembros</value>
+  </data>
+  <data name="MemberManagementDescription" xml:space="preserve">
+    <value>Ver y gestionar los miembros del grupo.</value>
+  </data>
+  <data name="MemberManagementPlaceholder" xml:space="preserve">
+    <value>Las funciones de gestión de miembros estarán disponibles en una actualización futura. Podrás ver miembros, eliminarlos y gestionar sus roles.</value>
+  </data>
+  <data name="JoinRequests" xml:space="preserve">
+    <value>Solicitudes de unión</value>
+  </data>
+  <data name="JoinRequestsDescription" xml:space="preserve">
+    <value>Revisar y aprobar solicitudes de unión pendientes.</value>
+  </data>
+  <data name="JoinRequestsPlaceholder" xml:space="preserve">
+    <value>Las funciones de gestión de solicitudes de unión estarán disponibles en una actualización futura. Podrás aprobar o denegar solicitudes de membresía pendientes.</value>
+  </data>
+  <data name="RoleManagement" xml:space="preserve">
+    <value>Roles</value>
+  </data>
+  <data name="RoleManagementDescription" xml:space="preserve">
+    <value>Asignar roles de administrador y moderador a los miembros.</value>
+  </data>
+  <data name="RoleManagementPlaceholder" xml:space="preserve">
+    <value>Las funciones de gestión de roles estarán disponibles en una actualización futura. Podrás promover miembros a administradores o moderadores.</value>
+  </data>
+  <data name="BannedMembers" xml:space="preserve">
+    <value>Bloqueados</value>
+  </data>
+  <data name="BannedMembersDescription" xml:space="preserve">
+    <value>Ver y gestionar miembros bloqueados.</value>
+  </data>
+  <data name="BannedMembersPlaceholder" xml:space="preserve">
+    <value>Las funciones de gestión de miembros bloqueados estarán disponibles en una actualización futura. Podrás ver miembros bloqueados y desbloquearlos si es necesario.</value>
+  </data>
+  <data name="GroupSettings" xml:space="preserve">
+    <value>Configuración</value>
+  </data>
+  <data name="GroupSettingsDescription" xml:space="preserve">
+    <value>Opciones avanzadas de configuración del grupo.</value>
+  </data>
+  <data name="GroupSettingsPlaceholder" xml:space="preserve">
+    <value>Las funciones de configuración avanzada estarán disponibles en una actualización futura. Podrás configurar reglas del grupo, opciones de visibilidad y más.</value>
+  </data>
+  <data name="GroupRules" xml:space="preserve">
+    <value>Reglas del grupo</value>
+  </data>
+  <data name="GroupRulesDescription" xml:space="preserve">
+    <value>Definir las reglas que los miembros deben seguir en este grupo.</value>
+  </data>
+  <data name="AddDefaultRules" xml:space="preserve">
+    <value>Agregar reglas predeterminadas</value>
+  </data>
+  <data name="AddRule" xml:space="preserve">
+    <value>Agregar regla</value>
+  </data>
+  <data name="AddNewRule" xml:space="preserve">
+    <value>Agregar nueva regla</value>
+  </data>
+  <data name="EditRule" xml:space="preserve">
+    <value>Editar regla</value>
+  </data>
+  <data name="DeleteRule" xml:space="preserve">
+    <value>Eliminar regla</value>
+  </data>
+  <data name="RuleTitle" xml:space="preserve">
+    <value>Título de la regla</value>
+  </data>
+  <data name="RuleTitlePlaceholder" xml:space="preserve">
+    <value>Ingresa un título breve y claro para esta regla</value>
+  </data>
+  <data name="RuleDescription" xml:space="preserve">
+    <value>Descripción de la regla</value>
+  </data>
+  <data name="RuleDescriptionPlaceholder" xml:space="preserve">
+    <value>Explica el propósito de la regla y qué comportamiento se espera o está prohibido</value>
+  </data>
+  <data name="SaveRule" xml:space="preserve">
+    <value>Guardar regla</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Guardando...</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>Arriba</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>Abajo</value>
+  </data>
+  <data name="NoRulesYet" xml:space="preserve">
+    <value>Aún no se han definido reglas para este grupo.</value>
+  </data>
+  <data name="NoRulesYetHint" xml:space="preserve">
+    <value>Haz clic en "Agregar reglas predeterminadas" para comenzar con reglas comunes, o "Agregar regla" para crear las tuyas.</value>
+  </data>
+  <data name="ConfirmDeleteRule" xml:space="preserve">
+    <value>¿Eliminar regla?</value>
+  </data>
+  <data name="ConfirmDeleteRuleMessage" xml:space="preserve">
+    <value>¿Estás seguro de que deseas eliminar esta regla? Esta acción no se puede deshacer.</value>
+  </data>
+  <data name="RuleTitleRequired" xml:space="preserve">
+    <value>El título de la regla es obligatorio.</value>
+  </data>
+  <data name="RuleDescriptionRequired" xml:space="preserve">
+    <value>La descripción de la regla es obligatoria.</value>
+  </data>
+  <data name="RuleCreated" xml:space="preserve">
+    <value>Regla creada correctamente.</value>
+  </data>
+  <data name="RuleUpdated" xml:space="preserve">
+    <value>Regla actualizada correctamente.</value>
+  </data>
+  <data name="RuleDeleted" xml:space="preserve">
+    <value>Regla eliminada correctamente.</value>
+  </data>
+  <data name="DefaultRulesAdded" xml:space="preserve">
+    <value>Se han agregado las reglas predeterminadas. Ahora puedes editarlas para adaptarlas a las necesidades de tu grupo.</value>
+  </data>
+  <data name="CannotAddDefaultRulesExist" xml:space="preserve">
+    <value>No se pueden agregar reglas predeterminadas cuando ya existen reglas. Elimina las reglas existentes primero.</value>
+  </data>
+  <data name="ErrorLoadingRules" xml:space="preserve">
+    <value>Se produjo un error al cargar las reglas.</value>
+  </data>
+  <data name="ErrorCreatingRule" xml:space="preserve">
+    <value>Se produjo un error al crear la regla.</value>
+  </data>
+  <data name="ErrorUpdatingRule" xml:space="preserve">
+    <value>Se produjo un error al actualizar la regla.</value>
+  </data>
+  <data name="ErrorDeletingRule" xml:space="preserve">
+    <value>Se produjo un error al eliminar la regla.</value>
+  </data>
+  <data name="ErrorSavingRule" xml:space="preserve">
+    <value>Se produjo un error al guardar la regla.</value>
+  </data>
+  <data name="ErrorReorderingRules" xml:space="preserve">
+    <value>Se produjo un error al reordenar las reglas.</value>
+  </data>
+  <data name="ErrorAddingDefaultRules" xml:space="preserve">
+    <value>Se produjo un error al agregar las reglas predeterminadas.</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Actualizar</value>
+  </data>
+  <data name="ApproveRequest" xml:space="preserve">
+    <value>Aprobar esta solicitud de unión</value>
+  </data>
+  <data name="DenyRequest" xml:space="preserve">
+    <value>Denegar esta solicitud de unión</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Aprobar</value>
+  </data>
+  <data name="Deny" xml:space="preserve">
+    <value>Denegar</value>
+  </data>
+  <data name="RequestedOn" xml:space="preserve">
+    <value>Solicitado el</value>
+  </data>
+  <data name="TotalPendingRequests" xml:space="preserve">
+    <value>{0} solicitud(es) pendiente(s)</value>
+  </data>
+  <data name="NoJoinRequests" xml:space="preserve">
+    <value>No hay solicitudes de unión pendientes en este momento.</value>
+  </data>
+  <data name="ConfirmDenyRequest" xml:space="preserve">
+    <value>¿Denegar solicitud de unión?</value>
+  </data>
+  <data name="ConfirmDenyRequestMessage" xml:space="preserve">
+    <value>¿Estás seguro de que deseas denegar esta solicitud de unión? El usuario no será notificado pero puede enviar otra solicitud más tarde.</value>
+  </data>
+  <data name="RequestApproved" xml:space="preserve">
+    <value>{0} ha sido aprobado y agregado al grupo.</value>
+  </data>
+  <data name="RequestDenied" xml:space="preserve">
+    <value>La solicitud de unión de {0} ha sido denegada.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Usuario desconocido</value>
+  </data>
+  <data name="ErrorLoadingRequests" xml:space="preserve">
+    <value>Se produjo un error al cargar las solicitudes de unión.</value>
+  </data>
+  <data name="ErrorApprovingRequest" xml:space="preserve">
+    <value>Se produjo un error al aprobar la solicitud.</value>
+  </data>
+  <data name="ErrorDenyingRequest" xml:space="preserve">
+    <value>Se produjo un error al denegar la solicitud.</value>
+  </data>
+</root>

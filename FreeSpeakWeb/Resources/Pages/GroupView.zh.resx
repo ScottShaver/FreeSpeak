@@ -97,4 +97,40 @@
   <data name="NoPostsYet" xml:space="preserve">
     <value>该群组中暂无帖子。成为第一个发帖的人吧！</value>
   </data>
+  <data name="GroupAdministration" xml:space="preserve">
+    <value>群组管理</value>
+  </data>
+  <data name="GroupModeration" xml:space="preserve">
+    <value>群组审核</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>创建者</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>管理员</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>版主</value>
+  </data>
+  <data name="YouAreGroupCreator" xml:space="preserve">
+    <value>您是此群组的创建者</value>
+  </data>
+  <data name="YouAreGroupAdmin" xml:space="preserve">
+    <value>您是此群组的管理员</value>
+  </data>
+  <data name="YouAreGroupModerator" xml:space="preserve">
+    <value>您是此群组的版主</value>
+  </data>
+  <data name="PostPending" xml:space="preserve">
+    <value>等待审批</value>
+  </data>
+  <data name="PostPendingDescription" xml:space="preserve">
+    <value>此帖子正在等待版主批准后才能对其他人可见。</value>
+  </data>
+  <data name="PostDeclined" xml:space="preserve">
+    <value>帖子被拒绝</value>
+  </data>
+  <data name="PostDeclinedDescription" xml:space="preserve">
+    <value>此帖子已被版主拒绝。您可以编辑并重新提交。</value>
+  </data>
 </root>

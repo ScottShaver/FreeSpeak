@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>グループモデレーション</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>読み込み中...</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="ErrorLoadingData" xml:space="preserve">
+    <value>モデレーションデータの読み込み中にエラーが発生しました。</value>
+  </data>
+  <data name="ReportedContent" xml:space="preserve">
+    <value>報告済み</value>
+  </data>
+  <data name="ReportedContentDescription" xml:space="preserve">
+    <value>メンバーによって報告されたコンテンツを確認します。</value>
+  </data>
+  <data name="ReportedContentPlaceholder" xml:space="preserve">
+    <value>報告されたコンテンツ機能は今後のアップデートで利用可能になります。メンバーから報告された投稿やコメントを確認し、対応することができます。</value>
+  </data>
+  <data name="PendingApproval" xml:space="preserve">
+    <value>保留中</value>
+  </data>
+  <data name="PendingApprovalDescription" xml:space="preserve">
+    <value>モデレーターの承認待ちの投稿を確認します。</value>
+  </data>
+  <data name="PendingApprovalPlaceholder" xml:space="preserve">
+    <value>保留中の承認機能は今後のアップデートで利用可能になります。投稿が公開される前に承認または却下することができます。</value>
+  </data>
+  <data name="RecentPosts" xml:space="preserve">
+    <value>最近</value>
+  </data>
+  <data name="RecentPostsDescription" xml:space="preserve">
+    <value>モデレーションレビュー用に最近の投稿を閲覧します。</value>
+  </data>
+  <data name="RecentPostsPlaceholder" xml:space="preserve">
+    <value>最近の投稿レビュー機能は今後のアップデートで利用可能になります。最近のグループアクティビティをすばやく確認してモデレートすることができます。</value>
+  </data>
+  <data name="ModerationLog" xml:space="preserve">
+    <value>モデログ</value>
+  </data>
+  <data name="ModerationLogDescription" xml:space="preserve">
+    <value>モデレーションアクションの履歴を表示します。</value>
+  </data>
+  <data name="ModerationLogPlaceholder" xml:space="preserve">
+    <value>モデレーションログ機能は今後のアップデートで利用可能になります。このグループで行われたすべてのモデレーションアクションの履歴を表示することができます。</value>
+  </data>
+  <data name="NoReports" xml:space="preserve">
+    <value>保留中の報告はありません。すべての報告が確認済みです！</value>
+  </data>
+  <data name="ReportedBy" xml:space="preserve">
+    <value>報告者</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>投稿</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>コメント</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>リストに戻る</value>
+  </data>
+  <data name="ViolatedRule" xml:space="preserve">
+    <value>違反したルール：</value>
+  </data>
+  <data name="ReporterDescription" xml:space="preserve">
+    <value>報告者の説明：</value>
+  </data>
+  <data name="ReportedPost" xml:space="preserve">
+    <value>報告された投稿</value>
+  </data>
+  <data name="ReportedComment" xml:space="preserve">
+    <value>報告されたコメント</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>作成者：</value>
+  </data>
+  <data name="ContentDeleted" xml:space="preserve">
+    <value>コンテンツは削除されました</value>
+  </data>
+  <data name="ModeratorNotes" xml:space="preserve">
+    <value>モデレーターメモ（任意）</value>
+  </data>
+  <data name="NotesPlaceholder" xml:space="preserve">
+    <value>決定や対応についてのメモを追加...</value>
+  </data>
+  <data name="DismissReport" xml:space="preserve">
+    <value>却下</value>
+  </data>
+  <data name="TakeAction" xml:space="preserve">
+    <value>対応する</value>
+  </data>
+  <data name="Resolve" xml:space="preserve">
+    <value>解決</value>
+  </data>
+  <data name="ActionExplanation" xml:space="preserve">
+    <value>アクションガイド：</value>
+  </data>
+  <data name="DismissExplanation" xml:space="preserve">
+    <value>違反なし、報告は無効です</value>
+  </data>
+  <data name="ActionExplanation2" xml:space="preserve">
+    <value>コンテンツがルールに違反、モデレーションアクションが必要です</value>
+  </data>
+  <data name="ResolveExplanation" xml:space="preserve">
+    <value>問題解決済み、コンテンツは作成者により編集または削除されました</value>
+  </data>
+  <data name="ReportDismissed" xml:space="preserve">
+    <value>報告を却下しました。</value>
+  </data>
+  <data name="ActionTaken" xml:space="preserve">
+    <value>報告を対応済みとしてマークしました。</value>
+  </data>
+  <data name="ReportResolved" xml:space="preserve">
+    <value>報告を解決しました。</value>
+  </data>
+  <data name="ErrorProcessingReport" xml:space="preserve">
+    <value>報告の処理中にエラーが発生しました。</value>
+  </data>
+  <data name="ErrorLoadingReports" xml:space="preserve">
+    <value>報告の読み込み中にエラーが発生しました。</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>不明なユーザー</value>
+  </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>たった今</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>{0}分前</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>{0}時間前</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>{0}日前</value>
+  </data>
+  <data name="ReasonViolatesGroupRule" xml:space="preserve">
+    <value>グループルール違反</value>
+  </data>
+  <data name="ReasonSpam" xml:space="preserve">
+    <value>スパムまたは迷惑コンテンツ</value>
+  </data>
+  <data name="ReasonHarassment" xml:space="preserve">
+    <value>嫌がらせまたはいじめ</value>
+  </data>
+  <data name="ReasonHateSpeech" xml:space="preserve">
+    <value>ヘイトスピーチ</value>
+  </data>
+  <data name="ReasonMisinformation" xml:space="preserve">
+    <value>誤情報</value>
+  </data>
+  <data name="ReasonAdultContent" xml:space="preserve">
+    <value>成人向けコンテンツ</value>
+  </data>
+  <data name="ReasonViolence" xml:space="preserve">
+    <value>暴力または過激なコンテンツ</value>
+  </data>
+  <data name="ReasonCopyright" xml:space="preserve">
+    <value>著作権侵害</value>
+  </data>
+  <data name="ReasonOffTopic" xml:space="preserve">
+    <value>トピック外のコンテンツ</value>
+  </data>
+  <data name="ReasonPrivacy" xml:space="preserve">
+    <value>プライバシー侵害</value>
+  </data>
+  <data name="ReasonSelfHarm" xml:space="preserve">
+    <value>自傷行為コンテンツ</value>
+  </data>
+  <data name="ReasonIllegal" xml:space="preserve">
+    <value>違法行為</value>
+  </data>
+  <data name="ReasonOther" xml:space="preserve">
+    <value>その他</value>
+  </data>
+  <data name="PostApprovalDisabled" xml:space="preserve">
+    <value>このグループでは投稿承認が有効になっていません。投稿は作成時に即座に公開されます。</value>
+  </data>
+  <data name="NoPendingPosts" xml:space="preserve">
+    <value>保留中の投稿はありません。すべての投稿が確認済みです！</value>
+  </data>
+  <data name="PostApproved" xml:space="preserve">
+    <value>投稿が承認され、公開されました。</value>
+  </data>
+  <data name="PostDeclined" xml:space="preserve">
+    <value>投稿を却下しました。</value>
+  </data>
+  <data name="ErrorLoadingPendingPosts" xml:space="preserve">
+    <value>保留中の投稿の読み込み中にエラーが発生しました。</value>
+  </data>
+  <data name="ErrorProcessingPost" xml:space="preserve">
+    <value>投稿の処理中にエラーが発生しました。</value>
+  </data>
+  <data name="Images" xml:space="preserve">
+    <value>画像</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="PendingPostsCount" xml:space="preserve">
+    <value>件の保留中投稿</value>
+  </data>
+  <data name="PostedAt" xml:space="preserve">
+    <value>投稿日時</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>承認</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>却下</value>
+  </data>
+  <data name="ApprovePostTooltip" xml:space="preserve">
+    <value>この投稿を承認してすべてのメンバーに表示する</value>
+  </data>
+  <data name="DeclinePostTooltip" xml:space="preserve">
+    <value>この投稿を却下 - 作成者は編集して再送信できます</value>
+  </data>
+</root>

@@ -103,4 +103,31 @@
   <data name="Saving" xml:space="preserve">
     <value>جاري الحفظ...</value>
   </data>
+  <data name="RequireAcceptRules" xml:space="preserve">
+    <value>يتطلب الموافقة على قواعد المجموعة</value>
+  </data>
+  <data name="RequireAcceptRulesHelp" xml:space="preserve">
+    <value>يجب على المستخدمين الموافقة على قواعد المجموعة قبل الانضمام أو تقديم طلب انضمام.</value>
+  </data>
+  <data name="RequiresPostApproval" xml:space="preserve">
+    <value>يتطلب موافقة على المنشورات</value>
+  </data>
+  <data name="RequiresPostApprovalHelp" xml:space="preserve">
+    <value>يجب الموافقة على المنشورات الجديدة من قبل المشرف قبل أن تكون مرئية للأعضاء الآخرين.</value>
+  </data>
+  <data name="GroupStatusSection" xml:space="preserve">
+    <value>حالة المجموعة</value>
+  </data>
+  <data name="IsActive" xml:space="preserve">
+    <value>المجموعة نشطة</value>
+  </data>
+  <data name="IsActiveHelp" xml:space="preserve">
+    <value>عندما تكون نشطة، تكون المجموعة جاهزة لقبول المستخدمين والمحتوى. المجموعات غير النشطة مرئية فقط للمسؤولين.</value>
+  </data>
+  <data name="IsClosed" xml:space="preserve">
+    <value>المجموعة مغلقة نهائياً</value>
+  </data>
+  <data name="IsClosedHelp" xml:space="preserve">
+    <value>تحذير: إغلاق المجموعة نهائي. لا يمكن إجراء أي تغييرات بعد الإغلاق، حتى من قبل المسؤولين.</value>
+  </data>
 </root>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="0" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ReportPost" xml:space="preserve">
+    <value>投稿を報告</value>
+  </data>
+  <data name="ReportComment" xml:space="preserve">
+    <value>コメントを報告</value>
+  </data>
+  <data name="ReportDescription" xml:space="preserve">
+    <value>このコンテンツの問題点を理解するためにご協力ください。あなたの報告はグループのモデレーターによって審査されます。</value>
+  </data>
+  <data name="SelectReason" xml:space="preserve">
+    <value>このコンテンツを報告する理由は何ですか？</value>
+  </data>
+  <data name="SelectViolatedRule" xml:space="preserve">
+    <value>このコンテンツはどのグループルールに違反していますか？</value>
+  </data>
+  <data name="AdditionalDetails" xml:space="preserve">
+    <value>追加の詳細（任意）</value>
+  </data>
+  <data name="AdditionalDetailsDescription" xml:space="preserve">
+    <value>モデレーターがこの報告を審査する際に役立つ追加のコンテキストを提供してください。</value>
+  </data>
+  <data name="DescriptionPlaceholder" xml:space="preserve">
+    <value>このコンテンツを報告する理由についての追加の詳細を入力してください...</value>
+  </data>
+  <data name="ReasonViolatesGroupRule" xml:space="preserve">
+    <value>グループルール違反</value>
+  </data>
+  <data name="ReasonSpam" xml:space="preserve">
+    <value>スパムまたは迷惑コンテンツ</value>
+  </data>
+  <data name="ReasonHarassment" xml:space="preserve">
+    <value>嫌がらせまたはいじめ</value>
+  </data>
+  <data name="ReasonHateSpeech" xml:space="preserve">
+    <value>ヘイトスピーチ</value>
+  </data>
+  <data name="ReasonMisinformation" xml:space="preserve">
+    <value>誤情報または虚偽情報</value>
+  </data>
+  <data name="ReasonAdultContent" xml:space="preserve">
+    <value>ヌードまたは性的コンテンツ</value>
+  </data>
+  <data name="ReasonViolence" xml:space="preserve">
+    <value>暴力またはグラフィックコンテンツ</value>
+  </data>
+  <data name="ReasonCopyright" xml:space="preserve">
+    <value>著作権または知的財産権の侵害</value>
+  </data>
+  <data name="ReasonOffTopic" xml:space="preserve">
+    <value>トピック外または無関係なコンテンツ</value>
+  </data>
+  <data name="ReasonPrivacy" xml:space="preserve">
+    <value>プライバシー侵害</value>
+  </data>
+  <data name="ReasonSelfHarm" xml:space="preserve">
+    <value>自傷行為または自殺に関するコンテンツ</value>
+  </data>
+  <data name="ReasonIllegal" xml:space="preserve">
+    <value>違法行為</value>
+  </data>
+  <data name="ReasonOther" xml:space="preserve">
+    <value>その他</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>読み込み中...</value>
+  </data>
+  <data name="NoGroupRules" xml:space="preserve">
+    <value>このグループには定義されたルールがありません。報告の別の理由を選択してください。</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>戻る</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="ReportingFor" xml:space="preserve">
+    <value>報告対象：</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>次へ</value>
+  </data>
+  <data name="SubmitReport" xml:space="preserve">
+    <value>報告を送信</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>報告ありがとうございます。モデレーターがこのコンテンツを審査し、適切な措置を講じます。</value>
+  </data>
+  <data name="SelectReasonError" xml:space="preserve">
+    <value>報告の理由を選択してください。</value>
+  </data>
+  <data name="SelectRuleError" xml:space="preserve">
+    <value>違反されたグループルールを選択してください。</value>
+  </data>
+  <data name="ErrorSubmitting" xml:space="preserve">
+    <value>報告の送信中にエラーが発生しました。もう一度お試しください。</value>
+  </data>
+</root>

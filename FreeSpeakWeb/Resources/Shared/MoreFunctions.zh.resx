@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>更多功能</value>
+  </data>
+  <data name="CreateGroup" xml:space="preserve">
+    <value>创建群组</value>
+  </data>
+  <data name="CreateGroupTooltip" xml:space="preserve">
+    <value>创建新群组</value>
+  </data>
+  <data name="NoFunctionsAvailable" xml:space="preserve">
+    <value>没有其他可用功能。</value>
+  </data>
+  <data name="CreateNewGroup" xml:space="preserve">
+    <value>创建新群组</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>群组名称</value>
+  </data>
+  <data name="GroupDescription" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="PublicGroup" xml:space="preserve">
+    <value>公开群组</value>
+  </data>
+  <data name="PublicGroupHelp" xml:space="preserve">
+    <value>公开群组对所有用户可见，可在搜索中找到。</value>
+  </data>
+  <data name="HiddenGroup" xml:space="preserve">
+    <value>隐藏群组</value>
+  </data>
+  <data name="HiddenGroupHelp" xml:space="preserve">
+    <value>隐藏群组无法在搜索中找到。只有群组管理员才能添加成员。</value>
+  </data>
+  <data name="RequireJoinApproval" xml:space="preserve">
+    <value>需要加入审批</value>
+  </data>
+  <data name="RequireJoinApprovalHelp" xml:space="preserve">
+    <value>新成员在加入前必须获得管理员批准。</value>
+  </data>
+  <data name="RequireAcceptRules" xml:space="preserve">
+    <value>需要同意群组规则</value>
+  </data>
+  <data name="RequireAcceptRulesHelp" xml:space="preserve">
+    <value>用户在加入或提交加入请求前必须同意群组规则。</value>
+  </data>
+  <data name="RequiresPostApproval" xml:space="preserve">
+    <value>需要帖子审批</value>
+  </data>
+  <data name="RequiresPostApprovalHelp" xml:space="preserve">
+    <value>新帖子必须经过版主批准后才能对其他成员可见。</value>
+  </data>
+  <data name="EnablePointsSystem" xml:space="preserve">
+    <value>启用积分系统</value>
+  </data>
+  <data name="EnablePointsSystemHelp" xml:space="preserve">
+    <value>成员通过帖子、评论和点赞赚取积分。成员可以获得新秀贡献者、顶级贡献者和全明星贡献者徽章。</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Creating" xml:space="preserve">
+    <value>正在创建...</value>
+  </data>
+  <data name="NotAuthenticated" xml:space="preserve">
+    <value>您必须登录才能创建群组。</value>
+  </data>
+  <data name="GroupNameRequired" xml:space="preserve">
+    <value>群组名称是必需的。</value>
+  </data>
+  <data name="GroupDescriptionRequired" xml:space="preserve">
+    <value>群组描述是必需的。</value>
+  </data>
+  <data name="GroupCreatedSuccess" xml:space="preserve">
+    <value>群组"{0}"已成功创建！</value>
+  </data>
+  <data name="GroupCreationFailed" xml:space="preserve">
+    <value>创建群组时发生错误。</value>
+  </data>
+</root>

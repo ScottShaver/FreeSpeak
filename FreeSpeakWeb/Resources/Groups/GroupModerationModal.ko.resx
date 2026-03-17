@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>그룹 관리</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>로딩 중...</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>닫기</value>
+  </data>
+  <data name="ErrorLoadingData" xml:space="preserve">
+    <value>관리 데이터를 로드하는 중 오류가 발생했습니다.</value>
+  </data>
+  <data name="ReportedContent" xml:space="preserve">
+    <value>신고됨</value>
+  </data>
+  <data name="ReportedContentDescription" xml:space="preserve">
+    <value>회원이 신고한 콘텐츠를 검토합니다.</value>
+  </data>
+  <data name="ReportedContentPlaceholder" xml:space="preserve">
+    <value>신고된 콘텐츠 기능은 향후 업데이트에서 제공될 예정입니다. 회원이 신고한 게시물과 댓글을 검토하고 조치를 취할 수 있습니다.</value>
+  </data>
+  <data name="PendingApproval" xml:space="preserve">
+    <value>대기 중</value>
+  </data>
+  <data name="PendingApprovalDescription" xml:space="preserve">
+    <value>관리자 승인 대기 중인 게시물을 검토합니다.</value>
+  </data>
+  <data name="PendingApprovalPlaceholder" xml:space="preserve">
+    <value>대기 중인 승인 기능은 향후 업데이트에서 제공될 예정입니다. 게시물이 게시되기 전에 승인하거나 거부할 수 있습니다.</value>
+  </data>
+  <data name="RecentPosts" xml:space="preserve">
+    <value>최근</value>
+  </data>
+  <data name="RecentPostsDescription" xml:space="preserve">
+    <value>관리 검토를 위해 최근 게시물을 탐색합니다.</value>
+  </data>
+  <data name="RecentPostsPlaceholder" xml:space="preserve">
+    <value>최근 게시물 검토 기능은 향후 업데이트에서 제공될 예정입니다. 최근 그룹 활동을 빠르게 검토하고 관리할 수 있습니다.</value>
+  </data>
+  <data name="ModerationLog" xml:space="preserve">
+    <value>관리 로그</value>
+  </data>
+  <data name="ModerationLogDescription" xml:space="preserve">
+    <value>관리 조치 기록을 봅니다.</value>
+  </data>
+  <data name="ModerationLogPlaceholder" xml:space="preserve">
+    <value>관리 로그 기능은 향후 업데이트에서 제공될 예정입니다. 이 그룹에서 수행된 모든 관리 조치의 기록을 볼 수 있습니다.</value>
+  </data>
+  <data name="NoReports" xml:space="preserve">
+    <value>대기 중인 신고가 없습니다. 모든 신고가 검토되었습니다!</value>
+  </data>
+  <data name="ReportedBy" xml:space="preserve">
+    <value>신고자</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>게시물</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>댓글</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>목록으로 돌아가기</value>
+  </data>
+  <data name="ViolatedRule" xml:space="preserve">
+    <value>위반된 규칙:</value>
+  </data>
+  <data name="ReporterDescription" xml:space="preserve">
+    <value>신고자 설명:</value>
+  </data>
+  <data name="ReportedPost" xml:space="preserve">
+    <value>신고된 게시물</value>
+  </data>
+  <data name="ReportedComment" xml:space="preserve">
+    <value>신고된 댓글</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>작성자:</value>
+  </data>
+  <data name="ContentDeleted" xml:space="preserve">
+    <value>콘텐츠가 삭제되었습니다</value>
+  </data>
+  <data name="ModeratorNotes" xml:space="preserve">
+    <value>관리자 메모 (선택사항)</value>
+  </data>
+  <data name="NotesPlaceholder" xml:space="preserve">
+    <value>결정 또는 조치에 대한 메모를 추가하세요...</value>
+  </data>
+  <data name="DismissReport" xml:space="preserve">
+    <value>기각</value>
+  </data>
+  <data name="TakeAction" xml:space="preserve">
+    <value>조치하기</value>
+  </data>
+  <data name="Resolve" xml:space="preserve">
+    <value>해결</value>
+  </data>
+  <data name="ActionExplanation" xml:space="preserve">
+    <value>조치 가이드:</value>
+  </data>
+  <data name="DismissExplanation" xml:space="preserve">
+    <value>위반 없음, 신고가 유효하지 않음</value>
+  </data>
+  <data name="ActionExplanation2" xml:space="preserve">
+    <value>콘텐츠가 규칙을 위반함, 관리 조치 필요</value>
+  </data>
+  <data name="ResolveExplanation" xml:space="preserve">
+    <value>문제 해결됨, 콘텐츠가 작성자에 의해 수정 또는 삭제됨</value>
+  </data>
+  <data name="ReportDismissed" xml:space="preserve">
+    <value>신고가 기각되었습니다.</value>
+  </data>
+  <data name="ActionTaken" xml:space="preserve">
+    <value>신고가 조치됨으로 표시되었습니다.</value>
+  </data>
+  <data name="ReportResolved" xml:space="preserve">
+    <value>신고가 해결되었습니다.</value>
+  </data>
+  <data name="ErrorProcessingReport" xml:space="preserve">
+    <value>신고 처리 중 오류가 발생했습니다.</value>
+  </data>
+  <data name="ErrorLoadingReports" xml:space="preserve">
+    <value>신고 로드 중 오류가 발생했습니다.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>알 수 없는 사용자</value>
+  </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>방금</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>{0}분 전</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>{0}시간 전</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>{0}일 전</value>
+  </data>
+  <data name="ReasonViolatesGroupRule" xml:space="preserve">
+    <value>그룹 규칙 위반</value>
+  </data>
+  <data name="ReasonSpam" xml:space="preserve">
+    <value>스팸 또는 원치 않는 콘텐츠</value>
+  </data>
+  <data name="ReasonHarassment" xml:space="preserve">
+    <value>괴롭힘 또는 왕따</value>
+  </data>
+  <data name="ReasonHateSpeech" xml:space="preserve">
+    <value>혐오 발언</value>
+  </data>
+  <data name="ReasonMisinformation" xml:space="preserve">
+    <value>허위 정보</value>
+  </data>
+  <data name="ReasonAdultContent" xml:space="preserve">
+    <value>성인 콘텐츠</value>
+  </data>
+  <data name="ReasonViolence" xml:space="preserve">
+    <value>폭력 또는 충격적인 콘텐츠</value>
+  </data>
+  <data name="ReasonCopyright" xml:space="preserve">
+    <value>저작권 침해</value>
+  </data>
+  <data name="ReasonOffTopic" xml:space="preserve">
+    <value>주제와 무관한 콘텐츠</value>
+  </data>
+  <data name="ReasonPrivacy" xml:space="preserve">
+    <value>개인정보 침해</value>
+  </data>
+  <data name="ReasonSelfHarm" xml:space="preserve">
+    <value>자해 콘텐츠</value>
+  </data>
+  <data name="ReasonIllegal" xml:space="preserve">
+    <value>불법 활동</value>
+  </data>
+  <data name="ReasonOther" xml:space="preserve">
+    <value>기타</value>
+  </data>
+  <data name="PostApprovalDisabled" xml:space="preserve">
+    <value>이 그룹에서는 게시물 승인이 활성화되어 있지 않습니다. 게시물은 작성 시 즉시 게시됩니다.</value>
+  </data>
+  <data name="NoPendingPosts" xml:space="preserve">
+    <value>대기 중인 게시물이 없습니다. 모든 게시물이 검토되었습니다!</value>
+  </data>
+  <data name="PostApproved" xml:space="preserve">
+    <value>게시물이 승인되어 게시되었습니다.</value>
+  </data>
+  <data name="PostDeclined" xml:space="preserve">
+    <value>게시물이 거부되었습니다.</value>
+  </data>
+  <data name="ErrorLoadingPendingPosts" xml:space="preserve">
+    <value>대기 중인 게시물 로드 중 오류가 발생했습니다.</value>
+  </data>
+  <data name="ErrorProcessingPost" xml:space="preserve">
+    <value>게시물 처리 중 오류가 발생했습니다.</value>
+  </data>
+  <data name="Images" xml:space="preserve">
+    <value>이미지</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>새로고침</value>
+  </data>
+  <data name="PendingPostsCount" xml:space="preserve">
+    <value>개의 대기 중인 게시물</value>
+  </data>
+  <data name="PostedAt" xml:space="preserve">
+    <value>게시됨</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>승인</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>거부</value>
+  </data>
+  <data name="ApprovePostTooltip" xml:space="preserve">
+    <value>이 게시물을 승인하고 모든 회원에게 표시</value>
+  </data>
+  <data name="DeclinePostTooltip" xml:space="preserve">
+    <value>이 게시물 거부 - 작성자가 수정하여 다시 제출할 수 있음</value>
+  </data>
+</root>

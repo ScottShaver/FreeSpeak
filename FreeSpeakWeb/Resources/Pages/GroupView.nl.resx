@@ -97,4 +97,40 @@
   <data name="NoPostsYet" xml:space="preserve">
     <value>Nog geen berichten in deze groep. Wees de eerste om te posten!</value>
   </data>
+  <data name="GroupAdministration" xml:space="preserve">
+    <value>Groepsbeheer</value>
+  </data>
+  <data name="GroupModeration" xml:space="preserve">
+    <value>Groepsmoderatie</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>Maker</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>Moderator</value>
+  </data>
+  <data name="YouAreGroupCreator" xml:space="preserve">
+    <value>U bent de maker van deze groep</value>
+  </data>
+  <data name="YouAreGroupAdmin" xml:space="preserve">
+    <value>U bent een beheerder van deze groep</value>
+  </data>
+  <data name="YouAreGroupModerator" xml:space="preserve">
+    <value>U bent een moderator van deze groep</value>
+  </data>
+  <data name="PostPending" xml:space="preserve">
+    <value>Wacht op goedkeuring</value>
+  </data>
+  <data name="PostPendingDescription" xml:space="preserve">
+    <value>Dit bericht wacht op goedkeuring van een moderator voordat het zichtbaar wordt voor anderen.</value>
+  </data>
+  <data name="PostDeclined" xml:space="preserve">
+    <value>Bericht afgewezen</value>
+  </data>
+  <data name="PostDeclinedDescription" xml:space="preserve">
+    <value>Dit bericht is afgewezen door een moderator. U kunt het bewerken en opnieuw indienen.</value>
+  </data>
 </root>
