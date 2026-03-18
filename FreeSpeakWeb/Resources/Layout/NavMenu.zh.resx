@@ -94,4 +94,10 @@
   <data name="SystemModerator" xml:space="preserve">
     <value>系统管理员</value>
   </data>
+  <data name="JumpToGroup" xml:space="preserve">
+    <value>跳转到群组</value>
+  </data>
+  <data name="JumpToFriend" xml:space="preserve">
+    <value>跳转到好友</value>
+  </data>
 </root>

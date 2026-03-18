@@ -133,4 +133,10 @@
   <data name="PostDeclinedDescription" xml:space="preserve">
     <value>Dieser Beitrag wurde von einem Moderator abgelehnt. Sie können ihn bearbeiten und erneut einreichen.</value>
   </data>
+  <data name="YourPoints" xml:space="preserve">
+    <value>Ihre Punkte</value>
+  </data>
+  <data name="YourPosts" xml:space="preserve">
+    <value>Ihre Beiträge</value>
+  </data>
 </root>

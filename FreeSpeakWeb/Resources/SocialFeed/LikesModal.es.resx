@@ -91,4 +91,16 @@
   <data name="Angry" xml:space="preserve">
     <value>Enojado</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>Ahora mismo</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>hace {0}m</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>hace {0}h</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>hace {0}d</value>
+  </data>
 </root>

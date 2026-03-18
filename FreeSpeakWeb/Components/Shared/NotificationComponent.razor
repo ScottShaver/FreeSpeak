@@ -4,6 +4,7 @@
 @using Microsoft.Extensions.Localization
 
 @inject HtmlSanitizationService HtmlSanitizationService
+@inject TimestampFormattingService TimestampFormatter
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.NotificationComponent> Localizer
 
 <div class="notification-item @(Notification.IsRead ? "read" : "unread")" @onclick="HandleClick">
@@ -62,11 +63,11 @@
     <div class="notification-content">
         <div class="notification-message">@((MarkupString)HtmlSanitizationService.Sanitize(Notification.Message))</div>
         <div class="notification-time">
-            @FormatTimeAgo(Notification.CreatedAt)
+            @TimestampFormatter.FormatTimeAgo(Notification.CreatedAt)
             @if (Notification.ExpiresAt.HasValue)
             {
                 <span class="notification-expiration" title="@($"{Localizer["Expires"]}: {Notification.ExpiresAt.Value:g}")">
-                    · @FormatExpirationTime(Notification.ExpiresAt.Value)
+                    · @TimestampFormatter.FormatExpirationTime(Notification.ExpiresAt.Value)
                 </span>
             }
         </div>
@@ -193,6 +194,7 @@
             {
                 "Like" => "👍",
                 "Love" => "❤️",
+                "Care" => "🤗",
                 "Haha" => "😂",
                 "Wow" => "😮",
                 "Sad" => "😢",
@@ -204,49 +206,6 @@
         {
             return string.Empty;
         }
-    }
-
-    private string FormatTimeAgo(DateTime dateTime)
-    {
-        var timeSpan = DateTime.UtcNow - dateTime;
-
-        if (timeSpan.TotalMinutes < 1)
-            return "just now";
-        if (timeSpan.TotalMinutes < 60)
-            return $"{(int)timeSpan.TotalMinutes}m ago";
-        if (timeSpan.TotalHours < 24)
-            return $"{(int)timeSpan.TotalHours}h ago";
-        if (timeSpan.TotalDays < 7)
-            return $"{(int)timeSpan.TotalDays}d ago";
-        if (timeSpan.TotalDays < 30)
-            return $"{(int)(timeSpan.TotalDays / 7)}w ago";
-        if (timeSpan.TotalDays < 365)
-            return $"{(int)(timeSpan.TotalDays / 30)}mo ago";
-
-        return dateTime.ToString("MMM d, yyyy");
-    }
-
-    /// <summary>
-    /// Formats the expiration timestamp as a relative time until expiration.
-    /// </summary>
-    /// <param name="expiresAt">The expiration date and time.</param>
-    /// <returns>A human-readable string indicating when the notification will expire.</returns>
-    private string FormatExpirationTime(DateTime expiresAt)
-    {
-        var timeUntilExpiry = expiresAt - DateTime.UtcNow;
-
-        if (timeUntilExpiry.TotalMinutes <= 0)
-            return "expires soon";
-        if (timeUntilExpiry.TotalMinutes < 60)
-            return $"expires in {(int)timeUntilExpiry.TotalMinutes}m";
-        if (timeUntilExpiry.TotalHours < 24)
-            return $"expires in {(int)timeUntilExpiry.TotalHours}h";
-        if (timeUntilExpiry.TotalDays < 7)
-            return $"expires in {(int)timeUntilExpiry.TotalDays}d";
-        if (timeUntilExpiry.TotalDays < 30)
-            return $"expires in {(int)(timeUntilExpiry.TotalDays / 7)}w";
-
-        return $"expires {expiresAt:MMM d}";
     }
 
     // Helper class to deserialize notification data

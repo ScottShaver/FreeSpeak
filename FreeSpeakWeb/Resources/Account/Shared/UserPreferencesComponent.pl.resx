@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Preferences" xml:space="preserve">
+    <value>Preferencje</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Ładowanie...</value>
+  </data>
+  <data name="ColorScheme" xml:space="preserve">
+    <value>Schemat kolorów</value>
+  </data>
+  <data name="ColorSchemeHelpText" xml:space="preserve">
+    <value>Wybierz preferowany motyw kolorystyczny dla strony.</value>
+  </data>
+  <data name="NameDisplay" xml:space="preserve">
+    <value>Wyświetlanie nazwy</value>
+  </data>
+  <data name="NameDisplayHelpText" xml:space="preserve">
+    <value>Jak Twoje imię wyświetla się innym użytkownikom na stronie.</value>
+  </data>
+  <data name="NameDisplayFullName" xml:space="preserve">
+    <value>Pełne imię i nazwisko (Jan Kowalski)</value>
+  </data>
+  <data name="NameDisplayFirstName" xml:space="preserve">
+    <value>Tylko imię (Jan)</value>
+  </data>
+  <data name="NameDisplayUsername" xml:space="preserve">
+    <value>Nazwa użytkownika (jankowalski)</value>
+  </data>
+  <data name="NameDisplayFirstNameLastInitial" xml:space="preserve">
+    <value>Imię + Inicjał nazwiska (Jan K.)</value>
+  </data>
+  <data name="DefaultPostVisibility" xml:space="preserve">
+    <value>Domyślna widoczność postów</value>
+  </data>
+  <data name="DefaultPostVisibilityHelpText" xml:space="preserve">
+    <value>Domyślna widoczność dla nowych postów. Możesz to zmienić podczas tworzenia posta.</value>
+  </data>
+  <data name="AudiencePublic" xml:space="preserve">
+    <value>Publiczny (Wszyscy mogą zobaczyć)</value>
+  </data>
+  <data name="AudienceFriendsOnly" xml:space="preserve">
+    <value>Tylko znajomi</value>
+  </data>
+  <data name="AudienceMeOnly" xml:space="preserve">
+    <value>Tylko ja (Prywatny)</value>
+  </data>
+  <data name="Timezone" xml:space="preserve">
+    <value>Strefa czasowa</value>
+  </data>
+  <data name="TimezoneHelpText" xml:space="preserve">
+    <value>Twoja preferowana strefa czasowa do wyświetlania dat i godzin.</value>
+  </data>
+  <data name="TimezoneGroupUS" xml:space="preserve">
+    <value>Stany Zjednoczone</value>
+  </data>
+  <data name="TimezoneGroupOther" xml:space="preserve">
+    <value>Inne popularne strefy czasowe</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Kraj</value>
+  </data>
+  <data name="CountryHelpText" xml:space="preserve">
+    <value>Twój kraj lub region.</value>
+  </data>
+  <data name="LanguageRegion" xml:space="preserve">
+    <value>Język i region</value>
+  </data>
+  <data name="LanguageRegionHelpText" xml:space="preserve">
+    <value>Twój preferowany język i format regionalny dla interfejsu użytkownika.</value>
+  </data>
+  <data name="LanguageGroupEnglish" xml:space="preserve">
+    <value>Angielski</value>
+  </data>
+  <data name="LanguageGroupSpanish" xml:space="preserve">
+    <value>Hiszpański</value>
+  </data>
+  <data name="LanguageGroupFrench" xml:space="preserve">
+    <value>Francuski</value>
+  </data>
+  <data name="LanguageGroupGerman" xml:space="preserve">
+    <value>Niemiecki</value>
+  </data>
+  <data name="LanguageGroupOther" xml:space="preserve">
+    <value>Inne języki</value>
+  </data>
+  <data name="NotificationExpiration" xml:space="preserve">
+    <value>Automatyczne wygasanie powiadomień (w dniach)</value>
+  </data>
+  <data name="NotificationExpirationHelpText" xml:space="preserve">
+    <value>Starsze powiadomienia wygasną automatycznie. Ustaw 365 dni, aby zachować je przez rok.</value>
+  </data>
+  <data name="PostReactions" xml:space="preserve">
+    <value>Reakcje na posty</value>
+  </data>
+  <data name="PostComments" xml:space="preserve">
+    <value>Komentarze do postów</value>
+  </data>
+  <data name="CommentReplies" xml:space="preserve">
+    <value>Odpowiedzi na komentarze</value>
+  </data>
+  <data name="CommentReactions" xml:space="preserve">
+    <value>Reakcje na komentarze</value>
+  </data>
+  <data name="FriendRequests" xml:space="preserve">
+    <value>Zaproszenia do znajomych</value>
+  </data>
+  <data name="FriendAccepted" xml:space="preserve">
+    <value>Zaakceptowane znajomości</value>
+  </data>
+  <data name="Mentions" xml:space="preserve">
+    <value>Wzmianki</value>
+  </data>
+  <data name="SystemNotifications" xml:space="preserve">
+    <value>Powiadomienia systemowe</value>
+  </data>
+  <data name="SavePreferences" xml:space="preserve">
+    <value>Zapisz preferencje</value>
+  </data>
+  <data name="ResetToDefaults" xml:space="preserve">
+    <value>Przywróć domyślne</value>
+  </data>
+  <data name="PreferencesSavedSuccess" xml:space="preserve">
+    <value>Twoje preferencje zostały pomyślnie zapisane.</value>
+  </data>
+  <data name="PreferencesResetSuccess" xml:space="preserve">
+    <value>Twoje preferencje zostały przywrócone do wartości domyślnych.</value>
+  </data>
+  <data name="ErrorSavingPreferences" xml:space="preserve">
+    <value>Wystąpił błąd podczas zapisywania preferencji. Spróbuj ponownie.</value>
+  </data>
+  <data name="ErrorLoadingPreferences" xml:space="preserve">
+    <value>Wystąpił błąd podczas ładowania preferencji.</value>
+  </data>
+</root>

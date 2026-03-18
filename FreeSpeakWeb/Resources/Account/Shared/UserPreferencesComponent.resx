@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <!-- Card Header -->
+  <data name="Preferences" xml:space="preserve">
+    <value>Preferences</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <!-- Color Scheme -->
+  <data name="ColorScheme" xml:space="preserve">
+    <value>Color Scheme</value>
+  </data>
+  <data name="ColorSchemeHelpText" xml:space="preserve">
+    <value>Choose your preferred color theme for the site.</value>
+  </data>
+  <!-- Name Display -->
+  <data name="NameDisplay" xml:space="preserve">
+    <value>Name Display</value>
+  </data>
+  <data name="NameDisplayHelpText" xml:space="preserve">
+    <value>How your name appears to other users across the site.</value>
+  </data>
+  <data name="NameDisplayFullName" xml:space="preserve">
+    <value>Full Name (John Smith)</value>
+  </data>
+  <data name="NameDisplayFirstName" xml:space="preserve">
+    <value>First Name Only (John)</value>
+  </data>
+  <data name="NameDisplayUsername" xml:space="preserve">
+    <value>Username (johnsmith)</value>
+  </data>
+  <data name="NameDisplayFirstNameLastInitial" xml:space="preserve">
+    <value>First Name + Last Initial (John S.)</value>
+  </data>
+  <!-- Default Post Visibility -->
+  <data name="DefaultPostVisibility" xml:space="preserve">
+    <value>Default Post Visibility</value>
+  </data>
+  <data name="DefaultPostVisibilityHelpText" xml:space="preserve">
+    <value>Default visibility for new posts. You can change this when creating a post.</value>
+  </data>
+  <data name="AudiencePublic" xml:space="preserve">
+    <value>Public (Everyone can see)</value>
+  </data>
+  <data name="AudienceFriendsOnly" xml:space="preserve">
+    <value>Friends Only</value>
+  </data>
+  <data name="AudienceMeOnly" xml:space="preserve">
+    <value>Only Me (Private)</value>
+  </data>
+  <!-- Timezone -->
+  <data name="Timezone" xml:space="preserve">
+    <value>Timezone</value>
+  </data>
+  <data name="TimezoneHelpText" xml:space="preserve">
+    <value>Your preferred timezone for displaying dates and times.</value>
+  </data>
+  <data name="TimezoneGroupUS" xml:space="preserve">
+    <value>United States</value>
+  </data>
+  <data name="TimezoneGroupOther" xml:space="preserve">
+    <value>Other Common Timezones</value>
+  </data>
+  <!-- Country -->
+  <data name="Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="CountryHelpText" xml:space="preserve">
+    <value>Your country or region.</value>
+  </data>
+  <!-- Language & Region -->
+  <data name="LanguageRegion" xml:space="preserve">
+    <value>Language &amp; Region</value>
+  </data>
+  <data name="LanguageRegionHelpText" xml:space="preserve">
+    <value>Your preferred language and regional format for the user interface.</value>
+  </data>
+  <data name="LanguageGroupEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="LanguageGroupSpanish" xml:space="preserve">
+    <value>Español (Spanish)</value>
+  </data>
+  <data name="LanguageGroupFrench" xml:space="preserve">
+    <value>Français (French)</value>
+  </data>
+  <data name="LanguageGroupGerman" xml:space="preserve">
+    <value>Deutsch (German)</value>
+  </data>
+  <data name="LanguageGroupOther" xml:space="preserve">
+    <value>Other Languages</value>
+  </data>
+  <!-- Notification Expiration -->
+  <data name="NotificationExpiration" xml:space="preserve">
+    <value>Notification Auto-Expiration (in days)</value>
+  </data>
+  <data name="NotificationExpirationHelpText" xml:space="preserve">
+    <value>Notifications older than this will automatically expire and can be cleaned up. Set to 365 days to keep them for a year.</value>
+  </data>
+  <data name="PostReactions" xml:space="preserve">
+    <value>Post Reactions</value>
+  </data>
+  <data name="PostComments" xml:space="preserve">
+    <value>Post Comments</value>
+  </data>
+  <data name="CommentReplies" xml:space="preserve">
+    <value>Comment Replies</value>
+  </data>
+  <data name="CommentReactions" xml:space="preserve">
+    <value>Comment Reactions</value>
+  </data>
+  <data name="FriendRequests" xml:space="preserve">
+    <value>Friend Requests</value>
+  </data>
+  <data name="FriendAccepted" xml:space="preserve">
+    <value>Friend Accepted</value>
+  </data>
+  <data name="Mentions" xml:space="preserve">
+    <value>Mentions</value>
+  </data>
+  <data name="SystemNotifications" xml:space="preserve">
+    <value>System Notifications</value>
+  </data>
+  <!-- Buttons -->
+  <data name="SavePreferences" xml:space="preserve">
+    <value>Save Preferences</value>
+  </data>
+  <data name="ResetToDefaults" xml:space="preserve">
+    <value>Reset to Defaults</value>
+  </data>
+  <!-- Status Messages -->
+  <data name="PreferencesSavedSuccess" xml:space="preserve">
+    <value>Your preferences have been saved successfully.</value>
+  </data>
+  <data name="PreferencesResetSuccess" xml:space="preserve">
+    <value>Your preferences have been reset to defaults successfully.</value>
+  </data>
+  <data name="ErrorSavingPreferences" xml:space="preserve">
+    <value>An error occurred while saving your preferences. Please try again.</value>
+  </data>
+  <data name="ErrorLoadingPreferences" xml:space="preserve">
+    <value>An error occurred while loading your preferences.</value>
+  </data>
+</root>

@@ -133,4 +133,10 @@
   <data name="PostDeclinedDescription" xml:space="preserve">
     <value>Ten post został odrzucony przez moderatora. Możesz go edytować i przesłać ponownie.</value>
   </data>
+  <data name="YourPoints" xml:space="preserve">
+    <value>Twoje punkty</value>
+  </data>
+  <data name="YourPosts" xml:space="preserve">
+    <value>Twoje posty</value>
+  </data>
 </root>

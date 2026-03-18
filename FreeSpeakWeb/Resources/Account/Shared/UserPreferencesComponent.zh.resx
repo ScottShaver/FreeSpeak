@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Preferences" xml:space="preserve">
+    <value>偏好设置</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>加载中...</value>
+  </data>
+  <data name="ColorScheme" xml:space="preserve">
+    <value>颜色主题</value>
+  </data>
+  <data name="ColorSchemeHelpText" xml:space="preserve">
+    <value>选择您喜欢的网站颜色主题。</value>
+  </data>
+  <data name="NameDisplay" xml:space="preserve">
+    <value>名称显示</value>
+  </data>
+  <data name="NameDisplayHelpText" xml:space="preserve">
+    <value>您的名字在网站上向其他用户显示的方式。</value>
+  </data>
+  <data name="NameDisplayFullName" xml:space="preserve">
+    <value>全名（张三）</value>
+  </data>
+  <data name="NameDisplayFirstName" xml:space="preserve">
+    <value>仅名字（三）</value>
+  </data>
+  <data name="NameDisplayUsername" xml:space="preserve">
+    <value>用户名（zhangsan）</value>
+  </data>
+  <data name="NameDisplayFirstNameLastInitial" xml:space="preserve">
+    <value>名字 + 姓氏首字母（三 张.）</value>
+  </data>
+  <data name="DefaultPostVisibility" xml:space="preserve">
+    <value>默认帖子可见性</value>
+  </data>
+  <data name="DefaultPostVisibilityHelpText" xml:space="preserve">
+    <value>新帖子的默认可见性。您可以在创建帖子时更改。</value>
+  </data>
+  <data name="AudiencePublic" xml:space="preserve">
+    <value>公开（所有人可见）</value>
+  </data>
+  <data name="AudienceFriendsOnly" xml:space="preserve">
+    <value>仅好友</value>
+  </data>
+  <data name="AudienceMeOnly" xml:space="preserve">
+    <value>仅自己（私密）</value>
+  </data>
+  <data name="Timezone" xml:space="preserve">
+    <value>时区</value>
+  </data>
+  <data name="TimezoneHelpText" xml:space="preserve">
+    <value>您用于显示日期和时间的首选时区。</value>
+  </data>
+  <data name="TimezoneGroupUS" xml:space="preserve">
+    <value>美国</value>
+  </data>
+  <data name="TimezoneGroupOther" xml:space="preserve">
+    <value>其他常用时区</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>国家</value>
+  </data>
+  <data name="CountryHelpText" xml:space="preserve">
+    <value>您的国家或地区。</value>
+  </data>
+  <data name="LanguageRegion" xml:space="preserve">
+    <value>语言和地区</value>
+  </data>
+  <data name="LanguageRegionHelpText" xml:space="preserve">
+    <value>您用于用户界面的首选语言和区域格式。</value>
+  </data>
+  <data name="LanguageGroupEnglish" xml:space="preserve">
+    <value>英语</value>
+  </data>
+  <data name="LanguageGroupSpanish" xml:space="preserve">
+    <value>西班牙语</value>
+  </data>
+  <data name="LanguageGroupFrench" xml:space="preserve">
+    <value>法语</value>
+  </data>
+  <data name="LanguageGroupGerman" xml:space="preserve">
+    <value>德语</value>
+  </data>
+  <data name="LanguageGroupOther" xml:space="preserve">
+    <value>其他语言</value>
+  </data>
+  <data name="NotificationExpiration" xml:space="preserve">
+    <value>通知自动过期（天数）</value>
+  </data>
+  <data name="NotificationExpirationHelpText" xml:space="preserve">
+    <value>早于此时间的通知将自动过期。设置为365天可保留一年。</value>
+  </data>
+  <data name="PostReactions" xml:space="preserve">
+    <value>帖子反应</value>
+  </data>
+  <data name="PostComments" xml:space="preserve">
+    <value>帖子评论</value>
+  </data>
+  <data name="CommentReplies" xml:space="preserve">
+    <value>评论回复</value>
+  </data>
+  <data name="CommentReactions" xml:space="preserve">
+    <value>评论反应</value>
+  </data>
+  <data name="FriendRequests" xml:space="preserve">
+    <value>好友请求</value>
+  </data>
+  <data name="FriendAccepted" xml:space="preserve">
+    <value>好友已接受</value>
+  </data>
+  <data name="Mentions" xml:space="preserve">
+    <value>提及</value>
+  </data>
+  <data name="SystemNotifications" xml:space="preserve">
+    <value>系统通知</value>
+  </data>
+  <data name="SavePreferences" xml:space="preserve">
+    <value>保存设置</value>
+  </data>
+  <data name="ResetToDefaults" xml:space="preserve">
+    <value>重置为默认</value>
+  </data>
+  <data name="PreferencesSavedSuccess" xml:space="preserve">
+    <value>您的设置已成功保存。</value>
+  </data>
+  <data name="PreferencesResetSuccess" xml:space="preserve">
+    <value>您的设置已重置为默认值。</value>
+  </data>
+  <data name="ErrorSavingPreferences" xml:space="preserve">
+    <value>保存设置时发生错误。请重试。</value>
+  </data>
+  <data name="ErrorLoadingPreferences" xml:space="preserve">
+    <value>加载设置时发生错误。</value>
+  </data>
+</root>

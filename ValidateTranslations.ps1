@@ -22,6 +22,10 @@ $ResourceGroups = @{
         BasePath = "FreeSpeakWeb\Resources\Account\Pages\Manage\ManageAccount.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
+    "UserPreferencesComponent" = @{
+        BasePath = "FreeSpeakWeb\Resources\Account\Shared\UserPreferencesComponent.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
 
     # Layout Resources
     "MainLayout" = @{
@@ -40,6 +44,10 @@ $ResourceGroups = @{
     }
     "FriendsList" = @{
         BasePath = "FreeSpeakWeb\Resources\Pages\FriendsList.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "FriendDetails" = @{
+        BasePath = "FreeSpeakWeb\Resources\Pages\FriendDetails.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
     "Groups" = @{
@@ -98,6 +106,10 @@ $ResourceGroups = @{
     }
     "MoreFunctions" = @{
         BasePath = "FreeSpeakWeb\Resources\Shared\MoreFunctions.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "TimeFormatting" = @{
+        BasePath = "FreeSpeakWeb\Resources\Shared\TimeFormatting.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
 

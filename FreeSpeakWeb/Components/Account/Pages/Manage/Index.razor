@@ -63,19 +63,19 @@
             <ValidationSummary class="text-danger" role="alert" />
 
             <div class="form-floating mb-3">
-                <input type="text" value="@username" id="username" class="form-control" placeholder="@Localizer["Username"]" disabled />
+                <input type="text" value="@username" id="username" class="form-control" disabled />
                 <label for="username" class="form-label">@Localizer["Username"]</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" value="@user?.FirstName" id="firstName" class="form-control" placeholder="@Localizer["FirstName"]" disabled />
+                <input type="text" value="@user?.FirstName" id="firstName" class="form-control" disabled />
                 <label for="firstName" class="form-label">@Localizer["FirstName"]</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" value="@user?.LastName" id="lastName" class="form-control" placeholder="@Localizer["LastName"]" disabled />
+                <input type="text" value="@user?.LastName" id="lastName" class="form-control" disabled />
                 <label for="lastName" class="form-label">@Localizer["LastName"]</label>
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.NameSuffix" id="Input.NameSuffix" class="form-control" placeholder="Jr., Sr., III, etc." />
+                <InputText @bind-Value="Input.NameSuffix" id="Input.NameSuffix" class="form-control" />
                 <label for="Input.NameSuffix" class="form-label">@Localizer["NameSuffix"]</label>
                 <ValidationMessage For="() => Input.NameSuffix" class="text-danger" />
             </div>
@@ -85,22 +85,22 @@
                 <ValidationMessage For="() => Input.DateOfBirth" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.City" id="Input.City" class="form-control" placeholder="@Localizer["City"]" />
+                <InputText @bind-Value="Input.City" id="Input.City" class="form-control" />
                 <label for="Input.City" class="form-label">@Localizer["City"]</label>
                 <ValidationMessage For="() => Input.City" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.State" id="Input.State" class="form-control" placeholder="@Localizer["State"]" />
+                <InputText @bind-Value="Input.State" id="Input.State" class="form-control" />
                 <label for="Input.State" class="form-label">@Localizer["State"]</label>
                 <ValidationMessage For="() => Input.State" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Occupation" id="Input.Occupation" class="form-control" placeholder="@Localizer["Occupation"]" />
+                <InputText @bind-Value="Input.Occupation" id="Input.Occupation" class="form-control" />
                 <label for="Input.Occupation" class="form-label">@Localizer["Occupation"]</label>
                 <ValidationMessage For="() => Input.Occupation" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.PhoneNumber" id="Input.PhoneNumber" class="form-control" placeholder="@Localizer["PhoneNumber"]" />
+                <InputText @bind-Value="Input.PhoneNumber" id="Input.PhoneNumber" class="form-control" />
                 <label for="Input.PhoneNumber" class="form-label">@Localizer["PhoneNumber"]</label>
                 <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
             </div>

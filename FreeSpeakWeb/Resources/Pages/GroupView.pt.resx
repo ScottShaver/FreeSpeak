@@ -131,6 +131,12 @@
     <value>Postagem recusada</value>
   </data>
   <data name="PostDeclinedDescription" xml:space="preserve">
-    <value>Esta postagem foi recusada por um moderador. Você pode editá-la e reenviá-la.</value>
+    <value>Esta postagem foi recusada por um moderador. Você pode editá-la e reenviar.</value>
+  </data>
+  <data name="YourPoints" xml:space="preserve">
+    <value>Seus pontos</value>
+  </data>
+  <data name="YourPosts" xml:space="preserve">
+    <value>Suas postagens</value>
   </data>
 </root>

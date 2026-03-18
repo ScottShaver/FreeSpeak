@@ -133,4 +133,10 @@
   <data name="PostDeclinedDescription" xml:space="preserve">
     <value>Dit bericht is afgewezen door een moderator. U kunt het bewerken en opnieuw indienen.</value>
   </data>
+  <data name="YourPoints" xml:space="preserve">
+    <value>Uw punten</value>
+  </data>
+  <data name="YourPosts" xml:space="preserve">
+    <value>Uw berichten</value>
+  </data>
 </root>

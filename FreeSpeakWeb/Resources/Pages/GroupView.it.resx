@@ -133,4 +133,10 @@
   <data name="PostDeclinedDescription" xml:space="preserve">
     <value>Questo post è stato rifiutato da un moderatore. Puoi modificarlo e inviarlo nuovamente.</value>
   </data>
+  <data name="YourPoints" xml:space="preserve">
+    <value>I tuoi punti</value>
+  </data>
+  <data name="YourPosts" xml:space="preserve">
+    <value>I tuoi post</value>
+  </data>
 </root>

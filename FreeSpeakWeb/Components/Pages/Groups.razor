@@ -34,6 +34,7 @@
 @inject UserPreferenceService UserPreferenceService
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject FreeSpeakWeb.Repositories.Abstractions.IGroupCommentRepository GroupCommentRepository
+@inject TimestampFormattingService TimestampFormatter
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.Groups> Localizer
 
 <PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
@@ -1601,18 +1602,7 @@
     /// <returns>A human-readable relative time string.</returns>
     private string GetRelativeTime(DateTime dateTime)
     {
-        var timeSpan = DateTime.UtcNow - dateTime;
-
-        if (timeSpan.TotalMinutes < 1)
-            return "just now";
-        if (timeSpan.TotalMinutes < 60)
-            return $"{(int)timeSpan.TotalMinutes}m ago";
-        if (timeSpan.TotalHours < 24)
-            return $"{(int)timeSpan.TotalHours}h ago";
-        if (timeSpan.TotalDays < 30)
-            return $"{(int)timeSpan.TotalDays}d ago";
-
-        return dateTime.ToString("MMM dd, yyyy");
+        return TimestampFormatter.FormatTimeAgo(dateTime);
     }
 
     #region PostPageBase Abstract Method Implementations

@@ -133,4 +133,10 @@
   <data name="PostDeclinedDescription" xml:space="preserve">
     <value>Cette publication a été refusée par un modérateur. Vous pouvez la modifier et la soumettre à nouveau.</value>
   </data>
+  <data name="YourPoints" xml:space="preserve">
+    <value>Vos points</value>
+  </data>
+  <data name="YourPosts" xml:space="preserve">
+    <value>Vos publications</value>
+  </data>
 </root>

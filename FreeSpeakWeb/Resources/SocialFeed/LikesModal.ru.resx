@@ -91,4 +91,16 @@
   <data name="Angry" xml:space="preserve">
     <value>Возмутительно</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>Только что</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>{0}м назад</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>{0}ч назад</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>{0}д назад</value>
+  </data>
 </root>

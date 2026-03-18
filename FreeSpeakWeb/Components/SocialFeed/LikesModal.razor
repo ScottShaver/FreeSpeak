@@ -161,13 +161,13 @@
         var timeSpan = DateTime.UtcNow - timestamp;
 
         if (timeSpan.TotalMinutes < 1)
-            return "Just now";
+            return Localizer["JustNow"];
         if (timeSpan.TotalMinutes < 60)
-            return $"{(int)timeSpan.TotalMinutes}m ago";
+            return string.Format(Localizer["MinutesAgo"], (int)timeSpan.TotalMinutes);
         if (timeSpan.TotalHours < 24)
-            return $"{(int)timeSpan.TotalHours}h ago";
+            return string.Format(Localizer["HoursAgo"], (int)timeSpan.TotalHours);
         if (timeSpan.TotalDays < 7)
-            return $"{(int)timeSpan.TotalDays}d ago";
+            return string.Format(Localizer["DaysAgo"], (int)timeSpan.TotalDays);
 
         return timestamp.ToString("MMM d, yyyy");
     }

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Preferences" xml:space="preserve">
+    <value>Voorkeuren</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Laden...</value>
+  </data>
+  <data name="ColorScheme" xml:space="preserve">
+    <value>Kleurenschema</value>
+  </data>
+  <data name="ColorSchemeHelpText" xml:space="preserve">
+    <value>Kies je favoriete kleurthema voor de site.</value>
+  </data>
+  <data name="NameDisplay" xml:space="preserve">
+    <value>Naamweergave</value>
+  </data>
+  <data name="NameDisplayHelpText" xml:space="preserve">
+    <value>Hoe je naam wordt weergegeven aan andere gebruikers op de site.</value>
+  </data>
+  <data name="NameDisplayFullName" xml:space="preserve">
+    <value>Volledige naam (Jan de Vries)</value>
+  </data>
+  <data name="NameDisplayFirstName" xml:space="preserve">
+    <value>Alleen voornaam (Jan)</value>
+  </data>
+  <data name="NameDisplayUsername" xml:space="preserve">
+    <value>Gebruikersnaam (jandevries)</value>
+  </data>
+  <data name="NameDisplayFirstNameLastInitial" xml:space="preserve">
+    <value>Voornaam + Achternaam initiaal (Jan V.)</value>
+  </data>
+  <data name="DefaultPostVisibility" xml:space="preserve">
+    <value>Standaard zichtbaarheid van berichten</value>
+  </data>
+  <data name="DefaultPostVisibilityHelpText" xml:space="preserve">
+    <value>Standaard zichtbaarheid voor nieuwe berichten. Je kunt dit wijzigen bij het maken van een bericht.</value>
+  </data>
+  <data name="AudiencePublic" xml:space="preserve">
+    <value>Openbaar (Iedereen kan zien)</value>
+  </data>
+  <data name="AudienceFriendsOnly" xml:space="preserve">
+    <value>Alleen vrienden</value>
+  </data>
+  <data name="AudienceMeOnly" xml:space="preserve">
+    <value>Alleen ik (Privé)</value>
+  </data>
+  <data name="Timezone" xml:space="preserve">
+    <value>Tijdzone</value>
+  </data>
+  <data name="TimezoneHelpText" xml:space="preserve">
+    <value>Je voorkeurstijdzone voor het weergeven van datums en tijden.</value>
+  </data>
+  <data name="TimezoneGroupUS" xml:space="preserve">
+    <value>Verenigde Staten</value>
+  </data>
+  <data name="TimezoneGroupOther" xml:space="preserve">
+    <value>Andere veelgebruikte tijdzones</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Land</value>
+  </data>
+  <data name="CountryHelpText" xml:space="preserve">
+    <value>Je land of regio.</value>
+  </data>
+  <data name="LanguageRegion" xml:space="preserve">
+    <value>Taal en regio</value>
+  </data>
+  <data name="LanguageRegionHelpText" xml:space="preserve">
+    <value>Je voorkeurstaal en regionaal formaat voor de gebruikersinterface.</value>
+  </data>
+  <data name="LanguageGroupEnglish" xml:space="preserve">
+    <value>Engels</value>
+  </data>
+  <data name="LanguageGroupSpanish" xml:space="preserve">
+    <value>Spaans</value>
+  </data>
+  <data name="LanguageGroupFrench" xml:space="preserve">
+    <value>Frans</value>
+  </data>
+  <data name="LanguageGroupGerman" xml:space="preserve">
+    <value>Duits</value>
+  </data>
+  <data name="LanguageGroupOther" xml:space="preserve">
+    <value>Andere talen</value>
+  </data>
+  <data name="NotificationExpiration" xml:space="preserve">
+    <value>Automatische verloop van meldingen (in dagen)</value>
+  </data>
+  <data name="NotificationExpirationHelpText" xml:space="preserve">
+    <value>Oudere meldingen verlopen automatisch. Stel 365 dagen in om ze een jaar te bewaren.</value>
+  </data>
+  <data name="PostReactions" xml:space="preserve">
+    <value>Reacties op berichten</value>
+  </data>
+  <data name="PostComments" xml:space="preserve">
+    <value>Opmerkingen bij berichten</value>
+  </data>
+  <data name="CommentReplies" xml:space="preserve">
+    <value>Antwoorden op opmerkingen</value>
+  </data>
+  <data name="CommentReactions" xml:space="preserve">
+    <value>Reacties op opmerkingen</value>
+  </data>
+  <data name="FriendRequests" xml:space="preserve">
+    <value>Vriendschapsverzoeken</value>
+  </data>
+  <data name="FriendAccepted" xml:space="preserve">
+    <value>Vriendschap geaccepteerd</value>
+  </data>
+  <data name="Mentions" xml:space="preserve">
+    <value>Vermeldingen</value>
+  </data>
+  <data name="SystemNotifications" xml:space="preserve">
+    <value>Systeemmeldingen</value>
+  </data>
+  <data name="SavePreferences" xml:space="preserve">
+    <value>Voorkeuren opslaan</value>
+  </data>
+  <data name="ResetToDefaults" xml:space="preserve">
+    <value>Standaardinstellingen herstellen</value>
+  </data>
+  <data name="PreferencesSavedSuccess" xml:space="preserve">
+    <value>Je voorkeuren zijn succesvol opgeslagen.</value>
+  </data>
+  <data name="PreferencesResetSuccess" xml:space="preserve">
+    <value>Je voorkeuren zijn hersteld naar de standaardwaarden.</value>
+  </data>
+  <data name="ErrorSavingPreferences" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het opslaan van je voorkeuren. Probeer het opnieuw.</value>
+  </data>
+  <data name="ErrorLoadingPreferences" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het laden van je voorkeuren.</value>
+  </data>
+</root>

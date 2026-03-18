@@ -94,4 +94,10 @@
   <data name="SystemModerator" xml:space="preserve">
     <value>Systeemmoderator</value>
   </data>
+  <data name="JumpToGroup" xml:space="preserve">
+    <value>Ga naar groep</value>
+  </data>
+  <data name="JumpToFriend" xml:space="preserve">
+    <value>Ga naar vriend</value>
+  </data>
 </root>

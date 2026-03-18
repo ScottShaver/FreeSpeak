@@ -91,4 +91,16 @@
   <data name="Angry" xml:space="preserve">
     <value>ひどいね</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>たった今</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>{0}分前</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>{0}時間前</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>{0}日前</value>
+  </data>
 </root>

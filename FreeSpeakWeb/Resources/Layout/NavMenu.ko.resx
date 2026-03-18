@@ -94,4 +94,10 @@
   <data name="SystemModerator" xml:space="preserve">
     <value>시스템 모더레이터</value>
   </data>
+  <data name="JumpToGroup" xml:space="preserve">
+    <value>그룹으로 이동</value>
+  </data>
+  <data name="JumpToFriend" xml:space="preserve">
+    <value>친구로 이동</value>
+  </data>
 </root>

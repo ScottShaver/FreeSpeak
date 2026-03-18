@@ -133,4 +133,10 @@
   <data name="PostDeclinedDescription" xml:space="preserve">
     <value>تم رفض هذا المنشور من قبل المشرف. يمكنك تعديله وإعادة إرساله.</value>
   </data>
+  <data name="YourPoints" xml:space="preserve">
+    <value>نقاطك</value>
+  </data>
+  <data name="YourPosts" xml:space="preserve">
+    <value>منشوراتك</value>
+  </data>
 </root>

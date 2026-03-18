@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Preferences" xml:space="preserve">
+    <value>Préférences</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Chargement...</value>
+  </data>
+  <data name="ColorScheme" xml:space="preserve">
+    <value>Thème de couleur</value>
+  </data>
+  <data name="ColorSchemeHelpText" xml:space="preserve">
+    <value>Choisissez votre thème de couleur préféré pour le site.</value>
+  </data>
+  <data name="NameDisplay" xml:space="preserve">
+    <value>Affichage du nom</value>
+  </data>
+  <data name="NameDisplayHelpText" xml:space="preserve">
+    <value>Comment votre nom apparaît aux autres utilisateurs sur le site.</value>
+  </data>
+  <data name="NameDisplayFullName" xml:space="preserve">
+    <value>Nom complet (Jean Dupont)</value>
+  </data>
+  <data name="NameDisplayFirstName" xml:space="preserve">
+    <value>Prénom uniquement (Jean)</value>
+  </data>
+  <data name="NameDisplayUsername" xml:space="preserve">
+    <value>Nom d'utilisateur (jeandupont)</value>
+  </data>
+  <data name="NameDisplayFirstNameLastInitial" xml:space="preserve">
+    <value>Prénom + Initiale du nom (Jean D.)</value>
+  </data>
+  <data name="DefaultPostVisibility" xml:space="preserve">
+    <value>Visibilité par défaut des publications</value>
+  </data>
+  <data name="DefaultPostVisibilityHelpText" xml:space="preserve">
+    <value>Visibilité par défaut pour les nouvelles publications. Vous pouvez la modifier lors de la création d'une publication.</value>
+  </data>
+  <data name="AudiencePublic" xml:space="preserve">
+    <value>Public (Tout le monde peut voir)</value>
+  </data>
+  <data name="AudienceFriendsOnly" xml:space="preserve">
+    <value>Amis uniquement</value>
+  </data>
+  <data name="AudienceMeOnly" xml:space="preserve">
+    <value>Moi uniquement (Privé)</value>
+  </data>
+  <data name="Timezone" xml:space="preserve">
+    <value>Fuseau horaire</value>
+  </data>
+  <data name="TimezoneHelpText" xml:space="preserve">
+    <value>Votre fuseau horaire préféré pour l'affichage des dates et heures.</value>
+  </data>
+  <data name="TimezoneGroupUS" xml:space="preserve">
+    <value>États-Unis</value>
+  </data>
+  <data name="TimezoneGroupOther" xml:space="preserve">
+    <value>Autres fuseaux horaires courants</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Pays</value>
+  </data>
+  <data name="CountryHelpText" xml:space="preserve">
+    <value>Votre pays ou région.</value>
+  </data>
+  <data name="LanguageRegion" xml:space="preserve">
+    <value>Langue et région</value>
+  </data>
+  <data name="LanguageRegionHelpText" xml:space="preserve">
+    <value>Votre langue préférée et format régional pour l'interface utilisateur.</value>
+  </data>
+  <data name="LanguageGroupEnglish" xml:space="preserve">
+    <value>Anglais</value>
+  </data>
+  <data name="LanguageGroupSpanish" xml:space="preserve">
+    <value>Espagnol</value>
+  </data>
+  <data name="LanguageGroupFrench" xml:space="preserve">
+    <value>Français</value>
+  </data>
+  <data name="LanguageGroupGerman" xml:space="preserve">
+    <value>Allemand</value>
+  </data>
+  <data name="LanguageGroupOther" xml:space="preserve">
+    <value>Autres langues</value>
+  </data>
+  <data name="NotificationExpiration" xml:space="preserve">
+    <value>Expiration automatique des notifications (en jours)</value>
+  </data>
+  <data name="NotificationExpirationHelpText" xml:space="preserve">
+    <value>Les notifications plus anciennes expireront automatiquement. Réglez sur 365 jours pour les conserver pendant un an.</value>
+  </data>
+  <data name="PostReactions" xml:space="preserve">
+    <value>Réactions aux publications</value>
+  </data>
+  <data name="PostComments" xml:space="preserve">
+    <value>Commentaires sur les publications</value>
+  </data>
+  <data name="CommentReplies" xml:space="preserve">
+    <value>Réponses aux commentaires</value>
+  </data>
+  <data name="CommentReactions" xml:space="preserve">
+    <value>Réactions aux commentaires</value>
+  </data>
+  <data name="FriendRequests" xml:space="preserve">
+    <value>Demandes d'amitié</value>
+  </data>
+  <data name="FriendAccepted" xml:space="preserve">
+    <value>Amitié acceptée</value>
+  </data>
+  <data name="Mentions" xml:space="preserve">
+    <value>Mentions</value>
+  </data>
+  <data name="SystemNotifications" xml:space="preserve">
+    <value>Notifications système</value>
+  </data>
+  <data name="SavePreferences" xml:space="preserve">
+    <value>Enregistrer les préférences</value>
+  </data>
+  <data name="ResetToDefaults" xml:space="preserve">
+    <value>Réinitialiser par défaut</value>
+  </data>
+  <data name="PreferencesSavedSuccess" xml:space="preserve">
+    <value>Vos préférences ont été enregistrées avec succès.</value>
+  </data>
+  <data name="PreferencesResetSuccess" xml:space="preserve">
+    <value>Vos préférences ont été réinitialisées aux valeurs par défaut.</value>
+  </data>
+  <data name="ErrorSavingPreferences" xml:space="preserve">
+    <value>Une erreur s'est produite lors de l'enregistrement de vos préférences. Veuillez réessayer.</value>
+  </data>
+  <data name="ErrorLoadingPreferences" xml:space="preserve">
+    <value>Une erreur s'est produite lors du chargement de vos préférences.</value>
+  </data>
+</root>
