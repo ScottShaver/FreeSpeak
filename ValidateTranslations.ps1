@@ -112,6 +112,10 @@ $ResourceGroups = @{
         BasePath = "FreeSpeakWeb\Resources\Shared\TimeFormatting.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
+    "NotificationTemplates" = @{
+        BasePath = "FreeSpeakWeb\Resources\Notifications\NotificationTemplates.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
 
     # Admin Resources
     "UserCreationModal" = @{

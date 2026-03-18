@@ -28,9 +28,18 @@ namespace FreeSpeakWeb.Data
         public NotificationType Type { get; set; }
 
         /// <summary>
-        /// Gets or sets the notification message text displayed to the user.
+        /// Gets or sets the template key used to render the notification message in different languages.
+        /// When set, the message is rendered at display time using the recipient's language preference.
+        /// If null, the Message field is used directly (for backward compatibility).
         /// </summary>
-        public required string Message { get; set; }
+        public string? TemplateKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the notification message text displayed to the user.
+        /// For new notifications, this may be null if TemplateKey is used instead.
+        /// For legacy notifications, this contains the pre-formatted message.
+        /// </summary>
+        public string? Message { get; set; }
 
         /// <summary>
         /// Gets or sets additional JSON-serialized data for the notification.

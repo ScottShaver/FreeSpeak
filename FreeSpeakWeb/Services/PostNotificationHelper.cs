@@ -71,9 +71,8 @@ namespace FreeSpeakWeb.Services
                     commenter.UserName ?? "User"
                 );
 
-                var message = groupId.HasValue
-                    ? $"<strong>{formattedName}</strong> commented on your group post"
-                    : $"<strong>{formattedName}</strong> commented on your post";
+                // Use template key instead of hardcoded message
+                var templateKey = groupId.HasValue ? "GroupPostComment" : "PostComment";
 
                 var data = groupId.HasValue
                     ? new
@@ -94,12 +93,19 @@ namespace FreeSpeakWeb.Services
                         CommenterProfilePicture = commenter.ProfilePictureUrl
                     };
 
-                await _notificationService.CreateNotificationAsync(
-                    postAuthorId,
-                    notificationType,
-                    message,
-                    data
+                var result = await _notificationService.CreateNotificationAsync(
+                    userId: postAuthorId,
+                    type: notificationType,
+                    message: null,
+                    data: data,
+                    expiresAt: null,
+                    templateKey: templateKey
                 );
+
+                if (!result.Success)
+                {
+                    _logger.LogWarning("Failed to create comment notification for post {PostId}: {Error}", postId, result.ErrorMessage);
+                }
             }
             catch (Exception ex)
             {
@@ -152,9 +158,8 @@ namespace FreeSpeakWeb.Services
                     replier.UserName ?? "User"
                 );
 
-                var message = groupId.HasValue
-                    ? $"<strong>{formattedName}</strong> replied to your comment in a group"
-                    : $"<strong>{formattedName}</strong> replied to your comment";
+                // Use template key instead of hardcoded message
+                var templateKey = groupId.HasValue ? "GroupCommentReply" : "CommentReply";
 
                 var data = groupId.HasValue
                     ? new
@@ -175,12 +180,19 @@ namespace FreeSpeakWeb.Services
                         CommenterProfilePicture = replier.ProfilePictureUrl
                     };
 
-                await _notificationService.CreateNotificationAsync(
-                    parentCommentAuthorId,
-                    notificationType,
-                    message,
-                    data
+                var result = await _notificationService.CreateNotificationAsync(
+                    userId: parentCommentAuthorId,
+                    type: notificationType,
+                    message: null,
+                    data: data,
+                    expiresAt: null,
+                    templateKey: templateKey
                 );
+
+                if (!result.Success)
+                {
+                    _logger.LogWarning("Failed to create comment reply notification for post {PostId}: {Error}", postId, result.ErrorMessage);
+                }
             }
             catch (Exception ex)
             {
@@ -233,10 +245,8 @@ namespace FreeSpeakWeb.Services
                     reactor.UserName ?? "User"
                 );
 
-                var reactionText = reactionType.ToString().ToLower();
-                var message = groupId.HasValue
-                    ? $"<strong>{formattedName}</strong> reacted to your group post with {reactionText}"
-                    : $"<strong>{formattedName}</strong> reacted to your post with {reactionText}";
+                // Use template key instead of hardcoded message
+                var templateKey = groupId.HasValue ? "GroupPostReaction" : "PostReaction";
 
                 var data = groupId.HasValue
                     ? new
@@ -257,12 +267,19 @@ namespace FreeSpeakWeb.Services
                         ReactionType = reactionType.ToString()
                     };
 
-                await _notificationService.CreateNotificationAsync(
-                    postAuthorId,
-                    notificationType,
-                    message,
-                    data
+                var result = await _notificationService.CreateNotificationAsync(
+                    userId: postAuthorId,
+                    type: notificationType,
+                    message: null,
+                    data: data,
+                    expiresAt: null,
+                    templateKey: templateKey
                 );
+
+                if (!result.Success)
+                {
+                    _logger.LogWarning("Failed to create post reaction notification for post {PostId}: {Error}", postId, result.ErrorMessage);
+                }
             }
             catch (Exception ex)
             {
@@ -316,10 +333,8 @@ namespace FreeSpeakWeb.Services
                     reactor.UserName ?? "User"
                 );
 
-                var reactionText = reactionType.ToString().ToLower();
-                var message = groupId.HasValue
-                    ? $"<strong>{formattedName}</strong> reacted to your comment in a group with {reactionText}"
-                    : $"<strong>{formattedName}</strong> reacted to your comment with {reactionText}";
+                // Use template key instead of hardcoded message
+                var templateKey = groupId.HasValue ? "GroupCommentReaction" : "CommentReaction";
 
                 var data = groupId.HasValue
                     ? new
@@ -342,12 +357,19 @@ namespace FreeSpeakWeb.Services
                         ReactionType = reactionType.ToString()
                     };
 
-                await _notificationService.CreateNotificationAsync(
-                    commentAuthorId,
-                    notificationType,
-                    message,
-                    data
+                var result = await _notificationService.CreateNotificationAsync(
+                    userId: commentAuthorId,
+                    type: notificationType,
+                    message: null,
+                    data: data,
+                    expiresAt: null,
+                    templateKey: templateKey
                 );
+
+                if (!result.Success)
+                {
+                    _logger.LogWarning("Failed to create comment reaction notification for comment {CommentId}: {Error}", commentId, result.ErrorMessage);
+                }
             }
             catch (Exception ex)
             {

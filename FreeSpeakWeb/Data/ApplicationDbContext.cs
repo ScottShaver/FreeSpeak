@@ -322,8 +322,9 @@ namespace FreeSpeakWeb.Data
                     .HasForeignKey(n => n.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
+                // Message is optional when using TemplateKey for localized notifications
                 entity.Property(n => n.Message)
-                    .IsRequired();
+                    .IsRequired(false);
 
                 // Create indexes for efficient querying
                 entity.HasIndex(n => n.UserId);

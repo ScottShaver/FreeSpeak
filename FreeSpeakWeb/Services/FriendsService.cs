@@ -96,13 +96,12 @@ namespace FreeSpeakWeb.Services
                     requester.LastName ?? string.Empty,
                     requester.UserName ?? "User"
                 );
-                var message = $"<strong>{formattedName}</strong> sent you a friend request";
 
-                // Create notification for the addressee
+                // Create notification for the addressee using template key
                 await _notificationService.CreateNotificationAsync(
                     userId: addresseeId,
                     type: NotificationType.FriendRequest,
-                    message: message,
+                    message: null,
                     data: new
                     {
                         NavigationUrl = "/friends?tab=requests",
@@ -110,7 +109,9 @@ namespace FreeSpeakWeb.Services
                         RequesterId = requesterId,
                         RequesterName = formattedName,
                         RequesterProfilePicture = requester.ProfilePictureUrl
-                    }
+                    },
+                    expiresAt: null,
+                    templateKey: "FriendRequest"
                 );
             }
 
@@ -169,12 +170,12 @@ namespace FreeSpeakWeb.Services
                     acceptor.LastName ?? string.Empty,
                     acceptor.UserName ?? "User"
                 );
-                var message = $"<strong>{formattedName}</strong> accepted your friend request";
 
+                // Create notification using template key
                 await _notificationService.CreateNotificationAsync(
                     userId: friendship.RequesterId,
                     type: NotificationType.FriendAccepted,
-                    message: message,
+                    message: null,
                     data: new
                     {
                         NavigationUrl = "/friends",
@@ -182,7 +183,9 @@ namespace FreeSpeakWeb.Services
                         AcceptorId = currentUserId,
                         RequesterName = formattedName,
                         RequesterProfilePicture = acceptor.ProfilePictureUrl
-                    }
+                    },
+                    expiresAt: null,
+                    templateKey: "FriendAccepted"
                 );
             }
 

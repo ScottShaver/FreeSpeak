@@ -5,6 +5,7 @@
 
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject TimestampFormattingService TimestampFormatter
+@inject NotificationTemplateService NotificationTemplateService
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.NotificationComponent> Localizer
 
 <div class="notification-item @(Notification.IsRead ? "read" : "unread")" @onclick="HandleClick">
@@ -61,7 +62,7 @@
         </div>
     </div>
     <div class="notification-content">
-        <div class="notification-message">@((MarkupString)HtmlSanitizationService.Sanitize(Notification.Message))</div>
+        <div class="notification-message">@((MarkupString)HtmlSanitizationService.Sanitize(RenderedMessage ?? string.Empty))</div>
         <div class="notification-time">
             @TimestampFormatter.FormatTimeAgo(Notification.CreatedAt)
             @if (Notification.ExpiresAt.HasValue)
@@ -96,6 +97,20 @@
 
     private string UserProfilePicture => GetProfilePicture();
     private string UserName => GetUserName();
+    private string? RenderedMessage { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // Render the notification message using template if available, otherwise use Message field
+        if (!string.IsNullOrEmpty(Notification.TemplateKey))
+        {
+            RenderedMessage = await NotificationTemplateService.RenderNotificationAsync(Notification);
+        }
+        else
+        {
+            RenderedMessage = Notification.Message;
+        }
+    }
 
     private async Task HandleClick()
     {
