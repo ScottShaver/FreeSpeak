@@ -133,4 +133,10 @@
   <data name="PostDeclinedDescription" xml:space="preserve">
     <value>This post was declined by a moderator. You can edit and resubmit it.</value>
   </data>
+  <data name="YourPoints" xml:space="preserve">
+    <value>Your Points</value>
+  </data>
+  <data name="YourPosts" xml:space="preserve">
+    <value>Your Posts</value>
+  </data>
 </root>

@@ -236,12 +236,26 @@
         return timestamp.ToLocalTime().ToString("MMMM d 'at' h:mm tt");
     }
 
+    /// <summary>
+    /// Extracts initials from a name string.
+    /// Handles the "GroupName > AuthorName" format by extracting only the author portion.
+    /// </summary>
+    /// <param name="name">The name to extract initials from.</param>
+    /// <returns>One or two character initials in uppercase.</returns>
     private string GetInitials(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
             return "U";
 
-        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        // Handle "GroupName > AuthorName" format - extract just the author name
+        var authorName = name;
+        var separatorIndex = name.IndexOf(" > ", StringComparison.Ordinal);
+        if (separatorIndex >= 0)
+        {
+            authorName = name.Substring(separatorIndex + 3).Trim();
+        }
+
+        var parts = authorName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
         if (parts.Length == 0)
             return "U";

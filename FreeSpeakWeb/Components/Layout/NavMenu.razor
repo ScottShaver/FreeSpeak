@@ -18,6 +18,7 @@
 @inject NotificationBadgeService NotificationBadgeService
 @inject UserPreferenceService UserPreferenceService
 @inject GroupMemberService GroupMemberService
+@inject FriendsService FriendsService
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Layout.NavMenu> Localizer
 
 <!-- Always visible header across the top -->
@@ -183,16 +184,65 @@
                     </form>
                 </div>
 
-                @if (userGroups != null && userGroups.Any())
+                @if ((userFriends != null && userFriends.Any()) || (userGroups != null && userGroups.Any()))
                 {
                     <hr class="nav-divider" />
 
-                    @foreach (var groupUser in userGroups)
+                    @if (userFriends != null && userFriends.Any())
                     {
-                        <div class="nav-item px-3">
-                            <a class="nav-link @(GetActiveMenuItemFromUrl() == $"group/{groupUser.GroupId}" ? "active" : "")" href="@($"group/{groupUser.GroupId}")" data-enhance-nav="false">
-                                <span class="bi bi-diagram-3-fill-nav-menu" aria-hidden="true"></span> @groupUser.Group?.Name
-                            </a>
+                        <div class="nav-item px-3 position-relative">
+                            <button type="button" class="nav-link w-100 text-start d-flex align-items-center justify-content-between" @onclick="ToggleFriendsPopup" @onclick:stopPropagation="true">
+                                <span>
+                                    <span class="bi bi-box-arrow-up-right" aria-hidden="true"></span> @Localizer["JumpToFriend"]
+                                </span>
+                                <span class="bi @(showFriendsPopup ? "bi-chevron-up" : "bi-chevron-down")" style="font-size: 0.75rem;"></span>
+                            </button>
+
+                            @if (showFriendsPopup)
+                            {
+                                <div class="friends-popup-menu" @onclick:stopPropagation="true">
+                                    @foreach (var friend in userFriends)
+                                    {
+                                        var displayName = friendDisplayNames.ContainsKey(friend.Id) ? friendDisplayNames[friend.Id] : (friend.UserName ?? "User");
+                                        <a href="@($"/friend/{friend.Id}")" 
+                                           class="friends-popup-item @(GetActiveMenuItemFromUrl() == $"friend/{friend.Id}" ? "active" : "")" 
+                                           data-enhance-nav="false"
+                                           @onclick="CloseFriendsPopup"
+                                           @onclick:stopPropagation="true">
+                                            <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span>
+                                            <span class="friend-name">@displayName</span>
+                                        </a>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @if (userGroups != null && userGroups.Any())
+                    {
+                        <div class="nav-item px-3 position-relative">
+                            <button type="button" class="nav-link w-100 text-start d-flex align-items-center justify-content-between" @onclick="ToggleGroupsPopup" @onclick:stopPropagation="true">
+                                <span>
+                                    <span class="bi bi-box-arrow-up-right" aria-hidden="true"></span> @Localizer["JumpToGroup"]
+                                </span>
+                                <span class="bi @(showGroupsPopup ? "bi-chevron-up" : "bi-chevron-down")" style="font-size: 0.75rem;"></span>
+                            </button>
+
+                            @if (showGroupsPopup)
+                            {
+                                <div class="groups-popup-menu" @onclick:stopPropagation="true">
+                                    @foreach (var groupUser in userGroups)
+                                    {
+                                        <a href="@($"/group/{groupUser.GroupId}")" 
+                                           class="groups-popup-item @(GetActiveMenuItemFromUrl() == $"group/{groupUser.GroupId}" ? "active" : "")" 
+                                           data-enhance-nav="false"
+                                           @onclick="CloseGroupsPopup">
+                                            <span class="bi bi-diagram-3-fill-nav-menu" aria-hidden="true"></span>
+                                            <span class="group-name">@groupUser.Group?.Name</span>
+                                        </a>
+                                    }
+                                </div>
+                            }
                         </div>
                     }
                 }
@@ -223,6 +273,10 @@
 
 @code {
     private bool showNavMenu = true;  // Start visible, JavaScript will hide on mobile
+    private bool showGroupsPopup = false;
+    private bool isTogglingGroupsPopup = false;
+    private bool showFriendsPopup = false;
+    private bool isTogglingFriendsPopup = false;
     private string? currentUrl;
     private string _activeMenuItem = "";
     private IJSObjectReference? module;
@@ -232,6 +286,8 @@
     private string? currentUserDisplayName;
     private int unreadNotificationCount = 0;
     private List<GroupUser>? userGroups;
+    private List<ApplicationUser>? userFriends;
+    private Dictionary<string, string> friendDisplayNames = new();
     private bool isSystemAdministrator = false;
     private bool isSystemModerator = false;
 
@@ -243,8 +299,76 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Toggles the visibility of the groups popup menu.
+    /// </summary>
+    private void ToggleGroupsPopup()
+    {
+        isTogglingGroupsPopup = true;
+        showGroupsPopup = !showGroupsPopup;
+
+        // Close friends popup when opening groups popup
+        if (showGroupsPopup && showFriendsPopup)
+        {
+            showFriendsPopup = false;
+        }
+
+        StateHasChanged();
+        // Reset the flag after a brief delay to allow the parent click handler to check it
+        _ = Task.Delay(50).ContinueWith(_ => isTogglingGroupsPopup = false);
+    }
+
+    /// <summary>
+    /// Closes the groups popup menu.
+    /// </summary>
+    private void CloseGroupsPopup()
+    {
+        showGroupsPopup = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Toggles the visibility of the friends popup menu.
+    /// </summary>
+    private void ToggleFriendsPopup()
+    {
+        isTogglingFriendsPopup = true;
+        showFriendsPopup = !showFriendsPopup;
+
+        // Close groups popup when opening friends popup
+        if (showFriendsPopup && showGroupsPopup)
+        {
+            showGroupsPopup = false;
+        }
+
+        StateHasChanged();
+        // Reset the flag after a brief delay to allow the parent click handler to check it
+        _ = Task.Delay(50).ContinueWith(_ => isTogglingFriendsPopup = false);
+    }
+
+    /// <summary>
+    /// Closes the friends popup menu.
+    /// </summary>
+    private void CloseFriendsPopup()
+    {
+        showFriendsPopup = false;
+        StateHasChanged();
+    }
+
     private async Task HandleNavMenuClick()
     {
+        // Don't close the groups popup if we just toggled it
+        if (showGroupsPopup && !isTogglingGroupsPopup)
+        {
+            showGroupsPopup = false;
+        }
+
+        // Don't close the friends popup if we just toggled it
+        if (showFriendsPopup && !isTogglingFriendsPopup)
+        {
+            showFriendsPopup = false;
+        }
+
         // Only close the nav menu if we're on mobile or narrow window
         if (module != null)
         {
@@ -315,6 +439,17 @@
 
                 // Load user's groups
                 await LoadUserGroupsAsync();
+
+                // Load user's friends (with error handling to prevent breaking login)
+                try
+                {
+                    await LoadUserFriendsAsync();
+                }
+                catch
+                {
+                    // Silently fail - friends list is not critical for basic navigation
+                    userFriends = new List<ApplicationUser>();
+                }
             }
         }
     }
@@ -323,17 +458,86 @@
     {
         if (currentUser == null) return;
 
-        var groups = await GroupMemberService.GetUserGroupsAsync(currentUser.Id);
-        // Sort alphabetically by group name
-        userGroups = groups
-            .OrderBy(gu => gu.Group?.Name ?? string.Empty)
-            .ToList();
+        try
+        {
+            var groups = await GroupMemberService.GetUserGroupsAsync(currentUser.Id);
+            // Sort alphabetically by group name
+            userGroups = groups
+                .OrderBy(gu => gu.Group?.Name ?? string.Empty)
+                .ToList();
+        }
+        catch
+        {
+            // Silently fail - groups list is not critical for basic navigation
+            userGroups = new List<GroupUser>();
+        }
+    }
+
+    private async Task LoadUserFriendsAsync()
+    {
+        if (currentUser == null) return;
+
+        try
+        {
+            var friends = await FriendsService.GetFriendsAsync(currentUser.Id);
+
+            // Pre-format display names for each friend
+            friendDisplayNames.Clear();
+            var friendsWithFormattedNames = new List<(ApplicationUser Friend, string DisplayName)>();
+
+            foreach (var friend in friends)
+            {
+                var displayName = await UserPreferenceService.FormatUserDisplayNameAsync(
+                    friend.Id,
+                    friend.FirstName ?? string.Empty,
+                    friend.LastName ?? string.Empty,
+                    friend.UserName ?? "User"
+                );
+
+                friendDisplayNames[friend.Id] = displayName;
+                friendsWithFormattedNames.Add((friend, displayName));
+            }
+
+            // Sort alphabetically by display name
+            userFriends = friendsWithFormattedNames
+                .OrderBy(f => f.DisplayName)
+                .Select(f => f.Friend)
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            // Log error but don't let it break the component
+            // Friends list is not critical for navigation
+            userFriends = new List<ApplicationUser>();
+            friendDisplayNames.Clear();
+        }
     }
 
     public async Task RefreshUserGroupsAsync()
     {
-        await LoadUserGroupsAsync();
-        StateHasChanged();
+        try
+        {
+            await LoadUserGroupsAsync();
+            StateHasChanged();
+        }
+        catch
+        {
+            // Silently fail
+        }
+    }
+
+    public async Task RefreshUserFriendsAsync()
+    {
+        try
+        {
+            await LoadUserFriendsAsync();
+            StateHasChanged();
+        }
+        catch
+        {
+            // Silently fail
+            friendDisplayNames.Clear();
+        }
     }
 
     protected override void OnParametersSet()
@@ -373,6 +577,8 @@
         else if (path.Equals("technology-credits", StringComparison.OrdinalIgnoreCase))
             _activeMenuItem = "technology-credits";
         else if (path.StartsWith("group/", StringComparison.OrdinalIgnoreCase))
+            _activeMenuItem = path.ToLowerInvariant();
+        else if (path.StartsWith("friend/", StringComparison.OrdinalIgnoreCase))
             _activeMenuItem = path.ToLowerInvariant();
         else
             _activeMenuItem = "/" + path;

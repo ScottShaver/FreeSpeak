@@ -46,6 +46,10 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="pinned-tab" data-bs-toggle="tab" data-bs-target="#pinned-content" type="button" role="tab" aria-controls="pinned-content" aria-selected="false">
                         @Localizer["PinnedPosts"]
+                        @if (pinnedPostsList.Count > 0)
+                        {
+                            <span class="badge bg-primary ms-1">@pinnedPostsList.Count</span>
+                        }
                     </button>
                 </li>
             </ul>

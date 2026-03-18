@@ -35,13 +35,13 @@
     <div class="public-feed-section">
         <h2>@Localizer["RecentPublicPosts"]</h2>
 
-        @if (isLoading && !posts.Any())
+        @if (isLoading)
         {
             <div class="loading-indicator">
                 <p>@Localizer["LoadingPosts"]</p>
             </div>
         }
-        else if (!posts.Any() && !isLoading)
+        else if (!posts.Any())
         {
             <div class="empty-feed">
                 <p>@Localizer["NoPosts"]</p>
@@ -143,21 +143,31 @@
     private bool hasMore = false;
     private int pageNumber = 1;
     private int pageSize = 10;
+    private bool hasLoadedOnce = false;
 
     private bool showPostDetail = false;
     private Post? selectedPost = null;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        // Check if user is authenticated and redirect to authenticated home
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        if (authState.User.Identity?.IsAuthenticated == true)
+        if (firstRender)
         {
-            NavigationManager.NavigateTo("/home");
-            return;
-        }
+            // Check if user is authenticated and redirect to authenticated home
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            if (authState.User.Identity?.IsAuthenticated == true)
+            {
+                NavigationManager.NavigateTo("/home");
+                return;
+            }
 
-        await LoadPublicPosts();
+            // Only load once
+            if (!hasLoadedOnce)
+            {
+                hasLoadedOnce = true;
+                await LoadPublicPosts();
+                StateHasChanged();
+            }
+        }
     }
 
     private async Task LoadPublicPosts()

@@ -447,6 +447,26 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets the total count of posts by a specific user in a specific group.
+        /// </summary>
+        /// <param name="groupId">The ID of the group.</param>
+        /// <param name="authorId">The ID of the author.</param>
+        /// <returns>The total number of posts by the author in the group.</returns>
+        public async Task<int> GetCountByGroupAndAuthorAsync(int groupId, string authorId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                return await context.GroupPosts.CountAsync(p => p.GroupId == groupId && p.AuthorId == authorId && p.Status == PostStatus.Posted);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error counting posts for author {AuthorId} in group {GroupId}", authorId, groupId);
+                return 0;
+            }
+        }
+
         public async Task<List<GroupPost>> GetByGroupAndAuthorAsync(int groupId, string authorId, int skip = 0, int take = 20)
         {
             try

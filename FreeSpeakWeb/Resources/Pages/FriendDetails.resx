@@ -18,6 +18,9 @@
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" maxOccurs="1" />
+              </xsd:sequence>
               <xsd:attribute name="alias" type="xsd:string" />
               <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
@@ -25,21 +28,20 @@
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="xml:space" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" maxOccurs="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -58,46 +60,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ToggleNavigation" xml:space="preserve">
-    <value>Toggle navigation menu</value>
+  <data name="LoadingFriendInformation" xml:space="preserve">
+    <value>Loading friend information...</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
+  <data name="FriendNotFound" xml:space="preserve">
+    <value>Friend not found.</value>
   </data>
-  <data name="Friends" xml:space="preserve">
-    <value>Friends</value>
+  <data name="NotFriends" xml:space="preserve">
+    <value>You are not friends with this user.</value>
   </data>
-  <data name="Groups" xml:space="preserve">
-    <value>Groups</value>
+  <data name="FriendPosts" xml:space="preserve">
+    <value>Posts</value>
   </data>
-  <data name="MyUploads" xml:space="preserve">
-    <value>My Uploads</value>
+  <data name="LoadingPosts" xml:space="preserve">
+    <value>Loading posts...</value>
   </data>
-  <data name="Notifications" xml:space="preserve">
-    <value>Notifications</value>
+  <data name="NoPostsYet" xml:space="preserve">
+    <value>No posts yet</value>
   </data>
-  <data name="Logout" xml:space="preserve">
-    <value>Logout</value>
+  <data name="NoPostsMessage" xml:space="preserve">
+    <value>This friend hasn't shared any posts yet.</value>
   </data>
-  <data name="Register" xml:space="preserve">
-    <value>Register</value>
+  <data name="LoadMorePosts" xml:space="preserve">
+    <value>Load More Posts</value>
   </data>
-  <data name="Login" xml:space="preserve">
-    <value>Login</value>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>Loading more posts...</value>
   </data>
-  <data name="TechnologyCredits" xml:space="preserve">
-    <value>Technology Credits</value>
-  </data>
-  <data name="SystemAdministration" xml:space="preserve">
-    <value>System Administration</value>
-  </data>
-  <data name="SystemModerator" xml:space="preserve">
-    <value>System Moderator</value>
-  </data>
-  <data name="JumpToGroup" xml:space="preserve">
-    <value>Jump To Group</value>
-  </data>
-  <data name="JumpToFriend" xml:space="preserve">
-    <value>Jump To Friend</value>
+  <data name="NoMorePosts" xml:space="preserve">
+    <value>No more posts at this time</value>
   </data>
 </root>
