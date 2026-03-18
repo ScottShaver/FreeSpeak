@@ -1,0 +1,840 @@
+@page "/friend/{FriendId}"
+@rendermode InteractiveServer
+@attribute [Authorize]
+@inherits PostPageBase<Post, Comment>
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
+@using FreeSpeakWeb.Helpers
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Components.Shared
+@using FreeSpeakWeb.Components.Pages.Base
+@using FreeSpeakWeb.Repositories.Abstractions
+@using System.Security.Claims
+@using Microsoft.JSInterop
+@using Microsoft.Extensions.Localization
+
+@inject IOptions<SiteSettings> SiteSettings
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject PostService PostService
+@inject FriendsService FriendsService
+@inject ImageUploadService ImageUploadService
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationStateService NavigationState
+@inject UserPreferenceService UserPreferenceService
+@inject HtmlSanitizationService HtmlSanitizationService
+@inject IFeedCommentRepository FeedCommentRepository
+@inject AlertService AlertService
+@inject ILogger<FriendDetails> Logger
+@inject IJSRuntime JSRuntime
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.FriendDetails> Localizer
+
+@implements IAsyncDisposable
+
+<PageTitle>@(friendUser?.FirstName ?? "Friend") @(friendUser?.LastName ?? "") - @SiteSettings.Value.SiteName</PageTitle>
+
+<div class="friend-details-container">
+    @if (isLoadingFriend)
+    {
+        <div class="loading-indicator text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">@Localizer["LoadingFriendInformation"]</p>
+        </div>
+    }
+    else if (friendUser == null)
+    {
+        <div class="alert alert-warning">
+            @Localizer["FriendNotFound"]
+        </div>
+    }
+    else if (!isFriend)
+    {
+        <div class="alert alert-warning">
+            @Localizer["NotFriends"]
+        </div>
+    }
+    else
+    {
+        <!-- Friend Header Information -->
+        <div class="friend-header-card mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            @if (!string.IsNullOrEmpty(friendUser.ProfilePictureUrl))
+                            {
+                                <img src="@friendUser.ProfilePictureUrl" alt="@friendDisplayName" class="rounded-circle friend-profile-picture" style="width: 80px; height: 80px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="default-profile-picture rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background-color: var(--surface-secondary, #f8f9fa);">
+                                    <i class="bi bi-person-fill fs-1"></i>
+                                </div>
+                            }
+                        </div>
+                        <div class="col">
+                            <h2 class="mb-1">@friendDisplayName</h2>
+                            <p class="text-muted mb-2">@@@friendUser.UserName</p>
+                            @* Bio field removed as ApplicationUser might not have it *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Friend's Posts Feed -->
+        <div class="friend-posts-section">
+            <h4 class="mb-3">@Localizer["FriendPosts"]</h4>
+
+            @if (isLoading)
+            {
+                <div class="loading-indicator text-center py-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">@Localizer["LoadingPosts"]</span>
+                    </div>
+                </div>
+            }
+            else if (!postsList.Any())
+            {
+                <div class="no-posts-message text-center py-5">
+                    <i class="bi bi-file-post display-1 text-muted mb-3"></i>
+                    <h5 class="text-muted">@Localizer["NoPostsYet"]</h5>
+                    <p class="text-muted">@Localizer["NoPostsMessage"]</p>
+                </div>
+            }
+            else
+            {
+                <div class="posts-container">
+                    @foreach (var post in postsList)
+                    {
+                        var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
+                        var userReaction = postUserReactions.ContainsKey(post.Id) ? postUserReactions[post.Id] : null;
+                        var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : friendDisplayName;
+                        var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
+                        var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
+
+                        var authorImageUrl = post.Author?.ProfilePictureUrl ?? friendUser?.ProfilePictureUrl;
+
+                        <FeedArticle 
+                            PostId="@post.Id"
+                            AuthorId="@post.AuthorId"
+                            AuthorName="@authorName"
+                            AuthorImageUrl="@authorImageUrl"
+                            CreatedAt="@post.CreatedAt"
+                            LikeCount="@post.LikeCount"
+                            CommentCount="@post.CommentCount"
+                            ShareCount="@post.ShareCount"
+                            LoadCommentsInternally="true"
+                            CommentsToShow="3"
+                            RefreshTrigger="@refreshTrigger"
+                            CurrentUserId="@currentUserId"
+                            CurrentUserImageUrl="@currentUserImageUrl"
+                            CurrentUserName="@currentUserName"
+                            ReactionBreakdown="@postReactions"
+                            UserReaction="@userReaction"
+                            AudienceType="@post.AudienceType"
+                            IsPinned="@isPinned"
+                            IsMuted="null"
+                            Images="@post.Images?.ToList()"
+                            OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(post.Id, reactionType))"
+                            OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
+                            OnPinPost="@HandlePinPost"
+                            OnUnpinPost="@HandleUnpinPost"
+                            OnPostDeleted="@HandlePostDeleted"
+                            OnEditPost="@HandleEditPost"
+                            OnCommentAdded="@HandleCommentAdded"
+                            OnReplySubmitted="@HandleReplySubmitted"
+                            OnCommentReactionChanged="@HandleCommentReactionChanged"
+                            OnRemoveCommentReaction="@HandleRemoveCommentReaction"
+                            OnDeleteComment="@HandleDeleteComment"
+                            OnCommentUpdated="@HandleCommentUpdated"
+                            OnReportComment="@HandleReportComment"
+                            OnShowPostDetail="@(() => ShowPostDetail(post))"
+                            OnShowComments="@(() => ShowPostDetail(post))">
+                            <ArticleContent>
+                                @((MarkupString)FormatContentWithLineBreaks(post.Content))
+                            </ArticleContent>
+                        </FeedArticle>
+                    }
+
+                    @if (isLoadingMorePosts)
+                    {
+                        <div class="loading-more text-center py-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">@Localizer["LoadingMorePosts"]</span>
+                            </div>
+                        </div>
+                    }
+
+                    @if (hasMorePosts == false && postsList.Any())
+                    {
+                        <div class="no-more-posts text-center py-4">
+                            <p class="text-muted mb-0">@Localizer["NoMorePosts"]</p>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@if (showPostDetail && selectedPost != null)
+{
+    var postReactions = postReactionData.ContainsKey(selectedPost.Id) ? postReactionData[selectedPost.Id] : new Dictionary<LikeType, int>();
+    var userReaction = postUserReactions.ContainsKey(selectedPost.Id) ? postUserReactions[selectedPost.Id] : null;
+    var authorName = postAuthorNames.ContainsKey(selectedPost.Id) ? postAuthorNames[selectedPost.Id] : friendDisplayName;
+    var authorImageUrl = selectedPost.Author?.ProfilePictureUrl ?? friendUser?.ProfilePictureUrl;
+    var isPinnedModal = pinnedPosts.ContainsKey(selectedPost.Id) && pinnedPosts[selectedPost.Id];
+
+    <PostDetailModal
+        PostId="@selectedPost.Id"
+        AuthorId="@selectedPost.AuthorId"
+        AuthorName="@authorName"
+        AuthorImageUrl="@authorImageUrl"
+        CreatedAt="@selectedPost.CreatedAt"
+        LikeCount="@selectedPost.LikeCount"
+        CommentCount="@selectedPost.CommentCount"
+        CurrentUserId="@currentUserId"
+        CurrentUserImageUrl="@currentUserImageUrl"
+        CurrentUserName="@currentUserName"
+        ReactionBreakdown="@postReactions"
+        UserReaction="@userReaction"
+        AudienceType="@selectedPost.AudienceType"
+        IsPinned="@isPinnedModal"
+        Images="@selectedPost.Images?.ToList()"
+        OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(selectedPost.Id, reactionType))"
+        OnRemoveReaction="@(async () => await HandleRemoveReaction(selectedPost.Id))"
+        OnPinPost="@HandlePinPost"
+        OnUnpinPost="@HandleUnpinPost"
+        OnPostDeleted="@HandlePostDeleted"
+        OnCommentAdded="@HandleCommentAdded"
+        OnReplySubmitted="@HandleReplySubmitted"
+        OnCommentReactionChanged="@HandleCommentReactionChanged"
+        OnRemoveCommentReaction="@HandleRemoveCommentReaction"
+        OnDeleteComment="@HandleDeleteComment"
+        OnCommentUpdated="@HandleCommentUpdated"
+        OnReportComment="@HandleReportComment"
+        OnClose="@ClosePostDetail">
+        <ArticleContent>
+            @((MarkupString)FormatContentWithLineBreaks(selectedPost.Content))
+        </ArticleContent>
+    </PostDetailModal>
+}
+
+@code {
+    [Parameter] public string FriendId { get; set; } = string.Empty;
+
+    private ApplicationUser? friendUser;
+    private string friendDisplayName = "";
+    private bool isLoadingFriend = true;
+    private bool isFriend = false;
+    private string? currentUserId;
+    private string? currentUserName;
+    private string? currentUserImageUrl;
+
+    // PostPageBase requirements
+    private List<Post> postsList = new();
+    private bool isLoading = false;
+    private bool isLoadingMorePosts = false;
+    private bool hasMorePosts = true;
+    private int currentPage = 1;
+    private int pageSize = 20;
+    private int totalItemCount = 0;
+
+    // JS Interop for infinite scrolling
+    private IJSObjectReference? jsModule;
+    private DotNetObjectReference<FriendDetails>? dotNetHelper;
+
+    // Post detail modal
+    private bool showPostDetail = false;
+    private Post? selectedPost = null;
+
+    #region PostPageBase Abstract Properties Implementation
+
+    protected override string? CurrentUserId => currentUserId;
+    protected override string? CurrentUserImageUrl => currentUserImageUrl;
+    protected override string? CurrentUserName => currentUserName;
+
+    #endregion
+
+    #region PostPageBase Abstract Methods Implementation
+
+    protected override async Task<(bool Success, string? ErrorMessage)> AddCommentToPostAsync(
+        int postId, string userId, string content)
+    {
+        var result = await PostService.AddCommentAsync(postId, userId, content);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> AddReplyToPostAsync(
+        int postId, string userId, string content, int? imageId, int parentCommentId)
+    {
+        var result = await PostService.AddCommentAsync(postId, userId, content, null, parentCommentId);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<Comment?> GetCommentByIdAsync(int commentId)
+    {
+        return await PostService.GetCommentByIdAsync(commentId);
+    }
+
+    protected override int GetPostIdFromComment(Comment comment)
+    {
+        return comment.PostId;
+    }
+
+    protected override void IncrementPostCommentCount(int postId)
+    {
+        var post = postsList.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.CommentCount++;
+        }
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> AddOrUpdatePostReactionAsync(
+        int postId, string userId, LikeType reactionType)
+    {
+        var result = await PostService.AddOrUpdateReactionAsync(postId, userId, reactionType);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> RemovePostReactionAsync(
+        int postId, string userId)
+    {
+        var result = await PostService.RemoveLikeAsync(postId, userId);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<Dictionary<LikeType, int>> GetPostReactionBreakdownAsync(int postId)
+    {
+        return await PostService.GetReactionBreakdownAsync(postId);
+    }
+
+    protected override void IncrementPostLikeCount(int postId)
+    {
+        var post = postsList.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.LikeCount++;
+        }
+    }
+
+    protected override void DecrementPostLikeCount(int postId)
+    {
+        var post = postsList.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.LikeCount = Math.Max(0, post.LikeCount - 1);
+        }
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> AddOrUpdateCommentReactionAsync(
+        int commentId, string userId, LikeType reactionType)
+    {
+        var result = await PostService.AddOrUpdateCommentReactionAsync(commentId, userId, reactionType);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> RemoveCommentReactionAsync(
+        int commentId, string userId)
+    {
+        var result = await PostService.RemoveCommentReactionAsync(commentId, userId);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<int?> FindPostIdForCommentAsync(int commentId)
+    {
+        var comment = await GetCommentByIdAsync(commentId);
+        return comment?.PostId;
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteCommentAsync(
+        int commentId, string userId)
+    {
+        var result = await PostService.DeleteCommentAsync(commentId, userId);
+        return (result.Success, result.ErrorMessage, result.DeletedCount);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> UpdateCommentAsync(
+        int commentId, string userId, string newContent)
+    {
+        var result = await FeedCommentRepository.UpdateAsync(commentId, userId, newContent);
+        return (result.Success, result.ErrorMessage);
+    }
+
+    protected override async Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
+        int commentId, string userId)
+    {
+        // TODO: Implement comment reporting when report system is available
+        await Task.CompletedTask;
+        return (true, null);
+    }
+
+    protected override void DecrementPostCommentCount(int postId, int decrementBy = 1)
+    {
+        var post = postsList.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.CommentCount = Math.Max(0, post.CommentCount - decrementBy);
+        }
+    }
+
+    #endregion
+
+    #region FeedArticle Event Handlers
+
+    private async Task HandleReactionChanged(int postId, LikeType reactionType)
+    {
+        await HandlePostReactionChanged(postId, reactionType);
+    }
+
+    private async Task HandleRemoveReaction(int postId)
+    {
+        await HandleRemovePostReaction(postId);
+    }
+
+    private async Task HandlePinPost(int postId)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await PostService.PinPostAsync(postId, currentUserId);
+
+            if (result.Success)
+            {
+                pinnedPosts[postId] = true;
+                StateHasChanged();
+            }
+            else
+            {
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to pin post.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error pinning post {PostId}", postId);
+            AlertService.ShowError("An error occurred while pinning the post.");
+        }
+    }
+
+    private async Task HandleUnpinPost(int postId)
+    {
+        if (currentUserId == null) return;
+
+        try
+        {
+            var result = await PostService.UnpinPostAsync(postId, currentUserId);
+
+            if (result.Success)
+            {
+                pinnedPosts[postId] = false;
+                StateHasChanged();
+            }
+            else
+            {
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to unpin post.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error unpinning post {PostId}", postId);
+            AlertService.ShowError("An error occurred while unpinning the post.");
+        }
+    }
+
+    private void HandleEditPost(int postId)
+    {
+        // Editing not available in friend view - users can only edit their own posts
+        // This handler is provided for compatibility but FeedArticle should hide edit options  
+        // for posts that don't belong to the current user
+    }
+
+    private void ShowPostDetail(Post post)
+    {
+        selectedPost = post;
+        showPostDetail = true;
+        StateHasChanged();
+    }
+
+    private void ClosePostDetail()
+    {
+        showPostDetail = false;
+        selectedPost = null;
+        StateHasChanged();
+    }
+
+    #endregion
+
+    #region Helper Methods
+
+    private string FormatContentWithLineBreaks(string content)
+    {
+        if (string.IsNullOrEmpty(content))
+            return string.Empty;
+
+        return HtmlSanitizationService.SanitizeAndFormatContent(content);
+    }
+
+    #endregion
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            var currentUser = await UserManager.GetUserAsync(authState.User);
+            if (currentUser != null)
+            {
+                currentUserId = currentUser.Id;
+                currentUserImageUrl = currentUser.ProfilePictureUrl;
+                currentUserName = await UserPreferenceService.FormatUserDisplayNameAsync(
+                    currentUser.Id,
+                    currentUser.FirstName ?? string.Empty,
+                    currentUser.LastName ?? string.Empty,
+                    currentUser.UserName ?? "User"
+                );
+                await LoadFriendAsync();
+            }
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(FriendId) && FriendId != friendUser?.Id)
+        {
+            // Reset state when navigating to a different friend
+            isLoadingFriend = true;
+            isFriend = false;
+            friendUser = null;
+            friendDisplayName = "";
+            postsList.Clear();
+            currentPage = 1;
+
+            // Reset modal state
+            showPostDetail = false;
+            selectedPost = null;
+
+            // Clear all tracking dictionaries
+            postReactionData.Clear();
+            postUserReactions.Clear();
+            postRefreshTriggers.Clear();
+            postAuthorNames.Clear();
+            pinnedPosts.Clear();
+
+            await LoadFriendAsync();
+        }
+    }
+
+    private async Task LoadFriendAsync()
+    {
+        try
+        {
+            isLoadingFriend = true;
+            StateHasChanged();
+
+            // Get the friend user
+            friendUser = await UserManager.FindByIdAsync(FriendId);
+            if (friendUser == null)
+            {
+                isLoadingFriend = false;
+                StateHasChanged();
+                return;
+            }
+
+            // Check if they are actually friends
+            var friends = await FriendsService.GetFriendsAsync(currentUserId!);
+            isFriend = friends.Any(f => f.Id == FriendId);
+
+            if (isFriend)
+            {
+                // Format the display name
+                friendDisplayName = await UserPreferenceService.FormatUserDisplayNameAsync(
+                    friendUser.Id,
+                    friendUser.FirstName ?? string.Empty,
+                    friendUser.LastName ?? string.Empty,
+                    friendUser.UserName ?? "User"
+                );
+
+                // Load friend's posts
+                await LoadPostsAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading friend details for FriendId: {FriendId}", FriendId);
+            AlertService.ShowAlert("An error occurred while loading friend details.", AlertType.Error);
+        }
+        finally
+        {
+            isLoadingFriend = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadPostsAsync()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(FriendId) || string.IsNullOrEmpty(currentUserId))
+                return;
+
+            isLoading = true;
+            StateHasChanged();
+
+            // Load posts from the friend
+            var posts = await PostService.GetPostsByUserAsync(FriendId, pageSize, currentPage);
+
+            if (currentPage == 1)
+            {
+                postsList = posts.ToList();
+            }
+            else
+            {
+                postsList.AddRange(posts);
+            }
+
+            hasMorePosts = posts.Count == pageSize;
+            totalItemCount = postsList.Count;
+
+            // Load reaction data for all posts
+            await LoadReactionDataForPosts(postsList);
+
+            // Load author names for all posts  
+            await LoadAuthorNamesForPosts(postsList);
+
+            // Load pinned status for all posts
+            await LoadPinnedStatusForPosts(postsList);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading posts for friend {FriendId} on page {Page}", FriendId, currentPage);
+            AlertService.ShowAlert("An error occurred while loading posts.", AlertType.Error);
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadReactionDataForPosts(List<Post> postsToLoad)
+    {
+        if (string.IsNullOrEmpty(currentUserId) || !postsToLoad.Any()) return;
+
+        try
+        {
+            // Get all post IDs in one collection
+            var postIds = postsToLoad.Select(p => p.Id).ToList();
+
+            // Get reaction breakdowns for all posts in a single query
+            var reactionBreakdowns = await PostService.GetReactionBreakdownForPostsAsync(postIds);
+            foreach (var kvp in reactionBreakdowns)
+            {
+                postReactionData[kvp.Key] = kvp.Value;
+            }
+
+            // Get user reactions for all posts in a single query
+            var userReactions = await PostService.GetUserReactionsForPostsAsync(postIds, currentUserId);
+            foreach (var kvp in userReactions)
+            {
+                postUserReactions[kvp.Key] = kvp.Value;
+            }
+        }
+        catch (Exception)
+        {
+            // Silently fail - reaction data optional
+        }
+    }
+
+    private async Task LoadAuthorNamesForPosts(List<Post> postsToLoad)
+    {
+        try
+        {
+            foreach (var post in postsToLoad)
+            {
+                if (post.Author != null)
+                {
+                    var displayName = await UserPreferenceService.FormatUserDisplayNameAsync(
+                        post.Author.Id,
+                        post.Author.FirstName ?? string.Empty,
+                        post.Author.LastName ?? string.Empty,
+                        post.Author.UserName ?? "Unknown"
+                    );
+                    postAuthorNames[post.Id] = displayName;
+                }
+                else
+                {
+                    // Use friend's display name as fallback
+                    postAuthorNames[post.Id] = friendDisplayName;
+                }
+            }
+        }
+        catch (Exception)
+        {
+            // Silently fail - author names optional
+        }
+    }
+
+    private async Task LoadPinnedStatusForPosts(List<Post> postsToLoad)
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        try
+        {
+            var postIds = postsToLoad.Select(p => p.Id).ToList();
+            var pinnedStatus = await PostService.GetPinnedStatusForPostsAsync(postIds, currentUserId);
+
+            foreach (var kvp in pinnedStatus)
+            {
+                pinnedPosts[kvp.Key] = kvp.Value;
+            }
+        }
+        catch (Exception)
+        {
+            // Silently fail - pinned status optional
+        }
+    }
+
+    private async Task HandlePostUpdated(Post updatedPost)
+    {
+        var existingPost = postsList.FirstOrDefault(p => p.Id == updatedPost.Id);
+        if (existingPost != null)
+        {
+            var index = postsList.IndexOf(existingPost);
+            postsList[index] = updatedPost;
+            StateHasChanged();
+        }
+    }
+
+    private void HandlePostDeleted(int postId)
+    {
+        // Remove the post from the list
+        var postToRemove = postsList.FirstOrDefault(p => p.Id == postId);
+        if (postToRemove != null)
+        {
+            postsList.Remove(postToRemove);
+        }
+
+        // Clean up related data dictionaries (inherited from base class)
+        postReactionData.Remove(postId);
+        postUserReactions.Remove(postId);
+        postRefreshTriggers.Remove(postId);
+        postAuthorNames.Remove(postId);
+        pinnedPosts.Remove(postId);
+
+        // If the deleted post was being viewed in detail, close the modal
+        if (selectedPost?.Id == postId)
+        {
+            selectedPost = null;
+            showPostDetail = false;
+        }
+
+        StateHasChanged();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/FriendDetails.razor.js");
+                dotNetHelper = DotNetObjectReference.Create(this);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Error loading JavaScript module for FriendDetails");
+                // Continue without infinite scroll - not critical
+            }
+        }
+
+        // Initialize infinite scroll only when we have a friend and posts loaded
+        if (isFriend && jsModule != null && dotNetHelper != null && postsList.Any() && !isLoading)
+        {
+            try
+            {
+                await jsModule.InvokeVoidAsync("initializeInfiniteScroll", (object?)null, dotNetHelper);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Error initializing infinite scroll for FriendDetails");
+                // Continue without infinite scroll - not critical
+            }
+        }
+    }
+
+    [JSInvokable]
+    public async Task LoadMorePostsAsync()
+    {
+        if (isLoadingMorePosts || !hasMorePosts || string.IsNullOrEmpty(FriendId) || string.IsNullOrEmpty(currentUserId)) 
+            return;
+
+        isLoadingMorePosts = true;
+        StateHasChanged(); // Update UI to show loading indicator
+
+        try
+        {
+            currentPage++;
+
+            // Load posts from the friend
+            var posts = await PostService.GetPostsByUserAsync(FriendId, pageSize, currentPage);
+
+            if (posts.Any())
+            {
+                postsList.AddRange(posts);
+                hasMorePosts = posts.Count == pageSize;
+
+                // Load reaction data for new posts
+                await LoadReactionDataForPosts(posts);
+
+                // Load author names for new posts  
+                await LoadAuthorNamesForPosts(posts);
+
+                // Load pinned status for new posts
+                await LoadPinnedStatusForPosts(posts);
+            }
+            else
+            {
+                hasMorePosts = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading more posts for friend {FriendId} on page {Page}", FriendId, currentPage);
+            // Don't show alert for infinite scroll errors, just log them
+        }
+        finally
+        {
+            isLoadingMorePosts = false;
+            StateHasChanged();
+        }
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        if (jsModule != null)
+        {
+            try
+            {
+                await jsModule.InvokeVoidAsync("disposeInfiniteScroll");
+                await jsModule.DisposeAsync();
+            }
+            catch
+            {
+                // Ignore disposal errors
+            }
+        }
+
+        dotNetHelper?.Dispose();
+    }
+}

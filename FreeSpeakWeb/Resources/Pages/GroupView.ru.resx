@@ -133,4 +133,10 @@
   <data name="PostDeclinedDescription" xml:space="preserve">
     <value>Эта публикация была отклонена модератором. Вы можете отредактировать и отправить её повторно.</value>
   </data>
+  <data name="YourPoints" xml:space="preserve">
+    <value>Ваши баллы</value>
+  </data>
+  <data name="YourPosts" xml:space="preserve">
+    <value>Ваши публикации</value>
+  </data>
 </root>

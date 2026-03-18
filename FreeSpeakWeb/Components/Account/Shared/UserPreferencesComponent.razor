@@ -5,23 +5,25 @@
 @using FreeSpeakWeb.Repositories.Abstractions
 @using FreeSpeakWeb.Services
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
 @inject UserPreferenceService PreferenceService
 @inject UserManager<ApplicationUser> UserManager
 @inject ThemeService ThemeService
 @inject IAuditLogRepository AuditLogRepository
 @inject AlertService AlertService
 @inject NavigationManager navigationManager
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Account.Shared.UserPreferencesComponent> Localizer
 
 <div class="card mb-4">
     <div class="card-header">
-        <h5 class="mb-0">Preferences</h5>
+        <h5 class="mb-0">@Localizer["Preferences"]</h5>
     </div>
     <div class="card-body">
         @if (isLoading)
         {
             <div class="text-center">
                 <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                    <span class="visually-hidden">@Localizer["Loading"]</span>
                 </div>
             </div>
         }
@@ -30,44 +32,44 @@
             <EditForm Model="@this" OnValidSubmit="SavePreferences">
                 <!-- Color Scheme -->
                 <div class="mb-4">
-                    <label class="form-label fw-bold">Color Scheme</label>
+                    <label class="form-label fw-bold">@Localizer["ColorScheme"]</label>
                     <select class="form-select" @bind="colorScheme">
                         @foreach (var theme in ThemeService.AvailableThemes)
                         {
                             <option value="@theme.Key">@theme.Value</option>
                         }
                     </select>
-                    <div class="form-text">Choose your preferred color theme for the site.</div>
+                    <div class="form-text">@Localizer["ColorSchemeHelpText"]</div>
                 </div>
 
                 <!-- Name Display -->
                 <div class="mb-4">
-                    <label class="form-label fw-bold">Name Display</label>
+                    <label class="form-label fw-bold">@Localizer["NameDisplay"]</label>
                     <select class="form-select" @bind="nameDisplay">
-                        <option value="@NameDisplayType.FullName">Full Name (John Smith)</option>
-                        <option value="@NameDisplayType.FirstName">First Name Only (John)</option>
-                        <option value="@NameDisplayType.Username">Username (johnsmith)</option>
-                        <option value="@NameDisplayType.FirstNameLastInitial">First Name + Last Initial (John S.)</option>
+                        <option value="@NameDisplayType.FullName">@Localizer["NameDisplayFullName"]</option>
+                        <option value="@NameDisplayType.FirstName">@Localizer["NameDisplayFirstName"]</option>
+                        <option value="@NameDisplayType.Username">@Localizer["NameDisplayUsername"]</option>
+                        <option value="@NameDisplayType.FirstNameLastInitial">@Localizer["NameDisplayFirstNameLastInitial"]</option>
                     </select>
-                    <div class="form-text">How your name appears to other users across the site.</div>
+                    <div class="form-text">@Localizer["NameDisplayHelpText"]</div>
                 </div>
 
                 <!-- Default Audience Type -->
                 <div class="mb-4">
-                    <label class="form-label fw-bold">Default Post Visibility</label>
+                    <label class="form-label fw-bold">@Localizer["DefaultPostVisibility"]</label>
                     <select class="form-select" @bind="defaultAudienceType">
-                        <option value="@AudienceType.Public">Public (Everyone can see)</option>
-                        <option value="@AudienceType.FriendsOnly">Friends Only</option>
-                        <option value="@AudienceType.MeOnly">Only Me (Private)</option>
+                        <option value="@AudienceType.Public">@Localizer["AudiencePublic"]</option>
+                        <option value="@AudienceType.FriendsOnly">@Localizer["AudienceFriendsOnly"]</option>
+                        <option value="@AudienceType.MeOnly">@Localizer["AudienceMeOnly"]</option>
                     </select>
-                    <div class="form-text">Default visibility for new posts. You can change this when creating a post.</div>
+                    <div class="form-text">@Localizer["DefaultPostVisibilityHelpText"]</div>
                 </div>
 
                 <!-- Timezone -->
                 <div class="mb-4">
-                    <label class="form-label fw-bold">Timezone</label>
+                    <label class="form-label fw-bold">@Localizer["Timezone"]</label>
                     <select class="form-select" @bind="timezone">
-                        <optgroup label="United States">
+                        <optgroup label="@Localizer["TimezoneGroupUS"]">
                             <option value="America/New_York">Eastern Time (ET)</option>
                             <option value="America/Chicago">Central Time (CT)</option>
                             <option value="America/Denver">Mountain Time (MT)</option>
@@ -76,7 +78,7 @@
                             <option value="America/Anchorage">Alaska Time (AKT)</option>
                             <option value="Pacific/Honolulu">Hawaii Time (HST)</option>
                         </optgroup>
-                        <optgroup label="Other Common Timezones">
+                        <optgroup label="@Localizer["TimezoneGroupOther"]">
                             <option value="UTC">UTC (Coordinated Universal Time)</option>
                             <option value="Europe/London">London (GMT/BST)</option>
                             <option value="Europe/Paris">Paris (CET/CEST)</option>
@@ -89,12 +91,12 @@
                             <option value="America/Mexico_City">Mexico City (CST)</option>
                         </optgroup>
                     </select>
-                    <div class="form-text">Your preferred timezone for displaying dates and times.</div>
+                    <div class="form-text">@Localizer["TimezoneHelpText"]</div>
                 </div>
 
                 <!-- Country -->
                 <div class="mb-4">
-                    <label class="form-label fw-bold">Country</label>
+                    <label class="form-label fw-bold">@Localizer["Country"]</label>
                     <select class="form-select" @bind="country">
                         <option value="US">United States of America</option>
                         <option value="CA">Canada</option>
@@ -122,35 +124,35 @@
                         <option value="RU">Russia</option>
                         <option value="ZA">South Africa</option>
                     </select>
-                    <div class="form-text">Your country or region.</div>
+                    <div class="form-text">@Localizer["CountryHelpText"]</div>
                 </div>
 
                 <!-- Culture (Language & Region) -->
                 <div class="mb-4">
-                    <label class="form-label fw-bold">Language &amp; Region</label>
+                    <label class="form-label fw-bold">@Localizer["LanguageRegion"]</label>
                     <select class="form-select" @bind="culture">
-                        <optgroup label="English">
+                        <optgroup label="@Localizer["LanguageGroupEnglish"]">
                             <option value="en-US">English (United States)</option>
                             <option value="en-GB">English (United Kingdom)</option>
                             <option value="en-AU">English (Australia)</option>
                             <option value="en-CA">English (Canada)</option>
                         </optgroup>
-                        <optgroup label="Español (Spanish)">
+                        <optgroup label="@Localizer["LanguageGroupSpanish"]">
                             <option value="es-ES">Español (España)</option>
                             <option value="es-MX">Español (México)</option>
                             <option value="es-AR">Español (Argentina)</option>
                         </optgroup>
-                        <optgroup label="Français (French)">
+                        <optgroup label="@Localizer["LanguageGroupFrench"]">
                             <option value="fr-FR">Français (France)</option>
                             <option value="fr-CA">Français (Canada)</option>
                             <option value="fr-BE">Français (Belgique)</option>
                         </optgroup>
-                        <optgroup label="Deutsch (German)">
+                        <optgroup label="@Localizer["LanguageGroupGerman"]">
                             <option value="de-DE">Deutsch (Deutschland)</option>
                             <option value="de-AT">Deutsch (Österreich)</option>
                             <option value="de-CH">Deutsch (Schweiz)</option>
                         </optgroup>
-                        <optgroup label="Other Languages">
+                        <optgroup label="@Localizer["LanguageGroupOther"]">
                             <option value="it-IT">Italiano (Italia)</option>
                             <option value="pt-BR">Português (Brasil)</option>
                             <option value="pt-PT">Português (Portugal)</option>
@@ -164,56 +166,55 @@
                             <option value="ar-SA">العربية (السعودية)</option>
                         </optgroup>
                     </select>
-                    <div class="form-text">Your preferred language and regional format for the user interface.</div>
+                    <div class="form-text">@Localizer["LanguageRegionHelpText"]</div>
                 </div>
 
                 <!-- Notification Expiration -->
                 <div class="mb-4">
-                    <label class="form-label fw-bold mb-3">Notification Auto-Expiration (in days)</label>
-                    
+                    <label class="form-label fw-bold mb-3">@Localizer["NotificationExpiration"]</label>
+
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Post Reactions</label>
+                            <label class="form-label">@Localizer["PostReactions"]</label>
                             <input type="number" class="form-control" @bind="expirationPostLiked" min="1" max="365" />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Post Comments</label>
+                            <label class="form-label">@Localizer["PostComments"]</label>
                             <input type="number" class="form-control" @bind="expirationPostComment" min="1" max="365" />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Comment Replies</label>
+                            <label class="form-label">@Localizer["CommentReplies"]</label>
                             <input type="number" class="form-control" @bind="expirationCommentReply" min="1" max="365" />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Comment Reactions</label>
+                            <label class="form-label">@Localizer["CommentReactions"]</label>
                             <input type="number" class="form-control" @bind="expirationCommentLiked" min="1" max="365" />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Friend Requests</label>
+                            <label class="form-label">@Localizer["FriendRequests"]</label>
                             <input type="number" class="form-control" @bind="expirationFriendRequest" min="1" max="365" />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Friend Accepted</label>
+                            <label class="form-label">@Localizer["FriendAccepted"]</label>
                             <input type="number" class="form-control" @bind="expirationFriendAccepted" min="1" max="365" />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Mentions</label>
+                            <label class="form-label">@Localizer["Mentions"]</label>
                             <input type="number" class="form-control" @bind="expirationMention" min="1" max="365" />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">System Notifications</label>
+                            <label class="form-label">@Localizer["SystemNotifications"]</label>
                             <input type="number" class="form-control" @bind="expirationSystem" min="1" max="365" />
                         </div>
                     </div>
                     <div class="form-text mt-2">
-                        Notifications older than this will automatically expire and can be cleaned up. 
-                        Set to 365 days to keep them for a year.
+                        @Localizer["NotificationExpirationHelpText"]
                     </div>
                 </div>
 
                 @if (!string.IsNullOrEmpty(statusMessage))
                 {
-                    <div class="alert @(statusMessage.Contains("success") ? "alert-success" : "alert-danger")" role="alert">
+                    <div class="alert @(statusMessage.Contains("success") || statusMessage.Contains("✓") ? "alert-success" : "alert-danger")" role="alert">
                         @statusMessage
                     </div>
                 }
@@ -224,10 +225,10 @@
                         {
                             <span class="spinner-border spinner-border-sm me-1" role="status"></span>
                         }
-                        Save Preferences
+                        @Localizer["SavePreferences"]
                     </button>
                     <button type="button" class="btn btn-secondary" @onclick="ResetToDefaults" disabled="@isSaving">
-                        Reset to Defaults
+                        @Localizer["ResetToDefaults"]
                     </button>
                 </div>
             </EditForm>

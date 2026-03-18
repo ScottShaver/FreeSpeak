@@ -1025,7 +1025,9 @@ namespace FreeSpeakWeb.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("Message")
-                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TemplateKey")
                         .HasColumnType("text");
 
                     b.Property<int>("Type")

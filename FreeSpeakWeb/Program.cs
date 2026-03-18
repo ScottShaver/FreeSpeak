@@ -168,6 +168,12 @@ namespace FreeSpeakWeb
             // Add NotificationBadgeService for badge polling and management
             builder.Services.AddScoped<NotificationBadgeService>();
 
+            // Add TimestampFormattingService for localized time formatting
+            builder.Services.AddScoped<TimestampFormattingService>();
+
+            // Add NotificationTemplateService for localized notification messages
+            builder.Services.AddScoped<NotificationTemplateService>();
+
             // Add NotificationCleanupService as a background service for periodic cleanup
             builder.Services.AddHostedService<NotificationCleanupService>();
 

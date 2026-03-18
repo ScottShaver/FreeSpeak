@@ -5,6 +5,7 @@
 @using Microsoft.Extensions.Localization
 
 @inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.FeedArticleHeader> Localizer
+@inject TimestampFormattingService TimestampFormatter
 
 <div class="article-header @GetAudienceHeaderClass()">
     @if (!string.IsNullOrEmpty(AuthorImageUrl))
@@ -206,7 +207,7 @@
     [Parameter]
     public int? AuthorGroupPoints { get; set; }
 
-    private string FormattedTimestamp => FormatTimestamp(CreatedAt);
+    private string FormattedTimestamp => TimestampFormatter.FormatTimeAgo(CreatedAt);
     private string FullTimestamp => CreatedAt.ToLocalTime().ToString("MMMM d, yyyy 'at' h:mm:ss tt");
 
     private string GetAudienceHeaderClass()
@@ -220,28 +221,26 @@
         };
     }
 
-    private string FormatTimestamp(DateTime timestamp)
-    {
-        var timeSpan = DateTime.UtcNow - timestamp;
-
-        if (timeSpan.TotalMinutes < 1)
-            return "Just now";
-        if (timeSpan.TotalMinutes < 60)
-            return $"{(int)timeSpan.TotalMinutes}m";
-        if (timeSpan.TotalHours < 24)
-            return $"{(int)timeSpan.TotalHours}h";
-        if (timeSpan.TotalDays < 7)
-            return $"{(int)timeSpan.TotalDays}d";
-
-        return timestamp.ToLocalTime().ToString("MMMM d 'at' h:mm tt");
-    }
-
+    /// <summary>
+    /// Extracts initials from a name string.
+    /// Handles the "GroupName > AuthorName" format by extracting only the author portion.
+    /// </summary>
+    /// <param name="name">The name to extract initials from.</param>
+    /// <returns>One or two character initials in uppercase.</returns>
     private string GetInitials(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
             return "U";
 
-        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        // Handle "GroupName > AuthorName" format - extract just the author name
+        var authorName = name;
+        var separatorIndex = name.IndexOf(" > ", StringComparison.Ordinal);
+        if (separatorIndex >= 0)
+        {
+            authorName = name.Substring(separatorIndex + 3).Trim();
+        }
+
+        var parts = authorName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
         if (parts.Length == 0)
             return "U";

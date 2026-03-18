@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FriendRequest" xml:space="preserve">
+    <value>&lt;strong&gt;{0}&lt;/strong&gt; hat dir eine Freundschaftsanfrage gesendet</value>
+  </data>
+  <data name="FriendAccepted" xml:space="preserve">
+    <value>&lt;strong&gt;{0}&lt;/strong&gt; hat deine Freundschaftsanfrage akzeptiert</value>
+  </data>
+  <data name="PostReaction" xml:space="preserve">
+    <value>&lt;strong&gt;{0}&lt;/strong&gt; hat auf deinen Beitrag mit {1} reagiert</value>
+  </data>
+  <data name="GroupPostReaction" xml:space="preserve">
+    <value>&lt;strong&gt;{0}&lt;/strong&gt; hat auf deinen Gruppenbeitrag mit {1} reagiert</value>
+  </data>
+  <data name="CommentReaction" xml:space="preserve">
+    <value>&lt;strong&gt;{0}&lt;/strong&gt; hat auf deinen Kommentar mit {1} reagiert</value>
+  </data>
+  <data name="GroupCommentReaction" xml:space="preserve">
+    <value>&lt;strong&gt;{0}&lt;/strong&gt; hat auf deinen Kommentar in einer Gruppe mit {1} reagiert</value>
+  </data>
+  <data name="PostComment" xml:space="preserve">
+    <value>&lt;strong&gt;{0}&lt;/strong&gt; hat deinen Beitrag kommentiert</value>
+  </data>
+  <data name="GroupPostComment" xml:space="preserve">
+    <value>&lt;strong&gt;{0}&lt;/strong&gt; hat deinen Gruppenbeitrag kommentiert</value>
+  </data>
+  <data name="CommentReply" xml:space="preserve">
+    <value>&lt;strong&gt;{0}&lt;/strong&gt; hat auf deinen Kommentar geantwortet</value>
+  </data>
+  <data name="GroupCommentReply" xml:space="preserve">
+    <value>&lt;strong&gt;{0}&lt;/strong&gt; hat auf deinen Kommentar in einer Gruppe geantwortet</value>
+  </data>
+  <data name="ReactionLike" xml:space="preserve">
+    <value>Gefällt mir</value>
+  </data>
+  <data name="ReactionLove" xml:space="preserve">
+    <value>Liebe</value>
+  </data>
+  <data name="ReactionCare" xml:space="preserve">
+    <value>Mitgefühl</value>
+  </data>
+  <data name="ReactionHaha" xml:space="preserve">
+    <value>Haha</value>
+  </data>
+  <data name="ReactionWow" xml:space="preserve">
+    <value>Wow</value>
+  </data>
+  <data name="ReactionSad" xml:space="preserve">
+    <value>Traurig</value>
+  </data>
+  <data name="ReactionAngry" xml:space="preserve">
+    <value>Wütend</value>
+  </data>
+</root>

@@ -53,25 +53,28 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         /// <param name="userId">The unique identifier of the user to notify.</param>
         /// <param name="type">The type of notification.</param>
-        /// <param name="message">The notification message content.</param>
+        /// <param name="message">The notification message content (optional if templateKey is provided).</param>
         /// <param name="data">Optional additional data to serialize with the notification.</param>
         /// <param name="expiresAt">Optional expiration date; if not provided, calculated from user preferences.</param>
+        /// <param name="templateKey">Optional template key for localized message rendering.</param>
         /// <returns>A tuple containing success status, error message if failed, and the created notification if successful.</returns>
         public async Task<(bool Success, string? ErrorMessage, UserNotification? Notification)> CreateNotificationAsync(
             string userId,
             NotificationType type,
-            string message,
+            string? message = null,
             object? data = null,
-            DateTime? expiresAt = null)
+            DateTime? expiresAt = null,
+            string? templateKey = null)
         {
             if (string.IsNullOrWhiteSpace(userId))
             {
                 return (false, "User ID is required.", null);
             }
 
-            if (string.IsNullOrWhiteSpace(message))
+            // Either message or templateKey must be provided
+            if (string.IsNullOrWhiteSpace(message) && string.IsNullOrWhiteSpace(templateKey))
             {
-                return (false, "Message is required.", null);
+                return (false, "Either message or templateKey is required.", null);
             }
 
             try
@@ -99,6 +102,7 @@ namespace FreeSpeakWeb.Services
                     UserId = userId,
                     Type = type,
                     Message = message,
+                    TemplateKey = templateKey,
                     Data = data != null ? JsonSerializer.Serialize(data) : null,
                     ExpiresAt = expiresAt,
                     CreatedAt = DateTime.UtcNow,
@@ -108,8 +112,8 @@ namespace FreeSpeakWeb.Services
                 context.UserNotifications.Add(notification);
                 await context.SaveChangesAsync();
 
-                _logger.LogInformation("Notification created for user {UserId}: Type {Type}, Expires {ExpiresAt}", 
-                    userId, type, expiresAt);
+                _logger.LogInformation("Notification created for user {UserId}: Type {Type}, TemplateKey {TemplateKey}, Expires {ExpiresAt}", 
+                    userId, type, templateKey, expiresAt);
                 return (true, null, notification);
             }
             catch (Exception ex)

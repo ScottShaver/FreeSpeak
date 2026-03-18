@@ -32,6 +32,7 @@
 @inject UserPreferenceService UserPreferenceService
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject ImageUploadService ImageUploadService
+@inject GroupPointsService GroupPointsService
 @inject FreeSpeakWeb.Repositories.Abstractions.IGroupCommentRepository GroupCommentRepository
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.GroupView> Localizer
 
@@ -133,6 +134,40 @@
                     <div class="stat-item">
                         <span class="stat-label">@Localizer["LastActivity"]</span>
                         <span class="stat-value">@GetRelativeTime(lastActivity)</span>
+                    </div>
+                </div>
+
+                <div class="user-stats-display mt-3 p-3 rounded border">
+                    <div class="d-flex align-items-center gap-4 flex-wrap">
+                        @* User's Post Count *@
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="stat-icon">
+                                <i class="bi bi-file-post text-info fs-4"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-label text-muted small">@Localizer["YourPosts"]</div>
+                                <span class="stat-value fw-bold fs-5">@currentUserPostCount.ToString("N0")</span>
+                            </div>
+                        </div>
+
+                        @* User's Points (only if points system is enabled) *@
+                        @if (group.EnablePointsSystem)
+                        {
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="points-icon">
+                                    <i class="bi @GroupPointsService.GetMemberLevelIcon(currentUserLevel) @GroupPointsService.GetMemberLevelColor(currentUserLevel) fs-4"></i>
+                                </div>
+                                <div class="points-info">
+                                    <div class="points-label text-muted small">@Localizer["YourPoints"]</div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="points-value fw-bold fs-5">@currentUserPoints.ToString("N0")</span>
+                                        <span class="badge @GetLevelBadgeClass(currentUserLevel)">
+                                            @GroupPointsService.GetMemberLevelName(currentUserLevel)
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -370,6 +405,11 @@
     private bool showGroupAdministration = false;
     private bool showGroupModeration = false;
 
+    // User points state
+    private int currentUserPoints = 0;
+    private int currentUserPostCount = 0;
+    private MemberLevel currentUserLevel = MemberLevel.Member;
+
     // Report comment modal state
     private bool showReportCommentModal = false;
     private int? reportingCommentId = null;
@@ -495,8 +535,20 @@
             
             var oneDayAgo = DateTime.UtcNow.AddDays(-1);
             postsToday = await GroupPostService.GetPostCountSinceAsync(GroupId, oneDayAgo);
-            
+
             lastActivity = await GroupPostService.GetLastActivityAsync(GroupId) ?? group.CreatedAt;
+
+            // Load user's post count and points if points system is enabled
+            if (!string.IsNullOrEmpty(currentUserId))
+            {
+                currentUserPostCount = await GroupPostService.GetUserPostCountInGroupAsync(GroupId, currentUserId);
+
+                if (group.EnablePointsSystem)
+                {
+                    currentUserPoints = await GroupPointsService.GetUserPointsAsync(currentUserId, GroupId);
+                    currentUserLevel = GroupPointsService.GetMemberLevel(currentUserPoints);
+                }
+            }
         }
         catch (Exception)
         {
@@ -1061,6 +1113,23 @@
             return $"{(int)timeSpan.TotalDays}d ago";
 
         return dateTime.Value.ToString("MMM dd, yyyy");
+    }
+
+    /// <summary>
+    /// Gets the Bootstrap badge CSS class for a member level.
+    /// </summary>
+    /// <param name="level">The member level.</param>
+    /// <returns>A Bootstrap badge class name.</returns>
+    private static string GetLevelBadgeClass(MemberLevel level)
+    {
+        return level switch
+        {
+            MemberLevel.AllStarContributor => "bg-warning text-dark",
+            MemberLevel.TopContributor => "bg-primary",
+            MemberLevel.RisingContributor => "bg-success",
+            MemberLevel.Member => "bg-secondary",
+            _ => "bg-secondary"
+        };
     }
 
     #region PostPageBase Abstract Method Implementations

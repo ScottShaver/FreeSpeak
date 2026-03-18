@@ -34,6 +34,7 @@
 @inject UserPreferenceService UserPreferenceService
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject FreeSpeakWeb.Repositories.Abstractions.IGroupCommentRepository GroupCommentRepository
+@inject TimestampFormattingService TimestampFormatter
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.Groups> Localizer
 
 <PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
@@ -49,6 +50,10 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="pinned-group-tab" data-bs-toggle="tab" data-bs-target="#pinned-group-content" type="button" role="tab" aria-controls="pinned-group-content" aria-selected="false" @onclick="OnPinnedTabClick">
                 @Localizer["PinnedGroupPosts"]
+                @if (pinnedGroupPostsCount > 0)
+                {
+                    <span class="badge bg-primary ms-1">@pinnedGroupPostsCount</span>
+                }
             </button>
         </li>
         <li class="nav-item" role="presentation">
@@ -514,6 +519,7 @@
     // Pinned Group Posts state
     private List<GroupPostViewModel> pinnedGroupPostsList = new();
     private bool isLoadingPinnedGroupPosts = false;
+    private int pinnedGroupPostsCount = 0;
 
     // Group Join Requests state
     private List<GroupJoinRequest> groupJoinRequests = new();
@@ -576,6 +582,9 @@
 
                 // Load join requests count for badge
                 await LoadJoinRequestsCount();
+
+                // Load pinned posts count for badge
+                await LoadPinnedGroupPostsCount();
 
                 // Mark initial load as complete to allow tab refresh on subsequent clicks
                 hasCompletedInitialLoad = true;
@@ -843,6 +852,9 @@
             // Get all pinned posts as projections
             var allPinnedDtos = await PinnedGroupPostService.GetPinnedGroupPostsAsProjectionAsync(currentUserId);
 
+            // Update the total count (before filtering) for the badge
+            pinnedGroupPostsCount = allPinnedDtos.Count;
+
             // Apply group filter if selected
             if (selectedPinnedGroupId.HasValue)
             {
@@ -1002,6 +1014,25 @@
         {
             // Load just the count for the badge
             groupJoinRequests = await GroupMemberService.GetUserJoinRequestsAsync(currentUserId);
+            StateHasChanged();
+        }
+        catch (Exception)
+        {
+            // Silently fail - badge will not show
+        }
+    }
+
+    /// <summary>
+    /// Loads the count of pinned group posts for badge display.
+    /// This is a lightweight version that only retrieves the count for initial page load.
+    /// </summary>
+    private async Task LoadPinnedGroupPostsCount()
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        try
+        {
+            pinnedGroupPostsCount = await PinnedGroupPostService.GetPinnedGroupPostCountAsync(currentUserId);
             StateHasChanged();
         }
         catch (Exception)
@@ -1571,18 +1602,7 @@
     /// <returns>A human-readable relative time string.</returns>
     private string GetRelativeTime(DateTime dateTime)
     {
-        var timeSpan = DateTime.UtcNow - dateTime;
-
-        if (timeSpan.TotalMinutes < 1)
-            return "just now";
-        if (timeSpan.TotalMinutes < 60)
-            return $"{(int)timeSpan.TotalMinutes}m ago";
-        if (timeSpan.TotalHours < 24)
-            return $"{(int)timeSpan.TotalHours}h ago";
-        if (timeSpan.TotalDays < 30)
-            return $"{(int)timeSpan.TotalDays}d ago";
-
-        return dateTime.ToString("MMM dd, yyyy");
+        return TimestampFormatter.FormatTimeAgo(dateTime);
     }
 
     #region PostPageBase Abstract Method Implementations

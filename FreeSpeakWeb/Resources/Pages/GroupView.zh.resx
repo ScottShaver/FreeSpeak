@@ -133,4 +133,10 @@
   <data name="PostDeclinedDescription" xml:space="preserve">
     <value>此帖子已被版主拒绝。您可以编辑并重新提交。</value>
   </data>
+  <data name="YourPoints" xml:space="preserve">
+    <value>您的积分</value>
+  </data>
+  <data name="YourPosts" xml:space="preserve">
+    <value>您的帖子</value>
+  </data>
 </root>

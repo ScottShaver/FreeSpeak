@@ -4,6 +4,8 @@
 @using Microsoft.Extensions.Localization
 
 @inject HtmlSanitizationService HtmlSanitizationService
+@inject TimestampFormattingService TimestampFormatter
+@inject NotificationTemplateService NotificationTemplateService
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.NotificationComponent> Localizer
 
 <div class="notification-item @(Notification.IsRead ? "read" : "unread")" @onclick="HandleClick">
@@ -15,8 +17,8 @@
         else
         {
             <div class="avatar-placeholder">
-                <span class="avatar-initial">@GetInitial(UserName)</span>
-            </div>
+                    <span class="avatar-initial">@GetInitials(UserName)</span>
+                </div>
         }
         <div class="notification-type-badge">
             @{
@@ -60,13 +62,13 @@
         </div>
     </div>
     <div class="notification-content">
-        <div class="notification-message">@((MarkupString)HtmlSanitizationService.Sanitize(Notification.Message))</div>
+        <div class="notification-message">@((MarkupString)HtmlSanitizationService.Sanitize(RenderedMessage ?? string.Empty))</div>
         <div class="notification-time">
-            @FormatTimeAgo(Notification.CreatedAt)
+            @TimestampFormatter.FormatTimeAgo(Notification.CreatedAt)
             @if (Notification.ExpiresAt.HasValue)
             {
                 <span class="notification-expiration" title="@($"{Localizer["Expires"]}: {Notification.ExpiresAt.Value:g}")">
-                    · @FormatExpirationTime(Notification.ExpiresAt.Value)
+                    · @TimestampFormatter.FormatExpirationTime(Notification.ExpiresAt.Value)
                 </span>
             }
         </div>
@@ -95,6 +97,20 @@
 
     private string UserProfilePicture => GetProfilePicture();
     private string UserName => GetUserName();
+    private string? RenderedMessage { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // Render the notification message using template if available, otherwise use Message field
+        if (!string.IsNullOrEmpty(Notification.TemplateKey))
+        {
+            RenderedMessage = await NotificationTemplateService.RenderNotificationAsync(Notification);
+        }
+        else
+        {
+            RenderedMessage = Notification.Message;
+        }
+    }
 
     private async Task HandleClick()
     {
@@ -147,10 +163,33 @@
         }
     }
 
-    private string GetInitial(string name)
+    /// <summary>
+    /// Extracts the initials from a user's name.
+    /// Returns up to 2 characters - first letter of first name and first letter of last name.
+    /// Falls back to first 2 characters of a single name, or "?" if empty.
+    /// </summary>
+    /// <param name="name">The user's display name.</param>
+    /// <returns>A string containing 1-2 uppercase initials.</returns>
+    private string GetInitials(string name)
     {
-        if (string.IsNullOrEmpty(name)) return "?";
-        return name[0].ToString().ToUpper();
+        if (string.IsNullOrWhiteSpace(name))
+            return "?";
+
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 0)
+            return "?";
+
+        if (parts.Length == 1)
+        {
+            var singleWord = parts[0];
+            if (singleWord.Length >= 2)
+                return singleWord.Substring(0, 2).ToUpper();
+            else
+                return singleWord.Substring(0, 1).ToUpper();
+        }
+
+        return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
     }
 
     private string GetReactionEmoji()
@@ -170,6 +209,7 @@
             {
                 "Like" => "👍",
                 "Love" => "❤️",
+                "Care" => "🤗",
                 "Haha" => "😂",
                 "Wow" => "😮",
                 "Sad" => "😢",
@@ -181,49 +221,6 @@
         {
             return string.Empty;
         }
-    }
-
-    private string FormatTimeAgo(DateTime dateTime)
-    {
-        var timeSpan = DateTime.UtcNow - dateTime;
-
-        if (timeSpan.TotalMinutes < 1)
-            return "just now";
-        if (timeSpan.TotalMinutes < 60)
-            return $"{(int)timeSpan.TotalMinutes}m ago";
-        if (timeSpan.TotalHours < 24)
-            return $"{(int)timeSpan.TotalHours}h ago";
-        if (timeSpan.TotalDays < 7)
-            return $"{(int)timeSpan.TotalDays}d ago";
-        if (timeSpan.TotalDays < 30)
-            return $"{(int)(timeSpan.TotalDays / 7)}w ago";
-        if (timeSpan.TotalDays < 365)
-            return $"{(int)(timeSpan.TotalDays / 30)}mo ago";
-
-        return dateTime.ToString("MMM d, yyyy");
-    }
-
-    /// <summary>
-    /// Formats the expiration timestamp as a relative time until expiration.
-    /// </summary>
-    /// <param name="expiresAt">The expiration date and time.</param>
-    /// <returns>A human-readable string indicating when the notification will expire.</returns>
-    private string FormatExpirationTime(DateTime expiresAt)
-    {
-        var timeUntilExpiry = expiresAt - DateTime.UtcNow;
-
-        if (timeUntilExpiry.TotalMinutes <= 0)
-            return "expires soon";
-        if (timeUntilExpiry.TotalMinutes < 60)
-            return $"expires in {(int)timeUntilExpiry.TotalMinutes}m";
-        if (timeUntilExpiry.TotalHours < 24)
-            return $"expires in {(int)timeUntilExpiry.TotalHours}h";
-        if (timeUntilExpiry.TotalDays < 7)
-            return $"expires in {(int)timeUntilExpiry.TotalDays}d";
-        if (timeUntilExpiry.TotalDays < 30)
-            return $"expires in {(int)(timeUntilExpiry.TotalDays / 7)}w";
-
-        return $"expires {expiresAt:MMM d}";
     }
 
     // Helper class to deserialize notification data

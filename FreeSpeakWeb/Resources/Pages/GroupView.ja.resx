@@ -133,4 +133,10 @@
   <data name="PostDeclinedDescription" xml:space="preserve">
     <value>この投稿はモデレーターによって拒否されました。編集して再送信できます。</value>
   </data>
+  <data name="YourPoints" xml:space="preserve">
+    <value>あなたのポイント</value>
+  </data>
+  <data name="YourPosts" xml:space="preserve">
+    <value>あなたの投稿</value>
+  </data>
 </root>

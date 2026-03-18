@@ -1,40 +1,43 @@
 @using FreeSpeakWeb.Data
+@using Microsoft.Extensions.Localization
+
+@inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.ReactionPicker> Localizer
 
 <div class="reaction-picker" @onmouseenter="OnMouseEnter" @onmouseleave="OnMouseLeave">
     @if (HasUserReaction)
     {
-        <button class="reaction-button remove-button" @onclick="OnRemoveSelected" title="Remove reaction">
+        <button class="reaction-button remove-button" @onclick="OnRemoveSelected" title="@Localizer["Remove"]">
             <span class="reaction-emoji">🚫</span>
-            <span class="reaction-label">Remove</span>
+            <span class="reaction-label">@Localizer["Remove"]</span>
         </button>
     }
-    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Like)" title="Like">
+    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Like)" title="@Localizer["Like"]">
         <span class="reaction-emoji">👍</span>
-        <span class="reaction-label">Like</span>
+        <span class="reaction-label">@Localizer["Like"]</span>
     </button>
-    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Love)" title="Love">
+    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Love)" title="@Localizer["Love"]">
         <span class="reaction-emoji">❤️</span>
-        <span class="reaction-label">Love</span>
+        <span class="reaction-label">@Localizer["Love"]</span>
     </button>
-    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Care)" title="Care">
+    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Care)" title="@Localizer["Care"]">
         <span class="reaction-emoji">🤗</span>
-        <span class="reaction-label">Care</span>
+        <span class="reaction-label">@Localizer["Care"]</span>
     </button>
-    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Haha)" title="Haha">
+    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Haha)" title="@Localizer["Haha"]">
         <span class="reaction-emoji">😂</span>
-        <span class="reaction-label">Haha</span>
+        <span class="reaction-label">@Localizer["Haha"]</span>
     </button>
-    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Wow)" title="Wow">
+    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Wow)" title="@Localizer["Wow"]">
         <span class="reaction-emoji">😮</span>
-        <span class="reaction-label">Wow</span>
+        <span class="reaction-label">@Localizer["Wow"]</span>
     </button>
-    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Sad)" title="Sad">
+    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Sad)" title="@Localizer["Sad"]">
         <span class="reaction-emoji">😢</span>
-        <span class="reaction-label">Sad</span>
+        <span class="reaction-label">@Localizer["Sad"]</span>
     </button>
-    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Angry)" title="Angry">
+    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Angry)" title="@Localizer["Angry"]">
         <span class="reaction-emoji">😠</span>
-        <span class="reaction-label">Angry</span>
+        <span class="reaction-label">@Localizer["Angry"]</span>
     </button>
 </div>
 

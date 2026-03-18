@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Preferences" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>読み込み中...</value>
+  </data>
+  <data name="ColorScheme" xml:space="preserve">
+    <value>カラーテーマ</value>
+  </data>
+  <data name="ColorSchemeHelpText" xml:space="preserve">
+    <value>サイトのお好みのカラーテーマを選択してください。</value>
+  </data>
+  <data name="NameDisplay" xml:space="preserve">
+    <value>名前の表示</value>
+  </data>
+  <data name="NameDisplayHelpText" xml:space="preserve">
+    <value>サイト上で他のユーザーにあなたの名前がどのように表示されるか。</value>
+  </data>
+  <data name="NameDisplayFullName" xml:space="preserve">
+    <value>フルネーム（山田太郎）</value>
+  </data>
+  <data name="NameDisplayFirstName" xml:space="preserve">
+    <value>名のみ（太郎）</value>
+  </data>
+  <data name="NameDisplayUsername" xml:space="preserve">
+    <value>ユーザー名（yamadataro）</value>
+  </data>
+  <data name="NameDisplayFirstNameLastInitial" xml:space="preserve">
+    <value>名 + 姓のイニシャル（太郎 山.）</value>
+  </data>
+  <data name="DefaultPostVisibility" xml:space="preserve">
+    <value>投稿のデフォルト公開設定</value>
+  </data>
+  <data name="DefaultPostVisibilityHelpText" xml:space="preserve">
+    <value>新しい投稿のデフォルトの公開設定。投稿作成時に変更できます。</value>
+  </data>
+  <data name="AudiencePublic" xml:space="preserve">
+    <value>公開（誰でも閲覧可能）</value>
+  </data>
+  <data name="AudienceFriendsOnly" xml:space="preserve">
+    <value>友達のみ</value>
+  </data>
+  <data name="AudienceMeOnly" xml:space="preserve">
+    <value>自分のみ（非公開）</value>
+  </data>
+  <data name="Timezone" xml:space="preserve">
+    <value>タイムゾーン</value>
+  </data>
+  <data name="TimezoneHelpText" xml:space="preserve">
+    <value>日付と時刻を表示するためのお好みのタイムゾーン。</value>
+  </data>
+  <data name="TimezoneGroupUS" xml:space="preserve">
+    <value>アメリカ合衆国</value>
+  </data>
+  <data name="TimezoneGroupOther" xml:space="preserve">
+    <value>その他の一般的なタイムゾーン</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>国</value>
+  </data>
+  <data name="CountryHelpText" xml:space="preserve">
+    <value>あなたの国または地域。</value>
+  </data>
+  <data name="LanguageRegion" xml:space="preserve">
+    <value>言語と地域</value>
+  </data>
+  <data name="LanguageRegionHelpText" xml:space="preserve">
+    <value>ユーザーインターフェースのお好みの言語と地域フォーマット。</value>
+  </data>
+  <data name="LanguageGroupEnglish" xml:space="preserve">
+    <value>英語</value>
+  </data>
+  <data name="LanguageGroupSpanish" xml:space="preserve">
+    <value>スペイン語</value>
+  </data>
+  <data name="LanguageGroupFrench" xml:space="preserve">
+    <value>フランス語</value>
+  </data>
+  <data name="LanguageGroupGerman" xml:space="preserve">
+    <value>ドイツ語</value>
+  </data>
+  <data name="LanguageGroupOther" xml:space="preserve">
+    <value>その他の言語</value>
+  </data>
+  <data name="NotificationExpiration" xml:space="preserve">
+    <value>通知の自動期限切れ（日数）</value>
+  </data>
+  <data name="NotificationExpirationHelpText" xml:space="preserve">
+    <value>これより古い通知は自動的に期限切れになります。1年間保持するには365日に設定してください。</value>
+  </data>
+  <data name="PostReactions" xml:space="preserve">
+    <value>投稿へのリアクション</value>
+  </data>
+  <data name="PostComments" xml:space="preserve">
+    <value>投稿へのコメント</value>
+  </data>
+  <data name="CommentReplies" xml:space="preserve">
+    <value>コメントへの返信</value>
+  </data>
+  <data name="CommentReactions" xml:space="preserve">
+    <value>コメントへのリアクション</value>
+  </data>
+  <data name="FriendRequests" xml:space="preserve">
+    <value>友達リクエスト</value>
+  </data>
+  <data name="FriendAccepted" xml:space="preserve">
+    <value>友達承認</value>
+  </data>
+  <data name="Mentions" xml:space="preserve">
+    <value>メンション</value>
+  </data>
+  <data name="SystemNotifications" xml:space="preserve">
+    <value>システム通知</value>
+  </data>
+  <data name="SavePreferences" xml:space="preserve">
+    <value>設定を保存</value>
+  </data>
+  <data name="ResetToDefaults" xml:space="preserve">
+    <value>デフォルトに戻す</value>
+  </data>
+  <data name="PreferencesSavedSuccess" xml:space="preserve">
+    <value>設定が正常に保存されました。</value>
+  </data>
+  <data name="PreferencesResetSuccess" xml:space="preserve">
+    <value>設定がデフォルト値にリセットされました。</value>
+  </data>
+  <data name="ErrorSavingPreferences" xml:space="preserve">
+    <value>設定の保存中にエラーが発生しました。もう一度お試しください。</value>
+  </data>
+  <data name="ErrorLoadingPreferences" xml:space="preserve">
+    <value>設定の読み込み中にエラーが発生しました。</value>
+  </data>
+</root>

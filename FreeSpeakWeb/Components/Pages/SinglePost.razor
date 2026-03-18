@@ -4,6 +4,7 @@
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Components.Pages.Base
+@using FreeSpeakWeb.Repositories.Abstractions
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @inherits PostPageBase<Post, Comment>
@@ -12,7 +13,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject UserManager<ApplicationUser> UserManager
-@inject FreeSpeakWeb.Repositories.FeedCommentRepository FeedCommentRepository
+@inject IFeedCommentRepository FeedCommentRepository
 @attribute [AllowAnonymous]
 
 <PageTitle>@pageTitle</PageTitle>

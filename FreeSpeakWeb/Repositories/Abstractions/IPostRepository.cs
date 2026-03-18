@@ -286,6 +286,14 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         Task<int> GetCountByGroupAsync(int groupId);
 
         /// <summary>
+        /// Gets the total count of posts by a specific user in a specific group.
+        /// </summary>
+        /// <param name="groupId">The ID of the group.</param>
+        /// <param name="authorId">The ID of the author.</param>
+        /// <returns>The total number of posts by the author in the group.</returns>
+        Task<int> GetCountByGroupAndAuthorAsync(int groupId, string authorId);
+
+        /// <summary>
         /// Retrieves posts created by a specific user within a specific group.
         /// </summary>
         /// <param name="groupId">The ID of the group.</param>

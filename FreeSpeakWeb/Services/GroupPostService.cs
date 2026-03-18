@@ -698,6 +698,17 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
+        /// Gets the total count of posts by a specific user in a group.
+        /// </summary>
+        /// <param name="groupId">The unique identifier of the group.</param>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The number of posts by the user in the group.</returns>
+        public async Task<int> GetUserPostCountInGroupAsync(int groupId, string userId)
+        {
+            return await _postRepository.GetCountByGroupAndAuthorAsync(groupId, userId);
+        }
+
+        /// <summary>
         /// Retrieves all posts from groups the user is a member of (combined feed).
         /// </summary>
         /// <param name="userId">The unique identifier of the user.</param>
