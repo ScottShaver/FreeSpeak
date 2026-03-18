@@ -5,6 +5,7 @@
 
 @inject FriendsService FriendsService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Friends.FriendListItem> Localizer
 
 <div class="friend-list-item text-center">
@@ -389,6 +390,22 @@
     [Parameter]
     public EventCallback<ApplicationUser> OnRemove { get; set; }
 
+    /// <summary>
+    /// Optional event callback for custom navigation handling.
+    /// If set, this will be invoked when the profile is clicked.
+    /// If not set, the component will navigate directly to /friend/{userId}.
+    /// </summary>
+    [Parameter]
+    public EventCallback<ApplicationUser> OnNavigateToProfile { get; set; }
+
+    /// <summary>
+    /// Controls whether clicking on the profile navigates to the friend's page.
+    /// When true (default), clicking navigates to /friend/{userId}.
+    /// When false, shows the profile preview modal instead.
+    /// </summary>
+    [Parameter]
+    public bool EnableProfileNavigation { get; set; } = false;
+
     private bool IsProcessing { get; set; }
     private string actionType = "";
     private bool showMutualFriendsModal = false;
@@ -476,8 +493,29 @@
         mutualFriends.Clear();
     }
 
+    /// <summary>
+    /// Handles the profile preview click. If EnableProfileNavigation is true,
+    /// navigates to the friend's profile page. Otherwise, shows the preview modal.
+    /// </summary>
     private async Task ShowProfilePreview()
     {
+        // If profile navigation is enabled, navigate to friend's page
+        if (EnableProfileNavigation)
+        {
+            // If a custom navigation handler is provided, invoke it
+            if (OnNavigateToProfile.HasDelegate)
+            {
+                await OnNavigateToProfile.InvokeAsync(User);
+            }
+            else
+            {
+                // Navigate to friend's profile page
+                NavigationManager.NavigateTo($"/friend/{User.Id}");
+            }
+            return;
+        }
+
+        // Otherwise, show the profile preview modal
         showProfilePreviewModal = true;
         isLoadingProfilePreview = true;
         StateHasChanged();

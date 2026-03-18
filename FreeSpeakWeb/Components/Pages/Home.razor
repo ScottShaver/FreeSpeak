@@ -115,6 +115,7 @@
                                     OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
                                     OnPinPost="@HandlePinPost"
                                     OnUnpinPost="@HandleUnpinPost"
+                                    OnAudienceTypeChanged="@(newAudienceType => HandleAudienceTypeChanged(post.Id, newAudienceType))"
                                     OnPostDeleted="@HandlePostDeleted"
                                     OnEditPost="@HandleEditPost"
                                     OnCommentAdded="@HandleCommentAdded"
@@ -200,6 +201,7 @@
                                     OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
                                     OnPinPost="@HandlePinPost"
                                     OnUnpinPost="@HandleUnpinPost"
+                                    OnAudienceTypeChanged="@(newAudienceType => HandleAudienceTypeChanged(post.Id, newAudienceType))"
                                     OnPostDeleted="@HandlePostDeleted"
                                     OnEditPost="@HandleEditPost"
                                     OnCommentAdded="@OnCommentAdded"
@@ -249,6 +251,7 @@
                 OnRemoveReaction="@(async () => await HandleRemoveReaction(selectedPost.Id))"
                 OnPinPost="@HandlePinPost"
                 OnUnpinPost="@HandleUnpinPost"
+                OnAudienceTypeChanged="@(newAudienceType => HandleAudienceTypeChanged(selectedPost.Id, newAudienceType))"
                 OnPostDeleted="@HandlePostDeleted"
                 OnCommentAdded="@OnCommentAdded"
                 OnReplySubmitted="@OnReplySubmitted"
@@ -384,6 +387,7 @@
     {
         if (currentUserId == null) return;
 
+        currentPage = 1;
         isLoading = true;
         try
         {
@@ -708,6 +712,29 @@
         {
             AlertService.ShowError("An error occurred while unpinning the post.");
         }
+    }
+
+    /// <summary>
+    /// Handles the event when a post's audience type is changed.
+    /// Updates the local post object to reflect the new audience type.
+    /// </summary>
+    private void HandleAudienceTypeChanged(int postId, AudienceType newAudienceType)
+    {
+        // Update the post in the main feed list
+        var post = posts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.AudienceType = newAudienceType;
+        }
+
+        // Update the post in the pinned posts list if it exists there
+        var pinnedPost = pinnedPostsList.FirstOrDefault(p => p.Id == postId);
+        if (pinnedPost != null)
+        {
+            pinnedPost.AudienceType = newAudienceType;
+        }
+
+        StateHasChanged();
     }
 
     private void HandlePostDeleted(int postId)

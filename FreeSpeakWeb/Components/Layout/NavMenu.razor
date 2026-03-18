@@ -47,9 +47,12 @@
                         <span class="bi bi-diagram-3-fill-nav-menu" style="margin: 0; top: 0;"></span>
                     </a>
 
-                    <a href="my-uploads" title="@Localizer["MyUploads"]" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "my-uploads" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "my-uploads" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
-                        <span class="bi bi-images-nav-menu" style="margin: 0; top: 0;"></span>
-                    </a>
+                    @if (SiteSettings.Value.AllowPostAttachments)
+                    {
+                        <a href="my-uploads" title="@Localizer["MyUploads"]" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "my-uploads" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; @(GetActiveMenuItemFromUrl() == "my-uploads" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
+                            <span class="bi bi-images-nav-menu" style="margin: 0; top: 0;"></span>
+                        </a>
+                    }
 
                     <a href="notifications" title="@Localizer["Notifications"]" class="nav-icon-link @(GetActiveMenuItemFromUrl() == "notifications" ? "active" : "")" data-enhance-nav="false" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; position: relative; @(GetActiveMenuItemFromUrl() == "notifications" ? "background-color: rgba(255,255,255,0.37); color: white; border-radius: 4px;" : "")">
                         <span class="bi bi-bell-fill-nav-menu" style="margin: 0; top: 0;"></span>

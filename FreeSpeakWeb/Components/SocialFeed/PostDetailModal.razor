@@ -46,6 +46,7 @@
                 OnRemoveReaction="@OnRemoveReaction"
                 OnPinPost="@OnPinPost"
                 OnUnpinPost="@OnUnpinPost"
+                OnAudienceTypeChanged="@OnAudienceTypeChanged"
                 OnPostDeleted="@HandlePostDeleted"
                 OnCommentAdded="@HandleCommentAdded"
                 OnReplySubmitted="@HandleReplySubmitted"
@@ -200,6 +201,12 @@
 
     [Parameter]
     public AudienceType AudienceType { get; set; } = AudienceType.Public;
+
+    /// <summary>
+    /// Event callback invoked when the post's audience type is changed.
+    /// </summary>
+    [Parameter]
+    public EventCallback<AudienceType> OnAudienceTypeChanged { get; set; }
 
     [Parameter]
     public bool IsPinned { get; set; } = false;
