@@ -1378,7 +1378,7 @@
 
     /// <summary>
     /// Handles pinning a group post for the current user.
-    /// Updates the pinned status in the UI upon success.
+    /// Updates the pinned status and count in the UI upon success.
     /// </summary>
     /// <param name="postId">The ID of the post to pin.</param>
     private async Task HandlePinGroupPost(int postId)
@@ -1390,6 +1390,7 @@
         if (success)
         {
             pinnedPosts[postId] = true;
+            pinnedGroupPostsCount++;
 
             // Log group post pin to audit log
             try

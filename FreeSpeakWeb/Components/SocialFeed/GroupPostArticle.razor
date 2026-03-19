@@ -18,7 +18,8 @@
 <div class="feed-article @(showMenu ? "menu-open" : "")">
     <!-- 1. Header Area -->
     <FeedArticleHeader 
-        AuthorName="@GetFormattedAuthorName()"
+        AuthorName="@AuthorName"
+        GroupName="@GroupName"
         AuthorImageUrl="@AuthorImageUrl"
         AuthorId="@AuthorId"
         CreatedAt="@CreatedAt"
@@ -962,15 +963,6 @@
         {
             await OnShowComments.InvokeAsync();
         }
-    }
-
-    private string GetFormattedAuthorName()
-    {
-        if (!string.IsNullOrEmpty(GroupName))
-        {
-            return $"{GroupName} > {AuthorName}";
-        }
-        return AuthorName;
     }
 
     private async Task LoadCommentsAsync()

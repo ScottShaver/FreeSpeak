@@ -126,7 +126,23 @@
         CurrentUserImageUrl="@CurrentUserImageUrl"
         CurrentUserName="@CurrentUserName"
         OnCommentSubmitted="@OnCommentSubmitted" />
+
+    <!-- Audience Selection Menu (inside feed-article for proper positioning) -->
+    @if (showAudienceMenu)
+    {
+        <div @onclick:stopPropagation="true" style="position: absolute; @audienceMenuPositionStyle z-index: 1001;">
+            <PopupMenu IsVisible="@showAudienceMenu" 
+                       MenuItems="@audienceMenuItems" 
+                       OnClose="@CloseAudienceMenu" />
+        </div>
+    }
 </div>
+
+<!-- Backdrop for Audience Menu (covers full viewport) -->
+@if (showAudienceMenu)
+{
+    <div class="modal-backdrop" @onclick="CloseAudienceMenu" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 1000;"></div>
+}
 
 @if (showLikesModal)
 {
@@ -138,19 +154,6 @@
     ImageUrls="@imageUrls"
     InitialIndex="@selectedImageIndex"
     OnClose="CloseImageViewer" />
-
-<!-- Audience Selection Menu -->
-@if (showAudienceMenu)
-{
-    <div class="modal-backdrop" @onclick="CloseAudienceMenu" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
-        <div @onclick:stopPropagation="true" style="position: relative;">
-            <PopupMenu IsVisible="@showAudienceMenu" 
-                       MenuItems="@audienceMenuItems" 
-                       OnClose="@CloseAudienceMenu"
-                       PositionStyle="position: relative;" />
-        </div>
-    </div>
-}
 
 <!-- Delete Confirmation Modal -->
 <ConfirmationDialog 

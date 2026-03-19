@@ -13,6 +13,7 @@
 @inject TimestampFormattingService TimestampFormatter
 @inject IJSRuntime JSRuntime
 @inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager NavigationManager
 
 <div class="article-header @GetAudienceHeaderClass()" @ref="headerElement">
     @if (!string.IsNullOrEmpty(AuthorImageUrl))
@@ -35,7 +36,21 @@
     }
     <div class="author-info">
         <div class="author-name-container">
-            <span class="author-name">@AuthorName</span>
+            <span class="author-name">
+                @if (!string.IsNullOrEmpty(GroupName) && GroupId.HasValue)
+                {
+                    <a href="@($"/group/{GroupId}")" class="group-name-link">@GroupName</a>
+                    <span> &gt; </span>
+                }
+                @if (!string.IsNullOrEmpty(AuthorId))
+                {
+                    <a href="@($"/friend/{AuthorId}")" class="author-name-link">@AuthorName</a>
+                }
+                else
+                {
+                    @AuthorName
+                }
+            </span>
             @if (GroupId.HasValue && AuthorGroupPoints.HasValue)
             {
                 <MemberLevelBadge 
@@ -244,6 +259,13 @@
     [Parameter]
     public int? GroupId { get; set; }
 
+    /// <summary>
+    /// The name of the group where the post was made. When provided along with GroupId,
+    /// the group name will be displayed as a clickable link before the author name.
+    /// </summary>
+    [Parameter]
+    public string? GroupName { get; set; }
+
     [Parameter]
     public int? AuthorGroupPoints { get; set; }
 
@@ -263,7 +285,6 @@
 
     /// <summary>
     /// Extracts initials from a name string.
-    /// Handles the "GroupName > AuthorName" format by extracting only the author portion.
     /// </summary>
     /// <param name="name">The name to extract initials from.</param>
     /// <returns>One or two character initials in uppercase.</returns>
@@ -272,15 +293,7 @@
         if (string.IsNullOrWhiteSpace(name))
             return "U";
 
-        // Handle "GroupName > AuthorName" format - extract just the author name
-        var authorName = name;
-        var separatorIndex = name.IndexOf(" > ", StringComparison.Ordinal);
-        if (separatorIndex >= 0)
-        {
-            authorName = name.Substring(separatorIndex + 3).Trim();
-        }
-
-        var parts = authorName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
         if (parts.Length == 0)
             return "U";
