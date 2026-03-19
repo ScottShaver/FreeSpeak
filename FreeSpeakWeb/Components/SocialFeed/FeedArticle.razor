@@ -6,15 +6,12 @@
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Helpers
 @using Microsoft.Extensions.Localization
-@inject IJSRuntime JS
+@inherits ArticleComponentBase
 @inject PostService PostService
 @inject UserPreferenceService UserPreferenceService
-@inject NavigationManager NavigationManager
 @inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
-@inject AlertService AlertService
 @inject IAuditLogRepository AuditLogRepository
 @inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.FeedArticle> Localizer
-@implements IAsyncDisposable
 
 <div class="feed-article @(showMenu ? "menu-open" : "")">
     <!-- 1. Header Area -->
@@ -22,6 +19,7 @@
         AuthorName="@AuthorName"
         AuthorImageUrl="@AuthorImageUrl"
         AuthorId="@AuthorId"
+        CurrentUserId="@CurrentUserId"
         CreatedAt="@CreatedAt"
         AudienceType="@currentAudienceType"
         IsPinned="@currentIsPinned"
@@ -75,48 +73,22 @@
         var directCount = LoadCommentsInternally ? internalDirectCommentCount : DirectCommentCount;
     }
 
-    <!-- More Comments Indicator -->
-    @if (!IsModalView && directCount > 0 && commentsToDisplay != null && directCount > commentsToDisplay.Count)
-    {
-        <div class="more-comments-indicator">
-            <button type="button" class="more-comments-button" @onclick="OnCommentClick">
-                @Localizer["ViewMoreComments"]
-            </button>
-        </div>
-    }
-
-    <!-- 5. Display Existing Comments -->
-    @if (commentsToDisplay != null && commentsToDisplay.Any())
-    {
-        <div class="article-comments">
-            @foreach (var comment in commentsToDisplay)
-            {
-                <MultiLineCommentDisplay 
-                    CommentId="@comment.CommentId"
-                    UserName="@comment.UserName"
-                    UserImageUrl="@comment.UserImageUrl"
-                    CommentAuthorId="@comment.CommentAuthorId"
-                    CommentText="@comment.CommentText"
-                    ImageUrl="@comment.ImageUrl"
-                    Timestamp="@comment.Timestamp"
-                    Replies="@comment.Replies"
-                    LikeCount="@comment.LikeCount"
-                    UserReaction="@comment.UserReaction"
-                    ReactionBreakdown="@comment.ReactionBreakdown"
-                    CurrentUserId="@CurrentUserId"
-                    CurrentUserImageUrl="@CurrentUserImageUrl"
-                    CurrentUserName="@CurrentUserName"
-                    Depth="0"
-                    OnReactionChanged="@OnCommentReactionChanged"
-                    OnRemoveReaction="@OnRemoveCommentReaction"
-                    OnReplySubmitted="@OnReplySubmittedLocally"
-                    OnDeleteComment="@OnCommentDeleted"
-                    OnEditComment="@OnCommentEditedLocally"
-                    OnCommentUpdated="@OnCommentUpdatedLocally"
-                    OnReportComment="@OnReportComment" />
-            }
-        </div>
-    }
+    <!-- Comments Section -->
+    <ArticleCommentList 
+        IsModalView="@IsModalView"
+        DirectCommentCount="@directCount"
+        Comments="@commentsToDisplay"
+        CurrentUserId="@CurrentUserId"
+        CurrentUserImageUrl="@CurrentUserImageUrl"
+        CurrentUserName="@CurrentUserName"
+        OnViewMoreCommentsClick="@OnCommentClick"
+        OnCommentReactionChanged="@OnCommentReactionChanged"
+        OnRemoveCommentReaction="@OnRemoveCommentReaction"
+        OnReplySubmitted="@OnReplySubmittedLocally"
+        OnDeleteComment="@OnCommentDeleted"
+        OnEditComment="@OnCommentEditedLocally"
+        OnCommentUpdated="@OnCommentUpdatedLocally"
+        OnReportComment="@OnReportComment" />
 
     <!-- 6. Comment Editor -->
     <FeedArticleCommentEditor 
@@ -203,177 +175,27 @@
 }
 
 @code {
-    [Parameter]
-    public int PostId { get; set; }
-
-    [Parameter]
-    public string AuthorId { get; set; } = string.Empty;
-
-    [Parameter]
-    public string AuthorName { get; set; } = "Anonymous";
-
-    [Parameter]
-    public string? AuthorImageUrl { get; set; }
-
-    [Parameter]
-    public string? CurrentUserId { get; set; }
-
-    [Parameter]
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-    [Parameter]
-    public RenderFragment? ArticleContent { get; set; }
-
-    [Parameter]
-    public int LikeCount { get; set; } = 0;
-
-    [Parameter]
-    public int CommentCount { get; set; } = 0;
-
-    [Parameter]
-    public int ShareCount { get; set; } = 0;
-
-    [Parameter]
-    public int DirectCommentCount { get; set; } = 0;
-
-    [Parameter]
-    public List<CommentDisplayModel>? Comments { get; set; }
-
-    [Parameter]
-    public string? CurrentUserImageUrl { get; set; }
-
-    [Parameter]
-    public string? CurrentUserName { get; set; }
-
-    [Parameter]
-    public Dictionary<LikeType, int>? ReactionBreakdown { get; set; }
-
-    [Parameter]
-    public LikeType? UserReaction { get; set; }
-
-    [Parameter]
-    public EventCallback<LikeType> OnReactionChanged { get; set; }
-
-    [Parameter]
-    public EventCallback OnRemoveReaction { get; set; }
-
-    [Parameter]
-    public EventCallback<(int PostId, string Content)> OnCommentAdded { get; set; }
-
-    [Parameter]
-    public EventCallback<(int ParentCommentId, string Content)> OnReplySubmitted { get; set; }
-
-    [Parameter]
-    public EventCallback<(int CommentId, LikeType ReactionType)> OnCommentReactionChanged { get; set; }
-
-    [Parameter]
-    public EventCallback<int> OnRemoveCommentReaction { get; set; }
+    #region FeedArticle-Specific Parameters
 
     /// <summary>
-    /// Event callback invoked when a user requests to delete their own comment.
+    /// Gets or sets the audience type for the post.
     /// </summary>
-    [Parameter]
-    public EventCallback<int> OnDeleteComment { get; set; }
-
-    /// <summary>
-    /// Event callback invoked when a user requests to edit their own comment.
-    /// </summary>
-    [Parameter]
-    public EventCallback<(int CommentId, string CurrentContent)> OnEditComment { get; set; }
-
-    /// <summary>
-    /// Event callback invoked when a comment is successfully updated with new content via inline editing.
-    /// </summary>
-    [Parameter]
-    public EventCallback<(int CommentId, string NewContent)> OnCommentUpdated { get; set; }
-
-    /// <summary>
-    /// Event callback invoked when a user requests to report another user's comment.
-    /// </summary>
-    [Parameter]
-    public EventCallback<int> OnReportComment { get; set; }
-
-    [Parameter]
-    public bool HideCommentEditor { get; set; } = false;
-
-    [Parameter]
-    public bool IsModalView { get; set; } = false;
-
-    [Parameter]
-    public EventCallback OnShowPostDetail { get; set; }
-
-    [Parameter]
-    public EventCallback OnShowComments { get; set; }
-
     [Parameter]
     public AudienceType AudienceType { get; set; } = AudienceType.Public;
 
+    /// <summary>
+    /// Event callback invoked when the post's audience type is changed.
+    /// </summary>
     [Parameter]
     public EventCallback<AudienceType> OnAudienceTypeChanged { get; set; }
 
-    [Parameter]
-    public bool IsPinned { get; set; } = false;
+    #endregion
 
-    [Parameter]
-    public EventCallback<int> OnPinPost { get; set; }
+    #region FeedArticle-Specific State
 
-    [Parameter]
-    public EventCallback<int> OnUnpinPost { get; set; }
-
-    [Parameter]
-    public EventCallback<int> OnPostDeleted { get; set; }
-
-    [Parameter]
-    public EventCallback<int> OnEditPost { get; set; }
-
-    [Parameter]
-    public List<PostImage>? Images { get; set; }
-
-    [Parameter]
-    public bool IsReadOnly { get; set; } = false;
-
-    [Parameter]
-    public bool LoadCommentsInternally { get; set; } = false;
-
-    [Parameter]
-    public int CommentsToShow { get; set; } = 3;
-
-    [Parameter]
-    public int RefreshTrigger { get; set; } = 0;
-
-    /// <summary>
-    /// Gets or sets whether notifications are muted for this post.
-    /// When provided by parent, avoids N+1 queries by using batch-loaded mute status.
-    /// </summary>
-    [Parameter]
-    public bool? IsMuted { get; set; }
-
-    // Internal state for audience and pinned status (to properly handle re-renders)
-    // These are the source of truth for rendering
+    // Internal state for audience (to properly handle re-renders)
     private AudienceType currentAudienceType = AudienceType.Public;
-    private bool currentIsPinned = false;
-
-    // Track if we've made local changes that parent hasn't reflected yet
     private bool hasLocalAudienceChange = false;
-    private bool hasLocalPinnedChange = false;
-
-    // Notification mute state - uses IsMuted parameter if provided, otherwise loaded on first render
-    private bool isNotificationMuted = false;
-    private bool hasMuteStatusFromParameter = false;
-
-    private bool showReactionPicker = false;
-    private bool showLikesModal = false;
-    private bool isLoadingLikes = false;
-    private List<(ApplicationUser User, LikeType Type, DateTime CreatedAt)> likes = new();
-    private System.Threading.Timer? hideTimer;
-    private ElementReference contentElement;
-    private IJSObjectReference? module;
-    private DotNetObjectReference<FeedArticle>? dotNetHelper;
-    private bool isTruncated = false;
-    private bool shouldShowExpandButton = false;
-    private bool showMenu = false;
-    private List<PopupMenu.PopupMenuItem> menuItems = new();
-    private string menuPositionStyle = string.Empty;
 
     // Audience selection state
     private bool showAudienceMenu = false;
@@ -382,108 +204,29 @@
     private List<PopupMenu.PopupMenuItem> audienceMenuItems = new();
     private string audienceMenuPositionStyle = string.Empty;
 
-    // Delete confirmation state
-    private bool showDeleteConfirmation = false;
-
-    // Image viewer state
-    private bool showImageViewer = false;
-    private List<string> imageUrls = new();
-    private int selectedImageIndex = 0;
-
-    // Internal comment loading state
-    private List<CommentDisplayModel> internalComments = new();
-    private int internalDirectCommentCount = 0;
+    // Total comment count for internal loading (FeedArticle-specific)
     private int internalTotalCommentCount = 0;
-    private bool isLoadingComments = false;
-    private int? lastLoadedPostId = null;
-    private int lastRefreshTrigger = 0;
 
-    private bool IsOwnPost => !string.IsNullOrEmpty(CurrentUserId) && !string.IsNullOrEmpty(AuthorId) && CurrentUserId == AuthorId;
+    // DotNetObjectReference for JS interop (type-specific)
+    private DotNetObjectReference<FeedArticle>? dotNetHelper;
 
+    #endregion
 
+    #region Computed Properties
+
+    /// <summary>
+    /// Gets whether the comment limit has been reached for this post.
+    /// </summary>
     private bool HasReachedCommentLimit => DirectCommentCount >= SiteSettings.Value.MaxFeedPostDirectCommentCount;
 
-    private async Task HandleContentElementRendered(ElementReference elementRef)
-    {
-        contentElement = elementRef;
-        // JavaScript initialization will happen in OnAfterRenderAsync
-    }
+    #endregion
 
-    private void ShowReactionPicker()
-    {
-        if (IsOwnPost) return; // Don't show picker for own posts
+    #region Menu Building (Override)
 
-        hideTimer?.Dispose();
-        showReactionPicker = true;
-        StateHasChanged();
-    }
-
-    private void CancelHideTimer()
-    {
-        if (IsOwnPost) return; // Don't show picker for own posts
-
-        hideTimer?.Dispose();
-        showReactionPicker = true;
-        StateHasChanged();
-    }
-
-    private void StartHideTimer()
-    {
-        hideTimer?.Dispose();
-        hideTimer = new System.Threading.Timer(_ =>
-        {
-            InvokeAsync(() =>
-            {
-                showReactionPicker = false;
-                StateHasChanged();
-            });
-        }, null, 500, Timeout.Infinite);
-    }
-
-    private void HideReactionPicker()
-    {
-        showReactionPicker = false;
-    }
-
-    private async Task HandleReaction(LikeType reactionType)
-    {
-        showReactionPicker = false;
-        await OnReactionChanged.InvokeAsync(reactionType);
-    }
-
-    private async Task HandleRemoveReaction()
-    {
-        showReactionPicker = false;
-        // Signal removal by invoking with a special parameter
-        // We'll update Home.razor to handle this
-        if (OnRemoveReaction.HasDelegate)
-        {
-            await OnRemoveReaction.InvokeAsync();
-        }
-    }
-
-    private async Task OnLikeClick()
-    {
-        // Default like action
-        await OnReactionChanged.InvokeAsync(LikeType.Like);
-    }
-
-    private void ToggleMenu()
-    {
-        if (showMenu)
-        {
-            CloseMenu();
-        }
-        else
-        {
-            BuildMenuItems();
-            showMenu = true;
-            menuPositionStyle = "right: 0; top: 40px;";
-            StateHasChanged();
-        }
-    }
-
-    private void BuildMenuItems()
+    /// <summary>
+    /// Builds the menu items for the post context menu.
+    /// </summary>
+    protected override void BuildMenuItems()
     {
         menuItems.Clear();
 
@@ -574,11 +317,14 @@
                 OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
             });
 
+            // TODO: Implement feed post reporting similar to GroupPostArticle
+            // Need to create: FeedContentReport entity, FeedContentReportService, and ReportFeedContentModal
+            // For now, show a placeholder alert
             menuItems.Add(new PopupMenu.PopupMenuItem
             {
                 Text = Localizer["ReportPost"],
                 Icon = "bi bi-flag",
-                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Report Post"))
+                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Report Post - Coming Soon"))
             });
 
             // Copy Link - only for public posts
@@ -607,12 +353,13 @@
         }
     }
 
-    private void CloseMenu()
-    {
-        showMenu = false;
-        StateHasChanged();
-    }
+    #endregion
 
+    #region Audience Menu Methods
+
+    /// <summary>
+    /// Builds the audience selection menu items.
+    /// </summary>
     private void BuildAudienceMenuItems()
     {
         audienceMenuItems.Clear();
@@ -639,24 +386,26 @@
         });
     }
 
+    /// <summary>
+    /// Handles clicking the change audience menu item.
+    /// </summary>
     private async Task HandleChangeAudienceClick()
     {
-        // Close the main menu
         CloseMenu();
-
-        // Build and show the audience menu
         BuildAudienceMenuItems();
         showAudienceMenu = true;
         audienceMenuPositionStyle = "right: 0; top: 40px;";
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Handles selecting an audience type from the menu.
+    /// </summary>
+    /// <param name="newAudienceType">The selected audience type.</param>
     private async Task SelectAudienceType(AudienceType newAudienceType)
     {
-        // Close the audience menu
         CloseAudienceMenu();
 
-        // Don't update if it's the same audience type
         if (currentAudienceType == newAudienceType)
         {
             return;
@@ -671,10 +420,12 @@
             return;
         }
 
-        // For Friends Only and Only Me, apply immediately
         await ApplyAudienceChange(newAudienceType);
     }
 
+    /// <summary>
+    /// Confirms changing the post to public audience.
+    /// </summary>
     private async Task ConfirmPublicAudience()
     {
         showPublicConfirmation = false;
@@ -682,44 +433,46 @@
         await ApplyAudienceChange(pendingAudienceType);
     }
 
+    /// <summary>
+    /// Cancels the public audience confirmation.
+    /// </summary>
     private void CancelPublicConfirmation()
     {
         showPublicConfirmation = false;
-        pendingAudienceType = currentAudienceType; // Reset to current
+        pendingAudienceType = currentAudienceType;
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Applies the audience change to the post.
+    /// </summary>
+    /// <param name="newAudienceType">The new audience type.</param>
     private async Task ApplyAudienceChange(AudienceType newAudienceType)
     {
-        // Update the post audience
         var result = await PostService.UpdatePostAudienceAsync(PostId, AuthorId, newAudienceType);
 
         if (result.Success)
         {
-            // Update internal state and mark that we have a local change
             currentAudienceType = newAudienceType;
             hasLocalAudienceChange = true;
 
-            // Unpin the post since audience changed (pinned posts are removed from DB)
+            // Unpin the post since audience changed
             if (currentIsPinned)
             {
                 currentIsPinned = false;
                 hasLocalPinnedChange = true;
 
-                // Notify parent component that the post was unpinned
                 if (OnUnpinPost.HasDelegate)
                 {
                     await OnUnpinPost.InvokeAsync(PostId);
                 }
             }
 
-            // Notify parent component of the audience change
             if (OnAudienceTypeChanged.HasDelegate)
             {
                 await OnAudienceTypeChanged.InvokeAsync(newAudienceType);
             }
 
-            // Log post visibility update to audit log
             try
             {
                 await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserPost, new UserPostDetails
@@ -731,50 +484,39 @@
             }
             catch { /* Audit logging should not fail the operation */ }
 
-            // Force an immediate re-render to show the new state
             StateHasChanged();
         }
         else
         {
-            // Show error message
             AlertService.ShowError(result.ErrorMessage ?? "Failed to update post audience.");
         }
     }
 
+    /// <summary>
+    /// Closes the audience selection menu.
+    /// </summary>
     private void CloseAudienceMenu()
     {
         showAudienceMenu = false;
         StateHasChanged();
     }
 
-    private void ShowDeleteConfirmation()
-    {
-        // Close the main menu
-        CloseMenu();
+    #endregion
 
-        // Show the delete confirmation modal
-        showDeleteConfirmation = true;
-        StateHasChanged();
-    }
+    #region Post Actions
 
-    private void CancelDeletePost()
-    {
-        showDeleteConfirmation = false;
-        StateHasChanged();
-    }
-
+    /// <summary>
+    /// Confirms and executes post deletion.
+    /// </summary>
     private async Task ConfirmDeletePost()
     {
-        // Close the confirmation modal
         showDeleteConfirmation = false;
         StateHasChanged();
 
-        // Delete the post
         var result = await PostService.DeletePostAsync(PostId, AuthorId);
 
         if (result.Success)
         {
-            // Log post deletion to audit log
             try
             {
                 await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserPost, new UserPostDetails
@@ -785,7 +527,6 @@
             }
             catch { /* Audit logging should not fail the operation */ }
 
-            // Notify parent component that the post was deleted
             if (OnPostDeleted.HasDelegate)
             {
                 await OnPostDeleted.InvokeAsync(PostId);
@@ -793,55 +534,24 @@
         }
         else
         {
-            // Show error message
             AlertService.ShowError(result.ErrorMessage ?? "Failed to delete post.");
         }
     }
 
-    private async Task HandleEditPostClick()
-    {
-        CloseMenu();
-
-        if (OnEditPost.HasDelegate)
-        {
-            await OnEditPost.InvokeAsync(PostId);
-        }
-    }
-
-    private async Task HandlePinUnpinClick()
-    {
-        if (IsPinned)
-        {
-            // Unpin the post
-            if (OnUnpinPost.HasDelegate)
-            {
-                await OnUnpinPost.InvokeAsync(PostId);
-            }
-        }
-        else
-        {
-            // Pin the post
-            if (OnPinPost.HasDelegate)
-            {
-                await OnPinPost.InvokeAsync(PostId);
-            }
-        }
-    }
-
+    /// <summary>
+    /// Copies the post link to clipboard.
+    /// </summary>
     private async Task HandleCopyLink()
     {
         CloseMenu();
 
         try
         {
-            // Build the URL for the single post page
             var baseUri = NavigationManager.BaseUri.TrimEnd('/');
             var postUrl = $"{baseUri}/post/{PostId}";
 
-            // Copy to clipboard using JavaScript
             await JS.InvokeVoidAsync("navigator.clipboard.writeText", postUrl);
 
-            // Log link copy to audit log
             try
             {
                 await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserPost, new UserPostDetails
@@ -858,26 +568,27 @@
         }
     }
 
+    /// <summary>
+    /// Toggles notification mute status for the post.
+    /// </summary>
     private async Task HandleToggleNotificationsClick()
     {
         CloseMenu();
 
         if (string.IsNullOrEmpty(CurrentUserId))
         {
-            return; // User must be logged in to mute/unmute notifications
+            return;
         }
 
         try
         {
             if (isNotificationMuted)
             {
-                // Unmute notifications
                 var result = await PostService.UnmutePostNotificationsAsync(PostId, CurrentUserId);
                 if (result.Success)
                 {
                     isNotificationMuted = false;
 
-                    // Log notification unmute to audit log
                     try
                     {
                         await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserNotification, new UserNotificationDetails
@@ -893,13 +604,11 @@
             }
             else
             {
-                // Mute notifications
                 var result = await PostService.MutePostNotificationsAsync(PostId, CurrentUserId);
                 if (result.Success)
                 {
                     isNotificationMuted = true;
 
-                    // Log notification mute to audit log
                     try
                     {
                         await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserNotification, new UserNotificationDetails
@@ -920,24 +629,9 @@
         }
     }
 
-    private async Task ShowMenu()
-    {
-        await JS.InvokeVoidAsync("alert", "Article Menu");
-    }
-
-    private async Task OnCommentClick()
-    {
-        if (OnShowComments.HasDelegate)
-        {
-            await OnShowComments.InvokeAsync();
-        }
-    }
-
-    private async Task OnShareClick()
-    {
-        await JS.InvokeVoidAsync("alert", "Share");
-    }
-
+    /// <summary>
+    /// Shows the likes modal with reaction details.
+    /// </summary>
     private async Task ShowLikesModal()
     {
         if (LikeCount == 0) return;
@@ -961,36 +655,20 @@
         }
     }
 
-    private void CloseLikesModal()
-    {
-        showLikesModal = false;
-        likes.Clear();
-    }
+    #endregion
 
-    private void OpenImageViewer(int imageIndex)
-    {
-        if (Images == null || !Images.Any()) return;
+    #region Comment Operations
 
-        // Request full-size images for the viewer by appending size=full query parameter
-        imageUrls = Images.Select(img => $"{img.ImageUrl}?size=full").ToList();
-        selectedImageIndex = imageIndex;
-        showImageViewer = true;
-        StateHasChanged();
-    }
-
-    private void CloseImageViewer()
-    {
-        showImageViewer = false;
-        StateHasChanged();
-    }
-
+    /// <summary>
+    /// Handles comment submission.
+    /// </summary>
+    /// <param name="commentText">The comment text.</param>
     private async Task OnCommentSubmitted(string commentText)
     {
         if (OnCommentAdded.HasDelegate && !string.IsNullOrWhiteSpace(commentText))
         {
             await OnCommentAdded.InvokeAsync((PostId, commentText));
 
-            // If loading internally, reload comments
             if (LoadCommentsInternally)
             {
                 await LoadCommentsAsync();
@@ -999,108 +677,88 @@
     }
 
     /// <summary>
-    /// Handles when a comment is deleted, forwarding to the parent and reloading internal comments if necessary.
+    /// Loads comments from the database (override from base class).
     /// </summary>
-    /// <param name="commentId">The ID of the comment that was deleted</param>
-    private async Task OnCommentDeleted(int commentId)
+    protected override async Task LoadCommentsAsync()
     {
-        if (OnDeleteComment.HasDelegate)
-        {
-            await OnDeleteComment.InvokeAsync(commentId);
+        if (isLoadingComments) return;
+        isLoadingComments = true;
 
-            // If loading internally, reload comments to reflect the deletion
-            if (LoadCommentsInternally)
-            {
-                await LoadCommentsAsync();
-            }
+        try
+        {
+            var allComments = await PostService.GetCommentsAsync(PostId);
+
+            var topComments = allComments
+                .OrderByDescending(c => c.CreatedAt)
+                .Take(CommentsToShow)
+                .OrderBy(c => c.CreatedAt)
+                .ToList();
+
+            internalComments = await BuildCommentModelsAsync(topComments);
+            internalDirectCommentCount = allComments.Count(c => c.ParentCommentId == null);
+            internalTotalCommentCount = await PostService.GetTotalCommentCountAsync(PostId);
+        }
+        catch (Exception)
+        {
+            // Silently fail - comments optional
+        }
+        finally
+        {
+            isLoadingComments = false;
         }
     }
 
     /// <summary>
-    /// Handles when a reply is submitted, forwarding to the parent and reloading internal comments if necessary.
+    /// Builds comment display models from comment entities.
     /// </summary>
-    /// <param name="args">Tuple containing the ParentCommentId and reply Content</param>
-    private async Task OnReplySubmittedLocally((int ParentCommentId, string Content) args)
+    /// <param name="comments">The comments to build models for.</param>
+    /// <returns>A list of comment display models.</returns>
+    private async Task<List<CommentDisplayModel>> BuildCommentModelsAsync(List<Comment> comments)
     {
-        if (OnReplySubmitted.HasDelegate)
-        {
-            await OnReplySubmitted.InvokeAsync(args);
-
-            // If loading internally, reload comments to reflect the new reply
-            if (LoadCommentsInternally)
-            {
-                await LoadCommentsAsync();
-            }
-        }
+        return await CommentHelpers.BuildCommentDisplayModelsAsync(
+            comments,
+            PostService,
+            UserPreferenceService,
+            CurrentUserId);
     }
+
+    #endregion
+
+    #region Lifecycle Methods
 
     /// <summary>
-    /// Handles when a comment is edited, forwarding to the parent and reloading internal comments if necessary.
+    /// Called when parameters are set. Handles state synchronization.
     /// </summary>
-    /// <param name="args">Tuple containing the CommentId and CurrentContent</param>
-    private async Task OnCommentEditedLocally((int CommentId, string CurrentContent) args)
-    {
-        if (OnEditComment.HasDelegate)
-        {
-            await OnEditComment.InvokeAsync(args);
-
-            // If loading internally, reload comments to reflect the edit
-            if (LoadCommentsInternally)
-            {
-                await LoadCommentsAsync();
-            }
-        }
-    }
-
-    /// <summary>
-    /// Handles when a comment is successfully updated via inline editing, forwarding to the parent and reloading internal comments if necessary.
-    /// </summary>
-    /// <param name="args">Tuple containing the CommentId and NewContent</param>
-    private async Task OnCommentUpdatedLocally((int CommentId, string NewContent) args)
-    {
-        if (OnCommentUpdated.HasDelegate)
-        {
-            await OnCommentUpdated.InvokeAsync(args);
-
-            // If loading internally, reload comments to reflect the update
-            if (LoadCommentsInternally)
-            {
-                await LoadCommentsAsync();
-            }
-        }
-    }
-
     protected override async Task OnParametersSetAsync()
     {
-        // Only sync parameters to internal state if we don't have pending local changes
+        // Sync audience type state
         if (!hasLocalAudienceChange)
         {
             currentAudienceType = AudienceType;
         }
         else if (currentAudienceType == AudienceType)
         {
-            // Parent has caught up with our local change
             hasLocalAudienceChange = false;
         }
 
+        // Sync pinned state
         if (!hasLocalPinnedChange)
         {
             currentIsPinned = IsPinned;
         }
         else if (currentIsPinned == IsPinned)
         {
-            // Parent has caught up with our local change
             hasLocalPinnedChange = false;
         }
 
-        // Use IsMuted parameter if provided (batch-loaded by parent to avoid N+1)
+        // Use IsMuted parameter if provided
         if (IsMuted.HasValue)
         {
             isNotificationMuted = IsMuted.Value;
             hasMuteStatusFromParameter = true;
         }
 
-        // Load comments if internal loading enabled and (PostId has changed OR RefreshTrigger has changed)
+        // Load comments if internal loading enabled
         if (LoadCommentsInternally && !isLoadingComments && (lastLoadedPostId != PostId || lastRefreshTrigger != RefreshTrigger))
         {
             lastLoadedPostId = PostId;
@@ -1109,11 +767,15 @@
         }
     }
 
+    /// <summary>
+    /// Called after the component renders. Initializes JS interop.
+    /// </summary>
+    /// <param name="firstRender">Whether this is the first render.</param>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            // Only load mute status if not provided by parent parameter (avoids N+1 queries)
+            // Load mute status if not provided by parent
             if (!hasMuteStatusFromParameter && !string.IsNullOrEmpty(CurrentUserId))
             {
                 try
@@ -1127,6 +789,7 @@
                 }
             }
 
+            // Initialize content measurement JS
             if (!IsModalView)
             {
                 try
@@ -1143,89 +806,14 @@
         }
     }
 
-    [JSInvokable]
-    public void SetContentOverflow(bool isOverflowing)
+    /// <summary>
+    /// Disposes of managed resources asynchronously.
+    /// </summary>
+    public override async ValueTask DisposeAsync()
     {
-        shouldShowExpandButton = isOverflowing;
-        isTruncated = isOverflowing;
-        StateHasChanged();
-    }
-
-    private async Task ShowPostDetail()
-    {
-        if (OnShowPostDetail.HasDelegate)
-        {
-            await OnShowPostDetail.InvokeAsync();
-        }
-    }
-
-    private async Task OnCommentCountClick()
-    {
-        if (CommentCount == 0) return;
-
-        if (OnShowComments.HasDelegate)
-        {
-            await OnShowComments.InvokeAsync();
-        }
-    }
-
-    private async Task LoadCommentsAsync()
-    {
-        if (isLoadingComments) return;
-        isLoadingComments = true;
-
-        try
-        {
-            var allComments = await PostService.GetCommentsAsync(PostId);
-
-            // Select N newest, display oldest-first (per spec)
-            var topComments = allComments
-                .OrderByDescending(c => c.CreatedAt)
-                .Take(CommentsToShow)
-                .OrderBy(c => c.CreatedAt)
-                .ToList();
-
-            // Build comment display models with full nesting
-            internalComments = await BuildCommentModelsAsync(topComments);
-            internalDirectCommentCount = allComments.Count(c => c.ParentCommentId == null);
-
-            // Get total count including all nested replies
-            internalTotalCommentCount = await PostService.GetTotalCommentCountAsync(PostId);
-        }
-        catch (Exception)
-        {
-            // Silently fail - comments optional
-        }
-        finally
-        {
-            isLoadingComments = false;
-        }
-    }
-
-    private async Task<List<CommentDisplayModel>> BuildCommentModelsAsync(List<Comment> comments)
-    {
-        // Use batch loading to reduce database round trips
-        return await CommentHelpers.BuildCommentDisplayModelsAsync(
-            comments,
-            PostService,
-            UserPreferenceService,
-            CurrentUserId);
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        hideTimer?.Dispose();
-
-        if (module != null)
-        {
-            try
-            {
-                await module.InvokeVoidAsync("cleanupContentMeasurement");
-                await module.DisposeAsync();
-            }
-            catch { }
-        }
-
+        await base.DisposeAsync();
         dotNetHelper?.Dispose();
     }
+
+    #endregion
 }

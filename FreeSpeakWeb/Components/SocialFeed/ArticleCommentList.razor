@@ -1,0 +1,134 @@
+@using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Data
+@using Microsoft.Extensions.Localization
+
+@inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.FeedArticle> Localizer
+
+@* More Comments Indicator *@
+@if (!IsModalView && DirectCommentCount > 0 && Comments != null && DirectCommentCount > Comments.Count)
+{
+    <div class="more-comments-indicator">
+        <button type="button" class="more-comments-button" @onclick="OnViewMoreCommentsClick">
+            @Localizer["ViewMoreComments"]
+        </button>
+    </div>
+}
+
+@* Display Existing Comments *@
+@if (Comments != null && Comments.Any())
+{
+    <div class="article-comments">
+        @foreach (var comment in Comments)
+        {
+            <MultiLineCommentDisplay 
+                CommentId="@comment.CommentId"
+                UserName="@comment.UserName"
+                UserImageUrl="@comment.UserImageUrl"
+                CommentAuthorId="@comment.CommentAuthorId"
+                CommentText="@comment.CommentText"
+                ImageUrl="@comment.ImageUrl"
+                Timestamp="@comment.Timestamp"
+                Replies="@comment.Replies"
+                LikeCount="@comment.LikeCount"
+                UserReaction="@comment.UserReaction"
+                ReactionBreakdown="@comment.ReactionBreakdown"
+                CurrentUserId="@CurrentUserId"
+                CurrentUserImageUrl="@CurrentUserImageUrl"
+                CurrentUserName="@CurrentUserName"
+                Depth="0"
+                OnReactionChanged="@OnCommentReactionChanged"
+                OnRemoveReaction="@OnRemoveCommentReaction"
+                OnReplySubmitted="@OnReplySubmitted"
+                OnDeleteComment="@OnDeleteComment"
+                OnEditComment="@OnEditComment"
+                OnCommentUpdated="@OnCommentUpdated"
+                OnReportComment="@OnReportComment" />
+        }
+    </div>
+}
+
+@code {
+    /// <summary>
+    /// Gets or sets whether this is displayed in a modal view.
+    /// </summary>
+    [Parameter]
+    public bool IsModalView { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets the count of direct (non-reply) comments.
+    /// </summary>
+    [Parameter]
+    public int DirectCommentCount { get; set; } = 0;
+
+    /// <summary>
+    /// Gets or sets the list of comments to display.
+    /// </summary>
+    [Parameter]
+    public List<CommentDisplayModel>? Comments { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current user's ID.
+    /// </summary>
+    [Parameter]
+    public string? CurrentUserId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current user's profile image URL.
+    /// </summary>
+    [Parameter]
+    public string? CurrentUserImageUrl { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current user's display name.
+    /// </summary>
+    [Parameter]
+    public string? CurrentUserName { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when the "View More Comments" button is clicked.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnViewMoreCommentsClick { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when a comment reaction is changed.
+    /// </summary>
+    [Parameter]
+    public EventCallback<(int CommentId, LikeType ReactionType)> OnCommentReactionChanged { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when a comment reaction is removed.
+    /// </summary>
+    [Parameter]
+    public EventCallback<int> OnRemoveCommentReaction { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when a reply is submitted.
+    /// </summary>
+    [Parameter]
+    public EventCallback<(int ParentCommentId, string Content)> OnReplySubmitted { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when a comment is deleted.
+    /// </summary>
+    [Parameter]
+    public EventCallback<int> OnDeleteComment { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when a comment edit is requested.
+    /// </summary>
+    [Parameter]
+    public EventCallback<(int CommentId, string CurrentContent)> OnEditComment { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when a comment is updated.
+    /// </summary>
+    [Parameter]
+    public EventCallback<(int CommentId, string NewContent)> OnCommentUpdated { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when a comment is reported.
+    /// </summary>
+    [Parameter]
+    public EventCallback<int> OnReportComment { get; set; }
+}

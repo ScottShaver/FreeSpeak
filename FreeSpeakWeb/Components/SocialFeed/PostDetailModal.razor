@@ -32,7 +32,7 @@
                 CreatedAt="@CreatedAt"
                 ArticleContent="@ArticleContent"
                 LikeCount="@LikeCount"
-                CommentCount="@CommentCount"
+                CommentCount="@totalCommentCount"
                 ShareCount="@ShareCount"
                 DirectCommentCount="@directCommentCount"
                 Comments="@modalComments"
@@ -53,7 +53,7 @@
                 OnReplySubmitted="@HandleReplySubmitted"
                 OnCommentReactionChanged="@HandleCommentReactionChanged"
                 OnRemoveCommentReaction="@HandleRemoveCommentReaction"
-                OnDeleteComment="@OnDeleteComment"
+                OnDeleteComment="@HandleDeleteComment"
                 OnEditComment="@OnEditComment"
                 OnCommentUpdated="@OnCommentUpdated"
                 OnReportComment="@OnReportComment"
@@ -228,6 +228,7 @@
 
     private List<CommentDisplayModel> modalComments = new();
     private int directCommentCount = 0;
+    private int totalCommentCount = 0;
     private int currentCommentPage = 1;
     private const int commentPageSize = 20;
     private bool isLoadingComments = false;
@@ -241,8 +242,9 @@
     {
         if (firstRender)
         {
-            // Load direct comment count
+            // Load direct comment count and total comment count
             directCommentCount = await PostService.GetDirectCommentCountAsync(PostId);
+            totalCommentCount = await PostService.GetTotalCommentCountAsync(PostId);
 
             await LoadInitialComments();
 
@@ -348,6 +350,12 @@
         currentCommentPage = 1;
         hasMoreComments = true;
         await LoadInitialComments();
+
+        // Update comment counts
+        directCommentCount = await PostService.GetDirectCommentCountAsync(PostId);
+        totalCommentCount = await PostService.GetTotalCommentCountAsync(PostId);
+
+        StateHasChanged();
     }
 
     private async Task HandleCommentReactionChanged((int CommentId, LikeType ReactionType) data)
@@ -424,8 +432,9 @@
             hasMoreComments = true;
             await LoadInitialComments();
 
-            // Update direct comment count
+            // Update comment counts
             directCommentCount = await PostService.GetDirectCommentCountAsync(PostId);
+            totalCommentCount = await PostService.GetTotalCommentCountAsync(PostId);
 
             StateHasChanged();
         }
@@ -441,6 +450,30 @@
         {
             await HandleCommentAdded((PostId, commentText));
         }
+    }
+
+    /// <summary>
+    /// Handles when a comment is deleted, forwarding to parent and refreshing the local comment list.
+    /// </summary>
+    /// <param name="commentId">The ID of the deleted comment.</param>
+    private async Task HandleDeleteComment(int commentId)
+    {
+        // Invoke parent callback to handle database deletion
+        if (OnDeleteComment.HasDelegate)
+        {
+            await OnDeleteComment.InvokeAsync(commentId);
+        }
+
+        // Reload comments to reflect the deletion
+        currentCommentPage = 1;
+        hasMoreComments = true;
+        await LoadInitialComments();
+
+        // Update comment counts
+        directCommentCount = await PostService.GetDirectCommentCountAsync(PostId);
+        totalCommentCount = await PostService.GetTotalCommentCountAsync(PostId);
+
+        StateHasChanged();
     }
 
     public async ValueTask DisposeAsync()

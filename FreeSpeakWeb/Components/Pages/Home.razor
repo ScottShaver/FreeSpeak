@@ -1149,7 +1149,7 @@
 
     protected override async Task<int?> FindPostIdForCommentAsync(int commentId)
     {
-        // Search through postComments dictionary
+        // Search through postComments dictionary first (for comments loaded by parent)
         foreach (var kvp in postComments)
         {
             if (CommentHelpers.FindCommentById(kvp.Value, commentId) != null)
@@ -1157,7 +1157,11 @@
                 return kvp.Key;
             }
         }
-        return null;
+
+        // If not found locally, query the database
+        // This handles cases where comments are loaded internally by FeedArticle components
+        var comment = await PostService.GetCommentByIdAsync(commentId);
+        return comment?.PostId;
     }
 
     // Service bridge methods for comment management
@@ -1178,8 +1182,9 @@
     protected override async Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
         int commentId, string userId)
     {
-        // TODO: Implement comment reporting when report system is available
-        // For now, return success with a placeholder message
+        // TODO: Implement feed comment reporting similar to group comment reporting
+        // Need to create: FeedContentReport entity, FeedContentReportService, and integrate with ReportFeedContentModal
+        // For now, return success with a placeholder - the UI should show "Coming Soon" message
         await Task.CompletedTask;
         return (true, null);
     }

@@ -614,6 +614,8 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
 
     /// <summary>
     /// Handles when a user requests to report another user's comment.
+    /// TODO: Implement feed comment reporting similar to group comment reporting
+    /// Need to create: FeedContentReport entity, FeedContentReportService, and ReportFeedContentModal
     /// </summary>
     /// <param name="commentId">The ID of the comment to report</param>
     protected async Task HandleReportComment(int commentId)
@@ -622,16 +624,9 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
 
         try
         {
-            var result = await ReportCommentAsync(commentId, CurrentUserId);
-
-            if (result.Success)
-            {
-                // Report submitted successfully - no alert needed
-            }
-            else
-            {
-                AlertService.ShowError(result.ErrorMessage ?? "Failed to submit report.");
-            }
+            // TODO: Replace with actual report modal when implemented
+            // For now, show a "Coming Soon" message via AlertService
+            AlertService.ShowInfo("Report Comment - Coming Soon");
         }
         catch (Exception)
         {

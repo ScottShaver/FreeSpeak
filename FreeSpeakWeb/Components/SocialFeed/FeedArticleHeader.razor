@@ -42,7 +42,7 @@
                     <a href="@($"/group/{GroupId}")" class="group-name-link">@GroupName</a>
                     <span> &gt; </span>
                 }
-                @if (!string.IsNullOrEmpty(AuthorId))
+                @if (!string.IsNullOrEmpty(AuthorId) && !IsOwnAuthor)
                 {
                     <a href="@($"/friend/{AuthorId}")" class="author-name-link">@AuthorName</a>
                 }
@@ -203,6 +203,12 @@
     public string? AuthorId { get; set; }
 
     /// <summary>
+    /// The current logged-in user's ID, used to prevent linking to own profile.
+    /// </summary>
+    [Parameter]
+    public string? CurrentUserId { get; set; }
+
+    /// <summary>
     /// Controls whether the hover preview popup is enabled.
     /// </summary>
     [Parameter]
@@ -268,6 +274,11 @@
 
     [Parameter]
     public int? AuthorGroupPoints { get; set; }
+
+    /// <summary>
+    /// Gets whether the current user is the author of this post.
+    /// </summary>
+    private bool IsOwnAuthor => !string.IsNullOrEmpty(CurrentUserId) && !string.IsNullOrEmpty(AuthorId) && CurrentUserId == AuthorId;
 
     private string FormattedTimestamp => TimestampFormatter.FormatTimeAgo(CreatedAt);
     private string FullTimestamp => CreatedAt.ToLocalTime().ToString("MMMM d, yyyy 'at' h:mm:ss tt");
