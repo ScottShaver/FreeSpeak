@@ -1,25 +1,38 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.Friends
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.Extensions.Localization
+@using Microsoft.JSInterop
+
+@implements IDisposable
 
 @inject FriendsService FriendsService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Friends.FriendListItem> Localizer
 
-<div class="friend-list-item text-center">
+<div class="friend-list-item text-center" @ref="containerElement">
     @if (!string.IsNullOrEmpty(User.ProfilePictureUrl))
     {
         <img src="@User.ProfilePictureUrl" 
              alt="@GetDisplayName()" 
              class="rounded-circle mb-2 profile-image-clickable friend-profile-image" 
-             @onclick="ShowProfilePreview" />
+             id="@profileImageId"
+             @ref="profileImageElement"
+             @onclick="HandleProfileClick"
+             @onmouseenter="HandleMouseEnter"
+             @onmouseleave="HandleMouseLeave" />
     }
     else
     {
         <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-2 profile-image-clickable friend-profile-image" 
-             @onclick="ShowProfilePreview">
+             id="@profileImageId"
+             @ref="profileImageElement"
+             @onclick="HandleProfileClick"
+             @onmouseenter="HandleMouseEnter"
+             @onmouseleave="HandleMouseLeave">
             <span class="text-white friend-profile-initial">@GetInitials(GetDisplayName())</span>
         </div>
     }
@@ -283,75 +296,15 @@
     </div>
 }
 
-<!-- Profile Preview Modal -->
-@if (showProfilePreviewModal)
-{
-    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" @onclick="CloseProfilePreview">
-        <div class="modal-dialog modal-dialog-centered" @onclick:stopPropagation="true">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Profile Preview</h5>
-                    <button type="button" class="btn-close" @onclick="CloseProfilePreview"></button>
-                </div>
-                <div class="modal-body">
-                    @if (isLoadingProfilePreview)
-                    {
-                        <div class="text-center py-3">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="text-center">
-                            @if (!string.IsNullOrEmpty(User.ProfilePictureUrl))
-                            {
-                                <img src="@User.ProfilePictureUrl" 
-                                     alt="@GetDisplayName()" 
-                                     class="rounded-circle mb-3" 
-                                     style="width: 120px; height: 120px; object-fit: cover;" />
-                            }
-                            else
-                            {
-                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-3" 
-                                     style="width: 120px; height: 120px;">
-                                    <span class="text-white" style="font-size: 3rem;">@GetInitials(GetDisplayName())</span>
-                                </div>
-                            }
-
-                            <h4 class="mb-2">@GetDisplayName()</h4>
-
-                            @if (!string.IsNullOrEmpty(User.UserName))
-                            {
-                                <p class="text-muted mb-3">@@@User.UserName</p>
-                            }
-
-                            @if (!string.IsNullOrEmpty(User.City) && !string.IsNullOrEmpty(User.State))
-                            {
-                                <p class="mb-2">
-                                    <i class="bi bi-geo-alt-fill"></i> @User.City, @User.State
-                                </p>
-                            }
-
-                            <div class="border-top pt-3 mt-3">
-                                <div class="row">
-                                    <div class="col">
-                                        <h5 class="mb-0">@userFriendCount</h5>
-                                        <small class="text-muted">@(userFriendCount == 1 ? "Friend" : "Friends")</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @onclick="CloseProfilePreview">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+<!-- Profile Preview Popup (hover-triggered) -->
+<ProfilePreviewPopup 
+    User="@User"
+    IsVisible="@showProfilePreviewPopup"
+    MutualFriendsCount="@MutualFriendsCount"
+    PositionX="@popupPositionX"
+    PositionY="@popupPositionY"
+    OnMouseEnter="@HandlePopupMouseEnter"
+    OnMouseLeave="@HandlePopupMouseLeave" />
 
 @code {
     [Parameter, EditorRequired]
@@ -406,15 +359,32 @@
     [Parameter]
     public bool EnableProfileNavigation { get; set; } = false;
 
+    /// <summary>
+    /// Controls whether the hover preview popup is enabled.
+    /// When true, hovering over the profile image for 1 second shows a preview popup.
+    /// </summary>
+    [Parameter]
+    public bool EnableHoverPreview { get; set; } = true;
+
     private bool IsProcessing { get; set; }
     private string actionType = "";
     private bool showMutualFriendsModal = false;
     private bool isLoadingMutualFriends = false;
     private List<ApplicationUser> mutualFriends = new();
 
-    private bool showProfilePreviewModal = false;
-    private bool isLoadingProfilePreview = false;
-    private int userFriendCount = 0;
+    // Hover preview popup state
+    private bool showProfilePreviewPopup = false;
+    private double popupPositionX = 0;
+    private double popupPositionY = 0;
+    private System.Threading.Timer? hoverTimer;
+    private bool isMouseOverProfile = false;
+    private bool isMouseOverPopup = false;
+    private ElementReference containerElement;
+    private ElementReference profileImageElement;
+    private string profileImageId = $"profile-img-{Guid.NewGuid():N}";
+
+    // Hover delay in milliseconds (1 second)
+    private const int HoverDelayMs = 1000;
 
     private string GetDisplayName()
     {
@@ -494,11 +464,15 @@
     }
 
     /// <summary>
-    /// Handles the profile preview click. If EnableProfileNavigation is true,
-    /// navigates to the friend's profile page. Otherwise, shows the preview modal.
+    /// Handles the profile click. If EnableProfileNavigation is true,
+    /// navigates to the friend's profile page.
     /// </summary>
-    private async Task ShowProfilePreview()
+    private async Task HandleProfileClick()
     {
+        // Cancel any pending hover timer
+        CancelHoverTimer();
+        HidePopup();
+
         // If profile navigation is enabled, navigate to friend's page
         if (EnableProfileNavigation)
         {
@@ -512,33 +486,175 @@
                 // Navigate to friend's profile page
                 NavigationManager.NavigateTo($"/friend/{User.Id}");
             }
-            return;
-        }
-
-        // Otherwise, show the profile preview modal
-        showProfilePreviewModal = true;
-        isLoadingProfilePreview = true;
-        StateHasChanged();
-
-        try
-        {
-            userFriendCount = await FriendsService.GetFriendsCountAsync(User.Id);
-        }
-        catch (Exception)
-        {
-            userFriendCount = 0;
-        }
-        finally
-        {
-            isLoadingProfilePreview = false;
-            StateHasChanged();
         }
     }
 
-    private void CloseProfilePreview()
+    /// <summary>
+    /// Handles mouse entering the profile image area.
+    /// Starts a timer to show the popup after the hover delay.
+    /// </summary>
+    private async Task HandleMouseEnter()
     {
-        showProfilePreviewModal = false;
-        userFriendCount = 0;
+        if (!EnableHoverPreview) return;
+
+        isMouseOverProfile = true;
+
+        // Cancel any existing timer
+        CancelHoverTimer();
+
+        // Calculate popup position
+        await CalculatePopupPosition();
+
+        // Start a new timer to show popup after delay
+        hoverTimer = new System.Threading.Timer(
+            callback: _ => InvokeAsync(() =>
+            {
+                if (isMouseOverProfile)
+                {
+                    showProfilePreviewPopup = true;
+                    StateHasChanged();
+                }
+            }),
+            state: null,
+            dueTime: HoverDelayMs,
+            period: System.Threading.Timeout.Infinite
+        );
+    }
+
+    /// <summary>
+    /// Handles mouse leaving the profile image area.
+    /// Hides the popup after a short delay if mouse is not over the popup.
+    /// </summary>
+    private void HandleMouseLeave()
+    {
+        isMouseOverProfile = false;
+        CancelHoverTimer();
+
+        // Use a short delay to allow mouse to move to popup
+        hoverTimer = new System.Threading.Timer(
+            callback: _ => InvokeAsync(() =>
+            {
+                if (!isMouseOverProfile && !isMouseOverPopup)
+                {
+                    HidePopup();
+                }
+            }),
+            state: null,
+            dueTime: 150,
+            period: System.Threading.Timeout.Infinite
+        );
+    }
+
+    /// <summary>
+    /// Handles mouse entering the popup (keeps it visible).
+    /// </summary>
+    private void HandlePopupMouseEnter()
+    {
+        isMouseOverPopup = true;
+        CancelHoverTimer();
+    }
+
+    /// <summary>
+    /// Handles mouse leaving the popup.
+    /// </summary>
+    private void HandlePopupMouseLeave()
+    {
+        isMouseOverPopup = false;
+
+        // Use a short delay before hiding
+        hoverTimer = new System.Threading.Timer(
+            callback: _ => InvokeAsync(() =>
+            {
+                if (!isMouseOverProfile && !isMouseOverPopup)
+                {
+                    HidePopup();
+                }
+            }),
+            state: null,
+            dueTime: 150,
+            period: System.Threading.Timeout.Infinite
+        );
+    }
+
+    /// <summary>
+    /// Calculates the position for the popup based on the profile image location.
+    /// </summary>
+    private async Task CalculatePopupPosition()
+    {
+        try
+        {
+            var rect = await JSRuntime.InvokeAsync<BoundingClientRect>(
+                "eval",
+                $"(function() {{ var el = document.getElementById('{profileImageId}'); if (el) {{ var r = el.getBoundingClientRect(); return {{ left: r.left, top: r.top, width: r.width, height: r.height }}; }} return null; }})()"
+            );
+
+            if (rect != null)
+            {
+                // Position popup below the profile image, centered horizontally
+                popupPositionX = rect.Left + (rect.Width / 2) - 140; // 140 = half of min popup width (280)
+                popupPositionY = rect.Top + rect.Height + 10;
+
+                // Ensure popup doesn't go off-screen on the left
+                if (popupPositionX < 10) popupPositionX = 10;
+
+                // Check if popup would go off-screen on the right (assuming 280px min width)
+                var viewportWidth = await JSRuntime.InvokeAsync<double>("eval", "window.innerWidth");
+                if (popupPositionX + 280 > viewportWidth - 10)
+                {
+                    popupPositionX = viewportWidth - 290;
+                }
+
+                // Check if popup would go off-screen at the bottom (assuming ~200px height)
+                var viewportHeight = await JSRuntime.InvokeAsync<double>("eval", "window.innerHeight");
+                if (popupPositionY + 200 > viewportHeight - 10)
+                {
+                    // Position above the profile image instead
+                    popupPositionY = rect.Top - 210;
+                    if (popupPositionY < 10) popupPositionY = 10;
+                }
+            }
+            else
+            {
+                // Fallback position near cursor
+                popupPositionX = 100;
+                popupPositionY = 100;
+            }
+        }
+        catch
+        {
+            // Fallback position
+            popupPositionX = 100;
+            popupPositionY = 100;
+        }
+    }
+
+    /// <summary>
+    /// Cancels the hover timer if active.
+    /// </summary>
+    private void CancelHoverTimer()
+    {
+        hoverTimer?.Dispose();
+        hoverTimer = null;
+    }
+
+    /// <summary>
+    /// Hides the popup and resets state.
+    /// </summary>
+    private void HidePopup()
+    {
+        showProfilePreviewPopup = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Helper class for bounding client rect from JavaScript.
+    /// </summary>
+    private class BoundingClientRect
+    {
+        public double Left { get; set; }
+        public double Top { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
     }
 
     private async Task HandleAccept()
@@ -594,5 +710,13 @@
             await OnRemove.InvokeAsync(User);
             IsProcessing = false;
         }
+    }
+
+    /// <summary>
+    /// Disposes of resources, including the hover timer.
+    /// </summary>
+    public void Dispose()
+    {
+        CancelHoverTimer();
     }
 }

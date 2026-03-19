@@ -1,0 +1,238 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using Microsoft.JSInterop
+
+@inject FriendsService FriendsService
+@inject IJSRuntime JSRuntime
+
+@implements IAsyncDisposable
+
+@if (IsVisible)
+{
+    <div class="profile-preview-popup @(isLoading ? "loading" : "")" 
+         style="@GetPositionStyle()"
+         @onmouseenter="HandlePopupMouseEnter"
+         @onmouseleave="HandlePopupMouseLeave">
+        <div class="popup-arrow"></div>
+        <div class="popup-content">
+            @if (isLoading)
+            {
+                <div class="text-center py-3">
+                        <div class="spinner-border spinner-border-sm" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+            }
+            else if (User != null)
+            {
+                <div class="profile-header">
+                    @if (!string.IsNullOrEmpty(User.ProfilePictureUrl))
+                    {
+                        <img src="@User.ProfilePictureUrl" 
+                             alt="@GetDisplayName()" 
+                             class="profile-avatar" />
+                    }
+                    else
+                    {
+                        <div class="profile-avatar profile-avatar-placeholder">
+                            <span>@GetInitials(GetDisplayName())</span>
+                        </div>
+                    }
+                    <div class="profile-info">
+                        <h6 class="profile-name">@GetDisplayName()</h6>
+                        @if (!string.IsNullOrEmpty(User.UserName))
+                        {
+                            <small class="profile-username text-muted">@@@User.UserName</small>
+                        }
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(User.City) && !string.IsNullOrEmpty(User.State))
+                {
+                    <div class="profile-location">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <span>@User.City, @User.State</span>
+                    </div>
+                }
+
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">@friendCount</span>
+                        <span class="stat-label">@(friendCount == 1 ? "Friend" : "Friends")</span>
+                    </div>
+                    @if (MutualFriendsCount > 0)
+                    {
+                        <div class="stat-item">
+                            <span class="stat-value">@MutualFriendsCount</span>
+                            <span class="stat-label">@(MutualFriendsCount == 1 ? "Mutual" : "Mutual")</span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    /// <summary>
+    /// The user whose profile preview is being displayed.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public ApplicationUser? User { get; set; }
+
+    /// <summary>
+    /// Controls whether the popup is visible.
+    /// </summary>
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    /// <summary>
+    /// Event callback when visibility should change.
+    /// </summary>
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    /// <summary>
+    /// The number of mutual friends between the current user and this user.
+    /// </summary>
+    [Parameter]
+    public int MutualFriendsCount { get; set; }
+
+    /// <summary>
+    /// The X position (left) for the popup in pixels.
+    /// </summary>
+    [Parameter]
+    public double PositionX { get; set; }
+
+    /// <summary>
+    /// The Y position (top) for the popup in pixels.
+    /// </summary>
+    [Parameter]
+    public double PositionY { get; set; }
+
+    /// <summary>
+    /// Event callback when mouse enters the popup (to keep it visible).
+    /// </summary>
+    [Parameter]
+    public EventCallback OnMouseEnter { get; set; }
+
+    /// <summary>
+    /// Event callback when mouse leaves the popup.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnMouseLeave { get; set; }
+
+    private bool isLoading = true;
+    private int friendCount = 0;
+    private string? previousUserId = null;
+
+    /// <summary>
+    /// Called when parameters are set. Loads friend count if user changed.
+    /// </summary>
+    protected override async Task OnParametersSetAsync()
+    {
+        if (IsVisible && User != null && User.Id != previousUserId)
+        {
+            previousUserId = User.Id;
+            isLoading = true;
+            StateHasChanged();
+
+            try
+            {
+                friendCount = await FriendsService.GetFriendsCountAsync(User.Id);
+            }
+            catch
+            {
+                friendCount = 0;
+            }
+            finally
+            {
+                isLoading = false;
+                StateHasChanged();
+            }
+        }
+        else if (!IsVisible)
+        {
+            // Reset state when hidden
+            previousUserId = null;
+            isLoading = true;
+        }
+    }
+
+    /// <summary>
+    /// Gets the CSS position style for the popup.
+    /// </summary>
+    private string GetPositionStyle()
+    {
+        return $"left: {PositionX}px; top: {PositionY}px;";
+    }
+
+    /// <summary>
+    /// Gets the display name for the user.
+    /// </summary>
+    private string GetDisplayName()
+    {
+        if (User == null) return "Unknown";
+
+        if (!string.IsNullOrEmpty(User.FirstName) && !string.IsNullOrEmpty(User.LastName))
+        {
+            return $"{User.FirstName} {User.LastName}";
+        }
+        return User.UserName ?? "Unknown";
+    }
+
+    /// <summary>
+    /// Gets the initials for the user's display name.
+    /// </summary>
+    private string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "U";
+
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 0)
+            return "U";
+
+        if (parts.Length == 1)
+        {
+            var singleWord = parts[0];
+            if (singleWord.Length >= 2)
+                return singleWord[..2].ToUpper();
+            else
+                return singleWord[..1].ToUpper();
+        }
+
+        return $"{parts[0][..1]}{parts[^1][..1]}".ToUpper();
+    }
+
+    /// <summary>
+    /// Handles mouse entering the popup to keep it visible.
+    /// </summary>
+    private async Task HandlePopupMouseEnter()
+    {
+        if (OnMouseEnter.HasDelegate)
+        {
+            await OnMouseEnter.InvokeAsync();
+        }
+    }
+
+    /// <summary>
+    /// Handles mouse leaving the popup to trigger hide.
+    /// </summary>
+    private async Task HandlePopupMouseLeave()
+    {
+        if (OnMouseLeave.HasDelegate)
+        {
+            await OnMouseLeave.InvokeAsync();
+        }
+    }
+
+    /// <summary>
+    /// Disposes of any resources.
+    /// </summary>
+    public ValueTask DisposeAsync()
+    {
+        return ValueTask.CompletedTask;
+    }
+}

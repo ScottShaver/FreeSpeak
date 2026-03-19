@@ -5,14 +5,19 @@ A modern social media platform built with Blazor Server and .NET 10, featuring r
 ## Project Overview
 
 FreeSpeak is a feature-rich social networking application that enables users to:
-- Create and share posts with image support
+- Create and share posts with image support (configurable via `AllowPostAttachments`)
 - Engage with content through multiple reaction types (Like, Love, Care, Haha, Wow, Sad, Angry)
 - Participate in threaded conversations with nested comments (up to 4 levels deep)
 - Create and join groups with dedicated posting and moderation
 - View detailed analytics for posts and interactions
 - Manage their profile with custom avatars
-- Receive real-time notifications for social interactions
-- Add friends and manage friend connections
+- Receive real-time **translated notifications** for social interactions
+- Add friends and manage friend connections via dedicated **Friends pages**
+- View individual **friend profile pages** with detailed information
+- **Quick navigation** via Jump to Group and Jump to Friend features
+- **Profile preview popups** on hover (1-second delay)
+- **Group creation and management** with rules and point systems
+- **System administration and moderation** tools
 
 ## 🌍 Internationalization Support
 
@@ -53,6 +58,7 @@ The application uses several custom settings in `appsettings.json` to control be
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `SiteName` | string | `"FreeSpeak"` | The display name of the site, used in titles and branding throughout the application |
+| `AllowPostAttachments` | bool | `true` | Controls whether users can attach images to posts. When `false`, the image upload UI is hidden and image uploads are blocked server-side |
 
 #### Comment System Limits
 
@@ -80,6 +86,7 @@ The application uses several custom settings in `appsettings.json` to control be
 ```json
 {
   "SiteName": "FreeSpeak",
+  "AllowPostAttachments": true,
   "MaxFeedPostCommentDepth": 4,
   "MaxFeedPostDirectCommentCount": 30,
   "ConnectionStrings": {
@@ -227,9 +234,9 @@ FreeSpeak/
 
 ## Key Features
 
-### Notification System
+### Notification System with Translation Templates
 
-The application includes a comprehensive notification system that keeps users informed of social interactions:
+The application includes a comprehensive notification system with **multi-language support** via the `NotificationTemplateService`:
 
 **Notification Types:**
 - **Post Reactions**: Notified when someone reacts to your post (shows actual reaction emoji: 👍 ❤️ 😂 😮 😢 😠)
@@ -240,6 +247,8 @@ The application includes a comprehensive notification system that keeps users in
 - **Friend Accepted**: Notified when someone accepts your friend request
 
 **Features:**
+- **Translated notifications** in all 12 supported languages
+- **Template-based system** for consistent notification generation
 - Visual notification center with unread indicators
 - User avatars with notification type badges
 - Click notification to view related post in modal
@@ -247,6 +256,135 @@ The application includes a comprehensive notification system that keeps users in
 - Mark all as read / Clear read notifications
 - Relative time display (5m ago, 2h ago, etc.)
 - Smart notifications (doesn't notify for your own interactions)
+
+**Technical Implementation:**
+- `NotificationTemplateService` loads localized templates from resource files
+- Supports placeholder replacement for dynamic content (usernames, etc.)
+- All notifications use the translation system for consistency
+- See [docs/LOCALIZATION.md](docs/LOCALIZATION.md) for details
+
+### Profile Preview on Hover
+
+**Interactive profile previews** appear when hovering over user avatars:
+
+**Features:**
+- **1-second hover delay** before popup appears
+- Displays: profile picture, name, username, location, friend count, mutual friends
+- **Smart positioning**: automatically positions below/above avatar to stay in viewport
+- Works on: Friends page, feed posts, comments (all user avatars)
+- Popup stays visible when mouse moves to it
+- Smooth fade-in/out animations
+
+**Technical Implementation:**
+- `ProfilePreviewPopup` reusable component
+- Uses unique element IDs for accurate positioning
+- JavaScript interop for getBoundingClientRect()
+- Viewport boundary detection prevents off-screen rendering
+- Timer-based hover detection with cleanup via IDisposable
+
+### Friend System
+
+**Comprehensive friend management** with dedicated pages:
+
+**Features:**
+- **Friends List page** with multiple tabs:
+  - Your Friends (with remove option)
+  - People You May Know (suggestions with mutual friend count)
+  - Friend Requests (accept/decline incoming requests)
+  - Sent Requests (cancel pending requests)
+  - Find People (search for users)
+- **Individual friend profile pages** (`/friend/{userId}`)
+  - View friend's posts, groups, and activity
+  - Profile information and statistics
+  - Send messages or interact with their content
+- **Profile preview on hover** for quick information
+- Friend-only post visibility
+- Mutual friends modal display
+
+**Navigation:**
+- **Jump to Friend** feature for quick navigation between friend profiles
+- Search and filter capabilities
+- Responsive grid layout (mobile, tablet, desktop)
+
+### Groups System with Points & Rules
+
+Create and participate in topic-based communities with gamification:
+
+**Group Features:**
+- **Create groups** with name, description, and privacy settings
+- **Group rules system**: administrators can define rules users must agree to before joining
+- **Point system**: members earn points for participation (posts, comments, likes)
+  - Points tracked per user per group
+  - Member level badges based on points
+  - Points displayed on profiles within group context
+- Group-specific post feeds
+- Member management (join, leave, invite)
+- Role-based permissions (Admin, Moderator, Member)
+- Group post pinning and bookmarking
+- Notification muting per post
+
+**Moderation Tools:**
+- Ban/unban members
+- Delete posts and comments
+- Moderator role assignment
+- Content reporting system
+- Rule enforcement
+
+**Navigation:**
+- **Jump to Group** feature for quick navigation between groups
+- Group directory and discovery
+
+**Technical Implementation:**
+- Separate entity model (GroupPost, GroupPostComment, GroupPostLike)
+- `GroupRule` entity for storing group rules
+- `GroupUser.Points` tracks member participation
+- `GroupPointsService` calculates points and levels
+- Cascade delete for data integrity
+- Cached counts for performance
+- See [docs/GROUP_POST_SYSTEM.md](docs/GROUP_POST_SYSTEM.md) for schema details
+
+### System Administration & Moderation
+
+**Administrative controls** for site management:
+
+**System Administrator Features:**
+- Access via **System Admin menu** (requires admin role)
+- User management (view all users, roles, activity)
+- Site-wide content moderation
+- Audit log viewing
+- System statistics and health monitoring
+- Database management tools
+
+**System Moderator Features:**
+- Access via **System Moderator menu** (requires moderator role)
+- Content moderation across all groups and posts
+- User reports review and action
+- Ban/warn users site-wide
+- Comment and post removal
+- Audit trail for all moderation actions
+
+**Technical Implementation:**
+- Role-based authorization (Admin, Moderator roles)
+- Audit logging for all administrative actions
+- Separate UI components for admin/moderator functions
+- See [docs/AUDIT_LOGGING_SYSTEM.md](docs/AUDIT_LOGGING_SYSTEM.md) for details
+
+### Translation Maintenance Tools
+
+**Developer tools** for managing translations:
+
+**ValidateTranslations.ps1 PowerShell Script:**
+- Scans all resource files to find missing translations
+- Generates report of untranslated keys per language
+- Identifies unused resource keys
+- Helps maintain 100% translation coverage
+- See [VALIDATION_SCRIPT_GUIDE.md](VALIDATION_SCRIPT_GUIDE.md) for usage
+
+**Features:**
+- Automatic detection of missing translations
+- Language coverage statistics
+- CSV export of missing translations
+- Integration with CI/CD pipelines
 
 ### Social Interactions
 
@@ -263,39 +401,11 @@ The application includes a comprehensive notification system that keeps users in
 - Rich text support with line breaks
 - Auto-scroll to highlighted comments from notifications
 
-**Friend System:**
-- Send and accept friend requests
-- Friend-only post visibility
-- Friends list management
-
-### Groups System
-
-Create and participate in topic-based communities:
-
-**Group Features:**
-- Create public or private groups
-- Group-specific post feeds
-- Member management (join, leave, invite)
-- Role-based permissions (Admin, Moderator, Member)
-- Group post pinning and bookmarking
-- Notification muting per post
-
-**Moderation Tools:**
-- Ban/unban members
-- Delete posts and comments
-- Moderator role assignment
-
-**Technical Implementation:**
-- Separate entity model (GroupPost, GroupPostComment, GroupPostLike)
-- Cascade delete for data integrity
-- Cached counts for performance
-- See [docs/GROUP_POST_SYSTEM.md](docs/GROUP_POST_SYSTEM.md) for schema details
-
 ### Image & Media
 
 **Upload Features:**
 - Drag-and-drop image upload
-- Multiple image support per post
+- Multiple image support per post (controlled by `AllowPostAttachments` setting)
 - Image gallery view
 - Profile picture management
 - My Uploads page (images and videos)
@@ -305,6 +415,9 @@ Create and participate in topic-based communities:
 - Image resizing service
 - Cached thumbnails for better performance
 - Secure file serving via API controller
+
+**Configuration:**
+- Set `AllowPostAttachments` to `false` in appsettings.json to disable post attachments site-wide
 
 ### Security
 
