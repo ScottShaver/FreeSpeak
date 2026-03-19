@@ -11,16 +11,10 @@
 
 <div class="post-creator">
     <div class="post-creator-header">
-        @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
-        {
-            <img src="@CurrentUserImageUrl" alt="You" class="post-creator-avatar" />
-        }
-        else
-        {
-            <div class="post-creator-avatar post-avatar-placeholder">
-                <span class="post-avatar-initial">@GetInitials(CurrentUserName ?? "User")</span>
-            </div>
-        }
+        <UserAvatar ImageUrl="@CurrentUserImageUrl" 
+                    Name="@(CurrentUserName ?? "User")" 
+                    Size="md"
+                    CssClass="post-creator-avatar" />
 
         <div class="textarea-container">
             <button type="button" class="emoji-button-inline" @onclick="ToggleEmojiPicker" @onmousedown:preventDefault="true" @ref="emojiButtonElement" title="@Localizer["AddEmoji"]">
@@ -514,28 +508,6 @@
     {
         showAudienceMenu = false;
         StateHasChanged();
-    }
-
-    private string GetInitials(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-            return "U";
-
-        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-        if (parts.Length == 0)
-            return "U";
-
-        if (parts.Length == 1)
-        {
-            var singleWord = parts[0];
-            if (singleWord.Length >= 2)
-                return singleWord.Substring(0, 2).ToUpper();
-            else
-                return singleWord.Substring(0, 1).ToUpper();
-        }
-
-        return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
     }
 
     public async ValueTask DisposeAsync()

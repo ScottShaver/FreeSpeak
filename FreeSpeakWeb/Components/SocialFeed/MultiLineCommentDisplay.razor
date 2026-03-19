@@ -63,20 +63,12 @@
                 </div>
                 @if (!string.IsNullOrEmpty(CurrentUserId))
                 {
-                    <div class="comment-menu-container" style="position: relative;">
-                        <button type="button" 
-                                class="comment-menu-button" 
-                                @onclick="ToggleCommentMenu"
-                                title="@Localizer["MoreOptions"]">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                            </svg>
-                        </button>
-                        <PopupMenu IsVisible="@showCommentMenu" 
-                                   MenuItems="@commentMenuItems" 
-                                   OnClose="@CloseCommentMenu"
-                                   PositionStyle="position: absolute; top: 100%; right: 0;" />
-                    </div>
+                    <MenuContainer 
+                        MenuItems="@commentMenuItems"
+                        IsVisible="@showCommentMenu"
+                        IsVisibleChanged="@HandleMenuVisibilityChanged"
+                        Tooltip="@Localizer["MoreOptions"]"
+                        Size="sm" />
                 }
             </div>
         }
@@ -349,6 +341,19 @@
 
     // Can save edit if the text is not empty, not just whitespace, and different from original
     private bool CanSaveEdit => !string.IsNullOrWhiteSpace(editedCommentText) && editedCommentText.Trim() != CommentText.Trim();
+
+    /// <summary>
+    /// Handles menu visibility changes and builds menu items when menu becomes visible.
+    /// </summary>
+    private void HandleMenuVisibilityChanged(bool visible)
+    {
+        showCommentMenu = visible;
+        if (visible)
+        {
+            BuildCommentMenuItems();
+        }
+        StateHasChanged();
+    }
 
     /// <summary>
     /// Toggles the comment menu visibility and builds the menu items based on ownership.

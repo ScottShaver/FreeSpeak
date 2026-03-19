@@ -1,6 +1,7 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.Friends
+@using FreeSpeakWeb.Components.Shared
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.Extensions.Localization
 @using Microsoft.JSInterop
@@ -51,57 +52,65 @@
     <div class="d-flex flex-column gap-1 gap-md-2">
         @if (ShowAccept)
         {
-            <button class="btn btn-success btn-sm btn-md-md friend-action-btn" @onclick="HandleAccept" disabled="@IsProcessing">
-                @if (IsProcessing && actionType == "accept")
-                {
-                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                }
-                @Localizer["Accept"]
-            </button>
+            <ActionButton Text="@Localizer["Accept"]"
+                          Variant="success"
+                          Size="sm"
+                          IsLoading="@(IsProcessing && actionType == "accept")"
+                          Disabled="@IsProcessing"
+                          OnClick="@HandleAccept"
+                          CssClass="friend-action-btn"
+                          FullWidth="true" />
         }
 
         @if (ShowReject)
         {
-            <button class="btn btn-outline-danger btn-sm btn-md-md friend-action-btn" @onclick="HandleReject" disabled="@IsProcessing">
-                @if (IsProcessing && actionType == "reject")
-                {
-                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                }
-                @Localizer["Decline"]
-            </button>
+            <ActionButton Text="@Localizer["Decline"]"
+                          Variant="danger"
+                          Outline="true"
+                          Size="sm"
+                          IsLoading="@(IsProcessing && actionType == "reject")"
+                          Disabled="@IsProcessing"
+                          OnClick="@HandleReject"
+                          CssClass="friend-action-btn"
+                          FullWidth="true" />
         }
 
         @if (ShowAddFriend)
         {
-            <button class="btn btn-primary btn-sm btn-md-md friend-action-btn" @onclick="HandleAddFriend" disabled="@IsProcessing">
-                @if (IsProcessing && actionType == "add")
-                {
-                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                }
-                @Localizer["AddFriend"]
-            </button>
+            <ActionButton Text="@Localizer["AddFriend"]"
+                          Variant="primary"
+                          Size="sm"
+                          IsLoading="@(IsProcessing && actionType == "add")"
+                          Disabled="@IsProcessing"
+                          OnClick="@HandleAddFriend"
+                          CssClass="friend-action-btn"
+                          FullWidth="true" />
         }
 
         @if (ShowCancel)
         {
-            <button class="btn btn-outline-warning btn-sm btn-md-md friend-action-btn" @onclick="HandleCancel" disabled="@IsProcessing">
-                @if (IsProcessing && actionType == "cancel")
-                {
-                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                }
-                @Localizer["CancelRequest"]
-            </button>
+            <ActionButton Text="@Localizer["CancelRequest"]"
+                          Variant="warning"
+                          Outline="true"
+                          Size="sm"
+                          IsLoading="@(IsProcessing && actionType == "cancel")"
+                          Disabled="@IsProcessing"
+                          OnClick="@HandleCancel"
+                          CssClass="friend-action-btn"
+                          FullWidth="true" />
         }
 
         @if (ShowRemove)
         {
-            <button class="btn btn-outline-secondary btn-sm btn-md-md friend-action-btn" @onclick="HandleRemove" disabled="@IsProcessing">
-                @if (IsProcessing && actionType == "remove")
-                {
-                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                }
-                @Localizer["Remove"]
-            </button>
+            <ActionButton Text="@Localizer["Remove"]"
+                          Variant="secondary"
+                          Outline="true"
+                          Size="sm"
+                          IsLoading="@(IsProcessing && actionType == "remove")"
+                          Disabled="@IsProcessing"
+                          OnClick="@HandleRemove"
+                          CssClass="friend-action-btn"
+                          FullWidth="true" />
         }
     </div>
 </div>
@@ -236,65 +245,47 @@
 </style>
 
 <!-- Mutual Friends Modal -->
-@if (showMutualFriendsModal)
-{
-    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" @onclick="CloseMutualFriends">
-        <div class="modal-dialog modal-dialog-scrollable" @onclick:stopPropagation="true">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Mutual Friends with @GetDisplayName()</h5>
-                    <button type="button" class="btn-close" @onclick="CloseMutualFriends"></button>
-                </div>
-                <div class="modal-body">
-                    @if (isLoadingMutualFriends)
-                    {
-                        <div class="text-center py-3">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
+<BaseModal IsVisible="@showMutualFriendsModal" 
+           Title="@MutualFriendsModalTitle" 
+           OnClose="@CloseMutualFriends"
+           Size="md"
+           Scrollable="true">
+    <ChildContent>
+        @if (isLoadingMutualFriends)
+        {
+            <LoadingSpinner Size="md" />
+        }
+        else if (mutualFriends.Count == 0)
+        {
+            <EmptyState Message="No mutual friends found." Icon="bi-people" />
+        }
+        else
+        {
+            <div class="list-group">
+                @foreach (var friend in mutualFriends)
+                {
+                    <div class="list-group-item">
+                        <div class="d-flex align-items-center gap-3">
+                            <UserAvatar ImageUrl="@friend.ProfilePictureUrl" 
+                                        Name="@GetFriendDisplayName(friend)" 
+                                        Size="md" />
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">@GetFriendDisplayName(friend)</h6>
+                                @if (!string.IsNullOrEmpty(friend.City) && !string.IsNullOrEmpty(friend.State))
+                                {
+                                    <small class="text-muted">@friend.City, @friend.State</small>
+                                }
                             </div>
                         </div>
-                    }
-                    else if (mutualFriends.Count == 0)
-                    {
-                        <p class="text-muted text-center">No mutual friends found.</p>
-                    }
-                    else
-                    {
-                        <div class="list-group">
-                            @foreach (var friend in mutualFriends)
-                            {
-                                <div class="list-group-item">
-                                    <div class="d-flex align-items-center gap-3">
-                                        @if (!string.IsNullOrEmpty(friend.ProfilePictureUrl))
-                                        {
-                                            <img src="@friend.ProfilePictureUrl" alt="@GetFriendDisplayName(friend)" class="rounded-circle" style="width: 48px; height: 48px; object-fit: cover;" />
-                                        }
-                                        else
-                                        {
-                                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                                                <span class="text-white">@GetFriendDisplayName(friend).Substring(0, 1).ToUpper()</span>
-                                            </div>
-                                        }
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-0">@GetFriendDisplayName(friend)</h6>
-                                            @if (!string.IsNullOrEmpty(friend.City) && !string.IsNullOrEmpty(friend.State))
-                                            {
-                                                <small class="text-muted">@friend.City, @friend.State</small>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    }
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @onclick="CloseMutualFriends">Close</button>
-                </div>
+                    </div>
+                }
             </div>
-        </div>
-    </div>
-}
+        }
+    </ChildContent>
+    <FooterContent>
+        <button type="button" class="btn btn-secondary" @onclick="CloseMutualFriends">Close</button>
+    </FooterContent>
+</BaseModal>
 
 <!-- Profile Preview Popup (hover-triggered) -->
 <ProfilePreviewPopup 
@@ -385,6 +376,8 @@
 
     // Hover delay in milliseconds (1 second)
     private const int HoverDelayMs = 1000;
+
+    private string MutualFriendsModalTitle => $"Mutual Friends with {GetDisplayName()}";
 
     private string GetDisplayName()
     {

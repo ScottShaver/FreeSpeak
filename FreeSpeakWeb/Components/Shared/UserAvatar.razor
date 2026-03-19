@@ -1,0 +1,119 @@
+@code {
+    /// <summary>
+    /// The URL of the user's profile picture. If null/empty, shows initials.
+    /// </summary>
+    [Parameter]
+    public string? ImageUrl { get; set; }
+
+    /// <summary>
+    /// The display name used to generate initials when no image is available.
+    /// </summary>
+    [Parameter]
+    public string Name { get; set; } = "Unknown";
+
+    /// <summary>
+    /// Alt text for the image. Defaults to Name if not specified.
+    /// </summary>
+    [Parameter]
+    public string? AltText { get; set; }
+
+    /// <summary>
+    /// Size of the avatar: "xs" (24px), "sm" (32px), "md" (48px), "lg" (64px), "xl" (96px), "xxl" (120px).
+    /// </summary>
+    [Parameter]
+    public string Size { get; set; } = "md";
+
+    /// <summary>
+    /// Additional CSS classes to apply to the avatar container.
+    /// </summary>
+    [Parameter]
+    public string CssClass { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Whether the avatar should be clickable.
+    /// </summary>
+    [Parameter]
+    public bool Clickable { get; set; } = false;
+
+    /// <summary>
+    /// Event callback when avatar is clicked (only if Clickable is true).
+    /// </summary>
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    /// <summary>
+    /// Optional element ID for the avatar.
+    /// </summary>
+    [Parameter]
+    public string? Id { get; set; }
+
+    /// <summary>
+    /// Captures additional attributes to pass through to the element.
+    /// </summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string SizeClass => Size switch
+    {
+        "xs" => "avatar-xs",
+        "sm" => "avatar-sm",
+        "md" => "avatar-md",
+        "lg" => "avatar-lg",
+        "xl" => "avatar-xl",
+        "xxl" => "avatar-xxl",
+        _ => "avatar-md"
+    };
+
+    private string ComputedAltText => AltText ?? Name;
+
+    /// <summary>
+    /// Gets the initials from a name for the avatar placeholder.
+    /// </summary>
+    private string GetInitials()
+    {
+        if (string.IsNullOrWhiteSpace(Name))
+            return "U";
+
+        var parts = Name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 0)
+            return "U";
+
+        if (parts.Length == 1)
+        {
+            var singleWord = parts[0];
+            return singleWord.Length >= 2 
+                ? singleWord[..2].ToUpper() 
+                : singleWord[..1].ToUpper();
+        }
+
+        return $"{parts[0][..1]}{parts[^1][..1]}".ToUpper();
+    }
+
+    private async Task HandleClick()
+    {
+        if (Clickable && OnClick.HasDelegate)
+        {
+            await OnClick.InvokeAsync();
+        }
+    }
+}
+
+@if (!string.IsNullOrEmpty(ImageUrl))
+{
+    <img src="@ImageUrl" 
+         alt="@ComputedAltText" 
+         id="@Id"
+         class="user-avatar @SizeClass @CssClass @(Clickable ? "clickable" : "")"
+         @onclick="HandleClick"
+         @attributes="AdditionalAttributes" />
+}
+else
+{
+    <div class="user-avatar user-avatar-placeholder @SizeClass @CssClass @(Clickable ? "clickable" : "")"
+         id="@Id"
+         @onclick="HandleClick"
+         @attributes="AdditionalAttributes">
+        <span class="avatar-initials">@GetInitials()</span>
+    </div>
+}

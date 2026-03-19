@@ -1,5 +1,6 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.Shared
 @using Microsoft.JSInterop
 
 @inject FriendsService FriendsService
@@ -56,16 +57,14 @@
                 }
 
                 <div class="profile-stats">
-                    <div class="stat-item">
-                        <span class="stat-value">@friendCount</span>
-                        <span class="stat-label">@(friendCount == 1 ? "Friend" : "Friends")</span>
-                    </div>
+                    <StatItem Value="@friendCount" 
+                              Label="@(friendCount == 1 ? "Friend" : "Friends")" 
+                              Size="sm" />
                     @if (MutualFriendsCount > 0)
                     {
-                        <div class="stat-item">
-                            <span class="stat-value">@MutualFriendsCount</span>
-                            <span class="stat-label">@(MutualFriendsCount == 1 ? "Mutual" : "Mutual")</span>
-                        </div>
+                        <StatItem Value="@MutualFriendsCount" 
+                                  Label="Mutual" 
+                                  Size="sm" />
                     }
                 </div>
             }

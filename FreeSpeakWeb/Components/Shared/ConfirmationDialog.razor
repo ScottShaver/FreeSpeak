@@ -1,0 +1,176 @@
+@using FreeSpeakWeb.Components.Shared
+
+<BaseModal IsVisible="@IsVisible"
+           Title="@Title"
+           OnClose="@HandleCancel"
+           ShowHeader="true"
+           ShowCloseButton="false"
+           CloseOnBackdropClick="@CloseOnBackdropClick"
+           CloseOnEscape="@CloseOnEscape"
+           Size="sm">
+    <ChildContent>
+        @if (BodyContent != null)
+        {
+            @BodyContent
+        }
+        else
+        {
+            <p class="confirmation-message">@Message</p>
+        }
+    </ChildContent>
+    <FooterContent>
+        <button type="button" 
+                class="btn @CancelButtonClass" 
+                @onclick="HandleCancel"
+                disabled="@IsProcessing">
+            @CancelText
+        </button>
+        <button type="button" 
+                class="btn @ConfirmButtonClass" 
+                @onclick="HandleConfirm"
+                disabled="@IsProcessing">
+            @if (IsProcessing)
+            {
+                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+            }
+            @ConfirmText
+        </button>
+    </FooterContent>
+</BaseModal>
+
+@code {
+    /// <summary>
+    /// Controls whether the dialog is visible.
+    /// </summary>
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    /// <summary>
+    /// The title displayed in the dialog header.
+    /// </summary>
+    [Parameter]
+    public string Title { get; set; } = "Confirm";
+
+    /// <summary>
+    /// The message displayed in the dialog body. Ignored if BodyContent is provided.
+    /// </summary>
+    [Parameter]
+    public string Message { get; set; } = "Are you sure you want to proceed?";
+
+    /// <summary>
+    /// Optional custom body content. If provided, overrides the Message parameter.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? BodyContent { get; set; }
+
+    /// <summary>
+    /// Text for the confirm button.
+    /// </summary>
+    [Parameter]
+    public string ConfirmText { get; set; } = "Confirm";
+
+    /// <summary>
+    /// Text for the cancel button.
+    /// </summary>
+    [Parameter]
+    public string CancelText { get; set; } = "Cancel";
+
+    /// <summary>
+    /// CSS class for the confirm button. Defaults to danger style.
+    /// </summary>
+    [Parameter]
+    public string ConfirmButtonClass { get; set; } = "btn-danger";
+
+    /// <summary>
+    /// CSS class for the cancel button.
+    /// </summary>
+    [Parameter]
+    public string CancelButtonClass { get; set; } = "btn-secondary";
+
+    /// <summary>
+    /// Event callback invoked when the user confirms the action.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnConfirm { get; set; }
+
+    /// <summary>
+    /// Event callback invoked when the user cancels or closes the dialog.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    /// <summary>
+    /// Controls whether the dialog closes when clicking the backdrop.
+    /// </summary>
+    [Parameter]
+    public bool CloseOnBackdropClick { get; set; } = true;
+
+    /// <summary>
+    /// Controls whether the dialog closes when pressing Escape.
+    /// </summary>
+    [Parameter]
+    public bool CloseOnEscape { get; set; } = true;
+
+    /// <summary>
+    /// Controls whether the confirm button shows a loading spinner.
+    /// </summary>
+    [Parameter]
+    public bool IsProcessing { get; set; }
+
+    /// <summary>
+    /// The type of confirmation dialog (affects styling).
+    /// </summary>
+    [Parameter]
+    public ConfirmationType Type { get; set; } = ConfirmationType.Danger;
+
+    protected override void OnParametersSet()
+    {
+        // Auto-set button class based on type if not explicitly overridden
+        if (ConfirmButtonClass == "btn-danger")
+        {
+            ConfirmButtonClass = Type switch
+            {
+                ConfirmationType.Danger => "btn-danger",
+                ConfirmationType.Warning => "btn-warning",
+                ConfirmationType.Info => "btn-info",
+                ConfirmationType.Success => "btn-success",
+                ConfirmationType.Primary => "btn-primary",
+                _ => "btn-danger"
+            };
+        }
+    }
+
+    /// <summary>
+    /// Handles the confirm button click.
+    /// </summary>
+    private async Task HandleConfirm()
+    {
+        if (OnConfirm.HasDelegate)
+        {
+            await OnConfirm.InvokeAsync();
+        }
+    }
+
+    /// <summary>
+    /// Handles the cancel button click or dialog close.
+    /// </summary>
+    private async Task HandleCancel()
+    {
+        if (OnCancel.HasDelegate)
+        {
+            await OnCancel.InvokeAsync();
+        }
+    }
+
+    /// <summary>
+    /// Defines the type of confirmation dialog.
+    /// </summary>
+    public enum ConfirmationType
+    {
+        Danger,
+        Warning,
+        Info,
+        Success,
+        Primary
+    }
+}

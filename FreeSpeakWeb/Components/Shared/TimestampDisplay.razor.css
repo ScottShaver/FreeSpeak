@@ -1,0 +1,4 @@
+.timestamp {
+    color: var(--text-secondary, #6c757d);
+    font-size: 0.875rem;
+}

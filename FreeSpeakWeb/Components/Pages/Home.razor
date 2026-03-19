@@ -69,15 +69,11 @@
                     <div class="feed-section">
                         @if (isLoading && !posts.Any())
                         {
-                            <div class="loading-indicator">
-                                <p>@Localizer["LoadingFeed"]</p>
-                            </div>
+                            <LoadingSpinner Text="@Localizer["LoadingFeed"]" Size="lg" />
                         }
                         else if (!posts.Any() && !isLoading)
                         {
-                            <div class="empty-feed">
-                                <p>@Localizer["EmptyFeed"]</p>
-                            </div>
+                            <EmptyState Message="@Localizer["EmptyFeed"]" Icon="bi-newspaper" />
                         }
                         else
                         {
@@ -135,16 +131,12 @@
 
                             @if (isLoadingMore)
                             {
-                                <div class="loading-more">
-                                    <p>@Localizer["LoadingMore"]</p>
-                                </div>
+                                <LoadingSpinner Text="@Localizer["LoadingMore"]" Size="sm" />
                             }
 
                             @if (hasMorePosts == false && posts.Any())
                             {
-                                <div class="no-more-posts">
-                                    <p>@Localizer["NoMorePosts"]</p>
-                                </div>
+                                <EmptyState Message="@Localizer["NoMorePosts"]" CssClass="no-more-posts" />
                             }
                         }
                     </div>

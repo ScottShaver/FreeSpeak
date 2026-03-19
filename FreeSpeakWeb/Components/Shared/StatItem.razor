@@ -1,0 +1,89 @@
+@code {
+    /// <summary>
+    /// The label text displayed above/below the value.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The value to display. Supports int, string, or any object (uses ToString()).
+    /// </summary>
+    [Parameter, EditorRequired]
+    public object? Value { get; set; }
+
+    /// <summary>
+    /// Optional icon class (Bootstrap Icons). Example: "bi-people", "bi-file-post".
+    /// </summary>
+    [Parameter]
+    public string? Icon { get; set; }
+
+    /// <summary>
+    /// Layout direction: "vertical" (default) or "horizontal".
+    /// </summary>
+    [Parameter]
+    public string Layout { get; set; } = "vertical";
+
+    /// <summary>
+    /// Whether to format numeric values with thousands separators.
+    /// </summary>
+    [Parameter]
+    public bool FormatNumber { get; set; } = true;
+
+    /// <summary>
+    /// Additional CSS classes for the container.
+    /// </summary>
+    [Parameter]
+    public string CssClass { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Size variant: "sm", "md" (default), "lg".
+    /// </summary>
+    [Parameter]
+    public string Size { get; set; } = "md";
+
+    private string FormattedValue
+    {
+        get
+        {
+            if (Value == null) return "0";
+
+            if (FormatNumber && Value is int intVal)
+                return intVal.ToString("N0");
+            if (FormatNumber && Value is long longVal)
+                return longVal.ToString("N0");
+            if (FormatNumber && Value is double doubleVal)
+                return doubleVal.ToString("N0");
+
+            return Value.ToString() ?? "0";
+        }
+    }
+
+    private string LayoutClass => Layout == "horizontal" ? "stat-item-horizontal" : "stat-item-vertical";
+    private string SizeClass => Size switch
+    {
+        "sm" => "stat-item-sm",
+        "lg" => "stat-item-lg",
+        _ => "stat-item-md"
+    };
+}
+
+<div class="stat-item @LayoutClass @SizeClass @CssClass">
+    @if (!string.IsNullOrEmpty(Icon))
+    {
+        <div class="stat-icon">
+            <i class="bi @Icon"></i>
+        </div>
+    }
+    <div class="stat-content">
+        @if (Layout == "horizontal")
+        {
+            <span class="stat-label">@Label</span>
+            <span class="stat-value">@FormattedValue</span>
+        }
+        else
+        {
+            <span class="stat-value">@FormattedValue</span>
+            <span class="stat-label">@Label</span>
+        }
+    </div>
+</div>

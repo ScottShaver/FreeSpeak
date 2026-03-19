@@ -10,16 +10,10 @@
 
 <div class="notification-item @(Notification.IsRead ? "read" : "unread")" @onclick="HandleClick">
     <div class="notification-avatar">
-        @if (!string.IsNullOrEmpty(UserProfilePicture))
-        {
-            <img src="@UserProfilePicture" alt="@UserName" class="avatar-img" />
-        }
-        else
-        {
-            <div class="avatar-placeholder">
-                    <span class="avatar-initial">@GetInitials(UserName)</span>
-                </div>
-        }
+        <UserAvatar ImageUrl="@UserProfilePicture" 
+                    Name="@UserName" 
+                    Size="md"
+                    CssClass="avatar-img" />
         <div class="notification-type-badge">
             @{
                 var reactionEmoji = GetReactionEmoji();
@@ -161,35 +155,6 @@
         {
             return "User";
         }
-    }
-
-    /// <summary>
-    /// Extracts the initials from a user's name.
-    /// Returns up to 2 characters - first letter of first name and first letter of last name.
-    /// Falls back to first 2 characters of a single name, or "?" if empty.
-    /// </summary>
-    /// <param name="name">The user's display name.</param>
-    /// <returns>A string containing 1-2 uppercase initials.</returns>
-    private string GetInitials(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-            return "?";
-
-        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-        if (parts.Length == 0)
-            return "?";
-
-        if (parts.Length == 1)
-        {
-            var singleWord = parts[0];
-            if (singleWord.Length >= 2)
-                return singleWord.Substring(0, 2).ToUpper();
-            else
-                return singleWord.Substring(0, 1).ToUpper();
-        }
-
-        return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
     }
 
     private string GetReactionEmoji()

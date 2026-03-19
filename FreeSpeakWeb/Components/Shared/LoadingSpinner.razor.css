@@ -1,0 +1,23 @@
+.loading-spinner {
+    padding: 1rem 0;
+}
+
+.loading-spinner-centered {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-text {
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+    color: var(--text-secondary, #6c757d);
+}
+
+/* Large spinner size */
+.spinner-lg {
+    width: 3rem;
+    height: 3rem;
+}

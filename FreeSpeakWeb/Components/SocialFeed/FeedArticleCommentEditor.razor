@@ -1,20 +1,15 @@
 @using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Components.Shared
 
 @if (!HideCommentEditor && !IsReadOnly)
 {
     @if (!HasReachedCommentLimit)
     {
         <div class="article-comment-editor">
-            @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
-            {
-                <img src="@CurrentUserImageUrl" alt="You" class="comment-user-avatar" />
-            }
-            else
-            {
-                <div class="comment-user-avatar comment-avatar-placeholder">
-                    <span class="comment-avatar-initial">@GetInitials(CurrentUserName ?? "User")</span>
-                </div>
-            }
+            <UserAvatar ImageUrl="@CurrentUserImageUrl" 
+                        Name="@(CurrentUserName ?? "User")" 
+                        Size="sm"
+                        CssClass="comment-user-avatar" />
             <div class="editor-wrapper">
                 <MultiLineCommentEditor OnCommentSubmitted="OnCommentSubmitted" />
             </div>
@@ -46,26 +41,4 @@
 
     [Parameter]
     public EventCallback<string> OnCommentSubmitted { get; set; }
-
-    private string GetInitials(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-            return "U";
-
-        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-        if (parts.Length == 0)
-            return "U";
-
-        if (parts.Length == 1)
-        {
-            var singleWord = parts[0];
-            if (singleWord.Length >= 2)
-                return singleWord.Substring(0, 2).ToUpper();
-            else
-                return singleWord.Substring(0, 1).ToUpper();
-        }
-
-        return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
-    }
 }

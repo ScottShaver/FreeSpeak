@@ -21,16 +21,10 @@
             <!-- Post Author Header (without menu) -->
             <div class="feed-article-header">
                 <div class="header-left">
-                    @if (!string.IsNullOrEmpty(AuthorImageUrl))
-                    {
-                        <img src="@AuthorImageUrl" alt="@AuthorName" class="author-avatar" />
-                    }
-                    else
-                    {
-                        <div class="author-avatar avatar-placeholder">
-                            <span class="avatar-initial">@GetInitials(AuthorName)</span>
-                        </div>
-                    }
+                    <UserAvatar ImageUrl="@AuthorImageUrl" 
+                                Name="@AuthorName" 
+                                Size="md"
+                                CssClass="author-avatar" />
                     <div class="author-info">
                         <span class="author-name">@AuthorName</span>
                         <div class="post-metadata">
@@ -380,17 +374,6 @@
         {
             isSaving = false;
         }
-    }
-
-    private string GetInitials(string? name)
-    {
-        if (string.IsNullOrEmpty(name))
-            return "?";
-
-        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        if (parts.Length >= 2)
-            return $"{parts[0][0]}{parts[1][0]}".ToUpper();
-        return parts[0][0].ToString().ToUpper();
     }
 
     private string GetTimeAgo(DateTime dateTime)

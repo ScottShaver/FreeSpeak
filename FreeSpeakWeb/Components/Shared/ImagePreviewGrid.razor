@@ -1,0 +1,67 @@
+@code {
+    /// <summary>
+    /// List of image URLs to display.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public List<string> ImageUrls { get; set; } = new();
+
+    /// <summary>
+    /// Maximum number of images to show in the grid (rest shows as "+X more").
+    /// </summary>
+    [Parameter]
+    public int MaxVisible { get; set; } = 4;
+
+    /// <summary>
+    /// Event callback when an image is clicked.
+    /// </summary>
+    [Parameter]
+    public EventCallback<int> OnImageClick { get; set; }
+
+    /// <summary>
+    /// Whether images are clickable.
+    /// </summary>
+    [Parameter]
+    public bool Clickable { get; set; } = true;
+
+    /// <summary>
+    /// Additional CSS classes for the container.
+    /// </summary>
+    [Parameter]
+    public string CssClass { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Alt text prefix for images.
+    /// </summary>
+    [Parameter]
+    public string AltTextPrefix { get; set; } = "Image";
+
+    private int VisibleCount => Math.Min(ImageUrls.Count, MaxVisible);
+    private int HiddenCount => Math.Max(0, ImageUrls.Count - MaxVisible);
+    private bool HasMoreImages => HiddenCount > 0;
+
+    private async Task HandleImageClick(int index)
+    {
+        if (Clickable && OnImageClick.HasDelegate)
+        {
+            await OnImageClick.InvokeAsync(index);
+        }
+    }
+}
+
+@if (ImageUrls.Any())
+{
+    <div class="image-preview-grid image-count-@VisibleCount @CssClass">
+        @for (int i = 0; i < VisibleCount; i++)
+        {
+            var index = i;
+            var isLast = i == VisibleCount - 1;
+            <div class="preview-image-item @(Clickable ? "clickable" : "")" @onclick="@(() => HandleImageClick(index))">
+                <img src="@ImageUrls[index]" alt="@AltTextPrefix @(index + 1)" />
+                @if (isLast && HasMoreImages)
+                {
+                    <div class="more-images-overlay">+@HiddenCount</div>
+                }
+            </div>
+        }
+    </div>
+}
