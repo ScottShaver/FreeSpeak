@@ -26,7 +26,7 @@
         AudienceType="@currentAudienceType"
         IsPinned="@currentIsPinned"
         LikeCount="@LikeCount"
-        CommentCount="@CommentCount"
+        CommentCount="@(LoadCommentsInternally ? internalTotalCommentCount : CommentCount)"
         ShareCount="@ShareCount"
         ReactionBreakdown="@ReactionBreakdown"
         IsModalView="@IsModalView"
@@ -390,6 +390,7 @@
     // Internal comment loading state
     private List<CommentDisplayModel> internalComments = new();
     private int internalDirectCommentCount = 0;
+    private int internalTotalCommentCount = 0;
     private bool isLoadingComments = false;
     private int? lastLoadedPostId = null;
     private int lastRefreshTrigger = 0;
@@ -1184,6 +1185,9 @@
             // Build comment display models with full nesting
             internalComments = await BuildCommentModelsAsync(topComments);
             internalDirectCommentCount = allComments.Count(c => c.ParentCommentId == null);
+
+            // Get total count including all nested replies
+            internalTotalCommentCount = await PostService.GetTotalCommentCountAsync(PostId);
         }
         catch (Exception)
         {

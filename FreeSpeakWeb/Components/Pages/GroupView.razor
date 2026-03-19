@@ -363,6 +363,34 @@
         OnReportSubmitted="HandleCommentReportSubmitted" />
 }
 
+@* Edit Group Post Modal *@
+@if (showEditGroupPost && editGroupPost != null)
+{
+    <PostEditModal 
+        @ref="groupPostEditModalRef"
+        PostId="@editGroupPost.Id"
+        AuthorName="@(editGroupPost.Author != null ? (postAuthorNames.ContainsKey(editGroupPost.Id) ? postAuthorNames[editGroupPost.Id] : "Unknown") : "Unknown")"
+        AuthorImageUrl="@editGroupPost.Author?.ProfilePictureUrl"
+        CreatedAt="@editGroupPost.CreatedAt"
+        InitialContent="@editGroupPost.Content"
+        InitialImages="@(editGroupPost.Images?.Select(img => new PostImage { Id = img.Id, PostId = editGroupPost.Id, ImageUrl = img.ImageUrl, UploadedAt = img.UploadedAt }).ToList())"
+        AudienceType="@AudienceType.Public"
+        CurrentUserId="@currentUserId"
+        OnSave="@HandleSaveGroupPostEdit"
+        OnCancel="@CloseEditGroupPostModal"
+        OnImageUploadStateChanged="@HandleEditGroupPostImageUploadStateChanged"
+        OnImagesSelected="@HandleEditGroupPostImagesSelected" />
+}
+
+@if (showEditGroupPostImageUpload)
+{
+    <ImageUploadModal 
+        IsVisible="true"
+        OnImagesSelected="@HandleEditGroupPostImagesSelected"
+        OnClose="@(() => showEditGroupPostImageUpload = false)"
+        MaxImages="10" />
+}
+
 @code {
     [Parameter]
     public int GroupId { get; set; }
@@ -929,12 +957,28 @@
     /// Handles the edit post action by opening the post detail modal.
     /// </summary>
     /// <param name="postId">The ID of the post to edit.</param>
+    /// <summary>
+    /// Handles the edit post action by opening the edit post modal.
+    /// </summary>
+    /// <param name="postId">The ID of the post to edit.</param>
     private async Task HandleEditGroupPost(int postId)
     {
-        var post = groupPosts.FirstOrDefault(p => p.Id == postId);
-        if (post != null)
+        // Close the detail modal if it's open
+        CloseGroupPostDetailModal();
+
+        // Find the post from the main list
+        var postViewModel = groupPosts.FirstOrDefault(p => p.Id == postId);
+
+        if (postViewModel != null)
         {
-            await ShowGroupPostDetail(post);
+            // Load the full GroupPost entity for editing
+            var fullPost = await GroupPostService.GetGroupPostByIdAsync(postId);
+            if (fullPost != null)
+            {
+                editGroupPost = fullPost;
+                showEditGroupPost = true;
+                StateHasChanged();
+            }
         }
     }
 
@@ -965,6 +1009,12 @@
     // Modal state
     private bool showGroupPostDetailModal = false;
     private GroupPostViewModel? selectedGroupPost = null;
+
+    // Edit modal state
+    private bool showEditGroupPost = false;
+    private GroupPost? editGroupPost = null;
+    private bool showEditGroupPostImageUpload = false;
+    private PostEditModal? groupPostEditModalRef;
 
     // Group settings modal state
     private bool showGroupSettings = false;
@@ -1015,6 +1065,65 @@
         showGroupPostDetailModal = false;
         selectedGroupPost = null;
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the edit post modal.
+    /// </summary>
+    private async Task CloseEditGroupPostModal()
+    {
+        showEditGroupPost = false;
+        editGroupPost = null;
+        StateHasChanged();
+        await Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Handles the save event from the edit post modal.
+    /// </summary>
+    /// <param name="args">Tuple containing post ID, content, image URLs, and removed image IDs.</param>
+    private async Task HandleSaveGroupPostEdit((int PostId, string Content, List<string> ImageUrls, List<int> RemovedImageIds) args)
+    {
+        var result = await GroupPostService.UpdateGroupPostAsync(args.PostId, currentUserId, args.Content, args.ImageUrls, args.RemovedImageIds);
+        if (result.Success)
+        {
+            await CloseEditGroupPostModal();
+            AlertService.ShowSuccess("Group post updated successfully.");
+
+            // Reload the group posts to reflect the changes
+            await LoadGroupPosts();
+            StateHasChanged();
+        }
+        else
+        {
+            AlertService.ShowError(result.ErrorMessage ?? "Failed to update group post.");
+        }
+    }
+
+    /// <summary>
+    /// Handles the image upload state change event from the edit modal.
+    /// </summary>
+    /// <param name="isOpen">Whether the image upload modal should be open.</param>
+    private async Task HandleEditGroupPostImageUploadStateChanged(bool isOpen)
+    {
+        showEditGroupPostImageUpload = isOpen;
+        StateHasChanged();
+        await Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Handles the images selected event from the edit modal.
+    /// </summary>
+    /// <param name="images">The list of selected images.</param>
+    private async Task HandleEditGroupPostImagesSelected(List<ImageUploadModal.SelectedImage> images)
+    {
+        if (groupPostEditModalRef != null && images != null && images.Any())
+        {
+            groupPostEditModalRef.AddNewImages(images);
+        }
+        showEditGroupPostImageUpload = false;
+        StateHasChanged();
+        await Task.CompletedTask;
     }
 
     private GroupPostComment? FindCommentInTree(List<GroupPostComment> comments, int commentId)
