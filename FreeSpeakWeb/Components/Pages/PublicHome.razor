@@ -56,7 +56,8 @@
                 var directCommentCount = postDirectCommentCounts.ContainsKey(post.Id) ? postDirectCommentCounts[post.Id] : 0;
                 var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
 
-                <FeedArticle 
+                <UnifiedArticle 
+                    ArticlePostType="PostType.UserPost"
                     PostId="@post.Id"
                     AuthorId="@post.AuthorId"
                     AuthorName="@authorName"
@@ -81,7 +82,7 @@
                     <ArticleContent>
                         @((MarkupString)FormatContentWithLineBreaks(post.Content))
                     </ArticleContent>
-                </FeedArticle>
+                </UnifiedArticle>
             }
 
             @if (hasMore && !isLoadingMore)

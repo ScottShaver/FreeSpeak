@@ -47,7 +47,8 @@
     else if (post != null)
     {
         <div class="single-post-wrapper">
-            <GroupPostArticle 
+            <UnifiedArticle 
+                ArticlePostType="PostType.GroupPost"
                 PostId="@post.Id"
                 GroupId="@post.GroupId"
                 GroupName="@groupName"
@@ -83,7 +84,7 @@
                 <ArticleContent>
                     @((MarkupString)HtmlSanitizationService.SanitizeAndFormatContent(post.Content))
                 </ArticleContent>
-            </GroupPostArticle>
+            </UnifiedArticle>
         </div>
     }
 </div>

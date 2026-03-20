@@ -213,7 +213,8 @@
                         var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
                         var isMuted = postMuteStatus.ContainsKey(post.Id) ? postMuteStatus[post.Id] : (bool?)null;
 
-                        <GroupPostArticle 
+                        <UnifiedArticle 
+                            ArticlePostType="PostType.GroupPost"
                             PostId="@post.Id"
                             GroupId="@post.GroupId"
                             GroupName="@post.GroupName"
@@ -254,7 +255,7 @@
                             <ArticleContent>
                                 @((MarkupString)FormatContentWithLineBreaks(post.Content))
                             </ArticleContent>
-                        </GroupPostArticle>
+                        </UnifiedArticle>
                     }
 
                     @if (isLoadingMorePinnedPosts)

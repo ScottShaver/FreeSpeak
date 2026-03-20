@@ -1,3 +1,16 @@
+@* 
+    DEPRECATION NOTICE: This component is being phased out in favor of UnifiedArticle.razor.
+    For new implementations, use:
+        <UnifiedArticle ArticlePostType="PostType.GroupPost" GroupId="@groupId" GroupName="@groupName" ... />
+
+    Migration steps:
+    1. Replace GroupPostArticle with UnifiedArticle
+    2. Add ArticlePostType="PostType.GroupPost" parameter
+    3. Keep GroupId, GroupName, and AuthorGroupPoints parameters
+    4. Keep all other parameters the same
+
+    This component will be removed in a future release.
+*@
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Components.Shared
 @using FreeSpeakWeb.Data

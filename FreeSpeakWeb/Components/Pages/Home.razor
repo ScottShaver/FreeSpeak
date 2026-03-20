@@ -168,7 +168,8 @@
                                 var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
                                 var isMuted = postMuteStatus.ContainsKey(post.Id) ? postMuteStatus[post.Id] : (bool?)null;
 
-                                <FeedArticle 
+                                <UnifiedArticle 
+                                    ArticlePostType="PostType.UserPost"
                                     PostId="@post.Id"
                                     AuthorId="@post.AuthorId"
                                     AuthorName="@authorName"
@@ -208,7 +209,7 @@
                                         <ArticleContent>
                                         @((MarkupString)FormatContentWithLineBreaks(post.Content))
                                     </ArticleContent>
-                                </FeedArticle>
+                                </UnifiedArticle>
                             }
                         }
                     </div>
