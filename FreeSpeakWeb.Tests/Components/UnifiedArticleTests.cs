@@ -6,8 +6,10 @@ using FreeSpeakWeb.Services;
 using FreeSpeakWeb.Tests.Infrastructure;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -81,13 +83,53 @@ namespace FreeSpeakWeb.Tests.Components
             );
 
             // Mock GroupPostService for GroupPost tests
-            var mockGroupPostService = new Mock<GroupPostService>();
+            // Since GroupPostService has many dependencies and we're not calling its methods in these tests,
+            // we'll provide a null mock that satisfies the component's dependency injection requirements
+            var mockGroupPostService = new Mock<GroupPostService>(
+                MockBehavior.Loose,
+                new object?[] { null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null! });
 
             Services.AddSingleton(postService);
             Services.AddSingleton(mockGroupPostService.Object);
             Services.AddSingleton(siteSettingsOptions);
             Services.AddSingleton(userPreferenceService);
             Services.AddSingleton(MockRepositories.CreateMockAuditLogRepository().Object);
+
+            // Register FeedArticle localizer mock
+            var mockFeedArticleLocalizer = new Mock<IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.FeedArticle>>();
+            mockFeedArticleLocalizer.Setup(l => l[It.IsAny<string>()])
+                .Returns((string key) => new LocalizedString(key, key));
+            Services.AddSingleton(mockFeedArticleLocalizer.Object);
+
+            // Register AlertService mock
+            Services.AddSingleton<AlertService>();
+
+            // Register UserManager mock required by child components
+            var mockUserManager = new Mock<UserManager<ApplicationUser>>(
+                Mock.Of<IUserStore<ApplicationUser>>(),
+                null!, null!, null!, null!, null!, null!, null!, null!);
+            Services.AddSingleton(mockUserManager.Object);
+
+            // Register TimeFormatting localizer mock required by TimestampFormattingService
+            var mockTimeFormattingLocalizer = new Mock<IStringLocalizer<FreeSpeakWeb.Resources.Shared.TimeFormatting>>();
+            mockTimeFormattingLocalizer.Setup(l => l[It.IsAny<string>()])
+                .Returns((string key) => new LocalizedString(key, key));
+            Services.AddSingleton(mockTimeFormattingLocalizer.Object);
+
+            // Register FeedArticleHeader localizer mock
+            var mockFeedArticleHeaderLocalizer = new Mock<IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.FeedArticleHeader>>();
+            mockFeedArticleHeaderLocalizer.Setup(l => l[It.IsAny<string>()])
+                .Returns((string key) => new LocalizedString(key, key));
+            Services.AddSingleton(mockFeedArticleHeaderLocalizer.Object);
+
+            // Register FeedArticleActions localizer mock
+            var mockFeedArticleActionsLocalizer = new Mock<IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.FeedArticleActions>>();
+            mockFeedArticleActionsLocalizer.Setup(l => l[It.IsAny<string>()])
+                .Returns((string key) => new LocalizedString(key, key));
+            Services.AddSingleton(mockFeedArticleActionsLocalizer.Object);
+
+            // Register TimestampFormattingService required by child components
+            Services.AddSingleton<TimestampFormattingService>();
         }
 
         #region UserPost Tests
