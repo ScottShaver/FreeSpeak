@@ -28,4 +28,11 @@ public class SiteSettings
     /// SystemAdministrator or GroupAdministrator roles can create groups.
     /// </summary>
     public bool AllowOpenGroupCreation { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets whether post attachments (image uploads) are enabled.
+    /// When true, users can upload images to posts and access the My Uploads page.
+    /// When false, all image upload functionality and My Uploads page are hidden.
+    /// </summary>
+    public bool AllowPostAttachments { get; set; } = true;
 }

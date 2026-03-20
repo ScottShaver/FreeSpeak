@@ -1,15 +1,12 @@
 @using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Components.Shared
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Helpers
 @using FreeSpeakWeb.Services
 @using Microsoft.JSInterop
 @using Microsoft.Extensions.Localization
-@inject PostService PostService
-@inject IJSRuntime JS
-@inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
-@inject UserPreferenceService UserPreferenceService
+@inherits PostDetailModalBase
 @inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.PostDetailModal> Localizer
-@implements IAsyncDisposable
 
 <div class="post-detail-modal-backdrop" @onclick="OnClose">
     <div class="post-detail-modal-container" @onclick:stopPropagation="true">
@@ -22,16 +19,16 @@
             </button>
         </div>
         <div class="post-detail-modal-content" @ref="modalContentElement">
-            <FeedArticle 
+            <UnifiedArticle 
+                ArticlePostType="PostType.UserPost"
                 PostId="@PostId"
                 AuthorId="@AuthorId"
                 AuthorName="@AuthorName"
                 AuthorImageUrl="@AuthorImageUrl"
                 CurrentUserId="@CurrentUserId"
                 CreatedAt="@CreatedAt"
-                ArticleContent="@ArticleContent"
                 LikeCount="@LikeCount"
-                CommentCount="@CommentCount"
+                CommentCount="@totalCommentCount"
                 ShareCount="@ShareCount"
                 DirectCommentCount="@directCommentCount"
                 Comments="@modalComments"
@@ -46,31 +43,32 @@
                 OnRemoveReaction="@OnRemoveReaction"
                 OnPinPost="@OnPinPost"
                 OnUnpinPost="@OnUnpinPost"
+                OnAudienceTypeChanged="@OnAudienceTypeChanged"
                 OnPostDeleted="@HandlePostDeleted"
                 OnCommentAdded="@HandleCommentAdded"
                 OnReplySubmitted="@HandleReplySubmitted"
                 OnCommentReactionChanged="@HandleCommentReactionChanged"
                 OnRemoveCommentReaction="@HandleRemoveCommentReaction"
-                OnDeleteComment="@OnDeleteComment"
+                OnDeleteComment="@HandleDeleteComment"
                 OnEditComment="@OnEditComment"
                 OnCommentUpdated="@OnCommentUpdated"
                 OnReportComment="@OnReportComment"
                 IsModalView="true"
                 IsReadOnly="@IsReadOnly"
-                HideCommentEditor="true" />
+                HideCommentEditor="true">
+                <ArticleContent>
+                    @ArticleContent
+                </ArticleContent>
+            </UnifiedArticle>
 
             @if (isLoadingComments && !modalComments.Any())
             {
-                <div class="loading-comments">
-                    <p>@Localizer["Loading"]</p>
-                </div>
+                <LoadingSpinner Text="@Localizer["Loading"]" />
             }
 
             @if (isLoadingMoreComments)
             {
-                <div class="loading-more-comments">
-                    <p>@Localizer["Loading"]</p>
-                </div>
+                <LoadingSpinner Text="@Localizer["Loading"]" Size="sm" />
             }
         </div>
 
@@ -107,350 +105,3 @@
     </div>
 </div>
 
-@code {
-    [Parameter]
-    public int PostId { get; set; }
-
-    [Parameter]
-    public string AuthorId { get; set; } = string.Empty;
-
-    [Parameter]
-    public string AuthorName { get; set; } = "Anonymous";
-
-    [Parameter]
-    public string? AuthorImageUrl { get; set; }
-
-    [Parameter]
-    public string? CurrentUserId { get; set; }
-
-    [Parameter]
-    public DateTime CreatedAt { get; set; }
-
-    [Parameter]
-    public RenderFragment? ArticleContent { get; set; }
-
-    [Parameter]
-    public int LikeCount { get; set; }
-
-    [Parameter]
-    public int CommentCount { get; set; }
-
-    [Parameter]
-    public int ShareCount { get; set; }
-
-    [Parameter]
-    public List<CommentDisplayModel>? Comments { get; set; }
-
-    [Parameter]
-    public string? CurrentUserImageUrl { get; set; }
-
-    [Parameter]
-    public string? CurrentUserName { get; set; }
-
-    [Parameter]
-    public Dictionary<LikeType, int>? ReactionBreakdown { get; set; }
-
-    [Parameter]
-    public LikeType? UserReaction { get; set; }
-
-    [Parameter]
-    public EventCallback<LikeType> OnReactionChanged { get; set; }
-
-    [Parameter]
-    public EventCallback OnRemoveReaction { get; set; }
-
-    [Parameter]
-    public EventCallback<(int PostId, string Content)> OnCommentAdded { get; set; }
-
-    [Parameter]
-    public EventCallback<(int ParentCommentId, string Content)> OnReplySubmitted { get; set; }
-
-    [Parameter]
-    public EventCallback<(int CommentId, LikeType ReactionType)> OnCommentReactionChanged { get; set; }
-
-    [Parameter]
-    public EventCallback<int> OnRemoveCommentReaction { get; set; }
-
-    /// <summary>
-    /// Event callback invoked when a user requests to delete their own comment.
-    /// </summary>
-    [Parameter]
-    public EventCallback<int> OnDeleteComment { get; set; }
-
-    /// <summary>
-    /// Event callback invoked when a user requests to edit their own comment.
-    /// </summary>
-    [Parameter]
-    public EventCallback<(int CommentId, string CurrentContent)> OnEditComment { get; set; }
-
-    /// <summary>
-    /// Event callback invoked when a comment is successfully updated with new content via inline editing.
-    /// </summary>
-    [Parameter]
-    public EventCallback<(int CommentId, string NewContent)> OnCommentUpdated { get; set; }
-
-    /// <summary>
-    /// Event callback invoked when a user requests to report another user's comment.
-    /// </summary>
-    [Parameter]
-    public EventCallback<int> OnReportComment { get; set; }
-
-    [Parameter]
-    public EventCallback OnClose { get; set; }
-
-    [Parameter]
-    public AudienceType AudienceType { get; set; } = AudienceType.Public;
-
-    [Parameter]
-    public bool IsPinned { get; set; } = false;
-
-    [Parameter]
-    public EventCallback<int> OnPinPost { get; set; }
-
-    [Parameter]
-    public EventCallback<int> OnUnpinPost { get; set; }
-
-    [Parameter]
-    public EventCallback<int> OnPostDeleted { get; set; }
-
-    [Parameter]
-    public List<PostImage>? Images { get; set; }
-
-    [Parameter]
-    public int? TargetCommentId { get; set; }
-
-    [Parameter]
-    public bool IsReadOnly { get; set; } = false;
-
-    private List<CommentDisplayModel> modalComments = new();
-    private int directCommentCount = 0;
-    private int currentCommentPage = 1;
-    private const int commentPageSize = 20;
-    private bool isLoadingComments = false;
-    private bool isLoadingMoreComments = false;
-    private bool hasMoreComments = true;
-    private ElementReference modalContentElement;
-    private IJSObjectReference? jsModule;
-    private DotNetObjectReference<PostDetailModal>? dotNetHelper;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            // Load direct comment count
-            directCommentCount = await PostService.GetDirectCommentCountAsync(PostId);
-
-            await LoadInitialComments();
-
-            try
-            {
-                jsModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/PostDetailModal.razor.js");
-                dotNetHelper = DotNetObjectReference.Create(this);
-                await jsModule.InvokeVoidAsync("initializeCommentScroll", modalContentElement, dotNetHelper);
-
-                // If there's a target comment, scroll to it and highlight it
-                if (TargetCommentId.HasValue && jsModule != null)
-                {
-                    await Task.Delay(100); // Small delay to ensure DOM is ready
-                    await jsModule.InvokeVoidAsync("scrollToAndHighlightComment", TargetCommentId.Value);
-                }
-            }
-            catch (Exception)
-            {
-                // Silently fail - scrolling not critical
-            }
-        }
-    }
-
-    private async Task LoadInitialComments()
-    {
-        isLoadingComments = true;
-        StateHasChanged();
-
-        try
-        {
-            var comments = await PostService.GetCommentsPagedAsync(PostId, commentPageSize, currentCommentPage);
-
-            // Use batch loading to reduce database round trips
-            modalComments = await CommentHelpers.BuildCommentDisplayModelsAsync(
-                comments.ToList(),
-                PostService,
-                UserPreferenceService,
-                CurrentUserId);
-
-            hasMoreComments = comments.Count == commentPageSize;
-        }
-        catch (Exception)
-        {
-            // Silently fail - comments will show empty
-        }
-        finally
-        {
-            isLoadingComments = false;
-            StateHasChanged();
-        }
-    }
-
-    [JSInvokable]
-    public async Task LoadMoreCommentsAsync()
-    {
-        if (isLoadingMoreComments || !hasMoreComments) return;
-
-        isLoadingMoreComments = true;
-        StateHasChanged();
-
-        try
-        {
-            currentCommentPage++;
-            var comments = await PostService.GetCommentsPagedAsync(PostId, commentPageSize, currentCommentPage);
-
-            if (comments.Any())
-            {
-                // Use batch loading to reduce database round trips
-                var newCommentModels = await CommentHelpers.BuildCommentDisplayModelsAsync(
-                    comments.ToList(),
-                    PostService,
-                    UserPreferenceService,
-                    CurrentUserId);
-
-                modalComments.AddRange(newCommentModels);
-                hasMoreComments = comments.Count == commentPageSize;
-            }
-            else
-            {
-                hasMoreComments = false;
-            }
-        }
-        catch (Exception)
-        {
-            currentCommentPage--;
-        }
-        finally
-        {
-            isLoadingMoreComments = false;
-            StateHasChanged();
-        }
-    }
-
-    private async Task HandleCommentAdded((int PostId, string Content) data)
-    {
-        // Invoke parent callback
-        if (OnCommentAdded.HasDelegate)
-        {
-            await OnCommentAdded.InvokeAsync(data);
-        }
-
-        // Reload comments to show the new comment
-        currentCommentPage = 1;
-        hasMoreComments = true;
-        await LoadInitialComments();
-    }
-
-    private async Task HandleCommentReactionChanged((int CommentId, LikeType ReactionType) data)
-    {
-        // Invoke parent callback
-        if (OnCommentReactionChanged.HasDelegate)
-        {
-            await OnCommentReactionChanged.InvokeAsync(data);
-        }
-
-        // Update the local comment's reaction data
-        await UpdateLocalCommentReaction(data.CommentId, data.ReactionType);
-    }
-
-    private async Task HandleRemoveCommentReaction(int commentId)
-    {
-        // Invoke parent callback
-        if (OnRemoveCommentReaction.HasDelegate)
-        {
-            await OnRemoveCommentReaction.InvokeAsync(commentId);
-        }
-
-        // Update the local comment's reaction data
-        await UpdateLocalCommentReaction(commentId, null);
-    }
-
-    private async Task HandlePostDeleted(int postId)
-    {
-        // Invoke parent callback to handle post deletion
-        if (OnPostDeleted.HasDelegate)
-        {
-            await OnPostDeleted.InvokeAsync(postId);
-        }
-
-        // Close the modal since the post is being deleted
-        if (OnClose.HasDelegate)
-        {
-            await OnClose.InvokeAsync();
-        }
-    }
-
-    private async Task UpdateLocalCommentReaction(int commentId, LikeType? newReaction)
-    {
-        // Find the comment in modalComments and update its reaction data
-        var comment = CommentHelpers.FindCommentById(modalComments, commentId);
-        if (comment != null)
-        {
-            // Update user's reaction
-            comment.UserReaction = newReaction;
-
-            // Reload reaction breakdown and like count
-            comment.ReactionBreakdown = await PostService.GetCommentReactionBreakdownAsync(commentId);
-            comment.LikeCount = await PostService.GetCommentLikeCountAsync(commentId);
-
-            StateHasChanged();
-        }
-    }
-
-    private async Task HandleReplySubmitted((int ParentCommentId, string Content) data)
-    {
-        if (string.IsNullOrWhiteSpace(CurrentUserId)) return;
-
-        try
-        {
-            // Notify parent that a reply was submitted so it can handle the database insertion
-            // The parent component (Home.razor, SinglePost.razor, etc.) will add the reply to the database
-            if (OnReplySubmitted.HasDelegate)
-            {
-                await OnReplySubmitted.InvokeAsync((data.ParentCommentId, data.Content));
-            }
-
-            // Reload comments to show the new reply after parent has added it
-            currentCommentPage = 1;
-            hasMoreComments = true;
-            await LoadInitialComments();
-
-            // Update direct comment count
-            directCommentCount = await PostService.GetDirectCommentCountAsync(PostId);
-
-            StateHasChanged();
-        }
-        catch (Exception)
-        {
-            await JS.InvokeVoidAsync("alert", "An error occurred while adding your reply.");
-        }
-    }
-
-    private async Task HandleCommentSubmittedInModal(string commentText)
-    {
-        if (!string.IsNullOrWhiteSpace(commentText))
-        {
-            await HandleCommentAdded((PostId, commentText));
-        }
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (jsModule != null)
-        {
-            try
-            {
-                await jsModule.InvokeVoidAsync("cleanupCommentScroll");
-                await jsModule.DisposeAsync();
-            }
-            catch { }
-        }
-
-        dotNetHelper?.Dispose();
-    }
-}

@@ -69,15 +69,11 @@
                     <div class="feed-section">
                         @if (isLoading && !posts.Any())
                         {
-                            <div class="loading-indicator">
-                                <p>@Localizer["LoadingFeed"]</p>
-                            </div>
+                            <LoadingSpinner Text="@Localizer["LoadingFeed"]" Size="lg" />
                         }
                         else if (!posts.Any() && !isLoading)
                         {
-                            <div class="empty-feed">
-                                <p>@Localizer["EmptyFeed"]</p>
-                            </div>
+                            <EmptyState Message="@Localizer["EmptyFeed"]" Icon="bi-newspaper" />
                         }
                         else
                         {
@@ -90,7 +86,8 @@
                                 var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
                                 var isMuted = postMuteStatus.ContainsKey(post.Id) ? postMuteStatus[post.Id] : (bool?)null;
 
-                                <FeedArticle 
+                                <UnifiedArticle 
+                                    ArticlePostType="PostType.UserPost"
                                     PostId="@post.Id"
                                     AuthorId="@post.AuthorId"
                                     AuthorName="@authorName"
@@ -111,10 +108,11 @@
                                     IsPinned="@isPinned"
                                     IsMuted="@isMuted"
                                     Images="@post.Images?.ToList()"
-                                    OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(post.Id, reactionType))"
+                                    OnReactionChanged="@(async (LikeType reactionType) => await HandleReactionChanged(post.Id, reactionType))"
                                     OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
                                     OnPinPost="@HandlePinPost"
                                     OnUnpinPost="@HandleUnpinPost"
+                                    OnAudienceTypeChanged="@((AudienceType newAudienceType) => HandleAudienceTypeChanged(post.Id, newAudienceType))"
                                     OnPostDeleted="@HandlePostDeleted"
                                     OnEditPost="@HandleEditPost"
                                     OnCommentAdded="@HandleCommentAdded"
@@ -129,21 +127,17 @@
                                     <ArticleContent>
                                         @((MarkupString)FormatContentWithLineBreaks(post.Content))
                                     </ArticleContent>
-                                </FeedArticle>
+                                </UnifiedArticle>
                             }
 
                             @if (isLoadingMore)
                             {
-                                <div class="loading-more">
-                                    <p>@Localizer["LoadingMore"]</p>
-                                </div>
+                                <LoadingSpinner Text="@Localizer["LoadingMore"]" Size="sm" />
                             }
 
                             @if (hasMorePosts == false && posts.Any())
                             {
-                                <div class="no-more-posts">
-                                    <p>@Localizer["NoMorePosts"]</p>
-                                </div>
+                                <EmptyState Message="@Localizer["NoMorePosts"]" CssClass="no-more-posts" />
                             }
                         }
                     </div>
@@ -175,7 +169,8 @@
                                 var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
                                 var isMuted = postMuteStatus.ContainsKey(post.Id) ? postMuteStatus[post.Id] : (bool?)null;
 
-                                <FeedArticle 
+                                <UnifiedArticle 
+                                    ArticlePostType="PostType.UserPost"
                                     PostId="@post.Id"
                                     AuthorId="@post.AuthorId"
                                     AuthorName="@authorName"
@@ -200,6 +195,7 @@
                                     OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
                                     OnPinPost="@HandlePinPost"
                                     OnUnpinPost="@HandleUnpinPost"
+                                    OnAudienceTypeChanged="@(newAudienceType => HandleAudienceTypeChanged(post.Id, newAudienceType))"
                                     OnPostDeleted="@HandlePostDeleted"
                                     OnEditPost="@HandleEditPost"
                                     OnCommentAdded="@OnCommentAdded"
@@ -214,7 +210,7 @@
                                         <ArticleContent>
                                         @((MarkupString)FormatContentWithLineBreaks(post.Content))
                                     </ArticleContent>
-                                </FeedArticle>
+                                </UnifiedArticle>
                             }
                         }
                     </div>
@@ -249,12 +245,15 @@
                 OnRemoveReaction="@(async () => await HandleRemoveReaction(selectedPost.Id))"
                 OnPinPost="@HandlePinPost"
                 OnUnpinPost="@HandleUnpinPost"
+                OnAudienceTypeChanged="@(newAudienceType => HandleAudienceTypeChanged(selectedPost.Id, newAudienceType))"
                 OnPostDeleted="@HandlePostDeleted"
                 OnCommentAdded="@OnCommentAdded"
+                OnCommentAddedComplete="@HandleCommentAddedFromModal"
                 OnReplySubmitted="@OnReplySubmitted"
                 OnCommentReactionChanged="@OnCommentReactionChanged"
                 OnRemoveCommentReaction="@OnRemoveCommentReaction"
                 OnDeleteComment="@HandleDeleteComment"
+                OnCommentDeleted="@HandleCommentDeletedFromModal"
                 OnCommentUpdated="@HandleCommentUpdated"
                 OnReportComment="@HandleReportComment"
                 OnClose="@(async () => await ClosePostDetail())">
@@ -333,6 +332,9 @@
     private int uploadCurrentStep = 0;
     private int uploadTotalSteps = 0;
 
+    // Disposal tracking flag to prevent operations on disposed component
+    private bool _disposed = false;
+
     protected override async Task OnInitializedAsync()
     {
         NavigationState.ActiveMenuItem = "/";
@@ -384,6 +386,7 @@
     {
         if (currentUserId == null) return;
 
+        currentPage = 1;
         isLoading = true;
         try
         {
@@ -448,6 +451,7 @@
     [JSInvokable]
     public async Task LoadMorePostsAsync()
     {
+        if (_disposed) return;
         if (currentUserId == null || isLoadingMore || !hasMorePosts) return;
 
         isLoadingMore = true;
@@ -457,6 +461,8 @@
         {
             currentPage++;
             var loadedPosts = await PostService.GetFeedPostsAsync(currentUserId, pageSize, currentPage);
+
+            if (_disposed) return;
 
             if (loadedPosts.Any())
             {
@@ -487,8 +493,11 @@
         }
         finally
         {
-            isLoadingMore = false;
-            StateHasChanged(); // Update UI after loading
+            if (!_disposed)
+            {
+                isLoadingMore = false;
+                StateHasChanged(); // Update UI after loading
+            }
         }
     }
 
@@ -710,6 +719,29 @@
         }
     }
 
+    /// <summary>
+    /// Handles the event when a post's audience type is changed.
+    /// Updates the local post object to reflect the new audience type.
+    /// </summary>
+    private void HandleAudienceTypeChanged(int postId, AudienceType newAudienceType)
+    {
+        // Update the post in the main feed list
+        var post = posts.FirstOrDefault(p => p.Id == postId);
+        if (post != null)
+        {
+            post.AudienceType = newAudienceType;
+        }
+
+        // Update the post in the pinned posts list if it exists there
+        var pinnedPost = pinnedPostsList.FirstOrDefault(p => p.Id == postId);
+        if (pinnedPost != null)
+        {
+            pinnedPost.AudienceType = newAudienceType;
+        }
+
+        StateHasChanged();
+    }
+
     private void HandlePostDeleted(int postId)
     {
         // Remove the post from the list
@@ -767,6 +799,34 @@
     {
         // Delegate to base class implementation
         await HandleRemovePostReaction(postId);
+    }
+
+    /// <summary>
+    /// Handles when a comment deletion is fully complete from the modal.
+    /// This triggers a refresh of the feed list's UnifiedArticle components
+    /// by incrementing the refresh trigger for the affected post.
+    /// </summary>
+    /// <param name="postId">The ID of the post whose comments were modified.</param>
+    private void HandleCommentDeletedFromModal(int postId)
+    {
+        // Increment the refresh trigger to force UnifiedArticle components in the feed list
+        // to reload their internally-loaded comments
+        IncrementRefreshTrigger(postId);
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles when a comment addition is fully complete from the modal.
+    /// This triggers a refresh of the feed list's UnifiedArticle components
+    /// by incrementing the refresh trigger for the affected post.
+    /// </summary>
+    /// <param name="postId">The ID of the post whose comments were modified.</param>
+    private void HandleCommentAddedFromModal(int postId)
+    {
+        // Increment the refresh trigger to force UnifiedArticle components in the feed list
+        // to reload their internally-loaded comments
+        IncrementRefreshTrigger(postId);
+        StateHasChanged();
     }
 
     private async Task OnCommentAdded((int PostId, string Content) data)
@@ -928,6 +988,8 @@
 
     private void ShowPostDetail(Post post)
     {
+        if (_disposed) return;
+
         selectedPost = post;
         showPostDetail = true;
         StateHasChanged();
@@ -935,6 +997,8 @@
 
     private async Task ClosePostDetail()
     {
+        if (_disposed) return;
+
         // Reload comments for the post before closing, in case they were updated in the modal
         if (selectedPost != null)
         {
@@ -1130,7 +1194,7 @@
 
     protected override async Task<int?> FindPostIdForCommentAsync(int commentId)
     {
-        // Search through postComments dictionary
+        // Search through postComments dictionary first (for comments loaded by parent)
         foreach (var kvp in postComments)
         {
             if (CommentHelpers.FindCommentById(kvp.Value, commentId) != null)
@@ -1138,7 +1202,11 @@
                 return kvp.Key;
             }
         }
-        return null;
+
+        // If not found locally, query the database
+        // This handles cases where comments are loaded internally by FeedArticle components
+        var comment = await PostService.GetCommentByIdAsync(commentId);
+        return comment?.PostId;
     }
 
     // Service bridge methods for comment management
@@ -1159,8 +1227,9 @@
     protected override async Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
         int commentId, string userId)
     {
-        // TODO: Implement comment reporting when report system is available
-        // For now, return success with a placeholder message
+        // TODO: Implement feed comment reporting similar to group comment reporting
+        // Need to create: FeedContentReport entity, FeedContentReportService, and integrate with ReportFeedContentModal
+        // For now, return success with a placeholder - the UI should show "Coming Soon" message
         await Task.CompletedTask;
         return (true, null);
     }
@@ -1178,6 +1247,8 @@
 
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
+        _disposed = true;
+
         if (jsModule != null)
         {
             try

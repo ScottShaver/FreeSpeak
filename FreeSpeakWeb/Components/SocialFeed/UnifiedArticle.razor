@@ -1,0 +1,183 @@
+@using FreeSpeakWeb.Components.SocialFeed
+@using FreeSpeakWeb.Components.Shared
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Data.AuditLogDetails
+@using FreeSpeakWeb.Repositories.Abstractions
+@using FreeSpeakWeb.Services
+@using Microsoft.Extensions.Localization
+@inherits ArticleComponentBase
+
+<div class="feed-article @(showMenu ? "menu-open" : "")">
+    <!-- 1. Header Area -->
+    <FeedArticleHeader 
+        AuthorName="@AuthorName"
+        GroupName="@(ArticlePostType == PostType.GroupPost ? GroupName : null)"
+        AuthorImageUrl="@AuthorImageUrl"
+        AuthorId="@AuthorId"
+        CurrentUserId="@CurrentUserId"
+        CreatedAt="@CreatedAt"
+        AudienceType="@currentAudienceType"
+        IsPinned="@currentIsPinned"
+        LikeCount="@LikeCount"
+        CommentCount="@(LoadCommentsInternally ? internalTotalCommentCount : CommentCount)"
+        ShareCount="@ShareCount"
+        ReactionBreakdown="@ReactionBreakdown"
+        IsModalView="@IsModalView"
+        IsReadOnly="@IsReadOnly"
+        OnShowLikesModal="@ShowLikesModal"
+        OnCommentCountClick="@OnCommentCountClick"
+        ShowMenu="@showMenu"
+        MenuItems="@menuItems"
+        MenuPositionStyle="@menuPositionStyle"
+        OnToggleMenu="@ToggleMenu"
+        OnCloseMenu="@CloseMenu"
+        GroupId="@(ArticlePostType == PostType.GroupPost ? GroupId : null)"
+        AuthorGroupPoints="@(ArticlePostType == PostType.GroupPost ? AuthorGroupPoints : null)" />
+
+    <!-- 2. Main Content Area -->
+    <FeedArticleContent 
+        ArticleContent="@ArticleContent"
+        IsModalView="@IsModalView"
+        IsTruncated="@isTruncated"
+        ShouldShowExpandButton="@shouldShowExpandButton"
+        OnShowPostDetail="@ShowPostDetail"
+        OnContentElementRendered="@HandleContentElementRendered"
+        ClickToSeeFullPostText="@Localizer["ClickToSeeFullPost"]" />
+
+    <!-- 2.5 Post Images -->
+    <FeedArticleImages 
+        Images="@Images"
+        OnOpenImageViewer="@OpenImageViewer" />
+
+    <!-- 4. Action Links -->
+    <FeedArticleActions 
+        IsReadOnly="@IsReadOnly"
+        IsOwnPost="@IsOwnPost"
+        IsModalView="@IsModalView"
+        UserReaction="@UserReaction"
+        ShowReactionPicker="@showReactionPicker"
+        OnShowReactionPicker="@ShowReactionPicker"
+        OnStartHideTimer="@StartHideTimer"
+        OnCancelHideTimer="@CancelHideTimer"
+        OnLikeClick="@OnLikeClick"
+        OnReactionPicked="@HandleReaction"
+        OnRemoveReaction="@HandleRemoveReaction"
+        OnCommentClick="@OnCommentClick"
+        OnShareClick="@OnShareClick" />
+
+    @{
+        var commentsToDisplay = LoadCommentsInternally ? internalComments : (Comments ?? new List<CommentDisplayModel>());
+        var directCount = LoadCommentsInternally ? internalDirectCommentCount : DirectCommentCount;
+    }
+
+    <!-- Comments Section -->
+    <ArticleCommentList 
+        IsModalView="@IsModalView"
+        DirectCommentCount="@directCount"
+        Comments="@commentsToDisplay"
+        CurrentUserId="@CurrentUserId"
+        CurrentUserImageUrl="@CurrentUserImageUrl"
+        CurrentUserName="@CurrentUserName"
+        OnViewMoreCommentsClick="@OnCommentClick"
+        OnCommentReactionChanged="@OnCommentReactionChanged"
+        OnRemoveCommentReaction="@OnRemoveCommentReaction"
+        OnReplySubmitted="@OnReplySubmittedLocally"
+        OnDeleteComment="@OnCommentDeleted"
+        OnEditComment="@OnCommentEditedLocally"
+        OnCommentUpdated="@OnCommentUpdatedLocally"
+        OnReportComment="@OnReportComment" />
+
+    <!-- 6. Comment Editor -->
+    <FeedArticleCommentEditor 
+        HideCommentEditor="@HideCommentEditor"
+        IsReadOnly="@IsReadOnly"
+        HasReachedCommentLimit="@HasReachedCommentLimit"
+        CurrentUserImageUrl="@CurrentUserImageUrl"
+        CurrentUserName="@CurrentUserName"
+        OnCommentSubmitted="@OnCommentSubmitted" />
+
+    <!-- Audience Selection Menu (UserPost only, inside feed-article for proper positioning) -->
+    @if (ArticlePostType == PostType.UserPost && showAudienceMenu)
+    {
+        <div @onclick:stopPropagation="true" style="position: absolute; @audienceMenuPositionStyle z-index: 1001;">
+            <PopupMenu IsVisible="@showAudienceMenu" 
+                       MenuItems="@audienceMenuItems" 
+                       OnClose="@CloseAudienceMenu" />
+        </div>
+    }
+</div>
+
+<!-- Backdrop for Audience Menu (UserPost only, covers full viewport) -->
+@if (ArticlePostType == PostType.UserPost && showAudienceMenu)
+{
+    <div class="modal-backdrop" @onclick="CloseAudienceMenu" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 1000;"></div>
+}
+
+@if (showLikesModal)
+{
+    <LikesModal Likes="@likes" isLoading="@isLoadingLikes" OnClose="CloseLikesModal" />
+}
+
+<ImageViewerModal 
+    IsVisible="@showImageViewer"
+    ImageUrls="@imageUrls"
+    InitialIndex="@selectedImageIndex"
+    OnClose="CloseImageViewer" />
+
+<!-- Delete Confirmation Modal -->
+<ConfirmationDialog 
+    IsVisible="@showDeleteConfirmation"
+    Title="Delete Post"
+    Message="@DeleteConfirmationMessage"
+    ConfirmText="Delete Post"
+    CancelText="Cancel"
+    Type="ConfirmationDialog.ConfirmationType.Danger"
+    OnConfirm="@ConfirmDeletePost"
+    OnCancel="@CancelDeletePost" />
+
+<!-- Public Audience Confirmation Modal (UserPost only) -->
+@if (ArticlePostType == PostType.UserPost && showPublicConfirmation)
+{
+    <div class="modal-backdrop" @onclick="CancelPublicConfirmation" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: flex; align-items: center; justify-content: center;">
+        <div class="public-confirmation-modal" @onclick:stopPropagation="true" style="background: var(--surface-color); border: 2px solid var(--border-color); border-radius: 12px; max-width: 500px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--border-color);">
+                <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: var(--text-primary);">Change Post to Public?</h3>
+                <button type="button" @onclick="CancelPublicConfirmation" style="background: none; border: none; font-size: 32px; line-height: 1; color: var(--text-secondary); cursor: pointer; padding: 0; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: background-color 0.2s;">×</button>
+            </div>
+            <div style="padding: 24px; text-align: center;">
+                <div style="color: var(--warning-color); margin-bottom: 16px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                    </svg>
+                </div>
+                <p style="font-size: 15px; color: var(--text-primary); margin-bottom: 12px; line-height: 1.5;">
+                    <strong style="color: var(--warning-color);">Public posts are visible to everyone</strong> — not just your friends. 
+                    Anyone on the internet can see, share, and comment on your public post.
+                </p>
+                <p style="font-size: 15px; color: var(--text-secondary); margin: 0;">
+                    Are you sure you want to make this post public?
+                </p>
+            </div>
+            <div style="display: flex; gap: 12px; padding: 16px 24px; border-top: 1px solid var(--border-color); justify-content: flex-end;">
+                <button type="button" @onclick="CancelPublicConfirmation" style="padding: 10px 20px; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; background-color: var(--surface-secondary); color: var(--text-primary); transition: background-color 0.2s;">
+                    Cancel
+                </button>
+                <button type="button" @onclick="ConfirmPublicAudience" style="padding: 10px 20px; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; background-color: var(--warning-color); color: white; transition: background-color 0.2s;">
+                    Yes, Make it Public
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@* Report Post Modal (GroupPost only) *@
+@if (ArticlePostType == PostType.GroupPost && showReportModal)
+{
+    <FreeSpeakWeb.Components.Groups.ReportContentModal
+        GroupId="@GroupId"
+        PostId="@PostId"
+        ReporterId="@CurrentUserId"
+        OnClose="CloseReportModal"
+        OnReportSubmitted="HandleReportSubmitted" />
+}

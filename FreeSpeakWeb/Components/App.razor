@@ -44,13 +44,36 @@
             applyTheme();
         });
 
-        // Listen for Blazor enhanced navigation events (if they exist)
+        // Listen for Blazor enhanced navigation events
         document.addEventListener('DOMContentLoaded', function() {
-            // Blazor enhanced nav callback
-            Blazor?.addEventListener?.('enhancednavigationcompleted', function() {
+            // For .NET 8+ Blazor enhanced navigation
+            if (typeof Blazor !== 'undefined' && Blazor.addEventListener) {
+                Blazor.addEventListener('enhancedload', function() {
+                    applyTheme();
+                });
+            }
+        });
+
+        // Also listen for page visibility changes and navigation state changes
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
                 applyTheme();
+            }
+        });
+
+        // MutationObserver to detect when data-theme might be removed
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+                    var currentTheme = document.documentElement.getAttribute('data-theme');
+                    var savedTheme = localStorage.getItem('selectedTheme');
+                    if (!currentTheme && savedTheme) {
+                        document.documentElement.setAttribute('data-theme', savedTheme);
+                    }
+                }
             });
         });
+        observer.observe(document.documentElement, { attributes: true });
     </script>
     <link rel="stylesheet" href="@Assets["lib/bootstrap/dist/css/bootstrap.min.css"]" />
     <link rel="stylesheet" href="@Assets["css/themes.css"]" />

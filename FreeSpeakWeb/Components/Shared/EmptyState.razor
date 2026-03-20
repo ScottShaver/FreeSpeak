@@ -1,0 +1,84 @@
+@code {
+    /// <summary>
+    /// The main message to display.
+    /// </summary>
+    [Parameter]
+    public string Message { get; set; } = "No items found.";
+
+    /// <summary>
+    /// Optional icon class (Bootstrap Icons). Example: "bi-inbox", "bi-people", "bi-file-text".
+    /// </summary>
+    [Parameter]
+    public string? Icon { get; set; }
+
+    /// <summary>
+    /// Optional secondary/description text.
+    /// </summary>
+    [Parameter]
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// Optional action button text. If provided, shows a button.
+    /// </summary>
+    [Parameter]
+    public string? ActionText { get; set; }
+
+    /// <summary>
+    /// Event callback when the action button is clicked.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnAction { get; set; }
+
+    /// <summary>
+    /// CSS class for the action button.
+    /// </summary>
+    [Parameter]
+    public string ActionButtonClass { get; set; } = "btn-primary";
+
+    /// <summary>
+    /// Additional CSS classes for the container.
+    /// </summary>
+    [Parameter]
+    public string CssClass { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Optional custom content to display instead of the default layout.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private async Task HandleAction()
+    {
+        if (OnAction.HasDelegate)
+        {
+            await OnAction.InvokeAsync();
+        }
+    }
+}
+
+<div class="empty-state @CssClass">
+    @if (ChildContent != null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(Icon))
+        {
+            <div class="empty-state-icon">
+                <i class="bi @Icon"></i>
+            </div>
+        }
+        <p class="empty-state-message">@Message</p>
+        @if (!string.IsNullOrEmpty(Description))
+        {
+            <p class="empty-state-description">@Description</p>
+        }
+        @if (!string.IsNullOrEmpty(ActionText))
+        {
+            <button type="button" class="btn @ActionButtonClass empty-state-action" @onclick="HandleAction">
+                @ActionText
+            </button>
+        }
+    }
+</div>

@@ -1,5 +1,6 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.Shared
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Localization
 
@@ -315,20 +316,9 @@
                                                     <div class="d-flex justify-content-between align-items-start">
                                                         <div class="d-flex align-items-start flex-grow-1">
                                                             <div class="me-3">
-                                                                @if (post.Author != null && !string.IsNullOrEmpty(post.Author.ProfilePictureUrl))
-                                                                {
-                                                                    <img src="@post.Author.ProfilePictureUrl" 
-                                                                         alt="@GetPostAuthorName(post)" 
-                                                                         class="rounded-circle" 
-                                                                         width="48" height="48" 
-                                                                         style="object-fit: cover;" />
-                                                                }
-                                                                else
-                                                                {
-                                                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                                                                        <span class="text-white fw-bold">@GetPostAuthorInitials(post)</span>
-                                                                    </div>
-                                                                }
+                                                                <UserAvatar ImageUrl="@post.Author?.ProfilePictureUrl"
+                                                                            Name="@GetPostAuthorName(post)"
+                                                                            Size="md" />
                                                             </div>
                                                             <div class="flex-grow-1">
                                                                 <h6 class="mb-1">@GetPostAuthorName(post)</h6>
@@ -951,29 +941,6 @@
         if (post.Author == null) return Localizer["UnknownUser"];
         var name = $"{post.Author.FirstName} {post.Author.LastName}".Trim();
         return string.IsNullOrEmpty(name) ? post.Author.UserName ?? Localizer["UnknownUser"] : name;
-    }
-
-    /// <summary>
-    /// Gets the post author's initials for avatar placeholder.
-    /// </summary>
-    private string GetPostAuthorInitials(GroupPost post)
-    {
-        if (post.Author == null) return "?";
-        var firstName = post.Author.FirstName ?? "";
-        var lastName = post.Author.LastName ?? "";
-        if (!string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName))
-        {
-            return $"{firstName[0]}{lastName[0]}".ToUpper();
-        }
-        if (!string.IsNullOrEmpty(firstName))
-        {
-            return firstName[0].ToString().ToUpper();
-        }
-        if (!string.IsNullOrEmpty(post.Author.UserName) && post.Author.UserName.Length > 0)
-        {
-            return post.Author.UserName[0].ToString().ToUpper();
-        }
-        return "?";
     }
 
     /// <summary>

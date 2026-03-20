@@ -1,0 +1,91 @@
+/* Base avatar styles */
+.user-avatar {
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.user-avatar.clickable {
+    cursor: pointer;
+}
+
+.user-avatar-placeholder {
+    background-color: var(--secondary-color, #6c757d);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-initials {
+    color: white;
+    font-weight: 500;
+    text-transform: uppercase;
+    user-select: none;
+}
+
+/* Size variants */
+.avatar-xs {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+}
+
+.avatar-xs .avatar-initials {
+    font-size: 0.625rem;
+}
+
+.avatar-sm {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+}
+
+.avatar-sm .avatar-initials {
+    font-size: 0.75rem;
+}
+
+.avatar-md {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+}
+
+.avatar-md .avatar-initials {
+    font-size: 1rem;
+}
+
+.avatar-lg {
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
+    min-height: 64px;
+}
+
+.avatar-lg .avatar-initials {
+    font-size: 1.25rem;
+}
+
+.avatar-xl {
+    width: 96px;
+    height: 96px;
+    min-width: 96px;
+    min-height: 96px;
+}
+
+.avatar-xl .avatar-initials {
+    font-size: 2rem;
+}
+
+.avatar-xxl {
+    width: 120px;
+    height: 120px;
+    min-width: 120px;
+    min-height: 120px;
+}
+
+.avatar-xxl .avatar-initials {
+    font-size: 2.5rem;
+}

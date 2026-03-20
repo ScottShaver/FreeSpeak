@@ -44,7 +44,8 @@
     else if (post != null)
     {
         <div class="single-post-wrapper">
-            <FeedArticle 
+            <UnifiedArticle 
+                ArticlePostType="PostType.UserPost"
                 PostId="@post.PostId"
                 AuthorId="@post.AuthorId"
                 AuthorName="@post.AuthorName"
@@ -65,7 +66,7 @@
                 Images="@post.Images"
                 IsModalView="true"
                 IsReadOnly="@(string.IsNullOrEmpty(currentUserId))"
-                OnReactionChanged="@(async (reactionType) => await HandlePostReactionChangedWrapper(reactionType))"
+                OnReactionChanged="@((LikeType reactionType) => HandlePostReactionChangedWrapper(reactionType))"
                 OnRemoveReaction="@(async () => await HandleRemovePostReactionWrapper())"
                 OnCommentAdded="@HandleCommentAdded"
                 OnReplySubmitted="@HandleReplySubmitted"
@@ -79,7 +80,7 @@
                 <ArticleContent>
                     @((MarkupString)HtmlSanitizationService.SanitizeAndFormatContent(post.Content))
                 </ArticleContent>
-            </FeedArticle>
+            </UnifiedArticle>
         </div>
     }
 </div>

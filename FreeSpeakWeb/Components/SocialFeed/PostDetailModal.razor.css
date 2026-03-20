@@ -70,7 +70,7 @@
 
 .post-detail-modal-footer {
     flex-shrink: 0;
-    padding: 12px 16px;
+    padding: 12px 16px 12px 20px;
     border-top: 1px solid var(--border-color, #e4e6eb);
     background: var(--surface-color, #ffffff);
 }

@@ -1,0 +1,211 @@
+/* Profile Preview Popup Styles */
+
+.profile-preview-popup {
+    position: fixed;
+    z-index: 1050;
+    min-width: 280px;
+    max-width: 320px;
+    background-color: var(--surface-primary, #ffffff);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+    animation: popupFadeIn 0.2s ease-out;
+    pointer-events: auto;
+}
+
+/* Fade in animation */
+@keyframes popupFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading state */
+.profile-preview-popup.loading {
+    min-height: 100px;
+}
+
+/* Arrow pointer */
+.popup-arrow {
+    position: absolute;
+    top: -8px;
+    left: 20px;
+    width: 16px;
+    height: 16px;
+    background-color: var(--surface-primary, #ffffff);
+    border-left: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+    border-top: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+    transform: rotate(45deg);
+}
+
+/* Popup content container */
+.popup-content {
+    padding: 16px;
+}
+
+/* Profile header with avatar and name */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+/* Profile avatar */
+.profile-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.profile-avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--secondary-bg, #6c757d);
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* Profile info section */
+.profile-info {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.profile-name {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary, #212529);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-username {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-secondary, #6c757d);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Location section */
+.profile-location {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary, #6c757d);
+    border-top: 1px solid var(--border-light, rgba(0, 0, 0, 0.05));
+}
+
+.profile-location i {
+    color: var(--primary-color, #0d6efd);
+}
+
+/* Stats section */
+.profile-stats {
+    display: flex;
+    gap: 20px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light, rgba(0, 0, 0, 0.05));
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary, #212529);
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary, #6c757d);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Dark theme support */
+::deep [data-theme="dark"] .profile-preview-popup,
+[data-theme="dark"] .profile-preview-popup {
+    background-color: var(--surface-primary, #2d2d2d);
+    border-color: var(--border-color, rgba(255, 255, 255, 0.1));
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+::deep [data-theme="dark"] .popup-arrow,
+[data-theme="dark"] .popup-arrow {
+    background-color: var(--surface-primary, #2d2d2d);
+    border-color: var(--border-color, rgba(255, 255, 255, 0.1));
+}
+
+::deep [data-theme="dark"] .profile-name,
+[data-theme="dark"] .profile-name {
+    color: var(--text-primary, #e9e9e9);
+}
+
+::deep [data-theme="dark"] .stat-value,
+[data-theme="dark"] .stat-value {
+    color: var(--text-primary, #e9e9e9);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .profile-preview-popup {
+        min-width: 240px;
+        max-width: 280px;
+    }
+
+    .popup-content {
+        padding: 12px;
+    }
+
+    .profile-avatar {
+        width: 48px;
+        height: 48px;
+    }
+
+    .profile-name {
+        font-size: 0.95rem;
+    }
+
+    .profile-stats {
+        gap: 16px;
+    }
+
+    .stat-value {
+        font-size: 1rem;
+    }
+}
+
+/* Ensure popup stays visible when near edges */
+@media (max-width: 400px) {
+    .profile-preview-popup {
+        position: fixed;
+        left: 10px !important;
+        right: 10px !important;
+        max-width: calc(100vw - 20px);
+    }
+
+    .popup-arrow {
+        display: none;
+    }
+}

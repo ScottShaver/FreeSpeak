@@ -9,6 +9,8 @@
 @using System.Security.Claims
 @using Microsoft.Extensions.Localization
 
+@implements IDisposable
+
 @inject IOptions<SiteSettings> SiteSettings
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> UserManager
@@ -26,7 +28,7 @@
         </h5>
 
         <div class="functions-list">
-            @if (canCreateGroup)
+            @if (canCreateGroup && isOnGroupsPage)
             {
                 <button type="button" class="function-button" @onclick="OpenCreateGroupModal" title="@Localizer["CreateGroupTooltip"]">
                     <i class="bi bi-people-fill"></i>
@@ -35,7 +37,7 @@
             }
 
             @* Placeholder for future functions *@
-            @if (!canCreateGroup)
+            @if (!canCreateGroup || !isOnGroupsPage)
             {
                 <p class="text-muted small">@Localizer["NoFunctionsAvailable"]</p>
             }
@@ -161,6 +163,8 @@
     private string? currentUserId;
     private bool isAuthenticated = false;
     private bool canCreateGroup = false;
+    private string currentUrl = string.Empty;
+    private bool isOnGroupsPage = false;
 
     // Create group modal state
     private bool showCreateGroupModal = false;
@@ -201,6 +205,33 @@
                 canCreateGroup = user.IsInRole("SystemAdministrator") || user.IsInRole("GroupAdministrator");
             }
         }
+
+        // Subscribe to navigation changes
+        NavigationManager.LocationChanged += OnLocationChanged;
+        UpdateCurrentPage();
+    }
+
+    /// <summary>
+    /// Handles navigation location changes.
+    /// </summary>
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        UpdateCurrentPage();
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Updates the current page state based on the navigation URL.
+    /// </summary>
+    private void UpdateCurrentPage()
+    {
+        currentUrl = NavigationManager.Uri;
+        var relativePath = NavigationManager.ToBaseRelativePath(currentUrl).ToLowerInvariant();
+
+        // Check if we're on groups page or a specific group page
+        isOnGroupsPage = relativePath.StartsWith("groups") || 
+                         relativePath.StartsWith("group/") ||
+                         (relativePath.Contains("/group/") && !relativePath.Contains("/post/"));
     }
 
     /// <summary>
@@ -320,5 +351,13 @@
             isCreating = false;
             StateHasChanged();
         }
+    }
+
+    /// <summary>
+    /// Disposes resources and unsubscribes from navigation events.
+    /// </summary>
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
     }
 }

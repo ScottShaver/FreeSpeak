@@ -1,5 +1,6 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.Shared
 @using Microsoft.Extensions.Localization
 @inject UserPreferenceService UserPreferenceService
 @inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.LikesModal> Localizer
@@ -32,19 +33,15 @@
                             var displayName = GetCachedDisplayName(like.User.Id);
                             <div class="like-item">
                                 <div class="like-user-info">
-                                    @if (!string.IsNullOrEmpty(like.User.ProfilePictureUrl))
-                                    {
-                                        <img src="@like.User.ProfilePictureUrl" alt="@displayName" class="like-user-avatar" />
-                                    }
-                                    else
-                                    {
-                                        <div class="like-user-avatar like-avatar-placeholder">
-                                            <span class="like-avatar-initial">@GetInitials(displayName)</span>
-                                        </div>
-                                    }
+                                    <UserAvatar ImageUrl="@like.User.ProfilePictureUrl" 
+                                                Name="@displayName" 
+                                                Size="md" 
+                                                CssClass="like-user-avatar" />
                                     <div class="like-user-details">
                                         <div class="like-user-name">@displayName</div>
-                                        <div class="like-timestamp">@FormatTimestamp(like.CreatedAt)</div>
+                                        <div class="like-timestamp">
+                                            <TimestampDisplay Timestamp="@like.CreatedAt" />
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="like-reaction">

@@ -8,6 +8,128 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Notification Translation Template System**
+  - `NotificationTemplateService` for generating translated notifications
+  - Template-based system using resource files for all 12 languages
+  - Supports placeholder replacement for dynamic content
+  - Consistent notification generation across the application
+  - Documentation in notification template resource files
+
+- **Profile Preview on Hover**
+  - `ProfilePreviewPopup` component displays user information on 1-second hover
+  - Shows profile picture, name, username, location, friend count, mutual friends
+  - Smart positioning with viewport boundary detection
+  - Works on Friends page, feed posts, and comments
+  - Smooth fade-in/out animations with timer-based detection
+  - Auto-repositions above avatar if too close to viewport bottom
+
+- **Individual Friend Profile Pages**
+  - New `/friend/{userId}` route for viewing friend profiles
+  - Displays friend's posts, groups, and activity
+  - Profile information and statistics
+  - Integration with profile preview popup
+  - Jump to Friend navigation feature for quick switching
+
+- **Friends Page Enhancements**
+  - Dedicated Friends List page with 5 tabs:
+    - Your Friends (with remove option and navigation enabled)
+    - People You May Know (with mutual friend counts)
+    - Friend Requests (accept/decline)
+    - Sent Requests (cancel pending)
+    - Find People (search functionality)
+  - Profile preview on hover for all friend cards
+  - Responsive grid layout for mobile, tablet, and desktop
+  - Mutual friends modal display
+
+- **Group Points and Gamification System**
+  - `GroupPointsService` calculates points for group participation
+  - Points awarded for: posts, comments, reactions
+  - Member level badges based on point thresholds
+  - Points tracked per user per group in `GroupUser.Points`
+  - Level display in group context (Bronze, Silver, Gold, Platinum, Diamond)
+  - Point accumulation visible in group member lists
+
+- **Group Rules System**
+  - `GroupRule` entity for storing group-specific rules
+  - `RulesAcceptanceModal` component for displaying rules before joining
+  - Users must agree to rules before joining a group
+  - Administrators can create, edit, and delete rules
+  - `GroupRuleService` for rule management
+  - Audit logging for rule creation and modifications
+
+- **Group Creation and Management**
+  - Users can create new groups with name, description, and privacy settings
+  - `GroupAdministrationModal` for group settings management
+  - Role management: assign administrators and moderators
+  - Member management: view members, change roles, ban users
+  - Group deletion with cascade cleanup
+  - Join request approval/denial system
+
+- **System Administrator Features**
+  - New "System Admin" menu item (requires Administrator role)
+  - `SystemAdmin.razor` page for site-wide administration
+  - User management interface
+  - Site statistics and health monitoring
+  - Audit log viewing
+  - Database management tools
+  - Full audit trail for administrative actions
+
+- **System Moderator Features**
+  - New "System Moderator" menu item (requires Moderator role)
+  - Content moderation across all groups and posts
+  - User reports review and action interface
+  - Site-wide ban/warn capabilities
+  - Comment and post removal powers
+  - Separate UI from group-level moderation
+  - Audit logging for all moderation actions
+
+- **Jump To Navigation**
+  - "Jump to Group" dropdown in navigation for quick group switching
+  - "Jump to Friend" feature for quick friend profile navigation
+  - Cached lists for performance
+  - Search/filter capabilities
+  - Recent groups/friends prioritization
+
+- **Translation Validation Tool**
+  - `ValidateTranslations.ps1` PowerShell script
+  - Scans all resource files for missing translations
+  - Generates coverage reports per language
+  - Identifies unused resource keys
+  - CSV export of missing translations
+  - Helps maintain 100% translation coverage
+  - Documentation in `VALIDATION_SCRIPT_GUIDE.md`
+
+- **Configuration Enhancement**
+  - `AllowPostAttachments` setting in appsettings.json
+  - Controls whether users can attach images to posts
+  - When false, hides upload UI and blocks server-side uploads
+  - Allows administrators to disable image uploads site-wide
+
+### Changed
+- Enhanced notification system to use translation templates
+- Updated all notification generation to use `NotificationTemplateService`
+- Friends page now uses dedicated FriendDetails route for navigation
+- Group member badges now show point-based levels
+- Navigation menu includes Jump to Group and Jump to Friend dropdowns
+
+### Technical
+- All user avatars now support profile preview on hover
+- Unique element IDs used for accurate popup positioning
+- JavaScript interop for getBoundingClientRect() calculations
+- Timer-based hover detection with proper disposal
+- Viewport boundary detection prevents off-screen rendering
+
+### Documentation
+- Updated README.md with all new features
+- Added Profile Preview section
+- Added Friends System section
+- Added Groups Points & Rules section
+- Added System Administration section
+- Added Translation Tools section
+- Updated configuration examples with `AllowPostAttachments`
+
+### Older Features
+
 - **Group Post System** (Complete posting system for groups)
   - Database Tables:
     - `GroupPosts` - Posts made within groups

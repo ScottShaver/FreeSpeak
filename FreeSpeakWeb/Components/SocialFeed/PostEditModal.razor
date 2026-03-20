@@ -3,6 +3,7 @@
 @using FreeSpeakWeb.Services
 @using Microsoft.JSInterop
 @inject ImageUploadService ImageUploadService
+@inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
 @inject IJSRuntime JS
 @implements IAsyncDisposable
 
@@ -20,22 +21,35 @@
             <!-- Post Author Header (without menu) -->
             <div class="feed-article-header">
                 <div class="header-left">
-                    @if (!string.IsNullOrEmpty(AuthorImageUrl))
-                    {
-                        <img src="@AuthorImageUrl" alt="@AuthorName" class="author-avatar" />
-                    }
-                    else
-                    {
-                        <div class="author-avatar avatar-placeholder">
-                            <span class="avatar-initial">@GetInitials(AuthorName)</span>
-                        </div>
-                    }
+                    <UserAvatar ImageUrl="@AuthorImageUrl" 
+                                Name="@AuthorName" 
+                                Size="md"
+                                CssClass="author-avatar" />
                     <div class="author-info">
                         <span class="author-name">@AuthorName</span>
                         <div class="post-metadata">
                             <span class="post-time">@GetTimeAgo(CreatedAt)</span>
                             <span class="metadata-separator">·</span>
-                            <span class="audience-icon">@GetAudienceIcon(AudienceType)</span>
+                            <span class="audience-icon">
+                                @if (AudienceType == AudienceType.Public)
+                                {
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0ZM2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484-.08.08-.162.158-.242.234-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"/>
+                                    </svg>
+                                }
+                                else if (AudienceType == AudienceType.FriendsOnly)
+                                {
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+                                    </svg>
+                                }
+                                else if (AudienceType == AudienceType.MeOnly)
+                                {
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                                    </svg>
+                                }
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -69,43 +83,46 @@
             </div>
 
             <!-- Image Management -->
-            <div class="edit-images-section">
-                @if (currentImages.Any())
-                {
-                    <div class="current-images-grid">
-                        @foreach (var image in currentImages)
-                        {
-                            <div class="image-preview-container">
-                                <img src="@image.ImageUrl" alt="Post image" class="image-preview" />
-                                <button type="button" class="remove-image-btn" @onclick="() => RemoveImage(image)">
-                                    <i class="bi bi-x-circle-fill"></i>
-                                </button>
-                            </div>
-                        }
-                    </div>
-                }
+            @if (SiteSettings.Value.AllowPostAttachments)
+            {
+                <div class="edit-images-section">
+                    @if (currentImages.Any())
+                    {
+                        <div class="current-images-grid">
+                            @foreach (var image in currentImages)
+                            {
+                                <div class="image-preview-container">
+                                    <img src="@image.ImageUrl" alt="Post image" class="image-preview" />
+                                    <button type="button" class="remove-image-btn" @onclick="() => RemoveImage(image)">
+                                        <i class="bi bi-x-circle-fill"></i>
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    }
 
-                @if (newImages.Any())
-                {
-                    <div class="current-images-grid">
-                        @foreach (var image in newImages)
-                        {
-                            <div class="image-preview-container">
-                                <img src="@image.DataUrl" alt="New image" class="image-preview" />
-                                <button type="button" class="remove-image-btn" @onclick="() => RemoveNewImage(image)">
-                                    <i class="bi bi-x-circle-fill"></i>
-                                </button>
-                            </div>
-                        }
-                    </div>
-                }
+                    @if (newImages.Any())
+                    {
+                        <div class="current-images-grid">
+                            @foreach (var image in newImages)
+                            {
+                                <div class="image-preview-container">
+                                    <img src="@image.DataUrl" alt="New image" class="image-preview" />
+                                    <button type="button" class="remove-image-btn" @onclick="() => RemoveNewImage(image)">
+                                        <i class="bi bi-x-circle-fill"></i>
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    }
 
-                <div class="add-images-section">
-                    <button type="button" class="btn-add-images" @onclick="OpenImageUpload">
-                        <i class="bi bi-image"></i> @((currentImages.Any() || newImages.Any()) ? "Add More Images" : "Add Images")
-                    </button>
+                    <div class="add-images-section">
+                        <button type="button" class="btn-add-images" @onclick="OpenImageUpload">
+                            <i class="bi bi-image"></i> @((currentImages.Any() || newImages.Any()) ? "Add More Images" : "Add Images")
+                        </button>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
 
         <!-- Footer with Action Buttons -->
@@ -359,17 +376,6 @@
         }
     }
 
-    private string GetInitials(string? name)
-    {
-        if (string.IsNullOrEmpty(name))
-            return "?";
-
-        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        if (parts.Length >= 2)
-            return $"{parts[0][0]}{parts[1][0]}".ToUpper();
-        return parts[0][0].ToString().ToUpper();
-    }
-
     private string GetTimeAgo(DateTime dateTime)
     {
         var timeSpan = DateTime.UtcNow - dateTime;
@@ -387,16 +393,5 @@
         if (timeSpan.TotalDays < 365)
             return $"{(int)(timeSpan.TotalDays / 30)}mo";
         return $"{(int)(timeSpan.TotalDays / 365)}y";
-    }
-
-    private string GetAudienceIcon(AudienceType audienceType)
-    {
-        return audienceType switch
-        {
-            AudienceType.Public => "🌐",
-            AudienceType.FriendsOnly => "👥",
-            AudienceType.MeOnly => "🔒",
-            _ => "🌐"
-        };
     }
 }

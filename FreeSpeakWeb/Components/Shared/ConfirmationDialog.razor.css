@@ -1,0 +1,5 @@
+.confirmation-message {
+    margin: 0;
+    color: var(--text-secondary, #6c757d);
+    line-height: 1.5;
+}

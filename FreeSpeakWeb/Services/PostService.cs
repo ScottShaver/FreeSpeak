@@ -1033,6 +1033,16 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
+        /// Gets the total count of all comments for a post (including nested replies).
+        /// </summary>
+        /// <param name="postId">The unique identifier of the post.</param>
+        /// <returns>The total count of all comments including replies.</returns>
+        public async Task<int> GetTotalCommentCountAsync(int postId)
+        {
+            return await _commentRepository.GetCommentCountAsync(postId);
+        }
+
+        /// <summary>
         /// Retrieves replies for a specific comment ordered by creation date.
         /// </summary>
         /// <param name="commentId">The unique identifier of the parent comment.</param>

@@ -33,12 +33,12 @@
                 <hr />
                 <ValidationSummary class="text-danger" role="alert" />
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.UserName" id="Input.UserName" class="form-control" autocomplete="username webauthn" aria-required="true" placeholder="username" />
+                    <InputText @bind-Value="Input.UserName" id="Input.UserName" class="form-control" autocomplete="username webauthn" aria-required="true" />
                     <label for="Input.UserName" class="form-label">@Localizer["UserName"]</label>
                     <ValidationMessage For="() => Input.UserName" class="text-danger" />
                 </div>
                 <div class="form-floating mb-3">
-                    <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                    <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
                     <label for="Input.Password" class="form-label">@Localizer["Password"]</label>
                     <ValidationMessage For="() => Input.Password" class="text-danger" />
                 </div>

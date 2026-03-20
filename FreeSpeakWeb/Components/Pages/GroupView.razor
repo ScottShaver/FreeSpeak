@@ -41,12 +41,7 @@
 <div class="group-view-container">
     @if (isLoadingGroup)
     {
-        <div class="loading-indicator">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mt-3">@Localizer["LoadingGroupInformation"]</p>
-        </div>
+        <LoadingSpinner Text="@Localizer["LoadingGroupInformation"]" Size="lg" />
     }
     else if (group == null)
     {
@@ -115,22 +110,18 @@
                 <p class="group-description">@group.Description</p>
 
                 <div class="group-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">@Localizer["Members"]</span>
-                        <span class="stat-value">@memberCount</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">@Localizer["TotalPosts"]</span>
-                        <span class="stat-value">@totalPosts</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">@Localizer["PostsThisWeek"]</span>
-                        <span class="stat-value">@postsThisWeek</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">@Localizer["PostsToday"]</span>
-                        <span class="stat-value">@postsToday</span>
-                    </div>
+                    <StatItem Label="@Localizer["Members"]" 
+                              Value="@memberCount" 
+                              Icon="bi-people" />
+                    <StatItem Label="@Localizer["TotalPosts"]" 
+                              Value="@totalPosts" 
+                              Icon="bi-file-post" />
+                    <StatItem Label="@Localizer["PostsThisWeek"]" 
+                              Value="@postsThisWeek" 
+                              Icon="bi-calendar-week" />
+                    <StatItem Label="@Localizer["PostsToday"]" 
+                              Value="@postsToday" 
+                              Icon="bi-calendar-day" />
                     <div class="stat-item">
                         <span class="stat-label">@Localizer["LastActivity"]</span>
                         <span class="stat-value">@GetRelativeTime(lastActivity)</span>
@@ -188,15 +179,11 @@
 
             @if (isLoadingPosts && !groupPosts.Any())
             {
-                <div class="loading-indicator">
-                    <p>@Localizer["LoadingPosts"]</p>
-                </div>
+                <LoadingSpinner Text="@Localizer["LoadingPosts"]" />
             }
             else if (!groupPosts.Any() && !isLoadingPosts)
             {
-                <div class="empty-feed">
-                    <p>@Localizer["NoPostsYet"]</p>
-                </div>
+                <EmptyState Message="@Localizer["NoPostsYet"]" Icon="bi-file-post" />
             }
             else
             {
@@ -228,7 +215,8 @@
                         </div>
                     }
 
-                    <GroupPostArticle
+                    <UnifiedArticle
+                        ArticlePostType="PostType.GroupPost"
                         PostId="@post.Id"
                         GroupId="@post.GroupId"
                         GroupName="@group.Name"
@@ -251,7 +239,7 @@
                         IsPinned="@isPinned"
                         IsMuted="@isMuted"
                         Images="@ConvertPostImageDtosToPostImages(post.Images)"
-                        OnReactionChanged="@(async (reactionType) => await HandleGroupPostReactionChanged(post.Id, reactionType))"
+                        OnReactionChanged="@((LikeType reactionType) => HandleGroupPostReactionChanged(post.Id, reactionType))"
                         OnRemoveReaction="@(async () => await HandleRemoveGroupPostReaction(post.Id))"
                         OnPinPost="@HandlePinGroupPost"
                         OnUnpinPost="@HandleUnpinGroupPost"
@@ -269,21 +257,17 @@
                         <ArticleContent>
                             @((MarkupString)FormatContentWithLineBreaks(post.Content))
                         </ArticleContent>
-                    </GroupPostArticle>
+                    </UnifiedArticle>
                 }
 
                 @if (isLoadingMorePosts)
                 {
-                    <div class="loading-more">
-                        <p>Loading more posts...</p>
-                    </div>
+                    <LoadingSpinner Text="Loading more posts..." Size="sm" />
                 }
 
                 @if (hasMorePosts == false && groupPosts.Any())
                 {
-                    <div class="no-more-posts">
-                        <p>No more posts at this time</p>
-                    </div>
+                    <EmptyState Message="No more posts at this time" CssClass="no-more-posts" />
                 }
             }
         </div>
@@ -321,10 +305,12 @@
         OnPostDeleted="@HandleGroupPostDeleted"
         OnEditPost="@HandleEditGroupPost"
         OnCommentAdded="@HandleGroupPostCommentAdded"
+        OnCommentAddedComplete="@HandleCommentAddedFromModal"
         OnReplySubmitted="@HandleGroupPostReplySubmitted"
         OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
         OnRemoveCommentReaction="@HandleRemoveGroupPostCommentReaction"
         OnDeleteComment="@HandleDeleteComment"
+        OnCommentDeleted="@HandleCommentDeletedFromModal"
         OnCommentUpdated="@HandleCommentUpdated"
         OnReportComment="@HandleReportComment"
         OnClose="@CloseGroupPostDetailModal">
@@ -378,6 +364,34 @@
         ReporterId="@currentUserId"
         OnClose="CloseReportCommentModal"
         OnReportSubmitted="HandleCommentReportSubmitted" />
+}
+
+@* Edit Group Post Modal *@
+@if (showEditGroupPost && editGroupPost != null)
+{
+    <PostEditModal 
+        @ref="groupPostEditModalRef"
+        PostId="@editGroupPost.Id"
+        AuthorName="@(editGroupPost.Author != null ? (postAuthorNames.ContainsKey(editGroupPost.Id) ? postAuthorNames[editGroupPost.Id] : "Unknown") : "Unknown")"
+        AuthorImageUrl="@editGroupPost.Author?.ProfilePictureUrl"
+        CreatedAt="@editGroupPost.CreatedAt"
+        InitialContent="@editGroupPost.Content"
+        InitialImages="@(editGroupPost.Images?.Select(img => new PostImage { Id = img.Id, PostId = editGroupPost.Id, ImageUrl = img.ImageUrl, UploadedAt = img.UploadedAt }).ToList())"
+        AudienceType="@AudienceType.Public"
+        CurrentUserId="@currentUserId"
+        OnSave="@HandleSaveGroupPostEdit"
+        OnCancel="@CloseEditGroupPostModal"
+        OnImageUploadStateChanged="@HandleEditGroupPostImageUploadStateChanged"
+        OnImagesSelected="@HandleEditGroupPostImagesSelected" />
+}
+
+@if (showEditGroupPostImageUpload)
+{
+    <ImageUploadModal 
+        IsVisible="true"
+        OnImagesSelected="@HandleEditGroupPostImagesSelected"
+        OnClose="@(() => showEditGroupPostImageUpload = false)"
+        MaxImages="10" />
 }
 
 @code {
@@ -946,12 +960,28 @@
     /// Handles the edit post action by opening the post detail modal.
     /// </summary>
     /// <param name="postId">The ID of the post to edit.</param>
+    /// <summary>
+    /// Handles the edit post action by opening the edit post modal.
+    /// </summary>
+    /// <param name="postId">The ID of the post to edit.</param>
     private async Task HandleEditGroupPost(int postId)
     {
-        var post = groupPosts.FirstOrDefault(p => p.Id == postId);
-        if (post != null)
+        // Close the detail modal if it's open
+        CloseGroupPostDetailModal();
+
+        // Find the post from the main list
+        var postViewModel = groupPosts.FirstOrDefault(p => p.Id == postId);
+
+        if (postViewModel != null)
         {
-            await ShowGroupPostDetail(post);
+            // Load the full GroupPost entity for editing
+            var fullPost = await GroupPostService.GetGroupPostByIdAsync(postId);
+            if (fullPost != null)
+            {
+                editGroupPost = fullPost;
+                showEditGroupPost = true;
+                StateHasChanged();
+            }
         }
     }
 
@@ -982,6 +1012,12 @@
     // Modal state
     private bool showGroupPostDetailModal = false;
     private GroupPostViewModel? selectedGroupPost = null;
+
+    // Edit modal state
+    private bool showEditGroupPost = false;
+    private GroupPost? editGroupPost = null;
+    private bool showEditGroupPostImageUpload = false;
+    private PostEditModal? groupPostEditModalRef;
 
     // Group settings modal state
     private bool showGroupSettings = false;
@@ -1032,6 +1068,93 @@
         showGroupPostDetailModal = false;
         selectedGroupPost = null;
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles when a comment deletion is fully complete from the modal.
+    /// This triggers a refresh of the feed list's UnifiedArticle components
+    /// by incrementing the refresh trigger for the affected post.
+    /// </summary>
+    /// <param name="postId">The ID of the post whose comments were modified.</param>
+    private void HandleCommentDeletedFromModal(int postId)
+    {
+        // Increment the refresh trigger to force UnifiedArticle components in the feed list
+        // to reload their internally-loaded comments
+        IncrementRefreshTrigger(postId);
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles when a comment addition is fully complete from the modal.
+    /// This triggers a refresh of the feed list's UnifiedArticle components
+    /// by incrementing the refresh trigger for the affected post.
+    /// </summary>
+    /// <param name="postId">The ID of the post whose comments were modified.</param>
+    private void HandleCommentAddedFromModal(int postId)
+    {
+        // Increment the refresh trigger to force UnifiedArticle components in the feed list
+        // to reload their internally-loaded comments
+        IncrementRefreshTrigger(postId);
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the edit post modal.
+    /// </summary>
+    private async Task CloseEditGroupPostModal()
+    {
+        showEditGroupPost = false;
+        editGroupPost = null;
+        StateHasChanged();
+        await Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Handles the save event from the edit post modal.
+    /// </summary>
+    /// <param name="args">Tuple containing post ID, content, image URLs, and removed image IDs.</param>
+    private async Task HandleSaveGroupPostEdit((int PostId, string Content, List<string> ImageUrls, List<int> RemovedImageIds) args)
+    {
+        var result = await GroupPostService.UpdateGroupPostAsync(args.PostId, currentUserId, args.Content, args.ImageUrls, args.RemovedImageIds);
+        if (result.Success)
+        {
+            await CloseEditGroupPostModal();
+            AlertService.ShowSuccess("Group post updated successfully.");
+
+            // Reload the group posts to reflect the changes
+            await LoadGroupPosts();
+            StateHasChanged();
+        }
+        else
+        {
+            AlertService.ShowError(result.ErrorMessage ?? "Failed to update group post.");
+        }
+    }
+
+    /// <summary>
+    /// Handles the image upload state change event from the edit modal.
+    /// </summary>
+    /// <param name="isOpen">Whether the image upload modal should be open.</param>
+    private async Task HandleEditGroupPostImageUploadStateChanged(bool isOpen)
+    {
+        showEditGroupPostImageUpload = isOpen;
+        StateHasChanged();
+        await Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Handles the images selected event from the edit modal.
+    /// </summary>
+    /// <param name="images">The list of selected images.</param>
+    private async Task HandleEditGroupPostImagesSelected(List<ImageUploadModal.SelectedImage> images)
+    {
+        if (groupPostEditModalRef != null && images != null && images.Any())
+        {
+            groupPostEditModalRef.AddNewImages(images);
+        }
+        showEditGroupPostImageUpload = false;
+        StateHasChanged();
+        await Task.CompletedTask;
     }
 
     private GroupPostComment? FindCommentInTree(List<GroupPostComment> comments, int commentId)

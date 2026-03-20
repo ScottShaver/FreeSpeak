@@ -1,0 +1,45 @@
+@using FreeSpeakWeb.Services
+@inject TimestampFormattingService TimestampService
+
+@code {
+    /// <summary>
+    /// The timestamp to display.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public DateTime Timestamp { get; set; }
+
+    /// <summary>
+    /// Display mode: "relative" (default, e.g., "5m ago"), "absolute" (e.g., "Jan 5, 2024"), 
+    /// "both" (relative with absolute in tooltip).
+    /// </summary>
+    [Parameter]
+    public string Mode { get; set; } = "both";
+
+    /// <summary>
+    /// Additional CSS classes.
+    /// </summary>
+    [Parameter]
+    public string CssClass { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Format string for absolute time display.
+    /// </summary>
+    [Parameter]
+    public string AbsoluteFormat { get; set; } = "MMM d, yyyy 'at' h:mm tt";
+
+    private string RelativeTime => TimestampService.FormatTimeAgo(Timestamp);
+    private string AbsoluteTime => Timestamp.ToString(AbsoluteFormat);
+}
+
+@if (Mode == "relative")
+{
+    <span class="timestamp @CssClass">@RelativeTime</span>
+}
+else if (Mode == "absolute")
+{
+    <span class="timestamp @CssClass">@AbsoluteTime</span>
+}
+else
+{
+    <span class="timestamp @CssClass" title="@AbsoluteTime">@RelativeTime</span>
+}

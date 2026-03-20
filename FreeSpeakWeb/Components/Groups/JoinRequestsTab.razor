@@ -1,5 +1,6 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.Shared
 @using Microsoft.Extensions.Localization
 
 @inject GroupMemberService GroupMemberService
@@ -50,16 +51,9 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="request-info d-flex align-items-center">
                                     <div class="user-avatar me-3">
-                                        @if (!string.IsNullOrEmpty(request.User?.ProfilePictureUrl))
-                                        {
-                                            <img src="@request.User.ProfilePictureUrl" alt="@GetUserDisplayName(request.User)" class="rounded-circle" width="48" height="48" />
-                                        }
-                                        else
-                                        {
-                                            <div class="avatar-placeholder rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                                                <span class="text-white fw-bold">@GetInitials(GetUserDisplayName(request.User))</span>
-                                            </div>
-                                        }
+                                        <UserAvatar ImageUrl="@request.User?.ProfilePictureUrl"
+                                                    Name="@GetUserDisplayName(request.User)"
+                                                    Size="md" />
                                     </div>
                                     <div class="user-details">
                                         <h6 class="mb-0">@GetUserDisplayName(request.User)</h6>
@@ -223,33 +217,6 @@
 
         var fullName = $"{user.FirstName} {user.LastName}".Trim();
         return string.IsNullOrEmpty(fullName) ? user.UserName ?? Localizer["UnknownUser"] : fullName;
-    }
-
-    /// <summary>
-    /// Gets the initials from a display name for the avatar placeholder.
-    /// </summary>
-    private string GetInitials(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-            return "?";
-
-        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-        if (parts.Length == 0)
-            return "?";
-
-        if (parts.Length == 1)
-        {
-            // For single word (username), try to get first 2 characters
-            var singleWord = parts[0];
-            if (singleWord.Length >= 2)
-                return singleWord.Substring(0, 2).ToUpper();
-            else
-                return singleWord.Substring(0, 1).ToUpper();
-        }
-
-        // Return first letter of first name + first letter of last name
-        return $"{parts[0].Substring(0, 1)}{parts[^1].Substring(0, 1)}".ToUpper();
     }
 
     /// <summary>

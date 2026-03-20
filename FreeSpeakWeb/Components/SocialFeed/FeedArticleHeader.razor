@@ -1,26 +1,56 @@
 @using FreeSpeakWeb.Components.Shared
 @using FreeSpeakWeb.Components.Groups
+@using FreeSpeakWeb.Components.Friends
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
 @using Microsoft.Extensions.Localization
+@using Microsoft.JSInterop
+@using Microsoft.AspNetCore.Identity
+
+@implements IDisposable
 
 @inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.FeedArticleHeader> Localizer
 @inject TimestampFormattingService TimestampFormatter
+@inject IJSRuntime JSRuntime
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager NavigationManager
 
-<div class="article-header @GetAudienceHeaderClass()">
+<div class="article-header @GetAudienceHeaderClass()" @ref="headerElement">
     @if (!string.IsNullOrEmpty(AuthorImageUrl))
     {
-        <img src="@AuthorImageUrl" alt="@AuthorName" class="author-avatar" />
+        <img src="@AuthorImageUrl" 
+             alt="@AuthorName" 
+             class="author-avatar" 
+             id="@avatarElementId"
+             @onmouseenter="HandleMouseEnter"
+             @onmouseleave="HandleMouseLeave" />
     }
     else
     {
-        <div class="author-avatar author-avatar-placeholder">
+        <div class="author-avatar author-avatar-placeholder"
+             id="@avatarElementId"
+             @onmouseenter="HandleMouseEnter"
+             @onmouseleave="HandleMouseLeave">
             <span class="author-avatar-initial">@GetInitials(AuthorName)</span>
         </div>
     }
     <div class="author-info">
         <div class="author-name-container">
-            <span class="author-name">@AuthorName</span>
+            <span class="author-name">
+                @if (!string.IsNullOrEmpty(GroupName) && GroupId.HasValue)
+                {
+                    <a href="@($"/group/{GroupId}")" class="group-name-link">@GroupName</a>
+                    <span> &gt; </span>
+                }
+                @if (!string.IsNullOrEmpty(AuthorId) && !IsOwnAuthor)
+                {
+                    <a href="@($"/friend/{AuthorId}")" class="author-name-link">@AuthorName</a>
+                }
+                else
+                {
+                    @AuthorName
+                }
+            </span>
             @if (GroupId.HasValue && AuthorGroupPoints.HasValue)
             {
                 <MemberLevelBadge 
@@ -146,12 +176,43 @@
     </div>
 </div>
 
+<!-- Profile Preview Popup (hover-triggered) -->
+@if (authorUser != null)
+{
+    <ProfilePreviewPopup 
+        User="@authorUser"
+        IsVisible="@showProfilePreviewPopup"
+        MutualFriendsCount="0"
+        PositionX="@popupPositionX"
+        PositionY="@popupPositionY"
+        OnMouseEnter="@HandlePopupMouseEnter"
+        OnMouseLeave="@HandlePopupMouseLeave" />
+}
+
 @code {
     [Parameter]
     public string AuthorName { get; set; } = "Anonymous";
 
     [Parameter]
     public string? AuthorImageUrl { get; set; }
+
+    /// <summary>
+    /// The author's user ID for loading profile preview data.
+    /// </summary>
+    [Parameter]
+    public string? AuthorId { get; set; }
+
+    /// <summary>
+    /// The current logged-in user's ID, used to prevent linking to own profile.
+    /// </summary>
+    [Parameter]
+    public string? CurrentUserId { get; set; }
+
+    /// <summary>
+    /// Controls whether the hover preview popup is enabled.
+    /// </summary>
+    [Parameter]
+    public bool EnableHoverPreview { get; set; } = true;
 
     [Parameter]
     public DateTime CreatedAt { get; set; } = DateTime.Now;
@@ -204,8 +265,20 @@
     [Parameter]
     public int? GroupId { get; set; }
 
+    /// <summary>
+    /// The name of the group where the post was made. When provided along with GroupId,
+    /// the group name will be displayed as a clickable link before the author name.
+    /// </summary>
+    [Parameter]
+    public string? GroupName { get; set; }
+
     [Parameter]
     public int? AuthorGroupPoints { get; set; }
+
+    /// <summary>
+    /// Gets whether the current user is the author of this post.
+    /// </summary>
+    private bool IsOwnAuthor => !string.IsNullOrEmpty(CurrentUserId) && !string.IsNullOrEmpty(AuthorId) && CurrentUserId == AuthorId;
 
     private string FormattedTimestamp => TimestampFormatter.FormatTimeAgo(CreatedAt);
     private string FullTimestamp => CreatedAt.ToLocalTime().ToString("MMMM d, yyyy 'at' h:mm:ss tt");
@@ -223,7 +296,6 @@
 
     /// <summary>
     /// Extracts initials from a name string.
-    /// Handles the "GroupName > AuthorName" format by extracting only the author portion.
     /// </summary>
     /// <param name="name">The name to extract initials from.</param>
     /// <returns>One or two character initials in uppercase.</returns>
@@ -232,15 +304,7 @@
         if (string.IsNullOrWhiteSpace(name))
             return "U";
 
-        // Handle "GroupName > AuthorName" format - extract just the author name
-        var authorName = name;
-        var separatorIndex = name.IndexOf(" > ", StringComparison.Ordinal);
-        if (separatorIndex >= 0)
-        {
-            authorName = name.Substring(separatorIndex + 3).Trim();
-        }
-
-        var parts = authorName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
         if (parts.Length == 0)
             return "U";
@@ -294,5 +358,214 @@
         {
             await OnCommentCountClick.InvokeAsync();
         }
+    }
+
+    // Hover preview popup state
+    private bool showProfilePreviewPopup = false;
+    private double popupPositionX = 0;
+    private double popupPositionY = 0;
+    private System.Threading.Timer? hoverTimer;
+    private bool isMouseOverAvatar = false;
+    private bool isMouseOverPopup = false;
+    private ElementReference headerElement;
+    private ApplicationUser? authorUser = null;
+    private bool isLoadingAuthor = false;
+    private string avatarElementId = $"author-avatar-{Guid.NewGuid():N}";
+
+    // Hover delay in milliseconds (1 second)
+    private const int HoverDelayMs = 1000;
+
+    /// <summary>
+    /// Handles mouse entering the author avatar area.
+    /// Starts a timer to show the popup after the hover delay.
+    /// </summary>
+    private async Task HandleMouseEnter()
+    {
+        if (!EnableHoverPreview || string.IsNullOrEmpty(AuthorId)) return;
+
+        isMouseOverAvatar = true;
+
+        // Cancel any existing timer
+        CancelHoverTimer();
+
+        // Calculate popup position
+        await CalculatePopupPosition();
+
+        // Start loading author data if not already loaded
+        if (authorUser == null && !isLoadingAuthor)
+        {
+            isLoadingAuthor = true;
+            try
+            {
+                authorUser = await UserManager.FindByIdAsync(AuthorId);
+            }
+            catch
+            {
+                authorUser = null;
+            }
+            finally
+            {
+                isLoadingAuthor = false;
+            }
+        }
+
+        // Start a new timer to show popup after delay
+        hoverTimer = new System.Threading.Timer(
+            callback: _ => InvokeAsync(() =>
+            {
+                if (isMouseOverAvatar && authorUser != null)
+                {
+                    showProfilePreviewPopup = true;
+                    StateHasChanged();
+                }
+            }),
+            state: null,
+            dueTime: HoverDelayMs,
+            period: System.Threading.Timeout.Infinite
+        );
+    }
+
+    /// <summary>
+    /// Handles mouse leaving the author avatar area.
+    /// Hides the popup after a short delay if mouse is not over the popup.
+    /// </summary>
+    private void HandleMouseLeave()
+    {
+        isMouseOverAvatar = false;
+        CancelHoverTimer();
+
+        // Use a short delay to allow mouse to move to popup
+        hoverTimer = new System.Threading.Timer(
+            callback: _ => InvokeAsync(() =>
+            {
+                if (!isMouseOverAvatar && !isMouseOverPopup)
+                {
+                    HidePopup();
+                }
+            }),
+            state: null,
+            dueTime: 150,
+            period: System.Threading.Timeout.Infinite
+        );
+    }
+
+    /// <summary>
+    /// Handles mouse entering the popup (keeps it visible).
+    /// </summary>
+    private void HandlePopupMouseEnter()
+    {
+        isMouseOverPopup = true;
+        CancelHoverTimer();
+    }
+
+    /// <summary>
+    /// Handles mouse leaving the popup.
+    /// </summary>
+    private void HandlePopupMouseLeave()
+    {
+        isMouseOverPopup = false;
+
+        // Use a short delay before hiding
+        hoverTimer = new System.Threading.Timer(
+            callback: _ => InvokeAsync(() =>
+            {
+                if (!isMouseOverAvatar && !isMouseOverPopup)
+                {
+                    HidePopup();
+                }
+            }),
+            state: null,
+            dueTime: 150,
+            period: System.Threading.Timeout.Infinite
+        );
+    }
+
+    /// <summary>
+    /// Calculates the position for the popup based on the avatar location.
+    /// </summary>
+    private async Task CalculatePopupPosition()
+    {
+        try
+        {
+            var rect = await JSRuntime.InvokeAsync<BoundingClientRect>(
+                "eval",
+                $"(function() {{ var el = document.getElementById('{avatarElementId}'); if (el) {{ var r = el.getBoundingClientRect(); return {{ left: r.left, top: r.top, width: r.width, height: r.height }}; }} return null; }})()"
+            );
+
+            if (rect != null)
+            {
+                // Position popup below the avatar, slightly to the right
+                popupPositionX = rect.Left;
+                popupPositionY = rect.Top + rect.Height + 10;
+
+                // Ensure popup doesn't go off-screen on the left
+                if (popupPositionX < 10) popupPositionX = 10;
+
+                // Check if popup would go off-screen on the right (assuming 280px min width)
+                var viewportWidth = await JSRuntime.InvokeAsync<double>("eval", "window.innerWidth");
+                if (popupPositionX + 280 > viewportWidth - 10)
+                {
+                    popupPositionX = viewportWidth - 290;
+                }
+
+                // Check if popup would go off-screen at the bottom (assuming ~200px height)
+                var viewportHeight = await JSRuntime.InvokeAsync<double>("eval", "window.innerHeight");
+                if (popupPositionY + 200 > viewportHeight - 10)
+                {
+                    // Position above the avatar instead
+                    popupPositionY = rect.Top - 210;
+                    if (popupPositionY < 10) popupPositionY = 10;
+                }
+            }
+            else
+            {
+                // Fallback position
+                popupPositionX = 100;
+                popupPositionY = 100;
+            }
+        }
+        catch
+        {
+            // Fallback position
+            popupPositionX = 100;
+            popupPositionY = 100;
+        }
+    }
+
+    /// <summary>
+    /// Cancels the hover timer if active.
+    /// </summary>
+    private void CancelHoverTimer()
+    {
+        hoverTimer?.Dispose();
+        hoverTimer = null;
+    }
+
+    /// <summary>
+    /// Hides the popup and resets state.
+    /// </summary>
+    private void HidePopup()
+    {
+        showProfilePreviewPopup = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Helper class for bounding client rect from JavaScript.
+    /// </summary>
+    private class BoundingClientRect
+    {
+        public double Left { get; set; }
+        public double Top { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+    }
+
+    /// <summary>
+    /// Disposes of resources, including the hover timer.
+    /// </summary>
+    public void Dispose()
+    {
+        CancelHoverTimer();
     }
 }

@@ -11,6 +11,7 @@
 @using FreeSpeakWeb.Repositories.Abstractions
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.Friends
+@using FreeSpeakWeb.Components.Shared
 @using Microsoft.EntityFrameworkCore
 @using System.Security.Claims
 @using Microsoft.Extensions.Localization
@@ -50,7 +51,7 @@
     <div class="col-12">
         @if (isLoading)
         {
-            <p><em>@Localizer["Loading"]</em></p>
+            <LoadingSpinner Text="@Localizer["Loading"]" />
         }
         else
         {
@@ -101,9 +102,7 @@
                 <div class="tab-pane fade @(activeTab == "friends" ? "show active" : "")" role="tabpanel">
                     @if (friends.Count == 0)
                     {
-                        <div class="alert alert-info" role="alert">
-                            <p class="mb-0">@Localizer["NoFriends"]</p>
-                        </div>
+                        <EmptyState Message="@Localizer["NoFriends"]" Icon="bi-people" />
                     }
                     else
                     {
@@ -114,6 +113,7 @@
                                     <FriendListItem 
                                         User="@friend" 
                                         ShowRemove="true"
+                                        EnableProfileNavigation="true"
                                         OnRemove="@HandleRemoveFriend" />
                                 </div>
                             }
@@ -125,9 +125,7 @@
                 <div class="tab-pane fade @(activeTab == "suggestions" ? "show active" : "")" role="tabpanel">
                     @if (peopleYouMayKnow.Count == 0)
                     {
-                        <div class="alert alert-info" role="alert">
-                            <p class="mb-0">@Localizer["NoSuggestions"]</p>
-                        </div>
+                        <EmptyState Message="@Localizer["NoSuggestions"]" Icon="bi-person-plus" />
                     }
                     else
                     {
@@ -153,9 +151,7 @@
                 <div class="tab-pane fade @(activeTab == "requests" ? "show active" : "")" role="tabpanel">
                     @if (pendingRequests.Count == 0)
                     {
-                        <div class="alert alert-info" role="alert">
-                            <p class="mb-0">@Localizer["NoPendingRequests"]</p>
-                        </div>
+                        <EmptyState Message="@Localizer["NoPendingRequests"]" Icon="bi-inbox" />
                     }
                     else
                     {
@@ -182,9 +178,7 @@
                 <div class="tab-pane fade @(activeTab == "sent" ? "show active" : "")" role="tabpanel">
                     @if (sentRequests.Count == 0)
                     {
-                        <div class="alert alert-info" role="alert">
-                            <p class="mb-0">@Localizer["NoSentRequests"]</p>
-                        </div>
+                        <EmptyState Message="@Localizer["NoSentRequests"]" Icon="bi-send" />
                     }
                     else
                     {
