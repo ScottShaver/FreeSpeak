@@ -145,6 +145,14 @@ public abstract class PostDetailModalBase : ComponentBase, IAsyncDisposable
     public EventCallback<(int PostId, string Content)> OnCommentAdded { get; set; }
 
     /// <summary>
+    /// Event callback invoked after a comment is fully added (database committed and modal reloaded).
+    /// This allows the parent to trigger a refresh of feed list components at the correct time.
+    /// The parameter is the PostId that was affected.
+    /// </summary>
+    [Parameter]
+    public EventCallback<int> OnCommentAddedComplete { get; set; }
+
+    /// <summary>
     /// Event callback invoked when a reply is submitted to a comment.
     /// </summary>
     [Parameter]
@@ -167,6 +175,14 @@ public abstract class PostDetailModalBase : ComponentBase, IAsyncDisposable
     /// </summary>
     [Parameter]
     public EventCallback<int> OnDeleteComment { get; set; }
+
+    /// <summary>
+    /// Event callback invoked after a comment deletion is fully complete.
+    /// This allows the parent to trigger a refresh of feed list components at the correct time.
+    /// The parameter is the PostId that was affected.
+    /// </summary>
+    [Parameter]
+    public EventCallback<int> OnCommentDeleted { get; set; }
 
     /// <summary>
     /// Event callback invoked when a user requests to edit their own comment.
@@ -475,6 +491,9 @@ public abstract class PostDetailModalBase : ComponentBase, IAsyncDisposable
             await OnCommentAdded.InvokeAsync(data);
         }
 
+        // Add a delay to ensure database operation completes fully
+        await Task.Delay(300);
+
         // Reload comments to show the new comment
         currentCommentPage = 1;
         hasMoreComments = true;
@@ -483,6 +502,12 @@ public abstract class PostDetailModalBase : ComponentBase, IAsyncDisposable
         // Update comment counts
         directCommentCount = await GetDirectCommentCountFromServiceAsync();
         localCommentCount = await GetTotalCommentCountFromServiceAsync();
+
+        // Notify parent that comment addition is complete and feed should refresh
+        if (OnCommentAddedComplete.HasDelegate)
+        {
+            await OnCommentAddedComplete.InvokeAsync(data.PostId);
+        }
 
         StateHasChanged();
     }
@@ -554,6 +579,9 @@ public abstract class PostDetailModalBase : ComponentBase, IAsyncDisposable
                 await OnReplySubmitted.InvokeAsync((data.ParentCommentId, data.Content));
             }
 
+            // Add a delay to ensure database operation completes fully
+            await Task.Delay(300);
+
             // Reload comments to show the new reply after parent has added it
             currentCommentPage = 1;
             hasMoreComments = true;
@@ -562,6 +590,12 @@ public abstract class PostDetailModalBase : ComponentBase, IAsyncDisposable
             // Update comment counts
             directCommentCount = await GetDirectCommentCountFromServiceAsync();
             localCommentCount = await GetTotalCommentCountFromServiceAsync();
+
+            // Notify parent that comment addition is complete and feed should refresh
+            if (OnCommentAddedComplete.HasDelegate)
+            {
+                await OnCommentAddedComplete.InvokeAsync(PostId);
+            }
 
             StateHasChanged();
         }
@@ -589,22 +623,110 @@ public abstract class PostDetailModalBase : ComponentBase, IAsyncDisposable
     /// <param name="commentId">The ID of the deleted comment.</param>
     protected async Task HandleDeleteComment(int commentId)
     {
-        // Invoke parent callback to handle database deletion
-        if (OnDeleteComment.HasDelegate)
+        try
         {
-            await OnDeleteComment.InvokeAsync(commentId);
+            // Optimistically remove the comment from local list first for immediate UI feedback
+            var commentToRemove = CommentHelpers.FindCommentById(modalComments, commentId);
+            if (commentToRemove != null)
+            {
+                // Check if this is a top-level comment (not a reply)
+                bool isTopLevelComment = IsTopLevelComment(modalComments, commentId);
+
+                // Remove the comment from the local list immediately
+                bool wasRemoved = RemoveCommentFromLocalList(modalComments, commentId);
+
+                if (wasRemoved)
+                {
+                    // Update comment counts optimistically
+                    localCommentCount = Math.Max(0, localCommentCount - 1);
+                    if (isTopLevelComment)
+                    {
+                        directCommentCount = Math.Max(0, directCommentCount - 1);
+                    }
+
+                    StateHasChanged(); // Immediate UI update
+                }
+            }
+
+            // Invoke parent callback to handle database deletion - wait for it to complete
+            if (OnDeleteComment.HasDelegate)
+            {
+                await OnDeleteComment.InvokeAsync(commentId);
+            }
+
+            // Add a longer delay to ensure database operation, parent feed update, and re-render complete
+            await Task.Delay(500);
+
+            // Reload comments to reflect the deletion and get accurate counts
+            currentCommentPage = 1;
+            hasMoreComments = true;
+            await LoadInitialComments();
+
+            // Update comment counts from service
+            directCommentCount = await GetDirectCommentCountFromServiceAsync();
+            localCommentCount = await GetTotalCommentCountFromServiceAsync();
+
+            // Notify parent that comment deletion is complete and feed should refresh
+            if (OnCommentDeleted.HasDelegate)
+            {
+                await OnCommentDeleted.InvokeAsync(PostId);
+            }
+
+            StateHasChanged();
+        }
+        catch (Exception)
+        {
+            // If something goes wrong, reload the comments to get back to a consistent state
+            currentCommentPage = 1;
+            hasMoreComments = true;
+            await LoadInitialComments();
+
+            directCommentCount = await GetDirectCommentCountFromServiceAsync();
+            localCommentCount = await GetTotalCommentCountFromServiceAsync();
+
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Checks if a comment is a top-level comment (not a reply).
+    /// </summary>
+    /// <param name="comments">The list of comments to search.</param>
+    /// <param name="commentId">The ID of the comment to check.</param>
+    /// <returns>True if the comment is found at the top level, false if it's a reply.</returns>
+    private bool IsTopLevelComment(List<CommentDisplayModel> comments, int commentId)
+    {
+        // Check if the comment is in the top-level list
+        return comments.Any(c => c.CommentId == commentId);
+    }
+
+    /// <summary>
+    /// Removes a comment from the local comment list recursively.
+    /// </summary>
+    /// <param name="comments">The list of comments to search.</param>
+    /// <param name="commentId">The ID of the comment to remove.</param>
+    /// <returns>True if the comment was found and removed, false otherwise.</returns>
+    private bool RemoveCommentFromLocalList(List<CommentDisplayModel> comments, int commentId)
+    {
+        for (int i = comments.Count - 1; i >= 0; i--)
+        {
+            if (comments[i].CommentId == commentId)
+            {
+                comments.RemoveAt(i);
+                return true; // Found and removed
+            }
+
+            // Check replies recursively
+            if (comments[i].Replies != null)
+            {
+                if (RemoveCommentFromLocalList(comments[i].Replies, commentId))
+                {
+                    return true; // Found and removed in replies
+                }
+            }
         }
 
-        // Reload comments to reflect the deletion
-        currentCommentPage = 1;
-        hasMoreComments = true;
-        await LoadInitialComments();
-
-        // Update comment counts
-        directCommentCount = await GetDirectCommentCountFromServiceAsync();
-        localCommentCount = await GetTotalCommentCountFromServiceAsync();
-
-        StateHasChanged();
+        return false; // Not found
     }
 
     #endregion

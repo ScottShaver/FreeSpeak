@@ -19,14 +19,14 @@
             </button>
         </div>
         <div class="post-detail-modal-content" @ref="modalContentElement">
-            <FeedArticle 
+            <UnifiedArticle 
+                ArticlePostType="PostType.UserPost"
                 PostId="@PostId"
                 AuthorId="@AuthorId"
                 AuthorName="@AuthorName"
                 AuthorImageUrl="@AuthorImageUrl"
                 CurrentUserId="@CurrentUserId"
                 CreatedAt="@CreatedAt"
-                ArticleContent="@ArticleContent"
                 LikeCount="@LikeCount"
                 CommentCount="@totalCommentCount"
                 ShareCount="@ShareCount"
@@ -55,7 +55,11 @@
                 OnReportComment="@OnReportComment"
                 IsModalView="true"
                 IsReadOnly="@IsReadOnly"
-                HideCommentEditor="true" />
+                HideCommentEditor="true">
+                <ArticleContent>
+                    @ArticleContent
+                </ArticleContent>
+            </UnifiedArticle>
 
             @if (isLoadingComments && !modalComments.Any())
             {

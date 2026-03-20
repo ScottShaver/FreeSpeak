@@ -896,6 +896,8 @@ public partial class UnifiedArticle : ArticleComponentBase
 
         internalComments = await BuildGroupPostCommentModelsAsync(topComments);
         internalDirectCommentCount = allComments.Count(c => c.ParentCommentId == null);
+        // Use the CommentCount parameter from the parent which tracks the total count
+        internalTotalCommentCount = CommentCount;
     }
 
     /// <summary>
@@ -1040,7 +1042,7 @@ public partial class UnifiedArticle : ArticleComponentBase
             {
                 try
                 {
-                    module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/FeedArticle.razor.js");
+                    module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/UnifiedArticle.razor.js");
                     dotNetHelper = DotNetObjectReference.Create(this);
                     await module.InvokeVoidAsync("initializeContentMeasurement", contentElement, dotNetHelper);
                 }
@@ -1057,6 +1059,19 @@ public partial class UnifiedArticle : ArticleComponentBase
     /// </summary>
     public override async ValueTask DisposeAsync()
     {
+        if (module != null)
+        {
+            try
+            {
+                await module.InvokeVoidAsync("cleanup");
+                await module.DisposeAsync();
+            }
+            catch
+            {
+                // Silently fail - cleanup not critical
+            }
+        }
+
         await base.DisposeAsync();
         dotNetHelper?.Dispose();
     }

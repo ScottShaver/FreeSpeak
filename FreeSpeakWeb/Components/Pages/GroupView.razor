@@ -215,7 +215,8 @@
                         </div>
                     }
 
-                    <GroupPostArticle
+                    <UnifiedArticle
+                        ArticlePostType="PostType.GroupPost"
                         PostId="@post.Id"
                         GroupId="@post.GroupId"
                         GroupName="@group.Name"
@@ -238,7 +239,7 @@
                         IsPinned="@isPinned"
                         IsMuted="@isMuted"
                         Images="@ConvertPostImageDtosToPostImages(post.Images)"
-                        OnReactionChanged="@(async (reactionType) => await HandleGroupPostReactionChanged(post.Id, reactionType))"
+                        OnReactionChanged="@((LikeType reactionType) => HandleGroupPostReactionChanged(post.Id, reactionType))"
                         OnRemoveReaction="@(async () => await HandleRemoveGroupPostReaction(post.Id))"
                         OnPinPost="@HandlePinGroupPost"
                         OnUnpinPost="@HandleUnpinGroupPost"
@@ -256,7 +257,7 @@
                         <ArticleContent>
                             @((MarkupString)FormatContentWithLineBreaks(post.Content))
                         </ArticleContent>
-                    </GroupPostArticle>
+                    </UnifiedArticle>
                 }
 
                 @if (isLoadingMorePosts)
@@ -304,10 +305,12 @@
         OnPostDeleted="@HandleGroupPostDeleted"
         OnEditPost="@HandleEditGroupPost"
         OnCommentAdded="@HandleGroupPostCommentAdded"
+        OnCommentAddedComplete="@HandleCommentAddedFromModal"
         OnReplySubmitted="@HandleGroupPostReplySubmitted"
         OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
         OnRemoveCommentReaction="@HandleRemoveGroupPostCommentReaction"
         OnDeleteComment="@HandleDeleteComment"
+        OnCommentDeleted="@HandleCommentDeletedFromModal"
         OnCommentUpdated="@HandleCommentUpdated"
         OnReportComment="@HandleReportComment"
         OnClose="@CloseGroupPostDetailModal">
@@ -1064,6 +1067,34 @@
     {
         showGroupPostDetailModal = false;
         selectedGroupPost = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles when a comment deletion is fully complete from the modal.
+    /// This triggers a refresh of the feed list's UnifiedArticle components
+    /// by incrementing the refresh trigger for the affected post.
+    /// </summary>
+    /// <param name="postId">The ID of the post whose comments were modified.</param>
+    private void HandleCommentDeletedFromModal(int postId)
+    {
+        // Increment the refresh trigger to force UnifiedArticle components in the feed list
+        // to reload their internally-loaded comments
+        IncrementRefreshTrigger(postId);
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles when a comment addition is fully complete from the modal.
+    /// This triggers a refresh of the feed list's UnifiedArticle components
+    /// by incrementing the refresh trigger for the affected post.
+    /// </summary>
+    /// <param name="postId">The ID of the post whose comments were modified.</param>
+    private void HandleCommentAddedFromModal(int postId)
+    {
+        // Increment the refresh trigger to force UnifiedArticle components in the feed list
+        // to reload their internally-loaded comments
+        IncrementRefreshTrigger(postId);
         StateHasChanged();
     }
 

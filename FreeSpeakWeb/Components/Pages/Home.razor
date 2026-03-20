@@ -86,7 +86,8 @@
                                 var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
                                 var isMuted = postMuteStatus.ContainsKey(post.Id) ? postMuteStatus[post.Id] : (bool?)null;
 
-                                <FeedArticle 
+                                <UnifiedArticle 
+                                    ArticlePostType="PostType.UserPost"
                                     PostId="@post.Id"
                                     AuthorId="@post.AuthorId"
                                     AuthorName="@authorName"
@@ -107,11 +108,11 @@
                                     IsPinned="@isPinned"
                                     IsMuted="@isMuted"
                                     Images="@post.Images?.ToList()"
-                                    OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(post.Id, reactionType))"
+                                    OnReactionChanged="@(async (LikeType reactionType) => await HandleReactionChanged(post.Id, reactionType))"
                                     OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
                                     OnPinPost="@HandlePinPost"
                                     OnUnpinPost="@HandleUnpinPost"
-                                    OnAudienceTypeChanged="@(newAudienceType => HandleAudienceTypeChanged(post.Id, newAudienceType))"
+                                    OnAudienceTypeChanged="@((AudienceType newAudienceType) => HandleAudienceTypeChanged(post.Id, newAudienceType))"
                                     OnPostDeleted="@HandlePostDeleted"
                                     OnEditPost="@HandleEditPost"
                                     OnCommentAdded="@HandleCommentAdded"
@@ -126,7 +127,7 @@
                                     <ArticleContent>
                                         @((MarkupString)FormatContentWithLineBreaks(post.Content))
                                     </ArticleContent>
-                                </FeedArticle>
+                                </UnifiedArticle>
                             }
 
                             @if (isLoadingMore)
@@ -247,10 +248,12 @@
                 OnAudienceTypeChanged="@(newAudienceType => HandleAudienceTypeChanged(selectedPost.Id, newAudienceType))"
                 OnPostDeleted="@HandlePostDeleted"
                 OnCommentAdded="@OnCommentAdded"
+                OnCommentAddedComplete="@HandleCommentAddedFromModal"
                 OnReplySubmitted="@OnReplySubmitted"
                 OnCommentReactionChanged="@OnCommentReactionChanged"
                 OnRemoveCommentReaction="@OnRemoveCommentReaction"
                 OnDeleteComment="@HandleDeleteComment"
+                OnCommentDeleted="@HandleCommentDeletedFromModal"
                 OnCommentUpdated="@HandleCommentUpdated"
                 OnReportComment="@HandleReportComment"
                 OnClose="@(async () => await ClosePostDetail())">
@@ -328,6 +331,9 @@
     private int uploadProgress = 0;
     private int uploadCurrentStep = 0;
     private int uploadTotalSteps = 0;
+
+    // Disposal tracking flag to prevent operations on disposed component
+    private bool _disposed = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -445,6 +451,7 @@
     [JSInvokable]
     public async Task LoadMorePostsAsync()
     {
+        if (_disposed) return;
         if (currentUserId == null || isLoadingMore || !hasMorePosts) return;
 
         isLoadingMore = true;
@@ -454,6 +461,8 @@
         {
             currentPage++;
             var loadedPosts = await PostService.GetFeedPostsAsync(currentUserId, pageSize, currentPage);
+
+            if (_disposed) return;
 
             if (loadedPosts.Any())
             {
@@ -484,8 +493,11 @@
         }
         finally
         {
-            isLoadingMore = false;
-            StateHasChanged(); // Update UI after loading
+            if (!_disposed)
+            {
+                isLoadingMore = false;
+                StateHasChanged(); // Update UI after loading
+            }
         }
     }
 
@@ -789,6 +801,34 @@
         await HandleRemovePostReaction(postId);
     }
 
+    /// <summary>
+    /// Handles when a comment deletion is fully complete from the modal.
+    /// This triggers a refresh of the feed list's UnifiedArticle components
+    /// by incrementing the refresh trigger for the affected post.
+    /// </summary>
+    /// <param name="postId">The ID of the post whose comments were modified.</param>
+    private void HandleCommentDeletedFromModal(int postId)
+    {
+        // Increment the refresh trigger to force UnifiedArticle components in the feed list
+        // to reload their internally-loaded comments
+        IncrementRefreshTrigger(postId);
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles when a comment addition is fully complete from the modal.
+    /// This triggers a refresh of the feed list's UnifiedArticle components
+    /// by incrementing the refresh trigger for the affected post.
+    /// </summary>
+    /// <param name="postId">The ID of the post whose comments were modified.</param>
+    private void HandleCommentAddedFromModal(int postId)
+    {
+        // Increment the refresh trigger to force UnifiedArticle components in the feed list
+        // to reload their internally-loaded comments
+        IncrementRefreshTrigger(postId);
+        StateHasChanged();
+    }
+
     private async Task OnCommentAdded((int PostId, string Content) data)
     {
         // Delegate to base class implementation
@@ -948,6 +988,8 @@
 
     private void ShowPostDetail(Post post)
     {
+        if (_disposed) return;
+
         selectedPost = post;
         showPostDetail = true;
         StateHasChanged();
@@ -955,6 +997,8 @@
 
     private async Task ClosePostDetail()
     {
+        if (_disposed) return;
+
         // Reload comments for the post before closing, in case they were updated in the modal
         if (selectedPost != null)
         {
@@ -1203,6 +1247,8 @@
 
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
+        _disposed = true;
+
         if (jsModule != null)
         {
             try

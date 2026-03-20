@@ -30,9 +30,7 @@
 @inject UserPreferenceService UserPreferenceService
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject IFeedCommentRepository FeedCommentRepository
-@inject AlertService AlertService
 @inject ILogger<FriendDetails> Logger
-@inject IJSRuntime JSRuntime
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.FriendDetails> Localizer
 
 @implements IAsyncDisposable
@@ -110,7 +108,8 @@
 
                         var authorImageUrl = post.Author?.ProfilePictureUrl ?? friendUser?.ProfilePictureUrl;
 
-                        <FeedArticle 
+                        <UnifiedArticle 
+                            ArticlePostType="PostType.UserPost"
                             PostId="@post.Id"
                             AuthorId="@post.AuthorId"
                             AuthorName="@authorName"
@@ -131,7 +130,7 @@
                             IsPinned="@isPinned"
                             IsMuted="null"
                             Images="@post.Images?.ToList()"
-                            OnReactionChanged="@(async (reactionType) => await HandleReactionChanged(post.Id, reactionType))"
+                            OnReactionChanged="@((LikeType reactionType) => HandleReactionChanged(post.Id, reactionType))"
                             OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
                             OnPinPost="@HandlePinPost"
                             OnUnpinPost="@HandleUnpinPost"
@@ -149,7 +148,7 @@
                             <ArticleContent>
                                 @((MarkupString)FormatContentWithLineBreaks(post.Content))
                             </ArticleContent>
-                        </FeedArticle>
+                        </UnifiedArticle>
                     }
 
                     @if (isLoadingMorePosts)
@@ -818,4 +817,4 @@
 
         dotNetHelper?.Dispose();
     }
-}
+}}}}

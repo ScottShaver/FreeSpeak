@@ -115,7 +115,8 @@
                         var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
                         var isMuted = postMuteStatus.ContainsKey(post.Id) ? postMuteStatus[post.Id] : (bool?)null;
 
-                        <GroupPostArticle 
+                        <UnifiedArticle 
+                            ArticlePostType="PostType.GroupPost"
                             PostId="@post.Id"
                             GroupId="@post.GroupId"
                             GroupName="@post.GroupName"
@@ -138,7 +139,7 @@
                             IsPinned="@isPinned"
                             IsMuted="@isMuted"
                             Images="@ConvertPostImageDtosToPostImages(post.Images)"
-                            OnReactionChanged="@(async (reactionType) => await HandleGroupPostReactionChanged(post.Id, reactionType))"
+                            OnReactionChanged="@(async (LikeType reactionType) => await HandleGroupPostReactionChanged(post.Id, reactionType))"
                             OnRemoveReaction="@(async () => await HandleRemoveGroupPostReaction(post.Id))"
                             OnPinPost="@HandlePinGroupPost"
                             OnUnpinPost="@HandleUnpinGroupPost"
@@ -156,7 +157,7 @@
                             <ArticleContent>
                                 @((MarkupString)FormatContentWithLineBreaks(post.Content))
                             </ArticleContent>
-                        </GroupPostArticle>
+                        </UnifiedArticle>
                     }
 
                     @if (isLoadingMoreGroupPosts)
@@ -455,10 +456,12 @@
         OnPostDeleted="@HandleGroupPostDeleted"
         OnEditPost="@HandleEditGroupPost"
         OnCommentAdded="@HandleGroupPostCommentAdded"
+        OnCommentAddedComplete="@HandleCommentAddedFromModal"
         OnReplySubmitted="@HandleGroupPostReplySubmitted"
         OnCommentReactionChanged="@HandleGroupPostCommentReactionChanged"
         OnRemoveCommentReaction="@HandleRemoveGroupPostCommentReaction"
         OnDeleteComment="@HandleDeleteComment"
+        OnCommentDeleted="@HandleCommentDeletedFromModal"
         OnCommentUpdated="@HandleCommentUpdated"
         OnReportComment="@HandleReportComment"
         OnClose="@CloseGroupPostDetailModal">
@@ -581,6 +584,9 @@
     // Guard flag to prevent double-loading on initial navigation
     private bool hasCompletedInitialLoad = false;
 
+    // Disposal tracking flag to prevent operations on disposed component
+    private bool _disposed = false;
+
     /// <summary>
     /// Initializes the component when it is first loaded.
     /// Retrieves the current user's authentication state, loads their groups, and initializes the group feed.
@@ -678,6 +684,7 @@
     /// </summary>
     private async Task LoadGroupFeed()
     {
+        if (_disposed) return;
         if (string.IsNullOrEmpty(currentUserId)) return;
 
         // Prevent concurrent loading operations
@@ -702,6 +709,8 @@
                 loadedDtos = await GroupPostService.GetAllGroupPostsForUserAsProjectionAsync(currentUserId, 0, groupPageSize);
             }
 
+            if (_disposed) return;
+
             groupPosts = GroupPostViewModel.FromDtos(loadedDtos);
             hasMoreGroupPosts = loadedDtos.Count >= groupPageSize;
 
@@ -714,8 +723,11 @@
         }
         finally
         {
-            isLoadingGroupFeed = false;
-            StateHasChanged();
+            if (!_disposed)
+            {
+                isLoadingGroupFeed = false;
+                StateHasChanged();
+            }
         }
     }
 
@@ -726,6 +738,7 @@
     [JSInvokable]
     public async Task LoadMoreGroupPostsAsync()
     {
+        if (_disposed) return;
         if (string.IsNullOrEmpty(currentUserId) || isLoadingMoreGroupPosts || hasMoreGroupPosts == false) return;
 
         isLoadingMoreGroupPosts = true;
@@ -748,6 +761,8 @@
                 loadedDtos = await GroupPostService.GetAllGroupPostsForUserAsProjectionAsync(currentUserId, skip, groupPageSize);
             }
 
+            if (_disposed) return;
+
             if (loadedDtos.Any())
             {
                 var newPosts = GroupPostViewModel.FromDtos(loadedDtos);
@@ -768,8 +783,11 @@
         }
         finally
         {
-            isLoadingMoreGroupPosts = false;
-            StateHasChanged();
+            if (!_disposed)
+            {
+                isLoadingMoreGroupPosts = false;
+                StateHasChanged();
+            }
         }
     }
 
@@ -869,6 +887,7 @@
     /// </summary>
     private async Task LoadPinnedGroupPosts()
     {
+        if (_disposed) return;
         if (string.IsNullOrEmpty(currentUserId)) return;
 
         isLoadingPinnedGroupPosts = true;
@@ -880,6 +899,8 @@
 
             // Get all pinned posts as projections
             var allPinnedDtos = await PinnedGroupPostService.GetPinnedGroupPostsAsProjectionAsync(currentUserId);
+
+            if (_disposed) return;
 
             // Update the total count (before filtering) for the badge
             pinnedGroupPostsCount = allPinnedDtos.Count;
@@ -909,8 +930,11 @@
         }
         finally
         {
-            isLoadingPinnedGroupPosts = false;
-            StateHasChanged();
+            if (!_disposed)
+            {
+                isLoadingPinnedGroupPosts = false;
+                StateHasChanged();
+            }
         }
     }
 
@@ -943,6 +967,7 @@
     [JSInvokable]
     public async Task LoadMorePinnedGroupPostsAsync()
     {
+        if (_disposed) return;
         if (string.IsNullOrEmpty(currentUserId) || isLoadingMorePinnedPosts || hasMorePinnedPosts == false) return;
 
         isLoadingMorePinnedPosts = true;
@@ -954,6 +979,8 @@
 
             // Get all pinned posts as projections
             var allPinnedDtos = await PinnedGroupPostService.GetPinnedGroupPostsAsProjectionAsync(currentUserId);
+
+            if (_disposed) return;
 
             // Apply group filter if selected
             if (selectedPinnedGroupId.HasValue)
@@ -991,8 +1018,11 @@
         }
         finally
         {
-            isLoadingMorePinnedPosts = false;
-            StateHasChanged();
+            if (!_disposed)
+            {
+                isLoadingMorePinnedPosts = false;
+                StateHasChanged();
+            }
         }
     }
 
@@ -1002,6 +1032,7 @@
     /// </summary>
     private async Task LoadJoinRequests()
     {
+        if (_disposed) return;
         if (string.IsNullOrEmpty(currentUserId)) return;
 
         isLoadingJoinRequests = true;
@@ -1026,8 +1057,11 @@
         }
         finally
         {
-            isLoadingJoinRequests = false;
-            StateHasChanged();
+            if (!_disposed)
+            {
+                isLoadingJoinRequests = false;
+                StateHasChanged();
+            }
         }
     }
 
@@ -1037,13 +1071,14 @@
     /// </summary>
     private async Task LoadJoinRequestsCount()
     {
+        if (_disposed) return;
         if (string.IsNullOrEmpty(currentUserId)) return;
 
         try
         {
             // Load just the count for the badge
             groupJoinRequests = await GroupMemberService.GetUserJoinRequestsAsync(currentUserId);
-            StateHasChanged();
+            if (!_disposed) StateHasChanged();
         }
         catch (Exception)
         {
@@ -1057,12 +1092,13 @@
     /// </summary>
     private async Task LoadPinnedGroupPostsCount()
     {
+        if (_disposed) return;
         if (string.IsNullOrEmpty(currentUserId)) return;
 
         try
         {
             pinnedGroupPostsCount = await PinnedGroupPostService.GetPinnedGroupPostCountAsync(currentUserId);
-            StateHasChanged();
+            if (!_disposed) StateHasChanged();
         }
         catch (Exception)
         {
@@ -1119,6 +1155,7 @@
     /// </summary>
     private async Task LoadSuggestedGroups()
     {
+        if (_disposed) return;
         if (string.IsNullOrEmpty(currentUserId)) return;
 
         isLoadingSuggestedGroups = true;
@@ -1134,8 +1171,11 @@
         }
         finally
         {
-            isLoadingSuggestedGroups = false;
-            StateHasChanged();
+            if (!_disposed)
+            {
+                isLoadingSuggestedGroups = false;
+                StateHasChanged();
+            }
         }
     }
 
@@ -1149,7 +1189,12 @@
         searchDebounceTimer?.Dispose();
         searchDebounceTimer = new System.Threading.Timer(async _ =>
         {
-            await InvokeAsync(async () => await SearchGroups());
+            if (_disposed) return;
+            await InvokeAsync(async () =>
+            {
+                if (_disposed) return;
+                await SearchGroups();
+            });
         }, null, 300, Timeout.Infinite);
     }
 
@@ -1159,6 +1204,8 @@
     /// </summary>
     private async Task SearchGroups()
     {
+        if (_disposed) return;
+
         if (string.IsNullOrWhiteSpace(groupSearchQuery))
         {
             searchedGroups.Clear();
@@ -1460,6 +1507,34 @@
     }
 
     /// <summary>
+    /// Handles when a comment deletion is fully complete from the modal.
+    /// This triggers a refresh of the feed list's UnifiedArticle components
+    /// by incrementing the refresh trigger for the affected post.
+    /// </summary>
+    /// <param name="postId">The ID of the post whose comments were modified.</param>
+    private void HandleCommentDeletedFromModal(int postId)
+    {
+        // Increment the refresh trigger to force UnifiedArticle components in the feed list
+        // to reload their internally-loaded comments
+        IncrementRefreshTrigger(postId);
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles when a comment addition is fully complete from the modal.
+    /// This triggers a refresh of the feed list's UnifiedArticle components
+    /// by incrementing the refresh trigger for the affected post.
+    /// </summary>
+    /// <param name="postId">The ID of the post whose comments were modified.</param>
+    private void HandleCommentAddedFromModal(int postId)
+    {
+        // Increment the refresh trigger to force UnifiedArticle components in the feed list
+        // to reload their internally-loaded comments
+        IncrementRefreshTrigger(postId);
+        StateHasChanged();
+    }
+
+    /// <summary>
     /// Handles the edit post action by opening the edit post modal.
     /// </summary>
     /// <param name="postId">The ID of the post to edit.</param>
@@ -1607,6 +1682,8 @@
     /// <param name="post">The group post view model to display in detail.</param>
     private async Task ShowGroupPostDetail(GroupPostViewModel post)
     {
+        if (_disposed) return;
+
         selectedGroupPost = post;
         showGroupPostDetailModal = true;
         StateHasChanged();
@@ -1618,6 +1695,8 @@
     /// </summary>
     private void CloseGroupPostDetailModal()
     {
+        if (_disposed) return;
+
         showGroupPostDetailModal = false;
         selectedGroupPost = null;
         StateHasChanged();
@@ -1916,7 +1995,15 @@
     /// <returns>The post ID if found, otherwise null.</returns>
     protected override async Task<int?> FindPostIdForCommentAsync(int commentId)
     {
-        // Search through both groupPosts and pinnedGroupPostsList
+        // First, try to find the comment directly from the database
+        // This is more reliable than searching through loaded posts, especially for nested replies
+        var comment = await GroupPostService.GetCommentByIdAsync(commentId);
+        if (comment != null)
+        {
+            return comment.PostId;
+        }
+
+        // Fallback: Search through both groupPosts and pinnedGroupPostsList
         foreach (var post in groupPosts)
         {
             var comments = await GroupPostService.GetCommentsAsync(post.Id);
@@ -2038,6 +2125,8 @@
 
     public async ValueTask DisposeAsync()
     {
+        _disposed = true;
+
         searchDebounceTimer?.Dispose();
 
         if (jsModule != null)

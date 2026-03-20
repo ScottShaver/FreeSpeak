@@ -15,16 +15,19 @@ using Xunit;
 
 namespace FreeSpeakWeb.Tests.Components
 {
-    public class FeedArticleTests : TestContext
+    /// <summary>
+    /// Tests for the UnifiedArticle component covering both UserPost and GroupPost scenarios.
+    /// </summary>
+    public class UnifiedArticleTests : TestContext
     {
-        public FeedArticleTests()
+        public UnifiedArticleTests()
         {
-            // Setup JSInterop for modules used by FeedArticle
+            // Setup JSInterop for modules used by UnifiedArticle
             JSInterop.SetupModule("./Components/SocialFeed/MultiLineCommentEditor.razor.js");
             JSInterop.SetupModule("./Components/SocialFeed/FeedArticle.razor.js");
             JSInterop.SetupModule("./Components/SocialFeed/FeedArticleImages.razor.js");
 
-            // Register required services for FeedArticle component
+            // Register required services for UnifiedArticle component
 
             // Mock IDbContextFactory for PostService
             var mockDbContextFactory = new Mock<IDbContextFactory<ApplicationDbContext>>();
@@ -77,20 +80,124 @@ namespace FreeSpeakWeb.Tests.Components
                 MockRepositories.CreateMockAuditLogRepository().Object
             );
 
+            // Mock GroupPostService for GroupPost tests
+            var mockGroupPostService = new Mock<GroupPostService>();
+
             Services.AddSingleton(postService);
+            Services.AddSingleton(mockGroupPostService.Object);
             Services.AddSingleton(siteSettingsOptions);
             Services.AddSingleton(userPreferenceService);
+            Services.AddSingleton(MockRepositories.CreateMockAuditLogRepository().Object);
         }
 
+        #region UserPost Tests
+
         [Fact]
-        public void FeedArticle_RendersAuthorName()
+        public void UnifiedArticle_UserPost_RendersAuthorName()
         {
             // Arrange
             var authorName = "John Doe";
 
             // Act
-            var cut = RenderComponent<FeedArticle>(parameters => parameters
+            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+                .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
+                .Add(p => p.AuthorId, "test-user-id")
+                .Add(p => p.AuthorName, authorName)
+                .Add(p => p.CreatedAt, DateTime.Now)
+                .Add(p => p.LikeCount, 0)
+                .Add(p => p.CommentCount, 0)
+                .Add(p => p.AudienceType, AudienceType.Public));
+
+            // Assert
+            cut.Find(".author-name").TextContent.Should().Be(authorName);
+        }
+
+        [Fact]
+        public void UnifiedArticle_UserPost_RendersLikeCount()
+        {
+            // Arrange
+            var likeCount = 42;
+
+            // Act
+            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+                .Add(p => p.ArticlePostType, PostType.UserPost)
+                .Add(p => p.PostId, 1)
+                .Add(p => p.AuthorId, "test-user-id")
+                .Add(p => p.AuthorName, "Test User")
+                .Add(p => p.CreatedAt, DateTime.Now)
+                .Add(p => p.LikeCount, likeCount)
+                .Add(p => p.CommentCount, 0)
+                .Add(p => p.ShareCount, 0)
+                .Add(p => p.AudienceType, AudienceType.Public));
+
+            // Assert
+            cut.Find(".header-stat-count").TextContent.Should().Contain(likeCount.ToString());
+        }
+
+        [Fact]
+        public void UnifiedArticle_UserPost_RendersCommentCount()
+        {
+            // Arrange
+            var commentCount = 15;
+
+            // Act
+            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+                .Add(p => p.ArticlePostType, PostType.UserPost)
+                .Add(p => p.PostId, 1)
+                .Add(p => p.AuthorId, "test-user-id")
+                .Add(p => p.AuthorName, "Test User")
+                .Add(p => p.CreatedAt, DateTime.Now)
+                .Add(p => p.LikeCount, 0)
+                .Add(p => p.CommentCount, commentCount)
+                .Add(p => p.ShareCount, 0)
+                .Add(p => p.AudienceType, AudienceType.Public));
+
+            // Assert
+            var statCounts = cut.FindAll(".header-stat-count");
+            statCounts[1].TextContent.Should().Contain(commentCount.ToString());
+        }
+
+        [Fact]
+        public void UnifiedArticle_UserPost_RendersShareCount()
+        {
+            // Arrange
+            var shareCount = 7;
+
+            // Act
+            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+                .Add(p => p.ArticlePostType, PostType.UserPost)
+                .Add(p => p.PostId, 1)
+                .Add(p => p.AuthorId, "test-user-id")
+                .Add(p => p.AuthorName, "Test User")
+                .Add(p => p.CreatedAt, DateTime.Now)
+                .Add(p => p.LikeCount, 0)
+                .Add(p => p.CommentCount, 0)
+                .Add(p => p.ShareCount, shareCount)
+                .Add(p => p.AudienceType, AudienceType.Public));
+
+            // Assert
+            var statCounts = cut.FindAll(".header-stat-count");
+            statCounts[2].TextContent.Should().Contain(shareCount.ToString());
+        }
+
+        #endregion
+
+        #region GroupPost Tests
+
+        [Fact]
+        public void UnifiedArticle_GroupPost_RendersAuthorName()
+        {
+            // Arrange
+            var authorName = "Jane Smith";
+            var groupName = "Test Group";
+
+            // Act
+            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+                .Add(p => p.ArticlePostType, PostType.GroupPost)
+                .Add(p => p.PostId, 1)
+                .Add(p => p.GroupId, 10)
+                .Add(p => p.GroupName, groupName)
                 .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, authorName)
                 .Add(p => p.CreatedAt, DateTime.Now)
@@ -102,81 +209,70 @@ namespace FreeSpeakWeb.Tests.Components
         }
 
         [Fact]
-        public void FeedArticle_RendersLikeCount()
+        public void UnifiedArticle_GroupPost_RendersGroupName()
         {
             // Arrange
-            var likeCount = 42;
+            var groupName = "Test Group";
 
             // Act
-            var cut = RenderComponent<FeedArticle>(parameters => parameters
+            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+                .Add(p => p.ArticlePostType, PostType.GroupPost)
                 .Add(p => p.PostId, 1)
-                .Add(p => p.AuthorId, "test-user-id")
-                .Add(p => p.AuthorName, "Test User")
-                .Add(p => p.CreatedAt, DateTime.Now)
-                .Add(p => p.LikeCount, likeCount)
-                .Add(p => p.CommentCount, 0)
-                .Add(p => p.ShareCount, 0));
-
-            // Assert
-            cut.Find(".header-stat-count").TextContent.Should().Contain(likeCount.ToString());
-        }
-
-        [Fact]
-        public void FeedArticle_RendersCommentCount()
-        {
-            // Arrange
-            var commentCount = 15;
-
-            // Act
-            var cut = RenderComponent<FeedArticle>(parameters => parameters
-                .Add(p => p.PostId, 1)
+                .Add(p => p.GroupId, 10)
+                .Add(p => p.GroupName, groupName)
                 .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
-                .Add(p => p.CommentCount, commentCount)
-                .Add(p => p.ShareCount, 0));
+                .Add(p => p.CommentCount, 0));
 
             // Assert
-            var statCounts = cut.FindAll(".header-stat-count");
-            statCounts[1].TextContent.Should().Contain(commentCount.ToString());
+            cut.Markup.Should().Contain(groupName);
         }
 
         [Fact]
-        public void FeedArticle_RendersShareCount()
+        public void UnifiedArticle_GroupPost_RendersAuthorGroupPoints()
         {
             // Arrange
-            var shareCount = 7;
+            var authorPoints = 150;
 
             // Act
-            var cut = RenderComponent<FeedArticle>(parameters => parameters
+            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+                .Add(p => p.ArticlePostType, PostType.GroupPost)
                 .Add(p => p.PostId, 1)
+                .Add(p => p.GroupId, 10)
+                .Add(p => p.GroupName, "Test Group")
                 .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
+                .Add(p => p.AuthorGroupPoints, authorPoints)
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
-                .Add(p => p.CommentCount, 0)
-                .Add(p => p.ShareCount, shareCount));
+                .Add(p => p.CommentCount, 0));
 
             // Assert
-            var statCounts = cut.FindAll(".header-stat-count");
-            statCounts[2].TextContent.Should().Contain(shareCount.ToString());
+            cut.Markup.Should().Contain(authorPoints.ToString());
         }
 
+        #endregion
+
+        #region Common Tests
+
         [Fact]
-        public void FeedArticle_RendersArticleContent()
+        public void UnifiedArticle_RendersArticleContent()
         {
             // Arrange
             var contentText = "This is a test post content";
 
             // Act
-            var cut = RenderComponent<FeedArticle>(parameters => parameters
+            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+                .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
                 .Add(p => p.CommentCount, 0)
+                .Add(p => p.AudienceType, AudienceType.Public)
                 .Add(p => p.ArticleContent, (RenderFragment)(builder =>
                 {
                     builder.AddContent(0, contentText);
@@ -187,16 +283,18 @@ namespace FreeSpeakWeb.Tests.Components
         }
 
         [Fact]
-        public void FeedArticle_HasActionButtons()
+        public void UnifiedArticle_HasActionButtons()
         {
             // Arrange & Act
-            var cut = RenderComponent<FeedArticle>(parameters => parameters
+            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+                .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
-                .Add(p => p.CommentCount, 0));
+                .Add(p => p.CommentCount, 0)
+                .Add(p => p.AudienceType, AudienceType.Public));
 
             // Assert
             var actionButtons = cut.FindAll(".action-button");
@@ -208,20 +306,22 @@ namespace FreeSpeakWeb.Tests.Components
         }
 
         [Fact]
-        public void FeedArticle_DisplaysAuthorAvatar()
+        public void UnifiedArticle_DisplaysAuthorAvatar()
         {
             // Arrange
             var avatarUrl = "https://example.com/avatar.jpg";
 
             // Act
-            var cut = RenderComponent<FeedArticle>(parameters => parameters
+            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+                .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.AuthorImageUrl, avatarUrl)
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
-                .Add(p => p.CommentCount, 0));
+                .Add(p => p.CommentCount, 0)
+                .Add(p => p.AudienceType, AudienceType.Public));
 
             // Assert
             var avatar = cut.Find(".author-avatar");
@@ -229,16 +329,18 @@ namespace FreeSpeakWeb.Tests.Components
         }
 
         [Fact]
-        public void FeedArticle_DisplaysDefaultAvatarWhenNotProvided()
+        public void UnifiedArticle_DisplaysDefaultAvatarWhenNotProvided()
         {
             // Arrange & Act
-            var cut = RenderComponent<FeedArticle>(parameters => parameters
+            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+                .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
-                .Add(p => p.CommentCount, 0));
+                .Add(p => p.CommentCount, 0)
+                .Add(p => p.AudienceType, AudienceType.Public));
 
             // Assert - Should show placeholder with initial instead of an img tag
             var avatar = cut.Find(".author-avatar");
@@ -248,19 +350,21 @@ namespace FreeSpeakWeb.Tests.Components
         }
 
         [Fact]
-        public void FeedArticle_FormatsTimestamp()
+        public void UnifiedArticle_FormatsTimestamp()
         {
             // Arrange
             var pastDate = DateTime.Now.AddHours(-2);
 
             // Act
-            var cut = RenderComponent<FeedArticle>(parameters => parameters
+            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+                .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, pastDate)
                 .Add(p => p.LikeCount, 0)
-                .Add(p => p.CommentCount, 0));
+                .Add(p => p.CommentCount, 0)
+                .Add(p => p.AudienceType, AudienceType.Public));
 
             // Assert - Should show relative time format (e.g., "2h", "3h", etc.)
             var timestamp = cut.Find(".article-timestamp");
@@ -268,21 +372,25 @@ namespace FreeSpeakWeb.Tests.Components
         }
 
         [Fact]
-        public void FeedArticle_HasMenuButton()
+        public void UnifiedArticle_HasMenuButton()
         {
             // Arrange & Act
-            var cut = RenderComponent<FeedArticle>(parameters => parameters
+            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+                .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
-                .Add(p => p.CommentCount, 0));
+                .Add(p => p.CommentCount, 0)
+                .Add(p => p.AudienceType, AudienceType.Public));
 
             // Assert
             var menuButton = cut.Find(".menu-button");
             menuButton.Should().NotBeNull();
         }
+
+        #endregion
     }
 }
 
