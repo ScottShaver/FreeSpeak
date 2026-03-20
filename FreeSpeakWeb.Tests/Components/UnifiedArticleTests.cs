@@ -87,7 +87,7 @@ namespace FreeSpeakWeb.Tests.Components
             // we'll provide a null mock that satisfies the component's dependency injection requirements
             var mockGroupPostService = new Mock<GroupPostService>(
                 MockBehavior.Loose,
-                new object?[] { null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null! });
+                new object[] { null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null! });
 
             Services.AddSingleton(postService);
             Services.AddSingleton(mockGroupPostService.Object);
