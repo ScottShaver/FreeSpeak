@@ -640,22 +640,38 @@
     {
         try
         {
+            // PERFORMANCE: Batch load all author names in a single query instead of N queries
+            var userDetails = new Dictionary<string, (string firstName, string lastName, string userName)>();
+
             foreach (var post in postsToLoad)
             {
                 if (post.Author != null)
                 {
-                    var displayName = await UserPreferenceService.FormatUserDisplayNameAsync(
-                        post.Author.Id,
-                        post.Author.FirstName ?? string.Empty,
-                        post.Author.LastName ?? string.Empty,
+                    userDetails[post.Author.Id] = (
+                        post.Author.FirstName ?? "",
+                        post.Author.LastName ?? "",
                         post.Author.UserName ?? "Unknown"
                     );
-                    postAuthorNames[post.Id] = displayName;
                 }
-                else
+            }
+
+            if (userDetails.Any())
+            {
+                // Batch format all display names in a single database query
+                var formattedNames = await UserPreferenceService.FormatUserDisplayNamesAsync(userDetails);
+
+                // Map formatted names back to posts
+                foreach (var post in postsToLoad)
                 {
-                    // Use friend's display name as fallback
-                    postAuthorNames[post.Id] = friendDisplayName;
+                    if (post.Author != null && formattedNames.ContainsKey(post.Author.Id))
+                    {
+                        postAuthorNames[post.Id] = formattedNames[post.Author.Id];
+                    }
+                    else
+                    {
+                        // Use friend's display name as fallback
+                        postAuthorNames[post.Id] = friendDisplayName;
+                    }
                 }
             }
         }

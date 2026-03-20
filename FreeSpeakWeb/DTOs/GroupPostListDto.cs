@@ -12,7 +12,10 @@ namespace FreeSpeakWeb.DTOs
     /// <param name="GroupId">The unique identifier of the group this post belongs to.</param>
     /// <param name="GroupName">The name of the group this post belongs to.</param>
     /// <param name="AuthorId">The unique identifier of the post author.</param>
-    /// <param name="AuthorName">The display name of the post author (FirstName + LastName).</param>
+    /// <param name="AuthorName">The display name of the post author (calculated from preferences).</param>
+    /// <param name="AuthorFirstName">The author's first name (for preference-based formatting).</param>
+    /// <param name="AuthorLastName">The author's last name (for preference-based formatting).</param>
+    /// <param name="AuthorUserName">The author's username (for preference-based formatting).</param>
     /// <param name="AuthorImageUrl">The URL for the post author's profile picture.</param>
     /// <param name="Content">The text content of the post.</param>
     /// <param name="CreatedAt">The timestamp when the post was created.</param>
@@ -28,6 +31,9 @@ namespace FreeSpeakWeb.DTOs
         string GroupName,
         string AuthorId,
         string AuthorName,
+        string AuthorFirstName,
+        string AuthorLastName,
+        string AuthorUserName,
         string? AuthorImageUrl,
         string Content,
         DateTime CreatedAt,

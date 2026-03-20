@@ -28,9 +28,25 @@ namespace FreeSpeakWeb.DTOs
         public string AuthorId { get; }
 
         /// <summary>
-        /// Gets the display name of the post author.
+        /// Gets or sets the display name of the post author.
+        /// Mutable to allow reformatting based on user preferences after loading.
         /// </summary>
-        public string AuthorName { get; }
+        public string AuthorName { get; set; }
+
+        /// <summary>
+        /// Gets the author's first name (for preference-based formatting).
+        /// </summary>
+        public string AuthorFirstName { get; }
+
+        /// <summary>
+        /// Gets the author's last name (for preference-based formatting).
+        /// </summary>
+        public string AuthorLastName { get; }
+
+        /// <summary>
+        /// Gets the author's username (for preference-based formatting).
+        /// </summary>
+        public string AuthorUserName { get; }
 
         /// <summary>
         /// Gets the URL for the post author's profile picture.
@@ -88,6 +104,9 @@ namespace FreeSpeakWeb.DTOs
         /// <param name="groupName">The group name.</param>
         /// <param name="authorId">The author identifier.</param>
         /// <param name="authorName">The author display name.</param>
+        /// <param name="authorFirstName">The author's first name.</param>
+        /// <param name="authorLastName">The author's last name.</param>
+        /// <param name="authorUserName">The author's username.</param>
         /// <param name="authorImageUrl">The author's profile picture URL.</param>
         /// <param name="content">The post content.</param>
         /// <param name="createdAt">The creation timestamp.</param>
@@ -103,6 +122,9 @@ namespace FreeSpeakWeb.DTOs
             string groupName,
             string authorId,
             string authorName,
+            string authorFirstName,
+            string authorLastName,
+            string authorUserName,
             string? authorImageUrl,
             string content,
             DateTime createdAt,
@@ -118,6 +140,9 @@ namespace FreeSpeakWeb.DTOs
             GroupName = groupName;
             AuthorId = authorId;
             AuthorName = authorName;
+            AuthorFirstName = authorFirstName;
+            AuthorLastName = authorLastName;
+            AuthorUserName = authorUserName;
             AuthorImageUrl = authorImageUrl;
             Content = content;
             CreatedAt = createdAt;
@@ -142,6 +167,9 @@ namespace FreeSpeakWeb.DTOs
                 dto.GroupName,
                 dto.AuthorId,
                 dto.AuthorName,
+                dto.AuthorFirstName,
+                dto.AuthorLastName,
+                dto.AuthorUserName,
                 dto.AuthorImageUrl,
                 dto.Content,
                 dto.CreatedAt,

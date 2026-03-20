@@ -432,5 +432,40 @@ namespace FreeSpeakWeb.Services
 
             return result;
         }
+
+        /// <summary>
+        /// Formats display names for multiple users in a single batch operation.
+        /// This method fetches all user preferences in one query, then formats all names.
+        /// PERFORMANCE: Eliminates N+1 query pattern when formatting multiple user names.
+        /// </summary>
+        /// <param name="users">Dictionary mapping user IDs to their name components (firstName, lastName, username).</param>
+        /// <returns>A dictionary mapping each user ID to their formatted display name.</returns>
+        public async Task<Dictionary<string, string>> FormatUserDisplayNamesAsync(
+            Dictionary<string, (string firstName, string lastName, string username)> users)
+        {
+            if (users == null || !users.Any())
+            {
+                return new Dictionary<string, string>();
+            }
+
+            try
+            {
+                // Batch load all preferences in a single query
+                var userIds = users.Keys.ToList();
+                var preferences = await GetNameDisplayTypesAsync(userIds);
+
+                // Format all names using the loaded preferences
+                return FormatUserDisplayNames(users, preferences);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error batch formatting user display names");
+                // Fallback: return full names for all users
+                return users.ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => $"{kvp.Value.firstName} {kvp.Value.lastName}".Trim()
+                );
+            }
+        }
     }
 }

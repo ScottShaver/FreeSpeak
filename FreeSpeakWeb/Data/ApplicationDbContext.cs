@@ -222,6 +222,11 @@ namespace FreeSpeakWeb.Data
                 entity.HasIndex(c => c.AuthorId);
                 entity.HasIndex(c => c.ParentCommentId);
                 entity.HasIndex(c => c.CreatedAt);
+
+                // PERFORMANCE: Composite index for comment loading with ordering
+                // Optimizes queries that load comments for a post ordered by creation date
+                entity.HasIndex(c => new { c.PostId, c.CreatedAt })
+                    .HasDatabaseName("IX_Comments_PostId_CreatedAt");
             });
 
             // Configure Like entity
@@ -509,6 +514,12 @@ namespace FreeSpeakWeb.Data
                 entity.HasIndex(gp => gp.CreatedAt);
                 // Composite index for finding group posts
                 entity.HasIndex(gp => new { gp.GroupId, gp.CreatedAt });
+
+                // PERFORMANCE: Composite index for group post feed queries with status filtering
+                // Optimizes queries that filter by Status and GroupId, then order by CreatedAt
+                // This is the primary query pattern in GetGroupPostsAsProjectionAsync
+                entity.HasIndex(gp => new { gp.Status, gp.GroupId, gp.CreatedAt })
+                    .HasDatabaseName("IX_GroupPosts_Status_GroupId_CreatedAt");
             });
 
             // Configure GroupPostImage entity
@@ -605,6 +616,11 @@ namespace FreeSpeakWeb.Data
                 entity.HasIndex(gpc => gpc.AuthorId);
                 entity.HasIndex(gpc => gpc.ParentCommentId);
                 entity.HasIndex(gpc => gpc.CreatedAt);
+
+                // PERFORMANCE: Composite index for comment loading with ordering
+                // Optimizes queries that load comments for a group post ordered by creation date
+                entity.HasIndex(gpc => new { gpc.PostId, gpc.CreatedAt })
+                    .HasDatabaseName("IX_GroupPostComments_PostId_CreatedAt");
             });
 
             // Configure GroupPostLike entity

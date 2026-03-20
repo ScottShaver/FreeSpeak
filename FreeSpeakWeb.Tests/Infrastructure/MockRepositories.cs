@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services;
 using Microsoft.EntityFrameworkCore;
@@ -121,7 +122,7 @@ namespace FreeSpeakWeb.Tests.Infrastructure
                 .ReturnsAsync((Post post) => (true, null, post));
 
             mock.Setup(r => r.GetFeedPostsAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .ReturnsAsync(new List<Post>());
+                .ReturnsAsync(new List<PostListDto>());
 
             return mock;
         }

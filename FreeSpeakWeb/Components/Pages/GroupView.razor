@@ -613,7 +613,10 @@
                     p.GroupId,
                     group.Name,
                     p.AuthorId,
-                    $"{p.Author?.FirstName} {p.Author?.LastName}".Trim(),
+                    $"{p.Author?.FirstName} {p.Author?.LastName}".Trim(), // Default name, will be reformatted based on preferences
+                    p.Author?.FirstName ?? "",
+                    p.Author?.LastName ?? "",
+                    p.Author?.UserName ?? "",
                     p.Author?.ProfilePictureUrl,
                     p.Content,
                     p.CreatedAt,
@@ -695,12 +698,14 @@
     /// <summary>
     /// Loads additional data for a list of group post view models, including reactions, pinned status, and mute status.
     /// Uses batch queries where possible to optimize performance.
-    /// Note: Author names and group names are already included in the ViewModel from the DTO projection.
     /// </summary>
     /// <param name="posts">The list of group post view models to load data for.</param>
     private async Task LoadGroupPostDataAsync(List<GroupPostViewModel> posts)
     {
         if (!posts.Any()) return;
+
+        // PERFORMANCE: Batch format author names based on user preferences
+        await ApplyAuthorNamePreferencesAsync(posts);
 
         // Get post IDs that need reaction data loaded
         var postIdsNeedingReactions = posts
@@ -757,6 +762,52 @@
             {
                 postMuteStatus[kvp.Key] = kvp.Value;
             }
+        }
+    }
+
+    /// <summary>
+    /// Applies user display name preferences to author names in group posts.
+    /// Uses batch loading to fetch all preferences in a single query.
+    /// </summary>
+    /// <param name="posts">The list of group post view models to update.</param>
+    private async Task ApplyAuthorNamePreferencesAsync(List<GroupPostViewModel> posts)
+    {
+        if (!posts.Any()) return;
+
+        try
+        {
+            // Collect all unique author details
+            var userDetails = new Dictionary<string, (string firstName, string lastName, string userName)>();
+            foreach (var post in posts)
+            {
+                if (!string.IsNullOrEmpty(post.AuthorId) && !userDetails.ContainsKey(post.AuthorId))
+                {
+                    userDetails[post.AuthorId] = (
+                        post.AuthorFirstName ?? "",
+                        post.AuthorLastName ?? "",
+                        post.AuthorUserName ?? ""
+                    );
+                }
+            }
+
+            if (userDetails.Any())
+            {
+                // Batch format all display names in a single database query
+                var formattedNames = await UserPreferenceService.FormatUserDisplayNamesAsync(userDetails);
+
+                // Apply formatted names to posts
+                foreach (var post in posts)
+                {
+                    if (formattedNames.TryGetValue(post.AuthorId, out var formattedName))
+                    {
+                        post.AuthorName = formattedName;
+                    }
+                }
+            }
+        }
+        catch (Exception)
+        {
+            // Silently fail - keep default names from DTO
         }
     }
 

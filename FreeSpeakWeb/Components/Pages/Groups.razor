@@ -801,6 +801,9 @@
     {
         if (!posts.Any()) return;
 
+        // PERFORMANCE: Batch format author names based on user preferences
+        await ApplyAuthorNamePreferencesAsync(posts);
+
         // Get post IDs that need reaction data loaded
         var postIdsNeedingReactions = posts
             .Where(p => !postReactionData.ContainsKey(p.Id))
@@ -856,6 +859,52 @@
             {
                 postMuteStatus[kvp.Key] = kvp.Value;
             }
+        }
+    }
+
+    /// <summary>
+    /// Applies user display name preferences to author names in group posts.
+    /// Uses batch loading to fetch all preferences in a single query.
+    /// </summary>
+    /// <param name="posts">The list of group post view models to update.</param>
+    private async Task ApplyAuthorNamePreferencesAsync(List<GroupPostViewModel> posts)
+    {
+        if (!posts.Any()) return;
+
+        try
+        {
+            // Collect all unique author details
+            var userDetails = new Dictionary<string, (string firstName, string lastName, string userName)>();
+            foreach (var post in posts)
+            {
+                if (!string.IsNullOrEmpty(post.AuthorId) && !userDetails.ContainsKey(post.AuthorId))
+                {
+                    userDetails[post.AuthorId] = (
+                        post.AuthorFirstName ?? "",
+                        post.AuthorLastName ?? "",
+                        post.AuthorUserName ?? ""
+                    );
+                }
+            }
+
+            if (userDetails.Any())
+            {
+                // Batch format all display names in a single database query
+                var formattedNames = await UserPreferenceService.FormatUserDisplayNamesAsync(userDetails);
+
+                // Apply formatted names to posts
+                foreach (var post in posts)
+                {
+                    if (formattedNames.TryGetValue(post.AuthorId, out var formattedName))
+                    {
+                        post.AuthorName = formattedName;
+                    }
+                }
+            }
+        }
+        catch (Exception)
+        {
+            // Silently fail - keep default names from DTO
         }
     }
 

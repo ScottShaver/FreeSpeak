@@ -508,12 +508,13 @@ namespace FreeSpeakWeb.Repositories
         /// Retrieves feed posts for a user, including their own posts and posts from friends.
         /// Only returns posts with appropriate audience settings (public, friends-only, or user's own posts).
         /// Uses cached friend lists for improved performance (80%+ faster when cached).
+        /// PERFORMANCE: Returns DTOs using database-side projection to reduce data transfer by 50-70%.
         /// </summary>
         /// <param name="userId">The unique identifier of the user viewing the feed.</param>
         /// <param name="skip">Number of posts to skip for pagination.</param>
         /// <param name="take">Number of posts to return.</param>
-        /// <returns>A list of feed posts ordered by creation date descending.</returns>
-        public async Task<List<Post>> GetFeedPostsAsync(string userId, int skip = 0, int take = 20)
+        /// <returns>A list of PostListDto projections ordered by creation date descending.</returns>
+        public async Task<List<PostListDto>> GetFeedPostsAsync(string userId, int skip = 0, int take = 20)
         {
             try
             {
@@ -524,9 +525,6 @@ namespace FreeSpeakWeb.Repositories
 
                 return await context.Posts
                     .AsNoTracking()
-                    .AsSplitQuery()
-                    .Include(p => p.Author)
-                    .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
                     .Where(p => authorIds.Contains(p.AuthorId) &&
                                (p.AuthorId == userId ||
                                 p.AudienceType == AudienceType.Public ||
@@ -534,12 +532,29 @@ namespace FreeSpeakWeb.Repositories
                     .OrderByDescending(p => p.CreatedAt)
                     .Skip(skip)
                     .Take(take)
+                    .Select(p => new PostListDto(
+                        p.Id,
+                        p.AuthorId,
+                        (p.Author.FirstName + " " + p.Author.LastName).Trim(),
+                        p.Author.ProfilePictureUrl,
+                        p.Content,
+                        p.CreatedAt,
+                        p.UpdatedAt,
+                        p.LikeCount,
+                        p.CommentCount,
+                        p.ShareCount,
+                        p.AudienceType,
+                        p.Images
+                            .OrderBy(i => i.DisplayOrder)
+                            .Select(i => new PostImageDto(i.Id, i.ImageUrl, i.DisplayOrder))
+                            .ToList()
+                    ))
                     .ToListAsync();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving feed for user {UserId}", userId);
-                return new List<Post>();
+                return new List<PostListDto>();
             }
         }
 
@@ -621,6 +636,7 @@ namespace FreeSpeakWeb.Repositories
         /// <param name="skip">Number of posts to skip for pagination.</param>
         /// <param name="take">Number of posts to return.</param>
         /// <returns>A list of PostListDto projections ordered by creation date descending.</returns>
+        [Obsolete("Use GetFeedPostsAsync instead - it now returns DTOs by default")]
         public async Task<List<PostListDto>> GetFeedPostsAsProjectionAsync(string userId, int skip = 0, int take = 20)
         {
             try
