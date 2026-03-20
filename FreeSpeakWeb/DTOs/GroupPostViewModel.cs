@@ -92,6 +92,16 @@ namespace FreeSpeakWeb.DTOs
         public int AuthorGroupPoints { get; }
 
         /// <summary>
+        /// Gets whether the author is an admin of this group.
+        /// </summary>
+        public bool IsGroupAdmin { get; }
+
+        /// <summary>
+        /// Gets whether the author is a moderator of this group.
+        /// </summary>
+        public bool IsGroupModerator { get; }
+
+        /// <summary>
         /// Gets the collection of images attached to this post.
         /// </summary>
         public List<PostImageDto> Images { get; }
@@ -115,6 +125,8 @@ namespace FreeSpeakWeb.DTOs
         /// <param name="commentCount">The initial comment count.</param>
         /// <param name="shareCount">The initial share count.</param>
         /// <param name="authorGroupPoints">The author's group points.</param>
+        /// <param name="isGroupAdmin">Whether the author is a group admin.</param>
+        /// <param name="isGroupModerator">Whether the author is a group moderator.</param>
         /// <param name="images">The post images.</param>
         public GroupPostViewModel(
             int id,
@@ -133,6 +145,8 @@ namespace FreeSpeakWeb.DTOs
             int commentCount,
             int shareCount,
             int authorGroupPoints,
+            bool isGroupAdmin,
+            bool isGroupModerator,
             List<PostImageDto> images)
         {
             Id = id;
@@ -151,6 +165,8 @@ namespace FreeSpeakWeb.DTOs
             CommentCount = commentCount;
             ShareCount = shareCount;
             AuthorGroupPoints = authorGroupPoints;
+            IsGroupAdmin = isGroupAdmin;
+            IsGroupModerator = isGroupModerator;
             Images = images;
         }
 
@@ -178,6 +194,8 @@ namespace FreeSpeakWeb.DTOs
                 dto.CommentCount,
                 dto.ShareCount,
                 dto.AuthorGroupPoints,
+                dto.IsGroupAdmin,
+                dto.IsGroupModerator,
                 dto.Images
             );
         }

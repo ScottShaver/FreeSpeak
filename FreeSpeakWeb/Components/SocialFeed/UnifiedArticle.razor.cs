@@ -77,6 +77,24 @@ public partial class UnifiedArticle : ArticleComponentBase
     [Parameter]
     public int? AuthorGroupPoints { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether the points system is enabled for the group (GroupPost only).
+    /// </summary>
+    [Parameter]
+    public bool EnablePointsSystem { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets whether the author is a group admin (GroupPost only).
+    /// </summary>
+    [Parameter]
+    public bool IsGroupAdmin { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets whether the author is a group moderator (GroupPost only).
+    /// </summary>
+    [Parameter]
+    public bool IsGroupModerator { get; set; } = false;
+
     #endregion
 
     #region State Fields

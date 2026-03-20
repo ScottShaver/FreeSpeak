@@ -277,4 +277,13 @@
   <data name="DeclinePostTooltip" xml:space="preserve">
     <value>Decline this post - the author can edit and resubmit</value>
   </data>
+  <data name="View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="ViewPostTooltip" xml:space="preserve">
+    <value>View the full post content</value>
+  </data>
+  <data name="AttachedImages" xml:space="preserve">
+    <value>Attached Images</value>
+  </data>
 </root>

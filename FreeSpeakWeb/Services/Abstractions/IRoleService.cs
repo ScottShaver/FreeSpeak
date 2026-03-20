@@ -49,5 +49,12 @@ namespace FreeSpeakWeb.Services.Abstractions
         /// <param name="roleName">The name of the role to check.</param>
         /// <returns>True if the user is in the role; otherwise, false.</returns>
         Task<bool> IsUserInRoleAsync(string userId, string roleName);
+
+        /// <summary>
+        /// Checks if a user is a system administrator.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>True if the user is a system administrator; otherwise, false.</returns>
+        Task<bool> IsSystemAdministratorAsync(string userId);
     }
 }

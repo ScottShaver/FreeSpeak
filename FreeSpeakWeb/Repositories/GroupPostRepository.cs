@@ -596,6 +596,14 @@ namespace FreeSpeakWeb.Repositories
                             .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
                             .Select(gu => gu.GroupPoints)
                             .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.IsAdmin)
+                            .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.IsModerator)
+                            .FirstOrDefault(),
                         p.Images
                             .OrderBy(i => i.DisplayOrder)
                             .Select(i => new PostImageDto(i.Id, i.ImageUrl, i.DisplayOrder))
@@ -708,6 +716,14 @@ namespace FreeSpeakWeb.Repositories
                             .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
                             .Select(gu => gu.GroupPoints)
                             .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.IsAdmin)
+                            .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.IsModerator)
+                            .FirstOrDefault(),
                         p.Images
                             .OrderBy(i => i.DisplayOrder)
                             .Select(i => new PostImageDto(i.Id, i.ImageUrl, i.DisplayOrder))
@@ -762,6 +778,14 @@ namespace FreeSpeakWeb.Repositories
                         context.GroupUsers
                             .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
                             .Select(gu => gu.GroupPoints)
+                            .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.IsAdmin)
+                            .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.IsModerator)
                             .FirstOrDefault(),
                         p.Images
                             .OrderBy(i => i.DisplayOrder)

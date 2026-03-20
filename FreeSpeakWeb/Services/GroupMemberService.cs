@@ -1,6 +1,7 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
@@ -13,6 +14,7 @@ namespace FreeSpeakWeb.Services
         private readonly ILogger<GroupMemberService> _logger;
         private readonly IAuditLogRepository _auditLogRepository;
         private readonly NotificationService _notificationService;
+        private readonly IRoleService _roleService;
 
         public GroupMemberService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
@@ -20,7 +22,8 @@ namespace FreeSpeakWeb.Services
             IGroupRepository groupRepository,
             ILogger<GroupMemberService> logger,
             IAuditLogRepository auditLogRepository,
-            NotificationService notificationService)
+            NotificationService notificationService,
+            IRoleService roleService)
         {
             _contextFactory = contextFactory;
             _memberRepository = memberRepository;
@@ -28,6 +31,7 @@ namespace FreeSpeakWeb.Services
             _logger = logger;
             _auditLogRepository = auditLogRepository;
             _notificationService = notificationService;
+            _roleService = roleService;
         }
 
         #region Join Requests
@@ -538,15 +542,22 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Check if a user is an admin of a group.
+        /// Check if a user is an admin of a group, or a system administrator.
         /// </summary>
         /// <param name="groupId">The ID of the group.</param>
         /// <param name="userId">The ID of the user.</param>
-        /// <returns>True if the user is an admin; otherwise, false.</returns>
+        /// <returns>True if the user is an admin or system administrator; otherwise, false.</returns>
         public async Task<bool> IsAdminAsync(int groupId, string userId)
         {
             try
             {
+                // System administrators have full access to all groups
+                var isSystemAdmin = await _roleService.IsSystemAdministratorAsync(userId);
+                if (isSystemAdmin)
+                {
+                    return true;
+                }
+
                 using var context = await _contextFactory.CreateDbContextAsync();
 
                 var membership = await context.GroupUsers
@@ -561,15 +572,22 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Check if a user is a moderator of a group.
+        /// Check if a user is a moderator of a group, or a system administrator.
         /// </summary>
         /// <param name="groupId">The ID of the group.</param>
         /// <param name="userId">The ID of the user.</param>
-        /// <returns>True if the user is a moderator; otherwise, false.</returns>
+        /// <returns>True if the user is a moderator or system administrator; otherwise, false.</returns>
         public async Task<bool> IsModeratorAsync(int groupId, string userId)
         {
             try
             {
+                // System administrators have full access to all groups
+                var isSystemAdmin = await _roleService.IsSystemAdministratorAsync(userId);
+                if (isSystemAdmin)
+                {
+                    return true;
+                }
+
                 using var context = await _contextFactory.CreateDbContextAsync();
 
                 var membership = await context.GroupUsers

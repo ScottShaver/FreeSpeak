@@ -212,8 +212,8 @@ namespace FreeSpeakWeb.Services
                 MemberLevel.AllStarContributor => "text-warning", // Gold
                 MemberLevel.TopContributor => "text-primary", // Blue
                 MemberLevel.RisingContributor => "text-success", // Green
-                MemberLevel.Member => "text-secondary", // Gray
-                _ => "text-secondary"
+                MemberLevel.Member => "text-info", // Teal/Cyan - more visible than gray
+                _ => "text-info"
             };
         }
 

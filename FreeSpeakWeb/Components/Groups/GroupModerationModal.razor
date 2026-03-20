@@ -56,13 +56,6 @@
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link @(activeTab == "recent" ? "active" : "")" 
-                                    type="button" 
-                                    @onclick="@(() => SetActiveTab("recent"))">
-                                <i class="bi bi-clock-history me-1"></i>@Localizer["RecentPosts"]
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
                             <button class="nav-link @(activeTab == "modlog" ? "active" : "")" 
                                     type="button" 
                                     @onclick="@(() => SetActiveTab("modlog"))">
@@ -288,6 +281,87 @@
                                         </div>
                                     </div>
                                 }
+                                else if (showPendingPostDetail && selectedPendingPost != null)
+                                {
+                                    <!-- Pending Post Detail View -->
+                                    <div class="pending-post-detail">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <button type="button" class="btn btn-link p-0" @onclick="ClosePendingPostDetail">
+                                                <i class="bi bi-arrow-left me-1"></i>@Localizer["BackToList"]
+                                            </button>
+                                        </div>
+
+                                        <div class="card mb-3">
+                                            <div class="card-header">
+                                                <div class="d-flex align-items-center">
+                                                    <UserAvatar ImageUrl="@selectedPendingPost.Author?.ProfilePictureUrl"
+                                                                Name="@GetPostAuthorName(selectedPendingPost)"
+                                                                Size="md" />
+                                                    <div class="ms-3">
+                                                        <h6 class="mb-0">@GetPostAuthorName(selectedPendingPost)</h6>
+                                                        <small class="text-muted">
+                                                            <i class="bi bi-clock me-1"></i>@Localizer["PostedAt"] @GetRelativeTime(selectedPendingPost.CreatedAt)
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="post-content mb-3">
+                                                    <p class="mb-0" style="white-space: pre-wrap;">@selectedPendingPost.Content</p>
+                                                </div>
+                                                @if (selectedPendingPost.Images != null && selectedPendingPost.Images.Any())
+                                                {
+                                                    <div class="post-images mt-3">
+                                                        <h6 class="mb-2">
+                                                            <i class="bi bi-images me-1"></i>@Localizer["AttachedImages"] (@selectedPendingPost.Images.Count)
+                                                        </h6>
+                                                        <div class="d-flex flex-wrap gap-2">
+                                                            @foreach (var image in selectedPendingPost.Images)
+                                                            {
+                                                                <img src="@image.ImageUrl" 
+                                                                     alt="Post image" 
+                                                                     class="img-thumbnail" 
+                                                                     style="max-width: 200px; max-height: 200px; object-fit: cover;" />
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="d-flex gap-2">
+                                                    <button type="button" 
+                                                            class="btn btn-success" 
+                                                            @onclick="@(() => ApprovePostFromDetail())"
+                                                            disabled="@(processingPostId == selectedPendingPost.Id)">
+                                                        @if (processingPostId == selectedPendingPost.Id)
+                                                        {
+                                                            <span class="spinner-border spinner-border-sm me-1"></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="bi bi-check-lg me-1"></i>
+                                                        }
+                                                        @Localizer["Approve"]
+                                                    </button>
+                                                    <button type="button" 
+                                                            class="btn btn-danger" 
+                                                            @onclick="@(() => DeclinePostFromDetail())"
+                                                            disabled="@(processingPostId == selectedPendingPost.Id)">
+                                                        @if (processingPostId == selectedPendingPost.Id)
+                                                        {
+                                                            <span class="spinner-border spinner-border-sm me-1"></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="bi bi-x-lg me-1"></i>
+                                                        }
+                                                        @Localizer["Decline"]
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                                 else
                                 {
                                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -309,7 +383,7 @@
                                             <i class="bi bi-info-circle me-1"></i>@pendingPosts.Count @Localizer["PendingPostsCount"]
                                         </div>
 
-                                        @foreach (var post in pendingPosts)
+                                        @foreach (var post in pendingPosts.OrderBy(p => p.CreatedAt))
                                         {
                                             <div class="card mb-3">
                                                 <div class="card-body">
@@ -336,7 +410,13 @@
                                                                 }
                                                             </div>
                                                         </div>
-                                                        <div class="d-flex gap-2 ms-3">
+                                                        <div class="d-flex flex-column gap-2 ms-3">
+                                                            <button type="button" 
+                                                                    class="btn btn-outline-primary btn-sm" 
+                                                                    @onclick="@(() => ShowPendingPostDetail(post))"
+                                                                    title="@Localizer["ViewPostTooltip"]">
+                                                                <i class="bi bi-eye me-1"></i>@Localizer["View"]
+                                                            </button>
                                                             <button type="button" 
                                                                     class="btn btn-success btn-sm" 
                                                                     @onclick="@(() => ApprovePost(post.Id))"
@@ -374,16 +454,6 @@
                                         }
                                     }
                                 }
-                            </div>
-                        }
-                        else if (activeTab == "recent")
-                        {
-                            <div class="tab-pane fade show active">
-                                <h6 class="mb-3">@Localizer["RecentPostsDescription"]</h6>
-                                <div class="alert alert-info">
-                                    <i class="bi bi-info-circle me-2"></i>@Localizer["RecentPostsPlaceholder"]
-                                </div>
-                                <!-- Future: Recent posts for quick moderation review -->
                             </div>
                         }
                         else if (activeTab == "modlog")
@@ -466,6 +536,8 @@
     private List<GroupPost> pendingPosts = new();
     private bool isLoadingPendingPosts = false;
     private int? processingPostId = null;
+    private GroupPost? selectedPendingPost = null;
+    private bool showPendingPostDetail = false;
 
     /// <summary>
     /// Initializes the component by loading initial data.
@@ -951,6 +1023,61 @@
         if (string.IsNullOrEmpty(content)) return string.Empty;
         if (content.Length <= maxLength) return content;
         return content.Substring(0, maxLength).TrimEnd() + "...";
+    }
+
+    /// <summary>
+    /// Shows the detail view for a pending post.
+    /// </summary>
+    /// <param name="post">The pending post to view in detail.</param>
+    private void ShowPendingPostDetail(GroupPost post)
+    {
+        selectedPendingPost = post;
+        showPendingPostDetail = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the pending post detail view.
+    /// </summary>
+    private void ClosePendingPostDetail()
+    {
+        showPendingPostDetail = false;
+        selectedPendingPost = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Approves the currently selected pending post from the detail view.
+    /// </summary>
+    private async Task ApprovePostFromDetail()
+    {
+        if (selectedPendingPost == null) return;
+
+        var postId = selectedPendingPost.Id;
+        await ApprovePost(postId);
+
+        // Close the detail view after approval
+        if (!pendingPosts.Any(p => p.Id == postId))
+        {
+            ClosePendingPostDetail();
+        }
+    }
+
+    /// <summary>
+    /// Declines the currently selected pending post from the detail view.
+    /// </summary>
+    private async Task DeclinePostFromDetail()
+    {
+        if (selectedPendingPost == null) return;
+
+        var postId = selectedPendingPost.Id;
+        await DeclinePost(postId);
+
+        // Close the detail view after declining
+        if (!pendingPosts.Any(p => p.Id == postId))
+        {
+            ClosePendingPostDetail();
+        }
     }
 
     #endregion

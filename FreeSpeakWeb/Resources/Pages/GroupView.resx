@@ -139,4 +139,10 @@
   <data name="YourPosts" xml:space="preserve">
     <value>Your Posts</value>
   </data>
+  <data name="GroupInactiveTitle" xml:space="preserve">
+    <value>Group Currently Inactive</value>
+  </data>
+  <data name="GroupInactiveMessage" xml:space="preserve">
+    <value>This group is currently not active. Posting and viewing posts is not available at this time. Please check back later or contact the group administrators for more information.</value>
+  </data>
 </root>

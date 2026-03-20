@@ -24,6 +24,8 @@ namespace FreeSpeakWeb.DTOs
     /// <param name="CommentCount">The cached count of comments on this group post.</param>
     /// <param name="ShareCount">The cached count of shares on this group post.</param>
     /// <param name="AuthorGroupPoints">The author's accumulated points in this group.</param>
+    /// <param name="IsGroupAdmin">Indicates whether the author is an admin of this group.</param>
+    /// <param name="IsGroupModerator">Indicates whether the author is a moderator of this group.</param>
     /// <param name="Images">The collection of image DTOs attached to this group post.</param>
     public record GroupPostListDto(
         int Id,
@@ -42,6 +44,8 @@ namespace FreeSpeakWeb.DTOs
         int CommentCount,
         int ShareCount,
         int AuthorGroupPoints,
+        bool IsGroupAdmin,
+        bool IsGroupModerator,
         List<PostImageDto> Images
     );
 

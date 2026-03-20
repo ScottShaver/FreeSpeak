@@ -99,9 +99,9 @@
                                 <i class="bi bi-shield-check me-1"></i>@Localizer["GroupModeration"]
                             </button>
                         }
-                        @if (!string.IsNullOrEmpty(currentUserId) && group.CreatorId == currentUserId)
+                        @if (CanAccessGroupSettings)
                         {
-                            <button class="btn btn-outline-secondary btn-sm" @onclick="OpenGroupSettings" title="Group Settings">
+                            <button class="btn btn-outline-secondary btn-sm" @onclick="OpenGroupSettings" title="@Localizer["Settings"]">
                                 <i class="bi bi-gear me-1"></i>@Localizer["Settings"]
                             </button>
                         }
@@ -166,23 +166,35 @@
 
         <!-- Group Feed -->
         <div class="group-feed-section">
-            <!-- Post Creator -->
-            <div class="group-post-creator mb-4">
-                <PostCreator 
-                    CurrentUserImageUrl="@currentUserImageUrl"
-                    CurrentUserName="@currentUserName"
-                    ShowAudienceSelector="false"
-                    OnPostCreated="HandleGroupPostCreated" />
-            </div>
-
-            <h3>@Localizer["RecentPosts"]</h3>
-
-            @if (isLoadingPosts && !groupPosts.Any())
+            @if (!group.IsActive)
             {
-                <LoadingSpinner Text="@Localizer["LoadingPosts"]" />
+                <div class="alert alert-warning d-flex align-items-center" role="alert">
+                    <i class="bi bi-pause-circle-fill fs-4 me-3"></i>
+                    <div>
+                        <h5 class="alert-heading mb-1">@Localizer["GroupInactiveTitle"]</h5>
+                        <p class="mb-0">@Localizer["GroupInactiveMessage"]</p>
+                    </div>
+                </div>
             }
-            else if (!groupPosts.Any() && !isLoadingPosts)
+            else
             {
+                <!-- Post Creator -->
+                <div class="group-post-creator mb-4">
+                    <PostCreator 
+                        CurrentUserImageUrl="@currentUserImageUrl"
+                        CurrentUserName="@currentUserName"
+                        ShowAudienceSelector="false"
+                        OnPostCreated="HandleGroupPostCreated" />
+                </div>
+
+                <h3>@Localizer["RecentPosts"]</h3>
+
+                @if (isLoadingPosts && !groupPosts.Any())
+                {
+                    <LoadingSpinner Text="@Localizer["LoadingPosts"]" />
+                }
+                else if (!groupPosts.Any() && !isLoadingPosts)
+                {
                 <EmptyState Message="@Localizer["NoPostsYet"]" Icon="bi-file-post" />
             }
             else
@@ -224,6 +236,9 @@
                         AuthorName="@post.AuthorName"
                         AuthorImageUrl="@post.AuthorImageUrl"
                         AuthorGroupPoints="@post.AuthorGroupPoints"
+                        EnablePointsSystem="@group.EnablePointsSystem"
+                        IsGroupAdmin="@post.IsGroupAdmin"
+                        IsGroupModerator="@post.IsGroupModerator"
                         CreatedAt="@post.CreatedAt"
                         LikeCount="@post.LikeCount"
                         CommentCount="@post.CommentCount"
@@ -270,6 +285,7 @@
                     <EmptyState Message="No more posts at this time" CssClass="no-more-posts" />
                 }
             }
+            }
         </div>
     }
 </div>
@@ -287,6 +303,10 @@
         AuthorId="@selectedGroupPost.AuthorId"
         AuthorName="@selectedGroupPost.AuthorName"
         AuthorImageUrl="@selectedGroupPost.AuthorImageUrl"
+        AuthorGroupPoints="@selectedGroupPost.AuthorGroupPoints"
+        EnablePointsSystem="@(group?.EnablePointsSystem ?? false)"
+        IsGroupAdmin="@selectedGroupPost.IsGroupAdmin"
+        IsGroupModerator="@selectedGroupPost.IsGroupModerator"
         CurrentUserId="@currentUserId"
         CreatedAt="@selectedGroupPost.CreatedAt"
         LikeCount="@selectedGroupPost.LikeCount"
@@ -578,10 +598,19 @@
     /// <summary>
     /// Loads the group posts for display.
     /// Includes a guard to prevent concurrent loading operations.
+    /// Skips loading if the group is not active.
     /// </summary>
     private async Task LoadGroupPosts()
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
+
+        // Skip loading posts if the group is not active
+        if (group != null && !group.IsActive)
+        {
+            groupPosts.Clear();
+            hasMorePosts = false;
+            return;
+        }
 
         // Prevent concurrent loading operations
         if (isLoadingPosts) return;
@@ -608,6 +637,10 @@
                     postStatuses[userPost.Id] = userPost.Status;
                 }
 
+                // Get the current user's group admin/mod status
+                var isCurrentUserAdmin = await GroupMemberService.IsAdminAsync(GroupId, currentUserId);
+                var isCurrentUserModerator = await GroupMemberService.IsModeratorAsync(GroupId, currentUserId);
+
                 var userPostDtos = userPosts.Select(p => new GroupPostListDto(
                     p.Id,
                     p.GroupId,
@@ -625,6 +658,8 @@
                     p.CommentCount,
                     p.ShareCount,
                     0, // Group points - will be loaded separately
+                    isCurrentUserAdmin, // IsGroupAdmin - use actual value
+                    isCurrentUserModerator, // IsGroupModerator - use actual value
                     p.Images?.Select(i => new PostImageDto(i.Id, i.ImageUrl, i.DisplayOrder)).ToList() ?? new List<PostImageDto>()
                 )).ToList();
 
@@ -659,6 +694,9 @@
     [JSInvokable]
     public async Task LoadMoreGroupPostsAsync()
     {
+        // Skip loading more posts if the group is not active
+        if (group != null && !group.IsActive) return;
+
         if (string.IsNullOrEmpty(currentUserId) || isLoadingMorePosts || hasMorePosts == false) return;
 
         isLoadingMorePosts = true;
@@ -1486,6 +1524,13 @@
     /// </summary>
     private bool CanAccessGroupModeration =>
         isGroupModerator || isGroupAdmin || isSystemModerator || isSystemAdmin || (group != null && group.CreatorId == currentUserId);
+
+    /// <summary>
+    /// Determines if the current user can access group settings.
+    /// Returns true if user is a group admin, group creator, or system administrator.
+    /// </summary>
+    private bool CanAccessGroupSettings =>
+        isGroupAdmin || isSystemAdmin || (group != null && group.CreatorId == currentUserId);
 
     /// <summary>
     /// Opens the group administration modal.

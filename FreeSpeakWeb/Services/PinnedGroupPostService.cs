@@ -312,6 +312,14 @@ namespace FreeSpeakWeb.Services
                             .Where(gu => gu.GroupId == p.GroupId && gu.UserId == p.AuthorId)
                             .Select(gu => gu.GroupPoints)
                             .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.GroupId == p.GroupId && gu.UserId == p.AuthorId)
+                            .Select(gu => gu.IsAdmin)
+                            .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.GroupId == p.GroupId && gu.UserId == p.AuthorId)
+                            .Select(gu => gu.IsModerator)
+                            .FirstOrDefault(),
                         p.Images.OrderBy(i => i.DisplayOrder).Select(i => new PostImageDto(
                             i.Id,
                             i.ImageUrl,

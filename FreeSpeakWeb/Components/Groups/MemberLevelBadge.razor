@@ -3,15 +3,15 @@
 @* Display member level badge with icon and level name *@
 @if (Level != MemberLevel.Member || ShowForAllLevels)
 {
-    <span class="member-level-badge @CssClass" title="@GetTooltip()">
-        <i class="bi @iconClass @colorClass"></i>
+    <span class="badge rounded-pill @GetBadgeColorClass() member-level-badge @CssClass" title="@GetTooltip()">
+        <i class="bi @iconClass"></i>
         @if (ShowText)
         {
             <span class="ms-1">@levelName</span>
         }
         @if (ShowPoints && Points.HasValue)
         {
-            <span class="ms-1 text-muted">(@Points pts)</span>
+            <span class="ms-1">(@Points pts)</span>
         }
     </span>
 }
@@ -80,6 +80,22 @@
             MemberLevel.RisingContributor => $"Rising Contributor - Achieved at {GroupPointsService.RisingContributorThreshold}+ points",
             MemberLevel.Member => "Member",
             _ => "Member"
+        };
+    }
+
+    /// <summary>
+    /// Gets the badge background color class for the member level.
+    /// </summary>
+    /// <returns>A Bootstrap badge background class.</returns>
+    private string GetBadgeColorClass()
+    {
+        return Level switch
+        {
+            MemberLevel.AllStarContributor => "bg-warning text-dark", // Gold badge with dark text
+            MemberLevel.TopContributor => "bg-primary text-white", // Blue badge with white text
+            MemberLevel.RisingContributor => "bg-success text-white", // Green badge with white text
+            MemberLevel.Member => "bg-secondary text-white", // Gray badge with white text
+            _ => "bg-secondary text-white"
         };
     }
 }

@@ -9,7 +9,7 @@
 
 <div class="feed-article @(showMenu ? "menu-open" : "")">
     <!-- 1. Header Area -->
-    <FeedArticleHeader 
+    <FeedArticleHeader
         AuthorName="@AuthorName"
         GroupName="@(ArticlePostType == PostType.GroupPost ? GroupName : null)"
         AuthorImageUrl="@AuthorImageUrl"
@@ -32,7 +32,10 @@
         OnToggleMenu="@ToggleMenu"
         OnCloseMenu="@CloseMenu"
         GroupId="@(ArticlePostType == PostType.GroupPost ? GroupId : null)"
-        AuthorGroupPoints="@(ArticlePostType == PostType.GroupPost ? AuthorGroupPoints : null)" />
+        AuthorGroupPoints="@(ArticlePostType == PostType.GroupPost ? AuthorGroupPoints : null)"
+        EnablePointsSystem="@(ArticlePostType == PostType.GroupPost && EnablePointsSystem)"
+        IsGroupAdmin="@(ArticlePostType == PostType.GroupPost && IsGroupAdmin)"
+        IsGroupModerator="@(ArticlePostType == PostType.GroupPost && IsGroupModerator)" />
 
     <!-- 2. Main Content Area -->
     <FeedArticleContent 

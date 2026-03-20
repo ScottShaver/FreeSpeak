@@ -2233,7 +2233,7 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                var projections = await _postRepository.GetFeedPostsAsProjectionAsync(userId, (pageNumber - 1) * pageSize, pageSize);
+                var projections = await _postRepository.GetFeedPostsAsync(userId, (pageNumber - 1) * pageSize, pageSize);
                 return projections.ToViewModels();
             }
             catch (Exception ex)

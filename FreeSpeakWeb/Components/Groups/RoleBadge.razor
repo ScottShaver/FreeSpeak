@@ -1,0 +1,82 @@
+@using FreeSpeakWeb.Data
+
+@* Display role badge for group/system administrators and moderators *@
+@if (ShowBadge)
+{
+    <span class="badge rounded-pill @GetBadgeColorClass() role-badge @CssClass" title="@RoleText">
+        <i class="bi @GetBadgeIcon()"></i>
+        @if (ShowText)
+        {
+            <span class="ms-1">@RoleText</span>
+        }
+    </span>
+}
+
+@code {
+    /// <summary>
+    /// The type of role to display.
+    /// </summary>
+    [Parameter]
+    public RoleType Role { get; set; }
+
+    /// <summary>
+    /// Whether to show the text label for the role. Default is false (icon only).
+    /// </summary>
+    [Parameter]
+    public bool ShowText { get; set; } = false;
+
+    /// <summary>
+    /// Additional CSS classes to apply to the badge container.
+    /// </summary>
+    [Parameter]
+    public string? CssClass { get; set; }
+
+    /// <summary>
+    /// Determines whether the badge should be displayed.
+    /// </summary>
+    private bool ShowBadge => Role != RoleType.None;
+
+    /// <summary>
+    /// Gets the display text for the role.
+    /// </summary>
+    private string RoleText => Role switch
+    {
+        RoleType.GroupAdmin => "Group Admin",
+        RoleType.GroupModerator => "Group Mod",
+        RoleType.SystemAdmin => "Admin",
+        RoleType.SystemModerator => "Mod",
+        _ => ""
+    };
+
+    /// <summary>
+    /// Gets the badge background color class for the role.
+    /// </summary>
+    /// <returns>A Bootstrap badge background class.</returns>
+    private string GetBadgeColorClass()
+    {
+        return Role switch
+        {
+            RoleType.SystemAdmin => "bg-danger text-white", // Red badge for system admin
+            RoleType.SystemModerator => "bg-warning text-dark", // Yellow badge for system moderator
+            RoleType.GroupAdmin => "bg-info text-white", // Cyan badge for group admin
+            RoleType.GroupModerator => "bg-secondary text-white", // Gray badge for group moderator
+            _ => "bg-secondary text-white"
+        };
+    }
+
+    /// <summary>
+    /// Gets the icon for the role badge.
+    /// </summary>
+    /// <returns>A Bootstrap icon class name.</returns>
+    private string GetBadgeIcon()
+    {
+        return Role switch
+        {
+            RoleType.SystemAdmin => "bi-shield-fill-exclamation",
+            RoleType.SystemModerator => "bi-shield-check",
+            RoleType.GroupAdmin => "bi-star-fill",
+            RoleType.GroupModerator => "bi-shield",
+            _ => ""
+        };
+    }
+}

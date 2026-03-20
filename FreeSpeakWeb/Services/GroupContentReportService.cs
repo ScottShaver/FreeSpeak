@@ -11,18 +11,22 @@ namespace FreeSpeakWeb.Services
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupContentReportService> _logger;
+        private readonly GroupAccessValidator _accessValidator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupContentReportService"/> class.
         /// </summary>
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording service operations.</param>
+        /// <param name="accessValidator">Validator for group access permissions.</param>
         public GroupContentReportService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<GroupContentReportService> logger)
+            ILogger<GroupContentReportService> logger,
+            GroupAccessValidator accessValidator)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _accessValidator = accessValidator;
         }
 
         #region Create Reports
@@ -354,6 +358,13 @@ namespace FreeSpeakWeb.Services
                 if (report == null)
                 {
                     return (false, "Report not found.");
+                }
+
+                // Check if user is a group admin, moderator, or system administrator
+                var isAuthorized = await _accessValidator.IsGroupAdminOrModeratorAsync(report.GroupId, reviewerId);
+                if (!isAuthorized)
+                {
+                    return (false, "You are not authorized to review reports in this group.");
                 }
 
                 report.Status = newStatus;

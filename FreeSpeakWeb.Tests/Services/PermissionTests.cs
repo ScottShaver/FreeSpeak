@@ -1,6 +1,7 @@
 using FluentAssertions;
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Services;
+using FreeSpeakWeb.Services.Abstractions;
 using FreeSpeakWeb.Tests.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -51,7 +52,9 @@ namespace FreeSpeakWeb.Tests.Services
         private static GroupAccessValidator CreateMockGroupAccessValidator(IDbContextFactory<ApplicationDbContext> dbFactory)
         {
             var logger = new Mock<ILogger<GroupAccessValidator>>();
-            return new GroupAccessValidator(dbFactory, logger.Object);
+            var roleService = new Mock<IRoleService>();
+            roleService.Setup(r => r.IsSystemAdministratorAsync(It.IsAny<string>())).ReturnsAsync(false);
+            return new GroupAccessValidator(dbFactory, logger.Object, roleService.Object);
         }
 
         private GroupPostService CreateGroupPostService(IDbContextFactory<ApplicationDbContext> dbFactory)
