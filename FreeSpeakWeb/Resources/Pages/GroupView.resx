@@ -133,6 +133,12 @@
   <data name="PostDeclinedDescription" xml:space="preserve">
     <value>This post was declined by a moderator. You can edit and resubmit it.</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>Reported</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>This post has been reported to the moderators and is awaiting review.</value>
+  </data>
   <data name="YourPoints" xml:space="preserve">
     <value>Your Points</value>
   </data>

@@ -1,6 +1,8 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.Shared
+@using FreeSpeakWeb.Components.SocialFeed
+@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Localization
 
@@ -8,6 +10,8 @@
 @inject GroupMemberService GroupMemberService
 @inject GroupPostService GroupPostService
 @inject GroupContentReportService ReportService
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ILogger<GroupModerationModal> Logger
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Groups.GroupModerationModal> Localizer
 
@@ -89,12 +93,10 @@
                                     }
                                     else
                                     {
-                                        <div class="list-group">
-                                            @foreach (var report in pendingReports)
-                                            {
-                                                <button type="button" 
-                                                        class="list-group-item list-group-item-action"
-                                                        @onclick="@(() => ShowReportDetail(report))">
+                                        @foreach (var report in pendingReports)
+                                        {
+                                            <div class="card mb-3">
+                                                <div class="card-body">
                                                     <div class="d-flex justify-content-between align-items-start">
                                                         <div class="flex-grow-1">
                                                             <div class="d-flex align-items-center mb-2">
@@ -126,11 +128,27 @@
                                                                 <span class="text-muted">@GetContentPreview(report)</span>
                                                             </div>
                                                         </div>
-                                                        <i class="bi bi-chevron-right ms-3"></i>
+                                                        <div class="d-flex flex-column gap-2 ms-3">
+                                                            @if (report.PostId.HasValue)
+                                                            {
+                                                                <button type="button" 
+                                                                        class="btn btn-outline-primary btn-sm" 
+                                                                        @onclick="@(() => ViewReportedPost(report))"
+                                                                        title="@Localizer["ViewPostTooltip"]">
+                                                                    <i class="bi bi-eye me-1"></i>@Localizer["View"]
+                                                                </button>
+                                                            }
+                                                            <button type="button" 
+                                                                    class="btn btn-outline-warning btn-sm" 
+                                                                    @onclick="@(() => ShowReportDetail(report))"
+                                                                    title="@Localizer["ModerateTooltip"]">
+                                                                <i class="bi bi-shield-check me-1"></i>@Localizer["Moderate"]
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                </button>
-                                            }
-                                        </div>
+                                                </div>
+                                            </div>
+                                        }
                                     }
                                 }
                                 else if (selectedReport != null)
@@ -413,39 +431,15 @@
                                                         <div class="d-flex flex-column gap-2 ms-3">
                                                             <button type="button" 
                                                                     class="btn btn-outline-primary btn-sm" 
-                                                                    @onclick="@(() => ShowPendingPostDetail(post))"
+                                                                    @onclick="@(() => ViewPendingPost(post))"
                                                                     title="@Localizer["ViewPostTooltip"]">
                                                                 <i class="bi bi-eye me-1"></i>@Localizer["View"]
                                                             </button>
                                                             <button type="button" 
-                                                                    class="btn btn-success btn-sm" 
-                                                                    @onclick="@(() => ApprovePost(post.Id))"
-                                                                    disabled="@(processingPostId == post.Id)"
-                                                                    title="@Localizer["ApprovePostTooltip"]">
-                                                                @if (processingPostId == post.Id)
-                                                                {
-                                                                    <span class="spinner-border spinner-border-sm me-1"></span>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <i class="bi bi-check-lg me-1"></i>
-                                                                }
-                                                                @Localizer["Approve"]
-                                                            </button>
-                                                            <button type="button" 
-                                                                    class="btn btn-outline-danger btn-sm" 
-                                                                    @onclick="@(() => DeclinePost(post.Id))"
-                                                                    disabled="@(processingPostId == post.Id)"
-                                                                    title="@Localizer["DeclinePostTooltip"]">
-                                                                @if (processingPostId == post.Id)
-                                                                {
-                                                                    <span class="spinner-border spinner-border-sm me-1"></span>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <i class="bi bi-x-lg me-1"></i>
-                                                                }
-                                                                @Localizer["Decline"]
+                                                                    class="btn btn-outline-warning btn-sm" 
+                                                                    @onclick="@(() => ShowPendingPostDetail(post))"
+                                                                    title="@Localizer["ModerateTooltip"]">
+                                                                <i class="bi bi-shield-check me-1"></i>@Localizer["Moderate"]
                                                             </button>
                                                         </div>
                                                     </div>
@@ -492,6 +486,76 @@
     </div>
 </div>
 
+@* Reported Post Detail Modal - wrapped with higher z-index to appear above moderation modal *@
+@if (showReportedPostDetailModal && selectedReportedPost != null)
+{
+    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1060;">
+        <GroupPostDetailModal 
+            PostId="@selectedReportedPost.Id"
+            GroupId="@selectedReportedPost.GroupId"
+            GroupName="@Group.Name"
+            AuthorId="@selectedReportedPost.AuthorId"
+            AuthorName="@GetReportedPostAuthorName()"
+            AuthorImageUrl="@selectedReportedPost.Author?.ProfilePictureUrl"
+            AuthorGroupPoints="@null"
+            EnablePointsSystem="@Group.EnablePointsSystem"
+            IsGroupAdmin="false"
+            IsGroupModerator="false"
+            CurrentUserId="@CurrentUserId"
+            CreatedAt="@selectedReportedPost.CreatedAt"
+            LikeCount="@selectedReportedPost.LikeCount"
+            CommentCount="@selectedReportedPost.CommentCount"
+            ShareCount="0"
+            CurrentUserImageUrl="@currentUserImageUrl"
+            CurrentUserName="@currentUserName"
+            ReactionBreakdown="@reportedPostReactions"
+            UserReaction="@reportedPostUserReaction"
+            IsPinned="false"
+            Images="@ConvertGroupPostImagesToPostImages(selectedReportedPost.Images)"
+            IsReadOnly="true"
+            OnClose="@CloseReportedPostDetailModal">
+            <ArticleContent>
+                @((MarkupString)FormatContentWithLineBreaks(selectedReportedPost.Content))
+            </ArticleContent>
+        </GroupPostDetailModal>
+    </div>
+}
+
+@* Pending Post Detail Modal - wrapped with higher z-index to appear above moderation modal *@
+@if (showPendingPostDetailModal && selectedPendingPostForModal != null)
+{
+    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1060;">
+        <GroupPostDetailModal 
+            PostId="@selectedPendingPostForModal.Id"
+            GroupId="@selectedPendingPostForModal.GroupId"
+            GroupName="@Group.Name"
+            AuthorId="@selectedPendingPostForModal.AuthorId"
+            AuthorName="@GetPendingPostAuthorName()"
+            AuthorImageUrl="@selectedPendingPostForModal.Author?.ProfilePictureUrl"
+            AuthorGroupPoints="@null"
+            EnablePointsSystem="@Group.EnablePointsSystem"
+            IsGroupAdmin="false"
+            IsGroupModerator="false"
+            CurrentUserId="@CurrentUserId"
+            CreatedAt="@selectedPendingPostForModal.CreatedAt"
+            LikeCount="@selectedPendingPostForModal.LikeCount"
+            CommentCount="@selectedPendingPostForModal.CommentCount"
+            ShareCount="0"
+            CurrentUserImageUrl="@currentUserImageUrl"
+            CurrentUserName="@currentUserName"
+            ReactionBreakdown="@pendingPostReactions"
+            UserReaction="@pendingPostUserReaction"
+            IsPinned="false"
+            Images="@ConvertGroupPostImagesToPostImages(selectedPendingPostForModal.Images)"
+            IsReadOnly="true"
+            OnClose="@ClosePendingPostDetailModal">
+            <ArticleContent>
+                @((MarkupString)FormatContentWithLineBreaks(selectedPendingPostForModal.Content))
+            </ArticleContent>
+        </GroupPostDetailModal>
+    </div>
+}
+
 @code {
     /// <summary>
     /// The group to moderate.
@@ -532,12 +596,26 @@
     private int? processingReportId = null;
     private string? reviewerNotes = null;
 
+    // Reported post detail modal state
+    private bool showReportedPostDetailModal = false;
+    private GroupPost? selectedReportedPost = null;
+    private Dictionary<LikeType, int> reportedPostReactions = new();
+    private LikeType? reportedPostUserReaction = null;
+    private string currentUserName = string.Empty;
+    private string? currentUserImageUrl = null;
+
     // Pending posts state
     private List<GroupPost> pendingPosts = new();
     private bool isLoadingPendingPosts = false;
     private int? processingPostId = null;
     private GroupPost? selectedPendingPost = null;
     private bool showPendingPostDetail = false;
+
+    // Pending post detail modal state (for viewing full post)
+    private bool showPendingPostDetailModal = false;
+    private GroupPost? selectedPendingPostForModal = null;
+    private Dictionary<LikeType, int> pendingPostReactions = new();
+    private LikeType? pendingPostUserReaction = null;
 
     /// <summary>
     /// Initializes the component by loading initial data.
@@ -904,6 +982,135 @@
         return dateTime.ToString("MMM dd, yyyy");
     }
 
+    #region Reported Post Detail Modal Methods
+
+    /// <summary>
+    /// Opens the full post detail modal for a reported post.
+    /// </summary>
+    /// <param name="report">The report containing the post to view.</param>
+    private async Task ViewReportedPost(GroupContentReport report)
+    {
+        if (!report.PostId.HasValue)
+        {
+            errorMessage = Localizer["CannotViewComment"];
+            return;
+        }
+
+        try
+        {
+            // Load the full post with author and images
+            var post = await GroupPostService.GetGroupPostByIdAsync(report.PostId.Value);
+            if (post == null)
+            {
+                errorMessage = Localizer["PostNotFound"];
+                return;
+            }
+
+            selectedReportedPost = post;
+
+            // Load reaction data for the post
+            reportedPostReactions = await GroupPostService.GetReactionBreakdownAsync(post.Id);
+            reportedPostUserReaction = await GroupPostService.GetUserReactionAsync(post.Id, CurrentUserId);
+
+            // Load current user info for the modal
+            await LoadCurrentUserInfoAsync();
+
+            showReportedPostDetailModal = true;
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading reported post {PostId}", report.PostId);
+            errorMessage = Localizer["ErrorLoadingPost"];
+        }
+    }
+
+    /// <summary>
+    /// Loads the current user's display info for the post detail modal.
+    /// </summary>
+    private async Task LoadCurrentUserInfoAsync()
+    {
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated == true)
+            {
+                currentUserName = user.Identity.Name ?? string.Empty;
+
+                var currentUser = await UserManager.FindByIdAsync(CurrentUserId);
+                if (currentUser != null)
+                {
+                    currentUserImageUrl = currentUser.ProfilePictureUrl;
+                    // Format name properly
+                    var fullName = $"{currentUser.FirstName} {currentUser.LastName}".Trim();
+                    if (!string.IsNullOrEmpty(fullName))
+                    {
+                        currentUserName = fullName;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex, "Error loading current user info");
+        }
+    }
+
+    /// <summary>
+    /// Closes the reported post detail modal.
+    /// </summary>
+    private void CloseReportedPostDetailModal()
+    {
+        showReportedPostDetailModal = false;
+        selectedReportedPost = null;
+        reportedPostReactions = new();
+        reportedPostUserReaction = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Gets the author name for the reported post.
+    /// </summary>
+    private string GetReportedPostAuthorName()
+    {
+        if (selectedReportedPost?.Author == null) return Localizer["UnknownUser"];
+        var name = $"{selectedReportedPost.Author.FirstName} {selectedReportedPost.Author.LastName}".Trim();
+        return string.IsNullOrEmpty(name) ? selectedReportedPost.Author.UserName ?? Localizer["UnknownUser"] : name;
+    }
+
+    /// <summary>
+    /// Formats post content with line breaks for display.
+    /// </summary>
+    private string FormatContentWithLineBreaks(string? content)
+    {
+        if (string.IsNullOrEmpty(content)) return string.Empty;
+        return System.Web.HttpUtility.HtmlEncode(content).Replace("\n", "<br />");
+    }
+
+    /// <summary>
+    /// Converts GroupPostImage collection to PostImage list for component compatibility.
+    /// </summary>
+    /// <param name="groupImages">The group post images to convert.</param>
+    /// <returns>A list of PostImage objects.</returns>
+    private List<PostImage>? ConvertGroupPostImagesToPostImages(ICollection<GroupPostImage>? groupImages)
+    {
+        if (groupImages == null || !groupImages.Any())
+            return null;
+
+        return groupImages.Select(gi => new PostImage
+        {
+            Id = gi.Id,
+            PostId = gi.PostId,
+            ImageUrl = gi.ImageUrl,
+            DisplayOrder = gi.DisplayOrder,
+            UploadedAt = gi.UploadedAt
+        }).ToList();
+    }
+
+    #endregion
+
     #region Pending Posts Methods
 
     /// <summary>
@@ -1034,6 +1241,63 @@
         selectedPendingPost = post;
         showPendingPostDetail = true;
         StateHasChanged();
+    }
+
+    /// <summary>
+    /// Opens the full post detail modal for a pending post.
+    /// </summary>
+    /// <param name="post">The pending post to view.</param>
+    private async Task ViewPendingPost(GroupPost post)
+    {
+        try
+        {
+            // Load the full post with author and images (in case not fully loaded)
+            var fullPost = await GroupPostService.GetGroupPostByIdAsync(post.Id);
+            if (fullPost == null)
+            {
+                errorMessage = Localizer["PostNotFound"];
+                return;
+            }
+
+            selectedPendingPostForModal = fullPost;
+
+            // Load reaction data for the post
+            pendingPostReactions = await GroupPostService.GetReactionBreakdownAsync(fullPost.Id);
+            pendingPostUserReaction = await GroupPostService.GetUserReactionAsync(fullPost.Id, CurrentUserId);
+
+            // Load current user info for the modal
+            await LoadCurrentUserInfoAsync();
+
+            showPendingPostDetailModal = true;
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading pending post {PostId}", post.Id);
+            errorMessage = Localizer["ErrorLoadingPost"];
+        }
+    }
+
+    /// <summary>
+    /// Closes the pending post detail modal.
+    /// </summary>
+    private void ClosePendingPostDetailModal()
+    {
+        showPendingPostDetailModal = false;
+        selectedPendingPostForModal = null;
+        pendingPostReactions = new();
+        pendingPostUserReaction = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Gets the author name for the pending post modal.
+    /// </summary>
+    private string GetPendingPostAuthorName()
+    {
+        if (selectedPendingPostForModal?.Author == null) return Localizer["UnknownUser"];
+        var name = $"{selectedPendingPostForModal.Author.FirstName} {selectedPendingPostForModal.Author.LastName}".Trim();
+        return string.IsNullOrEmpty(name) ? selectedPendingPostForModal.Author.UserName ?? Localizer["UnknownUser"] : name;
     }
 
     /// <summary>

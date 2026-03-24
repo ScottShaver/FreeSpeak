@@ -498,11 +498,8 @@ namespace FreeSpeakWeb.Services
                     return (false, "Post not found.");
                 }
 
-                // Check if user is a group admin or moderator
-                var isModeratorOrAdmin = await context.GroupUsers
-                    .AnyAsync(gu => gu.GroupId == post.GroupId && 
-                                   gu.UserId == moderatorId && 
-                                   (gu.IsAdmin || gu.IsModerator));
+                // Check if user is a group admin, moderator, or system administrator
+                var isModeratorOrAdmin = await _accessValidator.IsGroupAdminOrModeratorAsync(post.GroupId, moderatorId);
 
                 if (!isModeratorOrAdmin)
                 {

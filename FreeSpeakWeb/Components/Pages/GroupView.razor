@@ -33,8 +33,10 @@
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject ImageUploadService ImageUploadService
 @inject GroupPointsService GroupPointsService
+@inject GroupContentReportService ReportService
 @inject FreeSpeakWeb.Repositories.Abstractions.IGroupCommentRepository GroupCommentRepository
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.GroupView> Localizer
+@inject FreeSpeakWeb.Services.Abstractions.IRoleService RoleService
 
 <PageTitle>@(group?.Name ?? "Group") - @SiteSettings.Value.SiteName</PageTitle>
 
@@ -207,6 +209,7 @@
                     var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
                     var isMuted = postMuteStatus.ContainsKey(post.Id) ? postMuteStatus[post.Id] : (bool?)null;
                     var postStatus = postStatuses.ContainsKey(post.Id) ? postStatuses[post.Id] : PostStatus.Posted;
+                    var canDelete = GetCanDeletePost(post.Id);
 
                     @* Show status banner for user's own pending/declined posts *@
                     @if (post.AuthorId == currentUserId && postStatus != PostStatus.Posted)
@@ -224,6 +227,16 @@
                                 <span class="text-danger fw-bold">@Localizer["PostDeclined"]</span>
                                 <span class="text-muted small ms-2">@Localizer["PostDeclinedDescription"]</span>
                             }
+                        </div>
+                    }
+
+                    @* Show reported status banner for posts with pending reports *@
+                    @if (reportedPostIds.Contains(post.Id))
+                    {
+                        <div class="post-status-banner mb-2 p-2 rounded bg-danger bg-opacity-10 border border-danger">
+                            <i class="bi bi-flag-fill text-danger me-2"></i>
+                            <span class="text-danger fw-bold">@Localizer["PostReported"]</span>
+                            <span class="text-muted small ms-2">@Localizer["PostReportedDescription"]</span>
                         </div>
                     }
 
@@ -253,6 +266,7 @@
                         UserReaction="@userReaction"
                         IsPinned="@isPinned"
                         IsMuted="@isMuted"
+                        CanDeletePost="@canDelete"
                         Images="@ConvertPostImageDtosToPostImages(post.Images)"
                         OnReactionChanged="@((LikeType reactionType) => HandleGroupPostReactionChanged(post.Id, reactionType))"
                         OnRemoveReaction="@(async () => await HandleRemoveGroupPostReaction(post.Id))"
@@ -295,6 +309,7 @@
     var postReactions = postReactionData.ContainsKey(selectedGroupPost.Id) ? postReactionData[selectedGroupPost.Id] : new Dictionary<LikeType, int>();
     var userReaction = postUserReactions.ContainsKey(selectedGroupPost.Id) ? postUserReactions[selectedGroupPost.Id] : null;
     var isPinned = pinnedPosts.ContainsKey(selectedGroupPost.Id) && pinnedPosts[selectedGroupPost.Id];
+    var canDelete = GetCanDeletePost(selectedGroupPost.Id);
 
     <GroupPostDetailModal 
         PostId="@selectedGroupPost.Id"
@@ -317,6 +332,7 @@
         ReactionBreakdown="@postReactions"
         UserReaction="@userReaction"
         IsPinned="@isPinned"
+        CanDeletePost="@canDelete"
         Images="@ConvertPostImageDtosToPostImages(selectedGroupPost.Images)"
         OnReactionChanged="@(async (reactionType) => await HandleGroupPostReactionChanged(selectedGroupPost.Id, reactionType))"
         OnRemoveReaction="@(async () => await HandleRemoveGroupPostReaction(selectedGroupPost.Id))"
@@ -399,6 +415,7 @@
         InitialImages="@(editGroupPost.Images?.Select(img => new PostImage { Id = img.Id, PostId = editGroupPost.Id, ImageUrl = img.ImageUrl, UploadedAt = img.UploadedAt }).ToList())"
         AudienceType="@AudienceType.Public"
         CurrentUserId="@currentUserId"
+        GroupId="@GroupId"
         OnSave="@HandleSaveGroupPostEdit"
         OnCancel="@CloseEditGroupPostModal"
         OnImageUploadStateChanged="@HandleEditGroupPostImageUploadStateChanged"
@@ -457,6 +474,7 @@
     private const int pageSize = 20;
     private Dictionary<int, bool> postMuteStatus = new();
     private Dictionary<int, PostStatus> postStatuses = new();
+    private HashSet<int> reportedPostIds = new();
 
     // JavaScript interop
     private IJSObjectReference? jsModule;
@@ -472,6 +490,9 @@
 
     // Group-specific dictionaries (rename to use base class naming)
     // Base class provides: postRefreshTriggers, postReactionData, postUserReactions, pinnedPosts, postAuthorNames
+
+    // Permission caching for delete operations
+    private Dictionary<int, bool> _canDeletePostCache = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -745,6 +766,9 @@
         // PERFORMANCE: Batch format author names based on user preferences
         await ApplyAuthorNamePreferencesAsync(posts);
 
+        // Pre-compute delete permissions for all posts
+        await PreComputeDeletePermissionsAsync(posts);
+
         // Get post IDs that need reaction data loaded
         var postIdsNeedingReactions = posts
             .Where(p => !postReactionData.ContainsKey(p.Id))
@@ -800,6 +824,12 @@
             {
                 postMuteStatus[kvp.Key] = kvp.Value;
             }
+        }
+
+        // Load reported post IDs to show reported status banner to all users
+        if (reportedPostIds.Count == 0)
+        {
+            reportedPostIds = await ReportService.GetPostIdsWithPendingReportsAsync(GroupId);
         }
     }
 
@@ -1509,6 +1539,85 @@
 
     #endregion
 
+    #region Permission Helpers
+
+    /// <summary>
+    /// Pre-computes delete permissions for a batch of posts to avoid blocking .Result calls in razor markup.
+    /// </summary>
+    /// <param name="posts">The list of posts to pre-compute permissions for.</param>
+    private async Task PreComputeDeletePermissionsAsync(List<GroupPostViewModel> posts)
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        foreach (var post in posts)
+        {
+            if (!_canDeletePostCache.ContainsKey(post.Id))
+            {
+                try
+                {
+                    _canDeletePostCache[post.Id] = await CanUserDeletePostAsync(post);
+                }
+                catch (Exception)
+                {
+                    _canDeletePostCache[post.Id] = false;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets the cached delete permission for a post.
+    /// </summary>
+    /// <param name="postId">The ID of the post.</param>
+    /// <returns>True if the user can delete the post, otherwise false.</returns>
+    private bool GetCanDeletePost(int postId)
+    {
+        return _canDeletePostCache.TryGetValue(postId, out var canDelete) && canDelete;
+    }
+
+    /// <summary>
+    /// Determines if the current user can delete a specific group post.
+    /// System Administrators and System Moderators can delete any post.
+    /// Group Administrators and Group Moderators can delete any post in their group.
+    /// Post authors can always delete their own posts.
+    /// </summary>
+    /// <param name="post">The group post to check.</param>
+    /// <returns>True if the user can delete the post, otherwise false.</returns>
+    private async Task<bool> CanUserDeletePostAsync(GroupPostViewModel post)
+    {
+        if (string.IsNullOrEmpty(currentUserId))
+            return false;
+
+        // Post author can always delete their own post
+        if (post.AuthorId == currentUserId)
+            return true;
+
+        try
+        {
+            // Check system-level permissions (already loaded during init)
+            if (isSystemAdmin)
+                return true;
+
+            if (isSystemModerator)
+                return true;
+
+            // Check group-level permissions (already loaded during init for this group)
+            if (isGroupAdmin)
+                return true;
+
+            if (isGroupModerator)
+                return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+
+        return false;
+    }
+
+    #endregion
+
     #region Group Administration and Moderation
 
     /// <summary>
@@ -1579,10 +1688,12 @@
 
     /// <summary>
     /// Handles when a moderation action is performed, refreshing data as needed.
+    /// Reloads reported post IDs to update the reported status banners in the feed.
     /// </summary>
     private async Task HandleModerationActionPerformed()
     {
-        await LoadGroupPosts();
+        // Reload reported post IDs to remove banners from posts that no longer have pending reports
+        reportedPostIds = await ReportService.GetPostIdsWithPendingReportsAsync(GroupId);
         StateHasChanged();
     }
 

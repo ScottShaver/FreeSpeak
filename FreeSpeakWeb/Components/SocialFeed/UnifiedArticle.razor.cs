@@ -95,6 +95,14 @@ public partial class UnifiedArticle : ArticleComponentBase
     [Parameter]
     public bool IsGroupModerator { get; set; } = false;
 
+    /// <summary>
+    /// Gets or sets whether the current user can delete this post.
+    /// For group posts: System Admins, System Moderators, Group Admins, and Group Moderators can delete any post.
+    /// For user posts: Only the author can delete their own post.
+    /// </summary>
+    [Parameter]
+    public bool CanDeletePost { get; set; } = false;
+
     #endregion
 
     #region State Fields
@@ -232,6 +240,17 @@ public partial class UnifiedArticle : ArticleComponentBase
                 Icon = isNotificationMuted ? "bi bi-bell" : "bi bi-bell-slash",
                 OnClick = EventCallback.Factory.Create(this, async () => await HandleToggleNotificationsClick())
             });
+
+            // Show Delete Post if user has permission (system admin/moderator or group admin/moderator)
+            if (CanDeletePost)
+            {
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = Localizer["DeletePost"],
+                    Icon = "bi bi-trash",
+                    OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
+                });
+            }
 
             menuItems.Add(new PopupMenu.PopupMenuItem
             {

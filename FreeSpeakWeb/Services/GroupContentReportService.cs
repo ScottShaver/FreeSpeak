@@ -284,6 +284,86 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
+        /// Gets the IDs of posts that have pending (not reviewed) reports in a group.
+        /// Used to display a "reported" indicator on posts in the group feed.
+        /// </summary>
+        /// <param name="groupId">The ID of the group.</param>
+        /// <returns>A HashSet of post IDs that have pending reports.</returns>
+        public async Task<HashSet<int>> GetPostIdsWithPendingReportsAsync(int groupId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var postIds = await context.GroupContentReports
+                    .Where(r => r.GroupId == groupId && r.Status == ReportStatus.NotReviewed && r.PostId.HasValue)
+                    .Select(r => r.PostId!.Value)
+                    .Distinct()
+                    .ToListAsync();
+
+                return postIds.ToHashSet();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving post IDs with pending reports for group {GroupId}", groupId);
+                return new HashSet<int>();
+            }
+        }
+
+        /// <summary>
+        /// Gets the IDs of posts that have pending (not reviewed) reports from a list of post IDs.
+        /// Used to display a "reported" indicator on posts across multiple groups (e.g., My Feed).
+        /// </summary>
+        /// <param name="postIds">The list of post IDs to check.</param>
+        /// <returns>A HashSet of post IDs that have pending reports.</returns>
+        public async Task<HashSet<int>> GetPostIdsWithPendingReportsFromListAsync(IEnumerable<int> postIds)
+        {
+            if (postIds == null || !postIds.Any())
+            {
+                return new HashSet<int>();
+            }
+
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var reportedPostIds = await context.GroupContentReports
+                    .Where(r => r.PostId.HasValue && postIds.Contains(r.PostId.Value) && r.Status == ReportStatus.NotReviewed)
+                    .Select(r => r.PostId!.Value)
+                    .Distinct()
+                    .ToListAsync();
+
+                return reportedPostIds.ToHashSet();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving reported post IDs from list");
+                return new HashSet<int>();
+            }
+        }
+
+        /// <summary>
+        /// Checks if a specific post has any pending reports.
+        /// </summary>
+        /// <param name="postId">The ID of the post to check.</param>
+        /// <returns>True if the post has pending reports; otherwise, false.</returns>
+        public async Task<bool> HasPendingReportAsync(int postId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.GroupContentReports
+                    .AnyAsync(r => r.PostId == postId && r.Status == ReportStatus.NotReviewed);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking pending reports for post {PostId}", postId);
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Gets all reports for a group with optional status filter.
         /// </summary>
         /// <param name="groupId">The ID of the group.</param>

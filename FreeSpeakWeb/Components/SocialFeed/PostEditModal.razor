@@ -151,6 +151,10 @@
     [Parameter] public List<PostImage>? InitialImages { get; set; }
     [Parameter] public AudienceType AudienceType { get; set; }
     [Parameter] public string CurrentUserId { get; set; } = string.Empty;
+    /// <summary>
+    /// Optional group ID for group post editing. When set, images will be uploaded to group storage location.
+    /// </summary>
+    [Parameter] public int? GroupId { get; set; }
     [Parameter] public EventCallback<(int PostId, string Content, List<string> ImageUrls, List<int> RemovedImageIds)> OnSave { get; set; }
     [Parameter] public EventCallback OnCancel { get; set; }
     [Parameter] public EventCallback<bool> OnImageUploadStateChanged { get; set; }
@@ -361,7 +365,8 @@
                     ContentType: img.ContentType
                 )).ToList();
 
-                var uploadResult = await ImageUploadService.UploadImagesAsync(CurrentUserId, imagesToUpload);
+                // Pass GroupId for group post images to ensure they're stored in the correct location
+                var uploadResult = await ImageUploadService.UploadImagesAsync(CurrentUserId, imagesToUpload, groupId: GroupId);
                 if (uploadResult.Success)
                 {
                     newImageUrls = uploadResult.ImageUrls;

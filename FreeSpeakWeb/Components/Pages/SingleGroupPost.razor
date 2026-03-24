@@ -16,7 +16,8 @@
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject UserPreferenceService UserPreferenceService
 @inject UserManager<ApplicationUser> UserManager
-@inject FreeSpeakWeb.Repositories.GroupCommentRepository GroupCommentRepository
+@inject FreeSpeakWeb.Repositories.Abstractions.IGroupCommentRepository GroupCommentRepository
+@inject FreeSpeakWeb.Services.Abstractions.IRoleService RoleService
 @attribute [AllowAnonymous]
 
 <PageTitle>@pageTitle</PageTitle>
@@ -67,6 +68,7 @@
                 ReactionBreakdown="@reactionBreakdown"
                 UserReaction="@userReaction"
                 IsPinned="@isPinned"
+                CanDeletePost="@canDeletePost"
                 Images="@ConvertGroupPostImagesToPostImages(post.Images)"
                 IsModalView="true"
                 IsReadOnly="@(string.IsNullOrEmpty(currentUserId))"
@@ -108,6 +110,13 @@
     private Dictionary<LikeType, int> reactionBreakdown = new();
     private LikeType? userReaction;
     private bool isPinned;
+    private bool canDeletePost;
+
+    // Permission caching
+    private bool _isSystemAdmin = false;
+    private bool _isSystemModerator = false;
+    private bool _isGroupAdmin = false;
+    private bool _isGroupModerator = false;
 
     /// <summary>
     /// Initializes the component and loads the group post data.
@@ -195,6 +204,9 @@
                 {
                     userReaction = await GroupPostService.GetUserReactionAsync(PostId, currentUserId);
                     isPinned = await PinnedGroupPostService.IsGroupPostPinnedAsync(currentUserId, PostId);
+
+                    // Compute delete permission
+                    await ComputeDeletePermissionAsync();
                 }
 
                 pageTitle = $"Post by {authorName} in {groupName}";
@@ -312,6 +324,68 @@
             UploadedAt = gi.UploadedAt
         }).ToList();
     }
+
+    #region Permission Helpers
+
+    /// <summary>
+    /// Computes and caches the delete permission for the current post.
+    /// </summary>
+    private async Task ComputeDeletePermissionAsync()
+    {
+        if (string.IsNullOrEmpty(currentUserId) || post == null)
+        {
+            canDeletePost = false;
+            return;
+        }
+
+        try
+        {
+            // Post author can always delete their own post
+            if (post.AuthorId == currentUserId)
+            {
+                canDeletePost = true;
+                return;
+            }
+
+            // Check system-level permissions
+            _isSystemAdmin = await RoleService.IsSystemAdministratorAsync(currentUserId);
+            if (_isSystemAdmin)
+            {
+                canDeletePost = true;
+                return;
+            }
+
+            _isSystemModerator = await RoleService.IsUserInRoleAsync(currentUserId, "SystemModerator");
+            if (_isSystemModerator)
+            {
+                canDeletePost = true;
+                return;
+            }
+
+            // Check group-level permissions
+            _isGroupAdmin = await GroupMemberService.IsAdminAsync(GroupId, currentUserId);
+            if (_isGroupAdmin)
+            {
+                canDeletePost = true;
+                return;
+            }
+
+            _isGroupModerator = await GroupMemberService.IsModeratorAsync(GroupId, currentUserId);
+            if (_isGroupModerator)
+            {
+                canDeletePost = true;
+                return;
+            }
+
+            canDeletePost = false;
+        }
+        catch (Exception)
+        {
+            canDeletePost = false;
+        }
+    }
+
+    #endregion
 
     #region PostPageBase Abstract Property and Method Implementations
 

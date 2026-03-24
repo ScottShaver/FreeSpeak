@@ -59,6 +59,14 @@ public partial class GroupPostDetailModal
     public bool IsGroupModerator { get; set; } = false;
 
     /// <summary>
+    /// Gets or sets whether the current user can delete this post.
+    /// For group posts: System Admins, System Moderators, Group Admins, and Group Moderators can delete any post.
+    /// Post authors can always delete their own posts.
+    /// </summary>
+    [Parameter]
+    public bool CanDeletePost { get; set; } = false;
+
+    /// <summary>
     /// Event callback invoked when the user requests to edit the post.
     /// </summary>
     [Parameter]

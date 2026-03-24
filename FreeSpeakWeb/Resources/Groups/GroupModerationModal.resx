@@ -283,6 +283,24 @@
   <data name="ViewPostTooltip" xml:space="preserve">
     <value>View the full post content</value>
   </data>
+  <data name="ViewReportTooltip" xml:space="preserve">
+    <value>View the full report details</value>
+  </data>
+  <data name="Moderate" xml:space="preserve">
+    <value>Moderate</value>
+  </data>
+  <data name="ModerateTooltip" xml:space="preserve">
+    <value>Review and take moderation action on this report</value>
+  </data>
+  <data name="CannotViewComment" xml:space="preserve">
+    <value>Cannot view comments directly. Use Moderate to review the report.</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>The reported post could not be found.</value>
+  </data>
+  <data name="ErrorLoadingPost" xml:space="preserve">
+    <value>An error occurred while loading the post.</value>
+  </data>
   <data name="AttachedImages" xml:space="preserve">
     <value>Attached Images</value>
   </data>
