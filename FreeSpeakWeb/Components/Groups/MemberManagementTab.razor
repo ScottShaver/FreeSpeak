@@ -1,0 +1,641 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Services.Abstractions
+@using FreeSpeakWeb.Components.Shared
+@using Microsoft.AspNetCore.Identity
+
+@inject GroupMemberService GroupMemberService
+@inject GroupBannedMemberService GroupBannedMemberService
+@inject UserManager<ApplicationUser> UserManager
+@inject UserPreferenceService UserPreferenceService
+@inject IRoleService RoleService
+@inject ILogger<MemberManagementTab> Logger
+
+<div class="member-management-tab">
+    <!-- Search Bar -->
+    <div class="mb-3">
+        <input type="text" 
+               class="form-control" 
+               placeholder="🔍 Search members..." 
+               @bind="searchQuery" 
+               @bind:event="oninput"
+               @onkeyup="OnSearchKeyUp" />
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading members...</span>
+            </div>
+        </div>
+    }
+    else if (!members.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>No members found.
+        </div>
+    }
+    else
+    {
+        <div class="member-list">
+            @foreach (var member in filteredMembers)
+            {
+                var isExpanded = expandedMemberId == member.UserId;
+                var isSaving = savingMemberId == member.UserId;
+                var memberDisplayName = memberNames.ContainsKey(member.UserId) ? memberNames[member.UserId] : "Unknown";
+                var isGroupCreator = member.UserId == Group.CreatorId;
+
+                <div class="member-item @(isExpanded ? "expanded" : "")" @key="member.UserId">
+                    <div class="member-header" @onclick="() => ToggleMember(member.UserId)">
+                        <div class="member-info">
+                            <UserAvatar 
+                                ImageUrl="@member.User?.ProfilePictureUrl" 
+                                Name="@memberDisplayName"
+                                Size="md"
+                                CssClass="member-avatar" />
+                            <div class="member-details">
+                                <div class="member-name">
+                                    @memberDisplayName
+                                    @if (isGroupCreator)
+                                    {
+                                        <span class="badge bg-primary ms-2">Creator</span>
+                                    }
+                                    else if (member.IsAdmin)
+                                    {
+                                        <span class="badge bg-success ms-2">Admin</span>
+                                    }
+                                    else if (member.IsModerator)
+                                    {
+                                        <span class="badge bg-info ms-2">Moderator</span>
+                                    }
+                                </div>
+                                <div class="member-stats text-muted small">
+                                    Joined: @member.JoinedAt.ToString("MMM dd, yyyy") | 
+                                    Posts: @member.PostCount | 
+                                    Points: @member.GroupPoints
+                                </div>
+                            </div>
+                        </div>
+                        <div class="expand-icon">
+                            <i class="bi bi-chevron-@(isExpanded ? "up" : "down")"></i>
+                        </div>
+                    </div>
+
+                    @if (isExpanded)
+                    {
+                        <div class="member-actions-panel">
+                            @if (!string.IsNullOrEmpty(errorMessage) && errorMemberId == member.UserId)
+                            {
+                                <div class="alert alert-danger alert-sm mb-3" role="alert">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(successMessage) && successMemberId == member.UserId)
+                            {
+                                <div class="alert alert-success alert-sm mb-3" role="alert">
+                                    <i class="bi bi-check-circle me-2"></i>@successMessage
+                                </div>
+                            }
+
+                            @if (isGroupCreator)
+                            {
+                                <div class="alert alert-info alert-sm">
+                                    <i class="bi bi-info-circle me-2"></i>The group creator's permissions cannot be modified.
+                                </div>
+                            }
+                            else
+                            {
+                                <!-- Role Assignment Section -->
+                                <div class="action-section">
+                                    <h6 class="section-title">Role Assignment</h6>
+
+                                    <div class="role-controls">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" 
+                                                   type="checkbox" 
+                                                   id="admin-@member.UserId" 
+                                                   checked="@member.IsAdmin"
+                                                   @onchange="@(async (e) => await HandleAdminToggle(member.UserId, (bool)e.Value!))"
+                                                   disabled="@(isSaving || !CanSetAdmin)" />
+                                            <label class="form-check-label" for="admin-@member.UserId">
+                                                <i class="bi bi-shield-check me-1"></i>Group Administrator
+                                            </label>
+                                            @if (!CanSetAdmin)
+                                            {
+                                                <small class="text-muted d-block">Only the group creator or system administrators can assign admin roles</small>
+                                            }
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" 
+                                                   type="checkbox" 
+                                                   id="moderator-@member.UserId" 
+                                                   checked="@member.IsModerator"
+                                                   @onchange="@(async (e) => await HandleModeratorToggle(member.UserId, (bool)e.Value!))"
+                                                   disabled="@(isSaving || !CanSetModerator)" />
+                                            <label class="form-check-label" for="moderator-@member.UserId">
+                                                <i class="bi bi-person-badge me-1"></i>Group Moderator
+                                            </label>
+                                            @if (!CanSetModerator)
+                                            {
+                                                <small class="text-muted d-block">Only admins or system administrators can assign moderator roles</small>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Ban/Unban Section -->
+                                <div class="action-section">
+                                    <h6 class="section-title">Member Status</h6>
+                                    <div class="ban-controls">
+                                        <button type="button" 
+                                                class="btn btn-danger btn-sm"
+                                                @onclick="@(async () => await HandleBanMember(member.UserId))"
+                                                disabled="@(isSaving || !CanBanMember(member))">
+                                            <i class="bi bi-slash-circle me-1"></i>Ban Member
+                                        </button>
+                                        @if (!CanBanMember(member))
+                                        {
+                                            <small class="text-muted d-block mt-1">
+                                                @if (member.IsAdmin && !IsCurrentUserAdmin)
+                                                {
+                                                    <text>Moderators cannot ban administrators</text>
+                                                }
+                                                else if (!CanSetModerator)
+                                                {
+                                                    <text>You must be an admin or moderator to ban members</text>
+                                                }
+                                            </small>
+                                        }
+                                    </div>
+                                </div>
+
+                                <!-- Remove Member Section -->
+                                @if (CanRemoveMember)
+                                {
+                                    <div class="action-section">
+                                        <h6 class="section-title text-danger">Danger Zone</h6>
+                                        <div class="remove-controls">
+                                            <button type="button" 
+                                                    class="btn btn-outline-danger btn-sm"
+                                                    @onclick="@(async () => await HandleRemoveMember(member.UserId))"
+                                                    disabled="@isSaving">
+                                                <i class="bi bi-person-x me-1"></i>Remove from Group
+                                            </button>
+                                            <small class="text-muted d-block mt-1">This will permanently remove the member from the group</small>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        @if (hasMore)
+        {
+            <div class="text-center mt-3">
+                <button type="button" 
+                        class="btn btn-outline-primary"
+                        @onclick="LoadMoreMembers"
+                        disabled="@isLoadingMore">
+                    @if (isLoadingMore)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    }
+                    Load More
+                </button>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    /// <summary>
+    /// The group being managed.
+    /// </summary>
+    [Parameter]
+    public Group Group { get; set; } = null!;
+
+    /// <summary>
+    /// The current user's ID.
+    /// </summary>
+    [Parameter]
+    public string CurrentUserId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Callback invoked when a member action is performed.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnMemberActionPerformed { get; set; }
+
+    private List<GroupUser> members = new();
+    private Dictionary<string, string> memberNames = new();
+    private string searchQuery = string.Empty;
+    private bool isLoading = false;
+    private bool isLoadingMore = false;
+    private int currentPage = 1;
+    private const int pageSize = 20;
+    private bool hasMore = false;
+    private System.Threading.Timer? searchDebounceTimer;
+
+    private string? expandedMemberId = null;
+    private string? savingMemberId = null;
+    private string? errorMessage = null;
+    private string? errorMemberId = null;
+    private string? successMessage = null;
+    private string? successMemberId = null;
+
+    private bool IsCurrentUserCreator => Group.CreatorId == CurrentUserId;
+    private bool IsCurrentUserAdmin { get; set; } = false;
+    private bool IsCurrentUserModerator { get; set; } = false;
+    private bool IsSystemAdmin { get; set; } = false;
+
+    private bool CanSetAdmin => IsCurrentUserCreator || IsSystemAdmin;
+    private bool CanSetModerator => IsCurrentUserCreator || IsCurrentUserAdmin || IsSystemAdmin;
+    private bool CanRemoveMember => IsCurrentUserCreator || IsCurrentUserAdmin || IsSystemAdmin;
+
+    private IEnumerable<GroupUser> filteredMembers => string.IsNullOrWhiteSpace(searchQuery)
+        ? members
+        : members.Where(m => 
+        {
+            var displayName = memberNames.ContainsKey(m.UserId) ? memberNames[m.UserId] : string.Empty;
+            return displayName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase);
+        });
+
+    /// <summary>
+    /// Initializes the component and loads group members.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        // Check if user is system administrator
+        IsSystemAdmin = await RoleService.IsSystemAdministratorAsync(CurrentUserId);
+
+        // Check current user's roles in the group
+        IsCurrentUserAdmin = await GroupMemberService.IsAdminAsync(Group.Id, CurrentUserId);
+        IsCurrentUserModerator = await GroupMemberService.IsModeratorAsync(Group.Id, CurrentUserId);
+
+        // Force re-render after permissions are loaded
+        StateHasChanged();
+
+        await LoadMembers();
+    }
+
+    /// <summary>
+    /// Loads the group members.
+    /// </summary>
+    private async Task LoadMembers()
+    {
+        isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            currentPage = 1;
+            members = await GroupMemberService.GetGroupMembersAsync(Group.Id, pageSize, currentPage);
+            hasMore = members.Count >= pageSize;
+
+            // Load formatted display names for all members
+            await LoadMemberNames(members);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading members for group {GroupId}", Group.Id);
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Loads more members for pagination.
+    /// </summary>
+    private async Task LoadMoreMembers()
+    {
+        isLoadingMore = true;
+        StateHasChanged();
+
+        try
+        {
+            currentPage++;
+            var newMembers = await GroupMemberService.GetGroupMembersAsync(Group.Id, pageSize, currentPage);
+            hasMore = newMembers.Count >= pageSize;
+
+            members.AddRange(newMembers);
+
+            // Load formatted display names for new members
+            await LoadMemberNames(newMembers);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading more members for group {GroupId}", Group.Id);
+        }
+        finally
+        {
+            isLoadingMore = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Loads formatted display names for a list of group members.
+    /// </summary>
+    /// <param name="groupMembers">The list of group members to load names for.</param>
+    private async Task LoadMemberNames(List<GroupUser> groupMembers)
+    {
+        try
+        {
+            // Collect user details for batch formatting
+            var userDetails = new Dictionary<string, (string firstName, string lastName, string userName)>();
+
+            foreach (var member in groupMembers.Where(m => m.User != null && !memberNames.ContainsKey(m.UserId)))
+            {
+                userDetails[member.UserId] = (
+                    member.User!.FirstName,
+                    member.User.LastName,
+                    member.User.UserName ?? "Unknown"
+                );
+            }
+
+            if (userDetails.Any())
+            {
+                // Batch format all display names
+                var formattedNames = await UserPreferenceService.FormatUserDisplayNamesAsync(userDetails);
+
+                foreach (var kvp in formattedNames)
+                {
+                    memberNames[kvp.Key] = kvp.Value;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading member names for group {GroupId}", Group.Id);
+        }
+    }
+
+    /// <summary>
+    /// Handles search input with debouncing.
+    /// </summary>
+    /// <param name="e">The keyboard event arguments.</param>
+    private void OnSearchKeyUp(KeyboardEventArgs e)
+    {
+        searchDebounceTimer?.Dispose();
+        searchDebounceTimer = new System.Threading.Timer(_ =>
+        {
+            InvokeAsync(StateHasChanged);
+        }, null, 300, Timeout.Infinite);
+    }
+
+    /// <summary>
+    /// Toggles the expanded state of a member item.
+    /// </summary>
+    /// <param name="userId">The user ID of the member to toggle.</param>
+    private void ToggleMember(string userId)
+    {
+        if (expandedMemberId == userId)
+        {
+            expandedMemberId = null;
+        }
+        else
+        {
+            expandedMemberId = userId;
+            // Clear messages when expanding a different member
+            if (errorMemberId != userId)
+            {
+                errorMessage = null;
+                errorMemberId = null;
+            }
+            if (successMemberId != userId)
+            {
+                successMessage = null;
+                successMemberId = null;
+            }
+        }
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles toggling the admin role for a member.
+    /// </summary>
+    /// <param name="userId">The user ID of the member.</param>
+    /// <param name="isAdmin">Whether to set the user as admin.</param>
+    private async Task HandleAdminToggle(string userId, bool isAdmin)
+    {
+        ClearMessages();
+        savingMemberId = userId;
+        StateHasChanged();
+
+        try
+        {
+            var result = await GroupMemberService.SetAdminAsync(Group.Id, userId, isAdmin, CurrentUserId);
+
+            if (result.Success)
+            {
+                // Update local state
+                var member = members.FirstOrDefault(m => m.UserId == userId);
+                if (member != null)
+                {
+                    member.IsAdmin = isAdmin;
+                }
+
+                successMessage = isAdmin ? "Admin role granted successfully." : "Admin role revoked successfully.";
+                successMemberId = userId;
+
+                await OnMemberActionPerformed.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage ?? "An error occurred while updating the role.";
+                errorMemberId = userId;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error toggling admin role for user {UserId} in group {GroupId}", userId, Group.Id);
+            errorMessage = "An error occurred while updating the role.";
+            errorMemberId = userId;
+        }
+        finally
+        {
+            savingMemberId = null;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Handles toggling the moderator role for a member.
+    /// </summary>
+    /// <param name="userId">The user ID of the member.</param>
+    /// <param name="isModerator">Whether to set the user as moderator.</param>
+    private async Task HandleModeratorToggle(string userId, bool isModerator)
+    {
+        ClearMessages();
+        savingMemberId = userId;
+        StateHasChanged();
+
+        try
+        {
+            var result = await GroupMemberService.SetModeratorAsync(Group.Id, userId, isModerator, CurrentUserId);
+
+            if (result.Success)
+            {
+                // Update local state
+                var member = members.FirstOrDefault(m => m.UserId == userId);
+                if (member != null)
+                {
+                    member.IsModerator = isModerator;
+                }
+
+                successMessage = isModerator ? "Moderator role granted successfully." : "Moderator role revoked successfully.";
+                successMemberId = userId;
+
+                await OnMemberActionPerformed.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage ?? "An error occurred while updating the role.";
+                errorMemberId = userId;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error toggling moderator role for user {UserId} in group {GroupId}", userId, Group.Id);
+            errorMessage = "An error occurred while updating the role.";
+            errorMemberId = userId;
+        }
+        finally
+        {
+            savingMemberId = null;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Handles banning a member from the group.
+    /// </summary>
+    /// <param name="userId">The user ID of the member to ban.</param>
+    private async Task HandleBanMember(string userId)
+    {
+        ClearMessages();
+        savingMemberId = userId;
+        StateHasChanged();
+
+        try
+        {
+            var result = await GroupBannedMemberService.BanUserAsync(Group.Id, userId, CurrentUserId);
+
+            if (result.Success)
+            {
+                // Remove from local list
+                members.RemoveAll(m => m.UserId == userId);
+                expandedMemberId = null;
+
+                await OnMemberActionPerformed.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage ?? "An error occurred while banning the member.";
+                errorMemberId = userId;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error banning user {UserId} from group {GroupId}", userId, Group.Id);
+            errorMessage = "An error occurred while banning the member.";
+            errorMemberId = userId;
+        }
+        finally
+        {
+            savingMemberId = null;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Handles removing a member from the group.
+    /// </summary>
+    /// <param name="userId">The user ID of the member to remove.</param>
+    private async Task HandleRemoveMember(string userId)
+    {
+        ClearMessages();
+        savingMemberId = userId;
+        StateHasChanged();
+
+        try
+        {
+            var result = await GroupMemberService.RemoveMemberAsync(Group.Id, userId, CurrentUserId);
+
+            if (result.Success)
+            {
+                // Remove from local list
+                members.RemoveAll(m => m.UserId == userId);
+                expandedMemberId = null;
+
+                await OnMemberActionPerformed.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage ?? "An error occurred while removing the member.";
+                errorMemberId = userId;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error removing user {UserId} from group {GroupId}", userId, Group.Id);
+            errorMessage = "An error occurred while removing the member.";
+            errorMemberId = userId;
+        }
+        finally
+        {
+            savingMemberId = null;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Determines if the current user can ban a specific member.
+    /// </summary>
+    /// <param name="member">The member to check.</param>
+    /// <returns>True if the current user can ban the member; otherwise, false.</returns>
+    private bool CanBanMember(GroupUser member)
+    {
+        // System admins can ban anyone except the creator
+        if (IsSystemAdmin && member.UserId != Group.CreatorId)
+            return true;
+
+        // Must be admin or moderator
+        if (!IsCurrentUserAdmin && !IsCurrentUserModerator)
+            return false;
+
+        // Cannot ban the creator
+        if (member.UserId == Group.CreatorId)
+            return false;
+
+        // Moderators cannot ban admins
+        if (member.IsAdmin && !IsCurrentUserAdmin)
+            return false;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Clears all error and success messages.
+    /// </summary>
+    private void ClearMessages()
+    {
+        errorMessage = null;
+        errorMemberId = null;
+        successMessage = null;
+        successMemberId = null;
+    }
+
+    public void Dispose()
+    {
+        searchDebounceTimer?.Dispose();
+    }
+}

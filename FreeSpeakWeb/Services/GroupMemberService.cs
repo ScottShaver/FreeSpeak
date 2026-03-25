@@ -758,8 +758,11 @@ namespace FreeSpeakWeb.Services
                     return (false, "Group not found.");
                 }
 
-                // Only creator can set admins
-                if (group.CreatorId != requesterId)
+                // Check if requester is creator or system administrator
+                var isCreator = group.CreatorId == requesterId;
+                var isSysAdmin = await _roleService.IsSystemAdministratorAsync(requesterId);
+
+                if (!isCreator && !isSysAdmin)
                 {
                     return (false, "Only the group creator can assign admin roles.");
                 }
@@ -824,12 +827,13 @@ namespace FreeSpeakWeb.Services
                     return (false, "Group not found.");
                 }
 
-                // Check if requester is creator or admin
+                // Check if requester is creator, admin, or system administrator
                 var isCreator = group.CreatorId == requesterId;
                 var isAdmin = await context.GroupUsers
                     .AnyAsync(gu => gu.GroupId == groupId && gu.UserId == requesterId && gu.IsAdmin);
+                var isSysAdmin = await _roleService.IsSystemAdministratorAsync(requesterId);
 
-                if (!isCreator && !isAdmin)
+                if (!isCreator && !isAdmin && !isSysAdmin)
                 {
                     return (false, "Only group creator or admins can assign moderator roles.");
                 }

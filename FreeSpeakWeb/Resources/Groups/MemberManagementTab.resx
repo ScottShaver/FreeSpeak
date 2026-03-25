@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="SearchMembers" xml:space="preserve">
+    <value>Search members...</value>
+  </data>
+  <data name="LoadingMembers" xml:space="preserve">
+    <value>Loading members...</value>
+  </data>
+  <data name="NoMembersFound" xml:space="preserve">
+    <value>No members found.</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>Creator</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>Moderator</value>
+  </data>
+  <data name="Joined" xml:space="preserve">
+    <value>Joined</value>
+  </data>
+  <data name="Posts" xml:space="preserve">
+    <value>Posts</value>
+  </data>
+  <data name="Points" xml:space="preserve">
+    <value>Points</value>
+  </data>
+  <data name="CannotModifyCreator" xml:space="preserve">
+    <value>The group creator's permissions cannot be modified.</value>
+  </data>
+  <data name="RoleAssignment" xml:space="preserve">
+    <value>Role Assignment</value>
+  </data>
+  <data name="GroupAdmin" xml:space="preserve">
+    <value>Group Administrator</value>
+  </data>
+  <data name="OnlyCreatorCanSetAdmin" xml:space="preserve">
+    <value>Only the group creator can assign admin roles</value>
+  </data>
+  <data name="GroupModerator" xml:space="preserve">
+    <value>Group Moderator</value>
+  </data>
+  <data name="OnlyAdminCanSetModerator" xml:space="preserve">
+    <value>Only admins can assign moderator roles</value>
+  </data>
+  <data name="MemberStatus" xml:space="preserve">
+    <value>Member Status</value>
+  </data>
+  <data name="BanMember" xml:space="preserve">
+    <value>Ban Member</value>
+  </data>
+  <data name="ModeratorsCannotBanAdmins" xml:space="preserve">
+    <value>Moderators cannot ban administrators</value>
+  </data>
+  <data name="RequireAdminOrModeratorToBan" xml:space="preserve">
+    <value>You must be an admin or moderator to ban members</value>
+  </data>
+  <data name="DangerZone" xml:space="preserve">
+    <value>Danger Zone</value>
+  </data>
+  <data name="RemoveFromGroup" xml:space="preserve">
+    <value>Remove from Group</value>
+  </data>
+  <data name="RemoveMemberWarning" xml:space="preserve">
+    <value>This will permanently remove the member from the group</value>
+  </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>Load More</value>
+  </data>
+  <data name="AdminRoleGranted" xml:space="preserve">
+    <value>Admin role granted successfully.</value>
+  </data>
+  <data name="AdminRoleRevoked" xml:space="preserve">
+    <value>Admin role revoked successfully.</value>
+  </data>
+  <data name="ModeratorRoleGranted" xml:space="preserve">
+    <value>Moderator role granted successfully.</value>
+  </data>
+  <data name="ModeratorRoleRevoked" xml:space="preserve">
+    <value>Moderator role revoked successfully.</value>
+  </data>
+  <data name="ErrorUpdatingRole" xml:space="preserve">
+    <value>An error occurred while updating the role.</value>
+  </data>
+  <data name="ErrorBanningMember" xml:space="preserve">
+    <value>An error occurred while banning the member.</value>
+  </data>
+  <data name="ErrorRemovingMember" xml:space="preserve">
+    <value>An error occurred while removing the member.</value>
+  </data>
+</root>
