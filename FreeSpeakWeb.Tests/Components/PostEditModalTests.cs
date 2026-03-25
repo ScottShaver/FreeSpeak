@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Xunit;
 using Microsoft.EntityFrameworkCore;
@@ -47,8 +48,14 @@ public class PostEditModalTests : TestContext
             mockFileSignatureValidator.Object,
             mockVirusScanService.Object);
 
+        // Setup EmojiPicker localizer mock
+        var mockEmojiPickerLocalizer = new Mock<IStringLocalizer<FreeSpeakWeb.Resources.Shared.EmojiPicker>>();
+        mockEmojiPickerLocalizer.Setup(l => l[It.IsAny<string>()])
+            .Returns((string key) => new LocalizedString(key, key));
+
         Services.AddSingleton<IJSRuntime>(mockJsRuntime.Object);
         Services.AddSingleton(imageUploadService);
+        Services.AddSingleton(mockEmojiPickerLocalizer.Object);
     }
 
     [Fact]

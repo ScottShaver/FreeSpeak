@@ -1,8 +1,12 @@
 using Bunit;
 using FluentAssertions;
 using FreeSpeakWeb.Components.SocialFeed;
+using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
+using Moq;
 using Xunit;
 
 namespace FreeSpeakWeb.Tests.Components
@@ -13,6 +17,18 @@ namespace FreeSpeakWeb.Tests.Components
         {
             // Register HtmlSanitizationService required by MultiLineCommentDisplay
             Services.AddSingleton<HtmlSanitizationService>();
+
+            // Register UserManager mock required by MultiLineCommentDisplay
+            var mockUserManager = new Mock<UserManager<ApplicationUser>>(
+                Mock.Of<IUserStore<ApplicationUser>>(),
+                null!, null!, null!, null!, null!, null!, null!, null!, null!);
+            Services.AddSingleton(mockUserManager.Object);
+
+            // Register MultiLineCommentDisplay localizer mock
+            var mockLocalizer = new Mock<IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.MultiLineCommentDisplay>>();
+            mockLocalizer.Setup(l => l[It.IsAny<string>()])
+                .Returns((string key) => new LocalizedString(key, key));
+            Services.AddSingleton(mockLocalizer.Object);
         }
 
         [Fact]

@@ -1,35 +1,35 @@
-# Localization System
+# Localization & Internationalization Guide
 
-FreeSpeak supports multiple languages through the ASP.NET Core localization framework. This document describes the localization architecture, supported languages, and how to add new translations.
+## Overview
+
+FreeSpeak is a fully internationalized Blazor application supporting **13 languages** with comprehensive localization across all user-facing features. This guide covers the localization architecture, translation workflow, and maintenance procedures.
 
 ## Supported Languages
 
-FreeSpeak currently supports 13 languages:
-
-| Code | Language | Native Name |
-|------|----------|-------------|
-| en | English | English (Default) |
-| ko | Korean | 한국어 |
-| de | German | Deutsch |
-| es | Spanish | Español |
-| fr | French | Français |
-| it | Italian | Italiano |
-| ja | Japanese | 日本語 |
-| zh | Chinese (Simplified) | 简体中文 |
-| ar | Arabic | العربية |
-| nl | Dutch | Nederlands |
-| pl | Polish | Polski |
-| pt | Portuguese | Português |
-| ru | Russian | Русский |
+| Code | Language | Native Name | Status |
+|------|----------|-------------|--------|
+| en | English | English | ✅ Base Language |
+| ar | Arabic | العربية | ✅ Complete |
+| de | German | Deutsch | ✅ Complete |
+| es | Spanish | Español | ✅ Complete |
+| fr | French | Français | ✅ Complete |
+| it | Italian | Italiano | ✅ Complete |
+| ja | Japanese | 日本語 | ✅ Complete |
+| ko | Korean | 한국어 | ✅ Complete |
+| nl | Dutch | Nederlands | ✅ Complete |
+| pl | Polish | Polski | ✅ Complete |
+| pt | Portuguese | Português | ✅ Complete |
+| ru | Russian | Русский | ✅ Complete |
+| zh | Chinese | 简体中文 | ✅ Complete |
 
 ## Architecture
 
-### Overview
+### System Components
 
 The localization system uses:
 - **Resource Files (.resx)**: Store translated strings for each component
 - **IStringLocalizer<T>**: Dependency injection for accessing localized strings
-- **UserPreferenceCultureProvider**: Custom provider that reads user's language preference from the database
+- **UserPreferenceCultureProvider**: Custom provider that reads user's language preference
 - **Cookie-based fallback**: For non-authenticated users
 
 ### Resource File Structure
@@ -344,9 +344,99 @@ var message = string.Format(Localizer["NotificationCount"], count);
 // Where NotificationCount = "You have {0} notifications"
 ```
 
+## Translation Validation
+
+### Validation Script
+
+Use `ValidateTranslations.ps1` to audit translation completeness:
+
+```powershell
+# Run complete audit
+.\ValidateTranslations.ps1 -Action audit
+
+# With execution policy bypass
+PowerShell -ExecutionPolicy Bypass -File .\ValidateTranslations.ps1 -Action audit
+```
+
+### Sample Output
+
+```
+=== TRANSLATION AUDIT ===
+[ManageAccount] - Base keys: 67
+  COMPLETE ar.resx
+  COMPLETE de.resx
+  COMPLETE es.resx
+  Status: 12/12 files, 0 missing translations
+
+TOTAL MISSING: 0 translations
+```
+
 ## Testing Localization
 
 ### Manual Testing
+
+1. Change browser language settings
+2. Clear cookies and reload
+3. Verify text displays in correct language
+4. Test right-to-left (Arabic) layout
+5. Check for text overflow issues (German is ~30% longer)
+
+### Automated Testing
+
+```csharp
+[Fact]
+public void AllLocalizationKeys_HaveTranslations()
+{
+    var cultures = new[] { "de", "fr", "ja", "ko" };
+    foreach (var culture in cultures)
+    {
+        CultureInfo.CurrentUICulture = new CultureInfo(culture);
+        var value = Localizer["MyKey"];
+        value.Should().NotBe("MyKey", 
+            $"Missing translation for 'MyKey' in {culture}");
+    }
+}
+```
+
+## Troubleshooting
+
+### Missing Translation (Shows Key Name)
+
+**Symptoms**: `@Localizer["MyKey"]` displays "MyKey" instead of text
+
+**Solutions**:
+1. Check key exists in language file
+2. Verify key name spelling matches exactly
+3. Check for XML syntax errors in .resx file
+4. Rebuild the project
+
+### Resource Not Found
+
+**Symptoms**: `InvalidOperationException` when accessing localizer
+
+**Solutions**:
+1. Verify `ResourcesPath` matches folder structure
+2. Check namespace in `IStringLocalizer<T>` matches resource location
+3. Ensure .resx file has correct Build Action (Embedded Resource)
+
+## Maintenance Checklist
+
+### Before Release
+
+- [ ] Run `ValidateTranslations.ps1 -Action audit`
+- [ ] Test with German (longest text)
+- [ ] Test with Arabic (right-to-left)
+- [ ] Test with Japanese (character encoding)
+- [ ] Verify no missing translations for user-facing features
+- [ ] Build project to ensure all resources compile
+
+### Adding New Features
+
+1. Add keys to base English .resx
+2. Run validation to identify missing translations
+3. Add translations to all 12 language files
+4. Test in browser with different languages
+5. Document new keys if terminology changes
 
 1. Set your browser language preference
 2. Or set the user's Culture preference in Account Settings

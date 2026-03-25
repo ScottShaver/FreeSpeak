@@ -2,6 +2,7 @@ using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services;
+using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -137,9 +138,12 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         /// <returns>A real GroupAccessValidator instance.</returns>
         public GroupAccessValidator CreateGroupAccessValidator()
         {
+            var roleService = new Mock<IRoleService>();
+            roleService.Setup(r => r.IsSystemAdministratorAsync(It.IsAny<string>())).ReturnsAsync(false);
             return new GroupAccessValidator(
                 _contextFactory,
-                CreateMockLogger<GroupAccessValidator>());
+                CreateMockLogger<GroupAccessValidator>(),
+                roleService.Object);
         }
 
         /// <summary>

@@ -14,6 +14,7 @@
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject UserManager<ApplicationUser> UserManager
 @inject IFeedCommentRepository FeedCommentRepository
+@inject FreeSpeakWeb.Services.Abstractions.IRoleService RoleService
 @attribute [AllowAnonymous]
 
 <PageTitle>@pageTitle</PageTitle>
@@ -66,6 +67,7 @@
                 Images="@post.Images"
                 IsModalView="true"
                 IsReadOnly="@(string.IsNullOrEmpty(currentUserId))"
+                CanDeletePost="@canDeletePost"
                 OnReactionChanged="@((LikeType reactionType) => HandlePostReactionChangedWrapper(reactionType))"
                 OnRemoveReaction="@(async () => await HandleRemovePostReactionWrapper())"
                 OnCommentAdded="@HandleCommentAdded"
@@ -76,7 +78,8 @@
                 OnCommentUpdated="@HandleCommentUpdated"
                 OnReportComment="@HandleReportComment"
                 OnPinPost="@HandlePinPostWrapper"
-                OnUnpinPost="@HandleUnpinPostWrapper">
+                OnUnpinPost="@HandleUnpinPostWrapper"
+                OnPostDeleted="@HandlePostDeleted">
                 <ArticleContent>
                     @((MarkupString)HtmlSanitizationService.SanitizeAndFormatContent(post.Content))
                 </ArticleContent>
@@ -96,6 +99,7 @@
     private bool isLoading = true;
     private string? errorMessage;
     private string pageTitle = "Post";
+    private bool canDeletePost = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -109,7 +113,7 @@
             {
                 currentUserId = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                 currentUserName = user.Identity.Name;
-                
+
                 // Load the actual user from the database to get accurate profile picture
                 if (currentUserId != null)
                 {
@@ -128,6 +132,9 @@
             {
                 post = result.Data;
                 pageTitle = $"Post by {post.AuthorName}";
+
+                // Compute delete permission
+                await ComputeDeletePermissionAsync();
             }
             else
             {
@@ -147,6 +154,61 @@
     private void NavigateHome()
     {
         NavigationManager.NavigateTo("/");
+    }
+
+    /// <summary>
+    /// Computes whether the current user can delete the post.
+    /// System Administrators and System Moderators can delete any post.
+    /// Post authors can always delete their own posts.
+    /// </summary>
+    private async Task ComputeDeletePermissionAsync()
+    {
+        if (string.IsNullOrEmpty(currentUserId) || post == null)
+        {
+            canDeletePost = false;
+            return;
+        }
+
+        // Post author can always delete their own post
+        if (post.AuthorId == currentUserId)
+        {
+            canDeletePost = true;
+            return;
+        }
+
+        try
+        {
+            // Check system-level permissions
+            var isSystemAdmin = await RoleService.IsSystemAdministratorAsync(currentUserId);
+            if (isSystemAdmin)
+            {
+                canDeletePost = true;
+                return;
+            }
+
+            var isSystemModerator = await RoleService.IsUserInRoleAsync(currentUserId, "SystemModerator");
+            if (isSystemModerator)
+            {
+                canDeletePost = true;
+                return;
+            }
+        }
+        catch (Exception)
+        {
+            // If permission check fails, default to no delete permission
+        }
+
+        canDeletePost = false;
+    }
+
+    /// <summary>
+    /// Handles post deletion by navigating to the home page.
+    /// </summary>
+    /// <param name="postId">The ID of the deleted post.</param>
+    private void HandlePostDeleted(int postId)
+    {
+        // Navigate to home page after deletion
+        NavigationManager.NavigateTo("/home");
     }
 
     // Wrapper methods that reload entire post after base handler completes

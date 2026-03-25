@@ -507,7 +507,7 @@
                 .Select(f => f.Friend)
                 .ToList();
         }
-        catch (Exception ex)
+        catch
         {
             // Log error but don't let it break the component
             // Friends list is not critical for navigation

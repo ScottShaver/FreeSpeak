@@ -1,10 +1,16 @@
-# Validation Script Documentation
+# PowerShell Scripts Guide
 
-## Overview
+This guide documents the PowerShell scripts available in the FreeSpeak project for development, maintenance, and validation tasks.
+
+---
+
+## ValidateTranslations.ps1
+
+### Overview
 
 The `ValidateTranslations.ps1` script is an automated tool for auditing translation completeness across all FreeSpeak internationalization resources. It provides comprehensive reporting on missing translations, file status, and coverage statistics.
 
-## Quick Start
+### Quick Start
 
 ### Basic Usage
 ```powershell

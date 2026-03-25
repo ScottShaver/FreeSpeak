@@ -654,6 +654,7 @@ namespace FreeSpeakWeb.Data
         /// Manages AuditLog table partitions by creating monthly partitions for the current year
         /// and removing partitions older than one year to control data retention.
         /// This method should be called during application startup to ensure partitions exist.
+        /// If the AuditLogs table exists but is not partitioned, it will be converted to a partitioned table.
         /// </summary>
         /// <param name="dbContext">The ApplicationDbContext for executing partition management SQL.</param>
         /// <param name="logger">Logger for recording partition management operations.</param>
@@ -678,6 +679,15 @@ namespace FreeSpeakWeb.Data
 
                 try
                 {
+                    // Check if AuditLogs table is partitioned
+                    var isPartitioned = await IsTablePartitionedAsync(connection, "AuditLogs");
+
+                    if (!isPartitioned)
+                    {
+                        logger.LogInformation("AuditLogs table is not partitioned. Converting to partitioned table...");
+                        await ConvertToPartitionedTableAsync(dbContext, connection, logger);
+                    }
+
                     // 1. Create partitions for all months of the current year if they don't exist
                     for (int month = 1; month <= 12; month++)
                     {
@@ -761,6 +771,161 @@ namespace FreeSpeakWeb.Data
                     ex.GetType().Name, ex.Message);
                 // Don't throw - let the app continue even if partition management fails
             }
+        }
+
+        /// <summary>
+        /// Checks if a PostgreSQL table is partitioned.
+        /// </summary>
+        /// <param name="connection">The database connection.</param>
+        /// <param name="tableName">The name of the table to check.</param>
+        /// <returns>True if the table is partitioned, false otherwise.</returns>
+        private static async Task<bool> IsTablePartitionedAsync(System.Data.Common.DbConnection connection, string tableName)
+        {
+            // Query pg_class to check if the table has partitions (relkind = 'p' for partitioned table)
+            var query = $@"
+                SELECT COUNT(1) FROM pg_class 
+                WHERE relname = '{tableName}' 
+                AND relkind = 'p';
+            ";
+
+            using var command = connection.CreateCommand();
+            command.CommandText = query;
+            var result = await command.ExecuteScalarAsync();
+            return Convert.ToInt32(result) > 0;
+        }
+
+        /// <summary>
+        /// Converts an existing AuditLogs table to a partitioned table.
+        /// This involves renaming the existing table, creating a new partitioned table,
+        /// and migrating any existing data.
+        /// </summary>
+        /// <param name="dbContext">The database context.</param>
+        /// <param name="connection">The database connection.</param>
+        /// <param name="logger">Logger for recording operations.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        private static async Task ConvertToPartitionedTableAsync(
+            ApplicationDbContext dbContext, 
+            System.Data.Common.DbConnection connection, 
+            ILogger logger)
+        {
+            // First, clean up any leftover AuditLogs_old table from previous failed attempts
+            logger.LogDebug("Cleaning up any leftover AuditLogs_old table...");
+            await dbContext.Database.ExecuteSqlRawAsync(@"DROP TABLE IF EXISTS ""AuditLogs_old"" CASCADE;");
+
+            // Check if the original table exists as a regular (non-partitioned) table
+            var tableExistsQuery = @"
+                SELECT COUNT(1) FROM pg_class 
+                WHERE relname = 'AuditLogs' 
+                AND relkind = 'r';
+            ";
+
+            using var checkCommand = connection.CreateCommand();
+            checkCommand.CommandText = tableExistsQuery;
+            var tableExists = Convert.ToInt32(await checkCommand.ExecuteScalarAsync()) > 0;
+
+            if (tableExists)
+            {
+                logger.LogInformation("Renaming existing AuditLogs table to AuditLogs_old...");
+
+                // Rename existing table (this also renames the primary key constraint automatically in some cases)
+                await dbContext.Database.ExecuteSqlRawAsync(@"ALTER TABLE ""AuditLogs"" RENAME TO ""AuditLogs_old"";");
+
+                // Rename the primary key constraint so the new table can use the same name
+                // Use DO block to handle the case where constraint might not exist or have a different name
+                await dbContext.Database.ExecuteSqlRawAsync(@"
+                    DO $$
+                    BEGIN
+                        IF EXISTS (
+                            SELECT 1 FROM pg_constraint 
+                            WHERE conname = 'PK_AuditLogs' 
+                            AND conrelid = '""AuditLogs_old""'::regclass
+                        ) THEN
+                            ALTER TABLE ""AuditLogs_old"" RENAME CONSTRAINT ""PK_AuditLogs"" TO ""PK_AuditLogs_old"";
+                        END IF;
+                    END $$;
+                ");
+
+                // Drop indexes on the old table (they'll be recreated on the new table)
+                await dbContext.Database.ExecuteSqlRawAsync(@"DROP INDEX IF EXISTS ""IX_AuditLogs_UserId"";");
+                await dbContext.Database.ExecuteSqlRawAsync(@"DROP INDEX IF EXISTS ""IX_AuditLogs_ActionStamp"";");
+                await dbContext.Database.ExecuteSqlRawAsync(@"DROP INDEX IF EXISTS ""IX_AuditLogs_UserId_ActionStamp"";");
+                await dbContext.Database.ExecuteSqlRawAsync(@"DROP INDEX IF EXISTS ""IX_AuditLogs_ActionCategory"";");
+            }
+
+            // Also check if there's a stray PK_AuditLogs index that needs to be dropped
+            // This can happen if previous attempts failed partway through
+            await dbContext.Database.ExecuteSqlRawAsync(@"
+                DO $$
+                BEGIN
+                    IF EXISTS (
+                        SELECT 1 FROM pg_class 
+                        WHERE relname = 'PK_AuditLogs' 
+                        AND relkind = 'i'
+                    ) THEN
+                        DROP INDEX IF EXISTS ""PK_AuditLogs"";
+                    END IF;
+                END $$;
+            ");
+
+            logger.LogInformation("Creating partitioned AuditLogs table...");
+
+            // Create the partitioned table with the same structure
+            await dbContext.Database.ExecuteSqlRawAsync(@"
+                CREATE TABLE ""AuditLogs"" (
+                    ""Id"" bigint NOT NULL,
+                    ""ActionStamp"" timestamp with time zone NOT NULL,
+                    ""UserId"" character varying(450) NOT NULL,
+                    ""ActionCategory"" character varying(100) NOT NULL,
+                    ""ActionDetails"" TEXT NOT NULL,
+                    CONSTRAINT ""PK_AuditLogs"" PRIMARY KEY (""Id"", ""ActionStamp"")
+                ) PARTITION BY RANGE (""ActionStamp"");
+            ");
+
+            // Recreate indexes on the partitioned table
+            await dbContext.Database.ExecuteSqlRawAsync(@"CREATE INDEX ""IX_AuditLogs_UserId"" ON ""AuditLogs"" (""UserId"");");
+            await dbContext.Database.ExecuteSqlRawAsync(@"CREATE INDEX ""IX_AuditLogs_ActionStamp"" ON ""AuditLogs"" (""ActionStamp"");");
+            await dbContext.Database.ExecuteSqlRawAsync(@"CREATE INDEX ""IX_AuditLogs_UserId_ActionStamp"" ON ""AuditLogs"" (""UserId"", ""ActionStamp"");");
+            await dbContext.Database.ExecuteSqlRawAsync(@"CREATE INDEX ""IX_AuditLogs_ActionCategory"" ON ""AuditLogs"" (""ActionCategory"");");
+
+            // Create partitions for the current year to allow data insertion
+            var currentYear = DateTime.UtcNow.Year;
+            for (int month = 1; month <= 12; month++)
+            {
+                var partitionName = $"AuditLogs_y{currentYear}_m{month:D2}";
+                var startDate = new DateTime(currentYear, month, 1, 0, 0, 0, DateTimeKind.Utc);
+                var endDate = startDate.AddMonths(1);
+
+                await dbContext.Database.ExecuteSqlRawAsync($@"
+                    CREATE TABLE ""{partitionName}"" PARTITION OF ""AuditLogs""
+                    FOR VALUES FROM ('{startDate:yyyy-MM-dd HH:mm:ss}') TO ('{endDate:yyyy-MM-dd HH:mm:ss}');
+                ");
+
+                logger.LogDebug("Created partition: {PartitionName}", partitionName);
+            }
+
+            // If there was existing data, migrate it
+            if (tableExists)
+            {
+                logger.LogInformation("Migrating data from old table to partitioned table...");
+
+                // Only migrate data that falls within our current year partitions
+                // Data from other years will be lost (intentional for partition management)
+                var startOfYear = new DateTime(currentYear, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                var endOfYear = new DateTime(currentYear + 1, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+                await dbContext.Database.ExecuteSqlRawAsync($@"
+                    INSERT INTO ""AuditLogs"" (""Id"", ""ActionStamp"", ""UserId"", ""ActionCategory"", ""ActionDetails"")
+                    SELECT ""Id"", ""ActionStamp"", ""UserId"", ""ActionCategory"", ""ActionDetails""
+                    FROM ""AuditLogs_old""
+                    WHERE ""ActionStamp"" >= '{startOfYear:yyyy-MM-dd HH:mm:ss}' 
+                    AND ""ActionStamp"" < '{endOfYear:yyyy-MM-dd HH:mm:ss}';
+                ");
+
+                logger.LogInformation("Data migration completed. Dropping old table...");
+                await dbContext.Database.ExecuteSqlRawAsync(@"DROP TABLE ""AuditLogs_old"";");
+            }
+
+            logger.LogInformation("Successfully converted AuditLogs to a partitioned table.");
         }
     }
 }

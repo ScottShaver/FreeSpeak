@@ -1,6 +1,7 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
@@ -16,6 +17,8 @@ namespace FreeSpeakWeb.Services
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupService> _logger;
         private readonly IAuditLogRepository _auditLogRepository;
+        private readonly GroupMemberService _groupMemberService;
+        private readonly IRoleService _roleService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupService"/> class.
@@ -25,18 +28,24 @@ namespace FreeSpeakWeb.Services
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording service operations.</param>
         /// <param name="auditLogRepository">Repository for audit log operations.</param>
+        /// <param name="groupMemberService">Service for group member operations.</param>
+        /// <param name="roleService">Service for role operations.</param>
         public GroupService(
             IGroupRepository groupRepository,
             IUserRepository userRepository,
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupService> logger,
-            IAuditLogRepository auditLogRepository)
+            IAuditLogRepository auditLogRepository,
+            GroupMemberService groupMemberService,
+            IRoleService roleService)
         {
             _groupRepository = groupRepository;
             _userRepository = userRepository;
             _contextFactory = contextFactory;
             _logger = logger;
             _auditLogRepository = auditLogRepository;
+            _groupMemberService = groupMemberService;
+            _roleService = roleService;
         }
 
         #region Create Groups
@@ -398,10 +407,10 @@ namespace FreeSpeakWeb.Services
         #region Update Groups
 
         /// <summary>
-        /// Updates group information. Only the group creator can perform this action.
+        /// Updates group information. Only the group creator, group admins, or system administrators can perform this action.
         /// </summary>
         /// <param name="groupId">The unique identifier of the group.</param>
-        /// <param name="userId">The user ID attempting the update (must be creator).</param>
+        /// <param name="userId">The user ID attempting the update.</param>
         /// <param name="name">Optional new name for the group.</param>
         /// <param name="description">Optional new description.</param>
         /// <param name="isPublic">Optional new public visibility setting.</param>
@@ -446,10 +455,15 @@ namespace FreeSpeakWeb.Services
                     return (false, "Group not found.");
                 }
 
-                // Verify user is the creator
-                if (group.CreatorId != userId)
+                // Verify user has permission to update group settings
+                // Allowed: group creator, group admin, or system administrator
+                var isCreator = group.CreatorId == userId;
+                var isGroupAdmin = await _groupMemberService.IsAdminAsync(groupId, userId);
+                var isSystemAdmin = await _roleService.IsUserInRoleAsync(userId, "SystemAdministrator");
+
+                if (!isCreator && !isGroupAdmin && !isSystemAdmin)
                 {
-                    return (false, "Only the group creator can update group settings.");
+                    return (false, "You do not have permission to update group settings.");
                 }
 
                 // Track changes for audit log

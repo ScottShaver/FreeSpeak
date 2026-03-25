@@ -14,6 +14,7 @@
 @inject IJSRuntime JSRuntime
 @inject UserManager<ApplicationUser> UserManager
 @inject NavigationManager NavigationManager
+@inject GroupPointsService GroupPointsService
 
 <div class="article-header @GetAudienceHeaderClass()" @ref="headerElement">
     @if (!string.IsNullOrEmpty(AuthorImageUrl))
@@ -51,14 +52,29 @@
                     @AuthorName
                 }
             </span>
-            @if (GroupId.HasValue && AuthorGroupPoints.HasValue)
+            @if (GroupId.HasValue && EnablePointsSystem && AuthorGroupPoints.HasValue)
             {
                 <MemberLevelBadge 
                     Level="@GroupPointsService.GetMemberLevel(AuthorGroupPoints.Value)"
                     Points="@AuthorGroupPoints"
-                    ShowText="false"
+                    ShowText="true"
                     ShowPoints="false"
+                    ShowForAllLevels="true"
                     CssClass="ms-1 badge-sm" />
+            }
+            @if (GroupId.HasValue && IsGroupAdmin)
+            {
+                <RoleBadge 
+                    Role="RoleType.GroupAdmin"
+                    ShowText="true"
+                    CssClass="ms-1" />
+            }
+            @if (GroupId.HasValue && IsGroupModerator)
+            {
+                <RoleBadge 
+                    Role="RoleType.GroupModerator"
+                    ShowText="true"
+                    CssClass="ms-1" />
             }
         </div>
         <div class="article-timestamp-container">
@@ -274,6 +290,25 @@
 
     [Parameter]
     public int? AuthorGroupPoints { get; set; }
+
+    /// <summary>
+    /// Indicates whether the points system is enabled for the group.
+    /// When true, the member level badge will be displayed.
+    /// </summary>
+    [Parameter]
+    public bool EnablePointsSystem { get; set; } = false;
+
+    /// <summary>
+    /// Indicates whether the author is an admin of the group.
+    /// </summary>
+    [Parameter]
+    public bool IsGroupAdmin { get; set; } = false;
+
+    /// <summary>
+    /// Indicates whether the author is a moderator of the group.
+    /// </summary>
+    [Parameter]
+    public bool IsGroupModerator { get; set; } = false;
 
     /// <summary>
     /// Gets whether the current user is the author of this post.

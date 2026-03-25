@@ -32,6 +32,7 @@
 @inject IFeedCommentRepository FeedCommentRepository
 @inject ILogger<FriendDetails> Logger
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.FriendDetails> Localizer
+@inject FreeSpeakWeb.Services.Abstractions.IRoleService RoleService
 
 @implements IAsyncDisposable
 
@@ -129,6 +130,7 @@
                             AudienceType="@post.AudienceType"
                             IsPinned="@isPinned"
                             IsMuted="null"
+                            CanDeletePost="@GetCanDeletePost(post.Id)"
                             Images="@post.Images?.ToList()"
                             OnReactionChanged="@((LikeType reactionType) => HandleReactionChanged(post.Id, reactionType))"
                             OnRemoveReaction="@(async () => await HandleRemoveReaction(post.Id))"
@@ -236,6 +238,11 @@
     // Post detail modal
     private bool showPostDetail = false;
     private Post? selectedPost = null;
+
+    // Delete permission cache
+    private Dictionary<int, bool> _canDeletePostCache = new();
+    private bool? _isSystemAdmin;
+    private bool? _isSystemModerator;
 
     #region PostPageBase Abstract Properties Implementation
 
@@ -594,6 +601,9 @@
 
             // Load pinned status for all posts
             await LoadPinnedStatusForPosts(postsList);
+
+            // Pre-compute delete permissions for all posts
+            await PreComputeDeletePermissionsAsync(postsList);
         }
         catch (Exception ex)
         {
@@ -640,22 +650,38 @@
     {
         try
         {
+            // PERFORMANCE: Batch load all author names in a single query instead of N queries
+            var userDetails = new Dictionary<string, (string firstName, string lastName, string userName)>();
+
             foreach (var post in postsToLoad)
             {
                 if (post.Author != null)
                 {
-                    var displayName = await UserPreferenceService.FormatUserDisplayNameAsync(
-                        post.Author.Id,
-                        post.Author.FirstName ?? string.Empty,
-                        post.Author.LastName ?? string.Empty,
+                    userDetails[post.Author.Id] = (
+                        post.Author.FirstName ?? "",
+                        post.Author.LastName ?? "",
                         post.Author.UserName ?? "Unknown"
                     );
-                    postAuthorNames[post.Id] = displayName;
                 }
-                else
+            }
+
+            if (userDetails.Any())
+            {
+                // Batch format all display names in a single database query
+                var formattedNames = await UserPreferenceService.FormatUserDisplayNamesAsync(userDetails);
+
+                // Map formatted names back to posts
+                foreach (var post in postsToLoad)
                 {
-                    // Use friend's display name as fallback
-                    postAuthorNames[post.Id] = friendDisplayName;
+                    if (post.Author != null && formattedNames.ContainsKey(post.Author.Id))
+                    {
+                        postAuthorNames[post.Id] = formattedNames[post.Author.Id];
+                    }
+                    else
+                    {
+                        // Use friend's display name as fallback
+                        postAuthorNames[post.Id] = friendDisplayName;
+                    }
                 }
             }
         }
@@ -817,4 +843,83 @@
 
         dotNetHelper?.Dispose();
     }
-}}}}
+
+    #region Permission Helpers
+
+    /// <summary>
+    /// Pre-computes delete permissions for a batch of posts to avoid blocking .Result calls in razor markup.
+    /// </summary>
+    /// <param name="posts">The list of posts to pre-compute permissions for.</param>
+    private async Task PreComputeDeletePermissionsAsync(List<Post> posts)
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        foreach (var post in posts)
+        {
+            if (!_canDeletePostCache.ContainsKey(post.Id))
+            {
+                try
+                {
+                    _canDeletePostCache[post.Id] = await CanUserDeletePostAsync(post);
+                }
+                catch (Exception)
+                {
+                    _canDeletePostCache[post.Id] = false;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets the cached delete permission for a post.
+    /// </summary>
+    /// <param name="postId">The ID of the post.</param>
+    /// <returns>True if the user can delete the post, otherwise false.</returns>
+    private bool GetCanDeletePost(int postId)
+    {
+        return _canDeletePostCache.TryGetValue(postId, out var canDelete) && canDelete;
+    }
+
+    /// <summary>
+    /// Determines if the current user can delete a specific user post.
+    /// System Administrators and System Moderators can delete any post.
+    /// Post authors can always delete their own posts.
+    /// </summary>
+    /// <param name="post">The user post to check.</param>
+    /// <returns>True if the user can delete the post, otherwise false.</returns>
+    private async Task<bool> CanUserDeletePostAsync(Post post)
+    {
+        if (string.IsNullOrEmpty(currentUserId))
+            return false;
+
+        // Post author can always delete their own post
+        if (post.AuthorId == currentUserId)
+            return true;
+
+        try
+        {
+            // Check system-level permissions (cached)
+            if (!_isSystemAdmin.HasValue)
+            {
+                _isSystemAdmin = await RoleService.IsSystemAdministratorAsync(currentUserId);
+            }
+            if (_isSystemAdmin.HasValue && _isSystemAdmin.Value)
+                return true;
+
+            if (!_isSystemModerator.HasValue)
+            {
+                _isSystemModerator = await RoleService.IsUserInRoleAsync(currentUserId, "SystemModerator");
+            }
+            if (_isSystemModerator.HasValue && _isSystemModerator.Value)
+                return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+
+        return false;
+    }
+
+    #endregion
+}

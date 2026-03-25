@@ -93,11 +93,10 @@
                         else if (activeTab == "members")
                         {
                             <div class="tab-pane fade show active">
-                                <h6 class="mb-3">@Localizer["MemberManagementDescription"]</h6>
-                                <div class="alert alert-info">
-                                    <i class="bi bi-info-circle me-2"></i>@Localizer["MemberManagementPlaceholder"]
-                                </div>
-                                <!-- Future: Member list with search, remove, and role assignment -->
+                                <MemberManagementTab 
+                                    Group="@Group" 
+                                    CurrentUserId="@CurrentUserId" 
+                                    OnMemberActionPerformed="@HandleMemberActionPerformed" />
                             </div>
                         }
                         else if (activeTab == "requests")
@@ -260,6 +259,14 @@
         pendingRequestsCount = pendingRequests.Count;
         StateHasChanged();
 
+        await OnAdministrationActionPerformed.InvokeAsync();
+    }
+
+    /// <summary>
+    /// Handles when a member management action is performed (role change, ban, remove).
+    /// </summary>
+    private async Task HandleMemberActionPerformed()
+    {
         await OnAdministrationActionPerformed.InvokeAsync();
     }
 }

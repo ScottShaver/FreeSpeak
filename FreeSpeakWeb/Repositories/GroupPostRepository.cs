@@ -28,12 +28,27 @@ namespace FreeSpeakWeb.Repositories
 
         #region Post CRUD Operations
 
+        /// <summary>
+        /// Retrieves a group post by its unique identifier.
+        /// Uses a compiled query for optimal performance when loading full post data.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the group post to retrieve.</param>
+        /// <param name="includeAuthor">Whether to include the author's information in the result.</param>
+        /// <param name="includeImages">Whether to include the post's images in the result.</param>
+        /// <returns>The group post if found; otherwise, null.</returns>
         public async Task<GroupPost?> GetByIdAsync(int postId, bool includeAuthor = true, bool includeImages = true)
         {
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
 
+                // Use compiled query when requesting full data (most common case)
+                if (includeAuthor && includeImages)
+                {
+                    return await CompiledQueries.GetGroupPostByIdAsync(context, postId);
+                }
+
+                // Fall back to dynamic query for partial includes
                 var query = context.GroupPosts.AsNoTracking().AsSplitQuery();
 
                 if (includeAuthor)
@@ -312,12 +327,17 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <summary>
+        /// Checks whether a group post exists in the database using a compiled query for optimal performance.
+        /// </summary>
+        /// <param name="postId">The unique identifier of the group post to check.</param>
+        /// <returns>True if the group post exists; otherwise, false.</returns>
         public async Task<bool> ExistsAsync(int postId)
         {
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
-                return await context.GroupPosts.AnyAsync(p => p.Id == postId);
+                return await CompiledQueries.GroupPostExistsAsync(context, postId);
             }
             catch (Exception ex)
             {
@@ -561,7 +581,10 @@ namespace FreeSpeakWeb.Repositories
                         p.GroupId,
                         p.Group.Name,
                         p.AuthorId,
-                        (p.Author.FirstName + " " + p.Author.LastName).Trim(),
+                        (p.Author.FirstName + " " + p.Author.LastName).Trim(), // Default name, will be reformatted based on preferences
+                        p.Author.FirstName ?? "",
+                        p.Author.LastName ?? "",
+                        p.Author.UserName ?? "",
                         p.Author.ProfilePictureUrl,
                         p.Content,
                         p.CreatedAt,
@@ -572,6 +595,14 @@ namespace FreeSpeakWeb.Repositories
                         context.GroupUsers
                             .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
                             .Select(gu => gu.GroupPoints)
+                            .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.IsAdmin)
+                            .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.IsModerator)
                             .FirstOrDefault(),
                         p.Images
                             .OrderBy(i => i.DisplayOrder)
@@ -670,7 +701,10 @@ namespace FreeSpeakWeb.Repositories
                         p.GroupId,
                         p.Group.Name,
                         p.AuthorId,
-                        (p.Author.FirstName + " " + p.Author.LastName).Trim(),
+                        (p.Author.FirstName + " " + p.Author.LastName).Trim(), // Default name, will be reformatted based on preferences
+                        p.Author.FirstName ?? "",
+                        p.Author.LastName ?? "",
+                        p.Author.UserName ?? "",
                         p.Author.ProfilePictureUrl,
                         p.Content,
                         p.CreatedAt,
@@ -681,6 +715,14 @@ namespace FreeSpeakWeb.Repositories
                         context.GroupUsers
                             .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
                             .Select(gu => gu.GroupPoints)
+                            .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.IsAdmin)
+                            .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.IsModerator)
                             .FirstOrDefault(),
                         p.Images
                             .OrderBy(i => i.DisplayOrder)
@@ -722,7 +764,10 @@ namespace FreeSpeakWeb.Repositories
                         p.GroupId,
                         p.Group.Name,
                         p.AuthorId,
-                        (p.Author.FirstName + " " + p.Author.LastName).Trim(),
+                        (p.Author.FirstName + " " + p.Author.LastName).Trim(), // Default name, will be reformatted based on preferences
+                        p.Author.FirstName ?? "",
+                        p.Author.LastName ?? "",
+                        p.Author.UserName ?? "",
                         p.Author.ProfilePictureUrl,
                         p.Content,
                         p.CreatedAt,
@@ -733,6 +778,14 @@ namespace FreeSpeakWeb.Repositories
                         context.GroupUsers
                             .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
                             .Select(gu => gu.GroupPoints)
+                            .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.IsAdmin)
+                            .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.UserId == p.AuthorId && gu.GroupId == p.GroupId)
+                            .Select(gu => gu.IsModerator)
                             .FirstOrDefault(),
                         p.Images
                             .OrderBy(i => i.DisplayOrder)

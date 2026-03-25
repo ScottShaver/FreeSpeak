@@ -1,0 +1,39 @@
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 0.25rem 0.5rem;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+.role-badge i {
+    font-size: 0.75rem;
+    line-height: 1;
+}
+
+/* Animation for icon on hover */
+.role-badge:hover i {
+    animation: pulse-role 0.5s ease-in-out;
+}
+
+@keyframes pulse-role {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+/* Smaller badges for inline display - still readable */
+.role-badge.badge-sm {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+}
+
+.role-badge.badge-sm i {
+    font-size: 0.7rem;
+}

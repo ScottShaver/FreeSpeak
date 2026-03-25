@@ -477,6 +477,8 @@ namespace FreeSpeakWeb.Services
 
         /// <summary>
         /// Approves a pending group post, making it visible to all group members.
+        /// Uses optimistic concurrency to ensure only pending posts are approved and prevents race conditions
+        /// when multiple moderators attempt to moderate the same post simultaneously.
         /// </summary>
         /// <param name="postId">The unique identifier of the post to approve.</param>
         /// <param name="moderatorId">The user ID of the moderator approving the post.</param>
@@ -496,24 +498,36 @@ namespace FreeSpeakWeb.Services
                     return (false, "Post not found.");
                 }
 
-                // Check if user is a group admin or moderator
-                var isModeratorOrAdmin = await context.GroupUsers
-                    .AnyAsync(gu => gu.GroupId == post.GroupId && 
-                                   gu.UserId == moderatorId && 
-                                   (gu.IsAdmin || gu.IsModerator));
+                // Check if user is a group admin, moderator, or system administrator
+                var isModeratorOrAdmin = await _accessValidator.IsGroupAdminOrModeratorAsync(post.GroupId, moderatorId);
 
                 if (!isModeratorOrAdmin)
                 {
                     return (false, "You are not authorized to approve posts in this group.");
                 }
 
-                if (post.Status != PostStatus.Pending)
-                {
-                    return (false, "Only pending posts can be approved.");
-                }
+                // Use ExecuteUpdateAsync with a WHERE clause to atomically check and update
+                // This prevents race conditions when multiple moderators try to approve the same post
+                var rowsAffected = await context.GroupPosts
+                    .Where(p => p.Id == postId && p.Status == PostStatus.Pending)
+                    .ExecuteUpdateAsync(setters => setters.SetProperty(p => p.Status, PostStatus.Posted));
 
-                post.Status = PostStatus.Posted;
-                await context.SaveChangesAsync();
+                if (rowsAffected == 0)
+                {
+                    // Re-fetch to determine the actual reason for failure
+                    var currentPost = await context.GroupPosts.AsNoTracking().FirstOrDefaultAsync(p => p.Id == postId);
+                    if (currentPost == null)
+                    {
+                        return (false, "Post not found.");
+                    }
+
+                    return currentPost.Status switch
+                    {
+                        PostStatus.Posted => (false, "This post has already been approved by another moderator."),
+                        PostStatus.Declined => (false, "This post has already been declined by another moderator."),
+                        _ => (false, "This post is no longer pending and cannot be approved.")
+                    };
+                }
 
                 _logger.LogInformation("Group post {PostId} approved by moderator {ModeratorId}", postId, moderatorId);
                 return (true, null);
@@ -527,6 +541,8 @@ namespace FreeSpeakWeb.Services
 
         /// <summary>
         /// Declines a pending group post, preventing it from being published.
+        /// Uses optimistic concurrency to ensure only pending posts are declined and prevents race conditions
+        /// when multiple moderators attempt to moderate the same post simultaneously.
         /// </summary>
         /// <param name="postId">The unique identifier of the post to decline.</param>
         /// <param name="moderatorId">The user ID of the moderator declining the post.</param>
@@ -546,24 +562,36 @@ namespace FreeSpeakWeb.Services
                     return (false, "Post not found.");
                 }
 
-                // Check if user is a group admin or moderator
-                var isModeratorOrAdmin = await context.GroupUsers
-                    .AnyAsync(gu => gu.GroupId == post.GroupId && 
-                                   gu.UserId == moderatorId && 
-                                   (gu.IsAdmin || gu.IsModerator));
+                // Check if user is a group admin, moderator, or system administrator
+                var isModeratorOrAdmin = await _accessValidator.IsGroupAdminOrModeratorAsync(post.GroupId, moderatorId);
 
                 if (!isModeratorOrAdmin)
                 {
                     return (false, "You are not authorized to decline posts in this group.");
                 }
 
-                if (post.Status != PostStatus.Pending)
-                {
-                    return (false, "Only pending posts can be declined.");
-                }
+                // Use ExecuteUpdateAsync with a WHERE clause to atomically check and update
+                // This prevents race conditions when multiple moderators try to decline the same post
+                var rowsAffected = await context.GroupPosts
+                    .Where(p => p.Id == postId && p.Status == PostStatus.Pending)
+                    .ExecuteUpdateAsync(setters => setters.SetProperty(p => p.Status, PostStatus.Declined));
 
-                post.Status = PostStatus.Declined;
-                await context.SaveChangesAsync();
+                if (rowsAffected == 0)
+                {
+                    // Re-fetch to determine the actual reason for failure
+                    var currentPost = await context.GroupPosts.AsNoTracking().FirstOrDefaultAsync(p => p.Id == postId);
+                    if (currentPost == null)
+                    {
+                        return (false, "Post not found.");
+                    }
+
+                    return currentPost.Status switch
+                    {
+                        PostStatus.Posted => (false, "This post has already been approved by another moderator."),
+                        PostStatus.Declined => (false, "This post has already been declined by another moderator."),
+                        _ => (false, "This post is no longer pending and cannot be declined.")
+                    };
+                }
 
                 _logger.LogInformation("Group post {PostId} declined by moderator {ModeratorId}", postId, moderatorId);
                 return (true, null);

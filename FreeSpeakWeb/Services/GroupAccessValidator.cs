@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
@@ -11,13 +12,16 @@ namespace FreeSpeakWeb.Services
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupAccessValidator> _logger;
+        private readonly IRoleService _roleService;
 
         public GroupAccessValidator(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<GroupAccessValidator> logger)
+            ILogger<GroupAccessValidator> logger,
+            IRoleService roleService)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _roleService = roleService;
         }
 
         /// <summary>
@@ -51,12 +55,19 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Checks if a user is an admin or moderator of a group
+        /// Checks if a user is an admin or moderator of a group, or a system administrator.
         /// </summary>
         public async Task<bool> IsGroupAdminOrModeratorAsync(int groupId, string userId)
         {
             try
             {
+                // System administrators have full access to all groups
+                var isSystemAdmin = await _roleService.IsSystemAdministratorAsync(userId);
+                if (isSystemAdmin)
+                {
+                    return true;
+                }
+
                 using var context = await _contextFactory.CreateDbContextAsync();
 
                 return await context.GroupUsers

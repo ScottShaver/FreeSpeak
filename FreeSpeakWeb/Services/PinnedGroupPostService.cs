@@ -298,6 +298,9 @@ namespace FreeSpeakWeb.Services
                         p.Group != null ? p.Group.Name : "Unknown Group",
                         p.AuthorId,
                         p.Author != null ? $"{p.Author.FirstName} {p.Author.LastName}" : "Unknown",
+                        p.Author != null ? p.Author.FirstName ?? "" : "",
+                        p.Author != null ? p.Author.LastName ?? "" : "",
+                        p.Author != null ? p.Author.UserName ?? "" : "",
                         p.Author != null ? p.Author.ProfilePictureUrl : null,
                         p.Content,
                         p.CreatedAt,
@@ -308,6 +311,14 @@ namespace FreeSpeakWeb.Services
                         context.GroupUsers
                             .Where(gu => gu.GroupId == p.GroupId && gu.UserId == p.AuthorId)
                             .Select(gu => gu.GroupPoints)
+                            .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.GroupId == p.GroupId && gu.UserId == p.AuthorId)
+                            .Select(gu => gu.IsAdmin)
+                            .FirstOrDefault(),
+                        context.GroupUsers
+                            .Where(gu => gu.GroupId == p.GroupId && gu.UserId == p.AuthorId)
+                            .Select(gu => gu.IsModerator)
                             .FirstOrDefault(),
                         p.Images.OrderBy(i => i.DisplayOrder).Select(i => new PostImageDto(
                             i.Id,

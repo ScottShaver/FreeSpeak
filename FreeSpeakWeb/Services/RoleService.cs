@@ -216,5 +216,30 @@ namespace FreeSpeakWeb.Services
                 throw;
             }
         }
+
+        /// <summary>
+        /// Checks if a user is a system administrator.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>True if the user is a system administrator; otherwise, false.</returns>
+        public async Task<bool> IsSystemAdministratorAsync(string userId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    _logger.LogWarning("User not found when checking system administrator status: {UserId}", userId);
+                    return false;
+                }
+
+                return await _userManager.IsInRoleAsync(user, "SystemAdministrator");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking if user {UserId} is a system administrator", userId);
+                throw;
+            }
+        }
     }
 }

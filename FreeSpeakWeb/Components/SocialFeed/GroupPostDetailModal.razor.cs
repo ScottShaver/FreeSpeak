@@ -35,6 +35,38 @@ public partial class GroupPostDetailModal
     public string GroupName { get; set; } = string.Empty;
 
     /// <summary>
+    /// The author's points in this group.
+    /// </summary>
+    [Parameter]
+    public int? AuthorGroupPoints { get; set; }
+
+    /// <summary>
+    /// Indicates whether the points system is enabled for the group.
+    /// </summary>
+    [Parameter]
+    public bool EnablePointsSystem { get; set; } = false;
+
+    /// <summary>
+    /// Indicates whether the author is an admin of the group.
+    /// </summary>
+    [Parameter]
+    public bool IsGroupAdmin { get; set; } = false;
+
+    /// <summary>
+    /// Indicates whether the author is a moderator of the group.
+    /// </summary>
+    [Parameter]
+    public bool IsGroupModerator { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets whether the current user can delete this post.
+    /// For group posts: System Admins, System Moderators, Group Admins, and Group Moderators can delete any post.
+    /// Post authors can always delete their own posts.
+    /// </summary>
+    [Parameter]
+    public bool CanDeletePost { get; set; } = false;
+
+    /// <summary>
     /// Event callback invoked when the user requests to edit the post.
     /// </summary>
     [Parameter]

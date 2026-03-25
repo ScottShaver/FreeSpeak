@@ -77,6 +77,32 @@ public partial class UnifiedArticle : ArticleComponentBase
     [Parameter]
     public int? AuthorGroupPoints { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether the points system is enabled for the group (GroupPost only).
+    /// </summary>
+    [Parameter]
+    public bool EnablePointsSystem { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets whether the author is a group admin (GroupPost only).
+    /// </summary>
+    [Parameter]
+    public bool IsGroupAdmin { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets whether the author is a group moderator (GroupPost only).
+    /// </summary>
+    [Parameter]
+    public bool IsGroupModerator { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets whether the current user can delete this post.
+    /// For group posts: System Admins, System Moderators, Group Admins, and Group Moderators can delete any post.
+    /// For user posts: Only the author can delete their own post.
+    /// </summary>
+    [Parameter]
+    public bool CanDeletePost { get; set; } = false;
+
     #endregion
 
     #region State Fields
@@ -156,6 +182,13 @@ public partial class UnifiedArticle : ArticleComponentBase
 
                 menuItems.Add(new PopupMenu.PopupMenuItem
                 {
+                    Text = Localizer["DeletePost"],
+                    Icon = "bi bi-trash",
+                    OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
+                });
+
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
                     Text = Localizer["CopyLink"],
                     Icon = "bi bi-link-45deg",
                     OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
@@ -215,6 +248,17 @@ public partial class UnifiedArticle : ArticleComponentBase
                 OnClick = EventCallback.Factory.Create(this, async () => await HandleToggleNotificationsClick())
             });
 
+            // Show Delete Post if user has permission (system admin/moderator or group admin/moderator)
+            if (CanDeletePost)
+            {
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = Localizer["DeletePost"],
+                    Icon = "bi bi-trash",
+                    OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
+                });
+            }
+
             menuItems.Add(new PopupMenu.PopupMenuItem
             {
                 Text = Localizer["ReportPost"],
@@ -254,6 +298,13 @@ public partial class UnifiedArticle : ArticleComponentBase
                     Text = currentIsPinned ? Localizer["UnpinPost"] : Localizer["PinPost"],
                     Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
                     OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
+                });
+
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = Localizer["DeletePost"],
+                    Icon = "bi bi-trash",
+                    OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
                 });
 
                 if (currentAudienceType == AudienceType.Public)
@@ -322,6 +373,17 @@ public partial class UnifiedArticle : ArticleComponentBase
                 Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
                 OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
             });
+
+            // Show Delete Post if user has permission (system admin/moderator)
+            if (CanDeletePost)
+            {
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = Localizer["DeletePost"],
+                    Icon = "bi bi-trash",
+                    OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
+                });
+            }
 
             // TODO: Implement feed post reporting
             menuItems.Add(new PopupMenu.PopupMenuItem
