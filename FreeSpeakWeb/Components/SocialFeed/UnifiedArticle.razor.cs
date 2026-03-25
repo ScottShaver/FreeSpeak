@@ -182,6 +182,13 @@ public partial class UnifiedArticle : ArticleComponentBase
 
                 menuItems.Add(new PopupMenu.PopupMenuItem
                 {
+                    Text = Localizer["DeletePost"],
+                    Icon = "bi bi-trash",
+                    OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
+                });
+
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
                     Text = Localizer["CopyLink"],
                     Icon = "bi bi-link-45deg",
                     OnClick = EventCallback.Factory.Create(this, async () => await HandleCopyLink())
@@ -293,6 +300,13 @@ public partial class UnifiedArticle : ArticleComponentBase
                     OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
                 });
 
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = Localizer["DeletePost"],
+                    Icon = "bi bi-trash",
+                    OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
+                });
+
                 if (currentAudienceType == AudienceType.Public)
                 {
                     menuItems.Add(new PopupMenu.PopupMenuItem
@@ -359,6 +373,17 @@ public partial class UnifiedArticle : ArticleComponentBase
                 Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
                 OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
             });
+
+            // Show Delete Post if user has permission (system admin/moderator)
+            if (CanDeletePost)
+            {
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = Localizer["DeletePost"],
+                    Icon = "bi bi-trash",
+                    OnClick = EventCallback.Factory.Create(this, ShowDeleteConfirmation)
+                });
+            }
 
             // TODO: Implement feed post reporting
             menuItems.Add(new PopupMenu.PopupMenuItem

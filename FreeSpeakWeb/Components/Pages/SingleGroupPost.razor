@@ -68,6 +68,7 @@
                 ReactionBreakdown="@reactionBreakdown"
                 UserReaction="@userReaction"
                 IsPinned="@isPinned"
+                OnPostDeleted="@HandlePostDeleted"
                 CanDeletePost="@canDeletePost"
                 Images="@ConvertGroupPostImagesToPostImages(post.Images)"
                 IsModalView="true"
@@ -323,6 +324,38 @@
             DisplayOrder = gi.DisplayOrder,
             UploadedAt = gi.UploadedAt
         }).ToList();
+    }
+
+    /// <summary>
+    /// Handles the post deletion event by navigating back to the group page.
+    /// </summary>
+    /// <param name="postId">The ID of the deleted post.</param>
+    private async Task HandlePostDeleted(int postId)
+    {
+        if (string.IsNullOrEmpty(currentUserId) || post == null)
+            return;
+
+        try
+        {
+            var result = await GroupPostService.DeleteGroupPostAsync(postId, currentUserId);
+            if (result.Success)
+            {
+                // Navigate back to the group page after successful deletion
+                // Use forceLoad: true to ensure navigation occurs in interactive server mode
+                NavigationManager.NavigateTo($"/group/{GroupId}", forceLoad: true);
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage ?? "Failed to delete the post. Please try again.";
+                StateHasChanged();
+            }
+        }
+        catch (Exception)
+        {
+            // Handle error silently or show error message
+            errorMessage = "Failed to delete the post. Please try again.";
+            StateHasChanged();
+        }
     }
 
     #region Permission Helpers
