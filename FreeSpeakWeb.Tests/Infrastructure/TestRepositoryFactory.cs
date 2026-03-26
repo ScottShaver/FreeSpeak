@@ -226,6 +226,17 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         }
 
         /// <summary>
+        /// Creates a GroupFileRepository for testing group file operations.
+        /// </summary>
+        /// <returns>A real GroupFileRepository instance.</returns>
+        public IGroupFileRepository CreateGroupFileRepository()
+        {
+            return new GroupFileRepository(
+                _contextFactory,
+                CreateMockLogger<GroupFileRepository>());
+        }
+
+        /// <summary>
         /// Invalidates the friendship cache for a user.
         /// </summary>
         /// <param name="userId">The user ID to invalidate.</param>

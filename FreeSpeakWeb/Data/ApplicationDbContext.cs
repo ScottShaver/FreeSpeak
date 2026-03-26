@@ -126,6 +126,11 @@ namespace FreeSpeakWeb.Data
         public DbSet<GroupContentReport> GroupContentReports { get; set; }
 
         /// <summary>
+        /// Gets or sets the DbSet for files uploaded to groups for sharing with members.
+        /// </summary>
+        public DbSet<GroupFile> GroupFiles { get; set; }
+
+        /// <summary>
         /// Gets or sets the DbSet for audit log entries tracking user actions and system events.
         /// </summary>
         public DbSet<AuditLog> AuditLogs { get; set; }
@@ -734,6 +739,57 @@ namespace FreeSpeakWeb.Data
                 entity.HasIndex(r => r.Status);
                 entity.HasIndex(r => r.CreatedAt);
                 entity.HasIndex(r => new { r.GroupId, r.Status });
+            });
+
+            // Configure GroupFile entity
+            modelBuilder.Entity<GroupFile>(entity =>
+            {
+                entity.HasKey(f => f.Id);
+
+                entity.HasOne(f => f.Group)
+                    .WithMany()
+                    .HasForeignKey(f => f.GroupId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(f => f.Uploader)
+                    .WithMany()
+                    .HasForeignKey(f => f.UploaderId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(f => f.ReviewedBy)
+                    .WithMany()
+                    .HasForeignKey(f => f.ReviewedById)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(f => f.OriginalFileName)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                entity.Property(f => f.StoredFileName)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(f => f.ContentType)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(f => f.Description)
+                    .HasMaxLength(2000);
+
+                entity.Property(f => f.DeclinedReason)
+                    .HasMaxLength(1000);
+
+                // Create indexes for efficient querying
+                entity.HasIndex(f => f.GroupId);
+                entity.HasIndex(f => f.UploaderId);
+                entity.HasIndex(f => f.Status);
+                entity.HasIndex(f => f.UploadedAt);
+                // Composite index for listing approved files in a group sorted by upload date
+                entity.HasIndex(f => new { f.GroupId, f.Status, f.UploadedAt })
+                    .HasDatabaseName("IX_GroupFiles_GroupId_Status_UploadedAt");
+                // Composite index for searching files by name/description within a group
+                entity.HasIndex(f => new { f.GroupId, f.OriginalFileName })
+                    .HasDatabaseName("IX_GroupFiles_GroupId_OriginalFileName");
             });
 
             // Configure AuditLog entity

@@ -130,4 +130,19 @@
   <data name="IsClosedHelp" xml:space="preserve">
     <value>警告：グループの閉鎖は永続的です。閉鎖後は管理者でも変更を加えることはできません。</value>
   </data>
+  <data name="FileUploadSection" xml:space="preserve">
+    <value>ファイル共有</value>
+  </data>
+  <data name="EnableFileUploads" xml:space="preserve">
+    <value>ファイルアップロードを有効にする</value>
+  </data>
+  <data name="EnableFileUploadsHelp" xml:space="preserve">
+    <value>メンバーがファイルをアップロードしてグループと共有できるようにします。</value>
+  </data>
+  <data name="RequiresFileApproval" xml:space="preserve">
+    <value>ファイル承認が必要</value>
+  </data>
+  <data name="RequiresFileApprovalHelp" xml:space="preserve">
+    <value>アップロードされたファイルは、他のメンバーに表示される前にモデレーターの承認が必要です。</value>
+  </data>
 </root>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="SearchMembers" xml:space="preserve">
+    <value>搜索成员...</value>
+  </data>
+  <data name="LoadingMembers" xml:space="preserve">
+    <value>正在加载成员...</value>
+  </data>
+  <data name="NoMembersFound" xml:space="preserve">
+    <value>未找到成员。</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>创建者</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>管理员</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>版主</value>
+  </data>
+  <data name="Joined" xml:space="preserve">
+    <value>加入时间</value>
+  </data>
+  <data name="Posts" xml:space="preserve">
+    <value>帖子</value>
+  </data>
+  <data name="Points" xml:space="preserve">
+    <value>积分</value>
+  </data>
+  <data name="CannotModifyCreator" xml:space="preserve">
+    <value>无法修改群组创建者的权限。</value>
+  </data>
+  <data name="RoleAssignment" xml:space="preserve">
+    <value>角色分配</value>
+  </data>
+  <data name="GroupAdmin" xml:space="preserve">
+    <value>群组管理员</value>
+  </data>
+  <data name="OnlyCreatorCanSetAdmin" xml:space="preserve">
+    <value>只有群组创建者可以分配管理员角色</value>
+  </data>
+  <data name="GroupModerator" xml:space="preserve">
+    <value>群组版主</value>
+  </data>
+  <data name="OnlyAdminCanSetModerator" xml:space="preserve">
+    <value>只有管理员可以分配版主角色</value>
+  </data>
+  <data name="MemberStatus" xml:space="preserve">
+    <value>成员状态</value>
+  </data>
+  <data name="BanMember" xml:space="preserve">
+    <value>封禁成员</value>
+  </data>
+  <data name="ModeratorsCannotBanAdmins" xml:space="preserve">
+    <value>版主不能封禁管理员</value>
+  </data>
+  <data name="RequireAdminOrModeratorToBan" xml:space="preserve">
+    <value>您必须是管理员或版主才能封禁成员</value>
+  </data>
+  <data name="DangerZone" xml:space="preserve">
+    <value>危险区域</value>
+  </data>
+  <data name="RemoveFromGroup" xml:space="preserve">
+    <value>从群组中移除</value>
+  </data>
+  <data name="RemoveMemberWarning" xml:space="preserve">
+    <value>这将永久将成员从群组中移除</value>
+  </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>加载更多</value>
+  </data>
+  <data name="AdminRoleGranted" xml:space="preserve">
+    <value>管理员角色已成功授予。</value>
+  </data>
+  <data name="AdminRoleRevoked" xml:space="preserve">
+    <value>管理员角色已成功撤销。</value>
+  </data>
+  <data name="ModeratorRoleGranted" xml:space="preserve">
+    <value>版主角色已成功授予。</value>
+  </data>
+  <data name="ModeratorRoleRevoked" xml:space="preserve">
+    <value>版主角色已成功撤销。</value>
+  </data>
+  <data name="ErrorUpdatingRole" xml:space="preserve">
+    <value>更新角色时发生错误。</value>
+  </data>
+  <data name="ErrorBanningMember" xml:space="preserve">
+    <value>封禁成员时发生错误。</value>
+  </data>
+  <data name="ErrorRemovingMember" xml:space="preserve">
+    <value>移除成员时发生错误。</value>
+  </data>
+</root>

@@ -1140,16 +1140,19 @@ namespace FreeSpeakWeb.Services
                         }
                     }
 
-                    // Send notification for new reactions only
-                    await _notificationHelper.NotifyPostReactionAsync(
-                        post.AuthorId,
-                        userId,
-                        postId,
-                        type,
-                        NotificationType.GroupPostLiked,
-                        groupId: post.GroupId,
-                        checkMute: false
-                    );
+                    // Send notification for new reactions only (only if post is loaded and author is not null)
+                    if (post != null && !string.IsNullOrEmpty(post.AuthorId))
+                    {
+                        await _notificationHelper.NotifyPostReactionAsync(
+                            post.AuthorId,
+                            userId,
+                            postId,
+                            type,
+                            NotificationType.GroupPostLiked,
+                            groupId: post.GroupId,
+                            checkMute: false
+                        );
+                    }
                 }
 
                 // Log group post reaction to audit log

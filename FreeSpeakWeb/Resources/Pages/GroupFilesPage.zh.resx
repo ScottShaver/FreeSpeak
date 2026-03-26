@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="PageTitle" xml:space="preserve"><value>文件 - {0}</value></data>
+  <data name="LoadingGroupInfo" xml:space="preserve"><value>正在加载群组信息...</value></data>
+  <data name="GroupNotFound" xml:space="preserve"><value>未找到群组</value></data>
+  <data name="GroupNotFoundMessage" xml:space="preserve"><value>您要查找的群组不存在或您没有访问权限。</value></data>
+  <data name="GoToGroups" xml:space="preserve"><value>前往群组</value></data>
+  <data name="FilesNotEnabled" xml:space="preserve"><value>文件未启用</value></data>
+  <data name="FilesNotEnabledMessage" xml:space="preserve"><value>此群组未启用文件上传功能。</value></data>
+  <data name="BackToGroup" xml:space="preserve"><value>返回群组</value></data>
+  <data name="Groups" xml:space="preserve"><value>群组</value></data>
+  <data name="Files" xml:space="preserve"><value>文件</value></data>
+  <data name="GroupFiles" xml:space="preserve"><value>群组文件</value></data>
+  <data name="FileManager" xml:space="preserve"><value>文件管理器</value></data>
+  <data name="PendingApproval" xml:space="preserve"><value>待批准</value></data>
+  <data name="PageDescription" xml:space="preserve"><value>与群组成员共享文档、图像和其他文件。文件可能需要群组管理员的批准才能对所有人可见。</value></data>
+  <data name="TotalFiles" xml:space="preserve"><value>文件总数</value></data>
+  <data name="ApprovedFiles" xml:space="preserve"><value>已批准</value></data>
+  <data name="TotalStorage" xml:space="preserve"><value>总存储空间</value></data>
+  <data name="UploadFile" xml:space="preserve"><value>上传文件</value></data>
+  <data name="FilesPendingApproval" xml:space="preserve"><value>{0} 个文件等待审批</value></data>
+  <data name="HidePending" xml:space="preserve"><value>隐藏待审</value></data>
+  <data name="ReviewPending" xml:space="preserve"><value>审核待审</value></data>
+  <data name="PendingFiles" xml:space="preserve"><value>待审文件</value></data>
+  <data name="LoadingPendingFiles" xml:space="preserve"><value>正在加载待审文件...</value></data>
+  <data name="NoPendingFiles" xml:space="preserve"><value>没有等待审批的文件</value></data>
+  <data name="File" xml:space="preserve"><value>文件</value></data>
+  <data name="UploadedBy" xml:space="preserve"><value>上传者</value></data>
+  <data name="Size" xml:space="preserve"><value>大小</value></data>
+  <data name="Uploaded" xml:space="preserve"><value>上传时间</value></data>
+  <data name="Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="Approve" xml:space="preserve"><value>批准</value></data>
+  <data name="Decline" xml:space="preserve"><value>拒绝</value></data>
+  <data name="SearchPlaceholder" xml:space="preserve"><value>按名称或描述搜索文件...</value></data>
+  <data name="Search" xml:space="preserve"><value>搜索</value></data>
+  <data name="SearchResults" xml:space="preserve"><value>"{1}" 的 {0} 个结果</value></data>
+  <data name="FilesShared" xml:space="preserve"><value>此群组共享了 {0} 个文件</value></data>
+  <data name="LoadingFiles" xml:space="preserve"><value>正在加载文件...</value></data>
+  <data name="NoFilesYet" xml:space="preserve"><value>此群组尚未共享任何文件</value></data>
+  <data name="NoFilesMatch" xml:space="preserve"><value>没有与您搜索匹配的文件</value></data>
+  <data name="Download" xml:space="preserve"><value>下载</value></data>
+  <data name="Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="PendingApproval" xml:space="preserve"><value>等待审批</value></data>
+  <data name="FilePagination" xml:space="preserve"><value>文件分页</value></data>
+  <data name="UploadingFile" xml:space="preserve"><value>正在上传文件...</value></data>
+  <data name="SelectFile" xml:space="preserve"><value>选择文件</value></data>
+  <data name="MaxFileSize" xml:space="preserve"><value>最大文件大小：50 MB</value></data>
+  <data name="DescriptionOptional" xml:space="preserve"><value>描述（可选）</value></data>
+  <data name="DescriptionPlaceholder" xml:space="preserve"><value>添加描述以帮助他人了解此文件...</value></data>
+  <data name="FilesRequireApproval" xml:space="preserve"><value>文件需要审批后才能对其他成员可见。</value></data>
+  <data name="Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Upload" xml:space="preserve"><value>上传</value></data>
+  <data name="DeleteFile" xml:space="preserve"><value>删除文件</value></data>
+  <data name="DeleteFileConfirm" xml:space="preserve"><value>您确定要删除"{0}"吗？此操作无法撤消。</value></data>
+  <data name="DeclineFile" xml:space="preserve"><value>拒绝文件</value></data>
+  <data name="AboutToDecline" xml:space="preserve"><value>您即将拒绝：</value></data>
+  <data name="ReasonOptional" xml:space="preserve"><value>原因（可选）</value></data>
+  <data name="DeclineReasonPlaceholder" xml:space="preserve"><value>请提供拒绝此文件的原因...</value></data>
+</root>

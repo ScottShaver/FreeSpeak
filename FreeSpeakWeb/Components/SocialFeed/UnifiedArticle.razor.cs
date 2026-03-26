@@ -570,12 +570,15 @@ public partial class UnifiedArticle : ArticleComponentBase
 
             try
             {
-                await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserPost, new UserPostDetails
+                if (!string.IsNullOrEmpty(CurrentUserId))
                 {
-                    PostId = PostId,
-                    Visibility = newAudienceType.ToString(),
-                    OperationType = OperationTypeEnum.Update.ToString()
-                });
+                    await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserPost, new UserPostDetails
+                    {
+                        PostId = PostId,
+                        Visibility = newAudienceType.ToString(),
+                        OperationType = OperationTypeEnum.Update.ToString()
+                    });
+                }
             }
             catch { /* Audit logging should not fail the operation */ }
 
@@ -629,11 +632,14 @@ public partial class UnifiedArticle : ArticleComponentBase
         {
             try
             {
-                await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserPost, new UserPostDetails
+                if (!string.IsNullOrEmpty(CurrentUserId))
                 {
-                    PostId = PostId,
-                    OperationType = OperationTypeEnum.Delete.ToString()
-                });
+                    await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserPost, new UserPostDetails
+                    {
+                        PostId = PostId,
+                        OperationType = OperationTypeEnum.Delete.ToString()
+                    });
+                }
             }
             catch { /* Audit logging should not fail the operation */ }
 
@@ -659,12 +665,15 @@ public partial class UnifiedArticle : ArticleComponentBase
         {
             try
             {
-                await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserGroupPost, new UserGroupPostDetails
+                if (!string.IsNullOrEmpty(CurrentUserId))
                 {
-                    PostId = PostId,
-                    GroupId = GroupId,
-                    OperationType = OperationTypeEnum.Delete.ToString()
-                });
+                    await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserGroupPost, new UserGroupPostDetails
+                    {
+                        PostId = PostId,
+                        GroupId = GroupId,
+                        OperationType = OperationTypeEnum.Delete.ToString()
+                    });
+                }
             }
             catch { /* Audit logging should not fail the operation */ }
 
@@ -697,22 +706,25 @@ public partial class UnifiedArticle : ArticleComponentBase
 
             try
             {
-                if (ArticlePostType == PostType.GroupPost)
+                if (!string.IsNullOrEmpty(CurrentUserId))
                 {
-                    await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserGroupPost, new UserGroupPostDetails
+                    if (ArticlePostType == PostType.GroupPost)
                     {
-                        PostId = PostId,
-                        GroupId = GroupId,
-                        OperationType = OperationTypeEnum.CopyLink.ToString()
-                    });
-                }
-                else
-                {
-                    await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserPost, new UserPostDetails
+                        await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserGroupPost, new UserGroupPostDetails
+                        {
+                            PostId = PostId,
+                            GroupId = GroupId,
+                            OperationType = OperationTypeEnum.CopyLink.ToString()
+                        });
+                    }
+                    else
                     {
-                        PostId = PostId,
-                        OperationType = OperationTypeEnum.CopyLink.ToString()
-                    });
+                        await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserPost, new UserPostDetails
+                        {
+                            PostId = PostId,
+                            OperationType = OperationTypeEnum.CopyLink.ToString()
+                        });
+                    }
                 }
             }
             catch { /* Audit logging should not fail the operation */ }
@@ -763,11 +775,14 @@ public partial class UnifiedArticle : ArticleComponentBase
 
                 try
                 {
-                    await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserNotification, new UserNotificationDetails
+                    if (!string.IsNullOrEmpty(CurrentUserId))
                     {
-                        OperationType = OperationTypeEnum.UnmutePost.ToString(),
-                        ContentSummary = $"Unmuted notifications for post {PostId}"
-                    });
+                        await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserNotification, new UserNotificationDetails
+                        {
+                            OperationType = OperationTypeEnum.UnmutePost.ToString(),
+                            ContentSummary = $"Unmuted notifications for post {PostId}"
+                        });
+                    }
                 }
                 catch { /* Audit logging should not fail the operation */ }
 
@@ -783,11 +798,14 @@ public partial class UnifiedArticle : ArticleComponentBase
 
                 try
                 {
-                    await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserNotification, new UserNotificationDetails
+                    if (!string.IsNullOrEmpty(CurrentUserId))
                     {
-                        OperationType = OperationTypeEnum.MutePost.ToString(),
-                        ContentSummary = $"Muted notifications for post {PostId}"
-                    });
+                        await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserNotification, new UserNotificationDetails
+                        {
+                            OperationType = OperationTypeEnum.MutePost.ToString(),
+                            ContentSummary = $"Muted notifications for post {PostId}"
+                        });
+                    }
                 }
                 catch { /* Audit logging should not fail the operation */ }
 
@@ -810,11 +828,14 @@ public partial class UnifiedArticle : ArticleComponentBase
 
                 try
                 {
-                    await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserNotification, new UserNotificationDetails
+                    if (!string.IsNullOrEmpty(CurrentUserId))
                     {
-                        OperationType = OperationTypeEnum.UnmuteGroupPost.ToString(),
-                        ContentSummary = $"Unmuted notifications for group post {PostId} in group {GroupId}"
-                    });
+                        await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserNotification, new UserNotificationDetails
+                        {
+                            OperationType = OperationTypeEnum.UnmuteGroupPost.ToString(),
+                            ContentSummary = $"Unmuted notifications for group post {PostId} in group {GroupId}"
+                        });
+                    }
                 }
                 catch { /* Audit logging should not fail the operation */ }
 
@@ -830,11 +851,14 @@ public partial class UnifiedArticle : ArticleComponentBase
 
                 try
                 {
-                    await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserNotification, new UserNotificationDetails
+                    if (!string.IsNullOrEmpty(CurrentUserId))
                     {
-                        OperationType = OperationTypeEnum.MuteGroupPost.ToString(),
-                        ContentSummary = $"Muted notifications for group post {PostId} in group {GroupId}"
-                    });
+                        await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserNotification, new UserNotificationDetails
+                        {
+                            OperationType = OperationTypeEnum.MuteGroupPost.ToString(),
+                            ContentSummary = $"Muted notifications for group post {PostId} in group {GroupId}"
+                        });
+                    }
                 }
                 catch { /* Audit logging should not fail the operation */ }
 

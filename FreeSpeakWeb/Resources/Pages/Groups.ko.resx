@@ -154,4 +154,10 @@
   <data name="NoSuggestions" xml:space="preserve">
     <value>현재 그룹 추천이 없습니다.</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>신고됨</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>이 게시물은 모더레이터에게 신고되었으며 검토 대기 중입니다.</value>
+  </data>
 </root>

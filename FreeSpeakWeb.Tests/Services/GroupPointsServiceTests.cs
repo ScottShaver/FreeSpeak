@@ -532,7 +532,7 @@ namespace FreeSpeakWeb.Tests.Services
         }
 
         [Theory]
-        [InlineData(MemberLevel.Member, "text-secondary")]
+        [InlineData(MemberLevel.Member, "text-info")]
         [InlineData(MemberLevel.RisingContributor, "text-success")]
         [InlineData(MemberLevel.TopContributor, "text-primary")]
         [InlineData(MemberLevel.AllStarContributor, "text-warning")]

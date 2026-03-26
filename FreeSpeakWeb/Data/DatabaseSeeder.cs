@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
+#pragma warning disable EF1002 // ExecuteSqlRawAsync with interpolated strings is safe in DatabaseSeeder for controlled seeding data
+
 namespace FreeSpeakWeb.Data
 {
     /// <summary>

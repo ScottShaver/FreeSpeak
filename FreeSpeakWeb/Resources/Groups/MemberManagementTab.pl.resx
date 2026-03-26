@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="SearchMembers" xml:space="preserve">
+    <value>Szukaj członków...</value>
+  </data>
+  <data name="LoadingMembers" xml:space="preserve">
+    <value>Ładowanie członków...</value>
+  </data>
+  <data name="NoMembersFound" xml:space="preserve">
+    <value>Nie znaleziono członków.</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>Twórca</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>Moderator</value>
+  </data>
+  <data name="Joined" xml:space="preserve">
+    <value>Dołączył</value>
+  </data>
+  <data name="Posts" xml:space="preserve">
+    <value>Posty</value>
+  </data>
+  <data name="Points" xml:space="preserve">
+    <value>Punkty</value>
+  </data>
+  <data name="CannotModifyCreator" xml:space="preserve">
+    <value>Uprawnienia twórcy grupy nie mogą być modyfikowane.</value>
+  </data>
+  <data name="RoleAssignment" xml:space="preserve">
+    <value>Przypisanie roli</value>
+  </data>
+  <data name="GroupAdmin" xml:space="preserve">
+    <value>Administrator grupy</value>
+  </data>
+  <data name="OnlyCreatorCanSetAdmin" xml:space="preserve">
+    <value>Tylko twórca grupy może przypisywać role administratora</value>
+  </data>
+  <data name="GroupModerator" xml:space="preserve">
+    <value>Moderator grupy</value>
+  </data>
+  <data name="OnlyAdminCanSetModerator" xml:space="preserve">
+    <value>Tylko administratorzy mogą przypisywać role moderatora</value>
+  </data>
+  <data name="MemberStatus" xml:space="preserve">
+    <value>Status członka</value>
+  </data>
+  <data name="BanMember" xml:space="preserve">
+    <value>Zbanuj członka</value>
+  </data>
+  <data name="ModeratorsCannotBanAdmins" xml:space="preserve">
+    <value>Moderatorzy nie mogą banować administratorów</value>
+  </data>
+  <data name="RequireAdminOrModeratorToBan" xml:space="preserve">
+    <value>Musisz być administratorem lub moderatorem, aby banować członków</value>
+  </data>
+  <data name="DangerZone" xml:space="preserve">
+    <value>Strefa niebezpieczna</value>
+  </data>
+  <data name="RemoveFromGroup" xml:space="preserve">
+    <value>Usuń z grupy</value>
+  </data>
+  <data name="RemoveMemberWarning" xml:space="preserve">
+    <value>To trwale usunie członka z grupy</value>
+  </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>Załaduj więcej</value>
+  </data>
+  <data name="AdminRoleGranted" xml:space="preserve">
+    <value>Rola administratora została pomyślnie przyznana.</value>
+  </data>
+  <data name="AdminRoleRevoked" xml:space="preserve">
+    <value>Rola administratora została pomyślnie cofnięta.</value>
+  </data>
+  <data name="ModeratorRoleGranted" xml:space="preserve">
+    <value>Rola moderatora została pomyślnie przyznana.</value>
+  </data>
+  <data name="ModeratorRoleRevoked" xml:space="preserve">
+    <value>Rola moderatora została pomyślnie cofnięta.</value>
+  </data>
+  <data name="ErrorUpdatingRole" xml:space="preserve">
+    <value>Wystąpił błąd podczas aktualizacji roli.</value>
+  </data>
+  <data name="ErrorBanningMember" xml:space="preserve">
+    <value>Wystąpił błąd podczas banowania członka.</value>
+  </data>
+  <data name="ErrorRemovingMember" xml:space="preserve">
+    <value>Wystąpił błąd podczas usuwania członka.</value>
+  </data>
+</root>

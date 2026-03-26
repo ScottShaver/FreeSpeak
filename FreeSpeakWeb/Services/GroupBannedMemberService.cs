@@ -1,6 +1,7 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
@@ -14,6 +15,7 @@ namespace FreeSpeakWeb.Services
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupBannedMemberService> _logger;
         private readonly IAuditLogRepository _auditLogRepository;
+        private readonly IRoleService _roleService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupBannedMemberService"/> class.
@@ -21,14 +23,17 @@ namespace FreeSpeakWeb.Services
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording service operations.</param>
         /// <param name="auditLogRepository">Repository for audit log operations.</param>
+        /// <param name="roleService">Service for role operations.</param>
         public GroupBannedMemberService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupBannedMemberService> logger,
-            IAuditLogRepository auditLogRepository)
+            IAuditLogRepository auditLogRepository,
+            IRoleService roleService)
         {
             _contextFactory = contextFactory;
             _logger = logger;
             _auditLogRepository = auditLogRepository;
+            _roleService = roleService;
         }
 
         /// <summary>
@@ -40,11 +45,14 @@ namespace FreeSpeakWeb.Services
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
 
-                // Verify the banner is an admin or moderator
+                // Check if banner is a system administrator
+                var isSystemAdmin = await _roleService.IsSystemAdministratorAsync(bannedByUserId);
+
+                // Verify the banner is an admin, moderator, or system administrator
                 var bannerMembership = await context.GroupUsers
                     .FirstOrDefaultAsync(gu => gu.GroupId == groupId && gu.UserId == bannedByUserId);
 
-                if (bannerMembership == null || (!bannerMembership.IsAdmin && !bannerMembership.IsModerator))
+                if (!isSystemAdmin && (bannerMembership == null || (!bannerMembership.IsAdmin && !bannerMembership.IsModerator)))
                 {
                     return (false, "You must be an admin or moderator to ban users.");
                 }
@@ -65,8 +73,8 @@ namespace FreeSpeakWeb.Services
                     return (false, "Cannot ban the group creator.");
                 }
 
-                // Prevent regular moderators from banning admins
-                if (userMembership.IsAdmin && !bannerMembership.IsAdmin)
+                // Prevent regular moderators from banning admins (unless banner is system admin)
+                if (!isSystemAdmin && userMembership.IsAdmin && bannerMembership != null && !bannerMembership.IsAdmin)
                 {
                     return (false, "Moderators cannot ban administrators.");
                 }
@@ -128,11 +136,14 @@ namespace FreeSpeakWeb.Services
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
 
-                // Verify the unbanner is an admin or moderator
+                // Check if unbanner is a system administrator
+                var isSystemAdmin = await _roleService.IsSystemAdministratorAsync(unbannedByUserId);
+
+                // Verify the unbanner is an admin, moderator, or system administrator
                 var unbannerMembership = await context.GroupUsers
                     .FirstOrDefaultAsync(gu => gu.GroupId == groupId && gu.UserId == unbannedByUserId);
 
-                if (unbannerMembership == null || (!unbannerMembership.IsAdmin && !unbannerMembership.IsModerator))
+                if (!isSystemAdmin && (unbannerMembership == null || (!unbannerMembership.IsAdmin && !unbannerMembership.IsModerator)))
                 {
                     return (false, "You must be an admin or moderator to unban users.");
                 }

@@ -101,6 +101,12 @@
                                 <i class="bi bi-shield-check me-1"></i>@Localizer["GroupModeration"]
                             </button>
                         }
+                        @if (group.EnableFileUploads)
+                        {
+                            <a href="/group/@GroupId/files" class="btn btn-outline-secondary btn-sm" title="@Localizer["Files"]">
+                                <i class="bi bi-folder2 me-1"></i>@Localizer["Files"]
+                            </a>
+                        }
                         @if (CanAccessGroupSettings)
                         {
                             <button class="btn btn-outline-secondary btn-sm" @onclick="OpenGroupSettings" title="@Localizer["Settings"]">
@@ -648,7 +654,7 @@
 
             // If this group requires post approval, also load the current user's posts with any status
             // so they can see their own pending/declined posts
-            if (group.RequiresPostApproval && !string.IsNullOrEmpty(currentUserId))
+            if (group != null && group.RequiresPostApproval && !string.IsNullOrEmpty(currentUserId))
             {
                 var userPosts = await GroupPostService.GetUserPostsIncludingAllStatusesAsync(GroupId, currentUserId);
 
@@ -1234,6 +1240,8 @@
     /// <param name="args">Tuple containing post ID, content, image URLs, and removed image IDs.</param>
     private async Task HandleSaveGroupPostEdit((int PostId, string Content, List<string> ImageUrls, List<int> RemovedImageIds) args)
     {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
         var result = await GroupPostService.UpdateGroupPostAsync(args.PostId, currentUserId, args.Content, args.ImageUrls, args.RemovedImageIds);
         if (result.Success)
         {

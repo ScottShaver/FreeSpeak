@@ -215,6 +215,7 @@ namespace FreeSpeakWeb
             builder.Services.AddScoped<GroupPostEventHandlers>();
             builder.Services.AddScoped<GroupPointsService>();
             builder.Services.AddScoped<GroupContentReportService>();
+            builder.Services.AddScoped<IGroupFileService, GroupFileService>();
 
             // Add helper services for shared functionality
             builder.Services.AddScoped<PostNotificationHelper>();
@@ -238,6 +239,7 @@ namespace FreeSpeakWeb
             // Domain repositories
             builder.Services.AddScoped<IFriendshipRepository, FriendshipRepository>();
             builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+            builder.Services.AddScoped<IGroupFileRepository, GroupFileRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
             builder.Services.AddScoped<IPinnedPostRepository, PinnedPostRepository>();

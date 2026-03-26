@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="LoadingFiles" xml:space="preserve">
+    <value>Загрузка файлов...</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>Группа не найдена</value>
+  </data>
+  <data name="GroupNotFoundMessage" xml:space="preserve">
+    <value>Искомая группа не существует или у вас нет к ней доступа.</value>
+  </data>
+  <data name="GoToGroups" xml:space="preserve">
+    <value>Перейти к Группам</value>
+  </data>
+  <data name="AccessDenied" xml:space="preserve">
+    <value>Доступ запрещён</value>
+  </data>
+  <data name="MustBeMemberToViewFiles" xml:space="preserve">
+    <value>Вы должны быть участником этой группы, чтобы просматривать файлы.</value>
+  </data>
+  <data name="BackToGroup" xml:space="preserve">
+    <value>Вернуться к Группе</value>
+  </data>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Файлы группы</value>
+  </data>
+  <data name="Groups" xml:space="preserve">
+    <value>Группы</value>
+  </data>
+  <data name="Files" xml:space="preserve">
+    <value>Файлы</value>
+  </data>
+  <data name="UploadFile" xml:space="preserve">
+    <value>Загрузить файл</value>
+  </data>
+  <data name="TotalFiles" xml:space="preserve">
+    <value>Всего файлов</value>
+  </data>
+  <data name="ApprovedFiles" xml:space="preserve">
+    <value>Одобренные файлы</value>
+  </data>
+  <data name="PendingFiles" xml:space="preserve">
+    <value>Ожидающие файлы</value>
+  </data>
+  <data name="TotalStorage" xml:space="preserve">
+    <value>Общее хранилище</value>
+  </data>
+  <data name="SearchFiles" xml:space="preserve">
+    <value>Поиск файлов...</value>
+  </data>
+  <data name="AllFiles" xml:space="preserve">
+    <value>Все файлы</value>
+  </data>
+  <data name="MyFiles" xml:space="preserve">
+    <value>Мои файлы</value>
+  </data>
+  <data name="PendingApproval" xml:space="preserve">
+    <value>Ожидает одобрения</value>
+  </data>
+  <data name="NoFilesYet" xml:space="preserve">
+    <value>Файлы ещё не загружены.</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Ожидание</value>
+  </data>
+  <data name="Declined" xml:space="preserve">
+    <value>Отклонено</value>
+  </data>
+  <data name="Scanning" xml:space="preserve">
+    <value>Сканирование</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Скачать</value>
+  </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>Загрузить ещё</value>
+  </data>
+  <data name="SelectFile" xml:space="preserve">
+    <value>Выбрать файл</value>
+  </data>
+  <data name="MaxFileSize50MB" xml:space="preserve">
+    <value>Максимальный размер файла: 50 МБ</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Optional" xml:space="preserve">
+    <value>необязательно</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Загрузить</value>
+  </data>
+  <data name="ConfirmDelete" xml:space="preserve">
+    <value>Подтвердить удаление</value>
+  </data>
+  <data name="ConfirmDeleteMessage" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить этот файл? Это действие нельзя отменить.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="DeclineFile" xml:space="preserve">
+    <value>Отклонить файл</value>
+  </data>
+  <data name="DeclineReason" xml:space="preserve">
+    <value>Причина отклонения</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Отклонить</value>
+  </data>
+</root>

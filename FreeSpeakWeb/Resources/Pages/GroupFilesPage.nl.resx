@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="PageTitle" xml:space="preserve"><value>Bestanden - {0}</value></data>
+  <data name="LoadingGroupInfo" xml:space="preserve"><value>Groepsinformatie laden...</value></data>
+  <data name="GroupNotFound" xml:space="preserve"><value>Groep niet gevonden</value></data>
+  <data name="GroupNotFoundMessage" xml:space="preserve"><value>De groep die u zoekt bestaat niet of u heeft geen toegang.</value></data>
+  <data name="GoToGroups" xml:space="preserve"><value>Ga naar Groepen</value></data>
+  <data name="FilesNotEnabled" xml:space="preserve"><value>Bestanden niet ingeschakeld</value></data>
+  <data name="FilesNotEnabledMessage" xml:space="preserve"><value>Bestandsuploads zijn niet ingeschakeld voor deze groep.</value></data>
+  <data name="BackToGroup" xml:space="preserve"><value>Terug naar groep</value></data>
+  <data name="Groups" xml:space="preserve"><value>Groepen</value></data>
+  <data name="Files" xml:space="preserve"><value>Bestanden</value></data>
+  <data name="GroupFiles" xml:space="preserve"><value>Groepsbestanden</value></data>
+  <data name="FileManager" xml:space="preserve"><value>Bestandsbeheer</value></data>
+  <data name="PendingApproval" xml:space="preserve"><value>In afwachting van goedkeuring</value></data>
+  <data name="PageDescription" xml:space="preserve"><value>Deel documenten, afbeeldingen en andere bestanden met groepsleden. Bestanden kunnen goedkeuring van groepsbeheerders vereisen voordat ze voor iedereen zichtbaar worden.</value></data>
+  <data name="TotalFiles" xml:space="preserve"><value>Totaal bestanden</value></data>
+  <data name="ApprovedFiles" xml:space="preserve"><value>Goedgekeurd</value></data>
+  <data name="TotalStorage" xml:space="preserve"><value>Totale opslag</value></data>
+  <data name="UploadFile" xml:space="preserve"><value>Bestand uploaden</value></data>
+  <data name="FilesPendingApproval" xml:space="preserve"><value>{0} bestand(en) wachten op goedkeuring</value></data>
+  <data name="HidePending" xml:space="preserve"><value>Wachtende verbergen</value></data>
+  <data name="ReviewPending" xml:space="preserve"><value>Wachtende beoordelen</value></data>
+  <data name="PendingFiles" xml:space="preserve"><value>Wachtende bestanden</value></data>
+  <data name="LoadingPendingFiles" xml:space="preserve"><value>Wachtende bestanden laden...</value></data>
+  <data name="NoPendingFiles" xml:space="preserve"><value>Geen bestanden wachten op goedkeuring</value></data>
+  <data name="File" xml:space="preserve"><value>Bestand</value></data>
+  <data name="UploadedBy" xml:space="preserve"><value>Geüpload door</value></data>
+  <data name="Size" xml:space="preserve"><value>Grootte</value></data>
+  <data name="Uploaded" xml:space="preserve"><value>Geüpload</value></data>
+  <data name="Actions" xml:space="preserve"><value>Acties</value></data>
+  <data name="Approve" xml:space="preserve"><value>Goedkeuren</value></data>
+  <data name="Decline" xml:space="preserve"><value>Weigeren</value></data>
+  <data name="SearchPlaceholder" xml:space="preserve"><value>Zoek bestanden op naam of beschrijving...</value></data>
+  <data name="Search" xml:space="preserve"><value>Zoeken</value></data>
+  <data name="SearchResults" xml:space="preserve"><value>{0} resultaten voor "{1}"</value></data>
+  <data name="FilesShared" xml:space="preserve"><value>{0} bestand(en) gedeeld in deze groep</value></data>
+  <data name="LoadingFiles" xml:space="preserve"><value>Bestanden laden...</value></data>
+  <data name="NoFilesYet" xml:space="preserve"><value>Er zijn nog geen bestanden gedeeld in deze groep</value></data>
+  <data name="NoFilesMatch" xml:space="preserve"><value>Geen bestanden komen overeen met uw zoekopdracht</value></data>
+  <data name="Download" xml:space="preserve"><value>Downloaden</value></data>
+  <data name="Delete" xml:space="preserve"><value>Verwijderen</value></data>
+  <data name="PendingApproval" xml:space="preserve"><value>Wacht op goedkeuring</value></data>
+  <data name="FilePagination" xml:space="preserve"><value>Bestandspaginering</value></data>
+  <data name="UploadingFile" xml:space="preserve"><value>Bestand uploaden...</value></data>
+  <data name="SelectFile" xml:space="preserve"><value>Bestand selecteren</value></data>
+  <data name="MaxFileSize" xml:space="preserve"><value>Maximale bestandsgrootte: 50 MB</value></data>
+  <data name="DescriptionOptional" xml:space="preserve"><value>Beschrijving (optioneel)</value></data>
+  <data name="DescriptionPlaceholder" xml:space="preserve"><value>Voeg een beschrijving toe om anderen te helpen dit bestand te begrijpen...</value></data>
+  <data name="FilesRequireApproval" xml:space="preserve"><value>Bestanden vereisen goedkeuring voordat ze zichtbaar worden voor andere leden.</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Annuleren</value></data>
+  <data name="Upload" xml:space="preserve"><value>Uploaden</value></data>
+  <data name="DeleteFile" xml:space="preserve"><value>Bestand verwijderen</value></data>
+  <data name="DeleteFileConfirm" xml:space="preserve"><value>Weet u zeker dat u "{0}" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.</value></data>
+  <data name="DeclineFile" xml:space="preserve"><value>Bestand weigeren</value></data>
+  <data name="AboutToDecline" xml:space="preserve"><value>U staat op het punt te weigeren:</value></data>
+  <data name="ReasonOptional" xml:space="preserve"><value>Reden (optioneel)</value></data>
+  <data name="DeclineReasonPlaceholder" xml:space="preserve"><value>Geef een reden voor het weigeren van dit bestand...</value></data>
+</root>

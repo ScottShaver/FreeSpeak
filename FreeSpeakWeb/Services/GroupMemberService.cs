@@ -77,6 +77,14 @@ namespace FreeSpeakWeb.Services
                     return (false, "You are already a member of this group.", null);
                 }
 
+                // Check if user is banned from the group
+                var isBanned = await context.GroupBannedMembers
+                    .AnyAsync(gbm => gbm.GroupId == groupId && gbm.UserId == userId);
+                if (isBanned)
+                {
+                    return (false, "You are banned from this group and cannot submit a join request.", null);
+                }
+
                 // Check if there's already a pending request
                 var existingRequest = await context.GroupJoinRequests
                     .FirstOrDefaultAsync(jr => jr.GroupId == groupId && jr.UserId == userId);
@@ -365,6 +373,14 @@ namespace FreeSpeakWeb.Services
                     return (false, "User is already a member.");
                 }
 
+                // Check if user is banned from the group
+                var isBanned = await context.GroupBannedMembers
+                    .AnyAsync(gbm => gbm.GroupId == groupId && gbm.UserId == userId);
+                if (isBanned)
+                {
+                    return (false, "User is banned from this group and cannot be added.");
+                }
+
                 var groupUser = new GroupUser
                 {
                     GroupId = groupId,
@@ -431,6 +447,14 @@ namespace FreeSpeakWeb.Services
                 if (group.RequireAcceptRules && !hasAgreedToRules)
                 {
                     return (false, "You must agree to the group rules before joining.");
+                }
+
+                // Check if user is banned from the group
+                var isBanned = await context.GroupBannedMembers
+                    .AnyAsync(gbm => gbm.GroupId == groupId && gbm.UserId == userId);
+                if (isBanned)
+                {
+                    return (false, "You are banned from this group and cannot join.");
                 }
 
                 var result = await AddMemberAsync(groupId, userId, hasAgreedToRules);
@@ -959,12 +983,15 @@ namespace FreeSpeakWeb.Services
                     return (false, "Group not found.");
                 }
 
+                // Check if requester is system administrator
+                var isSystemAdmin = await _roleService.IsSystemAdministratorAsync(requesterId);
+
                 // Check if requester is creator or admin
                 var isCreator = group.CreatorId == requesterId;
                 var isAdmin = await context.GroupUsers
                     .AnyAsync(gu => gu.GroupId == groupId && gu.UserId == requesterId && gu.IsAdmin);
 
-                if (!isCreator && !isAdmin)
+                if (!isSystemAdmin && !isCreator && !isAdmin)
                 {
                     return (false, "Only group creator or admins can remove members.");
                 }

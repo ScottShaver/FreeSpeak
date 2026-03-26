@@ -54,6 +54,10 @@ $ResourceGroups = @{
         BasePath = "FreeSpeakWeb\Resources\Pages\Groups.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
+    "GroupFiles" = @{
+        BasePath = "FreeSpeakWeb\Resources\Pages\GroupFiles.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
     "GroupView" = @{
         BasePath = "FreeSpeakWeb\Resources\Pages\GroupView.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
@@ -182,6 +186,10 @@ $ResourceGroups = @{
         BasePath = "FreeSpeakWeb\Resources\Friends\FriendListItem.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
+    "ProfilePreviewPopup" = @{
+        BasePath = "FreeSpeakWeb\Resources\Friends\ProfilePreviewPopup.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
 
     # Groups Resources
     "GroupSettingsModal" = @{
@@ -194,6 +202,10 @@ $ResourceGroups = @{
     }
     "GroupModerationModal" = @{
         BasePath = "FreeSpeakWeb\Resources\Groups\GroupModerationModal.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "MemberManagementTab" = @{
+        BasePath = "FreeSpeakWeb\Resources\Groups\MemberManagementTab.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
     "RulesAcceptanceModal" = @{

@@ -706,8 +706,10 @@ public abstract class PostDetailModalBase : ComponentBase, IAsyncDisposable
     /// <param name="comments">The list of comments to search.</param>
     /// <param name="commentId">The ID of the comment to remove.</param>
     /// <returns>True if the comment was found and removed, false otherwise.</returns>
-    private bool RemoveCommentFromLocalList(List<CommentDisplayModel> comments, int commentId)
+    private bool RemoveCommentFromLocalList(List<CommentDisplayModel>? comments, int commentId)
     {
+        if (comments == null) return false;
+
         for (int i = comments.Count - 1; i >= 0; i--)
         {
             if (comments[i].CommentId == commentId)

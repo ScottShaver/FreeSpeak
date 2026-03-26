@@ -130,4 +130,19 @@
   <data name="IsClosedHelp" xml:space="preserve">
     <value>Avertissement : La fermeture d'un groupe est définitive. Aucune modification ne peut être effectuée une fois fermé, même par les administrateurs.</value>
   </data>
+  <data name="FileUploadSection" xml:space="preserve">
+    <value>Partage de fichiers</value>
+  </data>
+  <data name="EnableFileUploads" xml:space="preserve">
+    <value>Activer le téléchargement de fichiers</value>
+  </data>
+  <data name="EnableFileUploadsHelp" xml:space="preserve">
+    <value>Permettre aux membres de télécharger et partager des fichiers avec le groupe.</value>
+  </data>
+  <data name="RequiresFileApproval" xml:space="preserve">
+    <value>Approbation des fichiers requise</value>
+  </data>
+  <data name="RequiresFileApprovalHelp" xml:space="preserve">
+    <value>Les fichiers téléchargés doivent être approuvés par un modérateur avant d'être visibles par les autres membres.</value>
+  </data>
 </root>

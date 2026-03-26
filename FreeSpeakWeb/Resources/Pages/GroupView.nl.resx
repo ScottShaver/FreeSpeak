@@ -139,4 +139,19 @@
   <data name="YourPosts" xml:space="preserve">
     <value>Uw berichten</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>Gerapporteerd</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>Dit bericht is gemeld bij de moderators en wacht op beoordeling.</value>
+  </data>
+  <data name="GroupInactiveTitle" xml:space="preserve">
+    <value>Groep momenteel inactief</value>
+  </data>
+  <data name="GroupInactiveMessage" xml:space="preserve">
+    <value>Deze groep is momenteel niet actief. Plaatsen en bekijken van berichten is op dit moment niet beschikbaar. Kom later terug of neem contact op met de groepsbeheerders voor meer informatie.</value>
+  </data>
+  <data name="Files" xml:space="preserve">
+    <value>Bestanden</value>
+  </data>
 </root>

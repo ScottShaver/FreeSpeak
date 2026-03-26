@@ -130,4 +130,19 @@
   <data name="IsClosedHelp" xml:space="preserve">
     <value>경고: 그룹 폐쇄는 영구적입니다. 폐쇄 후에는 관리자라도 변경할 수 없습니다.</value>
   </data>
+  <data name="FileUploadSection" xml:space="preserve">
+    <value>파일 공유</value>
+  </data>
+  <data name="EnableFileUploads" xml:space="preserve">
+    <value>파일 업로드 활성화</value>
+  </data>
+  <data name="EnableFileUploadsHelp" xml:space="preserve">
+    <value>회원이 파일을 업로드하고 그룹과 공유할 수 있도록 허용합니다.</value>
+  </data>
+  <data name="RequiresFileApproval" xml:space="preserve">
+    <value>파일 승인 필요</value>
+  </data>
+  <data name="RequiresFileApprovalHelp" xml:space="preserve">
+    <value>업로드된 파일은 다른 회원에게 표시되기 전에 모더레이터의 승인을 받아야 합니다.</value>
+  </data>
 </root>

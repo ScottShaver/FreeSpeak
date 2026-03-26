@@ -1,5 +1,7 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Services.Abstractions
+@using FreeSpeakWeb.DTOs
 @using FreeSpeakWeb.Components.Shared
 @using FreeSpeakWeb.Components.SocialFeed
 @using Microsoft.AspNetCore.Components.Authorization
@@ -10,6 +12,7 @@
 @inject GroupMemberService GroupMemberService
 @inject GroupPostService GroupPostService
 @inject GroupContentReportService ReportService
+@inject IGroupFileService GroupFileService
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ILogger<GroupModerationModal> Logger
@@ -52,15 +55,29 @@
                             <button class="nav-link @(activeTab == "pending" ? "active" : "")" 
                                     type="button" 
                                     @onclick="@(() => SetActiveTab("pending"))">
-                                <i class="bi bi-hourglass-split me-1"></i>@Localizer["PendingApproval"]
-                                @if (pendingPostsCount > 0)
+                                    <i class="bi bi-hourglass-split me-1"></i>@Localizer["PendingApproval"]
+                                        @if (pendingPostsCount > 0)
+                                        {
+                                            <span class="badge bg-info ms-1">@pendingPostsCount</span>
+                                        }
+                                    </button>
+                                </li>
+                                @if (Group.EnableFileUploads && Group.RequiresFileApproval)
                                 {
-                                    <span class="badge bg-info ms-1">@pendingPostsCount</span>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link @(activeTab == "pendingfiles" ? "active" : "")" 
+                                                type="button" 
+                                                @onclick="@(() => SetActiveTab("pendingfiles"))">
+                                            <i class="bi bi-folder2 me-1"></i>@Localizer["PendingFiles"]
+                                            @if (pendingFilesCount > 0)
+                                            {
+                                                <span class="badge bg-info ms-1">@pendingFilesCount</span>
+                                            }
+                                        </button>
+                                    </li>
                                 }
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link @(activeTab == "modlog" ? "active" : "")" 
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link @(activeTab == "modlog" ? "active" : "")"
                                     type="button" 
                                     @onclick="@(() => SetActiveTab("modlog"))">
                                 <i class="bi bi-journal-text me-1"></i>@Localizer["ModerationLog"]
@@ -450,6 +467,90 @@
                                 }
                             </div>
                         }
+                        else if (activeTab == "pendingfiles")
+                        {
+                            <div class="tab-pane fade show active">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="mb-0">@Localizer["PendingFilesDescription"]</h6>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="LoadPendingFilesAsync" disabled="@isLoadingPendingFiles">
+                                        <i class="bi bi-arrow-clockwise me-1"></i>@Localizer["Refresh"]
+                                    </button>
+                                </div>
+
+                                @if (isLoadingPendingFiles)
+                                {
+                                    <div class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">@Localizer["Loading"]</span>
+                                        </div>
+                                    </div>
+                                }
+                                else if (!pendingFiles.Any())
+                                {
+                                    <div class="alert alert-success">
+                                        <i class="bi bi-check-circle me-2"></i>@Localizer["NoPendingFiles"]
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="text-muted small mb-3">
+                                        @Localizer["ShowingPendingFiles", pendingFiles.Count]
+                                    </div>
+                                    @foreach (var file in pendingFiles)
+                                    {
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div class="d-flex align-items-start flex-grow-1">
+                                                        <div class="me-3">
+                                                            <i class="bi @file.FileIcon fs-2 @GetFileIconColorClass(file)"></i>
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <h6 class="mb-1">@file.OriginalFileName</h6>
+                                                            @if (!string.IsNullOrWhiteSpace(file.Description))
+                                                            {
+                                                                <p class="text-muted small mb-1">@file.Description</p>
+                                                            }
+                                                            <div class="small text-muted">
+                                                                <span class="me-3"><i class="bi bi-hdd me-1"></i>@file.FormattedFileSize</span>
+                                                                <span><i class="bi bi-clock me-1"></i>@file.RelativeUploadTime</span>
+                                                            </div>
+                                                            <div class="small text-muted mt-1">
+                                                                <i class="bi bi-person me-1"></i>@Localizer["UploadedBy"] @file.UploaderName
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex flex-column gap-2 ms-3">
+                                                        <button type="button" 
+                                                                class="btn btn-success btn-sm" 
+                                                                @onclick="@(() => ApproveFile(file.Id))"
+                                                                disabled="@(processingFileId == file.Id)"
+                                                                title="@Localizer["ApproveTooltip"]">
+                                                            @if (processingFileId == file.Id)
+                                                            {
+                                                                <span class="spinner-border spinner-border-sm"></span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <i class="bi bi-check-lg me-1"></i>
+                                                            }
+                                                            @Localizer["Approve"]
+                                                        </button>
+                                                        <button type="button" 
+                                                                class="btn btn-danger btn-sm" 
+                                                                @onclick="@(() => OpenDeclineFileModal(file))"
+                                                                disabled="@(processingFileId == file.Id)"
+                                                                title="@Localizer["DeclineTooltip"]">
+                                                            <i class="bi bi-x-lg me-1"></i>@Localizer["Decline"]
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
                         else if (activeTab == "modlog")
                         {
                             <div class="tab-pane fade show active">
@@ -556,6 +657,43 @@
     </div>
 }
 
+@* Decline File Modal *@
+@if (showDeclineFileModal && fileToDecline != null)
+{
+    <div class="modal show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5); z-index: 1070;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-x-circle text-danger me-2"></i>@Localizer["DeclineFile"]</h5>
+                    <button type="button" class="btn-close" @onclick="CloseDeclineFileModal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>@Localizer["DeclineFileConfirmation", fileToDecline.OriginalFileName]</p>
+                    <div class="mb-3">
+                        <label for="declineFileReason" class="form-label">@Localizer["DeclineReason"]</label>
+                        <textarea id="declineFileReason" class="form-control" rows="3" @bind="declineFileReason"
+                                  placeholder="@Localizer["DeclineReasonPlaceholder"]"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseDeclineFileModal">@Localizer["Cancel"]</button>
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDeclineFile" disabled="@(processingFileId == fileToDecline.Id)">
+                        @if (processingFileId == fileToDecline.Id)
+                        {
+                            <span class="spinner-border spinner-border-sm me-1"></span>
+                        }
+                        else
+                        {
+                            <i class="bi bi-x-lg me-1"></i>
+                        }
+                        @Localizer["Decline"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     /// <summary>
     /// The group to moderate.
@@ -617,6 +755,15 @@
     private Dictionary<LikeType, int> pendingPostReactions = new();
     private LikeType? pendingPostUserReaction = null;
 
+    // Pending files state
+    private List<GroupFileDto> pendingFiles = [];
+    private bool isLoadingPendingFiles = false;
+    private int pendingFilesCount = 0;
+    private int? processingFileId = null;
+    private GroupFileDto? fileToDecline = null;
+    private bool showDeclineFileModal = false;
+    private string declineFileReason = "";
+
     /// <summary>
     /// Initializes the component by loading initial data.
     /// </summary>
@@ -650,6 +797,16 @@
             {
                 pendingPostsCount = 0;
             }
+
+            // Load pending files count for approval
+            if (Group.EnableFileUploads && Group.RequiresFileApproval)
+            {
+                pendingFilesCount = await GroupFileService.GetPendingFileCountAsync(Group.Id);
+            }
+            else
+            {
+                pendingFilesCount = 0;
+            }
         }
         catch (Exception ex)
         {
@@ -682,6 +839,10 @@
         else if (tabName == "pending")
         {
             await LoadPendingPostsAsync();
+        }
+        else if (tabName == "pendingfiles")
+        {
+            await LoadPendingFilesAsync();
         }
 
         StateHasChanged();
@@ -1211,6 +1372,151 @@
             StateHasChanged();
         }
     }
+
+    #region Pending Files Methods
+
+    /// <summary>
+    /// Loads the pending files for the group.
+    /// </summary>
+    private async Task LoadPendingFilesAsync()
+    {
+        isLoadingPendingFiles = true;
+        StateHasChanged();
+
+        try
+        {
+            pendingFiles = await GroupFileService.GetPendingFilesAsync(Group.Id, 0, 50);
+            pendingFilesCount = pendingFiles.Count;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading pending files for group {GroupId}", Group.Id);
+            errorMessage = Localizer["ErrorLoadingFiles"];
+        }
+        finally
+        {
+            isLoadingPendingFiles = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Approves a pending file.
+    /// </summary>
+    /// <param name="fileId">The ID of the file to approve.</param>
+    private async Task ApproveFile(int fileId)
+    {
+        processingFileId = fileId;
+        StateHasChanged();
+
+        try
+        {
+            var (success, error) = await GroupFileService.ApproveFileAsync(fileId, CurrentUserId);
+
+            if (success)
+            {
+                successMessage = Localizer["FileApproved"];
+                pendingFiles.RemoveAll(f => f.Id == fileId);
+                pendingFilesCount = pendingFiles.Count;
+                await OnModerationActionPerformed.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = error ?? Localizer["ErrorProcessingFile"];
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error approving file {FileId}", fileId);
+            errorMessage = Localizer["ErrorProcessingFile"];
+        }
+        finally
+        {
+            processingFileId = null;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Opens the decline file modal.
+    /// </summary>
+    /// <param name="file">The file to decline.</param>
+    private void OpenDeclineFileModal(GroupFileDto file)
+    {
+        fileToDecline = file;
+        declineFileReason = "";
+        showDeclineFileModal = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the decline file modal.
+    /// </summary>
+    private void CloseDeclineFileModal()
+    {
+        showDeclineFileModal = false;
+        fileToDecline = null;
+        declineFileReason = "";
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Confirms and executes file decline.
+    /// </summary>
+    private async Task ConfirmDeclineFile()
+    {
+        if (fileToDecline == null) return;
+
+        processingFileId = fileToDecline.Id;
+        StateHasChanged();
+
+        try
+        {
+            var (success, error) = await GroupFileService.DeclineFileAsync(
+                fileToDecline.Id, 
+                CurrentUserId,
+                string.IsNullOrWhiteSpace(declineFileReason) ? null : declineFileReason.Trim());
+
+            if (success)
+            {
+                successMessage = Localizer["FileDeclined"];
+                pendingFiles.RemoveAll(f => f.Id == fileToDecline.Id);
+                pendingFilesCount = pendingFiles.Count;
+                CloseDeclineFileModal();
+                await OnModerationActionPerformed.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = error ?? Localizer["ErrorProcessingFile"];
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error declining file {FileId}", fileToDecline.Id);
+            errorMessage = Localizer["ErrorProcessingFile"];
+        }
+        finally
+        {
+            processingFileId = null;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Gets the CSS color class for a file icon based on file type.
+    /// </summary>
+    /// <param name="file">The file DTO.</param>
+    /// <returns>A Bootstrap text color class.</returns>
+    private static string GetFileIconColorClass(GroupFileDto file)
+    {
+        if (file.IsImage) return "text-success";
+        if (file.IsPdf) return "text-danger";
+        if (file.IsDocument) return "text-primary";
+        if (file.IsArchive) return "text-warning";
+        return "text-secondary";
+    }
+
+    #endregion
 
     /// <summary>
     /// Gets the post author's display name.

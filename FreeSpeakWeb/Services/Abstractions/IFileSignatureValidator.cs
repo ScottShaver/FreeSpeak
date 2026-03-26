@@ -23,6 +23,24 @@ public interface IFileSignatureValidator
     (bool IsValid, string? ErrorMessage) ValidateFileSignature(ReadOnlySpan<byte> fileBytes, string fileName);
 
     /// <summary>
+    /// Validates that the file content matches the expected file type for group file uploads.
+    /// Allows images, videos, documents, and archives but blocks executables and scripts.
+    /// </summary>
+    /// <param name="fileBytes">The raw bytes of the file to validate.</param>
+    /// <param name="fileName">The declared filename including extension.</param>
+    /// <returns>A tuple containing success status and error message if validation failed.</returns>
+    (bool IsValid, string? ErrorMessage) ValidateGroupFileSignature(byte[] fileBytes, string fileName);
+
+    /// <summary>
+    /// Validates that the file content matches the expected file type for group file uploads.
+    /// Allows images, videos, documents, and archives but blocks executables and scripts.
+    /// </summary>
+    /// <param name="fileBytes">The raw bytes of the file to validate.</param>
+    /// <param name="fileName">The declared filename including extension.</param>
+    /// <returns>A tuple containing success status and error message if validation failed.</returns>
+    (bool IsValid, string? ErrorMessage) ValidateGroupFileSignature(ReadOnlySpan<byte> fileBytes, string fileName);
+
+    /// <summary>
     /// Detects the actual file type based on magic bytes.
     /// </summary>
     /// <param name="fileBytes">The raw bytes of the file to analyze.</param>

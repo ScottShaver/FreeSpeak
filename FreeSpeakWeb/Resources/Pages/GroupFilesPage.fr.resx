@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Fichiers - {0}</value>
+  </data>
+  <data name="LoadingGroupInfo" xml:space="preserve">
+    <value>Chargement des informations du groupe...</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>Groupe non trouvé</value>
+  </data>
+  <data name="GroupNotFoundMessage" xml:space="preserve">
+    <value>Le groupe que vous recherchez n'existe pas ou vous n'y avez pas accès.</value>
+  </data>
+  <data name="GoToGroups" xml:space="preserve">
+    <value>Aller aux groupes</value>
+  </data>
+  <data name="FilesNotEnabled" xml:space="preserve">
+    <value>Fichiers non activés</value>
+  </data>
+  <data name="FilesNotEnabledMessage" xml:space="preserve">
+    <value>Le téléchargement de fichiers n'est pas activé pour ce groupe.</value>
+  </data>
+  <data name="BackToGroup" xml:space="preserve">
+    <value>Retour au groupe</value>
+  </data>
+  <data name="Groups" xml:space="preserve">
+    <value>Groupes</value>
+  </data>
+  <data name="Files" xml:space="preserve">
+    <value>Fichiers</value>
+  </data>
+  <data name="GroupFiles" xml:space="preserve">
+    <value>Fichiers du groupe</value>
+  </data>
+  <data name="FileManager" xml:space="preserve">
+    <value>Gestionnaire de fichiers</value>
+  </data>
+  <data name="PendingApproval" xml:space="preserve">
+    <value>En attente d'approbation</value>
+  </data>
+  <data name="PageDescription" xml:space="preserve">
+    <value>Partagez des documents, des images et d'autres fichiers avec les membres du groupe. Les fichiers peuvent nécessiter l'approbation des administrateurs du groupe avant d'être visibles pour tous.</value>
+  </data>
+  <data name="TotalFiles" xml:space="preserve">
+    <value>Total des fichiers</value>
+  </data>
+  <data name="ApprovedFiles" xml:space="preserve">
+    <value>Approuvés</value>
+  </data>
+  <data name="TotalStorage" xml:space="preserve">
+    <value>Stockage total</value>
+  </data>
+  <data name="UploadFile" xml:space="preserve">
+    <value>Télécharger un fichier</value>
+  </data>
+  <data name="FilesPendingApproval" xml:space="preserve">
+    <value>{0} fichier(s) en attente d'approbation</value>
+  </data>
+  <data name="HidePending" xml:space="preserve">
+    <value>Masquer en attente</value>
+  </data>
+  <data name="ReviewPending" xml:space="preserve">
+    <value>Examiner en attente</value>
+  </data>
+  <data name="PendingFiles" xml:space="preserve">
+    <value>Fichiers en attente</value>
+  </data>
+  <data name="LoadingPendingFiles" xml:space="preserve">
+    <value>Chargement des fichiers en attente...</value>
+  </data>
+  <data name="NoPendingFiles" xml:space="preserve">
+    <value>Aucun fichier en attente d'approbation</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Fichier</value>
+  </data>
+  <data name="UploadedBy" xml:space="preserve">
+    <value>Téléchargé par</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Taille</value>
+  </data>
+  <data name="Uploaded" xml:space="preserve">
+    <value>Téléchargé</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Approuver</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Refuser</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>Rechercher des fichiers par nom ou description...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="SearchResults" xml:space="preserve">
+    <value>{0} résultats pour "{1}"</value>
+  </data>
+  <data name="FilesShared" xml:space="preserve">
+    <value>{0} fichier(s) partagé(s) dans ce groupe</value>
+  </data>
+  <data name="LoadingFiles" xml:space="preserve">
+    <value>Chargement des fichiers...</value>
+  </data>
+  <data name="NoFilesYet" xml:space="preserve">
+    <value>Aucun fichier n'a encore été partagé dans ce groupe</value>
+  </data>
+  <data name="NoFilesMatch" xml:space="preserve">
+    <value>Aucun fichier ne correspond à votre recherche</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Télécharger</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="PendingApproval" xml:space="preserve">
+    <value>En attente d'approbation</value>
+  </data>
+  <data name="FilePagination" xml:space="preserve">
+    <value>Pagination des fichiers</value>
+  </data>
+  <data name="UploadingFile" xml:space="preserve">
+    <value>Téléchargement du fichier...</value>
+  </data>
+  <data name="SelectFile" xml:space="preserve">
+    <value>Sélectionner un fichier</value>
+  </data>
+  <data name="MaxFileSize" xml:space="preserve">
+    <value>Taille maximale du fichier : 50 Mo</value>
+  </data>
+  <data name="DescriptionOptional" xml:space="preserve">
+    <value>Description (optionnel)</value>
+  </data>
+  <data name="DescriptionPlaceholder" xml:space="preserve">
+    <value>Ajoutez une description pour aider les autres à comprendre ce fichier...</value>
+  </data>
+  <data name="FilesRequireApproval" xml:space="preserve">
+    <value>Les fichiers doivent être approuvés avant d'être visibles par les autres membres.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Télécharger</value>
+  </data>
+  <data name="DeleteFile" xml:space="preserve">
+    <value>Supprimer le fichier</value>
+  </data>
+  <data name="DeleteFileConfirm" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir supprimer "{0}" ? Cette action ne peut pas être annulée.</value>
+  </data>
+  <data name="DeclineFile" xml:space="preserve">
+    <value>Refuser le fichier</value>
+  </data>
+  <data name="AboutToDecline" xml:space="preserve">
+    <value>Vous êtes sur le point de refuser :</value>
+  </data>
+  <data name="ReasonOptional" xml:space="preserve">
+    <value>Raison (optionnel)</value>
+  </data>
+  <data name="DeclineReasonPlaceholder" xml:space="preserve">
+    <value>Indiquez une raison pour refuser ce fichier...</value>
+  </data>
+</root>

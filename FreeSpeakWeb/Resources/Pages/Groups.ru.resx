@@ -154,4 +154,10 @@
   <data name="NoSuggestions" xml:space="preserve">
     <value>На данный момент нет рекомендаций групп.</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>Сообщено</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>Этот пост был сообщен модераторам и ожидает проверки.</value>
+  </data>
 </root>

@@ -130,4 +130,19 @@
   <data name="IsClosedHelp" xml:space="preserve">
     <value>Предупреждение: Закрытие группы необратимо. После закрытия никакие изменения невозможны, даже для администраторов.</value>
   </data>
+  <data name="FileUploadSection" xml:space="preserve">
+    <value>Обмен файлами</value>
+  </data>
+  <data name="EnableFileUploads" xml:space="preserve">
+    <value>Включить загрузку файлов</value>
+  </data>
+  <data name="EnableFileUploadsHelp" xml:space="preserve">
+    <value>Разрешить участникам загружать и делиться файлами с группой.</value>
+  </data>
+  <data name="RequiresFileApproval" xml:space="preserve">
+    <value>Требуется одобрение файлов</value>
+  </data>
+  <data name="RequiresFileApprovalHelp" xml:space="preserve">
+    <value>Загруженные файлы должны быть одобрены модератором, прежде чем они станут видимыми другим участникам.</value>
+  </data>
 </root>

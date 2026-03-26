@@ -154,4 +154,10 @@
   <data name="NoSuggestions" xml:space="preserve">
     <value>لا توجد اقتراحات مجموعات متاحة حالياً.</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>تم الإبلاغ</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>تم الإبلاغ عن هذا المنشور للمشرفين وهو قيد المراجعة.</value>
+  </data>
 </root>

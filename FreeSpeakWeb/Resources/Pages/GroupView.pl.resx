@@ -139,4 +139,19 @@
   <data name="YourPosts" xml:space="preserve">
     <value>Twoje posty</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>Zgłoszono</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>Ten post został zgłoszony moderatorom i oczekuje na przegląd.</value>
+  </data>
+  <data name="GroupInactiveTitle" xml:space="preserve">
+    <value>Grupa obecnie nieaktywna</value>
+  </data>
+  <data name="GroupInactiveMessage" xml:space="preserve">
+    <value>Ta grupa nie jest obecnie aktywna. Publikowanie i przeglądanie postów nie jest dostępne w tej chwili. Sprawdź ponownie później lub skontaktuj się z administratorami grupy, aby uzyskać więcej informacji.</value>
+  </data>
+  <data name="Files" xml:space="preserve">
+    <value>Pliki</value>
+  </data>
 </root>

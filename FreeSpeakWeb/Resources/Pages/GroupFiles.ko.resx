@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="LoadingFiles" xml:space="preserve">
+    <value>파일 로드 중...</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>그룹을 찾을 수 없습니다</value>
+  </data>
+  <data name="GroupNotFoundMessage" xml:space="preserve">
+    <value>찾고 있는 그룹이 존재하지 않거나 접근 권한이 없습니다.</value>
+  </data>
+  <data name="GoToGroups" xml:space="preserve">
+    <value>그룹으로 이동</value>
+  </data>
+  <data name="AccessDenied" xml:space="preserve">
+    <value>접근 거부</value>
+  </data>
+  <data name="MustBeMemberToViewFiles" xml:space="preserve">
+    <value>파일을 보려면 이 그룹의 회원이어야 합니다.</value>
+  </data>
+  <data name="BackToGroup" xml:space="preserve">
+    <value>그룹으로 돌아가기</value>
+  </data>
+  <data name="PageTitle" xml:space="preserve">
+    <value>그룹 파일</value>
+  </data>
+  <data name="Groups" xml:space="preserve">
+    <value>그룹</value>
+  </data>
+  <data name="Files" xml:space="preserve">
+    <value>파일</value>
+  </data>
+  <data name="UploadFile" xml:space="preserve">
+    <value>파일 업로드</value>
+  </data>
+  <data name="TotalFiles" xml:space="preserve">
+    <value>전체 파일</value>
+  </data>
+  <data name="ApprovedFiles" xml:space="preserve">
+    <value>승인된 파일</value>
+  </data>
+  <data name="PendingFiles" xml:space="preserve">
+    <value>대기 중인 파일</value>
+  </data>
+  <data name="TotalStorage" xml:space="preserve">
+    <value>총 저장 용량</value>
+  </data>
+  <data name="SearchFiles" xml:space="preserve">
+    <value>파일 검색...</value>
+  </data>
+  <data name="AllFiles" xml:space="preserve">
+    <value>모든 파일</value>
+  </data>
+  <data name="MyFiles" xml:space="preserve">
+    <value>내 파일</value>
+  </data>
+  <data name="PendingApproval" xml:space="preserve">
+    <value>승인 대기 중</value>
+  </data>
+  <data name="NoFilesYet" xml:space="preserve">
+    <value>아직 업로드된 파일이 없습니다.</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>대기 중</value>
+  </data>
+  <data name="Declined" xml:space="preserve">
+    <value>거부됨</value>
+  </data>
+  <data name="Scanning" xml:space="preserve">
+    <value>검사 중</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>다운로드</value>
+  </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>더 보기</value>
+  </data>
+  <data name="SelectFile" xml:space="preserve">
+    <value>파일 선택</value>
+  </data>
+  <data name="MaxFileSize50MB" xml:space="preserve">
+    <value>최대 파일 크기: 50 MB</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>설명</value>
+  </data>
+  <data name="Optional" xml:space="preserve">
+    <value>선택사항</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>업로드</value>
+  </data>
+  <data name="ConfirmDelete" xml:space="preserve">
+    <value>삭제 확인</value>
+  </data>
+  <data name="ConfirmDeleteMessage" xml:space="preserve">
+    <value>이 파일을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>삭제</value>
+  </data>
+  <data name="DeclineFile" xml:space="preserve">
+    <value>파일 거부</value>
+  </data>
+  <data name="DeclineReason" xml:space="preserve">
+    <value>거부 사유</value>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>거부</value>
+  </data>
+</root>

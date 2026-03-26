@@ -130,4 +130,19 @@
   <data name="IsClosedHelp" xml:space="preserve">
     <value>Ostrzeżenie: Zamknięcie grupy jest trwałe. Po zamknięciu nie można dokonywać żadnych zmian, nawet przez administratorów.</value>
   </data>
+  <data name="FileUploadSection" xml:space="preserve">
+    <value>Udostępnianie plików</value>
+  </data>
+  <data name="EnableFileUploads" xml:space="preserve">
+    <value>Włącz przesyłanie plików</value>
+  </data>
+  <data name="EnableFileUploadsHelp" xml:space="preserve">
+    <value>Zezwól członkom na przesyłanie i udostępnianie plików grupie.</value>
+  </data>
+  <data name="RequiresFileApproval" xml:space="preserve">
+    <value>Wymaga zatwierdzenia plików</value>
+  </data>
+  <data name="RequiresFileApprovalHelp" xml:space="preserve">
+    <value>Przesłane pliki muszą zostać zatwierdzone przez moderatora, zanim będą widoczne dla innych członków.</value>
+  </data>
 </root>

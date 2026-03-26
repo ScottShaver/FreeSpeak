@@ -105,6 +105,34 @@
                         </div>
 
                         <hr class="my-4" />
+                        <h6 class="text-muted mb-3">
+                            <i class="bi bi-folder2 me-1"></i>@Localizer["FileUploadSection"]
+                        </h6>
+
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enableFileUploads" @bind="enableFileUploads" />
+                                <label class="form-check-label" for="enableFileUploads">
+                                    <i class="bi bi-upload me-1"></i>@Localizer["EnableFileUploads"]
+                                </label>
+                                <div class="form-text">@Localizer["EnableFileUploadsHelp"]</div>
+                            </div>
+                        </div>
+
+                        @if (enableFileUploads)
+                        {
+                            <div class="mb-3 ms-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="requiresFileApproval" @bind="requiresFileApproval" />
+                                    <label class="form-check-label" for="requiresFileApproval">
+                                        <i class="bi bi-hourglass-split me-1"></i>@Localizer["RequiresFileApproval"]
+                                    </label>
+                                    <div class="form-text">@Localizer["RequiresFileApprovalHelp"]</div>
+                                </div>
+                            </div>
+                        }
+
+                        <hr class="my-4" />
                         <h6 class="text-muted mb-3">@Localizer["GroupStatusSection"]</h6>
 
                         <div class="mb-3">
@@ -196,6 +224,8 @@
     private bool requireAcceptRules;
     private bool requiresPostApproval;
     private bool enablePointsSystem;
+    private bool enableFileUploads;
+    private bool requiresFileApproval;
     private bool isActive;
     private bool isClosed;
 
@@ -219,6 +249,8 @@
             requireAcceptRules = Group.RequireAcceptRules;
             requiresPostApproval = Group.RequiresPostApproval;
             enablePointsSystem = Group.EnablePointsSystem;
+            enableFileUploads = Group.EnableFileUploads;
+            requiresFileApproval = Group.RequiresFileApproval;
             isActive = Group.IsActive;
             isClosed = Group.IsClosed;
         }
@@ -286,6 +318,8 @@
                 requireAcceptRules: requireAcceptRules,
                 requiresPostApproval: requiresPostApproval,
                 enablePointsSystem: enablePointsSystem,
+                enableFileUploads: enableFileUploads,
+                requiresFileApproval: requiresFileApproval,
                 isActive: isActive,
                 isClosed: isClosed
             );
@@ -304,6 +338,8 @@
                 Group.RequireAcceptRules = requireAcceptRules;
                 Group.RequiresPostApproval = requiresPostApproval;
                 Group.EnablePointsSystem = enablePointsSystem;
+                Group.EnableFileUploads = enableFileUploads;
+                Group.RequiresFileApproval = requiresFileApproval;
                 Group.IsActive = isActive;
                 Group.IsClosed = isClosed;
 

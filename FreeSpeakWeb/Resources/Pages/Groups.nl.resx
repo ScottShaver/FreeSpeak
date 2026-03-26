@@ -154,4 +154,10 @@
   <data name="NoSuggestions" xml:space="preserve">
     <value>Momenteel geen groepssuggesties beschikbaar.</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>Gerapporteerd</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>Dit bericht is gemeld bij de moderators en wacht op beoordeling.</value>
+  </data>
 </root>

@@ -154,4 +154,10 @@
   <data name="NoSuggestions" xml:space="preserve">
     <value>目前没有群组推荐。</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>已报告</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>此帖子已报告给版主，正在等待审核。</value>
+  </data>
 </root>

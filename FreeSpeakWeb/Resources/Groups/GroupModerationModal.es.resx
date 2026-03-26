@@ -277,4 +277,79 @@
   <data name="DeclinePostTooltip" xml:space="preserve">
     <value>Rechazar esta publicación - el autor puede editar y volver a enviar</value>
   </data>
+  <data name="View" xml:space="preserve">
+    <value>Ver</value>
+  </data>
+  <data name="ViewPostTooltip" xml:space="preserve">
+    <value>Ver el contenido completo de la publicación</value>
+  </data>
+  <data name="ViewReportTooltip" xml:space="preserve">
+    <value>Ver los detalles completos del informe</value>
+  </data>
+  <data name="Moderate" xml:space="preserve">
+    <value>Moderar</value>
+  </data>
+  <data name="ModerateTooltip" xml:space="preserve">
+    <value>Revisar y tomar acción de moderación sobre este informe</value>
+  </data>
+  <data name="CannotViewComment" xml:space="preserve">
+    <value>No se pueden ver los comentarios directamente. Use Moderar para revisar el informe.</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>No se pudo encontrar la publicación reportada.</value>
+  </data>
+  <data name="ErrorLoadingPost" xml:space="preserve">
+    <value>Ocurrió un error al cargar la publicación.</value>
+  </data>
+  <data name="AttachedImages" xml:space="preserve">
+    <value>Imágenes adjuntas</value>
+  </data>
+  <data name="PendingFiles" xml:space="preserve">
+    <value>Archivos pendientes</value>
+  </data>
+  <data name="PendingFilesDescription" xml:space="preserve">
+    <value>Revisar archivos cargados que esperan aprobación antes de ser visibles para los miembros del grupo.</value>
+  </data>
+  <data name="NoPendingFiles" xml:space="preserve">
+    <value>No hay archivos pendientes. ¡Todas las cargas de archivos han sido revisadas!</value>
+  </data>
+  <data name="ShowingPendingFiles" xml:space="preserve">
+    <value>Mostrando {0} archivo(s) pendiente(s)</value>
+  </data>
+  <data name="UploadedBy" xml:space="preserve">
+    <value>Cargado por</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>Archivo aprobado y ahora visible para los miembros del grupo.</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>Archivo rechazado y eliminado.</value>
+  </data>
+  <data name="ErrorLoadingFiles" xml:space="preserve">
+    <value>Ocurrió un error al cargar los archivos pendientes.</value>
+  </data>
+  <data name="ErrorProcessingFile" xml:space="preserve">
+    <value>Ocurrió un error al procesar el archivo.</value>
+  </data>
+  <data name="ApproveTooltip" xml:space="preserve">
+    <value>Aprobar este archivo y hacerlo visible para todos los miembros</value>
+  </data>
+  <data name="DeclineTooltip" xml:space="preserve">
+    <value>Rechazar este archivo - será eliminado</value>
+  </data>
+  <data name="DeclineFile" xml:space="preserve">
+    <value>Rechazar archivo</value>
+  </data>
+  <data name="DeclineFileConfirmation" xml:space="preserve">
+    <value>Está a punto de rechazar: {0}</value>
+  </data>
+  <data name="DeclineReason" xml:space="preserve">
+    <value>Razón (opcional)</value>
+  </data>
+  <data name="DeclineReasonPlaceholder" xml:space="preserve">
+    <value>Proporcione una razón para rechazar este archivo...</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
 </root>

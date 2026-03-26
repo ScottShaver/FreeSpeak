@@ -82,7 +82,7 @@ namespace FreeSpeakWeb.Tests.Services
 
         private GroupBannedMemberService CreateGroupBannedMemberService(IDbContextFactory<ApplicationDbContext> dbFactory)
         {
-            return new GroupBannedMemberService(dbFactory, CreateMockLogger<GroupBannedMemberService>(), MockRepositories.CreateMockAuditLogRepository().Object);
+            return new GroupBannedMemberService(dbFactory, CreateMockLogger<GroupBannedMemberService>(), MockRepositories.CreateMockAuditLogRepository().Object, MockRepositories.CreateMockRoleService().Object);
         }
 
         #endregion

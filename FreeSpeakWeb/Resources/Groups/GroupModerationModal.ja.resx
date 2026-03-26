@@ -277,4 +277,79 @@
   <data name="DeclinePostTooltip" xml:space="preserve">
     <value>この投稿を却下 - 作成者は編集して再送信できます</value>
   </data>
+  <data name="View" xml:space="preserve">
+    <value>表示</value>
+  </data>
+  <data name="ViewPostTooltip" xml:space="preserve">
+    <value>投稿の全内容を表示</value>
+  </data>
+  <data name="ViewReportTooltip" xml:space="preserve">
+    <value>報告の詳細を表示</value>
+  </data>
+  <data name="Moderate" xml:space="preserve">
+    <value>モデレート</value>
+  </data>
+  <data name="ModerateTooltip" xml:space="preserve">
+    <value>この報告を確認してモデレーションアクションを実行</value>
+  </data>
+  <data name="CannotViewComment" xml:space="preserve">
+    <value>コメントを直接表示できません。報告を確認するにはモデレートを使用してください。</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>報告された投稿が見つかりませんでした。</value>
+  </data>
+  <data name="ErrorLoadingPost" xml:space="preserve">
+    <value>投稿の読み込み中にエラーが発生しました。</value>
+  </data>
+  <data name="AttachedImages" xml:space="preserve">
+    <value>添付画像</value>
+  </data>
+  <data name="PendingFiles" xml:space="preserve">
+    <value>保留中のファイル</value>
+  </data>
+  <data name="PendingFilesDescription" xml:space="preserve">
+    <value>グループメンバーに表示される前に承認待ちのアップロードファイルを確認します。</value>
+  </data>
+  <data name="NoPendingFiles" xml:space="preserve">
+    <value>保留中のファイルはありません。すべてのファイルアップロードがレビューされました！</value>
+  </data>
+  <data name="ShowingPendingFiles" xml:space="preserve">
+    <value>{0}件の保留中のファイルを表示</value>
+  </data>
+  <data name="UploadedBy" xml:space="preserve">
+    <value>アップロード者</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>ファイルが承認され、グループメンバーに表示されるようになりました。</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>ファイルが拒否され、削除されました。</value>
+  </data>
+  <data name="ErrorLoadingFiles" xml:space="preserve">
+    <value>保留中のファイルの読み込み中にエラーが発生しました。</value>
+  </data>
+  <data name="ErrorProcessingFile" xml:space="preserve">
+    <value>ファイルの処理中にエラーが発生しました。</value>
+  </data>
+  <data name="ApproveTooltip" xml:space="preserve">
+    <value>このファイルを承認し、すべてのメンバーに表示する</value>
+  </data>
+  <data name="DeclineTooltip" xml:space="preserve">
+    <value>このファイルを拒否 - 削除されます</value>
+  </data>
+  <data name="DeclineFile" xml:space="preserve">
+    <value>ファイルを拒否</value>
+  </data>
+  <data name="DeclineFileConfirmation" xml:space="preserve">
+    <value>拒否しようとしています: {0}</value>
+  </data>
+  <data name="DeclineReason" xml:space="preserve">
+    <value>理由（任意）</value>
+  </data>
+  <data name="DeclineReasonPlaceholder" xml:space="preserve">
+    <value>このファイルを拒否する理由を入力してください...</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
 </root>

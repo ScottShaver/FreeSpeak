@@ -89,10 +89,15 @@ namespace FreeSpeakWeb.Tests.Components
                 MockBehavior.Loose,
                 new object[] { null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null!, null! });
 
+            // Create GroupPointsService
+            var mockGroupPointsLogger = new Mock<ILogger<GroupPointsService>>();
+            var groupPointsService = new GroupPointsService(mockDbContextFactory.Object, mockGroupPointsLogger.Object);
+
             Services.AddSingleton(postService);
             Services.AddSingleton(mockGroupPostService.Object);
             Services.AddSingleton(siteSettingsOptions);
             Services.AddSingleton(userPreferenceService);
+            Services.AddSingleton(groupPointsService);
             Services.AddSingleton(MockRepositories.CreateMockAuditLogRepository().Object);
 
             // Register FeedArticle localizer mock
@@ -127,6 +132,18 @@ namespace FreeSpeakWeb.Tests.Components
             mockFeedArticleActionsLocalizer.Setup(l => l[It.IsAny<string>()])
                 .Returns((string key) => new LocalizedString(key, key));
             Services.AddSingleton(mockFeedArticleActionsLocalizer.Object);
+
+            // Register MultiLineCommentEditor localizer mock
+            var mockMultiLineCommentEditorLocalizer = new Mock<IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.MultiLineCommentEditor>>();
+            mockMultiLineCommentEditorLocalizer.Setup(l => l[It.IsAny<string>()])
+                .Returns((string key) => new LocalizedString(key, key));
+            Services.AddSingleton(mockMultiLineCommentEditorLocalizer.Object);
+
+            // Register EmojiPicker localizer mock
+            var mockEmojiPickerLocalizer = new Mock<IStringLocalizer<FreeSpeakWeb.Resources.Shared.EmojiPicker>>();
+            mockEmojiPickerLocalizer.Setup(l => l[It.IsAny<string>()])
+                .Returns((string key) => new LocalizedString(key, key));
+            Services.AddSingleton(mockEmojiPickerLocalizer.Object);
 
             // Register TimestampFormattingService required by child components
             Services.AddSingleton<TimestampFormattingService>();

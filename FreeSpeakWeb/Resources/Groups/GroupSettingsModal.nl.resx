@@ -130,4 +130,19 @@
   <data name="IsClosedHelp" xml:space="preserve">
     <value>Waarschuwing: Het sluiten van een groep is permanent. Er kunnen geen wijzigingen worden aangebracht na sluiting, zelfs niet door beheerders.</value>
   </data>
+  <data name="FileUploadSection" xml:space="preserve">
+    <value>Bestanden delen</value>
+  </data>
+  <data name="EnableFileUploads" xml:space="preserve">
+    <value>Bestand uploaden inschakelen</value>
+  </data>
+  <data name="EnableFileUploadsHelp" xml:space="preserve">
+    <value>Sta leden toe om bestanden te uploaden en te delen met de groep.</value>
+  </data>
+  <data name="RequiresFileApproval" xml:space="preserve">
+    <value>Bestandsgoedkeuring vereist</value>
+  </data>
+  <data name="RequiresFileApprovalHelp" xml:space="preserve">
+    <value>Geüploade bestanden moeten worden goedgekeurd door een moderator voordat ze zichtbaar zijn voor andere leden.</value>
+  </data>
 </root>

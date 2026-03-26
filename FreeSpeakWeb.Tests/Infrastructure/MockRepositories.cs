@@ -2,6 +2,7 @@ using FreeSpeakWeb.Data;
 using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services;
+using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -398,6 +399,40 @@ namespace FreeSpeakWeb.Tests.Infrastructure
 
             mock.Setup(r => r.SearchAuditLogsAsync(It.IsAny<string?>(), It.IsAny<DateTime?>(), It.IsAny<DateTime?>()))
                 .ReturnsAsync(new List<AuditLog>());
+
+            return mock;
+        }
+
+        /// <summary>
+        /// Creates a mock IRoleService for testing.
+        /// By default, returns false for IsSystemAdministratorAsync. Configure specific behaviors in individual tests.
+        /// </summary>
+        public static Mock<IRoleService> CreateMockRoleService()
+        {
+            var mock = new Mock<IRoleService>();
+
+            // Setup default behaviors - user is NOT a system administrator
+            mock.Setup(r => r.IsSystemAdministratorAsync(It.IsAny<string>()))
+                .ReturnsAsync(false);
+
+            // Setup other methods with default implementations
+            mock.Setup(r => r.GetAllRolesAsync())
+                .ReturnsAsync(new List<string>());
+
+            mock.Setup(r => r.GetUserRolesAsync(It.IsAny<string>()))
+                .ReturnsAsync(new List<string>());
+
+            mock.Setup(r => r.AddUserToRoleAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(true);
+
+            mock.Setup(r => r.RemoveUserFromRoleAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(true);
+
+            mock.Setup(r => r.RoleExistsAsync(It.IsAny<string>()))
+                .ReturnsAsync(false);
+
+            mock.Setup(r => r.IsUserInRoleAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(false);
 
             return mock;
         }

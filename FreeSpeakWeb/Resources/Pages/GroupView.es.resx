@@ -139,4 +139,19 @@
   <data name="YourPosts" xml:space="preserve">
     <value>Tus publicaciones</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>Reportado</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>Esta publicación ha sido reportada a los moderadores y está pendiente de revisión.</value>
+  </data>
+  <data name="GroupInactiveTitle" xml:space="preserve">
+    <value>Grupo actualmente inactivo</value>
+  </data>
+  <data name="GroupInactiveMessage" xml:space="preserve">
+    <value>Este grupo no está activo actualmente. Publicar y ver publicaciones no está disponible en este momento. Por favor, vuelva más tarde o contacte a los administradores del grupo para obtener más información.</value>
+  </data>
+  <data name="Files" xml:space="preserve">
+    <value>Archivos</value>
+  </data>
 </root>

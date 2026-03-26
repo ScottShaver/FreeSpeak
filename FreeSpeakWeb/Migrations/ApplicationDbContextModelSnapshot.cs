@@ -296,6 +296,9 @@ namespace FreeSpeakWeb.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
+                    b.Property<bool>("EnableFileUploads")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("EnablePointsSystem")
                         .HasColumnType("boolean");
 
@@ -327,6 +330,9 @@ namespace FreeSpeakWeb.Migrations
                         .HasColumnType("character varying(200)");
 
                     b.Property<bool>("RequireAcceptRules")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("RequiresFileApproval")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("RequiresJoinApproval")
@@ -462,6 +468,92 @@ namespace FreeSpeakWeb.Migrations
                     b.HasIndex("GroupId", "Status");
 
                     b.ToTable("GroupContentReports");
+                });
+
+            modelBuilder.Entity("FreeSpeakWeb.Data.GroupFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("DeclinedReason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<int>("DownloadCount")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("FileSize")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("OriginalFileName")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime?>("ReviewedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ReviewedById")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("StoredFileName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UploaderId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("VirusScanCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("VirusScanCompletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool?>("VirusScanPassed")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("ReviewedById");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("UploadedAt");
+
+                    b.HasIndex("UploaderId");
+
+                    b.HasIndex("GroupId", "OriginalFileName")
+                        .HasDatabaseName("IX_GroupFiles_GroupId_OriginalFileName");
+
+                    b.HasIndex("GroupId", "Status", "UploadedAt")
+                        .HasDatabaseName("IX_GroupFiles_GroupId_Status_UploadedAt");
+
+                    b.ToTable("GroupFiles");
                 });
 
             modelBuilder.Entity("FreeSpeakWeb.Data.GroupJoinRequest", b =>
@@ -1372,6 +1464,32 @@ namespace FreeSpeakWeb.Migrations
                     b.Navigation("Reviewer");
 
                     b.Navigation("ViolatedRule");
+                });
+
+            modelBuilder.Entity("FreeSpeakWeb.Data.GroupFile", b =>
+                {
+                    b.HasOne("FreeSpeakWeb.Data.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FreeSpeakWeb.Data.ApplicationUser", "ReviewedBy")
+                        .WithMany()
+                        .HasForeignKey("ReviewedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("FreeSpeakWeb.Data.ApplicationUser", "Uploader")
+                        .WithMany()
+                        .HasForeignKey("UploaderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("ReviewedBy");
+
+                    b.Navigation("Uploader");
                 });
 
             modelBuilder.Entity("FreeSpeakWeb.Data.GroupJoinRequest", b =>
