@@ -1,0 +1,411 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Services.Abstractions
+@using FreeSpeakWeb.Components.Shared
+@using Microsoft.AspNetCore.Identity
+
+@inject GroupBannedMemberService GroupBannedMemberService
+@inject GroupMemberService GroupMemberService
+@inject UserManager<ApplicationUser> UserManager
+@inject UserPreferenceService UserPreferenceService
+@inject IRoleService RoleService
+@inject ILogger<BannedMembersTab> Logger
+
+<div class="banned-members-tab">
+    <!-- Search Bar -->
+    <div class="mb-3">
+        <input type="text" 
+               class="form-control" 
+               placeholder="🔍 Search banned members..." 
+               @bind="searchQuery" 
+               @bind:event="oninput"
+               @onkeyup="OnSearchKeyUp" />
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading banned members...</span>
+            </div>
+        </div>
+    }
+    else if (!bannedMembers.Any())
+    {
+        <div class="alert alert-success">
+            <i class="bi bi-check-circle me-2"></i>No banned members. This group has a clean record!
+        </div>
+    }
+    else
+    {
+        <div class="banned-list-container">
+            <div class="banned-list">
+                @foreach (var banned in filteredBannedMembers)
+                {
+                    var isExpanded = expandedMemberId == banned.UserId;
+                    var isUnbanning = unbanningMemberId == banned.UserId;
+                    var memberDisplayName = memberNames.ContainsKey(banned.UserId) ? memberNames[banned.UserId] : "Unknown";
+
+                    <div class="banned-item @(isExpanded ? "expanded" : "")" @key="banned.UserId">
+                        <div class="banned-header" @onclick="() => ToggleMember(banned.UserId)">
+                            <div class="banned-info">
+                                <UserAvatar 
+                                    ImageUrl="@banned.User?.ProfilePictureUrl" 
+                                    Name="@memberDisplayName"
+                                    Size="md"
+                                    CssClass="banned-avatar" />
+                                <div class="banned-details">
+                                    <div class="banned-name">
+                                        @memberDisplayName
+                                        <span class="badge bg-danger ms-2">Banned</span>
+                                    </div>
+                                    <div class="banned-stats text-muted small">
+                                        Banned on: @banned.BannedAt.ToString("MMM dd, yyyy 'at' h:mm tt")
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="expand-icon">
+                                <i class="bi bi-chevron-@(isExpanded ? "up" : "down")"></i>
+                            </div>
+                        </div>
+
+                        @if (isExpanded)
+                        {
+                            <div class="banned-actions-panel">
+                                @if (!string.IsNullOrEmpty(errorMessage) && errorMemberId == banned.UserId)
+                                {
+                                    <div class="alert alert-danger alert-sm mb-3" role="alert">
+                                        <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                                    </div>
+                                }
+
+                                @if (!string.IsNullOrEmpty(successMessage) && successMemberId == banned.UserId)
+                                {
+                                    <div class="alert alert-success alert-sm mb-3" role="alert">
+                                        <i class="bi bi-check-circle me-2"></i>@successMessage
+                                    </div>
+                                }
+
+                                <div class="action-section">
+                                    <h6 class="section-title">Unban Member</h6>
+                                    <div class="unban-controls">
+                                        <p class="text-muted small mb-2">
+                                            Unbanning this member will allow them to rejoin the group. They will need to send a new join request or be re-invited.
+                                        </p>
+                                        <button type="button" 
+                                                class="btn btn-success btn-sm"
+                                                @onclick="@(async () => await HandleUnbanMember(banned.UserId))"
+                                                disabled="@(isUnbanning || !CanUnbanMember)">
+                                            <i class="bi bi-check-circle me-1"></i>Unban Member
+                                        </button>
+                                        @if (!CanUnbanMember)
+                                        {
+                                            <small class="text-muted d-block mt-1">
+                                                You must be an admin or moderator to unban members
+                                            </small>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        @if (hasMore || isLoadingMore)
+        {
+            <div class="pagination-footer">
+                <button type="button" 
+                        class="btn btn-outline-primary btn-load-more"
+                        @onclick="LoadMoreBannedMembers"
+                        disabled="@isLoadingMore">
+                    @if (isLoadingMore)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span>Loading...</span>
+                    }
+                    else
+                    {
+                        <i class="bi bi-arrow-down-circle me-2"></i>
+                        <span>Load More Banned Members</span>
+                    }
+                </button>
+                <div class="pagination-info text-muted small mt-2">
+                    Showing @bannedMembers.Count banned member@(bannedMembers.Count != 1 ? "s" : "")
+                    @if (hasMore)
+                    {
+                        <text> • More available</text>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    /// <summary>
+    /// The group being managed.
+    /// </summary>
+    [Parameter]
+    public Group Group { get; set; } = null!;
+
+    /// <summary>
+    /// The current user's ID.
+    /// </summary>
+    [Parameter]
+    public string CurrentUserId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Callback invoked when a banned member action is performed.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnBannedMemberActionPerformed { get; set; }
+
+    private List<GroupBannedMember> bannedMembers = new();
+    private Dictionary<string, string> memberNames = new();
+    private string searchQuery = string.Empty;
+    private bool isLoading = false;
+    private bool isLoadingMore = false;
+    private int currentPage = 0;
+    private const int pageSize = 20;
+    private bool hasMore = false;
+    private System.Threading.Timer? searchDebounceTimer;
+
+    private string? expandedMemberId = null;
+    private string? unbanningMemberId = null;
+    private string? errorMessage = null;
+    private string? errorMemberId = null;
+    private string? successMessage = null;
+    private string? successMemberId = null;
+
+    private bool IsCurrentUserAdmin { get; set; } = false;
+    private bool IsCurrentUserModerator { get; set; } = false;
+    private bool IsSystemAdmin { get; set; } = false;
+
+    private bool CanUnbanMember => IsCurrentUserAdmin || IsCurrentUserModerator || IsSystemAdmin;
+
+    private IEnumerable<GroupBannedMember> filteredBannedMembers => string.IsNullOrWhiteSpace(searchQuery)
+        ? bannedMembers
+        : bannedMembers.Where(m => 
+        {
+            var displayName = memberNames.ContainsKey(m.UserId) ? memberNames[m.UserId] : string.Empty;
+            return displayName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase);
+        });
+
+    /// <summary>
+    /// Initializes the component and loads banned members.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        // Check if user is system administrator
+        IsSystemAdmin = await RoleService.IsSystemAdministratorAsync(CurrentUserId);
+
+        // Check current user's roles in the group
+        IsCurrentUserAdmin = await GroupMemberService.IsAdminAsync(Group.Id, CurrentUserId);
+        IsCurrentUserModerator = await GroupMemberService.IsModeratorAsync(Group.Id, CurrentUserId);
+
+        // Force re-render after permissions are loaded
+        StateHasChanged();
+
+        await LoadBannedMembers();
+    }
+
+    /// <summary>
+    /// Loads the banned members.
+    /// </summary>
+    private async Task LoadBannedMembers()
+    {
+        isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            currentPage = 0;
+            var skip = currentPage * pageSize;
+            bannedMembers = await GroupBannedMemberService.GetBannedMembersAsync(Group.Id, skip, pageSize);
+            hasMore = bannedMembers.Count >= pageSize;
+
+            // Load formatted display names for all banned members
+            await LoadMemberNames(bannedMembers);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading banned members for group {GroupId}", Group.Id);
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Loads more banned members for pagination.
+    /// </summary>
+    private async Task LoadMoreBannedMembers()
+    {
+        isLoadingMore = true;
+        StateHasChanged();
+
+        try
+        {
+            currentPage++;
+            var skip = currentPage * pageSize;
+            var newBannedMembers = await GroupBannedMemberService.GetBannedMembersAsync(Group.Id, skip, pageSize);
+            hasMore = newBannedMembers.Count >= pageSize;
+
+            bannedMembers.AddRange(newBannedMembers);
+
+            // Load formatted display names for new members
+            await LoadMemberNames(newBannedMembers);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading more banned members for group {GroupId}", Group.Id);
+        }
+        finally
+        {
+            isLoadingMore = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Loads formatted display names for a list of banned members.
+    /// </summary>
+    /// <param name="groupBannedMembers">The list of banned members to load names for.</param>
+    private async Task LoadMemberNames(List<GroupBannedMember> groupBannedMembers)
+    {
+        try
+        {
+            // Collect user details for batch formatting
+            var userDetails = new Dictionary<string, (string firstName, string lastName, string userName)>();
+
+            foreach (var member in groupBannedMembers.Where(m => m.User != null && !memberNames.ContainsKey(m.UserId)))
+            {
+                userDetails[member.UserId] = (
+                    member.User!.FirstName,
+                    member.User.LastName,
+                    member.User.UserName ?? "Unknown"
+                );
+            }
+
+            if (userDetails.Any())
+            {
+                // Batch format all display names
+                var formattedNames = await UserPreferenceService.FormatUserDisplayNamesAsync(userDetails);
+
+                foreach (var kvp in formattedNames)
+                {
+                    memberNames[kvp.Key] = kvp.Value;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading member names for banned members in group {GroupId}", Group.Id);
+        }
+    }
+
+    /// <summary>
+    /// Handles search input with debouncing.
+    /// </summary>
+    /// <param name="e">The keyboard event arguments.</param>
+    private void OnSearchKeyUp(KeyboardEventArgs e)
+    {
+        searchDebounceTimer?.Dispose();
+        searchDebounceTimer = new System.Threading.Timer(_ =>
+        {
+            InvokeAsync(StateHasChanged);
+        }, null, 300, Timeout.Infinite);
+    }
+
+    /// <summary>
+    /// Toggles the expanded state of a banned member item.
+    /// </summary>
+    /// <param name="userId">The user ID of the banned member to toggle.</param>
+    private void ToggleMember(string userId)
+    {
+        if (expandedMemberId == userId)
+        {
+            expandedMemberId = null;
+        }
+        else
+        {
+            expandedMemberId = userId;
+            // Clear messages when expanding a different member
+            if (errorMemberId != userId)
+            {
+                errorMessage = null;
+                errorMemberId = null;
+            }
+            if (successMemberId != userId)
+            {
+                successMessage = null;
+                successMemberId = null;
+            }
+        }
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles unbanning a member from the group.
+    /// </summary>
+    /// <param name="userId">The user ID of the member to unban.</param>
+    private async Task HandleUnbanMember(string userId)
+    {
+        ClearMessages();
+        unbanningMemberId = userId;
+        StateHasChanged();
+
+        try
+        {
+            var result = await GroupBannedMemberService.UnbanUserAsync(Group.Id, userId, CurrentUserId);
+
+            if (result.Success)
+            {
+                // Remove from local list
+                bannedMembers.RemoveAll(m => m.UserId == userId);
+                expandedMemberId = null;
+
+                await OnBannedMemberActionPerformed.InvokeAsync();
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage ?? "An error occurred while unbanning the member.";
+                errorMemberId = userId;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error unbanning user {UserId} from group {GroupId}", userId, Group.Id);
+            errorMessage = "An error occurred while unbanning the member.";
+            errorMemberId = userId;
+        }
+        finally
+        {
+            unbanningMemberId = null;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Clears all error and success messages.
+    /// </summary>
+    private void ClearMessages()
+    {
+        errorMessage = null;
+        errorMemberId = null;
+        successMessage = null;
+        successMemberId = null;
+    }
+
+    /// <summary>
+    /// Disposes resources used by the component.
+    /// </summary>
+    public void Dispose()
+    {
+        searchDebounceTimer?.Dispose();
+    }
+}

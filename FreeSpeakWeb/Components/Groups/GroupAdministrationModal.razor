@@ -57,24 +57,10 @@
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link @(activeTab == "roles" ? "active" : "")" 
-                                    type="button" 
-                                    @onclick="@(() => SetActiveTab("roles"))">
-                                <i class="bi bi-person-badge me-1"></i>@Localizer["RoleManagement"]
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
                             <button class="nav-link @(activeTab == "banned" ? "active" : "")" 
                                     type="button" 
                                     @onclick="@(() => SetActiveTab("banned"))">
                                 <i class="bi bi-slash-circle me-1"></i>@Localizer["BannedMembers"]
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link @(activeTab == "settings" ? "active" : "")" 
-                                    type="button" 
-                                    @onclick="@(() => SetActiveTab("settings"))">
-                                <i class="bi bi-gear me-1"></i>@Localizer["GroupSettings"]
                             </button>
                         </li>
                     </ul>
@@ -108,34 +94,13 @@
                                     OnRequestProcessed="@HandleRequestProcessed" />
                             </div>
                         }
-                        else if (activeTab == "roles")
-                        {
-                            <div class="tab-pane fade show active">
-                                <h6 class="mb-3">@Localizer["RoleManagementDescription"]</h6>
-                                <div class="alert alert-info">
-                                    <i class="bi bi-info-circle me-2"></i>@Localizer["RoleManagementPlaceholder"]
-                                </div>
-                                <!-- Future: Assign admin/moderator roles to members -->
-                            </div>
-                        }
                         else if (activeTab == "banned")
                         {
                             <div class="tab-pane fade show active">
-                                <h6 class="mb-3">@Localizer["BannedMembersDescription"]</h6>
-                                <div class="alert alert-info">
-                                    <i class="bi bi-info-circle me-2"></i>@Localizer["BannedMembersPlaceholder"]
-                                </div>
-                                <!-- Future: List of banned members with unban option -->
-                            </div>
-                        }
-                        else if (activeTab == "settings")
-                        {
-                            <div class="tab-pane fade show active">
-                                <h6 class="mb-3">@Localizer["GroupSettingsDescription"]</h6>
-                                <div class="alert alert-info">
-                                    <i class="bi bi-info-circle me-2"></i>@Localizer["GroupSettingsPlaceholder"]
-                                </div>
-                                <!-- Future: Advanced group settings (rules, visibility, etc.) -->
+                                <BannedMembersTab 
+                                    Group="@Group" 
+                                    CurrentUserId="@CurrentUserId" 
+                                    OnBannedMemberActionPerformed="@HandleBannedMemberActionPerformed" />
                             </div>
                         }
                     </div>
@@ -266,6 +231,14 @@
     /// Handles when a member management action is performed (role change, ban, remove).
     /// </summary>
     private async Task HandleMemberActionPerformed()
+    {
+        await OnAdministrationActionPerformed.InvokeAsync();
+    }
+
+    /// <summary>
+    /// Handles when a banned member action is performed (unban).
+    /// </summary>
+    private async Task HandleBannedMemberActionPerformed()
     {
         await OnAdministrationActionPerformed.InvokeAsync();
     }

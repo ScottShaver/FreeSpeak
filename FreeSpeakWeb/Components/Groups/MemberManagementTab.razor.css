@@ -2,6 +2,34 @@
     padding: 0;
 }
 
+.member-list-container {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.01);
+}
+
+.member-list-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.member-list-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+.member-list-container::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.member-list-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
 .member-list {
     display: flex;
     flex-direction: column;
@@ -197,6 +225,35 @@
     color: white;
     background-color: var(--bs-danger);
     border-color: var(--bs-danger);
+}
+
+/* Pagination footer */
+.pagination-footer {
+    margin-top: 1rem;
+    padding: 1rem;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.01);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.5rem;
+}
+
+.btn-load-more {
+    min-width: 180px;
+    font-weight: 500;
+}
+
+.pagination-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Responsive scrollable height */
+@media (max-width: 768px) {
+    .member-list-container {
+        max-height: 400px;
+    }
 }
 
 /* Form check switch styling */

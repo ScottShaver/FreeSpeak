@@ -38,15 +38,16 @@
     }
     else
     {
-        <div class="member-list">
-            @foreach (var member in filteredMembers)
-            {
-                var isExpanded = expandedMemberId == member.UserId;
-                var isSaving = savingMemberId == member.UserId;
-                var memberDisplayName = memberNames.ContainsKey(member.UserId) ? memberNames[member.UserId] : "Unknown";
-                var isGroupCreator = member.UserId == Group.CreatorId;
+        <div class="member-list-container">
+            <div class="member-list">
+                @foreach (var member in filteredMembers)
+                {
+                    var isExpanded = expandedMemberId == member.UserId;
+                    var isSaving = savingMemberId == member.UserId;
+                    var memberDisplayName = memberNames.ContainsKey(member.UserId) ? memberNames[member.UserId] : "Unknown";
+                    var isGroupCreator = member.UserId == Group.CreatorId;
 
-                <div class="member-item @(isExpanded ? "expanded" : "")" @key="member.UserId">
+                    <div class="member-item @(isExpanded ? "expanded" : "")" @key="member.UserId">
                     <div class="member-header" @onclick="() => ToggleMember(member.UserId)">
                         <div class="member-info">
                             <UserAvatar 
@@ -192,21 +193,34 @@
                     }
                 </div>
             }
+            </div>
         </div>
 
-        @if (hasMore)
+        @if (hasMore || isLoadingMore)
         {
-            <div class="text-center mt-3">
+            <div class="pagination-footer">
                 <button type="button" 
-                        class="btn btn-outline-primary"
+                        class="btn btn-outline-primary btn-load-more"
                         @onclick="LoadMoreMembers"
                         disabled="@isLoadingMore">
                     @if (isLoadingMore)
                     {
                         <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span>Loading...</span>
                     }
-                    Load More
+                    else
+                    {
+                        <i class="bi bi-arrow-down-circle me-2"></i>
+                        <span>Load More Members</span>
+                    }
                 </button>
+                <div class="pagination-info text-muted small mt-2">
+                    Showing @members.Count member@(members.Count != 1 ? "s" : "")
+                    @if (hasMore)
+                    {
+                        <text> • More available</text>
+                    }
+                </div>
             </div>
         }
     }

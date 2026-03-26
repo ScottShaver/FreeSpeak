@@ -21,7 +21,7 @@ namespace FreeSpeakWeb.Tests.Components
             // Register UserManager mock required by MultiLineCommentDisplay
             var mockUserManager = new Mock<UserManager<ApplicationUser>>(
                 Mock.Of<IUserStore<ApplicationUser>>(),
-                null!, null!, null!, null!, null!, null!, null!, null!, null!);
+                null!, null!, null!, null!, null!, null!, null!, null!);
             Services.AddSingleton(mockUserManager.Object);
 
             // Register MultiLineCommentDisplay localizer mock

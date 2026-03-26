@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -73,6 +74,16 @@ namespace FreeSpeakWeb.Tests.Infrastructure
             mock.Setup(x => x.LogActionAsync(It.IsAny<string>(), It.IsAny<ActionCategory>(), It.IsAny<object>()))
                 .Returns(Task.CompletedTask);
             return mock.Object;
+        }
+
+        /// <summary>
+        /// Creates a mock IRoleService for testing.
+        /// By default, returns false for IsSystemAdministratorAsync.
+        /// </summary>
+        /// <returns>A mock IRoleService.</returns>
+        protected IRoleService CreateMockRoleService()
+        {
+            return MockRepositories.CreateMockRoleService().Object;
         }
 
         public void Dispose()
