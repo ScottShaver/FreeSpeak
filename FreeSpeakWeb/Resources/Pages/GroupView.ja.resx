@@ -139,4 +139,16 @@
   <data name="YourPosts" xml:space="preserve">
     <value>あなたの投稿</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>報告済み</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>この投稿はモデレーターに報告され、レビュー待ちです。</value>
+  </data>
+  <data name="GroupInactiveTitle" xml:space="preserve">
+    <value>グループは現在非アクティブです</value>
+  </data>
+  <data name="GroupInactiveMessage" xml:space="preserve">
+    <value>このグループは現在アクティブではありません。投稿の作成と閲覧は現在利用できません。後でもう一度確認するか、グループ管理者に詳細をお問い合わせください。</value>
+  </data>
 </root>

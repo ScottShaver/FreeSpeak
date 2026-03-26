@@ -277,4 +277,31 @@
   <data name="DeclinePostTooltip" xml:space="preserve">
     <value>拒绝此帖子 - 作者可以编辑并重新提交</value>
   </data>
+  <data name="View" xml:space="preserve">
+    <value>查看</value>
+  </data>
+  <data name="ViewPostTooltip" xml:space="preserve">
+    <value>查看帖子完整内容</value>
+  </data>
+  <data name="ViewReportTooltip" xml:space="preserve">
+    <value>查看举报完整详情</value>
+  </data>
+  <data name="Moderate" xml:space="preserve">
+    <value>审核</value>
+  </data>
+  <data name="ModerateTooltip" xml:space="preserve">
+    <value>审核此举报并采取审核行动</value>
+  </data>
+  <data name="CannotViewComment" xml:space="preserve">
+    <value>无法直接查看评论。请使用审核来查看举报。</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>找不到被举报的帖子。</value>
+  </data>
+  <data name="ErrorLoadingPost" xml:space="preserve">
+    <value>加载帖子时发生错误。</value>
+  </data>
+  <data name="AttachedImages" xml:space="preserve">
+    <value>附加图片</value>
+  </data>
 </root>

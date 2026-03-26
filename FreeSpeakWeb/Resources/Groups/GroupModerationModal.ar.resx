@@ -277,4 +277,31 @@
   <data name="DeclinePostTooltip" xml:space="preserve">
     <value>رفض هذا المنشور - يمكن للكاتب التعديل وإعادة الإرسال</value>
   </data>
+  <data name="View" xml:space="preserve">
+    <value>عرض</value>
+  </data>
+  <data name="ViewPostTooltip" xml:space="preserve">
+    <value>عرض محتوى المنشور الكامل</value>
+  </data>
+  <data name="ViewReportTooltip" xml:space="preserve">
+    <value>عرض تفاصيل التقرير الكاملة</value>
+  </data>
+  <data name="Moderate" xml:space="preserve">
+    <value>إشراف</value>
+  </data>
+  <data name="ModerateTooltip" xml:space="preserve">
+    <value>مراجعة واتخاذ إجراء إشرافي على هذا التقرير</value>
+  </data>
+  <data name="CannotViewComment" xml:space="preserve">
+    <value>لا يمكن عرض التعليقات مباشرة. استخدم الإشراف لمراجعة التقرير.</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>لم يتم العثور على المنشور المبلغ عنه.</value>
+  </data>
+  <data name="ErrorLoadingPost" xml:space="preserve">
+    <value>حدث خطأ أثناء تحميل المنشور.</value>
+  </data>
+  <data name="AttachedImages" xml:space="preserve">
+    <value>الصور المرفقة</value>
+  </data>
 </root>

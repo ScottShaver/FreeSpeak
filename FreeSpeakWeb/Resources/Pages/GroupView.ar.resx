@@ -139,4 +139,16 @@
   <data name="YourPosts" xml:space="preserve">
     <value>منشوراتك</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>تم الإبلاغ</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>تم الإبلاغ عن هذا المنشور للمشرفين وهو قيد المراجعة.</value>
+  </data>
+  <data name="GroupInactiveTitle" xml:space="preserve">
+    <value>المجموعة غير نشطة حالياً</value>
+  </data>
+  <data name="GroupInactiveMessage" xml:space="preserve">
+    <value>هذه المجموعة غير نشطة حالياً. النشر وعرض المنشورات غير متاح في الوقت الحالي. يرجى التحقق لاحقاً أو الاتصال بمسؤولي المجموعة للحصول على مزيد من المعلومات.</value>
+  </data>
 </root>

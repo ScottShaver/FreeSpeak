@@ -277,4 +277,31 @@
   <data name="DeclinePostTooltip" xml:space="preserve">
     <value>Отклонить эту публикацию - автор может отредактировать и отправить повторно</value>
   </data>
+  <data name="View" xml:space="preserve">
+    <value>Просмотр</value>
+  </data>
+  <data name="ViewPostTooltip" xml:space="preserve">
+    <value>Просмотреть полное содержание публикации</value>
+  </data>
+  <data name="ViewReportTooltip" xml:space="preserve">
+    <value>Просмотреть полные детали жалобы</value>
+  </data>
+  <data name="Moderate" xml:space="preserve">
+    <value>Модерировать</value>
+  </data>
+  <data name="ModerateTooltip" xml:space="preserve">
+    <value>Проверить и принять модерационное решение по этой жалобе</value>
+  </data>
+  <data name="CannotViewComment" xml:space="preserve">
+    <value>Невозможно просмотреть комментарии напрямую. Используйте Модерировать для проверки жалобы.</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>Указанная публикация не найдена.</value>
+  </data>
+  <data name="ErrorLoadingPost" xml:space="preserve">
+    <value>Произошла ошибка при загрузке публикации.</value>
+  </data>
+  <data name="AttachedImages" xml:space="preserve">
+    <value>Прикрепленные изображения</value>
+  </data>
 </root>

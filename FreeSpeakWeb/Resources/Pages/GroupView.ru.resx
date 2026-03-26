@@ -139,4 +139,16 @@
   <data name="YourPosts" xml:space="preserve">
     <value>Ваши публикации</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>Сообщено</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>Этот пост был сообщен модераторам и ожидает проверки.</value>
+  </data>
+  <data name="GroupInactiveTitle" xml:space="preserve">
+    <value>Группа в настоящее время неактивна</value>
+  </data>
+  <data name="GroupInactiveMessage" xml:space="preserve">
+    <value>Эта группа в настоящее время неактивна. Публикация и просмотр публикаций в данный момент недоступны. Пожалуйста, проверьте позже или свяжитесь с администраторами группы для получения дополнительной информации.</value>
+  </data>
 </root>

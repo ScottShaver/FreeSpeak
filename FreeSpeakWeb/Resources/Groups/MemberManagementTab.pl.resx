@@ -58,97 +58,94 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Members" xml:space="preserve">
-    <value>成员</value>
+  <data name="SearchMembers" xml:space="preserve">
+    <value>Szukaj członków...</value>
   </data>
-  <data name="TotalPosts" xml:space="preserve">
-    <value>总帖子</value>
+  <data name="LoadingMembers" xml:space="preserve">
+    <value>Ładowanie członków...</value>
   </data>
-  <data name="PostsThisWeek" xml:space="preserve">
-    <value>本周帖子</value>
-  </data>
-  <data name="PostsToday" xml:space="preserve">
-    <value>今日帖子</value>
-  </data>
-  <data name="LastActivity" xml:space="preserve">
-    <value>最后活动</value>
-  </data>
-  <data name="RecentPosts" xml:space="preserve">
-    <value>最近帖子</value>
-  </data>
-  <data name="Settings" xml:space="preserve">
-    <value>设置</value>
-  </data>
-  <data name="LoadingGroupInformation" xml:space="preserve">
-    <value>正在加载群组信息...</value>
-  </data>
-  <data name="GroupNotFound" xml:space="preserve">
-    <value>未找到群组</value>
-  </data>
-  <data name="GroupNotFoundMessage" xml:space="preserve">
-    <value>您要查找的群组不存在或您没有访问权限。</value>
-  </data>
-  <data name="GoToGroups" xml:space="preserve">
-    <value>前往群组</value>
-  </data>
-  <data name="LoadingPosts" xml:space="preserve">
-    <value>正在加载帖子...</value>
-  </data>
-  <data name="NoPostsYet" xml:space="preserve">
-    <value>该群组中暂无帖子。成为第一个发帖的人吧！</value>
-  </data>
-  <data name="GroupAdministration" xml:space="preserve">
-    <value>群组管理</value>
-  </data>
-  <data name="GroupModeration" xml:space="preserve">
-    <value>群组审核</value>
+  <data name="NoMembersFound" xml:space="preserve">
+    <value>Nie znaleziono członków.</value>
   </data>
   <data name="Creator" xml:space="preserve">
-    <value>创建者</value>
+    <value>Twórca</value>
   </data>
   <data name="Admin" xml:space="preserve">
-    <value>管理员</value>
+    <value>Administrator</value>
   </data>
   <data name="Moderator" xml:space="preserve">
-    <value>版主</value>
+    <value>Moderator</value>
   </data>
-  <data name="YouAreGroupCreator" xml:space="preserve">
-    <value>您是此群组的创建者</value>
+  <data name="Joined" xml:space="preserve">
+    <value>Dołączył</value>
   </data>
-  <data name="YouAreGroupAdmin" xml:space="preserve">
-    <value>您是此群组的管理员</value>
+  <data name="Posts" xml:space="preserve">
+    <value>Posty</value>
   </data>
-  <data name="YouAreGroupModerator" xml:space="preserve">
-    <value>您是此群组的版主</value>
+  <data name="Points" xml:space="preserve">
+    <value>Punkty</value>
   </data>
-  <data name="PostPending" xml:space="preserve">
-    <value>等待审批</value>
+  <data name="CannotModifyCreator" xml:space="preserve">
+    <value>Uprawnienia twórcy grupy nie mogą być modyfikowane.</value>
   </data>
-  <data name="PostPendingDescription" xml:space="preserve">
-    <value>此帖子正在等待版主批准后才能对其他人可见。</value>
+  <data name="RoleAssignment" xml:space="preserve">
+    <value>Przypisanie roli</value>
   </data>
-  <data name="PostDeclined" xml:space="preserve">
-    <value>帖子被拒绝</value>
+  <data name="GroupAdmin" xml:space="preserve">
+    <value>Administrator grupy</value>
   </data>
-  <data name="PostDeclinedDescription" xml:space="preserve">
-    <value>此帖子已被版主拒绝。您可以编辑并重新提交。</value>
+  <data name="OnlyCreatorCanSetAdmin" xml:space="preserve">
+    <value>Tylko twórca grupy może przypisywać role administratora</value>
   </data>
-  <data name="YourPoints" xml:space="preserve">
-    <value>您的积分</value>
+  <data name="GroupModerator" xml:space="preserve">
+    <value>Moderator grupy</value>
   </data>
-  <data name="YourPosts" xml:space="preserve">
-    <value>您的帖子</value>
+  <data name="OnlyAdminCanSetModerator" xml:space="preserve">
+    <value>Tylko administratorzy mogą przypisywać role moderatora</value>
   </data>
-  <data name="PostReported" xml:space="preserve">
-    <value>已报告</value>
+  <data name="MemberStatus" xml:space="preserve">
+    <value>Status członka</value>
   </data>
-  <data name="PostReportedDescription" xml:space="preserve">
-    <value>此帖子已报告给版主，正在等待审核。</value>
+  <data name="BanMember" xml:space="preserve">
+    <value>Zbanuj członka</value>
   </data>
-  <data name="GroupInactiveTitle" xml:space="preserve">
-    <value>群组当前不活跃</value>
+  <data name="ModeratorsCannotBanAdmins" xml:space="preserve">
+    <value>Moderatorzy nie mogą banować administratorów</value>
   </data>
-  <data name="GroupInactiveMessage" xml:space="preserve">
-    <value>此群组当前不活跃。发布和查看帖子目前不可用。请稍后再查看或联系群组管理员以获取更多信息。</value>
+  <data name="RequireAdminOrModeratorToBan" xml:space="preserve">
+    <value>Musisz być administratorem lub moderatorem, aby banować członków</value>
+  </data>
+  <data name="DangerZone" xml:space="preserve">
+    <value>Strefa niebezpieczna</value>
+  </data>
+  <data name="RemoveFromGroup" xml:space="preserve">
+    <value>Usuń z grupy</value>
+  </data>
+  <data name="RemoveMemberWarning" xml:space="preserve">
+    <value>To trwale usunie członka z grupy</value>
+  </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>Załaduj więcej</value>
+  </data>
+  <data name="AdminRoleGranted" xml:space="preserve">
+    <value>Rola administratora została pomyślnie przyznana.</value>
+  </data>
+  <data name="AdminRoleRevoked" xml:space="preserve">
+    <value>Rola administratora została pomyślnie cofnięta.</value>
+  </data>
+  <data name="ModeratorRoleGranted" xml:space="preserve">
+    <value>Rola moderatora została pomyślnie przyznana.</value>
+  </data>
+  <data name="ModeratorRoleRevoked" xml:space="preserve">
+    <value>Rola moderatora została pomyślnie cofnięta.</value>
+  </data>
+  <data name="ErrorUpdatingRole" xml:space="preserve">
+    <value>Wystąpił błąd podczas aktualizacji roli.</value>
+  </data>
+  <data name="ErrorBanningMember" xml:space="preserve">
+    <value>Wystąpił błąd podczas banowania członka.</value>
+  </data>
+  <data name="ErrorRemovingMember" xml:space="preserve">
+    <value>Wystąpił błąd podczas usuwania członka.</value>
   </data>
 </root>

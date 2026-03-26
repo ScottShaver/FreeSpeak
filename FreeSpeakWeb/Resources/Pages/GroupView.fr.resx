@@ -139,4 +139,16 @@
   <data name="YourPosts" xml:space="preserve">
     <value>Vos publications</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>Signalé</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>Cette publication a été signalée aux modérateurs et est en cours de révision.</value>
+  </data>
+  <data name="GroupInactiveTitle" xml:space="preserve">
+    <value>Groupe actuellement inactif</value>
+  </data>
+  <data name="GroupInactiveMessage" xml:space="preserve">
+    <value>Ce groupe n'est actuellement pas actif. La publication et la visualisation des publications ne sont pas disponibles pour le moment. Veuillez revenir plus tard ou contacter les administrateurs du groupe pour plus d'informations.</value>
+  </data>
 </root>

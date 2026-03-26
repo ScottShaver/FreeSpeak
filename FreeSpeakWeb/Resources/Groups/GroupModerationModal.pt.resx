@@ -277,4 +277,31 @@
   <data name="DeclinePostTooltip" xml:space="preserve">
     <value>Rejeitar esta publicação - o autor pode editar e reenviar</value>
   </data>
+  <data name="View" xml:space="preserve">
+    <value>Ver</value>
+  </data>
+  <data name="ViewPostTooltip" xml:space="preserve">
+    <value>Ver o conteúdo completo da publicação</value>
+  </data>
+  <data name="ViewReportTooltip" xml:space="preserve">
+    <value>Ver os detalhes completos do relatório</value>
+  </data>
+  <data name="Moderate" xml:space="preserve">
+    <value>Moderar</value>
+  </data>
+  <data name="ModerateTooltip" xml:space="preserve">
+    <value>Revisar e tomar ação de moderação sobre este relatório</value>
+  </data>
+  <data name="CannotViewComment" xml:space="preserve">
+    <value>Não é possível ver comentários diretamente. Use Moderar para revisar o relatório.</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>A publicação reportada não foi encontrada.</value>
+  </data>
+  <data name="ErrorLoadingPost" xml:space="preserve">
+    <value>Ocorreu um erro ao carregar a publicação.</value>
+  </data>
+  <data name="AttachedImages" xml:space="preserve">
+    <value>Imagens anexadas</value>
+  </data>
 </root>

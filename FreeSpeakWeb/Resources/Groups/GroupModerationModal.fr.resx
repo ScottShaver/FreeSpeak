@@ -277,4 +277,31 @@
   <data name="DeclinePostTooltip" xml:space="preserve">
     <value>Refuser cette publication - l'auteur peut modifier et soumettre à nouveau</value>
   </data>
+  <data name="View" xml:space="preserve">
+    <value>Voir</value>
+  </data>
+  <data name="ViewPostTooltip" xml:space="preserve">
+    <value>Voir le contenu complet de la publication</value>
+  </data>
+  <data name="ViewReportTooltip" xml:space="preserve">
+    <value>Voir les détails complets du signalement</value>
+  </data>
+  <data name="Moderate" xml:space="preserve">
+    <value>Modérer</value>
+  </data>
+  <data name="ModerateTooltip" xml:space="preserve">
+    <value>Examiner et prendre des mesures de modération sur ce signalement</value>
+  </data>
+  <data name="CannotViewComment" xml:space="preserve">
+    <value>Impossible de voir les commentaires directement. Utilisez Modérer pour examiner le signalement.</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>La publication signalée n'a pas pu être trouvée.</value>
+  </data>
+  <data name="ErrorLoadingPost" xml:space="preserve">
+    <value>Une erreur s'est produite lors du chargement de la publication.</value>
+  </data>
+  <data name="AttachedImages" xml:space="preserve">
+    <value>Images jointes</value>
+  </data>
 </root>

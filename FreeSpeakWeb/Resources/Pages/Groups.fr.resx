@@ -154,4 +154,10 @@
   <data name="NoSuggestions" xml:space="preserve">
     <value>Aucune suggestion de groupe disponible pour le moment.</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>Signalé</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>Cette publication a été signalée aux modérateurs et est en cours de révision.</value>
+  </data>
 </root>

@@ -139,4 +139,16 @@
   <data name="YourPosts" xml:space="preserve">
     <value>Ihre Beiträge</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>Gemeldet</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>Dieser Beitrag wurde den Moderatoren gemeldet und wird überprüft.</value>
+  </data>
+  <data name="GroupInactiveTitle" xml:space="preserve">
+    <value>Gruppe derzeit inaktiv</value>
+  </data>
+  <data name="GroupInactiveMessage" xml:space="preserve">
+    <value>Diese Gruppe ist derzeit nicht aktiv. Das Posten und Anzeigen von Beiträgen ist momentan nicht verfügbar. Bitte schauen Sie später noch einmal vorbei oder kontaktieren Sie die Gruppenadministratoren für weitere Informationen.</value>
+  </data>
 </root>

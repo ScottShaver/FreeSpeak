@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="SearchMembers" xml:space="preserve">
+    <value>البحث عن الأعضاء...</value>
+  </data>
+  <data name="LoadingMembers" xml:space="preserve">
+    <value>جار تحميل الأعضاء...</value>
+  </data>
+  <data name="NoMembersFound" xml:space="preserve">
+    <value>لم يتم العثور على أعضاء.</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>المنشئ</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>المسؤول</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>المشرف</value>
+  </data>
+  <data name="Joined" xml:space="preserve">
+    <value>انضم</value>
+  </data>
+  <data name="Posts" xml:space="preserve">
+    <value>المنشورات</value>
+  </data>
+  <data name="Points" xml:space="preserve">
+    <value>النقاط</value>
+  </data>
+  <data name="CannotModifyCreator" xml:space="preserve">
+    <value>لا يمكن تعديل أذونات منشئ المجموعة.</value>
+  </data>
+  <data name="RoleAssignment" xml:space="preserve">
+    <value>تعيين الدور</value>
+  </data>
+  <data name="GroupAdmin" xml:space="preserve">
+    <value>مسؤول المجموعة</value>
+  </data>
+  <data name="OnlyCreatorCanSetAdmin" xml:space="preserve">
+    <value>فقط منشئ المجموعة يمكنه تعيين أدوار المسؤول</value>
+  </data>
+  <data name="GroupModerator" xml:space="preserve">
+    <value>مشرف المجموعة</value>
+  </data>
+  <data name="OnlyAdminCanSetModerator" xml:space="preserve">
+    <value>فقط المسؤولون يمكنهم تعيين أدوار المشرف</value>
+  </data>
+  <data name="MemberStatus" xml:space="preserve">
+    <value>حالة العضو</value>
+  </data>
+  <data name="BanMember" xml:space="preserve">
+    <value>حظر العضو</value>
+  </data>
+  <data name="ModeratorsCannotBanAdmins" xml:space="preserve">
+    <value>لا يمكن للمشرفين حظر المسؤولين</value>
+  </data>
+  <data name="RequireAdminOrModeratorToBan" xml:space="preserve">
+    <value>يجب أن تكون مسؤولاً أو مشرفاً لحظر الأعضاء</value>
+  </data>
+  <data name="DangerZone" xml:space="preserve">
+    <value>منطقة الخطر</value>
+  </data>
+  <data name="RemoveFromGroup" xml:space="preserve">
+    <value>إزالة من المجموعة</value>
+  </data>
+  <data name="RemoveMemberWarning" xml:space="preserve">
+    <value>سيؤدي هذا إلى إزالة العضو من المجموعة بشكل دائم</value>
+  </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>تحميل المزيد</value>
+  </data>
+  <data name="AdminRoleGranted" xml:space="preserve">
+    <value>تم منح دور المسؤول بنجاح.</value>
+  </data>
+  <data name="AdminRoleRevoked" xml:space="preserve">
+    <value>تم إلغاء دور المسؤول بنجاح.</value>
+  </data>
+  <data name="ModeratorRoleGranted" xml:space="preserve">
+    <value>تم منح دور المشرف بنجاح.</value>
+  </data>
+  <data name="ModeratorRoleRevoked" xml:space="preserve">
+    <value>تم إلغاء دور المشرف بنجاح.</value>
+  </data>
+  <data name="ErrorUpdatingRole" xml:space="preserve">
+    <value>حدث خطأ أثناء تحديث الدور.</value>
+  </data>
+  <data name="ErrorBanningMember" xml:space="preserve">
+    <value>حدث خطأ أثناء حظر العضو.</value>
+  </data>
+  <data name="ErrorRemovingMember" xml:space="preserve">
+    <value>حدث خطأ أثناء إزالة العضو.</value>
+  </data>
+</root>

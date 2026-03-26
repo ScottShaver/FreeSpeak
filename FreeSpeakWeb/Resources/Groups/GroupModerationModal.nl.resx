@@ -277,4 +277,31 @@
   <data name="DeclinePostTooltip" xml:space="preserve">
     <value>Dit bericht afwijzen - de auteur kan bewerken en opnieuw indienen</value>
   </data>
+  <data name="View" xml:space="preserve">
+    <value>Bekijken</value>
+  </data>
+  <data name="ViewPostTooltip" xml:space="preserve">
+    <value>De volledige berichtinhoud bekijken</value>
+  </data>
+  <data name="ViewReportTooltip" xml:space="preserve">
+    <value>De volledige rapportdetails bekijken</value>
+  </data>
+  <data name="Moderate" xml:space="preserve">
+    <value>Modereren</value>
+  </data>
+  <data name="ModerateTooltip" xml:space="preserve">
+    <value>Beoordeel en onderneem moderatieactie op dit rapport</value>
+  </data>
+  <data name="CannotViewComment" xml:space="preserve">
+    <value>Kan reacties niet direct bekijken. Gebruik Modereren om het rapport te beoordelen.</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>Het gerapporteerde bericht kon niet worden gevonden.</value>
+  </data>
+  <data name="ErrorLoadingPost" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het laden van het bericht.</value>
+  </data>
+  <data name="AttachedImages" xml:space="preserve">
+    <value>Bijgevoegde afbeeldingen</value>
+  </data>
 </root>

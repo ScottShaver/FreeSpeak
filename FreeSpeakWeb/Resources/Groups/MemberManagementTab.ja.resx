@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="SearchMembers" xml:space="preserve">
+    <value>メンバーを検索...</value>
+  </data>
+  <data name="LoadingMembers" xml:space="preserve">
+    <value>メンバーを読み込んでいます...</value>
+  </data>
+  <data name="NoMembersFound" xml:space="preserve">
+    <value>メンバーが見つかりませんでした。</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>作成者</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>管理者</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>モデレーター</value>
+  </data>
+  <data name="Joined" xml:space="preserve">
+    <value>参加日</value>
+  </data>
+  <data name="Posts" xml:space="preserve">
+    <value>投稿</value>
+  </data>
+  <data name="Points" xml:space="preserve">
+    <value>ポイント</value>
+  </data>
+  <data name="CannotModifyCreator" xml:space="preserve">
+    <value>グループ作成者の権限は変更できません。</value>
+  </data>
+  <data name="RoleAssignment" xml:space="preserve">
+    <value>役割の割り当て</value>
+  </data>
+  <data name="GroupAdmin" xml:space="preserve">
+    <value>グループ管理者</value>
+  </data>
+  <data name="OnlyCreatorCanSetAdmin" xml:space="preserve">
+    <value>グループ作成者のみが管理者の役割を割り当てることができます</value>
+  </data>
+  <data name="GroupModerator" xml:space="preserve">
+    <value>グループモデレーター</value>
+  </data>
+  <data name="OnlyAdminCanSetModerator" xml:space="preserve">
+    <value>管理者のみがモデレーターの役割を割り当てることができます</value>
+  </data>
+  <data name="MemberStatus" xml:space="preserve">
+    <value>メンバーステータス</value>
+  </data>
+  <data name="BanMember" xml:space="preserve">
+    <value>メンバーをバン</value>
+  </data>
+  <data name="ModeratorsCannotBanAdmins" xml:space="preserve">
+    <value>モデレーターは管理者をバンできません</value>
+  </data>
+  <data name="RequireAdminOrModeratorToBan" xml:space="preserve">
+    <value>メンバーをバンするには、管理者またはモデレーターである必要があります</value>
+  </data>
+  <data name="DangerZone" xml:space="preserve">
+    <value>危険ゾーン</value>
+  </data>
+  <data name="RemoveFromGroup" xml:space="preserve">
+    <value>グループから削除</value>
+  </data>
+  <data name="RemoveMemberWarning" xml:space="preserve">
+    <value>これにより、メンバーがグループから永久に削除されます</value>
+  </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>もっと読み込む</value>
+  </data>
+  <data name="AdminRoleGranted" xml:space="preserve">
+    <value>管理者の役割が正常に付与されました。</value>
+  </data>
+  <data name="AdminRoleRevoked" xml:space="preserve">
+    <value>管理者の役割が正常に取り消されました。</value>
+  </data>
+  <data name="ModeratorRoleGranted" xml:space="preserve">
+    <value>モデレーターの役割が正常に付与されました。</value>
+  </data>
+  <data name="ModeratorRoleRevoked" xml:space="preserve">
+    <value>モデレーターの役割が正常に取り消されました。</value>
+  </data>
+  <data name="ErrorUpdatingRole" xml:space="preserve">
+    <value>役割の更新中にエラーが発生しました。</value>
+  </data>
+  <data name="ErrorBanningMember" xml:space="preserve">
+    <value>メンバーのバン中にエラーが発生しました。</value>
+  </data>
+  <data name="ErrorRemovingMember" xml:space="preserve">
+    <value>メンバーの削除中にエラーが発生しました。</value>
+  </data>
+</root>

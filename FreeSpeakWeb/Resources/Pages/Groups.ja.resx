@@ -154,4 +154,10 @@
   <data name="NoSuggestions" xml:space="preserve">
     <value>現在おすすめのグループはありません。</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>報告済み</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>この投稿はモデレーターに報告され、レビュー待ちです。</value>
+  </data>
 </root>

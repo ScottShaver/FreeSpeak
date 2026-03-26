@@ -154,4 +154,10 @@
   <data name="NoSuggestions" xml:space="preserve">
     <value>Derzeit keine Gruppenvorschläge verfügbar.</value>
   </data>
+  <data name="PostReported" xml:space="preserve">
+    <value>Gemeldet</value>
+  </data>
+  <data name="PostReportedDescription" xml:space="preserve">
+    <value>Dieser Beitrag wurde den Moderatoren gemeldet und wird überprüft.</value>
+  </data>
 </root>

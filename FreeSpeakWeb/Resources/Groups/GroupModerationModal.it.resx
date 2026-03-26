@@ -277,4 +277,31 @@
   <data name="DeclinePostTooltip" xml:space="preserve">
     <value>Rifiuta questo post - l'autore può modificare e inviare nuovamente</value>
   </data>
+  <data name="View" xml:space="preserve">
+    <value>Visualizza</value>
+  </data>
+  <data name="ViewPostTooltip" xml:space="preserve">
+    <value>Visualizza il contenuto completo del post</value>
+  </data>
+  <data name="ViewReportTooltip" xml:space="preserve">
+    <value>Visualizza i dettagli completi della segnalazione</value>
+  </data>
+  <data name="Moderate" xml:space="preserve">
+    <value>Modera</value>
+  </data>
+  <data name="ModerateTooltip" xml:space="preserve">
+    <value>Rivedi e intraprendi un'azione di moderazione su questa segnalazione</value>
+  </data>
+  <data name="CannotViewComment" xml:space="preserve">
+    <value>Impossibile visualizzare i commenti direttamente. Usa Modera per rivedere la segnalazione.</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>Il post segnalato non è stato trovato.</value>
+  </data>
+  <data name="ErrorLoadingPost" xml:space="preserve">
+    <value>Si è verificato un errore durante il caricamento del post.</value>
+  </data>
+  <data name="AttachedImages" xml:space="preserve">
+    <value>Immagini allegate</value>
+  </data>
 </root>
