@@ -57,7 +57,6 @@
   <data name="NoFilesMatch" xml:space="preserve"><value>検索に一致するファイルはありません</value></data>
   <data name="Download" xml:space="preserve"><value>ダウンロード</value></data>
   <data name="Delete" xml:space="preserve"><value>削除</value></data>
-  <data name="PendingApproval" xml:space="preserve"><value>承認待ち</value></data>
   <data name="FilePagination" xml:space="preserve"><value>ファイルページネーション</value></data>
   <data name="UploadingFile" xml:space="preserve"><value>ファイルをアップロード中...</value></data>
   <data name="SelectFile" xml:space="preserve"><value>ファイルを選択</value></data>

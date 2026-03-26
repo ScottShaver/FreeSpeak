@@ -178,9 +178,6 @@
   <data name="Delete" xml:space="preserve">
     <value>Supprimer</value>
   </data>
-  <data name="PendingApproval" xml:space="preserve">
-    <value>En attente d'approbation</value>
-  </data>
   <data name="FilePagination" xml:space="preserve">
     <value>Pagination des fichiers</value>
   </data>

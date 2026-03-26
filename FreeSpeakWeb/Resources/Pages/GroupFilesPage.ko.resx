@@ -57,7 +57,6 @@
   <data name="NoFilesMatch" xml:space="preserve"><value>검색과 일치하는 파일이 없습니다</value></data>
   <data name="Download" xml:space="preserve"><value>다운로드</value></data>
   <data name="Delete" xml:space="preserve"><value>삭제</value></data>
-  <data name="PendingApproval" xml:space="preserve"><value>승인 대기 중</value></data>
   <data name="FilePagination" xml:space="preserve"><value>파일 페이지네이션</value></data>
   <data name="UploadingFile" xml:space="preserve"><value>파일 업로드 중...</value></data>
   <data name="SelectFile" xml:space="preserve"><value>파일 선택</value></data>

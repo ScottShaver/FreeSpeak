@@ -57,7 +57,6 @@
   <data name="NoFilesMatch" xml:space="preserve"><value>没有与您搜索匹配的文件</value></data>
   <data name="Download" xml:space="preserve"><value>下载</value></data>
   <data name="Delete" xml:space="preserve"><value>删除</value></data>
-  <data name="PendingApproval" xml:space="preserve"><value>等待审批</value></data>
   <data name="FilePagination" xml:space="preserve"><value>文件分页</value></data>
   <data name="UploadingFile" xml:space="preserve"><value>正在上传文件...</value></data>
   <data name="SelectFile" xml:space="preserve"><value>选择文件</value></data>

@@ -57,7 +57,6 @@
   <data name="NoFilesMatch" xml:space="preserve"><value>Żadne pliki nie pasują do wyszukiwania</value></data>
   <data name="Download" xml:space="preserve"><value>Pobierz</value></data>
   <data name="Delete" xml:space="preserve"><value>Usuń</value></data>
-  <data name="PendingApproval" xml:space="preserve"><value>Oczekuje na zatwierdzenie</value></data>
   <data name="FilePagination" xml:space="preserve"><value>Paginacja plików</value></data>
   <data name="UploadingFile" xml:space="preserve"><value>Przesyłanie pliku...</value></data>
   <data name="SelectFile" xml:space="preserve"><value>Wybierz plik</value></data>

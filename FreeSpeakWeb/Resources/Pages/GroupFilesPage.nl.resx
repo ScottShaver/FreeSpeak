@@ -57,7 +57,6 @@
   <data name="NoFilesMatch" xml:space="preserve"><value>Geen bestanden komen overeen met uw zoekopdracht</value></data>
   <data name="Download" xml:space="preserve"><value>Downloaden</value></data>
   <data name="Delete" xml:space="preserve"><value>Verwijderen</value></data>
-  <data name="PendingApproval" xml:space="preserve"><value>Wacht op goedkeuring</value></data>
   <data name="FilePagination" xml:space="preserve"><value>Bestandspaginering</value></data>
   <data name="UploadingFile" xml:space="preserve"><value>Bestand uploaden...</value></data>
   <data name="SelectFile" xml:space="preserve"><value>Bestand selecteren</value></data>
