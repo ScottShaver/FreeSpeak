@@ -383,3 +383,4 @@ FodyWeavers.xsd
 # /FreeSpeakWeb/wwwroot/uploads/posts/**/*
 # !/FreeSpeakWeb/wwwroot/uploads/posts/**/.gitkeep
 /FreeSpeakWeb/AppData/uploads/groupposts/2/images
+/FreeSpeakWeb/AppData/uploads/groupfiles/2
