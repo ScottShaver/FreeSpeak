@@ -1,0 +1,977 @@
+@page "/group/{GroupId:int}/files"
+@rendermode InteractiveServer
+@attribute [Authorize]
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.DTOs
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Services.Abstractions
+@using FreeSpeakWeb.Components.Shared
+@using System.Security.Claims
+@using Microsoft.JSInterop
+@using Microsoft.Extensions.Localization
+
+@inject IOptions<SiteSettings> SiteSettings
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject GroupService GroupService
+@inject GroupMemberService GroupMemberService
+@inject IGroupFileService GroupFileService
+@inject UserManager<ApplicationUser> UserManager
+@inject AlertService AlertService
+@inject IJSRuntime JSRuntime
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.GroupFilesPage> Localizer
+
+<PageTitle>@Localizer["PageTitle", group?.Name ?? "Group"] - @SiteSettings.Value.SiteName</PageTitle>
+
+<div class="group-files-container">
+    @if (isLoadingGroup)
+    {
+        <LoadingSpinner Text="@Localizer["LoadingGroupInfo"]" Size="lg" />
+    }
+    else if (group == null)
+    {
+        <div class="alert alert-danger">
+            <h4>@Localizer["GroupNotFound"]</h4>
+            <p>@Localizer["GroupNotFoundMessage"]</p>
+            <a href="/groups" class="btn btn-primary">@Localizer["GoToGroups"]</a>
+        </div>
+    }
+    else if (!group.EnableFileUploads)
+    {
+        <div class="alert alert-info">
+            <h4>@Localizer["FilesNotEnabled"]</h4>
+            <p>@Localizer["FilesNotEnabledMessage"]</p>
+            <a href="/group/@GroupId" class="btn btn-primary">@Localizer["BackToGroup"]</a>
+        </div>
+    }
+    else
+    {
+        <!-- Group Files Header -->
+        <div class="group-files-header">
+            <div class="group-files-header-content">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <h1><i class="bi bi-folder2-open me-2"></i>@Localizer["GroupFiles"]</h1>
+                    </div>
+                    <div class="group-files-header-actions">
+                        @if (canUploadFiles)
+                        {
+                            <button class="btn btn-primary" @onclick="OpenUploadModal">
+                                <i class="bi bi-upload me-1"></i>@Localizer["UploadFile"]
+                            </button>
+                        }
+                        <a href="/group/@GroupId" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>@Localizer["BackToGroup"]
+                        </a>
+                    </div>
+                </div>
+
+                <p class="group-files-description">@Localizer["PageDescription"]</p>
+
+                <div class="group-files-stats">
+                    <StatItem Label="@Localizer["TotalFiles"]" 
+                              Value="@totalFileCount" 
+                              Icon="bi-file-earmark" />
+                    <StatItem Label="@Localizer["ApprovedFiles"]" 
+                              Value="@approvedFileCount" 
+                              Icon="bi-check-circle" />
+                    <StatItem Label="@Localizer["TotalStorage"]" 
+                              Value="@totalStorageFormatted" 
+                              Icon="bi-hdd" 
+                              FormatNumber="false" />
+                    @if (canManageFiles && pendingFileCount > 0)
+                    {
+                        <StatItem Label="@Localizer["PendingApproval"]" 
+                                  Value="@pendingFileCount" 
+                                  Icon="bi-hourglass-split" 
+                                  CssClass="text-warning" />
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Files Alert for Admins -->
+        @if (canManageFiles && pendingFileCount > 0)
+        {
+            <div class="alert alert-warning d-flex justify-content-between align-items-center mb-4 cursor-pointer" @onclick="TogglePendingFilesView" role="button">
+                <div>
+                    <i class="bi bi-hourglass-split me-2"></i>
+                    <strong>@Localizer["FilesPendingApproval", pendingFileCount]</strong>
+                </div>
+                <button class="btn btn-warning btn-sm" @onclick:stopPropagation="true" @onclick="TogglePendingFilesView">
+                    @(showPendingFiles ? Localizer["HidePending"] : Localizer["ReviewPending"])
+                </button>
+            </div>
+        }
+
+        <!-- Pending Files Section -->
+        @if (showPendingFiles && canManageFiles)
+        {
+            <div class="card mb-4 border-warning">
+                <div class="card-header bg-warning bg-opacity-25">
+                    <h5 class="mb-0"><i class="bi bi-hourglass-split me-2"></i>@Localizer["PendingFiles"]</h5>
+                </div>
+                <div class="card-body">
+                    @if (isLoadingPendingFiles)
+                    {
+                        <LoadingSpinner Text="@Localizer["LoadingPendingFiles"]" />
+                    }
+                    else if (!pendingFiles.Any())
+                    {
+                        <EmptyState Message="@Localizer["NoPendingFiles"]" Icon="bi-check-circle" />
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>@Localizer["File"]</th>
+                                        <th>@Localizer["UploadedBy"]</th>
+                                        <th>@Localizer["Size"]</th>
+                                        <th>@Localizer["Uploaded"]</th>
+                                        <th class="text-end">@Localizer["Actions"]</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var file in pendingFiles)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <i class="bi @file.FileIcon fs-4 me-2 text-muted"></i>
+                                                    <div>
+                                                        <div class="fw-bold text-truncate" style="max-width: 250px;" title="@file.OriginalFileName">
+                                                            @file.OriginalFileName
+                                                        </div>
+                                                        @if (!string.IsNullOrWhiteSpace(file.Description))
+                                                        {
+                                                            <small class="text-muted text-truncate d-block" style="max-width: 250px;" title="@file.Description">
+                                                                @file.Description
+                                                            </small>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <UserAvatar ImageUrl="@file.UploaderImageUrl" Size="sm" />
+                                                    <span class="ms-2">@file.UploaderName</span>
+                                                </div>
+                                            </td>
+                                            <td>@file.FormattedFileSize</td>
+                                            <td>@file.RelativeUploadTime</td>
+                                            <td class="text-end">
+                                                <button class="btn btn-success btn-sm me-1" @onclick="() => ApproveFile(file.Id)" title="@Localizer["Approve"]">
+                                                    <i class="bi bi-check-lg"></i>
+                                                </button>
+                                                <button class="btn btn-danger btn-sm" @onclick="() => OpenDeclineModal(file)" title="@Localizer["Decline"]">
+                                                    <i class="bi bi-x-lg"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Search Bar -->
+        <div class="search-section mb-4">
+            <input type="text" 
+                   class="form-control" 
+                   placeholder="@Localizer["SearchPlaceholder"]"
+                   @bind="searchTerm"
+                   @bind:event="oninput"
+                   @onkeyup="HandleSearchKeyUp" />
+        </div>
+
+        <!-- File Count and Storage Info -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="text-muted">
+                @if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    <span>@Localizer["SearchResults", totalFileCount, searchTerm]</span>
+                }
+                else
+                {
+                    <span>@Localizer["FilesShared", totalFileCount]</span>
+                }
+            </div>
+        </div>
+
+        <!-- Files List -->
+        @if (isLoadingFiles)
+        {
+            <LoadingSpinner Text="@Localizer["LoadingFiles"]" />
+        }
+        else if (!files.Any())
+        {
+            <EmptyState Message="@(string.IsNullOrEmpty(searchTerm) ? Localizer["NoFilesYet"].Value : Localizer["NoFilesMatch"].Value)" 
+                        Icon="bi-folder2" />
+        }
+        else
+        {
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                @foreach (var file in files)
+                {
+                    <div class="col">
+                        <div class="card h-100 file-card @(file.UploaderId == currentUserId && file.Status == GroupFileStatus.Pending ? "border-warning" : "")">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start">
+                                    <div class="file-icon me-3">
+                                        <i class="bi @file.FileIcon fs-1 @GetFileIconColor(file)"></i>
+                                    </div>
+                                    <div class="flex-grow-1 overflow-hidden">
+                                        <h6 class="card-title mb-1 text-truncate" title="@file.OriginalFileName">
+                                            @file.OriginalFileName
+                                        </h6>
+                                        @if (!string.IsNullOrWhiteSpace(file.Description))
+                                        {
+                                            <p class="card-text small text-muted mb-2 text-truncate" title="@file.Description">
+                                                @file.Description
+                                            </p>
+                                        }
+                                        <div class="file-meta small text-muted">
+                                            <span class="me-3"><i class="bi bi-hdd me-1"></i>@file.FormattedFileSize</span>
+                                            <span><i class="bi bi-download me-1"></i>@file.DownloadCount</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="d-flex align-items-center small text-muted">
+                                        <UserAvatar ImageUrl="@file.UploaderImageUrl" Name="@file.UploaderName" Size="sm" CssClass="me-2" />
+                                        <div>
+                                            <div class="text-truncate" style="max-width: 150px;" title="@file.UploaderName">@file.UploaderName</div>
+                                            <small class="text-muted">@file.RelativeUploadTime</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    @if (file.Status == GroupFileStatus.Approved || file.UploaderId == currentUserId || canManageFiles)
+                                    {
+                                        <button class="btn btn-primary" @onclick="() => DownloadFile(file.Id)" title="@Localizer["Download"]">
+                                            <i class="bi bi-download me-1"></i>@Localizer["Download"]
+                                        </button>
+                                    }
+                                    @if (file.UploaderId == currentUserId || canManageFiles)
+                                    {
+                                        <button class="btn btn-outline-danger" @onclick="() => OpenDeleteConfirmation(file)" title="@Localizer["Delete"]">
+                                            <i class="bi bi-trash me-1"></i>@Localizer["Delete"]
+                                        </button>
+                                    }
+                                </div>
+                                @if (file.UploaderId == currentUserId && file.Status == GroupFileStatus.Pending)
+                                {
+                                    <div class="mt-2">
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="bi bi-hourglass-split me-1"></i>@Localizer["PendingApproval"]
+                                        </span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Pagination -->
+            @if (totalPages > 1)
+            {
+                <nav class="mt-4" aria-label="@Localizer["FilePagination"]">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                            <button class="page-link" @onclick="() => GoToPage(currentPage - 1)" disabled="@(currentPage == 1)">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                        </li>
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            var pageNumber = i;
+                            <li class="page-item @(currentPage == pageNumber ? "active" : "")">
+                                <button class="page-link" @onclick="() => GoToPage(pageNumber)">@pageNumber</button>
+                            </li>
+                        }
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <button class="page-link" @onclick="() => GoToPage(currentPage + 1)" disabled="@(currentPage == totalPages)">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            }
+        }
+    }
+</div>
+
+@* Upload File Modal *@
+@if (showUploadModal)
+{
+    <div class="modal show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-upload me-2"></i>@Localizer["UploadFile"]</h5>
+                    <button type="button" class="btn-close" @onclick="CloseUploadModal"></button>
+                </div>
+                <div class="modal-body">
+                    @if (isUploading)
+                    {
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary mb-3" role="status"></div>
+                            <p>@Localizer["UploadingFile"]</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mb-3">
+                            <label for="fileInput" class="form-label">@Localizer["SelectFile"]</label>
+                            <InputFile id="fileInput" class="form-control" OnChange="HandleFileSelected" accept="*/*" />
+                            <div class="form-text">@Localizer["MaxFileSize"]</div>
+                        </div>
+                        @if (selectedFile != null)
+                        {
+                            <div class="alert alert-info py-2">
+                                <i class="bi bi-file-earmark me-2"></i>
+                                <strong>@selectedFile.Name</strong> (@FormatBytes(selectedFile.Size))
+                            </div>
+                        }
+                        <div class="mb-3">
+                            <label for="fileDescription" class="form-label">@Localizer["DescriptionOptional"]</label>
+                            <textarea id="fileDescription" class="form-control" rows="3" @bind="uploadDescription"
+                                      placeholder="@Localizer["DescriptionPlaceholder"]"></textarea>
+                        </div>
+                        @if (group?.RequiresFileApproval == true)
+                        {
+                            <div class="alert alert-warning py-2">
+                                <i class="bi bi-info-circle me-2"></i>
+                                @Localizer["FilesRequireApproval"]
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseUploadModal" disabled="@isUploading">@Localizer["Cancel"]</button>
+                    <button type="button" class="btn btn-primary" @onclick="UploadFile" disabled="@(selectedFile == null || isUploading)">
+                        <i class="bi bi-upload me-1"></i>@Localizer["Upload"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@* Delete Confirmation Modal *@
+<ConfirmationDialog 
+    IsVisible="@showDeleteConfirmation"
+    Title="@Localizer["DeleteFile"].Value"
+    Message="@(fileToDelete != null ? Localizer["DeleteFileConfirm", fileToDelete.OriginalFileName].Value : "")"
+    ConfirmText="@Localizer["Delete"].Value"
+    ConfirmButtonClass="btn-danger"
+    OnConfirm="ConfirmDeleteFile"
+    OnCancel="CloseDeleteConfirmation" />
+
+@* Decline File Modal *@
+@if (showDeclineModal && fileToDecline != null)
+{
+    <div class="modal show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-x-circle text-danger me-2"></i>@Localizer["DeclineFile"]</h5>
+                    <button type="button" class="btn-close" @onclick="CloseDeclineModal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>@Localizer["AboutToDecline"] <strong>@fileToDecline.OriginalFileName</strong></p>
+                    <div class="mb-3">
+                        <label for="declineReason" class="form-label">@Localizer["ReasonOptional"]</label>
+                        <textarea id="declineReason" class="form-control" rows="3" @bind="declineReason"
+                                  placeholder="@Localizer["DeclineReasonPlaceholder"]"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseDeclineModal">@Localizer["Cancel"]</button>
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDeclineFile">
+                        <i class="bi bi-x-lg me-1"></i>@Localizer["Decline"]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int GroupId { get; set; }
+
+    private string? currentUserId;
+    private Group? group;
+    private bool isLoadingGroup = true;
+    private bool isLoadingFiles = false;
+    private bool isLoadingPendingFiles = false;
+
+    // Permissions
+    private bool canUploadFiles = false;
+    private bool canManageFiles = false;
+
+    // File list state
+    private List<GroupFileDto> files = [];
+    private string searchTerm = "";
+    private int currentPage = 1;
+    private const int pageSize = 12;
+    private int totalFileCount = 0;
+    private int approvedFileCount = 0;
+    private long totalStorageBytes = 0;
+    private string totalStorageFormatted => FormatBytes(totalStorageBytes);
+    private int totalPages => (int)Math.Ceiling(totalFileCount / (double)pageSize);
+
+    // Pending files state
+    private List<GroupFileDto> pendingFiles = [];
+    private int pendingFileCount = 0;
+    private bool showPendingFiles = false;
+
+    // Upload modal state
+    private bool showUploadModal = false;
+    private IBrowserFile? selectedFile;
+    private string uploadDescription = "";
+    private bool isUploading = false;
+
+    // Delete confirmation state
+    private bool showDeleteConfirmation = false;
+    private GroupFileDto? fileToDelete;
+
+    // Decline modal state
+    private bool showDeclineModal = false;
+    private GroupFileDto? fileToDecline;
+    private string declineReason = "";
+
+    /// <summary>
+    /// Initializes the component, loads group information and files.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            currentUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(currentUserId))
+            {
+                await LoadGroupInformation();
+
+                if (group != null && group.EnableFileUploads)
+                {
+                    await LoadPermissions();
+                    await LoadFiles();
+                    await LoadStorageStats();
+                    await LoadPendingFileCount();
+                }
+            }
+        }
+
+        isLoadingGroup = false;
+    }
+
+    /// <summary>
+    /// Loads the group information and validates membership.
+    /// </summary>
+    private async Task LoadGroupInformation()
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        try
+        {
+            // Check if user is a member
+            var isMember = await GroupMemberService.IsMemberAsync(GroupId, currentUserId);
+            if (!isMember)
+            {
+                group = null;
+                return;
+            }
+
+            group = await GroupService.GetGroupByIdAsync(GroupId);
+        }
+        catch (Exception)
+        {
+            group = null;
+        }
+    }
+
+    /// <summary>
+    /// Loads the user's permissions for file operations.
+    /// </summary>
+    private async Task LoadPermissions()
+    {
+        if (string.IsNullOrEmpty(currentUserId) || group == null) return;
+
+        canUploadFiles = await GroupFileService.CanUploadFilesAsync(GroupId, currentUserId);
+        canManageFiles = await GroupFileService.CanManageFilesAsync(GroupId, currentUserId);
+    }
+
+    /// <summary>
+    /// Loads the files list with optional search term.
+    /// </summary>
+    private async Task LoadFiles()
+    {
+        isLoadingFiles = true;
+        StateHasChanged();
+
+        try
+        {
+            var skip = (currentPage - 1) * pageSize;
+
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                files = await GroupFileService.GetGroupFilesAsync(GroupId, skip, pageSize);
+                totalFileCount = await GroupFileService.GetFileCountAsync(GroupId);
+            }
+            else
+            {
+                files = await GroupFileService.SearchFilesAsync(GroupId, searchTerm, skip, pageSize);
+                totalFileCount = await GroupFileService.GetSearchResultCountAsync(GroupId, searchTerm);
+            }
+
+            // Include user's own pending files in the list
+            if (!string.IsNullOrEmpty(currentUserId))
+            {
+                var userPendingFiles = await GroupFileService.GetUserFilesAsync(GroupId, currentUserId, includeAllStatuses: true, skip: 0, take: 50);
+                foreach (var pendingFile in userPendingFiles.Where(f => f.Status == GroupFileStatus.Pending))
+                {
+                    if (!files.Any(f => f.Id == pendingFile.Id))
+                    {
+                        files.Insert(0, pendingFile);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            AlertService.ShowError($"Failed to load files: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingFiles = false;
+            StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Loads storage statistics for the group.
+    /// </summary>
+    private async Task LoadStorageStats()
+    {
+        try
+        {
+            var stats = await GroupFileService.GetStorageStatsAsync(GroupId);
+            approvedFileCount = stats.ApprovedFileCount;
+            totalStorageBytes = stats.TotalStorageBytes;
+        }
+        catch
+        {
+            approvedFileCount = 0;
+            totalStorageBytes = 0;
+        }
+    }
+
+    /// <summary>
+    /// Loads the count of pending files for admin badge.
+    /// </summary>
+    private async Task LoadPendingFileCount()
+    {
+        if (!canManageFiles) return;
+
+        try
+        {
+            pendingFileCount = await GroupFileService.GetPendingFileCountAsync(GroupId);
+        }
+        catch
+        {
+            pendingFileCount = 0;
+        }
+    }
+
+    /// <summary>
+    /// Loads the pending files list for admin review.
+    /// </summary>
+    private async Task LoadPendingFiles()
+    {
+        isLoadingPendingFiles = true;
+        StateHasChanged();
+
+        try
+        {
+            pendingFiles = await GroupFileService.GetPendingFilesAsync(GroupId, 0, 50);
+        }
+        catch (Exception ex)
+        {
+            AlertService.ShowError($"Failed to load pending files: {ex.Message}");
+        }
+        finally
+        {
+            isLoadingPendingFiles = false;
+            StateHasChanged();
+        }
+    }
+
+    #region Search
+
+    /// <summary>
+    /// Handles key press in search input.
+    /// </summary>
+    private async Task HandleSearchKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SearchFiles();
+        }
+    }
+
+    /// <summary>
+    /// Performs the file search.
+    /// </summary>
+    private async Task SearchFiles()
+    {
+        currentPage = 1;
+        await LoadFiles();
+    }
+
+    /// <summary>
+    /// Clears the search and reloads all files.
+    /// </summary>
+    private async Task ClearSearch()
+    {
+        searchTerm = "";
+        currentPage = 1;
+        await LoadFiles();
+    }
+
+    #endregion
+
+    #region Pagination
+
+    /// <summary>
+    /// Navigates to a specific page.
+    /// </summary>
+    private async Task GoToPage(int page)
+    {
+        if (page < 1 || page > totalPages) return;
+
+        currentPage = page;
+        await LoadFiles();
+    }
+
+    #endregion
+
+    #region Upload
+
+    /// <summary>
+    /// Opens the upload file modal.
+    /// </summary>
+    private void OpenUploadModal()
+    {
+        showUploadModal = true;
+        selectedFile = null;
+        uploadDescription = "";
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the upload file modal.
+    /// </summary>
+    private void CloseUploadModal()
+    {
+        showUploadModal = false;
+        selectedFile = null;
+        uploadDescription = "";
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles file selection from the input.
+    /// </summary>
+    private void HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Uploads the selected file.
+    /// </summary>
+    private async Task UploadFile()
+    {
+        if (selectedFile == null || string.IsNullOrEmpty(currentUserId)) return;
+
+        isUploading = true;
+        StateHasChanged();
+
+        try
+        {
+            using var stream = selectedFile.OpenReadStream(maxAllowedSize: 50 * 1024 * 1024);
+
+            var result = await GroupFileService.UploadFileAsync(
+                GroupId,
+                currentUserId,
+                selectedFile.Name,
+                string.IsNullOrWhiteSpace(uploadDescription) ? null : uploadDescription.Trim(),
+                stream,
+                selectedFile.ContentType,
+                selectedFile.Size
+            );
+
+            if (result.Success)
+            {
+                CloseUploadModal();
+
+                if (result.IsPendingApproval)
+                {
+                    AlertService.ShowInfo("File uploaded successfully. It will be visible after admin approval.");
+                }
+                else
+                {
+                    AlertService.ShowSuccess("File uploaded successfully!");
+                }
+
+                await LoadFiles();
+            }
+            else
+            {
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to upload file.");
+            }
+        }
+        catch (Exception ex)
+        {
+            AlertService.ShowError($"Upload failed: {ex.Message}");
+        }
+        finally
+        {
+            isUploading = false;
+            StateHasChanged();
+        }
+    }
+
+    #endregion
+
+    #region Download
+
+    /// <summary>
+    /// Downloads a file.
+    /// </summary>
+    private async Task DownloadFile(int fileId)
+    {
+        try
+        {
+            // Trigger download via navigation to the API endpoint
+            var downloadUrl = $"/api/group-files/{fileId}/download";
+            await JSRuntime.InvokeVoidAsync("open", downloadUrl, "_blank");
+        }
+        catch (Exception ex)
+        {
+            AlertService.ShowError($"Download failed: {ex.Message}");
+        }
+    }
+
+    #endregion
+
+    #region Delete
+
+    /// <summary>
+    /// Opens the delete confirmation dialog.
+    /// </summary>
+    private void OpenDeleteConfirmation(GroupFileDto file)
+    {
+        fileToDelete = file;
+        showDeleteConfirmation = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the delete confirmation dialog.
+    /// </summary>
+    private void CloseDeleteConfirmation()
+    {
+        showDeleteConfirmation = false;
+        fileToDelete = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Confirms and executes file deletion.
+    /// </summary>
+    private async Task ConfirmDeleteFile()
+    {
+        if (fileToDelete == null || string.IsNullOrEmpty(currentUserId)) return;
+
+        try
+        {
+            var result = await GroupFileService.DeleteFileAsync(fileToDelete.Id, currentUserId);
+
+            if (result.Success)
+            {
+                AlertService.ShowSuccess("File deleted successfully.");
+                CloseDeleteConfirmation();
+                await LoadFiles();
+                await LoadStorageStats();
+            }
+            else
+            {
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to delete file.");
+            }
+        }
+        catch (Exception ex)
+        {
+            AlertService.ShowError($"Delete failed: {ex.Message}");
+        }
+    }
+
+    #endregion
+
+    #region Pending Files
+
+    /// <summary>
+    /// Toggles the pending files view.
+    /// </summary>
+    private async Task TogglePendingFilesView()
+    {
+        showPendingFiles = !showPendingFiles;
+
+        if (showPendingFiles && !pendingFiles.Any())
+        {
+            await LoadPendingFiles();
+        }
+
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Approves a pending file.
+    /// </summary>
+    private async Task ApproveFile(int fileId)
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        try
+        {
+            var result = await GroupFileService.ApproveFileAsync(fileId, currentUserId);
+
+            if (result.Success)
+            {
+                AlertService.ShowSuccess("File approved successfully.");
+                await LoadPendingFiles();
+                await LoadPendingFileCount();
+                await LoadFiles();
+            }
+            else
+            {
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to approve file.");
+            }
+        }
+        catch (Exception ex)
+        {
+            AlertService.ShowError($"Approval failed: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Opens the decline file modal.
+    /// </summary>
+    private void OpenDeclineModal(GroupFileDto file)
+    {
+        fileToDecline = file;
+        declineReason = "";
+        showDeclineModal = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the decline file modal.
+    /// </summary>
+    private void CloseDeclineModal()
+    {
+        showDeclineModal = false;
+        fileToDecline = null;
+        declineReason = "";
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Confirms and executes file decline.
+    /// </summary>
+    private async Task ConfirmDeclineFile()
+    {
+        if (fileToDecline == null || string.IsNullOrEmpty(currentUserId)) return;
+
+        try
+        {
+            var result = await GroupFileService.DeclineFileAsync(
+                fileToDecline.Id,
+                currentUserId,
+                string.IsNullOrWhiteSpace(declineReason) ? null : declineReason.Trim()
+            );
+
+            if (result.Success)
+            {
+                AlertService.ShowSuccess("File declined successfully.");
+                CloseDeclineModal();
+                await LoadPendingFiles();
+                await LoadPendingFileCount();
+            }
+            else
+            {
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to decline file.");
+            }
+        }
+        catch (Exception ex)
+        {
+            AlertService.ShowError($"Decline failed: {ex.Message}");
+        }
+    }
+
+    #endregion
+
+    #region Helpers
+
+    /// <summary>
+    /// Gets the Bootstrap color class for a file icon based on file type.
+    /// </summary>
+    private static string GetFileIconColor(GroupFileDto file)
+    {
+        if (file.IsImage) return "text-success";
+        if (file.IsPdf) return "text-danger";
+        if (file.IsDocument) return "text-primary";
+        if (file.IsArchive) return "text-warning";
+        return "text-secondary";
+    }
+
+    /// <summary>
+    /// Formats bytes into a human-readable string.
+    /// </summary>
+    private static string FormatBytes(long bytes)
+    {
+        string[] sizes = ["B", "KB", "MB", "GB", "TB"];
+        int order = 0;
+        double size = bytes;
+
+        while (size >= 1024 && order < sizes.Length - 1)
+        {
+            order++;
+            size /= 1024;
+        }
+
+        return $"{size:0.##} {sizes[order]}";
+    }
+
+    #endregion
+}

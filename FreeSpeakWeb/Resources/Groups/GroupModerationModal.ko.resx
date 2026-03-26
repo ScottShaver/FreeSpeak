@@ -304,4 +304,52 @@
   <data name="AttachedImages" xml:space="preserve">
     <value>첨부 이미지</value>
   </data>
+  <data name="PendingFiles" xml:space="preserve">
+    <value>대기 중인 파일</value>
+  </data>
+  <data name="PendingFilesDescription" xml:space="preserve">
+    <value>그룹 회원에게 표시되기 전에 승인 대기 중인 업로드된 파일을 검토합니다.</value>
+  </data>
+  <data name="NoPendingFiles" xml:space="preserve">
+    <value>대기 중인 파일이 없습니다. 모든 파일 업로드가 검토되었습니다!</value>
+  </data>
+  <data name="ShowingPendingFiles" xml:space="preserve">
+    <value>{0}개의 대기 중인 파일 표시</value>
+  </data>
+  <data name="UploadedBy" xml:space="preserve">
+    <value>업로드한 사람</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>파일이 승인되어 이제 그룹 회원에게 표시됩니다.</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>파일이 거부되어 제거되었습니다.</value>
+  </data>
+  <data name="ErrorLoadingFiles" xml:space="preserve">
+    <value>대기 중인 파일 로드 중 오류가 발생했습니다.</value>
+  </data>
+  <data name="ErrorProcessingFile" xml:space="preserve">
+    <value>파일 처리 중 오류가 발생했습니다.</value>
+  </data>
+  <data name="ApproveTooltip" xml:space="preserve">
+    <value>이 파일을 승인하고 모든 회원에게 표시</value>
+  </data>
+  <data name="DeclineTooltip" xml:space="preserve">
+    <value>이 파일 거부 - 제거됩니다</value>
+  </data>
+  <data name="DeclineFile" xml:space="preserve">
+    <value>파일 거부</value>
+  </data>
+  <data name="DeclineFileConfirmation" xml:space="preserve">
+    <value>거부하려고 합니다: {0}</value>
+  </data>
+  <data name="DeclineReason" xml:space="preserve">
+    <value>사유 (선택사항)</value>
+  </data>
+  <data name="DeclineReasonPlaceholder" xml:space="preserve">
+    <value>이 파일을 거부하는 이유를 입력하세요...</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>취소</value>
+  </data>
 </root>

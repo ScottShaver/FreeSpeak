@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="PageTitle" xml:space="preserve"><value>Pliki - {0}</value></data>
+  <data name="LoadingGroupInfo" xml:space="preserve"><value>Ładowanie informacji o grupie...</value></data>
+  <data name="GroupNotFound" xml:space="preserve"><value>Nie znaleziono grupy</value></data>
+  <data name="GroupNotFoundMessage" xml:space="preserve"><value>Szukana grupa nie istnieje lub nie masz do niej dostępu.</value></data>
+  <data name="GoToGroups" xml:space="preserve"><value>Przejdź do Grup</value></data>
+  <data name="FilesNotEnabled" xml:space="preserve"><value>Pliki nie są włączone</value></data>
+  <data name="FilesNotEnabledMessage" xml:space="preserve"><value>Przesyłanie plików nie jest włączone dla tej grupy.</value></data>
+  <data name="BackToGroup" xml:space="preserve"><value>Powrót do grupy</value></data>
+  <data name="Groups" xml:space="preserve"><value>Grupy</value></data>
+  <data name="Files" xml:space="preserve"><value>Pliki</value></data>
+  <data name="GroupFiles" xml:space="preserve"><value>Pliki grupy</value></data>
+  <data name="FileManager" xml:space="preserve"><value>Menedżer plików</value></data>
+  <data name="PendingApproval" xml:space="preserve"><value>Oczekuje na zatwierdzenie</value></data>
+  <data name="PageDescription" xml:space="preserve"><value>Udostępniaj dokumenty, obrazy i inne pliki członkom grupy. Pliki mogą wymagać zatwierdzenia przez administratorów grupy, zanim staną się widoczne dla wszystkich.</value></data>
+  <data name="TotalFiles" xml:space="preserve"><value>Wszystkie pliki</value></data>
+  <data name="ApprovedFiles" xml:space="preserve"><value>Zatwierdzone</value></data>
+  <data name="TotalStorage" xml:space="preserve"><value>Całkowita przestrzeń</value></data>
+  <data name="UploadFile" xml:space="preserve"><value>Prześlij plik</value></data>
+  <data name="FilesPendingApproval" xml:space="preserve"><value>{0} plik(ów) oczekuje na zatwierdzenie</value></data>
+  <data name="HidePending" xml:space="preserve"><value>Ukryj oczekujące</value></data>
+  <data name="ReviewPending" xml:space="preserve"><value>Przejrzyj oczekujące</value></data>
+  <data name="PendingFiles" xml:space="preserve"><value>Oczekujące pliki</value></data>
+  <data name="LoadingPendingFiles" xml:space="preserve"><value>Ładowanie oczekujących plików...</value></data>
+  <data name="NoPendingFiles" xml:space="preserve"><value>Brak plików oczekujących na zatwierdzenie</value></data>
+  <data name="File" xml:space="preserve"><value>Plik</value></data>
+  <data name="UploadedBy" xml:space="preserve"><value>Przesłane przez</value></data>
+  <data name="Size" xml:space="preserve"><value>Rozmiar</value></data>
+  <data name="Uploaded" xml:space="preserve"><value>Przesłano</value></data>
+  <data name="Actions" xml:space="preserve"><value>Akcje</value></data>
+  <data name="Approve" xml:space="preserve"><value>Zatwierdź</value></data>
+  <data name="Decline" xml:space="preserve"><value>Odrzuć</value></data>
+  <data name="SearchPlaceholder" xml:space="preserve"><value>Szukaj plików po nazwie lub opisie...</value></data>
+  <data name="Search" xml:space="preserve"><value>Szukaj</value></data>
+  <data name="SearchResults" xml:space="preserve"><value>{0} wyników dla "{1}"</value></data>
+  <data name="FilesShared" xml:space="preserve"><value>{0} plik(ów) udostępnionych w tej grupie</value></data>
+  <data name="LoadingFiles" xml:space="preserve"><value>Ładowanie plików...</value></data>
+  <data name="NoFilesYet" xml:space="preserve"><value>W tej grupie nie udostępniono jeszcze żadnych plików</value></data>
+  <data name="NoFilesMatch" xml:space="preserve"><value>Żadne pliki nie pasują do wyszukiwania</value></data>
+  <data name="Download" xml:space="preserve"><value>Pobierz</value></data>
+  <data name="Delete" xml:space="preserve"><value>Usuń</value></data>
+  <data name="PendingApproval" xml:space="preserve"><value>Oczekuje na zatwierdzenie</value></data>
+  <data name="FilePagination" xml:space="preserve"><value>Paginacja plików</value></data>
+  <data name="UploadingFile" xml:space="preserve"><value>Przesyłanie pliku...</value></data>
+  <data name="SelectFile" xml:space="preserve"><value>Wybierz plik</value></data>
+  <data name="MaxFileSize" xml:space="preserve"><value>Maksymalny rozmiar pliku: 50 MB</value></data>
+  <data name="DescriptionOptional" xml:space="preserve"><value>Opis (opcjonalnie)</value></data>
+  <data name="DescriptionPlaceholder" xml:space="preserve"><value>Dodaj opis, aby pomóc innym zrozumieć ten plik...</value></data>
+  <data name="FilesRequireApproval" xml:space="preserve"><value>Pliki wymagają zatwierdzenia zanim staną się widoczne dla innych członków.</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Anuluj</value></data>
+  <data name="Upload" xml:space="preserve"><value>Prześlij</value></data>
+  <data name="DeleteFile" xml:space="preserve"><value>Usuń plik</value></data>
+  <data name="DeleteFileConfirm" xml:space="preserve"><value>Czy na pewno chcesz usunąć "{0}"? Tej akcji nie można cofnąć.</value></data>
+  <data name="DeclineFile" xml:space="preserve"><value>Odrzuć plik</value></data>
+  <data name="AboutToDecline" xml:space="preserve"><value>Zamierzasz odrzucić:</value></data>
+  <data name="ReasonOptional" xml:space="preserve"><value>Powód (opcjonalnie)</value></data>
+  <data name="DeclineReasonPlaceholder" xml:space="preserve"><value>Podaj powód odrzucenia tego pliku...</value></data>
+</root>

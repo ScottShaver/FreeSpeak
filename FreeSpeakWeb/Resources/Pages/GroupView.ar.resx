@@ -151,4 +151,7 @@
   <data name="GroupInactiveMessage" xml:space="preserve">
     <value>هذه المجموعة غير نشطة حالياً. النشر وعرض المنشورات غير متاح في الوقت الحالي. يرجى التحقق لاحقاً أو الاتصال بمسؤولي المجموعة للحصول على مزيد من المعلومات.</value>
   </data>
+  <data name="Files" xml:space="preserve">
+    <value>الملفات</value>
+  </data>
 </root>

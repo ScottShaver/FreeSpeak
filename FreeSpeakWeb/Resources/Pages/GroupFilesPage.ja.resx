@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="PageTitle" xml:space="preserve"><value>ファイル - {0}</value></data>
+  <data name="LoadingGroupInfo" xml:space="preserve"><value>グループ情報を読み込み中...</value></data>
+  <data name="GroupNotFound" xml:space="preserve"><value>グループが見つかりません</value></data>
+  <data name="GroupNotFoundMessage" xml:space="preserve"><value>お探しのグループは存在しないか、アクセス権がありません。</value></data>
+  <data name="GoToGroups" xml:space="preserve"><value>グループへ移動</value></data>
+  <data name="FilesNotEnabled" xml:space="preserve"><value>ファイルが無効です</value></data>
+  <data name="FilesNotEnabledMessage" xml:space="preserve"><value>このグループではファイルのアップロードが有効になっていません。</value></data>
+  <data name="BackToGroup" xml:space="preserve"><value>グループに戻る</value></data>
+  <data name="Groups" xml:space="preserve"><value>グループ</value></data>
+  <data name="Files" xml:space="preserve"><value>ファイル</value></data>
+  <data name="GroupFiles" xml:space="preserve"><value>グループファイル</value></data>
+  <data name="FileManager" xml:space="preserve"><value>ファイルマネージャー</value></data>
+  <data name="PendingApproval" xml:space="preserve"><value>承認待ち</value></data>
+  <data name="PageDescription" xml:space="preserve"><value>ドキュメント、画像、その他のファイルをグループメンバーと共有できます。ファイルがすべてのメンバーに表示される前に、グループ管理者の承認が必要になる場合があります。</value></data>
+  <data name="TotalFiles" xml:space="preserve"><value>合計ファイル数</value></data>
+  <data name="ApprovedFiles" xml:space="preserve"><value>承認済み</value></data>
+  <data name="TotalStorage" xml:space="preserve"><value>合計ストレージ</value></data>
+  <data name="UploadFile" xml:space="preserve"><value>ファイルをアップロード</value></data>
+  <data name="FilesPendingApproval" xml:space="preserve"><value>{0}件のファイルが承認待ちです</value></data>
+  <data name="HidePending" xml:space="preserve"><value>保留中を非表示</value></data>
+  <data name="ReviewPending" xml:space="preserve"><value>保留中を確認</value></data>
+  <data name="PendingFiles" xml:space="preserve"><value>保留中のファイル</value></data>
+  <data name="LoadingPendingFiles" xml:space="preserve"><value>保留中のファイルを読み込み中...</value></data>
+  <data name="NoPendingFiles" xml:space="preserve"><value>承認待ちのファイルはありません</value></data>
+  <data name="File" xml:space="preserve"><value>ファイル</value></data>
+  <data name="UploadedBy" xml:space="preserve"><value>アップロード者</value></data>
+  <data name="Size" xml:space="preserve"><value>サイズ</value></data>
+  <data name="Uploaded" xml:space="preserve"><value>アップロード日時</value></data>
+  <data name="Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="Approve" xml:space="preserve"><value>承認</value></data>
+  <data name="Decline" xml:space="preserve"><value>却下</value></data>
+  <data name="SearchPlaceholder" xml:space="preserve"><value>ファイル名または説明で検索...</value></data>
+  <data name="Search" xml:space="preserve"><value>検索</value></data>
+  <data name="SearchResults" xml:space="preserve"><value>「{1}」の検索結果: {0}件</value></data>
+  <data name="FilesShared" xml:space="preserve"><value>このグループで共有されているファイル: {0}件</value></data>
+  <data name="LoadingFiles" xml:space="preserve"><value>ファイルを読み込み中...</value></data>
+  <data name="NoFilesYet" xml:space="preserve"><value>このグループにはまだファイルが共有されていません</value></data>
+  <data name="NoFilesMatch" xml:space="preserve"><value>検索に一致するファイルはありません</value></data>
+  <data name="Download" xml:space="preserve"><value>ダウンロード</value></data>
+  <data name="Delete" xml:space="preserve"><value>削除</value></data>
+  <data name="PendingApproval" xml:space="preserve"><value>承認待ち</value></data>
+  <data name="FilePagination" xml:space="preserve"><value>ファイルページネーション</value></data>
+  <data name="UploadingFile" xml:space="preserve"><value>ファイルをアップロード中...</value></data>
+  <data name="SelectFile" xml:space="preserve"><value>ファイルを選択</value></data>
+  <data name="MaxFileSize" xml:space="preserve"><value>最大ファイルサイズ: 50 MB</value></data>
+  <data name="DescriptionOptional" xml:space="preserve"><value>説明（任意）</value></data>
+  <data name="DescriptionPlaceholder" xml:space="preserve"><value>他のユーザーがこのファイルを理解できるように説明を追加してください...</value></data>
+  <data name="FilesRequireApproval" xml:space="preserve"><value>ファイルは他のメンバーに表示される前に承認が必要です。</value></data>
+  <data name="Cancel" xml:space="preserve"><value>キャンセル</value></data>
+  <data name="Upload" xml:space="preserve"><value>アップロード</value></data>
+  <data name="DeleteFile" xml:space="preserve"><value>ファイルを削除</value></data>
+  <data name="DeleteFileConfirm" xml:space="preserve"><value>「{0}」を削除してもよろしいですか？この操作は元に戻せません。</value></data>
+  <data name="DeclineFile" xml:space="preserve"><value>ファイルを却下</value></data>
+  <data name="AboutToDecline" xml:space="preserve"><value>以下を却下しようとしています:</value></data>
+  <data name="ReasonOptional" xml:space="preserve"><value>理由（任意）</value></data>
+  <data name="DeclineReasonPlaceholder" xml:space="preserve"><value>このファイルを却下する理由を入力してください...</value></data>
+</root>

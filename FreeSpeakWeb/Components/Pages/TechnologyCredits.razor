@@ -64,7 +64,7 @@
         <h3>Custom Features & Services</h3>
         <ul>
             <li><strong>Internationalization (i18n)</strong> - Comprehensive multi-language support
-                <br/><small>12 languages with 999+ translations across all user-facing features. Built with .NET's IStringLocalizer and resource files (.resx). Supports Arabic (RTL), East Asian languages, and European languages with automatic browser language detection.</small>
+                <br/><small>13 languages with 13,000+ translations across all user-facing features. Built with .NET's IStringLocalizer and resource files (.resx). Supports Arabic (RTL), East Asian languages, and European languages with automatic browser language detection.</small>
             </li>
             <li><strong>Theme System</strong> - 8 customizable color schemes with CSS custom properties
                 <br/><small>Default, Dark Mode, Light Mode, Ocean Blue, Forest Green, Sunset Orange, Purple Dream, High Contrast</small>
@@ -82,7 +82,10 @@
                 <br/><small>Global and per-endpoint limits to prevent abuse, distributed rate limiting for multi-server deployments</small>
             </li>
             <li><strong>File Signature Validation</strong> - Magic byte validation for uploaded files
-                <br/><small>Prevents disguised malicious files by verifying content matches declared file type</small>
+                <br/><small>Prevents disguised malicious files by verifying content matches declared file type. Supports separate validation rules for posts (images/videos only) and group files (documents, archives, images, videos). Blocks executables and scripts.</small>
+            </li>
+            <li><strong>Group File Sharing</strong> - Secure file sharing within groups
+                <br/><small>Upload and share documents (PDF, Office, text), archives (ZIP, RAR, 7z), images, and videos. Includes approval workflow, virus scanning, and download tracking.</small>
             </li>
             <li><strong>Virus Scanning</strong> - Optional ClamAV integration for file uploads
                 <br/><small>Scans images and videos for viruses/malware before storage</small>
@@ -108,7 +111,7 @@
             </li>
         </ul>
 
-        <h4>Supported Languages (12 Total)</h4>
+        <h4>Supported Languages (13 Total)</h4>
         <div class="row">
             <div class="col-md-6">
                 <ul>
@@ -135,13 +138,14 @@
 
         <h4>Translation Coverage</h4>
         <ul>
-            <li><strong>Account Management</strong> - 67 keys × 12 languages = 804 translations ✅</li>
-            <li><strong>Groups System</strong> - 32 keys × 12 languages = 384 translations ✅</li>
-            <li><strong>Group Views</strong> - 13 keys × 12 languages = 156 translations ✅</li>
-            <li><strong>Navigation & UI</strong> - All menu items and interface controls ✅</li>
-            <li><strong>SystemAdmin</strong> - 45 keys × 3 languages = 135 translations (partial)</li>
+            <li><strong>Account Management</strong> - 67 keys × 13 languages = 871 translations ✅</li>
+            <li><strong>Groups System</strong> - 98 keys × 13 languages = 1,274 translations ✅</li>
+            <li><strong>Group Files</strong> - 87 keys × 13 languages = 1,131 translations ✅</li>
+            <li><strong>Feed & Posts</strong> - 97 keys × 13 languages = 1,261 translations ✅</li>
+            <li><strong>Navigation & UI</strong> - 85 keys × 13 languages = 1,105 translations ✅</li>
+            <li><strong>System Administration</strong> - 45 keys × 13 languages = 585 translations ✅</li>
         </ul>
-        <p><small><strong>Total Coverage:</strong> 999+ translations • <strong>User-facing:</strong> 100% complete • <strong>Overall:</strong> 71.2%</small></p>
+        <p><small><strong>Total Coverage:</strong> 1,009 keys × 13 languages = 13,117 translations • <strong>User-facing:</strong> 100% complete</small></p>
 
         <h3>Testing Packages</h3>
         <h4>Unit Testing (FreeSpeakWeb.Tests)</h4>

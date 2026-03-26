@@ -304,4 +304,52 @@
   <data name="AttachedImages" xml:space="preserve">
     <value>Angehängte Bilder</value>
   </data>
+  <data name="PendingFiles" xml:space="preserve">
+    <value>Ausstehende Dateien</value>
+  </data>
+  <data name="PendingFilesDescription" xml:space="preserve">
+    <value>Überprüfen Sie hochgeladene Dateien, die auf Genehmigung warten, bevor sie für Gruppenmitglieder sichtbar werden.</value>
+  </data>
+  <data name="NoPendingFiles" xml:space="preserve">
+    <value>Keine ausstehenden Dateien. Alle Datei-Uploads wurden überprüft!</value>
+  </data>
+  <data name="ShowingPendingFiles" xml:space="preserve">
+    <value>{0} ausstehende Datei(en) werden angezeigt</value>
+  </data>
+  <data name="UploadedBy" xml:space="preserve">
+    <value>Hochgeladen von</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>Datei genehmigt und jetzt für Gruppenmitglieder sichtbar.</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>Datei abgelehnt und entfernt.</value>
+  </data>
+  <data name="ErrorLoadingFiles" xml:space="preserve">
+    <value>Beim Laden der ausstehenden Dateien ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="ErrorProcessingFile" xml:space="preserve">
+    <value>Bei der Verarbeitung der Datei ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="ApproveTooltip" xml:space="preserve">
+    <value>Diese Datei genehmigen und für alle Mitglieder sichtbar machen</value>
+  </data>
+  <data name="DeclineTooltip" xml:space="preserve">
+    <value>Diese Datei ablehnen - sie wird entfernt</value>
+  </data>
+  <data name="DeclineFile" xml:space="preserve">
+    <value>Datei ablehnen</value>
+  </data>
+  <data name="DeclineFileConfirmation" xml:space="preserve">
+    <value>Sie sind dabei abzulehnen: {0}</value>
+  </data>
+  <data name="DeclineReason" xml:space="preserve">
+    <value>Grund (optional)</value>
+  </data>
+  <data name="DeclineReasonPlaceholder" xml:space="preserve">
+    <value>Geben Sie einen Grund für die Ablehnung dieser Datei an...</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
 </root>

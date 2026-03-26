@@ -78,10 +78,40 @@ public class FileSignatureValidator : IFileSignatureValidator
         // MPEG - Video
         new FileSignature([0x00, 0x00, 0x01, 0xBA], "video/mpeg", [".mpg", ".mpeg"]),
         new FileSignature([0x00, 0x00, 0x01, 0xB3], "video/mpeg", [".mpg", ".mpeg"]),
+
+        // PDF - %PDF
+        new FileSignature([0x25, 0x50, 0x44, 0x46], "application/pdf", [".pdf"]),
+
+        // Microsoft Office (modern OOXML formats) - PK header with specific content
+        new FileSignature([0x50, 0x4B, 0x03, 0x04], "application/vnd.openxmlformats-officedocument.wordprocessingml.document", [".docx", ".xlsx", ".pptx"]),
+
+        // Microsoft Office (legacy formats)
+        new FileSignature([0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1], "application/msword", [".doc", ".xls", ".ppt"]),
+
+        // ZIP Archive
+        new FileSignature([0x50, 0x4B, 0x03, 0x04], "application/zip", [".zip"]),
+        new FileSignature([0x50, 0x4B, 0x05, 0x06], "application/zip", [".zip"]),
+        new FileSignature([0x50, 0x4B, 0x07, 0x08], "application/zip", [".zip"]),
+
+        // RAR Archive
+        new FileSignature([0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x00], "application/x-rar-compressed", [".rar"]),
+        new FileSignature([0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x01, 0x00], "application/x-rar-compressed", [".rar"]),
+
+        // 7-Zip Archive
+        new FileSignature([0x37, 0x7A, 0xBC, 0xAF, 0x27, 0x1C], "application/x-7z-compressed", [".7z"]),
+
+        // TAR Archive
+        new FileSignature([0x75, 0x73, 0x74, 0x61, 0x72], "application/x-tar", [".tar"], 257),
+
+        // GZIP
+        new FileSignature([0x1F, 0x8B], "application/gzip", [".gz", ".tgz"]),
+
+        // Plain text / CSV (no magic bytes, will be validated by extension only)
+        // Note: Text files don't have magic bytes, so we'll handle them specially
     ];
 
     /// <summary>
-    /// Allowed file extensions for upload.
+    /// Allowed image extensions for posts and group files.
     /// </summary>
     private static readonly HashSet<string> _allowedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -89,11 +119,43 @@ public class FileSignatureValidator : IFileSignatureValidator
     };
 
     /// <summary>
-    /// Allowed video extensions for upload.
+    /// Allowed video extensions for posts and group files.
     /// </summary>
     private static readonly HashSet<string> _allowedVideoExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
         ".mp4", ".m4v", ".mov", ".webm", ".mkv", ".avi", ".wmv", ".flv", ".3gp", ".3g2", ".mpg", ".mpeg"
+    };
+
+    /// <summary>
+    /// Allowed document extensions for group files only.
+    /// </summary>
+    private static readonly HashSet<string> _allowedDocumentExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".txt", ".csv", ".rtf", ".odt", ".ods", ".odp"
+    };
+
+    /// <summary>
+    /// Allowed archive extensions for group files only.
+    /// </summary>
+    private static readonly HashSet<string> _allowedArchiveExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".zip", ".rar", ".7z", ".tar", ".gz", ".tgz"
+    };
+
+    /// <summary>
+    /// Forbidden extensions that should never be allowed (executables and scripts).
+    /// </summary>
+    private static readonly HashSet<string> _forbiddenExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        // Executables
+        ".exe", ".dll", ".com", ".bat", ".cmd", ".msi", ".scr", ".sys", ".bin",
+        // Scripts
+        ".ps1", ".psm1", ".psd1", ".ps1xml", ".psc1", ".pssc", ".sh", ".bash", ".zsh",
+        ".vbs", ".vbe", ".js", ".jse", ".wsf", ".wsh",
+        // Application packages
+        ".app", ".deb", ".rpm", ".dmg", ".pkg",
+        // Other potentially dangerous
+        ".jar", ".apk", ".gadget", ".application", ".pif", ".cpl", ".inf", ".reg"
     };
 
     /// <summary>
@@ -128,6 +190,27 @@ public class FileSignatureValidator : IFileSignatureValidator
         { ".3g2", "video/3gpp" },
         { ".mpg", "video/mpeg" },
         { ".mpeg", "video/mpeg" },
+        // Documents
+        { ".pdf", "application/pdf" },
+        { ".doc", "application/msword" },
+        { ".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+        { ".xls", "application/vnd.ms-excel" },
+        { ".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
+        { ".ppt", "application/vnd.ms-powerpoint" },
+        { ".pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation" },
+        { ".txt", "text/plain" },
+        { ".csv", "text/csv" },
+        { ".rtf", "application/rtf" },
+        { ".odt", "application/vnd.oasis.opendocument.text" },
+        { ".ods", "application/vnd.oasis.opendocument.spreadsheet" },
+        { ".odp", "application/vnd.oasis.opendocument.presentation" },
+        // Archives
+        { ".zip", "application/zip" },
+        { ".rar", "application/x-rar-compressed" },
+        { ".7z", "application/x-7z-compressed" },
+        { ".tar", "application/x-tar" },
+        { ".gz", "application/gzip" },
+        { ".tgz", "application/gzip" },
     };
 
     /// <summary>
@@ -148,6 +231,38 @@ public class FileSignatureValidator : IFileSignatureValidator
     /// <inheritdoc/>
     public (bool IsValid, string? ErrorMessage) ValidateFileSignature(ReadOnlySpan<byte> fileBytes, string fileName)
     {
+        return ValidateFileSignatureInternal(fileBytes, fileName, forGroupFiles: false);
+    }
+
+    /// <summary>
+    /// Validates that the file content matches the expected file type for group file uploads.
+    /// Allows images, videos, documents, and archives but blocks executables and scripts.
+    /// </summary>
+    /// <param name="fileBytes">The raw bytes of the file to validate.</param>
+    /// <param name="fileName">The declared filename including extension.</param>
+    /// <returns>A tuple containing success status and error message if validation failed.</returns>
+    public (bool IsValid, string? ErrorMessage) ValidateGroupFileSignature(byte[] fileBytes, string fileName)
+    {
+        return ValidateGroupFileSignature(fileBytes.AsSpan(), fileName);
+    }
+
+    /// <summary>
+    /// Validates that the file content matches the expected file type for group file uploads.
+    /// Allows images, videos, documents, and archives but blocks executables and scripts.
+    /// </summary>
+    /// <param name="fileBytes">The raw bytes of the file to validate.</param>
+    /// <param name="fileName">The declared filename including extension.</param>
+    /// <returns>A tuple containing success status and error message if validation failed.</returns>
+    public (bool IsValid, string? ErrorMessage) ValidateGroupFileSignature(ReadOnlySpan<byte> fileBytes, string fileName)
+    {
+        return ValidateFileSignatureInternal(fileBytes, fileName, forGroupFiles: true);
+    }
+
+    /// <summary>
+    /// Internal method to validate file signature with different rules for posts vs group files.
+    /// </summary>
+    private (bool IsValid, string? ErrorMessage) ValidateFileSignatureInternal(ReadOnlySpan<byte> fileBytes, string fileName, bool forGroupFiles)
+    {
         if (fileBytes.Length == 0)
         {
             return (false, "File is empty.");
@@ -159,8 +274,20 @@ public class FileSignatureValidator : IFileSignatureValidator
             return (false, "File has no extension.");
         }
 
-        // Check if extension is allowed
-        if (!IsAllowedExtension(fileName))
+        // Check if extension is forbidden (executables/scripts)
+        if (_forbiddenExtensions.Contains(extension))
+        {
+            _logger.LogWarning("File upload rejected: Extension {Extension} is forbidden for file {FileName}", 
+                extension, fileName);
+            return (false, $"File extension '{extension}' is not allowed for security reasons.");
+        }
+
+        // Check if extension is allowed based on context
+        bool isAllowed = forGroupFiles 
+            ? IsAllowedForGroupFiles(fileName) 
+            : IsAllowedExtension(fileName);
+
+        if (!isAllowed)
         {
             _logger.LogWarning("File upload rejected: Extension {Extension} is not allowed for file {FileName}", 
                 extension, fileName);
@@ -174,10 +301,26 @@ public class FileSignatureValidator : IFileSignatureValidator
             return (false, $"Unknown file extension '{extension}'.");
         }
 
+        // For text files (txt, csv) that don't have magic bytes, skip signature validation
+        if (extension.Equals(".txt", StringComparison.OrdinalIgnoreCase) || 
+            extension.Equals(".csv", StringComparison.OrdinalIgnoreCase))
+        {
+            _logger.LogDebug("Text file validated by extension only: {FileName}", fileName);
+            return (true, null);
+        }
+
         // Detect actual MIME type from file content
         var detectedMimeType = DetectMimeType(fileBytes);
         if (detectedMimeType == null)
         {
+            // For certain document/archive formats, if we can't detect but extension is allowed, allow it
+            // This handles edge cases with complex formats
+            if (forGroupFiles && (_allowedDocumentExtensions.Contains(extension) || _allowedArchiveExtensions.Contains(extension)))
+            {
+                _logger.LogDebug("Document/archive file validated by extension: {FileName}", fileName);
+                return (true, null);
+            }
+
             _logger.LogWarning("File upload rejected: Unable to detect file type from magic bytes for file {FileName}", 
                 fileName);
             return (false, "Unable to verify file type. The file may be corrupted or in an unsupported format.");
@@ -231,6 +374,32 @@ public class FileSignatureValidator : IFileSignatureValidator
         }
 
         return _allowedImageExtensions.Contains(extension) || _allowedVideoExtensions.Contains(extension);
+    }
+
+    /// <summary>
+    /// Checks if the file extension is allowed for group file uploads (includes documents and archives).
+    /// </summary>
+    /// <param name="fileName">The filename to check.</param>
+    /// <returns>True if the extension is allowed, false otherwise.</returns>
+    public bool IsAllowedForGroupFiles(string fileName)
+    {
+        var extension = Path.GetExtension(fileName);
+        if (string.IsNullOrEmpty(extension))
+        {
+            return false;
+        }
+
+        // Check if forbidden first
+        if (_forbiddenExtensions.Contains(extension))
+        {
+            return false;
+        }
+
+        // Allow images, videos, documents, and archives
+        return _allowedImageExtensions.Contains(extension) || 
+               _allowedVideoExtensions.Contains(extension) ||
+               _allowedDocumentExtensions.Contains(extension) ||
+               _allowedArchiveExtensions.Contains(extension);
     }
 
     /// <inheritdoc/>
@@ -328,6 +497,26 @@ public class FileSignatureValidator : IFileSignatureValidator
             {
                 return true;
             }
+        }
+
+        // Office formats (OOXML uses ZIP container - PK header)
+        // Allow ZIP detection for Office documents
+        if ((expected.Contains("openxmlformats") || expected == "application/vnd.ms-excel" || 
+             expected == "application/vnd.ms-powerpoint" || expected == "application/msword") &&
+            detected == "application/zip")
+        {
+            return true;
+        }
+
+        // Legacy Office formats share the same OLE compound file header
+        var legacyOfficeTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "application/msword", "application/vnd.ms-excel", "application/vnd.ms-powerpoint"
+        };
+
+        if (legacyOfficeTypes.Contains(expected) && legacyOfficeTypes.Contains(detected))
+        {
+            return true;
         }
 
         return false;

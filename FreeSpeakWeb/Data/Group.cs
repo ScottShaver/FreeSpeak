@@ -76,6 +76,18 @@ namespace FreeSpeakWeb.Data
         public bool EnablePointsSystem { get; set; } = false;
 
         /// <summary>
+        /// Gets or sets whether file uploads are enabled for this group.
+        /// When true, members can upload files to share with other group members. Group admins can toggle this feature. Defaults to false.
+        /// </summary>
+        public bool EnableFileUploads { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets whether uploaded files require moderator or administrator approval before being visible to members.
+        /// When true, all file uploads start with Pending status and must be approved before other members can see or download them. Defaults to false.
+        /// </summary>
+        public bool RequiresFileApproval { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets whether the group is active and ready to accept users and content.
         /// When false, the group is in setup mode and not visible to non-admin users. Defaults to false.
         /// </summary>

@@ -304,4 +304,52 @@
   <data name="AttachedImages" xml:space="preserve">
     <value>Immagini allegate</value>
   </data>
+  <data name="PendingFiles" xml:space="preserve">
+    <value>File in attesa</value>
+  </data>
+  <data name="PendingFilesDescription" xml:space="preserve">
+    <value>Rivedi i file caricati in attesa di approvazione prima che diventino visibili ai membri del gruppo.</value>
+  </data>
+  <data name="NoPendingFiles" xml:space="preserve">
+    <value>Nessun file in attesa. Tutti i caricamenti di file sono stati revisionati!</value>
+  </data>
+  <data name="ShowingPendingFiles" xml:space="preserve">
+    <value>Visualizzazione di {0} file in attesa</value>
+  </data>
+  <data name="UploadedBy" xml:space="preserve">
+    <value>Caricato da</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>File approvato e ora visibile ai membri del gruppo.</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>File rifiutato e rimosso.</value>
+  </data>
+  <data name="ErrorLoadingFiles" xml:space="preserve">
+    <value>Si è verificato un errore durante il caricamento dei file in attesa.</value>
+  </data>
+  <data name="ErrorProcessingFile" xml:space="preserve">
+    <value>Si è verificato un errore durante l'elaborazione del file.</value>
+  </data>
+  <data name="ApproveTooltip" xml:space="preserve">
+    <value>Approva questo file e rendilo visibile a tutti i membri</value>
+  </data>
+  <data name="DeclineTooltip" xml:space="preserve">
+    <value>Rifiuta questo file - verrà rimosso</value>
+  </data>
+  <data name="DeclineFile" xml:space="preserve">
+    <value>Rifiuta file</value>
+  </data>
+  <data name="DeclineFileConfirmation" xml:space="preserve">
+    <value>Stai per rifiutare: {0}</value>
+  </data>
+  <data name="DeclineReason" xml:space="preserve">
+    <value>Motivo (opzionale)</value>
+  </data>
+  <data name="DeclineReasonPlaceholder" xml:space="preserve">
+    <value>Fornisci un motivo per il rifiuto di questo file...</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
 </root>

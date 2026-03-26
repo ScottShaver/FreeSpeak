@@ -304,4 +304,52 @@
   <data name="AttachedImages" xml:space="preserve">
     <value>Załączone obrazy</value>
   </data>
+  <data name="PendingFiles" xml:space="preserve">
+    <value>Oczekujące pliki</value>
+  </data>
+  <data name="PendingFilesDescription" xml:space="preserve">
+    <value>Przejrzyj przesłane pliki oczekujące na zatwierdzenie, zanim staną się widoczne dla członków grupy.</value>
+  </data>
+  <data name="NoPendingFiles" xml:space="preserve">
+    <value>Brak oczekujących plików. Wszystkie przesłane pliki zostały sprawdzone!</value>
+  </data>
+  <data name="ShowingPendingFiles" xml:space="preserve">
+    <value>Wyświetlanie {0} oczekujących plików</value>
+  </data>
+  <data name="UploadedBy" xml:space="preserve">
+    <value>Przesłane przez</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>Plik zatwierdzony i teraz widoczny dla członków grupy.</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>Plik odrzucony i usunięty.</value>
+  </data>
+  <data name="ErrorLoadingFiles" xml:space="preserve">
+    <value>Wystąpił błąd podczas ładowania oczekujących plików.</value>
+  </data>
+  <data name="ErrorProcessingFile" xml:space="preserve">
+    <value>Wystąpił błąd podczas przetwarzania pliku.</value>
+  </data>
+  <data name="ApproveTooltip" xml:space="preserve">
+    <value>Zatwierdź ten plik i uczyń go widocznym dla wszystkich członków</value>
+  </data>
+  <data name="DeclineTooltip" xml:space="preserve">
+    <value>Odrzuć ten plik - zostanie usunięty</value>
+  </data>
+  <data name="DeclineFile" xml:space="preserve">
+    <value>Odrzuć plik</value>
+  </data>
+  <data name="DeclineFileConfirmation" xml:space="preserve">
+    <value>Zamierzasz odrzucić: {0}</value>
+  </data>
+  <data name="DeclineReason" xml:space="preserve">
+    <value>Powód (opcjonalnie)</value>
+  </data>
+  <data name="DeclineReasonPlaceholder" xml:space="preserve">
+    <value>Podaj powód odrzucenia tego pliku...</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
 </root>

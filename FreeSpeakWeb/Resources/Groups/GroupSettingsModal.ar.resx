@@ -130,4 +130,19 @@
   <data name="IsClosedHelp" xml:space="preserve">
     <value>تحذير: إغلاق المجموعة نهائي. لا يمكن إجراء أي تغييرات بعد الإغلاق، حتى من قبل المسؤولين.</value>
   </data>
+  <data name="FileUploadSection" xml:space="preserve">
+    <value>مشاركة الملفات</value>
+  </data>
+  <data name="EnableFileUploads" xml:space="preserve">
+    <value>تفعيل رفع الملفات</value>
+  </data>
+  <data name="EnableFileUploadsHelp" xml:space="preserve">
+    <value>السماح للأعضاء برفع ومشاركة الملفات مع المجموعة.</value>
+  </data>
+  <data name="RequiresFileApproval" xml:space="preserve">
+    <value>يتطلب موافقة على الملفات</value>
+  </data>
+  <data name="RequiresFileApprovalHelp" xml:space="preserve">
+    <value>يجب الموافقة على الملفات المرفوعة من قبل المشرف قبل أن تكون مرئية للأعضاء الآخرين.</value>
+  </data>
 </root>

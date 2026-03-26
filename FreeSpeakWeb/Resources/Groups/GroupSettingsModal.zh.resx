@@ -130,4 +130,19 @@
   <data name="IsClosedHelp" xml:space="preserve">
     <value>警告：关闭群组是永久性的。关闭后无法进行任何更改，即使是管理员也不行。</value>
   </data>
+  <data name="FileUploadSection" xml:space="preserve">
+    <value>文件共享</value>
+  </data>
+  <data name="EnableFileUploads" xml:space="preserve">
+    <value>启用文件上传</value>
+  </data>
+  <data name="EnableFileUploadsHelp" xml:space="preserve">
+    <value>允许成员上传和共享文件给群组。</value>
+  </data>
+  <data name="RequiresFileApproval" xml:space="preserve">
+    <value>需要文件审批</value>
+  </data>
+  <data name="RequiresFileApprovalHelp" xml:space="preserve">
+    <value>上传的文件必须经版主审批后才能对其他成员可见。</value>
+  </data>
 </root>

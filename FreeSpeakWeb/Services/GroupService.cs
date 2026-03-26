@@ -419,6 +419,8 @@ namespace FreeSpeakWeb.Services
         /// <param name="requireAcceptRules">Optional setting for whether users must accept group rules before joining.</param>
         /// <param name="requiresPostApproval">Optional setting for whether new posts require moderator approval before being visible.</param>
         /// <param name="enablePointsSystem">Optional setting to enable or disable the points system for this group.</param>
+        /// <param name="enableFileUploads">Optional setting to enable or disable file uploads for this group.</param>
+        /// <param name="requiresFileApproval">Optional setting for whether uploaded files require moderator approval before being visible.</param>
         /// <param name="isActive">Optional setting to indicate if the group is active and ready for users.</param>
         /// <param name="isClosed">Optional setting to indicate if the group has been permanently closed.</param>
         /// <param name="headerImageUrl">Optional new header image URL.</param>
@@ -436,6 +438,8 @@ namespace FreeSpeakWeb.Services
             bool? requireAcceptRules = null,
             bool? requiresPostApproval = null,
             bool? enablePointsSystem = null,
+            bool? enableFileUploads = null,
+            bool? requiresFileApproval = null,
             bool? isActive = null,
             bool? isClosed = null,
             string? headerImageUrl = null,
@@ -566,6 +570,41 @@ namespace FreeSpeakWeb.Services
                         changedFields.Add("EnablePointsSystem");
                     }
                     group.EnablePointsSystem = enablePointsSystem.Value;
+                }
+
+                if (enableFileUploads.HasValue)
+                {
+                    if (group.EnableFileUploads != enableFileUploads.Value)
+                    {
+                        changedFields.Add("EnableFileUploads");
+                    }
+                    group.EnableFileUploads = enableFileUploads.Value;
+                }
+
+                if (requiresFileApproval.HasValue)
+                {
+                    if (group.RequiresFileApproval != requiresFileApproval.Value)
+                    {
+                        changedFields.Add("RequiresFileApproval");
+
+                        // If enabling file approval, set all existing non-Declined files to Approved status
+                        // so they remain visible to members
+                        if (requiresFileApproval.Value == true && group.RequiresFileApproval == false)
+                        {
+                            var filesToUpdate = await context.GroupFiles
+                                .Where(f => f.GroupId == groupId && f.Status != GroupFileStatus.Declined)
+                                .ToListAsync();
+
+                            foreach (var file in filesToUpdate)
+                            {
+                                file.Status = GroupFileStatus.Approved;
+                            }
+
+                            _logger.LogInformation("Set {Count} existing files to Approved status when enabling file approval for group {GroupId}", 
+                                filesToUpdate.Count, groupId);
+                        }
+                    }
+                    group.RequiresFileApproval = requiresFileApproval.Value;
                 }
 
                 if (requireAcceptRules.HasValue)

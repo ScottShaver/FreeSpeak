@@ -151,4 +151,7 @@
   <data name="GroupInactiveMessage" xml:space="preserve">
     <value>Este grupo no está activo actualmente. Publicar y ver publicaciones no está disponible en este momento. Por favor, vuelva más tarde o contacte a los administradores del grupo para obtener más información.</value>
   </data>
+  <data name="Files" xml:space="preserve">
+    <value>Archivos</value>
+  </data>
 </root>

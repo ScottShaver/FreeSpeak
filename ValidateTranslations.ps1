@@ -54,6 +54,10 @@ $ResourceGroups = @{
         BasePath = "FreeSpeakWeb\Resources\Pages\Groups.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
+    "GroupFiles" = @{
+        BasePath = "FreeSpeakWeb\Resources\Pages\GroupFiles.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
     "GroupView" = @{
         BasePath = "FreeSpeakWeb\Resources\Pages\GroupView.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")

@@ -304,4 +304,52 @@
   <data name="AttachedImages" xml:space="preserve">
     <value>附加图片</value>
   </data>
+  <data name="PendingFiles" xml:space="preserve">
+    <value>待审核文件</value>
+  </data>
+  <data name="PendingFilesDescription" xml:space="preserve">
+    <value>审核等待批准的上传文件，然后才能对群组成员可见。</value>
+  </data>
+  <data name="NoPendingFiles" xml:space="preserve">
+    <value>没有待审核的文件。所有文件上传都已审核！</value>
+  </data>
+  <data name="ShowingPendingFiles" xml:space="preserve">
+    <value>显示 {0} 个待审核文件</value>
+  </data>
+  <data name="UploadedBy" xml:space="preserve">
+    <value>上传者</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>文件已批准，现在对群组成员可见。</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>文件已拒绝并删除。</value>
+  </data>
+  <data name="ErrorLoadingFiles" xml:space="preserve">
+    <value>加载待审核文件时发生错误。</value>
+  </data>
+  <data name="ErrorProcessingFile" xml:space="preserve">
+    <value>处理文件时发生错误。</value>
+  </data>
+  <data name="ApproveTooltip" xml:space="preserve">
+    <value>批准此文件并使其对所有成员可见</value>
+  </data>
+  <data name="DeclineTooltip" xml:space="preserve">
+    <value>拒绝此文件 - 将被删除</value>
+  </data>
+  <data name="DeclineFile" xml:space="preserve">
+    <value>拒绝文件</value>
+  </data>
+  <data name="DeclineFileConfirmation" xml:space="preserve">
+    <value>您即将拒绝：{0}</value>
+  </data>
+  <data name="DeclineReason" xml:space="preserve">
+    <value>原因（可选）</value>
+  </data>
+  <data name="DeclineReasonPlaceholder" xml:space="preserve">
+    <value>请提供拒绝此文件的原因...</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
 </root>
