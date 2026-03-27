@@ -1,5 +1,9 @@
 # FreeSpeak
 
+Free as in free from advertisments, at the very least no ads in the feeds. :)
+
+I'm building this as way for me to get used to using AI as a developement partner.
+
 A modern social media platform built with Blazor Server and .NET 10, featuring real-time interactions, multi-level commenting, and reaction systems.
 
 ## Project Overview
