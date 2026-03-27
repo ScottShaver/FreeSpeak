@@ -55,7 +55,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
             return new PostRepository(
                 _contextFactory,
                 CreateMockLogger<PostRepository>(),
-                CreateFriendshipCacheService());
+                CreateFriendshipCacheService(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -67,7 +68,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
             return new FeedCommentRepository(
                 _contextFactory,
                 CreateMockLogger<FeedCommentRepository>(),
-                CreateMockAuditLogRepository());
+                CreateMockAuditLogRepository(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -78,7 +80,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         {
             return new FeedPostLikeRepository(
                 _contextFactory,
-                CreateMockLogger<FeedPostLikeRepository>());
+                CreateMockLogger<FeedPostLikeRepository>(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -89,7 +92,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         {
             return new FeedCommentLikeRepository(
                 _contextFactory,
-                CreateMockLogger<FeedCommentLikeRepository>());
+                CreateMockLogger<FeedCommentLikeRepository>(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -98,7 +102,10 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         /// <returns>A real PinnedPostRepository instance.</returns>
         public IPinnedPostRepository CreatePinnedPostRepository()
         {
-            return new PinnedPostRepository(_contextFactory);
+            return new PinnedPostRepository(
+                _contextFactory,
+                CreateMockLogger<PinnedPostRepository>(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -107,7 +114,10 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         /// <returns>A real PostNotificationMuteRepository instance.</returns>
         public IPostNotificationMuteRepository CreatePostNotificationMuteRepository()
         {
-            return new PostNotificationMuteRepository(_contextFactory);
+            return new PostNotificationMuteRepository(
+                _contextFactory,
+                CreateMockLogger<PostNotificationMuteRepository>(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -118,7 +128,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         {
             return new NotificationRepository(
                 _contextFactory,
-                CreateMockLogger<NotificationRepository>());
+                CreateMockLogger<NotificationRepository>(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -129,7 +140,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         {
             return new FriendshipRepository(
                 _contextFactory,
-                CreateMockLogger<FriendshipRepository>());
+                CreateMockLogger<FriendshipRepository>(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -155,7 +167,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
             return new GroupPostRepository(
                 _contextFactory,
                 CreateMockLogger<GroupPostRepository>(),
-                CreateGroupAccessValidator());
+                CreateGroupAccessValidator(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -167,7 +180,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
             return new GroupCommentRepository(
                 _contextFactory,
                 CreateMockLogger<GroupCommentRepository>(),
-                CreateMockAuditLogRepository());
+                CreateMockAuditLogRepository(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -178,7 +192,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         {
             return new GroupPostLikeRepository(
                 _contextFactory,
-                CreateMockLogger<GroupPostLikeRepository>());
+                CreateMockLogger<GroupPostLikeRepository>(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -189,7 +204,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         {
             return new GroupCommentLikeRepository(
                 _contextFactory,
-                CreateMockLogger<GroupCommentLikeRepository>());
+                CreateMockLogger<GroupCommentLikeRepository>(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -200,7 +216,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         {
             return new GroupMemberRepository(
                 _contextFactory,
-                CreateMockLogger<GroupMemberRepository>());
+                CreateMockLogger<GroupMemberRepository>(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -211,7 +228,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         {
             return new UserRepository(
                 _contextFactory,
-                CreateMockLogger<UserRepository>());
+                CreateMockLogger<UserRepository>(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -222,7 +240,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         {
             return new GroupRepository(
                 _contextFactory,
-                CreateMockLogger<GroupRepository>());
+                CreateMockLogger<GroupRepository>(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -233,7 +252,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         {
             return new GroupFileRepository(
                 _contextFactory,
-                CreateMockLogger<GroupFileRepository>());
+                CreateMockLogger<GroupFileRepository>(),
+                CreateMockProfilerHelper());
         }
 
         /// <summary>
@@ -257,6 +277,17 @@ namespace FreeSpeakWeb.Tests.Infrastructure
         private static ILogger<T> CreateMockLogger<T>()
         {
             return new Mock<ILogger<T>>().Object;
+        }
+
+        /// <summary>
+        /// Creates a mock ProfilerHelper for testing.
+        /// </summary>
+        /// <returns>A mock ProfilerHelper instance with profiling disabled.</returns>
+        private static ProfilerHelper CreateMockProfilerHelper()
+        {
+            var mockOptions = new Mock<Microsoft.Extensions.Options.IOptions<ProfilingSettings>>();
+            mockOptions.Setup(o => o.Value).Returns(new ProfilingSettings { Enabled = false });
+            return new ProfilerHelper(mockOptions.Object);
         }
 
         /// <summary>

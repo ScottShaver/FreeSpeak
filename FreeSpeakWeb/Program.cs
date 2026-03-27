@@ -135,8 +135,36 @@ namespace FreeSpeakWeb
             // PERFORMANCE: Add query performance monitoring service
             builder.Services.AddScoped<QueryPerformanceLogger>();
 
+            // PERFORMANCE: Configure MiniProfiler for profiling application code and EF queries
+            builder.Services.Configure<ProfilingSettings>(builder.Configuration.GetSection("Profiling"));
+            var profilingSettings = builder.Configuration.GetSection("Profiling").Get<ProfilingSettings>() ?? new ProfilingSettings();
+
+            if (profilingSettings.Enabled)
+            {
+                builder.Services.AddMiniProfiler(options =>
+                {
+                    options.RouteBasePath = "/profiler";
+                    options.ColorScheme = StackExchange.Profiling.ColorScheme.Auto;
+                    options.EnableDebugMode = builder.Environment.IsDevelopment();
+                    options.MaxUnviewedProfiles = profilingSettings.MaxResults;
+
+                    // Show profiling controls in UI if configured
+                    options.ShouldProfile = request => profilingSettings.ShowControls;
+
+                    // Ignore profiling of static assets
+                    options.IgnoredPaths.Add("/lib");
+                    options.IgnoredPaths.Add("/css");
+                    options.IgnoredPaths.Add("/js");
+                    options.IgnoredPaths.Add("/img");
+                    options.IgnoredPaths.Add("/fonts");
+                }).AddEntityFramework();
+            }
+
             // PERFORMANCE: Add friendship caching service for 80%+ performance improvement
             builder.Services.AddScoped<FriendshipCacheService>();
+
+            // PERFORMANCE: Add ProfilerHelper for wrapping MiniProfiler calls
+            builder.Services.AddScoped<ProfilerHelper>();
 
             // Add ProfilePictureService
             builder.Services.AddScoped<ProfilePictureService>();
@@ -385,6 +413,12 @@ namespace FreeSpeakWeb
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+            }
+
+            // PERFORMANCE: Add MiniProfiler middleware (must be early in pipeline)
+            if (profilingSettings.Enabled)
+            {
+                app.UseMiniProfiler();
             }
 
             app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);

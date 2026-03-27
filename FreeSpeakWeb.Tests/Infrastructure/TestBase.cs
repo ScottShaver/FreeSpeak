@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
 using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -74,6 +75,17 @@ namespace FreeSpeakWeb.Tests.Infrastructure
             mock.Setup(x => x.LogActionAsync(It.IsAny<string>(), It.IsAny<ActionCategory>(), It.IsAny<object>()))
                 .Returns(Task.CompletedTask);
             return mock.Object;
+        }
+
+        /// <summary>
+        /// Creates a mock ProfilerHelper for testing with profiling disabled.
+        /// </summary>
+        /// <returns>A ProfilerHelper instance with profiling disabled.</returns>
+        protected static ProfilerHelper CreateMockProfilerHelper()
+        {
+            var mockOptions = new Mock<Microsoft.Extensions.Options.IOptions<ProfilingSettings>>();
+            mockOptions.Setup(o => o.Value).Returns(new ProfilingSettings { Enabled = false });
+            return new ProfilerHelper(mockOptions.Object);
         }
 
         /// <summary>

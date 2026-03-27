@@ -15,15 +15,25 @@ namespace FreeSpeakWeb.Repositories
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<PostRepository> _logger;
         private readonly FriendshipCacheService _friendshipCache;
+        private readonly ProfilerHelper _profiler;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PostRepository"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording repository operations.</param>
+        /// <param name="friendshipCache">Cache service for friendship data.</param>
+        /// <param name="profiler">Helper for profiling repository operations.</param>
         public PostRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<PostRepository> logger,
-            FriendshipCacheService friendshipCache)
+            FriendshipCacheService friendshipCache,
+            ProfilerHelper profiler)
         {
             _contextFactory = contextFactory;
             _logger = logger;
             _friendshipCache = friendshipCache;
+            _profiler = profiler;
         }
 
         #region Post CRUD Operations
@@ -38,6 +48,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The post if found; otherwise, null.</returns>
         public async Task<Post?> GetByIdAsync(int postId, bool includeAuthor = true, bool includeImages = true)
         {
+            using var step = _profiler.Step($"PostRepository.GetByIdAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -73,6 +84,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A tuple containing success status, error message if any, and the created post.</returns>
         public async Task<(bool Success, string? ErrorMessage, Post? Post)> CreateAsync(Post post)
         {
+            using var step = _profiler.Step("PostRepository.CreateAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -99,6 +111,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A tuple containing success status and error message if any.</returns>
         public async Task<(bool Success, string? ErrorMessage)> UpdateContentAsync(int postId, string userId, string newContent)
         {
+            using var step = _profiler.Step($"PostRepository.UpdateContentAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -134,6 +147,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A tuple containing success status and error message if any.</returns>
         public async Task<(bool Success, string? ErrorMessage)> DeleteAsync(int postId, string userId)
         {
+            using var step = _profiler.Step($"PostRepository.DeleteAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -167,6 +181,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the user can delete the post; otherwise, false.</returns>
         public async Task<bool> CanUserDeleteAsync(int postId, string userId)
         {
+            using var step = _profiler.Step($"PostRepository.CanUserDeleteAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -282,6 +297,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of images for the post, or an empty list if none exist or an error occurs.</returns>
         public async Task<List<PostImage>> GetImagesAsync(int postId)
         {
+            using var step = _profiler.Step($"PostRepository.GetImagesAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -311,6 +327,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of posts by the author, ordered by creation date descending.</returns>
         public async Task<List<Post>> GetByAuthorAsync(string authorId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"PostRepository.GetByAuthorAsync({authorId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -330,6 +347,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The total number of posts by the author.</returns>
         public async Task<int> GetCountByAuthorAsync(string authorId)
         {
+            using var step = _profiler.Step($"PostRepository.GetCountByAuthorAsync({authorId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -349,6 +367,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the post exists; otherwise, false.</returns>
         public async Task<bool> ExistsAsync(int postId)
         {
+            using var step = _profiler.Step($"PostRepository.ExistsAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -371,6 +390,7 @@ namespace FreeSpeakWeb.Repositories
         /// <param name="postId">The unique identifier of the post.</param>
         public async Task IncrementLikeCountAsync(int postId)
         {
+            using var step = _profiler.Step($"PostRepository.IncrementLikeCountAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -390,6 +410,7 @@ namespace FreeSpeakWeb.Repositories
         /// <param name="postId">The unique identifier of the post.</param>
         public async Task DecrementLikeCountAsync(int postId)
         {
+            using var step = _profiler.Step($"PostRepository.DecrementLikeCountAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -409,6 +430,7 @@ namespace FreeSpeakWeb.Repositories
         /// <param name="postId">The unique identifier of the post.</param>
         public async Task IncrementCommentCountAsync(int postId)
         {
+            using var step = _profiler.Step($"PostRepository.IncrementCommentCountAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -429,6 +451,7 @@ namespace FreeSpeakWeb.Repositories
         /// <param name="count">The number to decrement by (default is 1).</param>
         public async Task DecrementCommentCountAsync(int postId, int count = 1)
         {
+            using var step = _profiler.Step($"PostRepository.DecrementCommentCountAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -448,6 +471,7 @@ namespace FreeSpeakWeb.Repositories
         /// <param name="postId">The unique identifier of the post.</param>
         public async Task IncrementShareCountAsync(int postId)
         {
+            using var step = _profiler.Step($"PostRepository.IncrementShareCountAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -474,6 +498,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A tuple containing success status and error message if any.</returns>
         public async Task<(bool Success, string? ErrorMessage)> UpdateAudienceAsync(int postId, string userId, AudienceType audienceType)
         {
+            using var step = _profiler.Step($"PostRepository.UpdateAudienceAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -514,6 +539,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of PostListDto projections ordered by creation date descending.</returns>
         public async Task<List<PostListDto>> GetFeedPostsAsync(string userId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"PostRepository.GetFeedPostsAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -563,6 +589,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The total number of posts in the user's feed.</returns>
         public async Task<int> GetFeedPostsCountAsync(string userId)
         {
+            using var step = _profiler.Step($"PostRepository.GetFeedPostsCountAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -593,6 +620,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A tuple containing the list of posts and a flag indicating if more posts exist.</returns>
         public async Task<(List<Post> Posts, bool HasMore)> GetPublicPostsAsync(int pageNumber = 1, int pageSize = 10)
         {
+            using var step = _profiler.Step("PostRepository.GetPublicPostsAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -637,6 +665,7 @@ namespace FreeSpeakWeb.Repositories
         [Obsolete("Use GetFeedPostsAsync instead - it now returns DTOs by default")]
         public async Task<List<PostListDto>> GetFeedPostsAsProjectionAsync(string userId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"PostRepository.GetFeedPostsAsProjectionAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -687,6 +716,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The post as a PostDetailDto if found; otherwise, null.</returns>
         public async Task<PostDetailDto?> GetByIdAsProjectionAsync(int postId)
         {
+            using var step = _profiler.Step($"PostRepository.GetByIdAsProjectionAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -731,6 +761,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of PostListDto projections ordered by creation date descending.</returns>
         public async Task<List<PostListDto>> GetByAuthorAsProjectionAsync(string authorId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"PostRepository.GetByAuthorAsProjectionAsync({authorId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -776,6 +807,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A tuple containing the list of projections and a flag indicating if more posts exist.</returns>
         public async Task<(List<PostListDto> Posts, bool HasMore)> GetPublicPostsAsProjectionAsync(int pageNumber = 1, int pageSize = 10)
         {
+            using var step = _profiler.Step("PostRepository.GetPublicPostsAsProjectionAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();

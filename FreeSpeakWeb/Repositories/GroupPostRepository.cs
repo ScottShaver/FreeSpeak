@@ -15,15 +15,25 @@ namespace FreeSpeakWeb.Repositories
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupPostRepository> _logger;
         private readonly GroupAccessValidator _accessValidator;
+        private readonly ProfilerHelper _profiler;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupPostRepository"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording repository operations.</param>
+        /// <param name="accessValidator">Validator for group access permissions.</param>
+        /// <param name="profiler">Helper for profiling repository operations.</param>
         public GroupPostRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupPostRepository> logger,
-            GroupAccessValidator accessValidator)
+            GroupAccessValidator accessValidator,
+            ProfilerHelper profiler)
         {
             _contextFactory = contextFactory;
             _logger = logger;
             _accessValidator = accessValidator;
+            _profiler = profiler;
         }
 
         #region Post CRUD Operations
@@ -38,6 +48,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The group post if found; otherwise, null.</returns>
         public async Task<GroupPost?> GetByIdAsync(int postId, bool includeAuthor = true, bool includeImages = true)
         {
+            using var step = _profiler.Step($"GroupPostRepository.GetByIdAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -70,6 +81,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<(bool Success, string? ErrorMessage, GroupPost? Post)> CreateAsync(GroupPost post)
         {
+            using var step = _profiler.Step("GroupPostRepository.CreateAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -99,6 +111,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<(bool Success, string? ErrorMessage)> UpdateContentAsync(int postId, string userId, string newContent)
         {
+            using var step = _profiler.Step($"GroupPostRepository.UpdateContentAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -128,6 +141,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<(bool Success, string? ErrorMessage)> DeleteAsync(int postId, string userId)
         {
+            using var step = _profiler.Step($"GroupPostRepository.DeleteAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -164,6 +178,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<bool> CanUserDeleteAsync(int postId, string userId)
         {
+            using var step = _profiler.Step($"GroupPostRepository.CanUserDeleteAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -268,6 +283,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<List<GroupPostImage>> GetImagesAsync(int postId)
         {
+            using var step = _profiler.Step($"GroupPostRepository.GetImagesAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -290,6 +306,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<List<GroupPost>> GetByAuthorAsync(string authorId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"GroupPostRepository.GetByAuthorAsync({authorId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -315,6 +332,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<int> GetCountByAuthorAsync(string authorId)
         {
+            using var step = _profiler.Step($"GroupPostRepository.GetCountByAuthorAsync({authorId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -334,6 +352,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the group post exists; otherwise, false.</returns>
         public async Task<bool> ExistsAsync(int postId)
         {
+            using var step = _profiler.Step($"GroupPostRepository.ExistsAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -352,6 +371,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task IncrementLikeCountAsync(int postId)
         {
+            using var step = _profiler.Step($"GroupPostRepository.IncrementLikeCountAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -367,6 +387,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task DecrementLikeCountAsync(int postId)
         {
+            using var step = _profiler.Step($"GroupPostRepository.DecrementLikeCountAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -382,6 +403,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task IncrementCommentCountAsync(int postId)
         {
+            using var step = _profiler.Step($"GroupPostRepository.IncrementCommentCountAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -397,6 +419,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task DecrementCommentCountAsync(int postId, int count = 1)
         {
+            using var step = _profiler.Step($"GroupPostRepository.DecrementCommentCountAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -412,6 +435,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task IncrementShareCountAsync(int postId)
         {
+            using var step = _profiler.Step($"GroupPostRepository.IncrementShareCountAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -431,6 +455,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<List<GroupPost>> GetByGroupAsync(int groupId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"GroupPostRepository.GetByGroupAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -455,6 +480,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<int> GetCountByGroupAsync(int groupId)
         {
+            using var step = _profiler.Step($"GroupPostRepository.GetCountByGroupAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -475,6 +501,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The total number of posts by the author in the group.</returns>
         public async Task<int> GetCountByGroupAndAuthorAsync(int groupId, string authorId)
         {
+            using var step = _profiler.Step($"GroupPostRepository.GetCountByGroupAndAuthorAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -489,6 +516,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<List<GroupPost>> GetByGroupAndAuthorAsync(int groupId, string authorId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"GroupPostRepository.GetByGroupAndAuthorAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -513,6 +541,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<List<GroupPost>> GetAllGroupPostsForUserAsync(string userId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"GroupPostRepository.GetAllGroupPostsForUserAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -566,6 +595,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of GroupPostListDto projections ordered by creation date descending.</returns>
         public async Task<List<GroupPostListDto>> GetByGroupAsProjectionAsync(int groupId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"GroupPostRepository.GetByGroupAsProjectionAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -626,6 +656,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The group post as a GroupPostDetailDto if found; otherwise, null.</returns>
         public async Task<GroupPostDetailDto?> GetByIdAsProjectionAsync(int postId)
         {
+            using var step = _profiler.Step($"GroupPostRepository.GetByIdAsProjectionAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -676,6 +707,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of GroupPostListDto projections ordered by creation date descending.</returns>
         public async Task<List<GroupPostListDto>> GetAllGroupPostsAsProjectionAsync(string userId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"GroupPostRepository.GetAllGroupPostsAsProjectionAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -749,6 +781,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of GroupPostListDto projections ordered by creation date descending.</returns>
         public async Task<List<GroupPostListDto>> GetByGroupAndAuthorAsProjectionAsync(int groupId, string authorId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"GroupPostRepository.GetByGroupAndAuthorAsProjectionAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();

@@ -1,6 +1,7 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Repositories
@@ -13,18 +14,22 @@ namespace FreeSpeakWeb.Repositories
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<AuditLogRepository> _logger;
+        private readonly ProfilerHelper _profiler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuditLogRepository"/> class.
         /// </summary>
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording repository operations.</param>
+        /// <param name="profiler">Helper for profiling repository operations.</param>
         public AuditLogRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<AuditLogRepository> logger)
+            ILogger<AuditLogRepository> logger,
+            ProfilerHelper profiler)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _profiler = profiler;
         }
 
         /// <summary>
@@ -36,6 +41,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task LogActionAsync(string userId, string actionCategory, string actionDetails)
         {
+            using var step = _profiler.Step("AuditLogRepository.LogActionAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -85,6 +91,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of audit log entries for the user.</returns>
         public async Task<List<AuditLog>> GetUserAuditLogsAsync(string userId, int pageNumber = 1, int pageSize = 50)
         {
+            using var step = _profiler.Step($"AuditLogRepository.GetUserAuditLogsAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -112,6 +119,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The total number of audit log entries for the user.</returns>
         public async Task<int> GetUserAuditLogCountAsync(string userId)
         {
+            using var step = _profiler.Step($"AuditLogRepository.GetUserAuditLogCountAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -137,6 +145,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of audit log entries within the specified date range.</returns>
         public async Task<List<AuditLog>> GetUserAuditLogsByDateRangeAsync(string userId, DateTime startDate, DateTime endDate)
         {
+            using var step = _profiler.Step($"AuditLogRepository.GetUserAuditLogsByDateRangeAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -170,6 +179,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of audit log entries matching the category.</returns>
         public async Task<List<AuditLog>> GetAuditLogsByCategoryAsync(string actionCategory, int pageNumber = 1, int pageSize = 50)
         {
+            using var step = _profiler.Step("AuditLogRepository.GetAuditLogsByCategoryAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -201,6 +211,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of up to 500 audit log entries matching the search criteria, ordered by most recent first.</returns>
         public async Task<List<AuditLog>> SearchAuditLogsAsync(string? actionCategory = null, DateTime? startDate = null, DateTime? endDate = null, string? userId = null)
         {
+            using var step = _profiler.Step("AuditLogRepository.SearchAuditLogsAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
