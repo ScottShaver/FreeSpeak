@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Repositories
@@ -12,18 +13,22 @@ namespace FreeSpeakWeb.Repositories
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<FeedCommentLikeRepository> _logger;
+        private readonly ProfilerHelper _profiler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FeedCommentLikeRepository"/> class.
         /// </summary>
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording repository operations.</param>
+        /// <param name="profiler">Helper for profiling repository operations.</param>
         public FeedCommentLikeRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<FeedCommentLikeRepository> logger)
+            ILogger<FeedCommentLikeRepository> logger,
+            ProfilerHelper profiler)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _profiler = profiler;
         }
 
         /// <summary>
@@ -35,6 +40,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A tuple containing success status, error message if any, and the like entity.</returns>
         public async Task<(bool Success, string? ErrorMessage, CommentLike? Like)> AddOrUpdateAsync(int commentId, string userId, LikeType likeType)
         {
+            using var step = _profiler.Step($"FeedCommentLikeRepository.AddOrUpdateAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -67,6 +73,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A tuple containing success status and error message if any.</returns>
         public async Task<(bool Success, string? ErrorMessage)> RemoveAsync(int commentId, string userId)
         {
+            using var step = _profiler.Step($"FeedCommentLikeRepository.RemoveAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -93,6 +100,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The like entity if found; otherwise, null.</returns>
         public async Task<CommentLike?> GetUserLikeAsync(int commentId, string userId)
         {
+            using var step = _profiler.Step($"FeedCommentLikeRepository.GetUserLikeAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -113,6 +121,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the user has liked the comment; otherwise, false.</returns>
         public async Task<bool> HasUserLikedAsync(int commentId, string userId)
         {
+            using var step = _profiler.Step($"FeedCommentLikeRepository.HasUserLikedAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -132,6 +141,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of likes on the comment.</returns>
         public async Task<List<CommentLike>> GetByCommentAsync(int commentId)
         {
+            using var step = _profiler.Step($"FeedCommentLikeRepository.GetByCommentAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -151,6 +161,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The total number of likes on the comment.</returns>
         public async Task<int> GetCountAsync(int commentId)
         {
+            using var step = _profiler.Step($"FeedCommentLikeRepository.GetCountAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -170,6 +181,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A dictionary mapping each like type to its count.</returns>
         public async Task<Dictionary<LikeType, int>> GetCountsByTypeAsync(int commentId)
         {
+            using var step = _profiler.Step($"FeedCommentLikeRepository.GetCountsByTypeAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -191,6 +203,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A dictionary mapping each comment ID to the user's like (or null if not liked).</returns>
         public async Task<Dictionary<int, CommentLike?>> GetUserLikesForCommentsAsync(string userId, IEnumerable<int> commentIds)
         {
+            using var step = _profiler.Step("FeedCommentLikeRepository.GetUserLikesForCommentsAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -213,6 +226,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A dictionary mapping each comment ID to its like count.</returns>
         public async Task<Dictionary<int, int>> GetCountsForCommentsAsync(IEnumerable<int> commentIds)
         {
+            using var step = _profiler.Step("FeedCommentLikeRepository.GetCountsForCommentsAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -243,6 +257,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A dictionary mapping each comment ID to its reaction breakdown (LikeType to count).</returns>
         public async Task<Dictionary<int, Dictionary<LikeType, int>>> GetReactionBreakdownsForCommentsAsync(IEnumerable<int> commentIds)
         {
+            using var step = _profiler.Step("FeedCommentLikeRepository.GetReactionBreakdownsForCommentsAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();

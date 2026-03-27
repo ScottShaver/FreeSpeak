@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Repositories
@@ -12,18 +13,22 @@ namespace FreeSpeakWeb.Repositories
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<UserRepository> _logger;
+        private readonly ProfilerHelper _profiler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserRepository"/> class.
         /// </summary>
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording repository operations.</param>
+        /// <param name="profiler">Helper for profiling repository operations.</param>
         public UserRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<UserRepository> logger)
+            ILogger<UserRepository> logger,
+            ProfilerHelper profiler)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _profiler = profiler;
         }
 
         /// <summary>
@@ -33,6 +38,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The user entity if found; otherwise, null.</returns>
         public async Task<ApplicationUser?> GetByIdAsync(string userId)
         {
+            using var step = _profiler.Step($"UserRepository.GetByIdAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -52,6 +58,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of users matching the provided IDs.</returns>
         public async Task<List<ApplicationUser>> GetByIdsAsync(IEnumerable<string> userIds)
         {
+            using var step = _profiler.Step("UserRepository.GetByIdsAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -72,6 +79,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The user entity if found; otherwise, null.</returns>
         public async Task<ApplicationUser?> GetByUsernameAsync(string username)
         {
+            using var step = _profiler.Step($"UserRepository.GetByUsernameAsync({username})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -92,6 +100,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The user entity if found; otherwise, null.</returns>
         public async Task<ApplicationUser?> GetByEmailAsync(string email)
         {
+            using var step = _profiler.Step("UserRepository.GetByEmailAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -114,6 +123,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of matching users ordered by first name.</returns>
         public async Task<List<ApplicationUser>> SearchUsersAsync(string searchTerm, int skip = 0, int take = 50)
         {
+            using var step = _profiler.Step("UserRepository.SearchUsersAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -145,6 +155,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of matching users ordered by first name.</returns>
         public async Task<List<ApplicationUser>> AdminSearchUsersAsync(string searchTerm, int maxResults = 100)
         {
+            using var step = _profiler.Step("UserRepository.AdminSearchUsersAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -178,6 +189,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the update was successful; otherwise, false.</returns>
         public async Task<bool> UpdateProfileAsync(ApplicationUser user)
         {
+            using var step = _profiler.Step($"UserRepository.UpdateProfileAsync({user.Id})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -200,6 +212,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the update was successful; otherwise, false.</returns>
         public async Task<bool> UpdateProfilePictureAsync(string userId, string profilePictureUrl)
         {
+            using var step = _profiler.Step($"UserRepository.UpdateProfilePictureAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -226,6 +239,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the username is available; otherwise, false.</returns>
         public async Task<bool> IsUsernameAvailableAsync(string username, string? excludeUserId = null)
         {
+            using var step = _profiler.Step("UserRepository.IsUsernameAvailableAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -252,6 +266,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the email is available; otherwise, false.</returns>
         public async Task<bool> IsEmailAvailableAsync(string email, string? excludeUserId = null)
         {
+            using var step = _profiler.Step("UserRepository.IsEmailAvailableAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -277,6 +292,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the user exists; otherwise, false.</returns>
         public async Task<bool> ExistsAsync(string userId)
         {
+            using var step = _profiler.Step($"UserRepository.ExistsAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();

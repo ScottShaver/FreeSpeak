@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Repositories
@@ -11,17 +12,27 @@ namespace FreeSpeakWeb.Repositories
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupPostLikeRepository> _logger;
+        private readonly ProfilerHelper _profiler;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupPostLikeRepository"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording repository operations.</param>
+        /// <param name="profiler">Helper for profiling repository operations.</param>
         public GroupPostLikeRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<GroupPostLikeRepository> logger)
+            ILogger<GroupPostLikeRepository> logger,
+            ProfilerHelper profiler)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _profiler = profiler;
         }
 
         public async Task<(bool Success, string? ErrorMessage, GroupPostLike? Like)> AddOrUpdateAsync(int postId, string userId, LikeType likeType)
         {
+            using var step = _profiler.Step($"GroupPostLikeRepository.AddOrUpdateAsync(postId:{postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -58,6 +69,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<(bool Success, string? ErrorMessage)> RemoveAsync(int postId, string userId)
         {
+            using var step = _profiler.Step($"GroupPostLikeRepository.RemoveAsync(postId:{postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -82,6 +94,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<GroupPostLike?> GetUserLikeAsync(int postId, string userId)
         {
+            using var step = _profiler.Step($"GroupPostLikeRepository.GetUserLikeAsync(postId:{postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -97,6 +110,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<bool> HasUserLikedAsync(int postId, string userId)
         {
+            using var step = _profiler.Step($"GroupPostLikeRepository.HasUserLikedAsync(postId:{postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -111,6 +125,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<List<GroupPostLike>> GetByPostAsync(int postId)
         {
+            using var step = _profiler.Step($"GroupPostLikeRepository.GetByPostAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -128,6 +143,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<int> GetCountAsync(int postId)
         {
+            using var step = _profiler.Step($"GroupPostLikeRepository.GetCountAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -142,6 +158,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<Dictionary<LikeType, int>> GetCountsByTypeAsync(int postId)
         {
+            using var step = _profiler.Step($"GroupPostLikeRepository.GetCountsByTypeAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -159,6 +176,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<List<ApplicationUser>> GetLikedByUsersAsync(int postId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"GroupPostLikeRepository.GetLikedByUsersAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -180,6 +198,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<List<int>> GetPostIdsLikedByUserAsync(string userId, int skip = 0, int take = 50)
         {
+            using var step = _profiler.Step($"GroupPostLikeRepository.GetPostIdsLikedByUserAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -200,6 +219,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<Dictionary<int, GroupPostLike?>> GetUserLikesForPostsAsync(string userId, IEnumerable<int> postIds)
         {
+            using var step = _profiler.Step("GroupPostLikeRepository.GetUserLikesForPostsAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -227,6 +247,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A dictionary mapping post IDs to dictionaries of like types and their counts.</returns>
         public async Task<Dictionary<int, Dictionary<LikeType, int>>> GetCountsByTypeForPostsAsync(List<int> postIds)
         {
+            using var step = _profiler.Step("GroupPostLikeRepository.GetCountsByTypeForPostsAsync");
             try
             {
                 if (postIds == null || !postIds.Any())
@@ -270,6 +291,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A dictionary mapping post IDs to the user's reaction type (or null if no reaction).</returns>
         public async Task<Dictionary<int, LikeType?>> GetUserReactionsForPostsAsync(List<int> postIds, string userId)
         {
+            using var step = _profiler.Step("GroupPostLikeRepository.GetUserReactionsForPostsAsync");
             try
             {
                 if (postIds == null || !postIds.Any())

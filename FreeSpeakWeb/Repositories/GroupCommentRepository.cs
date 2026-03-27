@@ -1,6 +1,7 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Repositories
@@ -13,6 +14,7 @@ namespace FreeSpeakWeb.Repositories
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupCommentRepository> _logger;
         private readonly IAuditLogRepository _auditLogRepository;
+        private readonly ProfilerHelper _profiler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupCommentRepository"/> class.
@@ -20,18 +22,22 @@ namespace FreeSpeakWeb.Repositories
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording repository operations.</param>
         /// <param name="auditLogRepository">Repository for audit log operations.</param>
+        /// <param name="profiler">Helper for profiling repository operations.</param>
         public GroupCommentRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupCommentRepository> logger,
-            IAuditLogRepository auditLogRepository)
+            IAuditLogRepository auditLogRepository,
+            ProfilerHelper profiler)
         {
             _contextFactory = contextFactory;
             _logger = logger;
             _auditLogRepository = auditLogRepository;
+            _profiler = profiler;
         }
 
         public async Task<GroupPostComment?> GetByIdAsync(int commentId, bool includeAuthor = true, bool includeReplies = false)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.GetByIdAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -59,6 +65,7 @@ namespace FreeSpeakWeb.Repositories
             string? imageUrl = null,
             int? parentCommentId = null)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.AddAsync(postId:{postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -103,6 +110,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<(bool Success, string? ErrorMessage)> UpdateAsync(int commentId, string userId, string newContent)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.UpdateAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -136,6 +144,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A tuple containing success status, error message if any, and the count of deleted comments.</returns>
         public async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteAsync(int commentId, string userId)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.DeleteAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -260,6 +269,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the user can delete the comment; otherwise, false.</returns>
         public async Task<bool> CanUserDeleteAsync(int commentId, string userId)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.CanUserDeleteAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -282,6 +292,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<List<GroupPostComment>> GetTopLevelCommentsAsync(int postId)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.GetTopLevelCommentsAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -301,6 +312,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<List<GroupPostComment>> GetRepliesAsync(int parentCommentId)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.GetRepliesAsync({parentCommentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -327,6 +339,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of comments matching the provided IDs.</returns>
         public async Task<List<GroupPostComment>> GetByIdsAsync(IEnumerable<int> commentIds, bool includeAuthor = true)
         {
+            using var step = _profiler.Step("GroupCommentRepository.GetByIdsAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -350,6 +363,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<List<GroupPostComment>> GetAllCommentsAsync(int postId)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.GetAllCommentsAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -369,6 +383,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<int> GetCommentCountAsync(int postId)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.GetCommentCountAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -383,6 +398,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<List<GroupPostComment>> GetByAuthorAsync(string authorId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.GetByAuthorAsync({authorId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -405,6 +421,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<bool> ExistsAsync(int commentId)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.ExistsAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -419,6 +436,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<int> GetDepthAsync(int commentId)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.GetDepthAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -448,6 +466,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<GroupPostComment?> GetRootCommentAsync(int commentId)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.GetRootCommentAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -474,6 +493,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<int?> GetPostIdAsync(int commentId)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.GetPostIdAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -490,6 +510,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<List<GroupPostComment>> GetGroupCommentsAsync(int groupId, int skip = 0, int take = 50)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.GetGroupCommentsAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -512,6 +533,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<int> GetGroupCommentCountAsync(int groupId)
         {
+            using var step = _profiler.Step($"GroupCommentRepository.GetGroupCommentCountAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();

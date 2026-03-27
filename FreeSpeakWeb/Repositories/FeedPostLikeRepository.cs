@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Repositories
@@ -12,18 +13,22 @@ namespace FreeSpeakWeb.Repositories
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<FeedPostLikeRepository> _logger;
+        private readonly ProfilerHelper _profiler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FeedPostLikeRepository"/> class.
         /// </summary>
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording repository operations.</param>
+        /// <param name="profiler">Helper for profiling repository operations.</param>
         public FeedPostLikeRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<FeedPostLikeRepository> logger)
+            ILogger<FeedPostLikeRepository> logger,
+            ProfilerHelper profiler)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _profiler = profiler;
         }
 
         /// <summary>
@@ -35,6 +40,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A tuple containing success status, error message if any, and the like entity.</returns>
         public async Task<(bool Success, string? ErrorMessage, Like? Like)> AddOrUpdateAsync(int postId, string userId, LikeType likeType)
         {
+            using var step = _profiler.Step($"FeedPostLikeRepository.AddOrUpdateAsync(postId:{postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -77,6 +83,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A tuple containing success status and error message if any.</returns>
         public async Task<(bool Success, string? ErrorMessage)> RemoveAsync(int postId, string userId)
         {
+            using var step = _profiler.Step($"FeedPostLikeRepository.RemoveAsync(postId:{postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -107,6 +114,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The like entity if found; otherwise, null.</returns>
         public async Task<Like?> GetUserLikeAsync(int postId, string userId)
         {
+            using var step = _profiler.Step($"FeedPostLikeRepository.GetUserLikeAsync(postId:{postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -128,6 +136,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the user has liked the post; otherwise, false.</returns>
         public async Task<bool> HasUserLikedAsync(int postId, string userId)
         {
+            using var step = _profiler.Step($"FeedPostLikeRepository.HasUserLikedAsync(postId:{postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -147,6 +156,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of likes on the post.</returns>
         public async Task<List<Like>> GetByPostAsync(int postId)
         {
+            using var step = _profiler.Step($"FeedPostLikeRepository.GetByPostAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -169,6 +179,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The total number of likes on the post.</returns>
         public async Task<int> GetCountAsync(int postId)
         {
+            using var step = _profiler.Step($"FeedPostLikeRepository.GetCountAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -188,6 +199,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A dictionary mapping each like type to its count.</returns>
         public async Task<Dictionary<LikeType, int>> GetCountsByTypeAsync(int postId)
         {
+            using var step = _profiler.Step($"FeedPostLikeRepository.GetCountsByTypeAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -212,6 +224,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of users who liked the post, ordered by like creation date descending.</returns>
         public async Task<List<ApplicationUser>> GetLikedByUsersAsync(int postId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"FeedPostLikeRepository.GetLikedByUsersAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -240,6 +253,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of post IDs liked by the user, ordered by like creation date descending.</returns>
         public async Task<List<int>> GetPostIdsLikedByUserAsync(string userId, int skip = 0, int take = 50)
         {
+            using var step = _profiler.Step($"FeedPostLikeRepository.GetPostIdsLikedByUserAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();

@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Repositories
@@ -13,18 +14,22 @@ namespace FreeSpeakWeb.Repositories
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupFileRepository> _logger;
+        private readonly ProfilerHelper _profiler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupFileRepository"/> class.
         /// </summary>
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording repository operations.</param>
+        /// <param name="profiler">Helper for profiling repository operations.</param>
         public GroupFileRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<GroupFileRepository> logger)
+            ILogger<GroupFileRepository> logger,
+            ProfilerHelper profiler)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _profiler = profiler;
         }
 
         #region Basic CRUD Operations
@@ -32,12 +37,14 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task<GroupFile?> GetByIdAsync(int id)
         {
+            using var step = _profiler.Step($"GroupFileRepository.GetByIdAsync({id})");
             return await GetByIdAsync(id, false, false);
         }
 
         /// <inheritdoc />
         public async Task<GroupFile?> GetByIdAsync(int fileId, bool includeUploader = false, bool includeReviewer = false)
         {
+            using var step = _profiler.Step($"GroupFileRepository.GetByIdAsync({fileId}, includeUploader:{includeUploader})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -66,6 +73,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task<List<GroupFile>> GetAllAsync()
         {
+            using var step = _profiler.Step("GroupFileRepository.GetAllAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -84,6 +92,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task<GroupFile> AddAsync(GroupFile entity)
         {
+            using var step = _profiler.Step("GroupFileRepository.AddAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -101,6 +110,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task UpdateAsync(GroupFile entity)
         {
+            using var step = _profiler.Step($"GroupFileRepository.UpdateAsync({entity.Id})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -117,6 +127,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task DeleteAsync(GroupFile entity)
         {
+            using var step = _profiler.Step($"GroupFileRepository.DeleteAsync({entity.Id})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -133,6 +144,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task<bool> ExistsAsync(int id)
         {
+            using var step = _profiler.Step($"GroupFileRepository.ExistsAsync({id})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -152,6 +164,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task<List<GroupFile>> GetFilesByGroupAsync(int groupId, GroupFileStatus status = GroupFileStatus.Approved, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"GroupFileRepository.GetFilesByGroupAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -174,6 +187,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task<List<GroupFile>> GetFilesByUploaderAsync(int groupId, string uploaderId, bool includeAllStatuses = false, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"GroupFileRepository.GetFilesByUploaderAsync({groupId}, {uploaderId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -204,6 +218,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task<List<GroupFile>> GetPendingFilesAsync(int groupId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"GroupFileRepository.GetPendingFilesAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -263,6 +278,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task<int> GetFileCountAsync(int groupId, GroupFileStatus? status = null)
         {
+            using var step = _profiler.Step($"GroupFileRepository.GetFileCountAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -318,6 +334,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task<(bool Success, string? ErrorMessage)> ApproveFileAsync(int fileId, string reviewerId)
         {
+            using var step = _profiler.Step($"GroupFileRepository.ApproveFileAsync({fileId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -353,6 +370,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task<(bool Success, string? ErrorMessage, string? StoredFileName)> DeclineFileAsync(int fileId, string reviewerId, string? reason)
         {
+            using var step = _profiler.Step($"GroupFileRepository.DeclineFileAsync({fileId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -390,6 +408,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task<(bool Success, string? ErrorMessage, string? StoredFileName)> DeleteFileAsync(int fileId, string deleterId)
         {
+            using var step = _profiler.Step($"GroupFileRepository.DeleteFileAsync({fileId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -422,6 +441,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task IncrementDownloadCountAsync(int fileId)
         {
+            using var step = _profiler.Step($"GroupFileRepository.IncrementDownloadCountAsync({fileId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -440,6 +460,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task UpdateVirusScanStatusAsync(int fileId, bool passed)
         {
+            using var step = _profiler.Step($"GroupFileRepository.UpdateVirusScanStatusAsync({fileId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -466,6 +487,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task<List<GroupFile>> GetFilesAwaitingVirusScanAsync(int take = 10)
         {
+            using var step = _profiler.Step("GroupFileRepository.GetFilesAwaitingVirusScanAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -486,6 +508,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task<bool> FileNameExistsInGroupAsync(int groupId, string originalFileName)
         {
+            using var step = _profiler.Step($"GroupFileRepository.FileNameExistsInGroupAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -504,6 +527,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task<long> GetGroupStorageUsedAsync(int groupId)
         {
+            using var step = _profiler.Step($"GroupFileRepository.GetGroupStorageUsedAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -521,6 +545,7 @@ namespace FreeSpeakWeb.Repositories
         /// <inheritdoc />
         public async Task<long> GetUserStorageUsedAsync(int groupId, string uploaderId)
         {
+            using var step = _profiler.Step($"GroupFileRepository.GetUserStorageUsedAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();

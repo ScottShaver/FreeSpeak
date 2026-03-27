@@ -12,6 +12,7 @@
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JS
 @inject IOptions<SiteSettings> SiteSettings
+@inject IOptions<ProfilingSettings> ProfilingSettings
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IServiceScopeFactory ScopeFactory
 @inject ThemeService ThemeService
@@ -271,6 +272,15 @@
                 <span class="bi bi-info-circle-nav-menu" aria-hidden="true"></span> @Localizer["TechnologyCredits"]
             </a>
         </div>
+
+        @if (ProfilingSettings.Value.Enabled)
+        {
+            <div class="nav-item px-3">
+                <a class="nav-link" href="/profiler/results-index" target="_blank" rel="noopener noreferrer">
+                    <span class="bi bi-speedometer2" aria-hidden="true"></span> Profiler
+                </a>
+            </div>
+        }
     </nav>
 </div>
 

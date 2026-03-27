@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Repositories;
@@ -13,18 +14,22 @@ public class GroupMemberRepository : IGroupMemberRepository
 {
     private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
     private readonly ILogger<GroupMemberRepository> _logger;
+    private readonly ProfilerHelper _profiler;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GroupMemberRepository"/> class.
     /// </summary>
     /// <param name="contextFactory">Factory for creating database contexts.</param>
     /// <param name="logger">Logger for recording repository operations.</param>
+    /// <param name="profiler">Helper for profiling repository operations.</param>
     public GroupMemberRepository(
         IDbContextFactory<ApplicationDbContext> contextFactory,
-        ILogger<GroupMemberRepository> logger)
+        ILogger<GroupMemberRepository> logger,
+        ProfilerHelper profiler)
     {
         _contextFactory = contextFactory;
         _logger = logger;
+        _profiler = profiler;
     }
 
     /// <summary>
@@ -34,6 +39,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>The group membership with user and group details if found; otherwise, null.</returns>
     public async Task<GroupUser?> GetByIdAsync(int id)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.GetByIdAsync({id})");
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.GroupUsers
             .Include(gu => gu.User)
@@ -47,6 +53,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>A list of all group memberships with user and group details.</returns>
     public async Task<List<GroupUser>> GetAllAsync()
     {
+        using var step = _profiler.Step("GroupMemberRepository.GetAllAsync");
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.GroupUsers
             .Include(gu => gu.User)
@@ -61,6 +68,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>The added group membership entity.</returns>
     public async Task<GroupUser> AddAsync(GroupUser entity)
     {
+        using var step = _profiler.Step("GroupMemberRepository.AddAsync");
         using var context = await _contextFactory.CreateDbContextAsync();
         context.GroupUsers.Add(entity);
         await context.SaveChangesAsync();
@@ -79,6 +87,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <param name="entity">The group membership entity with updated values.</param>
     public async Task UpdateAsync(GroupUser entity)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.UpdateAsync({entity.Id})");
         using var context = await _contextFactory.CreateDbContextAsync();
         context.GroupUsers.Update(entity);
         await context.SaveChangesAsync();
@@ -90,6 +99,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <param name="entity">The group membership entity to delete.</param>
     public async Task DeleteAsync(GroupUser entity)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.DeleteAsync({entity.Id})");
         using var context = await _contextFactory.CreateDbContextAsync();
         context.GroupUsers.Remove(entity);
         await context.SaveChangesAsync();
@@ -107,6 +117,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>True if the membership exists; otherwise, false.</returns>
     public async Task<bool> ExistsAsync(int id)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.ExistsAsync({id})");
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.GroupUsers.AnyAsync(gu => gu.Id == id);
     }
@@ -119,6 +130,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>The group membership if found; otherwise, null.</returns>
     public async Task<GroupUser?> GetMembershipAsync(int groupId, string userId)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.GetMembershipAsync({groupId})");
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.GroupUsers
             .Include(gu => gu.User)
@@ -134,6 +146,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>A list of group memberships with user details.</returns>
     public async Task<List<GroupUser>> GetGroupMembersAsync(int groupId, int skip = 0, int take = 50)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.GetGroupMembersAsync({groupId})");
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.GroupUsers
             .Include(gu => gu.User)
@@ -155,6 +168,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>A list of group memberships ordered by last activity descending.</returns>
     public async Task<List<GroupUser>> GetUserMembershipsAsync(string userId, int skip = 0, int take = 50)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.GetUserMembershipsAsync({userId})");
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.GroupUsers
             .Include(gu => gu.Group)
@@ -173,6 +187,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>True if the user is a member; otherwise, false.</returns>
     public async Task<bool> IsMemberAsync(int groupId, string userId)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.IsMemberAsync({groupId})");
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.GroupUsers.AnyAsync(gu => gu.GroupId == groupId && gu.UserId == userId);
     }
@@ -185,6 +200,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>True if the user is an admin; otherwise, false.</returns>
     public async Task<bool> IsAdminAsync(int groupId, string userId)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.IsAdminAsync({groupId})");
         using var context = await _contextFactory.CreateDbContextAsync();
         var membership = await context.GroupUsers
             .FirstOrDefaultAsync(gu => gu.GroupId == groupId && gu.UserId == userId);
@@ -199,6 +215,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>True if the user is a moderator; otherwise, false.</returns>
     public async Task<bool> IsModeratorAsync(int groupId, string userId)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.IsModeratorAsync({groupId})");
         using var context = await _contextFactory.CreateDbContextAsync();
         var membership = await context.GroupUsers
             .FirstOrDefaultAsync(gu => gu.GroupId == groupId && gu.UserId == userId);
@@ -212,6 +229,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>The number of members in the group.</returns>
     public async Task<int> GetMemberCountAsync(int groupId)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.GetMemberCountAsync({groupId})");
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.GroupUsers.CountAsync(gu => gu.GroupId == groupId);
     }
@@ -223,6 +241,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>A list of group memberships for users with admin privileges.</returns>
     public async Task<List<GroupUser>> GetAdminsAsync(int groupId)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.GetAdminsAsync({groupId})");
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.GroupUsers
             .Include(gu => gu.User)
@@ -237,6 +256,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>A list of group memberships for users with moderator privileges.</returns>
     public async Task<List<GroupUser>> GetModeratorsAsync(int groupId)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.GetModeratorsAsync({groupId})");
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.GroupUsers
             .Include(gu => gu.User)
@@ -252,6 +272,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>True if the promotion was successful; otherwise, false.</returns>
     public async Task<bool> PromoteToAdminAsync(int groupId, string userId)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.PromoteToAdminAsync({groupId})");
         try
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -281,6 +302,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>True if the demotion was successful; otherwise, false.</returns>
     public async Task<bool> DemoteFromAdminAsync(int groupId, string userId)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.DemoteFromAdminAsync({groupId})");
         try
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -310,6 +332,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>True if the promotion was successful; otherwise, false.</returns>
     public async Task<bool> PromoteToModeratorAsync(int groupId, string userId)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.PromoteToModeratorAsync({groupId})");
         try
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -339,6 +362,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>True if the demotion was successful; otherwise, false.</returns>
     public async Task<bool> DemoteFromModeratorAsync(int groupId, string userId)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.DemoteFromModeratorAsync({groupId})");
         try
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -368,6 +392,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <returns>True if the removal was successful; otherwise, false.</returns>
     public async Task<bool> RemoveMemberAsync(int groupId, string userId)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.RemoveMemberAsync({groupId})");
         try
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -401,6 +426,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <param name="userId">The unique identifier of the user.</param>
     public async Task UpdateLastActiveAsync(int groupId, string userId)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.UpdateLastActiveAsync({groupId})");
         try
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -421,6 +447,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <param name="userId">The unique identifier of the user.</param>
     public async Task IncrementPostCountAsync(int groupId, string userId)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.IncrementPostCountAsync({groupId})");
         try
         {
             using var context = await _contextFactory.CreateDbContextAsync();
@@ -441,6 +468,7 @@ public class GroupMemberRepository : IGroupMemberRepository
     /// <param name="userId">The unique identifier of the user.</param>
     public async Task DecrementPostCountAsync(int groupId, string userId)
     {
+        using var step = _profiler.Step($"GroupMemberRepository.DecrementPostCountAsync({groupId})");
         try
         {
             using var context = await _contextFactory.CreateDbContextAsync();

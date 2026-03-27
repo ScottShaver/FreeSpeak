@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Repositories
@@ -13,18 +14,22 @@ namespace FreeSpeakWeb.Repositories
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupRepository> _logger;
+        private readonly ProfilerHelper _profiler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupRepository"/> class.
         /// </summary>
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording repository operations.</param>
+        /// <param name="profiler">Helper for profiling repository operations.</param>
         public GroupRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<GroupRepository> logger)
+            ILogger<GroupRepository> logger,
+            ProfilerHelper profiler)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _profiler = profiler;
         }
 
         /// <summary>
@@ -34,6 +39,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The group entity if found; otherwise, null.</returns>
         public async Task<Group?> GetByIdAsync(int id)
         {
+            using var step = _profiler.Step($"GroupRepository.GetByIdAsync({id})");
             return await GetByIdAsync(id, false, false);
         }
 
@@ -46,6 +52,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The group entity with creator details if found; otherwise, null.</returns>
         public async Task<Group?> GetByIdAsync(int groupId, bool includeMembers = false, bool includeRules = false)
         {
+            using var step = _profiler.Step($"GroupRepository.GetByIdAsync({groupId}, includeMembers:{includeMembers})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -72,6 +79,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of all groups with creator details.</returns>
         public async Task<List<Group>> GetAllAsync()
         {
+            using var step = _profiler.Step("GroupRepository.GetAllAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -94,6 +102,7 @@ namespace FreeSpeakWeb.Repositories
         /// <exception cref="Exception">Thrown when the database operation fails.</exception>
         public async Task<Group> AddAsync(Group entity)
         {
+            using var step = _profiler.Step("GroupRepository.AddAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -115,6 +124,7 @@ namespace FreeSpeakWeb.Repositories
         /// <exception cref="Exception">Thrown when the database operation fails.</exception>
         public async Task UpdateAsync(Group entity)
         {
+            using var step = _profiler.Step($"GroupRepository.UpdateAsync({entity.Id})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -135,6 +145,7 @@ namespace FreeSpeakWeb.Repositories
         /// <exception cref="Exception">Thrown when the database operation fails.</exception>
         public async Task DeleteAsync(Group entity)
         {
+            using var step = _profiler.Step($"GroupRepository.DeleteAsync({entity.Id})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -155,6 +166,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the group exists; otherwise, false.</returns>
         public async Task<bool> ExistsAsync(int id)
         {
+            using var step = _profiler.Step($"GroupRepository.ExistsAsync({id})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -175,6 +187,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of public groups ordered by last activity descending.</returns>
         public async Task<List<Group>> GetPublicGroupsAsync(int skip = 0, int take = 50)
         {
+            using var step = _profiler.Step("GroupRepository.GetPublicGroupsAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -202,6 +215,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of groups the user belongs to, ordered by last activity descending.</returns>
         public async Task<List<Group>> GetUserGroupsAsync(string userId, int skip = 0, int take = 50)
         {
+            using var step = _profiler.Step($"GroupRepository.GetUserGroupsAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -236,6 +250,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of groups created by the user, ordered by creation date descending.</returns>
         public async Task<List<Group>> GetGroupsCreatedByUserAsync(string userId, int skip = 0, int take = 50)
         {
+            using var step = _profiler.Step($"GroupRepository.GetGroupsCreatedByUserAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -263,6 +278,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of matching groups ordered by member count descending.</returns>
         public async Task<List<Group>> SearchGroupsAsync(string searchTerm, int skip = 0, int take = 50)
         {
+            using var step = _profiler.Step("GroupRepository.SearchGroupsAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -292,6 +308,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the user is a member; otherwise, false.</returns>
         public async Task<bool> IsUserMemberAsync(int groupId, string userId)
         {
+            using var step = _profiler.Step($"GroupRepository.IsUserMemberAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -312,6 +329,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the user is the creator; otherwise, false.</returns>
         public async Task<bool> IsUserCreatorAsync(int groupId, string userId)
         {
+            using var step = _profiler.Step($"GroupRepository.IsUserCreatorAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -333,6 +351,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the user is an admin; otherwise, false.</returns>
         public async Task<bool> IsUserAdminAsync(int groupId, string userId)
         {
+            using var step = _profiler.Step($"GroupRepository.IsUserAdminAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -355,6 +374,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The number of members in the group.</returns>
         public async Task<int> GetMemberCountAsync(int groupId)
         {
+            using var step = _profiler.Step($"GroupRepository.GetMemberCountAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -373,6 +393,7 @@ namespace FreeSpeakWeb.Repositories
         /// <param name="groupId">The unique identifier of the group.</param>
         public async Task UpdateLastActiveAsync(int groupId)
         {
+            using var step = _profiler.Step($"GroupRepository.UpdateLastActiveAsync({groupId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();

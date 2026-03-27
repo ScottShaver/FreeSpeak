@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Repositories
@@ -12,18 +13,22 @@ namespace FreeSpeakWeb.Repositories
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<FriendshipRepository> _logger;
+        private readonly ProfilerHelper _profiler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FriendshipRepository"/> class.
         /// </summary>
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording repository operations.</param>
+        /// <param name="profiler">Helper for profiling repository operations.</param>
         public FriendshipRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<FriendshipRepository> logger)
+            ILogger<FriendshipRepository> logger,
+            ProfilerHelper profiler)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _profiler = profiler;
         }
 
         /// <summary>
@@ -33,6 +38,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The friendship entity with requester and addressee details if found; otherwise, null.</returns>
         public async Task<Friendship?> GetByIdAsync(int id)
         {
+            using var step = _profiler.Step($"FriendshipRepository.GetByIdAsync({id})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -54,6 +60,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of all friendships with requester and addressee details.</returns>
         public async Task<List<Friendship>> GetAllAsync()
         {
+            using var step = _profiler.Step("FriendshipRepository.GetAllAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -77,6 +84,7 @@ namespace FreeSpeakWeb.Repositories
         /// <exception cref="Exception">Thrown when the database operation fails.</exception>
         public async Task<Friendship> AddAsync(Friendship entity)
         {
+            using var step = _profiler.Step("FriendshipRepository.AddAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -98,6 +106,7 @@ namespace FreeSpeakWeb.Repositories
         /// <exception cref="Exception">Thrown when the database operation fails.</exception>
         public async Task UpdateAsync(Friendship entity)
         {
+            using var step = _profiler.Step($"FriendshipRepository.UpdateAsync({entity.Id})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -118,6 +127,7 @@ namespace FreeSpeakWeb.Repositories
         /// <exception cref="Exception">Thrown when the database operation fails.</exception>
         public async Task DeleteAsync(Friendship entity)
         {
+            using var step = _profiler.Step($"FriendshipRepository.DeleteAsync({entity.Id})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -138,6 +148,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the friendship exists; otherwise, false.</returns>
         public async Task<bool> ExistsAsync(int id)
         {
+            using var step = _profiler.Step($"FriendshipRepository.ExistsAsync({id})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -158,6 +169,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The friendship entity if found; otherwise, null.</returns>
         public async Task<Friendship?> GetFriendshipAsync(string userId1, string userId2)
         {
+            using var step = _profiler.Step("FriendshipRepository.GetFriendshipAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -182,6 +194,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of all friendships where the user is either requester or addressee.</returns>
         public async Task<List<Friendship>> GetUserFriendshipsAsync(string userId)
         {
+            using var step = _profiler.Step($"FriendshipRepository.GetUserFriendshipsAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -205,6 +218,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of accepted friendships where the user is either requester or addressee.</returns>
         public async Task<List<Friendship>> GetAcceptedFriendshipsAsync(string userId)
         {
+            using var step = _profiler.Step($"FriendshipRepository.GetAcceptedFriendshipsAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -228,6 +242,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of pending friendship requests ordered by request date descending.</returns>
         public async Task<List<Friendship>> GetPendingRequestsAsync(string userId)
         {
+            using var step = _profiler.Step($"FriendshipRepository.GetPendingRequestsAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -252,6 +267,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of pending friendship requests sent by the user, ordered by request date descending.</returns>
         public async Task<List<Friendship>> GetSentRequestsAsync(string userId)
         {
+            using var step = _profiler.Step($"FriendshipRepository.GetSentRequestsAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -276,6 +292,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of friendships with blocked status initiated by the user.</returns>
         public async Task<List<Friendship>> GetBlockedUsersAsync(string userId)
         {
+            using var step = _profiler.Step($"FriendshipRepository.GetBlockedUsersAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -300,6 +317,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the users are friends; otherwise, false.</returns>
         public async Task<bool> AreFriendsAsync(string userId1, string userId2)
         {
+            using var step = _profiler.Step("FriendshipRepository.AreFriendsAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -323,6 +341,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the blocker has blocked the other user; otherwise, false.</returns>
         public async Task<bool> IsBlockedAsync(string blockerId, string blockedId)
         {
+            using var step = _profiler.Step("FriendshipRepository.IsBlockedAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -343,6 +362,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The total number of friends the user has.</returns>
         public async Task<int> GetFriendCountAsync(string userId)
         {
+            using var step = _profiler.Step($"FriendshipRepository.GetFriendCountAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -363,6 +383,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The number of pending friend requests awaiting the user's response.</returns>
         public async Task<int> GetPendingRequestCountAsync(string userId)
         {
+            using var step = _profiler.Step($"FriendshipRepository.GetPendingRequestCountAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();

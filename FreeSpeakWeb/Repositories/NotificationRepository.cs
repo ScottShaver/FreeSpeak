@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Repositories
@@ -11,17 +12,27 @@ namespace FreeSpeakWeb.Repositories
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<NotificationRepository> _logger;
+        private readonly ProfilerHelper _profiler;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotificationRepository"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording repository operations.</param>
+        /// <param name="profiler">Helper for profiling repository operations.</param>
         public NotificationRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<NotificationRepository> logger)
+            ILogger<NotificationRepository> logger,
+            ProfilerHelper profiler)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _profiler = profiler;
         }
 
         public async Task<UserNotification?> GetByIdAsync(int id)
         {
+            using var step = _profiler.Step($"NotificationRepository.GetByIdAsync({id})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -36,6 +47,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<List<UserNotification>> GetAllAsync()
         {
+            using var step = _profiler.Step("NotificationRepository.GetAllAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -50,6 +62,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<UserNotification> AddAsync(UserNotification entity)
         {
+            using var step = _profiler.Step("NotificationRepository.AddAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -66,6 +79,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task UpdateAsync(UserNotification entity)
         {
+            using var step = _profiler.Step($"NotificationRepository.UpdateAsync({entity.Id})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -81,6 +95,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task DeleteAsync(UserNotification entity)
         {
+            using var step = _profiler.Step($"NotificationRepository.DeleteAsync({entity.Id})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -96,6 +111,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<bool> ExistsAsync(int id)
         {
+            using var step = _profiler.Step($"NotificationRepository.ExistsAsync({id})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -110,6 +126,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<List<UserNotification>> GetUserNotificationsAsync(string userId, int skip = 0, int take = 50, bool unreadOnly = false)
         {
+            using var step = _profiler.Step($"NotificationRepository.GetUserNotificationsAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -133,6 +150,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<int> GetUnreadCountAsync(string userId)
         {
+            using var step = _profiler.Step($"NotificationRepository.GetUnreadCountAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -147,6 +165,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<int> GetTotalCountAsync(string userId)
         {
+            using var step = _profiler.Step($"NotificationRepository.GetTotalCountAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -161,6 +180,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<bool> MarkAsReadAsync(int notificationId, string userId)
         {
+            using var step = _profiler.Step($"NotificationRepository.MarkAsReadAsync({notificationId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -183,6 +203,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<int> MarkAllAsReadAsync(string userId)
         {
+            using var step = _profiler.Step($"NotificationRepository.MarkAllAsReadAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -207,6 +228,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<bool> DeleteNotificationAsync(int notificationId, string userId)
         {
+            using var step = _profiler.Step($"NotificationRepository.DeleteNotificationAsync({notificationId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -229,6 +251,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<int> DeleteReadNotificationsAsync(string userId)
         {
+            using var step = _profiler.Step($"NotificationRepository.DeleteReadNotificationsAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -249,6 +272,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<int> DeleteExpiredNotificationsAsync()
         {
+            using var step = _profiler.Step("NotificationRepository.DeleteExpiredNotificationsAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -272,6 +296,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<int> BulkCreateNotificationsAsync(IEnumerable<UserNotification> notifications)
         {
+            using var step = _profiler.Step("NotificationRepository.BulkCreateNotificationsAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -291,6 +316,7 @@ namespace FreeSpeakWeb.Repositories
 
         public async Task<UserNotification?> GetNotificationByTypeAsync(string userId, NotificationType type, string? relatedEntityId = null)
         {
+            using var step = _profiler.Step($"NotificationRepository.GetNotificationByTypeAsync({userId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();

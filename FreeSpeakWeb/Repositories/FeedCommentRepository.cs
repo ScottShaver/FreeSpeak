@@ -1,6 +1,7 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Repositories
@@ -14,6 +15,7 @@ namespace FreeSpeakWeb.Repositories
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<FeedCommentRepository> _logger;
         private readonly IAuditLogRepository _auditLogRepository;
+        private readonly ProfilerHelper _profiler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FeedCommentRepository"/> class.
@@ -21,14 +23,17 @@ namespace FreeSpeakWeb.Repositories
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording repository operations.</param>
         /// <param name="auditLogRepository">Repository for audit log operations.</param>
+        /// <param name="profiler">Helper for profiling repository operations.</param>
         public FeedCommentRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<FeedCommentRepository> logger,
-            IAuditLogRepository auditLogRepository)
+            IAuditLogRepository auditLogRepository,
+            ProfilerHelper profiler)
         {
             _contextFactory = contextFactory;
             _logger = logger;
             _auditLogRepository = auditLogRepository;
+            _profiler = profiler;
         }
 
         /// <summary>
@@ -40,6 +45,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The comment if found; otherwise, null.</returns>
         public async Task<Comment?> GetByIdAsync(int commentId, bool includeAuthor = true, bool includeReplies = false)
         {
+            using var step = _profiler.Step($"FeedCommentRepository.GetByIdAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -76,6 +82,7 @@ namespace FreeSpeakWeb.Repositories
             string? imageUrl = null,
             int? parentCommentId = null)
         {
+            using var step = _profiler.Step($"FeedCommentRepository.AddAsync(postId:{postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -127,6 +134,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A tuple containing success status and error message if any.</returns>
         public async Task<(bool Success, string? ErrorMessage)> UpdateAsync(int commentId, string userId, string newContent)
         {
+            using var step = _profiler.Step($"FeedCommentRepository.UpdateAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -160,6 +168,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A tuple containing success status, error message if any, and the count of deleted comments.</returns>
         public async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteAsync(int commentId, string userId)
         {
+            using var step = _profiler.Step($"FeedCommentRepository.DeleteAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -282,6 +291,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the user can delete the comment; otherwise, false.</returns>
         public async Task<bool> CanUserDeleteAsync(int commentId, string userId)
         {
+            using var step = _profiler.Step($"FeedCommentRepository.CanUserDeleteAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -309,6 +319,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of top-level comments ordered by creation date descending.</returns>
         public async Task<List<Comment>> GetTopLevelCommentsAsync(int postId)
         {
+            using var step = _profiler.Step($"FeedCommentRepository.GetTopLevelCommentsAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -333,6 +344,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of replies ordered by creation date ascending.</returns>
         public async Task<List<Comment>> GetRepliesAsync(int parentCommentId)
         {
+            using var step = _profiler.Step($"FeedCommentRepository.GetRepliesAsync({parentCommentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -359,6 +371,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of comments matching the provided IDs.</returns>
         public async Task<List<Comment>> GetByIdsAsync(IEnumerable<int> commentIds, bool includeAuthor = true)
         {
+            using var step = _profiler.Step("FeedCommentRepository.GetByIdsAsync");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -387,6 +400,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of all comments ordered by creation date ascending.</returns>
         public async Task<List<Comment>> GetAllCommentsAsync(int postId)
         {
+            using var step = _profiler.Step($"FeedCommentRepository.GetAllCommentsAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -411,6 +425,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The total number of comments on the post.</returns>
         public async Task<int> GetCommentCountAsync(int postId)
         {
+            using var step = _profiler.Step($"FeedCommentRepository.GetCommentCountAsync({postId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -432,6 +447,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>A list of comments by the author ordered by creation date descending.</returns>
         public async Task<List<Comment>> GetByAuthorAsync(string authorId, int skip = 0, int take = 20)
         {
+            using var step = _profiler.Step($"FeedCommentRepository.GetByAuthorAsync({authorId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -459,6 +475,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>True if the comment exists; otherwise, false.</returns>
         public async Task<bool> ExistsAsync(int commentId)
         {
+            using var step = _profiler.Step($"FeedCommentRepository.ExistsAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -478,6 +495,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The depth level (0 for top-level comments, 1 for first-level replies, etc.).</returns>
         public async Task<int> GetDepthAsync(int commentId)
         {
+            using var step = _profiler.Step($"FeedCommentRepository.GetDepthAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -512,6 +530,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The root comment in the reply chain, or null if not found.</returns>
         public async Task<Comment?> GetRootCommentAsync(int commentId)
         {
+            using var step = _profiler.Step($"FeedCommentRepository.GetRootCommentAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
@@ -543,6 +562,7 @@ namespace FreeSpeakWeb.Repositories
         /// <returns>The post ID if found; otherwise, null.</returns>
         public async Task<int?> GetPostIdAsync(int commentId)
         {
+            using var step = _profiler.Step($"FeedCommentRepository.GetPostIdAsync({commentId})");
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
