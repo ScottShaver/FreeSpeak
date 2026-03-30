@@ -35,7 +35,19 @@
         AuthorGroupPoints="@(ArticlePostType == PostType.GroupPost ? AuthorGroupPoints : null)"
         EnablePointsSystem="@(ArticlePostType == PostType.GroupPost && EnablePointsSystem)"
         IsGroupAdmin="@(ArticlePostType == PostType.GroupPost && IsGroupAdmin)"
-        IsGroupModerator="@(ArticlePostType == PostType.GroupPost && IsGroupModerator)" />
+        IsGroupModerator="@(ArticlePostType == PostType.GroupPost && IsGroupModerator)"
+        IsOwnPost="@IsOwnPost"
+        ArticlePostType="@ArticlePostType"
+        UserReaction="@UserReaction"
+        ShowReactionPicker="@showReactionPicker"
+        OnShowReactionPicker="@ShowReactionPicker"
+        OnStartHideTimer="@StartHideTimer"
+        OnCancelHideTimer="@CancelHideTimer"
+        OnLikeClick="@OnLikeClick"
+        OnReactionPicked="@HandleReaction"
+        OnRemoveReaction="@HandleRemoveReaction"
+        OnCommentButtonClick="@OnCommentClick"
+        OnShareClick="@HandleShareClick" />
 
     <!-- 2. Main Content Area -->
     <FeedArticleContent 
@@ -51,22 +63,6 @@
     <FeedArticleImages 
         Images="@Images"
         OnOpenImageViewer="@OpenImageViewer" />
-
-    <!-- 4. Action Links -->
-    <FeedArticleActions 
-        IsReadOnly="@IsReadOnly"
-        IsOwnPost="@IsOwnPost"
-        IsModalView="@IsModalView"
-        UserReaction="@UserReaction"
-        ShowReactionPicker="@showReactionPicker"
-        OnShowReactionPicker="@ShowReactionPicker"
-        OnStartHideTimer="@StartHideTimer"
-        OnCancelHideTimer="@CancelHideTimer"
-        OnLikeClick="@OnLikeClick"
-        OnReactionPicked="@HandleReaction"
-        OnRemoveReaction="@HandleRemoveReaction"
-        OnCommentClick="@OnCommentClick"
-        OnShareClick="@OnShareClick" />
 
     @{
         var commentsToDisplay = LoadCommentsInternally ? internalComments : (Comments ?? new List<CommentDisplayModel>());

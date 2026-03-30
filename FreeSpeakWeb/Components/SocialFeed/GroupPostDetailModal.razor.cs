@@ -74,6 +74,15 @@ public partial class GroupPostDetailModal
 
     #endregion
 
+    #region Local State
+
+    /// <summary>
+    /// Reference to the comment editor component for focus management.
+    /// </summary>
+    private MultiLineCommentEditor? commentEditorRef;
+
+    #endregion
+
     #region Overridden Service Methods
 
     /// <summary>
@@ -130,6 +139,30 @@ public partial class GroupPostDetailModal
     protected override async Task<int> GetCommentLikeCountFromServiceAsync(int commentId)
     {
         return await GroupPostService.GetCommentLikeCountAsync(commentId);
+    }
+
+    #endregion
+
+    #region Lifecycle Overrides
+
+    /// <summary>
+    /// Called after rendering. Focuses comment editor when modal opens.
+    /// </summary>
+    /// <param name="firstRender">True if this is the first render.</param>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Focus the comment editor when modal opens
+            // Small delay to ensure the MultiLineCommentEditor's JS module is loaded
+            if (commentEditorRef != null && !IsReadOnly)
+            {
+                await Task.Delay(100);
+                await commentEditorRef.FocusAsync();
+            }
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     #endregion

@@ -4,6 +4,9 @@
 @using Microsoft.JSInterop
 
 @inject FriendsService FriendsService
+@inject GroupMemberService GroupMemberService
+@inject GroupPostService GroupPostService
+@inject PostService PostService
 @inject IJSRuntime JSRuntime
 
 @implements IAsyncDisposable
@@ -66,6 +69,15 @@
                                   Label="Mutual" 
                                   Size="sm" />
                     }
+                    <StatItem Value="@groupCount" 
+                              Label="@(groupCount == 1 ? "Group" : "Groups")" 
+                              Size="sm" />
+                    <StatItem Value="@groupPostCount" 
+                              Label="Group Posts" 
+                              Size="sm" />
+                    <StatItem Value="@postCount" 
+                              Label="@(postCount == 1 ? "Post" : "Posts")" 
+                              Size="sm" />
                 </div>
             }
         </div>
@@ -123,10 +135,13 @@
 
     private bool isLoading = true;
     private int friendCount = 0;
+    private int groupCount = 0;
+    private int groupPostCount = 0;
+    private int postCount = 0;
     private string? previousUserId = null;
 
     /// <summary>
-    /// Called when parameters are set. Loads friend count if user changed.
+    /// Called when parameters are set. Loads user statistics if user changed.
     /// </summary>
     protected override async Task OnParametersSetAsync()
     {
@@ -138,11 +153,25 @@
 
             try
             {
-                friendCount = await FriendsService.GetFriendsCountAsync(User.Id);
+                // Load all statistics in parallel for better performance
+                var friendCountTask = FriendsService.GetFriendsCountAsync(User.Id);
+                var groupCountTask = GroupMemberService.GetUserGroupCountAsync(User.Id);
+                var groupPostCountTask = GroupPostService.GetUserTotalGroupPostCountAsync(User.Id);
+                var postCountTask = PostService.GetUserPostCountAsync(User.Id);
+
+                await Task.WhenAll(friendCountTask, groupCountTask, groupPostCountTask, postCountTask);
+
+                friendCount = friendCountTask.Result;
+                groupCount = groupCountTask.Result;
+                groupPostCount = groupPostCountTask.Result;
+                postCount = postCountTask.Result;
             }
             catch
             {
                 friendCount = 0;
+                groupCount = 0;
+                groupPostCount = 0;
+                postCount = 0;
             }
             finally
             {

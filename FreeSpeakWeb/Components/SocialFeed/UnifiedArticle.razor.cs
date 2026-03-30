@@ -175,9 +175,23 @@ public partial class UnifiedArticle : ArticleComponentBase
             {
                 menuItems.Add(new PopupMenu.PopupMenuItem
                 {
+                    Text = Localizer["EditPost"],
+                    Icon = "bi bi-pencil",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandleEditPostClick())
+                });
+
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
                     Text = currentIsPinned ? Localizer["UnpinPost"] : Localizer["PinPost"],
                     Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
                     OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
+                });
+
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = isNotificationMuted ? Localizer["TurnOnNotifications"] : Localizer["TurnOffNotifications"],
+                    Icon = isNotificationMuted ? "bi bi-bell" : "bi bi-bell-slash",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandleToggleNotificationsClick())
                 });
 
                 menuItems.Add(new PopupMenu.PopupMenuItem
@@ -295,9 +309,30 @@ public partial class UnifiedArticle : ArticleComponentBase
             {
                 menuItems.Add(new PopupMenu.PopupMenuItem
                 {
+                    Text = Localizer["EditPost"],
+                    Icon = "bi bi-pencil",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandleEditPostClick())
+                });
+
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
                     Text = currentIsPinned ? Localizer["UnpinPost"] : Localizer["PinPost"],
                     Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
                     OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
+                });
+
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = Localizer["ChangePostAudience"],
+                    Icon = "bi bi-globe",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandleChangeAudienceClick())
+                });
+
+                menuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = isNotificationMuted ? Localizer["TurnOnNotifications"] : Localizer["TurnOffNotifications"],
+                    Icon = isNotificationMuted ? "bi bi-bell" : "bi bi-bell-slash",
+                    OnClick = EventCallback.Factory.Create(this, async () => await HandleToggleNotificationsClick())
                 });
 
                 menuItems.Add(new PopupMenu.PopupMenuItem
@@ -732,6 +767,54 @@ public partial class UnifiedArticle : ArticleComponentBase
         catch (Exception)
         {
             AlertService.ShowError("Failed to copy link to clipboard.");
+        }
+    }
+
+    /// <summary>
+    /// Handles clicking the Share action button.
+    /// Copies the post link to clipboard and shows a success message.
+    /// </summary>
+    private async Task HandleShareClick()
+    {
+        try
+        {
+            var baseUri = NavigationManager.BaseUri.TrimEnd('/');
+            var postUrl = ArticlePostType == PostType.GroupPost
+                ? $"{baseUri}/group/{GroupId}/post/{PostId}"
+                : $"{baseUri}/post/{PostId}";
+
+            await JS.InvokeVoidAsync("navigator.clipboard.writeText", postUrl);
+
+            AlertService.ShowSuccess(Localizer["LinkCopied"]);
+
+            try
+            {
+                if (!string.IsNullOrEmpty(CurrentUserId))
+                {
+                    if (ArticlePostType == PostType.GroupPost)
+                    {
+                        await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserGroupPost, new UserGroupPostDetails
+                        {
+                            PostId = PostId,
+                            GroupId = GroupId,
+                            OperationType = OperationTypeEnum.CopyLink.ToString()
+                        });
+                    }
+                    else
+                    {
+                        await AuditLogRepository.LogActionAsync(CurrentUserId, ActionCategory.UserPost, new UserPostDetails
+                        {
+                            PostId = PostId,
+                            OperationType = OperationTypeEnum.CopyLink.ToString()
+                        });
+                    }
+                }
+            }
+            catch { /* Audit logging should not fail the operation */ }
+        }
+        catch (Exception)
+        {
+            AlertService.ShowError(Localizer["FailedToCopyLink"]);
         }
     }
 
