@@ -1,58 +1,61 @@
-/* 4. Action Links */
+/* 4. Action Links - Compact Header Style */
 .article-actions {
     display: flex;
-    padding: 4px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
     gap: 4px;
-    border-bottom: 1px solid #e4e6eb;
-    clear: both;
+    background: transparent;
     position: relative;
-    background-color: #f8f9fa;
 }
 
 .like-button-container {
     position: relative;
-    flex: 1;
 }
 
 .like-button-placeholder {
-    flex: 1;
+    display: none;
 }
 
 .comment-button-container {
-    flex: 1;
 }
 
 .comment-button-placeholder {
-    flex: 1;
+    display: none;
 }
 
 .share-button-container {
-    flex: 1;
 }
 
 .action-button {
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 8px;
+    gap: 4px;
+    padding: 4px 8px;
     border: none;
-    background: transparent;
-    color: #65676b;
-    font-size: 15px;
-    font-weight: 600;
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 10px;
     transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.action-button svg {
+    width: 14px;
+    height: 14px;
 }
 
 .action-button:hover {
-    background-color: #f0f2f5;
+    background-color: rgba(0, 0, 0, 0.12);
 }
 
 .action-button.reacted {
-    color: #1877f2;
+    color: var(--primary-color);
+    background: rgba(var(--primary-color-rgb, 24, 119, 242), 0.15);
 }
 
 .action-button.reacted.love {
@@ -60,10 +63,11 @@
 }
 
 .user-reaction-emoji {
-    font-size: 18px;
+    font-size: 14px;
+    line-height: 1;
 }
 
 .reaction-text {
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 500;
 }

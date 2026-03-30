@@ -33,8 +33,15 @@ export function initializeContentMeasurement(contentElement, dotNetHelper) {
     storedDotNetHelper = dotNetHelper;
 
     try {
-        // Initial measurement
-        measureContent(contentElement, dotNetHelper);
+        // Use requestAnimationFrame to ensure layout is complete before measuring
+        // This fixes the issue where new posts show "Click to see full post" incorrectly
+        requestAnimationFrame(() => {
+            // Double requestAnimationFrame ensures the browser has completed both
+            // style calculation and layout before we measure
+            requestAnimationFrame(() => {
+                measureContent(contentElement, dotNetHelper);
+            });
+        });
 
         // Set up ResizeObserver to detect dynamic changes (e.g., window resize)
         if (typeof ResizeObserver !== 'undefined') {

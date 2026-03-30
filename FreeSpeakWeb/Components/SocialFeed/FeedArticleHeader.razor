@@ -109,6 +109,25 @@
             }
         </div>
     </div>
+
+    <!-- Embedded Actions (compact, centered in header) -->
+    <FeedArticleActions 
+        IsReadOnly="@IsReadOnly"
+        IsOwnPost="@IsOwnPost"
+        IsModalView="@IsModalView"
+        ArticlePostType="@ArticlePostType"
+        AudienceType="@AudienceType"
+        UserReaction="@UserReaction"
+        ShowReactionPicker="@ShowReactionPicker"
+        OnShowReactionPicker="@OnShowReactionPicker"
+        OnStartHideTimer="@OnStartHideTimer"
+        OnCancelHideTimer="@OnCancelHideTimer"
+        OnLikeClick="@OnLikeClick"
+        OnReactionPicked="@OnReactionPicked"
+        OnRemoveReaction="@OnRemoveReaction"
+        OnCommentClick="@OnCommentButtonClick"
+        OnShareClick="@OnShareClick" />
+
     <div class="header-stats">
         @if (IsModalView || IsReadOnly)
         {
@@ -309,6 +328,82 @@
     /// </summary>
     [Parameter]
     public bool IsGroupModerator { get; set; } = false;
+
+    // ========================
+    // Action Parameters (for embedded FeedArticleActions)
+    // ========================
+
+    /// <summary>
+    /// Indicates whether the current user is the author of the post (for action display).
+    /// </summary>
+    [Parameter]
+    public bool IsOwnPost { get; set; } = false;
+
+    /// <summary>
+    /// The type of post (UserPost or GroupPost) for determining share button visibility.
+    /// </summary>
+    [Parameter]
+    public PostType ArticlePostType { get; set; } = PostType.UserPost;
+
+    /// <summary>
+    /// The current user's reaction type on the post.
+    /// </summary>
+    [Parameter]
+    public LikeType? UserReaction { get; set; }
+
+    /// <summary>
+    /// Controls whether the reaction picker is visible.
+    /// </summary>
+    [Parameter]
+    public bool ShowReactionPicker { get; set; } = false;
+
+    /// <summary>
+    /// Event callback for showing the reaction picker.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnShowReactionPicker { get; set; }
+
+    /// <summary>
+    /// Event callback for starting the hide timer on the reaction picker.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnStartHideTimer { get; set; }
+
+    /// <summary>
+    /// Event callback for canceling the hide timer on the reaction picker.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnCancelHideTimer { get; set; }
+
+    /// <summary>
+    /// Event callback for the like button click.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnLikeClick { get; set; }
+
+    /// <summary>
+    /// Event callback for when a reaction is picked.
+    /// </summary>
+    [Parameter]
+    public EventCallback<LikeType> OnReactionPicked { get; set; }
+
+    /// <summary>
+    /// Event callback for removing the current reaction.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnRemoveReaction { get; set; }
+
+    /// <summary>
+    /// Event callback for the comment button click.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnCommentButtonClick { get; set; }
+
+    /// <summary>
+    /// Event callback for the share button click.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnShareClick { get; set; }
 
     /// <summary>
     /// Gets whether the current user is the author of this post.

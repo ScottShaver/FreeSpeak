@@ -566,6 +566,27 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
+        /// Gets the total number of groups a user is a member of.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The count of groups the user belongs to.</returns>
+        public async Task<int> GetUserGroupCountAsync(string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.GroupUsers
+                    .CountAsync(gu => gu.UserId == userId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting group count for user {UserId}", userId);
+                return 0;
+            }
+        }
+
+        /// <summary>
         /// Check if a user is an admin of a group, or a system administrator.
         /// </summary>
         /// <param name="groupId">The ID of the group.</param>

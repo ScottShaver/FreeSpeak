@@ -513,6 +513,24 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
+        /// Gets the total count of posts authored by a specific user.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The total number of posts by the user.</returns>
+        public async Task<int> GetUserPostCountAsync(string userId)
+        {
+            try
+            {
+                return await _postRepository.GetCountByAuthorAsync(userId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting post count for user {UserId}", userId);
+                return 0;
+            }
+        }
+
+        /// <summary>
         /// Retrieves public posts for unauthenticated users.
         /// </summary>
         /// <param name="pageNumber">The page number to retrieve (1-based).</param>

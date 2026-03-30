@@ -10,6 +10,7 @@ namespace FreeSpeakWeb.DTOs
     /// <param name="Id">The unique identifier of the post.</param>
     /// <param name="AuthorId">The unique identifier of the post author.</param>
     /// <param name="AuthorName">The display name of the post author (FirstName + LastName).</param>
+    /// <param name="AuthorUserName">The username of the post author.</param>
     /// <param name="AuthorImageUrl">The URL for the post author's profile picture.</param>
     /// <param name="Content">The text content of the post.</param>
     /// <param name="CreatedAt">The timestamp when the post was created.</param>
@@ -23,6 +24,7 @@ namespace FreeSpeakWeb.DTOs
         int Id,
         string AuthorId,
         string AuthorName,
+        string? AuthorUserName,
         string? AuthorImageUrl,
         string Content,
         DateTime CreatedAt,

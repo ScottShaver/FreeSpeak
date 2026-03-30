@@ -27,6 +27,7 @@ namespace FreeSpeakWeb.Mapping
                     Id = dto.AuthorId,
                     FirstName = dto.AuthorName.Split(' ').FirstOrDefault() ?? dto.AuthorName,
                     LastName = dto.AuthorName.Split(' ').Skip(1).FirstOrDefault() ?? "",
+                    UserName = dto.AuthorUserName,
                     ProfilePictureUrl = dto.AuthorImageUrl
                 },
                 Content = dto.Content,

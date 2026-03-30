@@ -1,15 +1,25 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Components.Friends
 @using System.Text.Json
 @using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.JSInterop
+
+@implements IDisposable
 
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject TimestampFormattingService TimestampFormatter
 @inject NotificationTemplateService NotificationTemplateService
+@inject UserManager<ApplicationUser> UserManager
+@inject IJSRuntime JSRuntime
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.NotificationComponent> Localizer
 
 <div class="notification-item @(Notification.IsRead ? "read" : "unread")" @onclick="HandleClick">
-    <div class="notification-avatar">
+    <div class="notification-avatar"
+         id="@avatarElementId"
+         @onmouseenter="HandleMouseEnter"
+         @onmouseleave="HandleMouseLeave">
         <UserAvatar ImageUrl="@UserProfilePicture" 
                     Name="@UserName" 
                     Size="md"
@@ -75,6 +85,19 @@
         <span class="bi bi-trash"></span>
     </button>
 </div>
+
+<!-- Profile Preview Popup (hover-triggered) -->
+@if (actorUser != null)
+{
+    <ProfilePreviewPopup 
+        User="@actorUser"
+        IsVisible="@showProfilePreviewPopup"
+        MutualFriendsCount="0"
+        PositionX="@popupPositionX"
+        PositionY="@popupPositionY"
+        OnMouseEnter="@HandlePopupMouseEnter"
+        OnMouseLeave="@HandlePopupMouseLeave" />
+}
 
 @code {
     [Parameter]
@@ -191,12 +214,242 @@
     // Helper class to deserialize notification data
     private class NotificationData
     {
+        public string? ReactorId { get; set; }
         public string? ReactorName { get; set; }
         public string? ReactorProfilePicture { get; set; }
+        public string? CommenterId { get; set; }
         public string? CommenterName { get; set; }
         public string? CommenterProfilePicture { get; set; }
+        public string? RequesterId { get; set; }
         public string? RequesterName { get; set; }
         public string? RequesterProfilePicture { get; set; }
         public string? ReactionType { get; set; }
+    }
+
+    // Hover preview popup state
+    private bool showProfilePreviewPopup = false;
+    private double popupPositionX = 0;
+    private double popupPositionY = 0;
+    private System.Threading.Timer? hoverTimer;
+    private bool isMouseOverAvatar = false;
+    private bool isMouseOverPopup = false;
+    private ApplicationUser? actorUser = null;
+    private bool isLoadingActor = false;
+    private string avatarElementId = $"notification-avatar-{Guid.NewGuid():N}";
+
+    // Hover delay in milliseconds (1 second)
+    private const int HoverDelayMs = 1000;
+
+    /// <summary>
+    /// Gets the user ID of the actor (person who triggered the notification).
+    /// </summary>
+    private string? GetActorUserId()
+    {
+        if (string.IsNullOrEmpty(Notification.Data)) return null;
+
+        try
+        {
+            var data = JsonSerializer.Deserialize<NotificationData>(Notification.Data);
+            return data?.ReactorId ?? data?.CommenterId ?? data?.RequesterId;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Handles mouse entering the avatar area.
+    /// Starts a timer to show the popup after the hover delay.
+    /// </summary>
+    private async Task HandleMouseEnter()
+    {
+        var actorId = GetActorUserId();
+        if (string.IsNullOrEmpty(actorId)) return;
+
+        isMouseOverAvatar = true;
+
+        // Cancel any existing timer
+        CancelHoverTimer();
+
+        // Calculate popup position
+        await CalculatePopupPosition();
+
+        // Start loading actor data if not already loaded
+        if (actorUser == null && !isLoadingActor)
+        {
+            isLoadingActor = true;
+            try
+            {
+                actorUser = await UserManager.FindByIdAsync(actorId);
+            }
+            catch
+            {
+                actorUser = null;
+            }
+            finally
+            {
+                isLoadingActor = false;
+            }
+        }
+
+        // Start a new timer to show popup after delay
+        hoverTimer = new System.Threading.Timer(
+            callback: _ => InvokeAsync(() =>
+            {
+                if (isMouseOverAvatar && actorUser != null)
+                {
+                    showProfilePreviewPopup = true;
+                    StateHasChanged();
+                }
+            }),
+            state: null,
+            dueTime: HoverDelayMs,
+            period: System.Threading.Timeout.Infinite
+        );
+    }
+
+    /// <summary>
+    /// Handles mouse leaving the avatar area.
+    /// Hides the popup after a short delay if mouse is not over the popup.
+    /// </summary>
+    private void HandleMouseLeave()
+    {
+        isMouseOverAvatar = false;
+        CancelHoverTimer();
+
+        // Use a short delay to allow mouse to move to popup
+        hoverTimer = new System.Threading.Timer(
+            callback: _ => InvokeAsync(() =>
+            {
+                if (!isMouseOverAvatar && !isMouseOverPopup)
+                {
+                    HidePopup();
+                }
+            }),
+            state: null,
+            dueTime: 150,
+            period: System.Threading.Timeout.Infinite
+        );
+    }
+
+    /// <summary>
+    /// Handles mouse entering the popup (keeps it visible).
+    /// </summary>
+    private void HandlePopupMouseEnter()
+    {
+        isMouseOverPopup = true;
+        CancelHoverTimer();
+    }
+
+    /// <summary>
+    /// Handles mouse leaving the popup.
+    /// </summary>
+    private void HandlePopupMouseLeave()
+    {
+        isMouseOverPopup = false;
+
+        // Use a short delay before hiding
+        hoverTimer = new System.Threading.Timer(
+            callback: _ => InvokeAsync(() =>
+            {
+                if (!isMouseOverAvatar && !isMouseOverPopup)
+                {
+                    HidePopup();
+                }
+            }),
+            state: null,
+            dueTime: 150,
+            period: System.Threading.Timeout.Infinite
+        );
+    }
+
+    /// <summary>
+    /// Calculates the position for the popup based on the avatar location.
+    /// </summary>
+    private async Task CalculatePopupPosition()
+    {
+        try
+        {
+            var rect = await JSRuntime.InvokeAsync<BoundingClientRect>(
+                "eval",
+                $"(function() {{ var el = document.getElementById('{avatarElementId}'); if (el) {{ var r = el.getBoundingClientRect(); return {{ left: r.left, top: r.top, width: r.width, height: r.height }}; }} return null; }})()"
+            );
+
+            if (rect != null)
+            {
+                // Position popup below the avatar, slightly to the right
+                popupPositionX = rect.Left;
+                popupPositionY = rect.Top + rect.Height + 10;
+
+                // Ensure popup doesn't go off-screen on the left
+                if (popupPositionX < 10) popupPositionX = 10;
+
+                // Check if popup would go off-screen on the right (assuming 280px min width)
+                var viewportWidth = await JSRuntime.InvokeAsync<double>("eval", "window.innerWidth");
+                if (popupPositionX + 280 > viewportWidth - 10)
+                {
+                    popupPositionX = viewportWidth - 290;
+                }
+
+                // Check if popup would go off-screen at the bottom (assuming ~200px height)
+                var viewportHeight = await JSRuntime.InvokeAsync<double>("eval", "window.innerHeight");
+                if (popupPositionY + 200 > viewportHeight - 10)
+                {
+                    // Position above the avatar instead
+                    popupPositionY = rect.Top - 210;
+                    if (popupPositionY < 10) popupPositionY = 10;
+                }
+            }
+            else
+            {
+                // Fallback position
+                popupPositionX = 100;
+                popupPositionY = 100;
+            }
+        }
+        catch
+        {
+            // Fallback position
+            popupPositionX = 100;
+            popupPositionY = 100;
+        }
+    }
+
+    /// <summary>
+    /// Cancels the hover timer if active.
+    /// </summary>
+    private void CancelHoverTimer()
+    {
+        hoverTimer?.Dispose();
+        hoverTimer = null;
+    }
+
+    /// <summary>
+    /// Hides the popup and resets state.
+    /// </summary>
+    private void HidePopup()
+    {
+        showProfilePreviewPopup = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Helper class for bounding client rect from JavaScript.
+    /// </summary>
+    private class BoundingClientRect
+    {
+        public double Left { get; set; }
+        public double Top { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+    }
+
+    /// <summary>
+    /// Disposes of resources, including the hover timer.
+    /// </summary>
+    public void Dispose()
+    {
+        CancelHoverTimer();
     }
 }

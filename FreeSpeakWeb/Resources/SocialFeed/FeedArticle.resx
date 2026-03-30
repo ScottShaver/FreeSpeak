@@ -127,6 +127,9 @@
   <data name="LinkCopied" xml:space="preserve">
     <value>Link copied to clipboard!</value>
   </data>
+  <data name="FailedToCopyLink" xml:space="preserve">
+    <value>Failed to copy link to clipboard.</value>
+  </data>
   <data name="ChangeToPublicTitle" xml:space="preserve">
     <value>Change to Public?</value>
   </data>

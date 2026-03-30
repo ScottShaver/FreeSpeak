@@ -34,6 +34,14 @@ public partial class PostDetailModal
     [Parameter]
     public EventCallback<AudienceType> OnAudienceTypeChanged { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether the current user can delete this post.
+    /// For feed posts: System Admins and System Moderators can delete any post.
+    /// Post authors can always delete their own posts.
+    /// </summary>
+    [Parameter]
+    public bool CanDeletePost { get; set; } = false;
+
     #endregion
 
     #region Local State
@@ -42,6 +50,11 @@ public partial class PostDetailModal
     /// Total comment count including all nested replies.
     /// </summary>
     private int totalCommentCount = 0;
+
+    /// <summary>
+    /// Reference to the comment editor component for focus management.
+    /// </summary>
+    private MultiLineCommentEditor? commentEditorRef;
 
     #endregion
 
@@ -118,7 +131,7 @@ public partial class PostDetailModal
     #region Lifecycle Overrides
 
     /// <summary>
-    /// Called after rendering. Loads total comment count in addition to base behavior.
+    /// Called after rendering. Loads total comment count, focuses comment editor, and invokes base behavior.
     /// </summary>
     /// <param name="firstRender">True if this is the first render.</param>
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -127,6 +140,14 @@ public partial class PostDetailModal
         {
             // Load total comment count for feed posts
             totalCommentCount = await PostService.GetTotalCommentCountAsync(base.PostId);
+
+            // Focus the comment editor when modal opens
+            // Small delay to ensure the MultiLineCommentEditor's JS module is loaded
+            if (commentEditorRef != null && !IsReadOnly)
+            {
+                await Task.Delay(100);
+                await commentEditorRef.FocusAsync();
+            }
         }
 
         await base.OnAfterRenderAsync(firstRender);

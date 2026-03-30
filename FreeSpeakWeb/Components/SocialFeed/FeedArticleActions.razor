@@ -49,30 +49,60 @@
         {
             <div class="comment-button-placeholder"></div>
         }
-        <div class="share-button-container">
-            <button type="button" class="action-button" @onclick="OnShareClick">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"/>
-                </svg>
-                @Localizer["Share"]
-            </button>
-        </div>
+        @if (ShowShareButton)
+        {
+            <div class="share-button-container">
+                <button type="button" class="action-button" @onclick="OnShareClick">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"/>
+                    </svg>
+                    @Localizer["Share"]
+                </button>
+            </div>
+        }
     </div>
 }
 
 @code {
+    /// <summary>
+    /// Indicates whether the actions are in read-only mode.
+    /// </summary>
     [Parameter]
     public bool IsReadOnly { get; set; } = false;
 
+    /// <summary>
+    /// Indicates whether the current user is the author of the post.
+    /// </summary>
     [Parameter]
     public bool IsOwnPost { get; set; } = false;
 
+    /// <summary>
+    /// Indicates whether this is being displayed in a modal view.
+    /// </summary>
     [Parameter]
     public bool IsModalView { get; set; } = false;
 
+    /// <summary>
+    /// The type of post (UserPost or GroupPost).
+    /// </summary>
+    [Parameter]
+    public PostType ArticlePostType { get; set; } = PostType.UserPost;
+
+    /// <summary>
+    /// The audience type for the post (Public, FriendsOnly, MeOnly).
+    /// </summary>
+    [Parameter]
+    public AudienceType AudienceType { get; set; } = AudienceType.Public;
+
+    /// <summary>
+    /// The current user's reaction type on the post.
+    /// </summary>
     [Parameter]
     public LikeType? UserReaction { get; set; }
 
+    /// <summary>
+    /// Controls whether the reaction picker is visible.
+    /// </summary>
     [Parameter]
     public bool ShowReactionPicker { get; set; } = false;
 
@@ -99,6 +129,12 @@
 
     [Parameter]
     public EventCallback OnShareClick { get; set; }
+
+    /// <summary>
+    /// Determines whether the Share button should be shown.
+    /// Share is available for Public posts (both UserPosts and GroupPosts).
+    /// </summary>
+    private bool ShowShareButton => AudienceType == AudienceType.Public;
 
     private string GetReactionEmoji(LikeType reactionType)
     {
