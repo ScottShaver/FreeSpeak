@@ -7,6 +7,8 @@
     z-index: 9998 !important;
     /* Transparent backdrop to capture clicks outside the popup */
     background: transparent;
+    /* Allow mouse events to pass through to elements underneath */
+    pointer-events: none;
 }
 
 .popup-portal-container {

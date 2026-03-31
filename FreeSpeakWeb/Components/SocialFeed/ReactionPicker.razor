@@ -59,10 +59,11 @@
     private bool _isShowingPortal;
 
     /// <summary>
-    /// When true, renders the reaction picker through the portal at document body level.
+    /// When true (default), renders the reaction picker through the portal at document body level.
+    /// Set to false to render inline within the parent container.
     /// </summary>
     [Parameter]
-    public bool UsePortal { get; set; } = false;
+    public bool UsePortal { get; set; } = true;
 
     /// <summary>
     /// The ID of the HTML element to anchor the portal picker to.
@@ -121,6 +122,13 @@
             return;
         }
 
+        // Check if portal is already showing for this anchor to prevent flicker
+        if (PortalService.IsShowingForAnchor(AnchorElementId))
+        {
+            _isShowingPortal = true;
+            return;
+        }
+
         _isShowingPortal = true;
 
         // Build portal content with RenderTreeBuilder
@@ -154,7 +162,11 @@
         if (_isShowingPortal)
         {
             _isShowingPortal = false;
-            PortalService.HidePopup();
+            // Only hide if we're the one currently showing in the portal
+            if (PortalService.IsShowingForAnchor(AnchorElementId))
+            {
+                PortalService.HidePopup();
+            }
         }
     }
 

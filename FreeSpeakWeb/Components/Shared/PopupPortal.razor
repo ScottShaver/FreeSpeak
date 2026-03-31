@@ -3,17 +3,8 @@
 @inject PopupPortalService PortalService
 @inject IJSRuntime JSRuntime
 
-@* Debug indicator - remove after testing *@
-@if (_debugShowIndicator)
-{
-    <div style="position: fixed; bottom: 10px; left: 10px; background: red; color: white; padding: 5px; z-index: 99999; font-size: 12px;">
-        Portal Active: @PortalService.IsActive | HasContent: @(PortalService.CurrentContent != null)
-    </div>
-}
-
 @if (PortalService.IsActive && PortalService.CurrentContent != null)
 {
-    <div class="popup-portal-backdrop" @onclick="HandleBackdropClick"></div>
     <div @ref="_portalElement" class="popup-portal-container" style="@_positionStyle">
         @PortalService.CurrentContent.Content
     </div>
@@ -24,7 +15,6 @@
     private IJSObjectReference? _jsModule;
     private bool _needsPositioning;
     private string _positionStyle = "top: 100px; right: 20px;";
-    private bool _debugShowIndicator = true; // Set to false to hide debug indicator
 
     /// <summary>
     /// Initializes the component and subscribes to portal service state changes.
@@ -32,7 +22,6 @@
     protected override void OnInitialized()
     {
         PortalService.OnStateChanged += HandleStateChanged;
-        Console.WriteLine($"PopupPortal: Initialized and subscribed to service. Service IsActive={PortalService.IsActive}");
     }
 
     /// <summary>
@@ -42,16 +31,14 @@
     {
         if (firstRender)
         {
-            Console.WriteLine("PopupPortal: First render, loading JS module");
             try
             {
                 _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>(
                     "import", "./Components/Shared/PopupPortal.razor.js");
-                Console.WriteLine("PopupPortal: JS module loaded successfully");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"PopupPortal: Failed to load JS module: {ex.Message}");
+                // JS module load failed - positioning will use fallback
             }
         }
 
@@ -68,7 +55,6 @@
     /// </summary>
     private void HandleStateChanged()
     {
-        Console.WriteLine($"PopupPortal.HandleStateChanged: IsActive={PortalService.IsActive}, HasContent={PortalService.CurrentContent != null}");
         _needsPositioning = PortalService.IsActive;
         _positionStyle = "top: 100px; right: 20px;"; // Default fallback position
         InvokeAsync(StateHasChanged);
@@ -84,7 +70,6 @@
 
         if (_jsModule == null)
         {
-            Console.WriteLine("PopupPortal: JS module not loaded, using fallback position");
             return;
         }
 
@@ -101,9 +86,9 @@
 
             await _jsModule.InvokeVoidAsync("positionPopup", _portalElement, content.AnchorElementId, placement);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"PopupPortal: Positioning failed: {ex.Message}");
+            // Positioning failed - fallback position will be used
         }
     }
 

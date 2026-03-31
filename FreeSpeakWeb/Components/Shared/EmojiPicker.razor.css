@@ -63,7 +63,7 @@
 .emoji-btn {
     width: 32px;
     height: 32px;
-    border: none;
+    border: none !important;
     background: transparent;
     border-radius: 4px;
     font-size: 24px;
@@ -73,6 +73,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    outline: none;
 }
 
 .emoji-btn:hover {
@@ -82,4 +83,15 @@
 
 .emoji-btn:active {
     transform: scale(0.95);
+}
+
+/* Portal-specific styles */
+.emoji-picker-portal .emoji-btn {
+    border: none !important;
+    outline: none !important;
+}
+
+.emoji-picker-portal .emoji-category-btn {
+    border: none !important;
+    outline: none !important;
 }

@@ -53,11 +53,12 @@
     public bool ShowButton { get; set; } = true;
 
     /// <summary>
-    /// When true, renders the popup through the portal at document body level.
+    /// When true (default), renders the popup through the portal at document body level.
     /// This prevents CSS overflow clipping issues in modal containers.
+    /// Set to false only if portal rendering causes issues in specific contexts.
     /// </summary>
     [Parameter]
-    public bool UsePortal { get; set; } = false;
+    public bool UsePortal { get; set; } = true;
 
     /// <summary>
     /// The preferred placement of the popup relative to the anchor element.

@@ -14,7 +14,6 @@ public class PopupPortalService
     public PopupPortalService()
     {
         _instanceId = Interlocked.Increment(ref _instanceCounter);
-        Console.WriteLine($"PopupPortalService: Created instance #{_instanceId}");
     }
 
     /// <summary>
@@ -41,7 +40,6 @@ public class PopupPortalService
     /// <param name="onClose">Optional callback when the popup is closed.</param>
     public void ShowPopup(RenderFragment content, string anchorElementId, PopupPlacement placement = PopupPlacement.BottomEnd, Action? onClose = null)
     {
-        Console.WriteLine($"PopupPortalService #{_instanceId}: ShowPopup called. Subscribers: {OnStateChanged?.GetInvocationList().Length ?? 0}");
         CurrentContent = new PopupPortalContent
         {
             Content = content,
@@ -60,7 +58,6 @@ public class PopupPortalService
     {
         if (!IsActive) return;
 
-        Console.WriteLine($"PopupPortalService #{_instanceId}: HidePopup called");
         var onClose = CurrentContent?.OnClose;
         CurrentContent = null;
         IsActive = false;
@@ -69,11 +66,20 @@ public class PopupPortalService
     }
 
     /// <summary>
+    /// Checks if a popup is currently showing for the specified anchor element.
+    /// </summary>
+    /// <param name="anchorElementId">The ID of the anchor element to check.</param>
+    /// <returns>True if a popup is active and anchored to the specified element.</returns>
+    public bool IsShowingForAnchor(string anchorElementId)
+    {
+        return IsActive && CurrentContent?.AnchorElementId == anchorElementId;
+    }
+
+    /// <summary>
     /// Notifies subscribers that state has changed.
     /// </summary>
     private void NotifyStateChanged()
     {
-        Console.WriteLine($"PopupPortalService #{_instanceId}: NotifyStateChanged - invoking {OnStateChanged?.GetInvocationList().Length ?? 0} subscribers");
         OnStateChanged?.Invoke();
     }
 }

@@ -238,3 +238,157 @@ h1:focus {
     pointer-events: none;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
+
+/* ==========================================
+   Portal Emoji Picker Styles (Global)
+   ========================================== */
+
+.popup-portal-container .emoji-picker-portal {
+    background: var(--surface-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    width: 320px;
+    border: 2px solid var(--border-color);
+    overflow: hidden;
+}
+
+.popup-portal-container .emoji-categories {
+    display: flex;
+    gap: 4px;
+    padding: 8px;
+    background-color: var(--surface-secondary);
+    border-bottom: 2px solid var(--border-color);
+    overflow-x: auto;
+}
+
+.popup-portal-container .emoji-category-btn {
+    min-width: 32px;
+    height: 32px;
+    border: none !important;
+    background: transparent;
+    border-radius: 4px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none !important;
+}
+
+.popup-portal-container .emoji-category-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.popup-portal-container .emoji-category-btn.active {
+    background-color: var(--surface-hover);
+}
+
+.popup-portal-container .emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 4px;
+    padding: 8px;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.popup-portal-container .emoji-btn {
+    width: 32px;
+    height: 32px;
+    border: none !important;
+    background: transparent;
+    border-radius: 4px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none !important;
+}
+
+.popup-portal-container .emoji-btn:hover {
+    background-color: var(--surface-secondary);
+    transform: scale(1.1);
+}
+
+.popup-portal-container .emoji-btn:active {
+    transform: scale(0.95);
+}
+
+/* ==========================================
+   Inline Emoji Picker Styles (Global)
+   These styles apply when the emoji picker is
+   rendered inline (UsePortal=false) and ensure
+   RenderTreeBuilder content is styled correctly.
+   ========================================== */
+
+.emoji-picker .emoji-categories {
+    display: flex;
+    gap: 4px;
+    padding: 8px;
+    background-color: var(--surface-secondary);
+    border-bottom: 2px solid var(--border-color);
+    overflow-x: auto;
+}
+
+.emoji-picker .emoji-category-btn {
+    min-width: 32px;
+    height: 32px;
+    border: none !important;
+    background: transparent;
+    border-radius: 4px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none !important;
+}
+
+.emoji-picker .emoji-category-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.emoji-picker .emoji-category-btn.active {
+    background-color: var(--surface-hover);
+}
+
+.emoji-picker .emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 4px;
+    padding: 8px;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.emoji-picker .emoji-btn {
+    width: 32px;
+    height: 32px;
+    border: none !important;
+    background: transparent;
+    border-radius: 4px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none !important;
+}
+
+.emoji-picker .emoji-btn:hover {
+    background-color: var(--surface-secondary);
+    transform: scale(1.1);
+}
+
+.emoji-picker .emoji-btn:active {
+    transform: scale(0.95);
+}
