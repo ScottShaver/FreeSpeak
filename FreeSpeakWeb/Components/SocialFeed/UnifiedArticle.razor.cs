@@ -114,7 +114,7 @@ public partial class UnifiedArticle : ArticleComponentBase
     private bool showPublicConfirmation = false;
     private AudienceType pendingAudienceType = AudienceType.FriendsOnly;
     private List<PopupMenu.PopupMenuItem> audienceMenuItems = new();
-    private string audienceMenuPositionStyle = string.Empty;
+    private string _audienceMenuAnchorId = $"audience-menu-{Guid.NewGuid():N}";
 
     // Report modal state (GroupPost only)
     private bool showReportModal = false;
@@ -253,13 +253,6 @@ public partial class UnifiedArticle : ArticleComponentBase
                 Text = currentIsPinned ? Localizer["UnpinPost"] : Localizer["PinPost"],
                 Icon = currentIsPinned ? "bi bi-pin-angle-fill" : "bi bi-pin-angle",
                 OnClick = EventCallback.Factory.Create(this, async () => await HandlePinUnpinClick())
-            });
-
-            menuItems.Add(new PopupMenu.PopupMenuItem
-            {
-                Text = isNotificationMuted ? Localizer["TurnOnNotifications"] : Localizer["TurnOffNotifications"],
-                Icon = isNotificationMuted ? "bi bi-bell" : "bi bi-bell-slash",
-                OnClick = EventCallback.Factory.Create(this, async () => await HandleToggleNotificationsClick())
             });
 
             // Show Delete Post if user has permission (system admin/moderator or group admin/moderator)
@@ -525,7 +518,6 @@ public partial class UnifiedArticle : ArticleComponentBase
         CloseMenu();
         BuildAudienceMenuItems();
         showAudienceMenu = true;
-        audienceMenuPositionStyle = "right: 0; top: 40px;";
         StateHasChanged();
         return Task.CompletedTask;
     }

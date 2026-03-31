@@ -68,7 +68,8 @@
                         IsVisible="@showCommentMenu"
                         IsVisibleChanged="@HandleMenuVisibilityChanged"
                         Tooltip="@Localizer["MoreOptions"]"
-                        Size="sm" />
+                        Size="sm"
+                        UsePortal="true" />
                 }
             </div>
         }
@@ -87,7 +88,7 @@
 
             @if (ShouldShowLikeButton)
             {
-                <div class="like-button-container" @onmouseenter="ShowReactionPicker" @onmouseleave="StartHideTimer" @onmouseenter:stopPropagation="true">
+                <div id="@_reactionPickerAnchorId" class="like-button-container" @onmouseenter="ShowReactionPicker" @onmouseleave="StartHideTimer" @onmouseenter:stopPropagation="true">
                     <button type="button" class="comment-like-button @(UserReaction != null ? "reacted" : "")" @onclick="OnLikeClick">
                         @if (UserReaction != null)
                         {
@@ -99,10 +100,14 @@
                             <span>@Localizer["Like"]</span>
                         }
                     </button>
-                    @if (showReactionPicker)
-                    {
-                        <ReactionPicker HasUserReaction="@(UserReaction != null)" OnReactionPicked="HandleReaction" OnRemoveReaction="HandleRemoveReaction" OnClose="StartHideTimer" OnEnter="CancelHideTimer" />
-                    }
+                    <ReactionPicker 
+                        HasUserReaction="@(UserReaction != null)" 
+                        OnReactionPicked="HandleReaction" 
+                        OnRemoveReaction="HandleRemoveReaction" 
+                        OnClose="StartHideTimer" 
+                        OnEnter="CancelHideTimer"
+                        IsVisible="@showReactionPicker"
+                        AnchorElementId="@_reactionPickerAnchorId" />
                 </div>
             }
             @if (ShouldShowReplyButton)
@@ -317,6 +322,9 @@
     private IJSObjectReference? jsModule;
     private MultiLineCommentEditor? commentEditor;
 
+    // Unique anchor ID for reaction picker portal positioning
+    private string _reactionPickerAnchorId = $"comment-reaction-anchor-{Guid.NewGuid():N}";
+
     // Hover preview popup state
     private bool showProfilePreviewPopup = false;
     private double popupPositionX = 0;
@@ -505,8 +513,11 @@
         if (IsOwnComment) return;
 
         hideTimer?.Dispose();
-        showReactionPicker = true;
-        StateHasChanged();
+        if (!showReactionPicker)
+        {
+            showReactionPicker = true;
+            StateHasChanged();
+        }
     }
 
     private void CancelHideTimer()
@@ -514,8 +525,7 @@
         if (IsOwnComment) return;
 
         hideTimer?.Dispose();
-        showReactionPicker = true;
-        StateHasChanged();
+        // Don't call StateHasChanged if already showing - prevents render loop
     }
 
     private void StartHideTimer()

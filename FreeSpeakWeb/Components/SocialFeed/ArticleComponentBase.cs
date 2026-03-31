@@ -425,8 +425,11 @@ public abstract class ArticleComponentBase : ComponentBase, IAsyncDisposable
         if (IsOwnPost) return;
 
         hideTimer?.Dispose();
-        showReactionPicker = true;
-        StateHasChanged();
+        if (!showReactionPicker)
+        {
+            showReactionPicker = true;
+            StateHasChanged();
+        }
     }
 
     /// <summary>
@@ -437,8 +440,7 @@ public abstract class ArticleComponentBase : ComponentBase, IAsyncDisposable
         if (IsOwnPost) return;
 
         hideTimer?.Dispose();
-        showReactionPicker = true;
-        StateHasChanged();
+        // Don't call StateHasChanged if already showing - prevents render loop
     }
 
     /// <summary>
@@ -721,6 +723,40 @@ public abstract class ArticleComponentBase : ComponentBase, IAsyncDisposable
         if (OnCommentUpdated.HasDelegate)
         {
             await OnCommentUpdated.InvokeAsync(args);
+
+            if (LoadCommentsInternally)
+            {
+                await LoadCommentsAsync();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles when a comment reaction changes, forwarding to the parent and reloading internal comments if necessary.
+    /// </summary>
+    /// <param name="args">Tuple containing the CommentId and ReactionType.</param>
+    protected async Task OnCommentReactionChangedLocally((int CommentId, LikeType ReactionType) args)
+    {
+        if (OnCommentReactionChanged.HasDelegate)
+        {
+            await OnCommentReactionChanged.InvokeAsync(args);
+
+            if (LoadCommentsInternally)
+            {
+                await LoadCommentsAsync();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles when a comment reaction is removed, forwarding to the parent and reloading internal comments if necessary.
+    /// </summary>
+    /// <param name="commentId">The ID of the comment whose reaction was removed.</param>
+    protected async Task OnRemoveCommentReactionLocally(int commentId)
+    {
+        if (OnRemoveCommentReaction.HasDelegate)
+        {
+            await OnRemoveCommentReaction.InvokeAsync(commentId);
 
             if (LoadCommentsInternally)
             {

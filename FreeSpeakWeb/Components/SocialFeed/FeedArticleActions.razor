@@ -9,7 +9,7 @@
     <div class="article-actions">
         @if (!IsOwnPost)
         {
-            <div class="like-button-container" @onmouseenter="OnShowReactionPicker" @onmouseleave="OnStartHideTimer" @onmouseenter:stopPropagation="true">
+            <div id="@_reactionPickerAnchorId" class="like-button-container" @onmouseenter="OnShowReactionPicker" @onmouseleave="OnStartHideTimer" @onmouseenter:stopPropagation="true">
                 <button type="button" class="action-button @(UserReaction != null ? "reacted" : "")" @onclick="OnLikeClick">
                     @if (UserReaction != null)
                     {
@@ -24,9 +24,29 @@
                         <span>@Localizer["Like"]</span>
                     }
                 </button>
-                @if (ShowReactionPicker)
+                @if (IsModalView)
                 {
-                    <ReactionPicker HasUserReaction="@(UserReaction != null)" OnReactionPicked="OnReactionPicked" OnRemoveReaction="OnRemoveReaction" OnClose="OnStartHideTimer" OnEnter="OnCancelHideTimer" />
+                    @* Portal mode: Always render, portal service manages visibility *@
+                    <ReactionPicker 
+                        HasUserReaction="@(UserReaction != null)" 
+                        OnReactionPicked="OnReactionPicked" 
+                        OnRemoveReaction="OnRemoveReaction" 
+                        OnClose="OnStartHideTimer" 
+                        OnEnter="OnCancelHideTimer"
+                        IsVisible="@ShowReactionPicker"
+                        UsePortal="true"
+                        AnchorElementId="@_reactionPickerAnchorId" />
+                }
+                else if (ShowReactionPicker)
+                {
+                    @* Inline mode: Parent controls visibility via conditional rendering *@
+                    <ReactionPicker 
+                        HasUserReaction="@(UserReaction != null)" 
+                        OnReactionPicked="OnReactionPicked" 
+                        OnRemoveReaction="OnRemoveReaction" 
+                        OnClose="OnStartHideTimer" 
+                        OnEnter="OnCancelHideTimer"
+                        UsePortal="false" />
                 }
             </div>
         }
@@ -135,6 +155,8 @@
     /// Share is available for Public posts (both UserPosts and GroupPosts).
     /// </summary>
     private bool ShowShareButton => AudienceType == AudienceType.Public;
+
+    private string _reactionPickerAnchorId = $"reaction-picker-anchor-{Guid.NewGuid():N}";
 
     private string GetReactionEmoji(LikeType reactionType)
     {

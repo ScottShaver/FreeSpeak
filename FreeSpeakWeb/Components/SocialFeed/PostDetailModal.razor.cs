@@ -35,6 +35,12 @@ public partial class PostDetailModal
     public EventCallback<AudienceType> OnAudienceTypeChanged { get; set; }
 
     /// <summary>
+    /// Event callback invoked when the user requests to edit the post.
+    /// </summary>
+    [Parameter]
+    public EventCallback<int> OnEditPost { get; set; }
+
+    /// <summary>
     /// Gets or sets whether the current user can delete this post.
     /// For feed posts: System Admins and System Moderators can delete any post.
     /// Post authors can always delete their own posts.

@@ -1,0 +1,115 @@
+@using FreeSpeakWeb.Services
+@implements IDisposable
+@inject PopupPortalService PortalService
+@inject IJSRuntime JSRuntime
+
+@if (PortalService.IsActive && PortalService.CurrentContent != null)
+{
+    <div @ref="_portalElement" class="popup-portal-container" style="@_positionStyle">
+        @PortalService.CurrentContent.Content
+    </div>
+}
+
+@code {
+    private ElementReference _portalElement;
+    private IJSObjectReference? _jsModule;
+    private bool _needsPositioning;
+    private string _positionStyle = "top: 100px; right: 20px;";
+
+    /// <summary>
+    /// Initializes the component and subscribes to portal service state changes.
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        PortalService.OnStateChanged += HandleStateChanged;
+    }
+
+    /// <summary>
+    /// Loads the JavaScript module for positioning calculations.
+    /// </summary>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>(
+                    "import", "./Components/Shared/PopupPortal.razor.js");
+            }
+            catch (Exception)
+            {
+                // JS module load failed - positioning will use fallback
+            }
+        }
+
+        // Position the popup after it's rendered
+        if (_needsPositioning && PortalService.IsActive && PortalService.CurrentContent != null)
+        {
+            _needsPositioning = false;
+            await PositionPopupAsync();
+        }
+    }
+
+    /// <summary>
+    /// Handles state change notifications from the portal service.
+    /// </summary>
+    private void HandleStateChanged()
+    {
+        _needsPositioning = PortalService.IsActive;
+        _positionStyle = "top: 100px; right: 20px;"; // Default fallback position
+        InvokeAsync(StateHasChanged);
+    }
+
+    /// <summary>
+    /// Positions the popup relative to its anchor element using JavaScript.
+    /// </summary>
+    private async Task PositionPopupAsync()
+    {
+        var content = PortalService.CurrentContent;
+        if (content == null) return;
+
+        if (_jsModule == null)
+        {
+            return;
+        }
+
+        try
+        {
+            var placement = content.Placement switch
+            {
+                PopupPlacement.BottomEnd => "bottom-end",
+                PopupPlacement.BottomStart => "bottom-start",
+                PopupPlacement.TopEnd => "top-end",
+                PopupPlacement.TopStart => "top-start",
+                _ => "bottom-end"
+            };
+
+            await _jsModule.InvokeVoidAsync("positionPopup", _portalElement, content.AnchorElementId, placement);
+        }
+        catch (Exception)
+        {
+            // Positioning failed - fallback position will be used
+        }
+    }
+
+    /// <summary>
+    /// Handles clicks on the backdrop to close the popup.
+    /// </summary>
+    private void HandleBackdropClick()
+    {
+        PortalService.HidePopup();
+    }
+
+    /// <summary>
+    /// Cleans up subscriptions and JavaScript module reference.
+    /// </summary>
+    public void Dispose()
+    {
+        PortalService.OnStateChanged -= HandleStateChanged;
+
+        if (_jsModule != null)
+        {
+            _ = _jsModule.DisposeAsync();
+        }
+    }
+}

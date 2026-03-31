@@ -1,0 +1,28 @@
+.popup-portal-backdrop {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 9998 !important;
+    /* Transparent backdrop to capture clicks outside the popup */
+    background: transparent;
+    /* Allow mouse events to pass through to elements underneath */
+    pointer-events: none;
+}
+
+.popup-portal-container {
+    position: fixed !important;
+    z-index: 9999 !important;
+    /* Default position - will be overridden by JS or inline style */
+    top: 100px;
+    right: 20px;
+    /* Ensure the popup is visible and not clipped */
+    overflow: visible !important;
+}
+
+/* 
+ * NOTE: Portal menu item styles (.popup-menu, .popup-menu-item) are in 
+ * wwwroot/app.css as global styles because portal content is rendered 
+ * via RenderTreeBuilder and doesn't have CSS isolation scope attributes.
+ */

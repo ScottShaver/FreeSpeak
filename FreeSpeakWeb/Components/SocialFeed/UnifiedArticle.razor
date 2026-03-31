@@ -31,6 +31,7 @@
         MenuPositionStyle="@menuPositionStyle"
         OnToggleMenu="@ToggleMenu"
         OnCloseMenu="@CloseMenu"
+        UsePortalMenu="@IsModalView"
         GroupId="@(ArticlePostType == PostType.GroupPost ? GroupId : null)"
         AuthorGroupPoints="@(ArticlePostType == PostType.GroupPost ? AuthorGroupPoints : null)"
         EnablePointsSystem="@(ArticlePostType == PostType.GroupPost && EnablePointsSystem)"
@@ -78,8 +79,8 @@
         CurrentUserImageUrl="@CurrentUserImageUrl"
         CurrentUserName="@CurrentUserName"
         OnViewMoreCommentsClick="@OnCommentClick"
-        OnCommentReactionChanged="@OnCommentReactionChanged"
-        OnRemoveCommentReaction="@OnRemoveCommentReaction"
+        OnCommentReactionChanged="@OnCommentReactionChangedLocally"
+        OnRemoveCommentReaction="@OnRemoveCommentReactionLocally"
         OnReplySubmitted="@OnReplySubmittedLocally"
         OnDeleteComment="@OnCommentDeleted"
         OnEditComment="@OnCommentEditedLocally"
@@ -95,23 +96,25 @@
         CurrentUserName="@CurrentUserName"
         OnCommentSubmitted="@OnCommentSubmitted" />
 
-    <!-- Audience Selection Menu (UserPost only, inside feed-article for proper positioning) -->
-    @if (ArticlePostType == PostType.UserPost && showAudienceMenu)
+    <!-- Audience Selection Menu Anchor (UserPost only) -->
+    @if (ArticlePostType == PostType.UserPost)
     {
-        <div @onclick:stopPropagation="true" style="position: absolute; @audienceMenuPositionStyle z-index: 1001;">
-            <PopupMenu IsVisible="@showAudienceMenu" 
-                       MenuItems="@audienceMenuItems" 
-                       OnClose="@CloseAudienceMenu" />
-        </div>
+        <div id="@_audienceMenuAnchorId" style="position: absolute; right: 0; top: 40px; width: 1px; height: 1px;"></div>
+    }
+
+    <!-- Audience Selection Menu (UserPost only, always use portal) -->
+    @if (ArticlePostType == PostType.UserPost)
+    {
+        <PopupMenu IsVisible="@showAudienceMenu" 
+                   MenuItems="@audienceMenuItems" 
+                   OnClose="@CloseAudienceMenu"
+                   UsePortal="true"
+                   AnchorElementId="@_audienceMenuAnchorId"
+                   Placement="PopupPlacement.BottomEnd" />
     }
 </div>
 
-<!-- Backdrop for Audience Menu (UserPost only, covers full viewport) -->
-@if (ArticlePostType == PostType.UserPost && showAudienceMenu)
-{
-    <div class="modal-backdrop" @onclick="CloseAudienceMenu" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 1000;"></div>
-}
-
+<!-- Backdrop for Audience Menu (UserPost only, covers full viewport, only when not using portal) -->
 @if (showLikesModal)
 {
     <LikesModal Likes="@likes" isLoading="@isLoadingLikes" OnClose="CloseLikesModal" />

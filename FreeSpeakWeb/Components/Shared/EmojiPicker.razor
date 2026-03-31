@@ -1,51 +1,106 @@
 @using Microsoft.Extensions.Localization
+@using FreeSpeakWeb.Services
+@implements IDisposable
 
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.EmojiPicker> Localizer
+@inject PopupPortalService PortalService
 
-@if (IsVisible)
+@if (!UsePortal)
 {
-    <div class="emoji-picker-backdrop" @onclick="Close"></div>
-    <div class="emoji-picker" style="@PositionStyle" @ref="pickerElement">
-        <div class="emoji-categories">
-            @foreach (var category in emojiCategories)
-            {
-                <button type="button" 
-                        class="emoji-category-btn @(selectedCategory == category.Key ? "active" : "")"
-                        @onclick="() => SelectCategory(category.Key)"
-                        title="@Localizer[category.Key]">
-                    @category.Value.FirstOrDefault()
-                </button>
-            }
+    @* Traditional inline rendering - parent controls visibility via conditional rendering *@
+    @if (IsVisible)
+    {
+        <div class="emoji-picker-backdrop" @onclick="Close"></div>
+        <div class="emoji-picker" style="@PositionStyle" @ref="pickerElement">
+            @EmojiPickerContent
         </div>
-        <div class="emoji-grid">
-            @if (selectedCategory != null && emojiCategories.ContainsKey(selectedCategory))
-            {
-                @foreach (var emoji in emojiCategories[selectedCategory])
-                {
-                    <button type="button" 
-                            class="emoji-btn" 
-                            @onclick="() => OnEmojiSelected(emoji)"
-                            title="@emoji">
-                        @emoji
-                    </button>
-                }
-            }
-        </div>
-    </div>
+    }
 }
+@* Portal mode: visibility managed by portal service via IsVisible parameter *@
 
 @code {
+    private RenderFragment EmojiPickerContent => __builder =>
+    {
+        var seq = 0;
+        __builder.OpenElement(seq++, "div");
+        __builder.AddAttribute(seq++, "class", "emoji-categories");
+
+        foreach (var category in emojiCategories)
+        {
+            var categoryKey = category.Key; // Capture in local variable to avoid closure issue
+            __builder.OpenElement(seq++, "button");
+            __builder.AddAttribute(seq++, "type", "button");
+            __builder.AddAttribute(seq++, "class", $"emoji-category-btn {(selectedCategory == categoryKey ? "active" : "")}");
+            __builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(this, () => SelectCategory(categoryKey)));
+            __builder.AddAttribute(seq++, "title", Localizer[categoryKey].Value);
+            __builder.AddContent(seq++, category.Value.FirstOrDefault());
+            __builder.CloseElement();
+        }
+
+        __builder.CloseElement();
+
+        __builder.OpenElement(seq++, "div");
+        __builder.AddAttribute(seq++, "class", "emoji-grid");
+
+        if (selectedCategory != null && emojiCategories.ContainsKey(selectedCategory))
+        {
+            foreach (var emoji in emojiCategories[selectedCategory])
+            {
+                var emojiCopy = emoji;
+                __builder.OpenElement(seq++, "button");
+                __builder.AddAttribute(seq++, "type", "button");
+                __builder.AddAttribute(seq++, "class", "emoji-btn");
+                __builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(this, () => OnEmojiSelected(emojiCopy)));
+                __builder.AddAttribute(seq++, "title", emojiCopy);
+                __builder.AddContent(seq++, emojiCopy);
+                __builder.CloseElement();
+            }
+        }
+
+        __builder.CloseElement();
+    };
+
+    private bool _previousIsVisible;
+    private bool _isShowingPortal;
+
+    /// <summary>
+    /// Controls whether the emoji picker is visible.
+    /// </summary>
     [Parameter]
     public bool IsVisible { get; set; }
 
+    /// <summary>
+    /// Event callback invoked when the picker should close.
+    /// </summary>
     [Parameter]
     public EventCallback OnClose { get; set; }
 
+    /// <summary>
+    /// Event callback invoked when an emoji is selected.
+    /// </summary>
     [Parameter]
     public EventCallback<string> OnEmojiSelect { get; set; }
 
+    /// <summary>
+    /// CSS position style for inline rendering mode (when UsePortal is false).
+    /// </summary>
     [Parameter]
     public string PositionStyle { get; set; } = string.Empty;
+
+    /// <summary>
+    /// When true (default), renders the emoji picker through the portal at document body level.
+    /// This prevents CSS overflow clipping issues in modal containers.
+    /// Set to false for traditional inline rendering where the parent controls visibility.
+    /// </summary>
+    [Parameter]
+    public bool UsePortal { get; set; } = true;
+
+    /// <summary>
+    /// The ID of the HTML element to anchor the portal picker to.
+    /// Required when UsePortal is true.
+    /// </summary>
+    [Parameter]
+    public string AnchorElementId { get; set; } = string.Empty;
 
     private string? selectedCategory = "Smileys";
     private ElementReference pickerElement;
@@ -85,6 +140,77 @@
         }
     };
 
+    /// <summary>
+    /// Handles parameter changes to manage portal visibility.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        if (UsePortal && IsVisible != _previousIsVisible)
+        {
+            if (IsVisible && !_isShowingPortal)
+            {
+                ShowPortalPicker();
+            }
+            else if (!IsVisible && _isShowingPortal)
+            {
+                HidePortalPicker();
+            }
+        }
+        _previousIsVisible = IsVisible;
+    }
+
+    /// <summary>
+    /// Shows the emoji picker through the portal service.
+    /// </summary>
+    private void ShowPortalPicker()
+    {
+        if (string.IsNullOrEmpty(AnchorElementId))
+        {
+            return;
+        }
+
+        _isShowingPortal = true;
+
+        // Build portal content with RenderTreeBuilder - includes backdrop
+        RenderFragment portalContent = builder =>
+        {
+            var seq = 0;
+            // Add backdrop
+            builder.OpenElement(seq++, "div");
+            builder.AddAttribute(seq++, "class", "emoji-picker-backdrop");
+            builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(this, Close));
+            builder.CloseElement();
+
+            // Add picker
+            builder.OpenElement(seq++, "div");
+            builder.AddAttribute(seq++, "class", "emoji-picker emoji-picker-portal");
+
+            // Add emoji picker content
+            builder.AddContent(seq++, EmojiPickerContent);
+
+            builder.CloseElement();
+        };
+
+        PortalService.ShowPopup(portalContent, AnchorElementId, PopupPlacement.BottomStart, () =>
+        {
+            // Portal was closed externally (e.g., backdrop click)
+            _isShowingPortal = false;
+            InvokeAsync(async () => await Close());
+        });
+    }
+
+    /// <summary>
+    /// Hides the emoji picker from the portal.
+    /// </summary>
+    private void HidePortalPicker()
+    {
+        if (_isShowingPortal)
+        {
+            _isShowingPortal = false;
+            PortalService.HidePopup();
+        }
+    }
+
     private async Task OnEmojiSelected(string emoji)
     {
         if (OnEmojiSelect.HasDelegate)
@@ -102,6 +228,24 @@
     private void SelectCategory(string category)
     {
         selectedCategory = category;
-        StateHasChanged();
+
+        // If using portal mode, we need to update the portal content
+        if (UsePortal && _isShowingPortal)
+        {
+            // Re-show the portal with updated content
+            ShowPortalPicker();
+        }
+        else
+        {
+            StateHasChanged();
+        }
+    }
+
+    public void Dispose()
+    {
+        if (UsePortal && _isShowingPortal)
+        {
+            HidePortalPicker();
+        }
     }
 }

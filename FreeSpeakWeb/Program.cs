@@ -227,6 +227,10 @@ namespace FreeSpeakWeb
             // Add AlertService for user notifications
             builder.Services.AddScoped<AlertService>();
 
+            // Add PopupPortalService for rendering popups at document body level
+            // NOTE: Must be Singleton because components in different DI scopes need to share state
+            builder.Services.AddSingleton<PopupPortalService>();
+
             // Add RoleService for managing user roles
             builder.Services.AddScoped<IRoleService, RoleService>();
 

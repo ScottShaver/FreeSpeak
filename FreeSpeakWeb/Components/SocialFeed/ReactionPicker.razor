@@ -1,47 +1,83 @@
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services
 @using Microsoft.Extensions.Localization
+@implements IDisposable
 
 @inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.ReactionPicker> Localizer
+@inject PopupPortalService PortalService
 
-<div class="reaction-picker" @onmouseenter="OnMouseEnter" @onmouseleave="OnMouseLeave">
-    @if (HasUserReaction)
-    {
-        <button class="reaction-button remove-button" @onclick="OnRemoveSelected" title="@Localizer["Remove"]">
-            <span class="reaction-emoji">🚫</span>
-            <span class="reaction-label">@Localizer["Remove"]</span>
-        </button>
-    }
-    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Like)" title="@Localizer["Like"]">
-        <span class="reaction-emoji">👍</span>
-        <span class="reaction-label">@Localizer["Like"]</span>
-    </button>
-    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Love)" title="@Localizer["Love"]">
-        <span class="reaction-emoji">❤️</span>
-        <span class="reaction-label">@Localizer["Love"]</span>
-    </button>
-    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Care)" title="@Localizer["Care"]">
-        <span class="reaction-emoji">🤗</span>
-        <span class="reaction-label">@Localizer["Care"]</span>
-    </button>
-    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Haha)" title="@Localizer["Haha"]">
-        <span class="reaction-emoji">😂</span>
-        <span class="reaction-label">@Localizer["Haha"]</span>
-    </button>
-    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Wow)" title="@Localizer["Wow"]">
-        <span class="reaction-emoji">😮</span>
-        <span class="reaction-label">@Localizer["Wow"]</span>
-    </button>
-    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Sad)" title="@Localizer["Sad"]">
-        <span class="reaction-emoji">😢</span>
-        <span class="reaction-label">@Localizer["Sad"]</span>
-    </button>
-    <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Angry)" title="@Localizer["Angry"]">
-        <span class="reaction-emoji">😠</span>
-        <span class="reaction-label">@Localizer["Angry"]</span>
-    </button>
-</div>
+@if (!UsePortal)
+{
+    @* Traditional inline rendering - parent controls visibility via conditional rendering *@
+    <div class="reaction-picker" @onmouseenter="OnMouseEnter" @onmouseleave="OnMouseLeave">
+        @ReactionButtons
+    </div>
+}
+@* Portal mode: visibility managed by portal service via IsVisible parameter *@
 
 @code {
+    private RenderFragment ReactionButtons => __builder =>
+    {
+        if (HasUserReaction)
+        {
+            <button class="reaction-button remove-button" @onclick="OnRemoveSelected" title="@Localizer["Remove"]">
+                <span class="reaction-emoji">🚫</span>
+                <span class="reaction-label">@Localizer["Remove"]</span>
+            </button>
+        }
+        <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Like)" title="@Localizer["Like"]">
+            <span class="reaction-emoji">👍</span>
+            <span class="reaction-label">@Localizer["Like"]</span>
+        </button>
+        <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Love)" title="@Localizer["Love"]">
+            <span class="reaction-emoji">❤️</span>
+            <span class="reaction-label">@Localizer["Love"]</span>
+        </button>
+        <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Care)" title="@Localizer["Care"]">
+            <span class="reaction-emoji">🤗</span>
+            <span class="reaction-label">@Localizer["Care"]</span>
+        </button>
+        <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Haha)" title="@Localizer["Haha"]">
+            <span class="reaction-emoji">😂</span>
+            <span class="reaction-label">@Localizer["Haha"]</span>
+        </button>
+        <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Wow)" title="@Localizer["Wow"]">
+            <span class="reaction-emoji">😮</span>
+            <span class="reaction-label">@Localizer["Wow"]</span>
+        </button>
+        <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Sad)" title="@Localizer["Sad"]">
+            <span class="reaction-emoji">😢</span>
+            <span class="reaction-label">@Localizer["Sad"]</span>
+        </button>
+        <button class="reaction-button" @onclick="() => OnReactionSelected(LikeType.Angry)" title="@Localizer["Angry"]">
+            <span class="reaction-emoji">😠</span>
+            <span class="reaction-label">@Localizer["Angry"]</span>
+        </button>
+    };
+
+    private bool _previousIsVisible;
+    private bool _isShowingPortal;
+
+    /// <summary>
+    /// When true (default), renders the reaction picker through the portal at document body level.
+    /// Set to false to render inline within the parent container.
+    /// </summary>
+    [Parameter]
+    public bool UsePortal { get; set; } = true;
+
+    /// <summary>
+    /// The ID of the HTML element to anchor the portal picker to.
+    /// Required when UsePortal is true.
+    /// </summary>
+    [Parameter]
+    public string AnchorElementId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Controls whether the picker is visible (for portal mode).
+    /// </summary>
+    [Parameter]
+    public bool IsVisible { get; set; }
+
     [Parameter]
     public bool HasUserReaction { get; set; }
 
@@ -56,6 +92,83 @@
 
     [Parameter]
     public EventCallback OnEnter { get; set; }
+
+    /// <summary>
+    /// Handles parameter changes to manage portal visibility.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        if (UsePortal && IsVisible != _previousIsVisible)
+        {
+            if (IsVisible && !_isShowingPortal)
+            {
+                ShowPortalPicker();
+            }
+            else if (!IsVisible && _isShowingPortal)
+            {
+                HidePortalPicker();
+            }
+        }
+        _previousIsVisible = IsVisible;
+    }
+
+    /// <summary>
+    /// Shows the picker through the portal service.
+    /// </summary>
+    private void ShowPortalPicker()
+    {
+        if (string.IsNullOrEmpty(AnchorElementId))
+        {
+            return;
+        }
+
+        // Check if portal is already showing for this anchor to prevent flicker
+        if (PortalService.IsShowingForAnchor(AnchorElementId))
+        {
+            _isShowingPortal = true;
+            return;
+        }
+
+        _isShowingPortal = true;
+
+        // Build portal content with RenderTreeBuilder
+        RenderFragment portalContent = builder =>
+        {
+            var seq = 0;
+            builder.OpenElement(seq++, "div");
+            builder.AddAttribute(seq++, "class", "reaction-picker reaction-picker-portal");
+            builder.AddAttribute(seq++, "onmouseenter", EventCallback.Factory.Create(this, OnMouseEnter));
+            builder.AddAttribute(seq++, "onmouseleave", EventCallback.Factory.Create(this, OnMouseLeave));
+
+            // Add reaction buttons
+            builder.AddContent(seq++, ReactionButtons);
+
+            builder.CloseElement();
+        };
+
+        PortalService.ShowPopup(portalContent, AnchorElementId, PopupPlacement.TopStart, () =>
+        {
+            // Portal was closed externally
+            _isShowingPortal = false;
+            InvokeAsync(async () => await OnClose.InvokeAsync());
+        });
+    }
+
+    /// <summary>
+    /// Hides the picker from the portal.
+    /// </summary>
+    private void HidePortalPicker()
+    {
+        if (_isShowingPortal)
+        {
+            _isShowingPortal = false;
+            // Only hide if we're the one currently showing in the portal
+            if (PortalService.IsShowingForAnchor(AnchorElementId))
+            {
+                PortalService.HidePopup();
+            }
+        }
+    }
 
     private async Task OnReactionSelected(LikeType reactionType)
     {
@@ -75,5 +188,13 @@
     private async Task OnMouseLeave()
     {
         await OnClose.InvokeAsync();
+    }
+
+    public void Dispose()
+    {
+        if (UsePortal && _isShowingPortal)
+        {
+            HidePortalPicker();
+        }
     }
 }
