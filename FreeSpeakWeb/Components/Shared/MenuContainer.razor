@@ -1,6 +1,9 @@
 @using FreeSpeakWeb.Components.Shared
+@using FreeSpeakWeb.Services
 
 @code {
+    private string _anchorId = $"menu-anchor-{Guid.NewGuid():N}";
+
     /// <summary>
     /// The menu items to display in the popup.
     /// </summary>
@@ -32,7 +35,7 @@
     public string Size { get; set; } = "md";
 
     /// <summary>
-    /// Position style for the popup menu.
+    /// Position style for the popup menu (used when UsePortal is false).
     /// </summary>
     [Parameter]
     public string PopupPositionStyle { get; set; } = "position: absolute; top: 100%; right: 0;";
@@ -48,6 +51,20 @@
     /// </summary>
     [Parameter]
     public bool ShowButton { get; set; } = true;
+
+    /// <summary>
+    /// When true, renders the popup through the portal at document body level.
+    /// This prevents CSS overflow clipping issues in modal containers.
+    /// </summary>
+    [Parameter]
+    public bool UsePortal { get; set; } = false;
+
+    /// <summary>
+    /// The preferred placement of the popup relative to the anchor element.
+    /// Only used when UsePortal is true.
+    /// </summary>
+    [Parameter]
+    public PopupPlacement Placement { get; set; } = PopupPlacement.BottomEnd;
 
     private int IconSize => Size switch
     {
@@ -78,7 +95,7 @@
 
 @if (ShowButton)
 {
-    <div class="menu-container @CssClass">
+    <div id="@_anchorId" class="menu-container @CssClass">
         <button type="button" 
                 class="menu-trigger-button" 
                 @onclick="ToggleMenu"
@@ -91,6 +108,9 @@
         <PopupMenu IsVisible="@IsVisible" 
                    MenuItems="@MenuItems" 
                    OnClose="@CloseMenu"
-                   PositionStyle="@PopupPositionStyle" />
+                   PositionStyle="@PopupPositionStyle"
+                   UsePortal="@UsePortal"
+                   AnchorElementId="@_anchorId"
+                   Placement="@Placement" />
     </div>
 }

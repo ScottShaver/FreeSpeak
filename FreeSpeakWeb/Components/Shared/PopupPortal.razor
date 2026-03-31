@@ -1,0 +1,130 @@
+@using FreeSpeakWeb.Services
+@implements IDisposable
+@inject PopupPortalService PortalService
+@inject IJSRuntime JSRuntime
+
+@* Debug indicator - remove after testing *@
+@if (_debugShowIndicator)
+{
+    <div style="position: fixed; bottom: 10px; left: 10px; background: red; color: white; padding: 5px; z-index: 99999; font-size: 12px;">
+        Portal Active: @PortalService.IsActive | HasContent: @(PortalService.CurrentContent != null)
+    </div>
+}
+
+@if (PortalService.IsActive && PortalService.CurrentContent != null)
+{
+    <div class="popup-portal-backdrop" @onclick="HandleBackdropClick"></div>
+    <div @ref="_portalElement" class="popup-portal-container" style="@_positionStyle">
+        @PortalService.CurrentContent.Content
+    </div>
+}
+
+@code {
+    private ElementReference _portalElement;
+    private IJSObjectReference? _jsModule;
+    private bool _needsPositioning;
+    private string _positionStyle = "top: 100px; right: 20px;";
+    private bool _debugShowIndicator = true; // Set to false to hide debug indicator
+
+    /// <summary>
+    /// Initializes the component and subscribes to portal service state changes.
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        PortalService.OnStateChanged += HandleStateChanged;
+        Console.WriteLine($"PopupPortal: Initialized and subscribed to service. Service IsActive={PortalService.IsActive}");
+    }
+
+    /// <summary>
+    /// Loads the JavaScript module for positioning calculations.
+    /// </summary>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Console.WriteLine("PopupPortal: First render, loading JS module");
+            try
+            {
+                _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>(
+                    "import", "./Components/Shared/PopupPortal.razor.js");
+                Console.WriteLine("PopupPortal: JS module loaded successfully");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"PopupPortal: Failed to load JS module: {ex.Message}");
+            }
+        }
+
+        // Position the popup after it's rendered
+        if (_needsPositioning && PortalService.IsActive && PortalService.CurrentContent != null)
+        {
+            _needsPositioning = false;
+            await PositionPopupAsync();
+        }
+    }
+
+    /// <summary>
+    /// Handles state change notifications from the portal service.
+    /// </summary>
+    private void HandleStateChanged()
+    {
+        Console.WriteLine($"PopupPortal.HandleStateChanged: IsActive={PortalService.IsActive}, HasContent={PortalService.CurrentContent != null}");
+        _needsPositioning = PortalService.IsActive;
+        _positionStyle = "top: 100px; right: 20px;"; // Default fallback position
+        InvokeAsync(StateHasChanged);
+    }
+
+    /// <summary>
+    /// Positions the popup relative to its anchor element using JavaScript.
+    /// </summary>
+    private async Task PositionPopupAsync()
+    {
+        var content = PortalService.CurrentContent;
+        if (content == null) return;
+
+        if (_jsModule == null)
+        {
+            Console.WriteLine("PopupPortal: JS module not loaded, using fallback position");
+            return;
+        }
+
+        try
+        {
+            var placement = content.Placement switch
+            {
+                PopupPlacement.BottomEnd => "bottom-end",
+                PopupPlacement.BottomStart => "bottom-start",
+                PopupPlacement.TopEnd => "top-end",
+                PopupPlacement.TopStart => "top-start",
+                _ => "bottom-end"
+            };
+
+            await _jsModule.InvokeVoidAsync("positionPopup", _portalElement, content.AnchorElementId, placement);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"PopupPortal: Positioning failed: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Handles clicks on the backdrop to close the popup.
+    /// </summary>
+    private void HandleBackdropClick()
+    {
+        PortalService.HidePopup();
+    }
+
+    /// <summary>
+    /// Cleans up subscriptions and JavaScript module reference.
+    /// </summary>
+    public void Dispose()
+    {
+        PortalService.OnStateChanged -= HandleStateChanged;
+
+        if (_jsModule != null)
+        {
+            _ = _jsModule.DisposeAsync();
+        }
+    }
+}

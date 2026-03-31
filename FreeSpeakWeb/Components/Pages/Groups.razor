@@ -633,7 +633,14 @@
                 if (appUser != null)
                 {
                     currentUserImageUrl = appUser.ProfilePictureUrl;
-                    currentUserName = $"{appUser.FirstName} {appUser.LastName}";
+                    // Format current user's display name using the same preference service
+                    // to ensure consistency with author names in the feed
+                    currentUserName = await UserPreferenceService.FormatUserDisplayNameAsync(
+                        appUser.Id,
+                        appUser.FirstName,
+                        appUser.LastName,
+                        appUser.UserName ?? "Unknown"
+                    );
                 }
 
                 // Load user's groups for the filter dropdown

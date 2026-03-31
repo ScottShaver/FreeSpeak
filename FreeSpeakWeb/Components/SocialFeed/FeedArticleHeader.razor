@@ -196,7 +196,7 @@
             <span class="header-stat-count">@ShareCount</span>
         </div>
     </div>
-    <div style="position: relative; z-index: 10;">
+    <div id="@_menuAnchorId" style="position: relative; z-index: 10;">
         <button type="button" 
                 class="menu-button" 
                 @onclick="ToggleMenu">
@@ -207,7 +207,10 @@
         <PopupMenu IsVisible="@ShowMenu" 
                    MenuItems="@MenuItems" 
                    OnClose="@OnCloseMenu"
-                   PositionStyle="@MenuPositionStyle" />
+                   PositionStyle="@MenuPositionStyle"
+                   UsePortal="@UsePortalMenu"
+                   AnchorElementId="@_menuAnchorId"
+                   Placement="PopupPlacement.BottomEnd" />
     </div>
 </div>
 
@@ -296,6 +299,13 @@
 
     [Parameter]
     public EventCallback OnCloseMenu { get; set; }
+
+    /// <summary>
+    /// When true, renders the popup menu through the portal at document body level.
+    /// This prevents CSS overflow clipping issues in modal containers.
+    /// </summary>
+    [Parameter]
+    public bool UsePortalMenu { get; set; } = false;
 
     [Parameter]
     public int? GroupId { get; set; }
@@ -412,6 +422,8 @@
 
     private string FormattedTimestamp => TimestampFormatter.FormatTimeAgo(CreatedAt);
     private string FullTimestamp => CreatedAt.ToLocalTime().ToString("MMMM d, yyyy 'at' h:mm:ss tt");
+
+    private string _menuAnchorId = $"header-menu-{Guid.NewGuid():N}";
 
     private string GetAudienceHeaderClass()
     {

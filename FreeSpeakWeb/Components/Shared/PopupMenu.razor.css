@@ -10,6 +10,8 @@
 
 .popup-menu {
     position: absolute;
+    display: flex;
+    flex-direction: column;
     background: var(--surface-color, #ffffff);
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -17,6 +19,12 @@
     padding: 4px;
     z-index: 1999;
     border: 2px solid var(--border-color, #e4e6eb);
+}
+
+/* Portal mode: rendered at body level with fixed positioning */
+.popup-menu.popup-menu-portal {
+    position: relative;
+    z-index: 1100;
 }
 
 .popup-menu-item {

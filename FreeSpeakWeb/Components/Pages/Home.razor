@@ -256,6 +256,7 @@
                 OnUnpinPost="@HandleUnpinPost"
                 OnAudienceTypeChanged="@(newAudienceType => HandleAudienceTypeChanged(selectedPost.Id, newAudienceType))"
                 OnPostDeleted="@HandlePostDeleted"
+                OnEditPost="@HandleEditPostFromModal"
                 OnCommentAdded="@OnCommentAdded"
                 OnCommentAddedComplete="@HandleCommentAddedFromModal"
                 OnReplySubmitted="@OnReplySubmitted"
@@ -1067,6 +1068,20 @@
         {
             // Post not found - silently ignore
         }
+    }
+
+    /// <summary>
+    /// Handles the edit post request from the PostDetailModal.
+    /// Closes the detail modal and opens the edit modal.
+    /// </summary>
+    /// <param name="postId">The ID of the post to edit.</param>
+    private async Task HandleEditPostFromModal(int postId)
+    {
+        // Close the detail modal first
+        await ClosePostDetail();
+
+        // Then open the edit modal
+        HandleEditPost(postId);
     }
 
     private async Task HandleSaveEdit((int PostId, string Content, List<string> NewImageUrls, List<int> RemovedImageIds) data)

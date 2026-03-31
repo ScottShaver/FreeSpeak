@@ -731,6 +731,27 @@ public abstract class PostDetailModalBase : ComponentBase, IAsyncDisposable
         return false; // Not found
     }
 
+    /// <summary>
+    /// Handles when a comment is updated with new content via inline editing.
+    /// </summary>
+    /// <param name="data">The comment ID and new content.</param>
+    protected async Task HandleCommentUpdated((int CommentId, string NewContent) data)
+    {
+        // Invoke parent callback first
+        if (OnCommentUpdated.HasDelegate)
+        {
+            await OnCommentUpdated.InvokeAsync(data);
+        }
+
+        // Update the local comment's text immediately for UI feedback
+        var comment = CommentHelpers.FindCommentById(modalComments, data.CommentId);
+        if (comment != null)
+        {
+            comment.CommentText = data.NewContent;
+            StateHasChanged();
+        }
+    }
+
     #endregion
 
     #region Helper Methods
