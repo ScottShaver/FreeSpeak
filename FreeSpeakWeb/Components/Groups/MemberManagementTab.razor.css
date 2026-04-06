@@ -42,16 +42,18 @@
     background: white;
     transition: all 0.3s ease;
     overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    margin: 5px;
 }
 
 .member-item:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.member-item.expanded {
-    border-color: var(--bs-primary);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
+    .member-item.expanded {
+        border-color: var(--bs-primary);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
 
 .member-header {
     display: flex;

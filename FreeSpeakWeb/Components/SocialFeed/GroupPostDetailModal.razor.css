@@ -15,14 +15,14 @@
 
 .group-post-detail-modal-container {
     background: var(--surface-color, #ffffff);
-/*    border: 2px solid var(--border-color, #e4e6eb);*/
+    /*    border: 2px solid var(--border-color, #e4e6eb);*/
     border-radius: 8px;
     width: 100%;
     max-width: 1000px;
     /*height: calc(100vh - 40px);*/ /* Fixed height to prevent resizing */
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     margin: auto;
     overflow: hidden; /* Portal pattern handles popup overflow */
 }

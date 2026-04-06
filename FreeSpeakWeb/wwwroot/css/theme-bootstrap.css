@@ -105,8 +105,8 @@
 .modal-content {
     background-color: var(--surface-color);
     border-color: var(--border-color);
-/*    box-shadow: var(--shadow-lg);*/
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    /*    box-shadow: var(--shadow-lg);*/
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 .modal-header {

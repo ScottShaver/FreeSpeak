@@ -1,7 +1,7 @@
 /* Add 2px border to match other popups */
 .modal-content {
-/*    border: 2px solid var(--border-color) !important;*/
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    /*    border: 2px solid var(--border-color) !important;*/
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .likes-list {

@@ -42,16 +42,19 @@
     background: white;
     transition: all 0.3s ease;
     overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    margin: 5px;
 }
 
 .banned-item:hover {
     box-shadow: 0 2px 8px rgba(220, 53, 69, 0.15);
 }
 
-.banned-item.expanded {
-    border-color: var(--bs-danger);
-    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
-}
+    .banned-item.expanded {
+        border-color: var(--bs-danger);
+        /*box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);*/
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
 
 .banned-header {
     display: flex;

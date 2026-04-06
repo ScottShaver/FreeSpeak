@@ -16,7 +16,7 @@
     justify-content: space-between;
     padding: 16px 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
     pointer-events: auto;
     min-width: 300px;
@@ -147,6 +147,6 @@
 /* Dark mode adjustments */
 @media (prefers-color-scheme: dark) {
     .alert-message {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     }
 }

@@ -8,7 +8,7 @@
     background-color: var(--surface-primary, #ffffff);
     border-radius: 12px;
     /*box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);*/
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     /*border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));*/
     animation: popupFadeIn 0.2s ease-out;
     pointer-events: auto;
@@ -149,7 +149,7 @@
 [data-theme="dark"] .profile-preview-popup {
     background-color: var(--surface-primary, #2d2d2d);
     border-color: var(--border-color, rgba(255, 255, 255, 0.1));
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 ::deep [data-theme="dark"] .popup-arrow,

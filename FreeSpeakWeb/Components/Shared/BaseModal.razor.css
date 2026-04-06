@@ -49,7 +49,7 @@
 .base-modal-content {
     background: var(--surface-color, #fff);
     border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
     max-height: 90vh;
