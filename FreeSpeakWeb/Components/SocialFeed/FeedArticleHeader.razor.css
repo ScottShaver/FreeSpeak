@@ -5,6 +5,8 @@
     padding: 8px 12px;
     gap: 8px;
     background: var(--surface-secondary);
+    border-top-left-radius: 8px; 
+    border-top-right-radius: 8px;
 }
 
 /* Public posts - theme-aware gradient */

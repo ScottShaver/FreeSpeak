@@ -15,14 +15,14 @@
 
 .post-detail-modal-container {
     background: var(--surface-color, #ffffff);
-    border: 2px solid var(--border-color, #e4e6eb);
+/*    border: 2px solid var(--border-color, #e4e6eb);*/
     border-radius: 8px;
     width: 100%;
     max-width: 800px;
     max-height: calc(100vh - 40px);
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     margin: auto;
     overflow: hidden;
 }

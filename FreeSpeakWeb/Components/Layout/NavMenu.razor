@@ -240,7 +240,8 @@
                                         <a href="@($"/group/{groupUser.GroupId}")" 
                                            class="groups-popup-item @(GetActiveMenuItemFromUrl() == $"group/{groupUser.GroupId}" ? "active" : "")" 
                                            data-enhance-nav="false"
-                                           @onclick="CloseGroupsPopup">
+                                           @onclick="CloseGroupsPopup"
+                                           @onclick:stopPropagation="true">
                                             <span class="bi bi-diagram-3-fill-nav-menu" aria-hidden="true"></span>
                                             <span class="group-name">@groupUser.Group?.Name</span>
                                         </a>

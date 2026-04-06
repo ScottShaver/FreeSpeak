@@ -1,0 +1,108 @@
+/* FriendDetails.razor.css - Scoped styles for the FriendDetails component */
+
+.friend-details-container {
+/*    max-width: 800px;*/
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Friend Header Card */
+.friend-header-card {
+    margin-bottom: 1.5rem;
+}
+
+    .friend-header-card .card {
+        background-color: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    }
+
+.friend-header-card .card-body {
+    padding: 1.5rem;
+}
+
+::deep .friend-profile-picture {
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Friend Posts Section */
+.friend-posts-section {
+    margin-top: 1rem;
+}
+
+.friend-posts-section h4 {
+    color: var(--text-color);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+/* Posts Container */
+.posts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Loading Indicator */
+.loading-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+/* No More Posts Message */
+::deep .no-more-posts {
+    text-align: center;
+    padding: 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: 1rem;
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+}
+
+.alert-warning {
+    background-color: var(--warning-bg, #fff3cd);
+    border-color: var(--warning-border, #ffecb5);
+    color: var(--warning-text, #664d03);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .friend-details-container {
+        padding: 0.5rem;
+    }
+
+    .friend-header-card .card-body {
+        padding: 1rem;
+    }
+
+    .friend-header-card .row {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .friend-header-card .col-auto {
+        margin-bottom: 1rem;
+    }
+
+    .friend-header-card h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .friend-posts-section h4 {
+        font-size: 1.1rem;
+    }
+}

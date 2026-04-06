@@ -15,14 +15,14 @@
 
 .post-detail-modal-container {
     background: var(--surface-color, #ffffff);
-    border: 2px solid var(--border-color, #e4e6eb);
+/*    border: 2px solid var(--border-color, #e4e6eb);*/
     border-radius: 8px;
     width: 100%;
     max-width: 1000px;
-    height: calc(100vh - 40px); /* Fixed height to prevent resizing */
+    /*height: calc(100vh - 40px);*/ /* Fixed height to prevent resizing */
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     margin: auto;
     overflow: hidden; /* Portal pattern handles popup overflow */
 }
@@ -127,11 +127,13 @@
 }
 
 /* When no images, use flex layout */
-.post-detail-modal-content ::deep .feed-article.no-images {
-    display: flex;
-    flex-direction: column;
-    flex: 1; /* Fill available space in the modal */
-}
+    .post-detail-modal-content ::deep .feed-article.no-images {
+        display: flex;
+        flex-direction: column;
+        flex: 1; /* Fill available space in the modal */
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
 
 /* Make article content not grow when no images */
 .post-detail-modal-content ::deep .feed-article.no-images .article-header,

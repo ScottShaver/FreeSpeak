@@ -178,7 +178,7 @@
             // Add backdrop
             builder.OpenElement(seq++, "div");
             builder.AddAttribute(seq++, "class", "emoji-picker-backdrop");
-            builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(this, Close));
+            builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(this, async () => await Close()));
             builder.CloseElement();
 
             // Add picker

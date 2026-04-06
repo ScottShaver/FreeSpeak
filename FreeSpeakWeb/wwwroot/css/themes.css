@@ -25,9 +25,9 @@
     --nav-gradient-start: rgb(5, 39, 103);
     --nav-gradient-end: #3a0647;
     
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
 }
 
 /* Dark Mode Theme */
@@ -55,8 +55,8 @@
     --nav-gradient-end: #0d1621;
     
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.6);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.7);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
 }
 
 /* Light Mode Theme */
@@ -68,24 +68,19 @@
     --danger-color: #dc3545;
     --warning-color: #ffa500;
     --info-color: #0dcaf0;
-    
     --surface-color: #ffffff;
     --surface-secondary: #f5f5f5;
     --surface-hover: #eeeeee;
-    
     --text-primary: #212529;
     --text-secondary: #6c757d;
     --text-muted: #adb5bd;
-    
     --border-color: #dee2e6;
     --hover-overlay: rgba(0, 0, 0, 0.04);
-
-    --nav-gradient-start: #e3f2fd;
-    --nav-gradient-end: #bbdefb;
-    
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
-    --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 8px 12px rgba(0, 0, 0, 0.08);
+    --nav-gradient-start: #accce5;
+    --nav-gradient-end: #78aedb;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 8px 12px rgba(0, 0, 0, 0.5);
 }
 
 /* Ocean Blue Theme */
@@ -112,9 +107,9 @@
     --nav-gradient-start: #006064;
     --nav-gradient-end: #00acc1;
     
-    --shadow-sm: 0 1px 3px rgba(0, 151, 167, 0.3);
-    --shadow-md: 0 4px 6px rgba(0, 151, 167, 0.3);
-    --shadow-lg: 0 10px 15px rgba(0, 151, 167, 0.3);
+    --shadow-sm: 0 1px 3px rgba(0, 151, 167, 0.5);
+    --shadow-md: 0 4px 6px rgba(0, 151, 167, 0.5);
+    --shadow-lg: 0 10px 15px rgba(0, 151, 167, 0.5);
 }
 
 /* Forest Green Theme */
@@ -141,9 +136,9 @@
     --nav-gradient-start: #1b5e20;
     --nav-gradient-end: #2e7d32;
     
-    --shadow-sm: 0 1px 3px rgba(46, 125, 50, 0.3);
-    --shadow-md: 0 4px 6px rgba(46, 125, 50, 0.3);
-    --shadow-lg: 0 10px 15px rgba(46, 125, 50, 0.3);
+    --shadow-sm: 0 1px 3px rgba(46, 125, 50, 0.5);
+    --shadow-md: 0 4px 6px rgba(46, 125, 50, 0.5);
+    --shadow-lg: 0 10px 15px rgba(46, 125, 50, 0.5);
 }
 
 /* Sunset Orange Theme */
@@ -170,9 +165,9 @@
     --nav-gradient-start: #bf360c;
     --nav-gradient-end: #e65100;
     
-    --shadow-sm: 0 1px 3px rgba(230, 81, 0, 0.3);
-    --shadow-md: 0 4px 6px rgba(230, 81, 0, 0.3);
-    --shadow-lg: 0 10px 15px rgba(230, 81, 0, 0.3);
+    --shadow-sm: 0 1px 3px rgba(230, 81, 0, 0.5);
+    --shadow-md: 0 4px 6px rgba(230, 81, 0, 0.5);
+    --shadow-lg: 0 10px 15px rgba(230, 81, 0, 0.5);
 }
 
 /* Purple Dream Theme */
@@ -199,9 +194,9 @@
     --nav-gradient-start: #311b92;
     --nav-gradient-end: #4a148c;
     
-    --shadow-sm: 0 1px 3px rgba(74, 20, 140, 0.3);
-    --shadow-md: 0 4px 6px rgba(74, 20, 140, 0.3);
-    --shadow-lg: 0 10px 15px rgba(74, 20, 140, 0.3);
+    --shadow-sm: 0 1px 3px rgba(74, 20, 140, 0.5);
+    --shadow-md: 0 4px 6px rgba(74, 20, 140, 0.5);
+    --shadow-lg: 0 10px 15px rgba(74, 20, 140, 0.5);
 }
 
 /* High Contrast Theme */
@@ -228,9 +223,9 @@
     --nav-gradient-start: #000000;
     --nav-gradient-end: #1a1a1a;
     
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.9);
-    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.9);
-    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.9);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.5);
 }
 
 /* Apply theme colors to common elements */

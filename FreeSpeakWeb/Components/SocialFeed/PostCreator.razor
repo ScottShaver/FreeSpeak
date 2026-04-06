@@ -45,7 +45,7 @@
         @if (ShowAudienceSelector)
         {
             <div style="position: relative;">
-                <button type="button" class="audience-selector-button" @onclick="ToggleAudienceMenu" @onmousedown:preventDefault="true" @ref="audienceButtonElement">
+                <button type="button" class="audience-selector-button" id="@audienceMenuAnchorId" @onclick="ToggleAudienceMenu" @onmousedown:preventDefault="true" @ref="audienceButtonElement">
                     @if (SelectedAudienceType == AudienceType.Public)
                     {
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
@@ -72,7 +72,8 @@
                            MenuItems="@audienceMenuItems" 
                            OnClose="@CloseAudienceMenu"
                            PositionStyle="@audienceMenuPositionStyle"
-                           UsePortal="true" />
+                           UsePortal="true"
+                           AnchorElementId="@audienceMenuAnchorId" />
             </div>
         }
     </div>
@@ -182,6 +183,7 @@
     private List<PopupMenu.PopupMenuItem> audienceMenuItems = new();
     private string audienceMenuPositionStyle = string.Empty;
     private string emojiPickerAnchorId = $"emoji-picker-anchor-{Guid.NewGuid():N}";
+    private string audienceMenuAnchorId = $"audience-menu-anchor-{Guid.NewGuid():N}";
     private AudienceType selectedAudienceType = AudienceType.FriendsOnly;
     private List<ImageUploadModal.SelectedImage> selectedImages = new();
 

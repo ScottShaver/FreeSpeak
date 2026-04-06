@@ -5,6 +5,7 @@
 
 @if (PortalService.IsActive && PortalService.CurrentContent != null)
 {
+    <div class="popup-portal-backdrop" @onclick="HandleBackdropClick"></div>
     <div @ref="_portalElement" class="popup-portal-container" style="@_positionStyle">
         @PortalService.CurrentContent.Content
     </div>

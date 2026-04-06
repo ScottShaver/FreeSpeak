@@ -116,12 +116,14 @@ h1:focus {
     flex-direction: column;
     background: var(--surface-color, #ffffff);
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     min-width: 200px;
     max-width: 280px;
     width: max-content;
     padding: 4px;
-    border: 2px solid var(--border-color, #e4e6eb);
+    /*border: 2px solid var(--border-color, #e4e6eb);*/
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 .popup-portal-container .popup-menu-item {
@@ -179,7 +181,7 @@ h1:focus {
     border: 2px solid var(--border-color);
     border-radius: 30px;
     padding: 6px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
     animation: scaleIn 0.15s ease-out;
 }
 
@@ -243,12 +245,23 @@ h1:focus {
    Portal Emoji Picker Styles (Global)
    ========================================== */
 
+/* Backdrop for portal emoji picker - captures clicks outside picker to close it */
+.popup-portal-container .emoji-picker-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background: transparent;
+}
+
 .popup-portal-container .emoji-picker-portal {
     background: var(--surface-color);
     border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     width: 320px;
-    border: 2px solid var(--border-color);
+    /*border: 2px solid var(--border-color);*/
     overflow: hidden;
 }
 
@@ -391,4 +404,41 @@ h1:focus {
 
 .emoji-picker .emoji-btn:active {
     transform: scale(0.95);
+}
+
+/* ==========================================
+   NavMenu Icon Link Styles (Global)
+   Moved from NavMenu.razor.css to eliminate
+   :global() pseudo-class warnings.
+   ========================================== */
+
+.nav-icon-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+}
+
+.nav-icon-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+a.nav-icon-link.active {
+    background-color: rgba(255, 255, 255, 0.37) !important;
+    color: white !important;
+}
+
+.nav-icon-link.btn-link {
+    border: none;
+    background-color: transparent;
+}
+
+.nav-icon-link .bi {
+    margin-right: 0;
 }

@@ -14,11 +14,11 @@
     flex-direction: column;
     background: var(--surface-color, #ffffff);
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     min-width: 200px;
     padding: 4px;
     z-index: 1999;
-    border: 2px solid var(--border-color, #e4e6eb);
+    /*border: 2px solid var(--border-color, #e4e6eb);*/
 }
 
 /* Portal mode: rendered at body level with fixed positioning */

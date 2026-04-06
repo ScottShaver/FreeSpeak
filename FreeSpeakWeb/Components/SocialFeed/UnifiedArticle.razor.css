@@ -1,7 +1,8 @@
 .feed-article {
     background-color: var(--surface-color);
     border-radius: 8px;
-    box-shadow: var(--shadow-md);
+    /*box-shadow: var(--shadow-md);*/
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     margin-bottom: 16px;
     margin-left: 5px;
     margin-right: 5px;
@@ -369,6 +370,8 @@
     clear: both;
     position: relative;
     background-color: #f8f9fa;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 /* More Comments Indicator */
@@ -406,6 +409,8 @@
     clear: both;
     position: relative;
     background-color: #f8f9fa;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 .comment-user-avatar {

@@ -84,15 +84,23 @@
         <div class="tab-pane fade show active" id="group-feed-content" role="tabpanel" aria-labelledby="group-feed-tab">
             <div class="feed-section">
                 <!-- Group Filter Dropdown -->
-                <div class="group-filter-section">
-                    <label for="groupFilter" class="form-label">@Localizer["ShowPostsFrom"]</label>
-                    <select id="groupFilter" class="form-select" @onchange="OnGroupFilterChanged">
-                        <option value="">@Localizer["AllGroups"]</option>
-                        @foreach (var group in userGroups)
-                        {
-                            <option value="@group.Id" selected="@(selectedGroupId == group.Id)">@group.Name</option>
-                        }
-                    </select>
+                <div class="group-filter-section d-flex align-items-end gap-2">
+                    <div>
+                        <label for="groupFilter" class="form-label">@Localizer["ShowPostsFrom"]</label>
+                        <select id="groupFilter" class="form-select" @onchange="OnGroupFilterChanged">
+                            <option value="">@Localizer["AllGroups"]</option>
+                            @foreach (var group in userGroups)
+                            {
+                                <option value="@group.Id" selected="@(selectedGroupId == group.Id)">@group.Name</option>
+                            }
+                        </select>
+                    </div>
+                    @if (selectedGroupId.HasValue)
+                    {
+                        <button type="button" class="btn btn-primary" @onclick="JumpToSelectedGroup">
+                            @Localizer["JumpToGroup"]
+                        </button>
+                    }
                 </div>
 
                 @if (isLoadingGroupFeed && !groupPosts.Any())
@@ -980,6 +988,18 @@
 
         // Reset and reload the feed
         await LoadGroupFeed();
+    }
+
+    /// <summary>
+    /// Navigates to the group page for the currently selected group.
+    /// This method is called when the user clicks the "Jump To Group" button.
+    /// </summary>
+    private void JumpToSelectedGroup()
+    {
+        if (selectedGroupId.HasValue)
+        {
+            NavigationManager.NavigateTo($"/group/{selectedGroupId.Value}");
+        }
     }
 
     /// <summary>

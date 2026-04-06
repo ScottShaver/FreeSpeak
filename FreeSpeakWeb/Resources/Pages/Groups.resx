@@ -161,4 +161,7 @@
   <data name="PostReportedDescription" xml:space="preserve">
     <value>This post has been reported to the moderators and is awaiting review.</value>
   </data>
+  <data name="JumpToGroup" xml:space="preserve">
+    <value>Jump To Group</value>
+  </data>
 </root>
