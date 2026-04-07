@@ -1,0 +1,22 @@
+/* Friend Profile Header Styles */
+.friend-header-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.friend-profile-picture {
+}
+
+/* Stats section */
+.profile-stats {
+    display: flex;
+    gap: 20px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light, rgba(0, 0, 0, 0.05));
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+    .profile-stats {
+        border-top: 1px solid var(--border-dark, rgba(255, 255, 255, 0.1));
+    }
+}

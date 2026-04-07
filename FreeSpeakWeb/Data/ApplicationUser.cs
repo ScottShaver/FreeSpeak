@@ -73,6 +73,14 @@ namespace FreeSpeakWeb.Data
         [PersonalData]
         [MaxLength(75)]
         public string? Occupation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user's "About Me" description.
+        /// This is an optional field with a maximum length of 2000 characters.
+        /// </summary>
+        [PersonalData]
+        [MaxLength(2000)]
+        public string? AboutMe { get; set; }
     }
 
 }

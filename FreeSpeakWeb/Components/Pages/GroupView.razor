@@ -87,7 +87,7 @@
                     </div>
                 }
                 <div class="d-flex justify-content-between align-items-start mb-2">
-                    <h1>@group.Name</h1>
+                    <h1><a href="/group/@GroupId" class="text-decoration-none text-reset">@group.Name</a></h1>
                     <div class="group-header-actions d-flex gap-2">
                         @if (CanAccessGroupAdministration)
                         {
@@ -130,10 +130,9 @@
                     <StatItem Label="@Localizer["PostsToday"]" 
                               Value="@postsToday" 
                               Icon="bi-calendar-day" />
-                    <div class="stat-item">
-                        <span class="stat-label">@Localizer["LastActivity"]</span>
-                        <span class="stat-value">@GetRelativeTime(lastActivity)</span>
-                    </div>
+                    <StatItem Label="@Localizer["LastActivity"]" 
+                              Value="@GetRelativeTime(lastActivity)" 
+                              Icon="bi-clock-history" />
                 </div>
 
                 <div class="user-stats-display mt-3 p-3 rounded border">

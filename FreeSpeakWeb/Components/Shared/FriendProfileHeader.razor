@@ -1,0 +1,124 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Components.Shared
+
+<!-- Friend Header Information -->
+<div class="friend-header-card mb-4">
+    <div class="card">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <UserAvatar ImageUrl="@ProfilePictureUrl"
+                                Name="@DisplayName"
+                                Size="xl"
+                                CssClass="friend-profile-picture" />
+                </div>
+                <div class="col">
+                    <h2 class="mb-1"><a href="/friend/@UserId" class="text-decoration-none text-reset">@DisplayName</a></h2>
+                    <p class="text-muted mb-2">@@@UserName</p>
+                    @if (!string.IsNullOrEmpty(City) && !string.IsNullOrEmpty(State))
+                    {
+                        <p class="text-muted mb-0">
+                            <i class="bi bi-geo-alt-fill"></i>
+                            @City, @State
+                        </p>
+                    }
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(AboutMe))
+            {
+                <div class="mt-3">
+                    <p class="mb-0">@AboutMe</p>
+                </div>
+            }
+            <div class="profile-stats mt-3">
+                <StatItem Value="@FriendCount" 
+                          Label="@(FriendCount == 1 ? "Friend" : "Friends")" />
+                @if (MutualFriendsCount > 0)
+                {
+                    <StatItem Value="@MutualFriendsCount" 
+                              Label="Mutual" />
+                }
+                <StatItem Value="@GroupCount" 
+                          Label="@(GroupCount == 1 ? "Group" : "Groups")" />
+                <StatItem Value="@GroupPostCount" 
+                          Label="Group Posts" />
+                <StatItem Value="@PostCount" 
+                          Label="@(PostCount == 1 ? "Post" : "Posts")" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// The user ID of the profile being displayed.
+    /// </summary>
+    [Parameter]
+    public string UserId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The display name of the user.
+    /// </summary>
+    [Parameter]
+    public string DisplayName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The username of the user.
+    /// </summary>
+    [Parameter]
+    public string UserName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The profile picture URL of the user.
+    /// </summary>
+    [Parameter]
+    public string? ProfilePictureUrl { get; set; }
+
+    /// <summary>
+    /// The city where the user is located.
+    /// </summary>
+    [Parameter]
+    public string? City { get; set; }
+
+    /// <summary>
+    /// The state where the user is located.
+    /// </summary>
+    [Parameter]
+    public string? State { get; set; }
+
+    /// <summary>
+    /// The "About Me" description of the user.
+    /// </summary>
+    [Parameter]
+    public string? AboutMe { get; set; }
+
+    /// <summary>
+    /// The total number of friends the user has.
+    /// </summary>
+    [Parameter]
+    public int FriendCount { get; set; }
+
+    /// <summary>
+    /// The number of mutual friends between the current user and the profile user.
+    /// </summary>
+    [Parameter]
+    public int MutualFriendsCount { get; set; }
+
+    /// <summary>
+    /// The total number of groups the user is a member of.
+    /// </summary>
+    [Parameter]
+    public int GroupCount { get; set; }
+
+    /// <summary>
+    /// The total number of group posts the user has made.
+    /// </summary>
+    [Parameter]
+    public int GroupPostCount { get; set; }
+
+    /// <summary>
+    /// The total number of posts the user has made.
+    /// </summary>
+    [Parameter]
+    public int PostCount { get; set; }
+}

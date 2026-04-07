@@ -105,6 +105,11 @@
                 <label for="Input.PhoneNumber" class="form-label">@Localizer["PhoneNumber"]</label>
                 <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
             </div>
+            <div class="mb-3">
+                <label for="Input.AboutMe" class="form-label">@Localizer["AboutMe"]</label>
+                <InputTextArea @bind-Value="Input.AboutMe" id="Input.AboutMe" class="form-control" rows="5" />
+                <ValidationMessage For="() => Input.AboutMe" class="text-danger" />
+            </div>
             <button type="submit" class="w-100 btn btn-lg btn-theme-primary">@Localizer["Save"]</button>
         </EditForm>
     </div>
@@ -144,6 +149,7 @@
         Input.City ??= user.City;
         Input.State ??= user.State;
         Input.Occupation ??= user.Occupation;
+        Input.AboutMe ??= user.AboutMe;
     }
 
     private void OnFileSelected(InputFileChangeEventArgs e)
@@ -217,6 +223,7 @@
         Input.City = Input.City?.Trim();
         Input.State = Input.State?.Trim();
         Input.Occupation = Input.Occupation?.Trim();
+        Input.AboutMe = Input.AboutMe?.Trim();
 
         // Additional server-side validation for field lengths
         if (Input.NameSuffix?.Length > 75)
@@ -237,6 +244,11 @@
         if (Input.Occupation?.Length > 75)
         {
             statusMessage = "Error: Occupation cannot exceed 75 characters.";
+            return;
+        }
+        if (Input.AboutMe?.Length > 2000)
+        {
+            statusMessage = "Error: About Me cannot exceed 2000 characters.";
             return;
         }
 
@@ -285,6 +297,12 @@
             hasChanges = true;
         }
 
+        if (Input.AboutMe != user.AboutMe)
+        {
+            user.AboutMe = Input.AboutMe;
+            hasChanges = true;
+        }
+
         if (hasChanges)
         {
             var updateResult = await UserManager.UpdateAsync(user);
@@ -330,5 +348,9 @@
         [StringLength(75, ErrorMessage = "The {0} must be at max {1} characters long.")]
         [Display(Name = "Occupation")]
         public string? Occupation { get; set; }
+
+        [StringLength(2000, ErrorMessage = "The {0} must be at max {1} characters long.")]
+        [Display(Name = "About Me")]
+        public string? AboutMe { get; set; }
     }
 }

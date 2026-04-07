@@ -35,10 +35,29 @@
 @inject IFeedCommentRepository FeedCommentRepository
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.Home> Localizer
 @inject FreeSpeakWeb.Services.Abstractions.IRoleService RoleService
+@inject FriendsService FriendsService
+@inject GroupMemberService GroupMemberService
+@inject GroupPostService GroupPostService
 
 <PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
 
 <div class="home-container">
+    @if (currentUser != null)
+    {
+        <FriendProfileHeader UserId="@currentUserId"
+                             DisplayName="@currentUserDisplayName"
+                             UserName="@(currentUser.UserName ?? string.Empty)"
+                             ProfilePictureUrl="@currentUser.ProfilePictureUrl"
+                             City="@currentUser.City"
+                             State="@currentUser.State"
+                             AboutMe="@currentUser.AboutMe"
+                             FriendCount="@friendCount"
+                             MutualFriendsCount="@mutualFriendsCount"
+                             GroupCount="@groupCount"
+                             GroupPostCount="@groupPostCount"
+                             PostCount="@postCount" />
+    }
+
             <!-- Tabbed Interface -->
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -339,6 +358,15 @@
     private bool showEditPostImageUpload = false;
     private PostEditModal? postEditModalRef;
 
+    // Current user profile stats
+    private ApplicationUser? currentUser;
+    private string currentUserDisplayName = string.Empty;
+    private int friendCount = 0;
+    private int groupCount = 0;
+    private int groupPostCount = 0;
+    private int postCount = 0;
+    private int mutualFriendsCount = 0; // Not applicable for own profile, but required by component
+
     // Upload progress tracking
     private bool showUploadProgress = false;
     private string uploadProgressTitle = "Adding Your Post";
@@ -360,7 +388,7 @@
         if (currentUserId != null)
         {
             // Load the actual user from the database to get accurate name and profile picture
-            var currentUser = await UserManager.FindByIdAsync(currentUserId);
+            currentUser = await UserManager.FindByIdAsync(currentUserId);
             if (currentUser != null)
             {
                 currentUserImageUrl = currentUser.ProfilePictureUrl ?? null;
@@ -372,6 +400,11 @@
                     currentUser.LastName,
                     currentUser.UserName ?? "User"
                 );
+
+                currentUserDisplayName = currentUserName;
+
+                // Load user stats
+                await LoadCurrentUserStatsAsync();
             }
         }
 
@@ -463,6 +496,34 @@
         finally
         {
             isLoadingPinnedPosts = false;
+        }
+    }
+
+    /// <summary>
+    /// Loads the statistics for the current user including friend count, group count, and post count.
+    /// </summary>
+    private async Task LoadCurrentUserStatsAsync()
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        try
+        {
+            // Load all stats in parallel for better performance
+            var friendCountTask = FriendsService.GetFriendsCountAsync(currentUserId);
+            var groupCountTask = GroupMemberService.GetUserGroupCountAsync(currentUserId);
+            var groupPostCountTask = GroupPostService.GetUserTotalGroupPostCountAsync(currentUserId);
+            var postCountTask = PostService.GetUserPostCountAsync(currentUserId);
+
+            await Task.WhenAll(friendCountTask, groupCountTask, groupPostCountTask, postCountTask);
+
+            friendCount = await friendCountTask;
+            groupCount = await groupCountTask;
+            groupPostCount = await groupPostCountTask;
+            postCount = await postCountTask;
+        }
+        catch (Exception)
+        {
+            // Stats are non-critical, don't fail the page load
         }
     }
 
