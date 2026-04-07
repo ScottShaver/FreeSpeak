@@ -33,6 +33,8 @@
 @inject ILogger<FriendDetails> Logger
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.FriendDetails> Localizer
 @inject FreeSpeakWeb.Services.Abstractions.IRoleService RoleService
+@inject GroupMemberService GroupMemberService
+@inject GroupPostService GroupPostService
 
 @implements IAsyncDisposable
 
@@ -57,26 +59,18 @@
     }
     else
     {
-        <!-- Friend Header Information -->
-        <div class="friend-header-card mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <UserAvatar ImageUrl="@friendUser.ProfilePictureUrl"
-                                        Name="@friendDisplayName"
-                                        Size="xl"
-                                        CssClass="friend-profile-picture" />
-                        </div>
-                        <div class="col">
-                            <h2 class="mb-1">@friendDisplayName</h2>
-                            <p class="text-muted mb-2">@@@friendUser.UserName</p>
-                            @* Bio field removed as ApplicationUser might not have it *@
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <FriendProfileHeader UserId="@FriendId"
+                             DisplayName="@friendDisplayName"
+                             UserName="@friendUser.UserName"
+                             ProfilePictureUrl="@friendUser.ProfilePictureUrl"
+                             City="@friendUser.City"
+                             State="@friendUser.State"
+                             AboutMe="@friendUser.AboutMe"
+                             FriendCount="@friendCount"
+                             MutualFriendsCount="@mutualFriendsCount"
+                             GroupCount="@groupCount"
+                             GroupPostCount="@groupPostCount"
+                             PostCount="@postCount" />
 
         <!-- Friend's Posts Feed -->
         <div class="friend-posts-section">
@@ -221,6 +215,13 @@
     private string? currentUserId;
     private string? currentUserName;
     private string? currentUserImageUrl;
+
+    // Stats for friend header
+    private int friendCount = 0;
+    private int groupCount = 0;
+    private int groupPostCount = 0;
+    private int postCount = 0;
+    private int mutualFriendsCount = 0;
 
     // PostPageBase requirements
     private List<Post> postsList = new();
@@ -552,8 +553,11 @@
                     friendUser.UserName ?? "User"
                 );
 
-                // Load friend's posts
-                await LoadPostsAsync();
+                // Load friend's stats and posts in parallel
+                await Task.WhenAll(
+                    LoadFriendStatsAsync(),
+                    LoadPostsAsync()
+                );
             }
         }
         catch (Exception ex)
@@ -565,6 +569,40 @@
         {
             isLoadingFriend = false;
             StateHasChanged();
+        }
+    }
+
+    /// <summary>
+    /// Loads the statistics for the friend user including friend count, group count, and post count.
+    /// </summary>
+    private async Task LoadFriendStatsAsync()
+    {
+        if (string.IsNullOrEmpty(FriendId) || string.IsNullOrEmpty(currentUserId)) return;
+
+        try
+        {
+            // Load all stats in parallel for better performance
+            var friendCountTask = FriendsService.GetFriendsCountAsync(FriendId);
+            var groupCountTask = GroupMemberService.GetUserGroupCountAsync(FriendId);
+            var groupPostCountTask = GroupPostService.GetUserTotalGroupPostCountAsync(FriendId);
+            var postCountTask = PostService.GetUserPostCountAsync(FriendId);
+            var mutualFriendsTask = FriendsService.GetMutualFriendsAsync(currentUserId, FriendId);
+
+            await Task.WhenAll(friendCountTask, groupCountTask, groupPostCountTask, postCountTask, mutualFriendsTask);
+
+            friendCount = await friendCountTask;
+            groupCount = await groupCountTask;
+            groupPostCount = await groupPostCountTask;
+            postCount = await postCountTask;
+            mutualFriendsCount = (await mutualFriendsTask).Count;
+
+            Logger.LogInformation("Loaded stats for friend {FriendId} - Friends: {FriendCount}, Groups: {GroupCount}, GroupPosts: {GroupPostCount}, Posts: {PostCount}, Mutual: {MutualCount}",
+                FriendId, friendCount, groupCount, groupPostCount, postCount, mutualFriendsCount);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading stats for friend {FriendId}", FriendId);
+            // Stats are non-critical, don't fail the page load
         }
     }
 

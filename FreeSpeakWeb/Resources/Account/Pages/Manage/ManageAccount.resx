@@ -98,6 +98,9 @@
   <data name="PhoneNumber" xml:space="preserve">
     <value>Phone number</value>
   </data>
+  <data name="AboutMe" xml:space="preserve">
+    <value>About Me</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
   </data>

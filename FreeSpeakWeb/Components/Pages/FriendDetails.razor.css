@@ -3,7 +3,7 @@
 .friend-details-container {
 /*    max-width: 800px;*/
     margin: 0 auto;
-    padding: 1rem;
+/*    padding: 1rem;*/
 }
 
 /* Friend Header Card */
@@ -20,6 +20,15 @@
 
 .friend-header-card .card-body {
     padding: 1.5rem;
+}
+
+/* Profile Stats - matches GroupView .group-stats styling */
+.profile-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--bs-border-color);
 }
 
 ::deep .friend-profile-picture {

@@ -1,6 +1,7 @@
 .notifications-container {
-    max-width: 800px;
-    margin: 0 auto;
+/*    max-width: 800px;*/
+/*    margin: 0 auto;*/
+/*    margin-top: 16px;*/
     background-color: var(--bs-body-bg);
     border-radius: 8px;
     overflow: hidden;
