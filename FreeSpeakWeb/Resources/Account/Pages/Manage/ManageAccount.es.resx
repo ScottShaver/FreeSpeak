@@ -269,4 +269,7 @@
   <data name="ChangeYourAccountSettings" xml:space="preserve">
     <value>Cambiar la configuración de su cuenta</value>
   </data>
+  <data name="AboutMe" xml:space="preserve">
+    <value>Sobre mí</value>
+  </data>
 </root>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"><xsd:import namespace="http://www.w3.org/XML/1998/namespace" /><xsd:element name="root" msdata:IsDataSet="true"><xsd:complexType><xsd:choice maxOccurs="unbounded"><xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element><xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element><xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element><xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" /></xsd:complexType></xsd:element></xsd:choice></xsd:complexType></xsd:element></xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="SearchPlaceholder" xml:space="preserve"><value>🔍 차단된 멤버 검색...</value></data>
+  <data name="LoadingBannedMembers" xml:space="preserve"><value>차단된 멤버 로딩 중...</value></data>
+  <data name="NoBannedMembers" xml:space="preserve"><value>차단된 멤버가 없습니다. 이 그룹은 깨끗한 기록을 가지고 있습니다!</value></data>
+  <data name="Banned" xml:space="preserve"><value>차단됨</value></data>
+  <data name="UnbanMember" xml:space="preserve"><value>차단 해제</value></data>
+  <data name="Loading" xml:space="preserve"><value>로딩 중...</value></data>
+  <data name="LoadMoreBannedMembers" xml:space="preserve"><value>더 많은 차단 멤버 로드</value></data>
+  <data name="BannedOn" xml:space="preserve"><value>차단 날짜:</value></data>
+  <data name="UnbanDescription" xml:space="preserve"><value>이 멤버의 차단을 해제하면 그룹에 다시 참여할 수 있습니다. 새 참여 요청을 보내거나 다시 초대받아야 합니다.</value></data>
+  <data name="NoPermissionToUnban" xml:space="preserve"><value>멤버 차단을 해제하려면 관리자 또는 중재자여야 합니다</value></data>
+  <data name="ShowingBannedMembersSingular" xml:space="preserve"><value>차단된 멤버 {0}명 표시 중</value></data>
+  <data name="ShowingBannedMembersPlural" xml:space="preserve"><value>차단된 멤버 {0}명 표시 중</value></data>
+  <data name="MoreAvailable" xml:space="preserve"><value>더 보기 가능</value></data>
+</root>

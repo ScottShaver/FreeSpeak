@@ -269,4 +269,7 @@
   <data name="ChangeYourAccountSettings" xml:space="preserve">
     <value>更改您的账户设置</value>
   </data>
+  <data name="AboutMe" xml:space="preserve">
+    <value>关于我</value>
+  </data>
 </root>

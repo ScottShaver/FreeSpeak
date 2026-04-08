@@ -136,4 +136,7 @@
   <data name="MakePublic" xml:space="preserve">
     <value>نعم، اجعله عامًا</value>
   </data>
+  <data name="FailedToCopyLink" xml:space="preserve">
+    <value>فشل نسخ الرابط إلى الحافظة.</value>
+  </data>
 </root>

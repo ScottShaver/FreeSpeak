@@ -160,4 +160,7 @@
   <data name="PostReportedDescription" xml:space="preserve">
     <value>Dit bericht is gemeld bij de moderators en wacht op beoordeling.</value>
   </data>
+  <data name="JumpToGroup" xml:space="preserve">
+    <value>Ga naar groep</value>
+  </data>
 </root>

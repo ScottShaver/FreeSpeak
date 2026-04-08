@@ -1028,6 +1028,9 @@ namespace FreeSpeakWeb.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("FriendId")
+                        .HasColumnType("text");
+
                     b.Property<int>("LikeCount")
                         .HasColumnType("integer");
 
@@ -1043,8 +1046,19 @@ namespace FreeSpeakWeb.Migrations
 
                     b.HasIndex("CreatedAt");
 
+                    b.HasIndex("FriendId");
+
+                    b.HasIndex("AuthorId", "CreatedAt")
+                        .HasDatabaseName("IX_Posts_AuthorId_CreatedAt");
+
+                    b.HasIndex("FriendId", "CreatedAt")
+                        .HasDatabaseName("IX_Posts_FriendId_CreatedAt");
+
                     b.HasIndex("AuthorId", "AudienceType", "CreatedAt")
                         .HasDatabaseName("IX_Posts_AuthorId_AudienceType_CreatedAt");
+
+                    b.HasIndex("AuthorId", "FriendId", "CreatedAt")
+                        .HasDatabaseName("IX_Posts_AuthorId_FriendId_CreatedAt");
 
                     b.ToTable("Posts");
                 });
@@ -1723,7 +1737,14 @@ namespace FreeSpeakWeb.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("FreeSpeakWeb.Data.ApplicationUser", "Friend")
+                        .WithMany()
+                        .HasForeignKey("FriendId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Author");
+
+                    b.Navigation("Friend");
                 });
 
             modelBuilder.Entity("FreeSpeakWeb.Data.PostImage", b =>

@@ -30,6 +30,7 @@ namespace FreeSpeakWeb.Services
         private readonly UserPreferenceService _userPreferenceService;
         private readonly PostNotificationHelper _notificationHelper;
         private readonly IAuditLogRepository _auditLogRepository;
+        private readonly IFriendshipRepository _friendshipRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PostService"/> class.
@@ -49,6 +50,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="userPreferenceService">Service for user display preferences.</param>
         /// <param name="notificationHelper">Helper for creating post-related notifications.</param>
         /// <param name="auditLogRepository">Repository for audit log operations.</param>
+        /// <param name="friendshipRepository">Repository for friendship operations.</param>
         public PostService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             IFeedPostRepository<Post, PostImage> postRepository,
@@ -64,7 +66,8 @@ namespace FreeSpeakWeb.Services
             NotificationService notificationService,
             UserPreferenceService userPreferenceService,
             PostNotificationHelper notificationHelper,
-            IAuditLogRepository auditLogRepository)
+            IAuditLogRepository auditLogRepository,
+            IFriendshipRepository friendshipRepository)
         {
             _contextFactory = contextFactory;
             _postRepository = postRepository;
@@ -81,6 +84,7 @@ namespace FreeSpeakWeb.Services
             _userPreferenceService = userPreferenceService;
             _notificationHelper = notificationHelper;
             _auditLogRepository = auditLogRepository;
+            _friendshipRepository = friendshipRepository;
         }
 
         #region Post Operations
@@ -92,13 +96,29 @@ namespace FreeSpeakWeb.Services
         /// <param name="content">The text content of the post (can be empty if images are provided).</param>
         /// <param name="audienceType">The visibility setting for the post.</param>
         /// <param name="imageUrls">Optional list of image URLs to attach to the post.</param>
+        /// <param name="friendId">Optional friend ID to post on their feed. When provided, validates that the friend exists and is friends with the author.</param>
         /// <returns>A tuple containing success status, error message if failed, and the created post if successful.</returns>
-        public async Task<(bool Success, string? ErrorMessage, Post? Post)> CreatePostAsync(string authorId, string content, AudienceType audienceType = AudienceType.Public, List<string>? imageUrls = null)
+        public async Task<(bool Success, string? ErrorMessage, Post? Post)> CreatePostAsync(string authorId, string content, AudienceType audienceType = AudienceType.Public, List<string>? imageUrls = null, string? friendId = null)
         {
             // Allow empty content if images are provided
             if (string.IsNullOrWhiteSpace(content) && (imageUrls == null || !imageUrls.Any()))
             {
                 return (false, "Post must contain either text or images.", null);
+            }
+
+            // Validate friendId if provided
+            if (!string.IsNullOrWhiteSpace(friendId))
+            {
+                var friendship = await _friendshipRepository.GetFriendshipAsync(authorId, friendId);
+                if (friendship == null)
+                {
+                    return (false, "No friendship relationship found.", null);
+                }
+
+                if (friendship.Status != FriendshipStatus.Accepted)
+                {
+                    return (false, "You can only post on the feed of accepted friends.", null);
+                }
             }
 
             try
@@ -108,7 +128,8 @@ namespace FreeSpeakWeb.Services
                     AuthorId = authorId,
                     Content = string.IsNullOrWhiteSpace(content) ? string.Empty : content.Trim(),
                     CreatedAt = DateTime.UtcNow,
-                    AudienceType = audienceType
+                    AudienceType = audienceType,
+                    FriendId = friendId
                 };
 
                 var result = await _postRepository.CreateAsync(post);
@@ -127,7 +148,8 @@ namespace FreeSpeakWeb.Services
                     }
                 }
 
-                _logger.LogInformation("Post created by user {AuthorId}: Post ID {PostId}", authorId, result.Post.Id);
+                _logger.LogInformation("Post created by user {AuthorId}: Post ID {PostId}{FriendInfo}", 
+                    authorId, result.Post.Id, friendId != null ? $" on friend's feed (FriendId: {friendId})" : string.Empty);
 
                 // Log post creation to audit log
                 await _auditLogRepository.LogActionAsync(authorId, ActionCategory.UserPost, new UserPostDetails
@@ -136,7 +158,8 @@ namespace FreeSpeakWeb.Services
                     Visibility = audienceType.ToString(),
                     OperationType = OperationTypeEnum.Create.ToString(),
                     HasMedia = imageUrls != null && imageUrls.Any(),
-                    MediaType = imageUrls != null && imageUrls.Any() ? "Image" : null
+                    MediaType = imageUrls != null && imageUrls.Any() ? "Image" : null,
+                    FriendId = friendId
                 });
 
                 return (true, null, result.Post);
@@ -509,6 +532,30 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogError(ex, "Error retrieving posts for user {UserId}", userId);
                 return new List<Post>();
+            }
+        }
+
+        /// <summary>
+        /// Retrieves posts for a specific user's profile feed with audience filtering based on the viewer.
+        /// Includes both posts authored by the user and cross-feed posts made on their feed by friends.
+        /// Filters out MeOnly posts unless the viewer is the author.
+        /// PERFORMANCE: Returns DTOs using database-side projection to reduce data transfer by 50-70%.
+        /// </summary>
+        /// <param name="authorId">The unique identifier of the user whose profile feed to retrieve.</param>
+        /// <param name="viewerId">The unique identifier of the user viewing the posts.</param>
+        /// <param name="pageSize">Number of posts per page.</param>
+        /// <param name="pageNumber">The page number to retrieve (1-based).</param>
+        /// <returns>A list of PostListDto projections filtered by audience permissions.</returns>
+        public async Task<List<PostListDto>> GetPostsByUserWithAudienceFilterAsync(string authorId, string viewerId, int pageSize = 20, int pageNumber = 1)
+        {
+            try
+            {
+                return await _postRepository.GetByAuthorWithAudienceFilterAsync(authorId, viewerId, (pageNumber - 1) * pageSize, pageSize);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving filtered posts for author {AuthorId} viewed by {ViewerId}", authorId, viewerId);
+                return new List<PostListDto>();
             }
         }
 
@@ -1978,7 +2025,7 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Retrieves all pinned posts for a user with author and image information.
+        /// Retrieves all pinned posts for a user with author, friend, and image information.
         /// </summary>
         /// <param name="userId">The unique identifier of the user.</param>
         /// <returns>A list of pinned posts ordered by most recently pinned first.</returns>
@@ -1992,6 +2039,8 @@ namespace FreeSpeakWeb.Services
                     .Where(pp => pp.UserId == userId)
                     .Include(pp => pp.Post)
                         .ThenInclude(p => p.Author)
+                    .Include(pp => pp.Post)
+                        .ThenInclude(p => p.Friend)
                     .Include(pp => pp.Post)
                         .ThenInclude(p => p.Images)
                     .OrderByDescending(pp => pp.PinnedAt)

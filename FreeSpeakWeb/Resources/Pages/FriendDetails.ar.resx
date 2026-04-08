@@ -88,4 +88,7 @@
   <data name="NoMorePosts" xml:space="preserve">
     <value>لا توجد منشورات أخرى في الوقت الحالي</value>
   </data>
+  <data name="AboutMe" xml:space="preserve">
+    <value>عنّي</value>
+  </data>
 </root>

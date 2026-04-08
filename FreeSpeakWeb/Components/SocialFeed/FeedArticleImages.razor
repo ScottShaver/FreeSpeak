@@ -1,5 +1,7 @@
 @using FreeSpeakWeb.Data
+@using Microsoft.Extensions.Localization
 @inject IJSRuntime JS
+@inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.FeedArticleImages> Localizer
 
 @if (Images != null && Images.Any())
 {
@@ -9,12 +11,12 @@
                 <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
                 <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
             </svg>
-            <span>@Images.Count @(Images.Count == 1 ? "image" : "images")</span>
+            <span>@Images.Count @(Images.Count == 1 ? Localizer["ImageSingular"].Value : Localizer["ImagePlural"].Value)</span>
         </div>
 
         @if (Images.Count > 1)
         {
-            <button type="button" class="scroll-button scroll-left" @onclick="ScrollLeft" title="Previous image">
+            <button type="button" class="scroll-button scroll-left" @onclick="ScrollLeft" title="@Localizer["PreviousImage"]">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
                 </svg>
@@ -26,14 +28,14 @@
             {
                 var index = i;
                 <div class="image-item" @onclick="@(() => HandleOpenImageViewer(index))">
-                    <img src="@Images[index].ImageUrl" alt="Post image @(index + 1)" />
+                    <img src="@Images[index].ImageUrl" alt="@Localizer["PostImageAlt"] @(index + 1)" />
                 </div>
             }
         </div>
 
         @if (Images.Count > 1)
         {
-            <button type="button" class="scroll-button scroll-right" @onclick="ScrollRight" title="Next image">
+            <button type="button" class="scroll-button scroll-right" @onclick="ScrollRight" title="@Localizer["NextImage"]">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
                 </svg>

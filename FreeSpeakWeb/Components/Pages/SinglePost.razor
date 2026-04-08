@@ -7,12 +7,14 @@
 @using FreeSpeakWeb.Repositories.Abstractions
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
 @inherits PostPageBase<Post, Comment>
 @inject PostService PostService
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject HtmlSanitizationService HtmlSanitizationService
 @inject UserManager<ApplicationUser> UserManager
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.SinglePost> Localizer
 @inject IFeedCommentRepository FeedCommentRepository
 @inject FreeSpeakWeb.Services.Abstractions.IRoleService RoleService
 @attribute [AllowAnonymous]
@@ -34,10 +36,10 @@
         <div class="error-container">
             <div class="alert alert-warning" role="alert">
                 <i class="bi bi-exclamation-triangle-fill"></i>
-                <h4>Post Not Available</h4>
+                <h4>@Localizer["PostNotAvailable"]</h4>
                 <p>@errorMessage</p>
                 <button type="button" class="btn btn-primary mt-3" @onclick="NavigateHome">
-                    <i class="bi bi-house-door"></i> Go to Home
+                    <i class="bi bi-house-door"></i> @Localizer["GoToHome"]
                 </button>
             </div>
         </div>

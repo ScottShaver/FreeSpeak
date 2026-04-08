@@ -136,4 +136,7 @@
   <data name="MakePublic" xml:space="preserve">
     <value>是的，设为公开</value>
   </data>
+  <data name="FailedToCopyLink" xml:space="preserve">
+    <value>无法将链接复制到剪贴板。</value>
+  </data>
 </root>

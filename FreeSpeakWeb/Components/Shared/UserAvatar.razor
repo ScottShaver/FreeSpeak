@@ -1,3 +1,6 @@
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.UserAvatar> Localizer
+
 @code {
     /// <summary>
     /// The URL of the user's profile picture. If null/empty, shows initials.
@@ -9,7 +12,12 @@
     /// The display name used to generate initials when no image is available.
     /// </summary>
     [Parameter]
-    public string Name { get; set; } = "Unknown";
+    public string? Name { get; set; }
+
+    /// <summary>
+    /// Gets the effective name, using the localized default if not explicitly set.
+    /// </summary>
+    private string EffectiveName => Name ?? Localizer["Unknown"];
 
     /// <summary>
     /// Alt text for the image. Defaults to Name if not specified.
@@ -64,17 +72,17 @@
         _ => "avatar-md"
     };
 
-    private string ComputedAltText => AltText ?? Name;
+    private string ComputedAltText => AltText ?? EffectiveName;
 
     /// <summary>
     /// Gets the initials from a name for the avatar placeholder.
     /// </summary>
     private string GetInitials()
     {
-        if (string.IsNullOrWhiteSpace(Name))
+        if (string.IsNullOrWhiteSpace(EffectiveName))
             return "U";
 
-        var parts = Name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var parts = EffectiveName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
         if (parts.Length == 0)
             return "U";

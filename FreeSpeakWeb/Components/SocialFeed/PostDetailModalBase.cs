@@ -61,6 +61,30 @@ public abstract class PostDetailModalBase : ComponentBase, IAsyncDisposable
     public string? AuthorImageUrl { get; set; }
 
     /// <summary>
+    /// The friend's user ID when this post was made on their feed (cross-feed post).
+    /// </summary>
+    [Parameter]
+    public string? FriendId { get; set; }
+
+    /// <summary>
+    /// The display name of the friend whose feed this post was made on, if applicable.
+    /// </summary>
+    [Parameter]
+    public string? FriendName { get; set; }
+
+    /// <summary>
+    /// The username of the friend whose feed this post was made on, if applicable.
+    /// </summary>
+    [Parameter]
+    public string? FriendUserName { get; set; }
+
+    /// <summary>
+    /// The profile picture URL of the friend whose feed this post was made on, if applicable.
+    /// </summary>
+    [Parameter]
+    public string? FriendProfilePictureUrl { get; set; }
+
+    /// <summary>
     /// The unique identifier of the current user viewing the modal.
     /// </summary>
     [Parameter]

@@ -58,6 +58,10 @@ $ResourceGroups = @{
         BasePath = "FreeSpeakWeb\Resources\Pages\GroupFiles.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
+    "GroupFilesPage" = @{
+        BasePath = "FreeSpeakWeb\Resources\Pages\GroupFilesPage.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
     "GroupView" = @{
         BasePath = "FreeSpeakWeb\Resources\Pages\GroupView.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
@@ -82,18 +86,58 @@ $ResourceGroups = @{
         BasePath = "FreeSpeakWeb\Resources\Pages\SystemAdmin.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
+    "NotFound" = @{
+        BasePath = "FreeSpeakWeb\Resources\Pages\NotFound.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "SingleGroupPost" = @{
+        BasePath = "FreeSpeakWeb\Resources\Pages\SingleGroupPost.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "SinglePost" = @{
+        BasePath = "FreeSpeakWeb\Resources\Pages\SinglePost.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "SystemModerator" = @{
+        BasePath = "FreeSpeakWeb\Resources\Pages\SystemModerator.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
 
     # Shared Component Resources
     "AlertContainer" = @{
         BasePath = "FreeSpeakWeb\Resources\Shared\AlertContainer.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
+    "ConfirmationDialog" = @{
+        BasePath = "FreeSpeakWeb\Resources\Shared\ConfirmationDialog.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "FriendProfileHeader" = @{
+        BasePath = "FreeSpeakWeb\Resources\Shared\FriendProfileHeader.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
     "EmojiPicker" = @{
         BasePath = "FreeSpeakWeb\Resources\Shared\EmojiPicker.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
+    "ImageGalleryModal" = @{
+        BasePath = "FreeSpeakWeb\Resources\Shared\ImageGalleryModal.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "ImagePreviewGrid" = @{
+        BasePath = "FreeSpeakWeb\Resources\Shared\ImagePreviewGrid.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
     "ImageUploadModal" = @{
         BasePath = "FreeSpeakWeb\Resources\Shared\ImageUploadModal.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "ImageViewerModal" = @{
+        BasePath = "FreeSpeakWeb\Resources\Shared\ImageViewerModal.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "MenuContainer" = @{
+        BasePath = "FreeSpeakWeb\Resources\Shared\MenuContainer.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
     "NotificationComponent" = @{
@@ -106,6 +150,10 @@ $ResourceGroups = @{
     }
     "UploadProgressModal" = @{
         BasePath = "FreeSpeakWeb\Resources\Shared\UploadProgressModal.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "UserAvatar" = @{
+        BasePath = "FreeSpeakWeb\Resources\Shared\UserAvatar.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
     "MoreFunctions" = @{
@@ -152,8 +200,16 @@ $ResourceGroups = @{
         BasePath = "FreeSpeakWeb\Resources\SocialFeed\FeedArticleActions.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
+    "FeedArticleCommentEditor" = @{
+        BasePath = "FreeSpeakWeb\Resources\SocialFeed\FeedArticleCommentEditor.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
     "FeedArticleHeader" = @{
         BasePath = "FreeSpeakWeb\Resources\SocialFeed\FeedArticleHeader.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "FeedArticleImages" = @{
+        BasePath = "FreeSpeakWeb\Resources\SocialFeed\FeedArticleImages.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
     "LikesModal" = @{
@@ -180,6 +236,14 @@ $ResourceGroups = @{
         BasePath = "FreeSpeakWeb\Resources\SocialFeed\PostDetailModal.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
     }
+    "PostEditModal" = @{
+        BasePath = "FreeSpeakWeb\Resources\SocialFeed\PostEditModal.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
+    "UnifiedArticle" = @{
+        BasePath = "FreeSpeakWeb\Resources\SocialFeed\UnifiedArticle.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
 
     # Friends Resources
     "FriendListItem" = @{
@@ -192,6 +256,10 @@ $ResourceGroups = @{
     }
 
     # Groups Resources
+    "BannedMembersTab" = @{
+        BasePath = "FreeSpeakWeb\Resources\Groups\BannedMembersTab.resx"
+        Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")
+    }
     "GroupSettingsModal" = @{
         BasePath = "FreeSpeakWeb\Resources\Groups\GroupSettingsModal.resx"
         Languages = @("ar", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "zh")

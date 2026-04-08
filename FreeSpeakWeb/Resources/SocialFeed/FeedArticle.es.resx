@@ -136,4 +136,7 @@
   <data name="MakePublic" xml:space="preserve">
     <value>Sí, Hacer Público</value>
   </data>
+  <data name="FailedToCopyLink" xml:space="preserve">
+    <value>No se pudo copiar el enlace al portapapeles.</value>
+  </data>
 </root>

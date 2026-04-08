@@ -25,6 +25,18 @@ namespace FreeSpeakWeb.Data
         public ApplicationUser Author { get; set; } = null!;
 
         /// <summary>
+        /// Gets or sets the ID of the friend whose feed this post was made on.
+        /// Null if the post was made on the author's own feed.
+        /// </summary>
+        public string? FriendId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the navigation property to the friend's user profile.
+        /// Null if the post was made on the author's own feed.
+        /// </summary>
+        public ApplicationUser? Friend { get; set; }
+
+        /// <summary>
         /// Gets or sets the main text content of the post.
         /// </summary>
         public required string Content { get; set; }

@@ -53,6 +53,30 @@ public abstract class ArticleComponentBase : ComponentBase, IAsyncDisposable
     public string? AuthorImageUrl { get; set; }
 
     /// <summary>
+    /// Gets or sets the friend's user ID when this post was made on their feed (cross-feed post).
+    /// </summary>
+    [Parameter]
+    public string? FriendId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the display name of the friend whose feed this post was made on, if applicable.
+    /// </summary>
+    [Parameter]
+    public string? FriendName { get; set; }
+
+    /// <summary>
+    /// Gets or sets the username of the friend whose feed this post was made on, if applicable.
+    /// </summary>
+    [Parameter]
+    public string? FriendUserName { get; set; }
+
+    /// <summary>
+    /// Gets or sets the profile picture URL of the friend whose feed this post was made on, if applicable.
+    /// </summary>
+    [Parameter]
+    public string? FriendProfilePictureUrl { get; set; }
+
+    /// <summary>
     /// Gets or sets the current user's ID.
     /// </summary>
     [Parameter]

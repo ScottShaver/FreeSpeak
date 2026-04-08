@@ -79,7 +79,8 @@ namespace FreeSpeakWeb.Tests.Components
                 notificationService,
                 userPreferenceService,
                 postNotificationHelper,
-                MockRepositories.CreateMockAuditLogRepository().Object
+                MockRepositories.CreateMockAuditLogRepository().Object,
+                MockRepositories.CreateMockFriendshipRepository().Object
             );
 
             // Mock GroupPostService for GroupPost tests

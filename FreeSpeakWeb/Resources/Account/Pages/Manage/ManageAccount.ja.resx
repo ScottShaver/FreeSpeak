@@ -269,4 +269,7 @@
   <data name="No" xml:space="preserve">
     <value>いいえ</value>
   </data>
+  <data name="AboutMe" xml:space="preserve">
+    <value>自己紹介</value>
+  </data>
 </root>

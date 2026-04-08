@@ -136,4 +136,7 @@
   <data name="MakePublic" xml:space="preserve">
     <value>Sì, rendi pubblico</value>
   </data>
+  <data name="FailedToCopyLink" xml:space="preserve">
+    <value>Impossibile copiare il link negli appunti.</value>
+  </data>
 </root>

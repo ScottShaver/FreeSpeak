@@ -87,7 +87,8 @@ namespace FreeSpeakWeb.Tests.Services
                 CreateNotificationService(repoFactory.ContextFactory),
                 CreateUserPreferenceService(repoFactory.ContextFactory),
                 CreatePostNotificationHelper(repoFactory.ContextFactory),
-                MockRepositories.CreateMockAuditLogRepository().Object);
+                MockRepositories.CreateMockAuditLogRepository().Object,
+                repoFactory.CreateFriendshipRepository());
         }
 
         /// <summary>

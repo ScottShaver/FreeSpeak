@@ -1,5 +1,7 @@
 @using FreeSpeakWeb.Components.SocialFeed
 @using FreeSpeakWeb.Components.Shared
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.FeedArticleCommentEditor> Localizer
 
 @if (!HideCommentEditor && !IsReadOnly)
 {
@@ -18,7 +20,7 @@
     else
     {
         <div class="article-comment-limit-message">
-            <span>No more comments allowed</span>
+            <span>@Localizer["NoMoreCommentsAllowed"]</span>
         </div>
     }
 }

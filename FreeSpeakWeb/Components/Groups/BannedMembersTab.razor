@@ -10,13 +10,15 @@
 @inject UserPreferenceService UserPreferenceService
 @inject IRoleService RoleService
 @inject ILogger<BannedMembersTab> Logger
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Groups.BannedMembersTab> Localizer
 
 <div class="banned-members-tab">
     <!-- Search Bar -->
     <div class="mb-3">
         <input type="text" 
                class="form-control" 
-               placeholder="🔍 Search banned members..." 
+               placeholder="@Localizer["SearchPlaceholder"]"
                @bind="searchQuery" 
                @bind:event="oninput"
                @onkeyup="OnSearchKeyUp" />
@@ -26,14 +28,14 @@
     {
         <div class="text-center py-4">
             <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading banned members...</span>
+                <span class="visually-hidden">@Localizer["LoadingBannedMembers"]</span>
             </div>
         </div>
     }
     else if (!bannedMembers.Any())
     {
         <div class="alert alert-success">
-            <i class="bi bi-check-circle me-2"></i>No banned members. This group has a clean record!
+            <i class="bi bi-check-circle me-2"></i>@Localizer["NoBannedMembers"]
         </div>
     }
     else
@@ -57,10 +59,10 @@
                                 <div class="banned-details">
                                     <div class="banned-name">
                                         @memberDisplayName
-                                        <span class="badge bg-danger ms-2">Banned</span>
+                                        <span class="badge bg-danger ms-2">@Localizer["Banned"]</span>
                                     </div>
                                     <div class="banned-stats text-muted small">
-                                        Banned on: @banned.BannedAt.ToString("MMM dd, yyyy 'at' h:mm tt")
+                                        @Localizer["BannedOn"] @banned.BannedAt.ToString("MMM dd, yyyy 'at' h:mm tt")
                                     </div>
                                 </div>
                             </div>
@@ -87,21 +89,21 @@
                                 }
 
                                 <div class="action-section">
-                                    <h6 class="section-title">Unban Member</h6>
+                                    <h6 class="section-title">@Localizer["UnbanMember"]</h6>
                                     <div class="unban-controls">
                                         <p class="text-muted small mb-2">
-                                            Unbanning this member will allow them to rejoin the group. They will need to send a new join request or be re-invited.
+                                            @Localizer["UnbanDescription"]
                                         </p>
                                         <button type="button" 
                                                 class="btn btn-success btn-sm"
                                                 @onclick="@(async () => await HandleUnbanMember(banned.UserId))"
                                                 disabled="@(isUnbanning || !CanUnbanMember)">
-                                            <i class="bi bi-check-circle me-1"></i>Unban Member
+                                            <i class="bi bi-check-circle me-1"></i>@Localizer["UnbanMember"]
                                         </button>
                                         @if (!CanUnbanMember)
                                         {
                                             <small class="text-muted d-block mt-1">
-                                                You must be an admin or moderator to unban members
+                                                @Localizer["NoPermissionToUnban"]
                                             </small>
                                         }
                                     </div>
@@ -123,19 +125,19 @@
                     @if (isLoadingMore)
                     {
                         <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        <span>Loading...</span>
+                        <span>@Localizer["Loading"]</span>
                     }
                     else
                     {
                         <i class="bi bi-arrow-down-circle me-2"></i>
-                        <span>Load More Banned Members</span>
+                        <span>@Localizer["LoadMoreBannedMembers"]</span>
                     }
                 </button>
                 <div class="pagination-info text-muted small mt-2">
-                    Showing @bannedMembers.Count banned member@(bannedMembers.Count != 1 ? "s" : "")
+                    @(bannedMembers.Count != 1 ? string.Format(Localizer["ShowingBannedMembersPlural"].Value, bannedMembers.Count) : string.Format(Localizer["ShowingBannedMembersSingular"].Value, bannedMembers.Count))
                     @if (hasMore)
                     {
-                        <text> • More available</text>
+                        <text> • @Localizer["MoreAvailable"]</text>
                     }
                 </div>
             </div>

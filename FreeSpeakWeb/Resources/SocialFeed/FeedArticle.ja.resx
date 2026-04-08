@@ -136,4 +136,7 @@
   <data name="MakePublic" xml:space="preserve">
     <value>はい、公開にする</value>
   </data>
+  <data name="FailedToCopyLink" xml:space="preserve">
+    <value>リンクをクリップボードにコピーできませんでした。</value>
+  </data>
 </root>

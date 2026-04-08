@@ -136,4 +136,7 @@
   <data name="MakePublic" xml:space="preserve">
     <value>Ja, öffentlich machen</value>
   </data>
+  <data name="FailedToCopyLink" xml:space="preserve">
+    <value>Link konnte nicht in die Zwischenablage kopiert werden.</value>
+  </data>
 </root>

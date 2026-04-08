@@ -1,7 +1,9 @@
 @using FreeSpeakWeb.Components.Shared
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.ConfirmationDialog> Localizer
 
 <BaseModal IsVisible="@IsVisible"
-           Title="@Title"
+           Title="@EffectiveTitle"
            OnClose="@HandleCancel"
            ShowHeader="true"
            ShowCloseButton="false"
@@ -15,7 +17,7 @@
         }
         else
         {
-            <p class="confirmation-message">@Message</p>
+            <p class="confirmation-message">@EffectiveMessage</p>
         }
     </ChildContent>
     <FooterContent>
@@ -23,7 +25,7 @@
                 class="btn @CancelButtonClass" 
                 @onclick="HandleCancel"
                 disabled="@IsProcessing">
-            @CancelText
+            @EffectiveCancelText
         </button>
         <button type="button" 
                 class="btn @ConfirmButtonClass" 
@@ -33,7 +35,7 @@
             {
                 <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
             }
-            @ConfirmText
+            @EffectiveConfirmText
         </button>
     </FooterContent>
 </BaseModal>
@@ -49,13 +51,13 @@
     /// The title displayed in the dialog header.
     /// </summary>
     [Parameter]
-    public string Title { get; set; } = "Confirm";
+    public string? Title { get; set; }
 
     /// <summary>
     /// The message displayed in the dialog body. Ignored if BodyContent is provided.
     /// </summary>
     [Parameter]
-    public string Message { get; set; } = "Are you sure you want to proceed?";
+    public string? Message { get; set; }
 
     /// <summary>
     /// Optional custom body content. If provided, overrides the Message parameter.
@@ -67,13 +69,33 @@
     /// Text for the confirm button.
     /// </summary>
     [Parameter]
-    public string ConfirmText { get; set; } = "Confirm";
+    public string? ConfirmText { get; set; }
 
     /// <summary>
     /// Text for the cancel button.
     /// </summary>
     [Parameter]
-    public string CancelText { get; set; } = "Cancel";
+    public string? CancelText { get; set; }
+
+    /// <summary>
+    /// Gets the effective title, using the localized default if not explicitly set.
+    /// </summary>
+    private string EffectiveTitle => Title ?? Localizer["DefaultTitle"];
+
+    /// <summary>
+    /// Gets the effective message, using the localized default if not explicitly set.
+    /// </summary>
+    private string EffectiveMessage => Message ?? Localizer["DefaultMessage"];
+
+    /// <summary>
+    /// Gets the effective confirm text, using the localized default if not explicitly set.
+    /// </summary>
+    private string EffectiveConfirmText => ConfirmText ?? Localizer["Confirm"];
+
+    /// <summary>
+    /// Gets the effective cancel text, using the localized default if not explicitly set.
+    /// </summary>
+    private string EffectiveCancelText => CancelText ?? Localizer["Cancel"];
 
     /// <summary>
     /// CSS class for the confirm button. Defaults to danger style.

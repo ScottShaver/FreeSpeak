@@ -1,3 +1,6 @@
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.ImagePreviewGrid> Localizer
+
 @code {
     /// <summary>
     /// List of image URLs to display.
@@ -33,7 +36,12 @@
     /// Alt text prefix for images.
     /// </summary>
     [Parameter]
-    public string AltTextPrefix { get; set; } = "Image";
+    public string? AltTextPrefix { get; set; }
+
+    /// <summary>
+    /// Gets the effective alt text prefix, using the localized default if not explicitly set.
+    /// </summary>
+    private string EffectiveAltTextPrefix => AltTextPrefix ?? Localizer["Image"];
 
     private int VisibleCount => Math.Min(ImageUrls.Count, MaxVisible);
     private int HiddenCount => Math.Max(0, ImageUrls.Count - MaxVisible);
@@ -56,7 +64,7 @@
             var index = i;
             var isLast = i == VisibleCount - 1;
             <div class="preview-image-item @(Clickable ? "clickable" : "")" @onclick="@(() => HandleImageClick(index))">
-                <img src="@ImageUrls[index]" alt="@AltTextPrefix @(index + 1)" />
+                <img src="@ImageUrls[index]" alt="@EffectiveAltTextPrefix @(index + 1)" />
                 @if (isLast && HasMoreImages)
                 {
                     <div class="more-images-overlay">+@HiddenCount</div>

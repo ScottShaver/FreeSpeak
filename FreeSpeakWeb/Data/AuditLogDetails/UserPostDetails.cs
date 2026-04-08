@@ -27,5 +27,11 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
         /// Examples: "Image", "Video", "Link".
         /// </summary>
         public string? MediaType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ID of the friend whose feed this post was made on.
+        /// Null if the post was made on the author's own feed.
+        /// </summary>
+        public string? FriendId { get; set; }
     }
 }

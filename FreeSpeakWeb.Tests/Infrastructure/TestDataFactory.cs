@@ -34,13 +34,25 @@ namespace FreeSpeakWeb.Tests.Infrastructure
             };
         }
 
+        /// <summary>
+        /// Creates a test post with the specified properties.
+        /// </summary>
+        /// <param name="authorId">The ID of the post author.</param>
+        /// <param name="content">The text content of the post.</param>
+        /// <param name="likeCount">The initial like count.</param>
+        /// <param name="commentCount">The initial comment count.</param>
+        /// <param name="shareCount">The initial share count.</param>
+        /// <param name="audienceType">The audience visibility level.</param>
+        /// <param name="friendId">Optional friend ID for cross-feed posts.</param>
+        /// <returns>A new <see cref="Post"/> instance.</returns>
         public static Post CreateTestPost(
             string authorId,
             string content = "Test post content",
             int likeCount = 0,
             int commentCount = 0,
             int shareCount = 0,
-            AudienceType audienceType = AudienceType.FriendsOnly)
+            AudienceType audienceType = AudienceType.FriendsOnly,
+            string? friendId = null)
         {
             return new Post
             {
@@ -50,7 +62,8 @@ namespace FreeSpeakWeb.Tests.Infrastructure
                 LikeCount = likeCount,
                 CommentCount = commentCount,
                 ShareCount = shareCount,
-                AudienceType = audienceType
+                AudienceType = audienceType,
+                FriendId = friendId
             };
         }
 

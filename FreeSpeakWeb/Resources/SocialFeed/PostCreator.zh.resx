@@ -103,4 +103,7 @@
   <data name="MakePublicButton" xml:space="preserve">
     <value>是的，设为公开</value>
   </data>
+  <data name="FriendPlaceholder" xml:space="preserve">
+    <value>给 {0} 写点什么...</value>
+  </data>
 </root>
