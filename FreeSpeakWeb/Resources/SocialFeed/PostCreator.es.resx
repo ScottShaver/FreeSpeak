@@ -103,4 +103,7 @@
   <data name="MakePublicButton" xml:space="preserve">
     <value>Sí, hacerla pública</value>
   </data>
+  <data name="FriendPlaceholder" xml:space="preserve">
+    <value>Escribe algo para {0}...</value>
+  </data>
 </root>

@@ -160,4 +160,7 @@
   <data name="PostReportedDescription" xml:space="preserve">
     <value>此帖子已报告给版主，正在等待审核。</value>
   </data>
+  <data name="JumpToGroup" xml:space="preserve">
+    <value>跳转到群组</value>
+  </data>
 </root>

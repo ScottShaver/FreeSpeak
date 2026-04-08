@@ -20,6 +20,10 @@ namespace FreeSpeakWeb.DTOs
     /// <param name="ShareCount">The cached count of shares on this post.</param>
     /// <param name="AudienceType">The audience visibility level for this post.</param>
     /// <param name="Images">The collection of image DTOs attached to this post.</param>
+    /// <param name="FriendId">The unique identifier of the friend whose feed this post was made on, if applicable.</param>
+    /// <param name="FriendDisplayName">The display name of the friend whose feed this post was made on, if applicable.</param>
+    /// <param name="FriendUserName">The username of the friend whose feed this post was made on, if applicable.</param>
+    /// <param name="FriendProfilePictureUrl">The URL for the friend's profile picture, if applicable.</param>
     public record PostListDto(
         int Id,
         string AuthorId,
@@ -33,7 +37,11 @@ namespace FreeSpeakWeb.DTOs
         int CommentCount,
         int ShareCount,
         AudienceType AudienceType,
-        List<PostImageDto> Images
+        List<PostImageDto> Images,
+        string? FriendId,
+        string? FriendDisplayName,
+        string? FriendUserName,
+        string? FriendProfilePictureUrl
     );
 
     /// <summary>

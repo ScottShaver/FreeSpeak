@@ -269,4 +269,7 @@
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
+  <data name="AboutMe" xml:space="preserve">
+    <value>Su di me</value>
+  </data>
 </root>

@@ -136,4 +136,7 @@
   <data name="MakePublic" xml:space="preserve">
     <value>Ja, openbaar maken</value>
   </data>
+  <data name="FailedToCopyLink" xml:space="preserve">
+    <value>Kan link niet naar klembord kopiëren.</value>
+  </data>
 </root>

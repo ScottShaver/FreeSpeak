@@ -88,4 +88,7 @@
   <data name="NoMorePosts" xml:space="preserve">
     <value>현재 더 이상 게시물이 없습니다</value>
   </data>
+  <data name="AboutMe" xml:space="preserve">
+    <value>자기소개</value>
+  </data>
 </root>

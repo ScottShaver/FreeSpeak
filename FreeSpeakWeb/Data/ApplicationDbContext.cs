@@ -185,11 +185,17 @@ namespace FreeSpeakWeb.Data
                     .HasForeignKey(p => p.AuthorId)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                entity.HasOne(p => p.Friend)
+                    .WithMany()
+                    .HasForeignKey(p => p.FriendId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
                 entity.Property(p => p.Content)
                     .IsRequired();
 
                 // Create indexes
                 entity.HasIndex(p => p.AuthorId);
+                entity.HasIndex(p => p.FriendId);
                 entity.HasIndex(p => p.CreatedAt);
 
                 // PERFORMANCE: Composite index for feed queries (AuthorId + AudienceType + CreatedAt)
@@ -197,6 +203,19 @@ namespace FreeSpeakWeb.Data
                 // on AuthorId and AudienceType, followed by sorting on CreatedAt
                 entity.HasIndex(p => new { p.AuthorId, p.AudienceType, p.CreatedAt })
                     .HasDatabaseName("IX_Posts_AuthorId_AudienceType_CreatedAt");
+
+                // PERFORMANCE: Composite indexes for friend feed (cross-feed) queries
+                // Optimizes queries filtering by AuthorId with CreatedAt ordering
+                entity.HasIndex(p => new { p.AuthorId, p.CreatedAt })
+                    .HasDatabaseName("IX_Posts_AuthorId_CreatedAt");
+
+                // Optimizes queries filtering by FriendId with CreatedAt ordering
+                entity.HasIndex(p => new { p.FriendId, p.CreatedAt })
+                    .HasDatabaseName("IX_Posts_FriendId_CreatedAt");
+
+                // Optimizes combined cross-feed queries filtering by AuthorId and FriendId with CreatedAt ordering
+                entity.HasIndex(p => new { p.AuthorId, p.FriendId, p.CreatedAt })
+                    .HasDatabaseName("IX_Posts_AuthorId_FriendId_CreatedAt");
             });
 
             // Configure Comment entity

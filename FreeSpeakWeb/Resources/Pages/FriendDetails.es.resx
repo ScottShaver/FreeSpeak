@@ -88,4 +88,7 @@
   <data name="NoMorePosts" xml:space="preserve">
     <value>No hay más publicaciones en este momento</value>
   </data>
+  <data name="AboutMe" xml:space="preserve">
+    <value>Sobre mí</value>
+  </data>
 </root>

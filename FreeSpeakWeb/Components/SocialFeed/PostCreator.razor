@@ -35,7 +35,7 @@
                 @bind:after="HandleInputAfter"
                 @ref="textareaElement"
                 @onkeydown="HandleKeyDown"
-                placeholder="@Localizer["Placeholder"]"
+                placeholder="@PlaceholderText"
                 rows="1"
                 class="post-textarea"
                 @onfocus="OnFocus"
@@ -199,6 +199,18 @@
     [Parameter]
     public bool ShowAudienceSelector { get; set; } = true;
 
+    /// <summary>
+    /// Optional friend ID to post to their feed. When set, the post will be created on the friend's feed.
+    /// </summary>
+    [Parameter]
+    public string? FriendId { get; set; }
+
+    /// <summary>
+    /// Optional display name of the friend whose feed this post will appear on. Used to customize the placeholder text.
+    /// </summary>
+    [Parameter]
+    public string? FriendName { get; set; }
+
     [Parameter]
     public EventCallback<(string Content, AudienceType AudienceType, List<ImageUploadModal.SelectedImage> Images)> OnPostCreated { get; set; }
 
@@ -219,6 +231,13 @@
     }
 
     private bool CanSubmit => !string.IsNullOrWhiteSpace(PostContent) || selectedImages.Any();
+
+    /// <summary>
+    /// Gets the placeholder text for the textarea, customized when posting to a friend's feed.
+    /// </summary>
+    private string PlaceholderText => string.IsNullOrEmpty(FriendName)
+        ? Localizer["Placeholder"]
+        : string.Format(Localizer["FriendPlaceholder"], FriendName);
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

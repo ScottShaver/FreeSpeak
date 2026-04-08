@@ -103,4 +103,7 @@
   <data name="MakePublicButton" xml:space="preserve">
     <value>예, 공개하기</value>
   </data>
+  <data name="FriendPlaceholder" xml:space="preserve">
+    <value>{0}에게 뭔가를 써보세요...</value>
+  </data>
 </root>

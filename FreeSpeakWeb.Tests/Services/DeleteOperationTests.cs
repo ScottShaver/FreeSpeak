@@ -85,7 +85,8 @@ namespace FreeSpeakWeb.Tests.Services
                 CreateMockNotificationService(),
                 CreateMockUserPreferenceService(),
                 CreateMockPostNotificationHelper(),
-                MockRepositories.CreateMockAuditLogRepository().Object);
+                MockRepositories.CreateMockAuditLogRepository().Object,
+                MockRepositories.CreateMockFriendshipRepository().Object);
         }
 
         private GroupPostService CreateGroupPostService(IDbContextFactory<ApplicationDbContext> dbFactory)

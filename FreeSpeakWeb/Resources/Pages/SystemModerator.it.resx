@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"><xsd:import namespace="http://www.w3.org/XML/1998/namespace" /><xsd:element name="root" msdata:IsDataSet="true"><xsd:complexType><xsd:choice maxOccurs="unbounded"><xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element><xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element><xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element><xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" /></xsd:complexType></xsd:element></xsd:choice></xsd:complexType></xsd:element></xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="PageTitle" xml:space="preserve"><value>Funzioni del moderatore di sistema</value></data>
+  <data name="Heading" xml:space="preserve"><value>Funzioni del moderatore di sistema</value></data>
+  <data name="WelcomeMessage" xml:space="preserve"><value>Questa pagina è accessibile agli utenti con il ruolo di amministratore di sistema o moderatore di sistema.</value></data>
+  <data name="WelcomeGreeting" xml:space="preserve"><value>Benvenuto, moderatore di sistema!</value></data>
+  <data name="AvailableFunctions" xml:space="preserve"><value>Funzioni disponibili</value></data>
+  <data name="FunctionsDescription" xml:space="preserve"><value>Questa è una pagina segnaposto per le funzioni del moderatore di sistema. Le funzionalità future possono includere:</value></data>
+  <data name="ContentModerationQueue" xml:space="preserve"><value>Coda di moderazione dei contenuti</value></data>
+  <data name="UserReportsReview" xml:space="preserve"><value>Revisione delle segnalazioni degli utenti</value></data>
+  <data name="FlaggedPostsManagement" xml:space="preserve"><value>Gestione dei post segnalati</value></data>
+  <data name="CommunityGuidelineEnforcement" xml:space="preserve"><value>Applicazione delle linee guida della comunità</value></data>
+  <data name="UserWarningsAndSuspensions" xml:space="preserve"><value>Avvertimenti e sospensioni degli utenti</value></data>
+  <data name="ModerationActivityLogs" xml:space="preserve"><value>Registri delle attività di moderazione</value></data>
+  <data name="YourInformation" xml:space="preserve"><value>Le tue informazioni</value></data>
+  <data name="Username" xml:space="preserve"><value>Nome utente:</value></data>
+  <data name="Email" xml:space="preserve"><value>E-mail:</value></data>
+  <data name="Roles" xml:space="preserve"><value>Ruoli:</value></data>
+</root>

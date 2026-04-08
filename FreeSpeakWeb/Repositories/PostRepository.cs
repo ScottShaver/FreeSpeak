@@ -528,7 +528,7 @@ namespace FreeSpeakWeb.Repositories
         }
 
         /// <summary>
-        /// Retrieves feed posts for a user, including their own posts and posts from friends.
+        /// Retrieves feed posts for a user, including their own posts, posts from friends, and posts made on their feed by friends.
         /// Only returns posts with appropriate audience settings (public, friends-only, or user's own posts).
         /// Uses cached friend lists for improved performance (80%+ faster when cached).
         /// PERFORMANCE: Returns DTOs using database-side projection to reduce data transfer by 50-70%.
@@ -549,10 +549,17 @@ namespace FreeSpeakWeb.Repositories
 
                 return await context.Posts
                     .AsNoTracking()
-                    .Where(p => authorIds.Contains(p.AuthorId) &&
-                               (p.AuthorId == userId ||
-                                p.AudienceType == AudienceType.Public ||
-                                p.AudienceType == AudienceType.FriendsOnly))
+                    .Where(p => (authorIds.Contains(p.AuthorId) || p.FriendId == userId) &&
+                               (
+                                   // MeOnly posts: ONLY visible to the author
+                                   (p.AudienceType == AudienceType.MeOnly && p.AuthorId == userId) ||
+                                   // FriendsOnly posts: visible to author and friends
+                                   (p.AudienceType == AudienceType.FriendsOnly && (p.AuthorId == userId || authorIds.Contains(p.AuthorId))) ||
+                                   // Public posts: visible to everyone in feed
+                                   (p.AudienceType == AudienceType.Public) ||
+                                   // Cross-feed posts: visible to the friend whose feed it was posted on
+                                   (p.FriendId == userId && p.AudienceType != AudienceType.MeOnly)
+                               ))
                     .OrderByDescending(p => p.CreatedAt)
                     .Skip(skip)
                     .Take(take)
@@ -572,7 +579,11 @@ namespace FreeSpeakWeb.Repositories
                         p.Images
                             .OrderBy(i => i.DisplayOrder)
                             .Select(i => new PostImageDto(i.Id, i.ImageUrl, i.DisplayOrder))
-                            .ToList()
+                            .ToList(),
+                        p.FriendId,
+                        p.Friend != null ? (p.Friend.FirstName + " " + p.Friend.LastName).Trim() : null,
+                        p.Friend != null ? p.Friend.UserName : null,
+                        p.Friend != null ? p.Friend.ProfilePictureUrl : null
                     ))
                     .ToListAsync();
             }
@@ -584,7 +595,7 @@ namespace FreeSpeakWeb.Repositories
         }
 
         /// <summary>
-        /// Gets the total count of posts in a user's feed.
+        /// Gets the total count of posts in a user's feed, including posts made on their feed by friends.
         /// </summary>
         /// <param name="userId">The unique identifier of the user viewing the feed.</param>
         /// <returns>The total number of posts in the user's feed.</returns>
@@ -600,10 +611,17 @@ namespace FreeSpeakWeb.Repositories
 
                 return await context.Posts
                     .AsNoTracking()
-                    .Where(p => authorIds.Contains(p.AuthorId) &&
-                               (p.AuthorId == userId ||
-                                p.AudienceType == AudienceType.Public ||
-                                p.AudienceType == AudienceType.FriendsOnly))
+                    .Where(p => (authorIds.Contains(p.AuthorId) || p.FriendId == userId) &&
+                               (
+                                   // MeOnly posts: ONLY visible to the author
+                                   (p.AudienceType == AudienceType.MeOnly && p.AuthorId == userId) ||
+                                   // FriendsOnly posts: visible to author and friends
+                                   (p.AudienceType == AudienceType.FriendsOnly && (p.AuthorId == userId || authorIds.Contains(p.AuthorId))) ||
+                                   // Public posts: visible to everyone in feed
+                                   (p.AudienceType == AudienceType.Public) ||
+                                   // Cross-feed posts: visible to the friend whose feed it was posted on
+                                   (p.FriendId == userId && p.AudienceType != AudienceType.MeOnly)
+                               ))
                     .CountAsync();
             }
             catch (Exception ex)
@@ -677,9 +695,14 @@ namespace FreeSpeakWeb.Repositories
                 return await context.Posts
                     .AsNoTracking()
                     .Where(p => authorIds.Contains(p.AuthorId) &&
-                               (p.AuthorId == userId ||
-                                p.AudienceType == AudienceType.Public ||
-                                p.AudienceType == AudienceType.FriendsOnly))
+                               (
+                                   // MeOnly posts: ONLY visible to the author
+                                   (p.AudienceType == AudienceType.MeOnly && p.AuthorId == userId) ||
+                                   // FriendsOnly posts: visible to author and friends
+                                   (p.AudienceType == AudienceType.FriendsOnly && (p.AuthorId == userId || authorIds.Contains(p.AuthorId))) ||
+                                   // Public posts: visible to everyone in feed
+                                   (p.AudienceType == AudienceType.Public)
+                               ))
                     .OrderByDescending(p => p.CreatedAt)
                     .Skip(skip)
                     .Take(take)
@@ -699,7 +722,11 @@ namespace FreeSpeakWeb.Repositories
                         p.Images
                             .OrderBy(i => i.DisplayOrder)
                             .Select(i => new PostImageDto(i.Id, i.ImageUrl, i.DisplayOrder))
-                            .ToList()
+                            .ToList(),
+                        p.FriendId,
+                        p.Friend != null ? (p.Friend.FirstName + " " + p.Friend.LastName).Trim() : null,
+                        p.Friend != null ? p.Friend.UserName : null,
+                        p.Friend != null ? p.Friend.ProfilePictureUrl : null
                     ))
                     .ToListAsync();
             }
@@ -790,7 +817,11 @@ namespace FreeSpeakWeb.Repositories
                         p.Images
                             .OrderBy(i => i.DisplayOrder)
                             .Select(i => new PostImageDto(i.Id, i.ImageUrl, i.DisplayOrder))
-                            .ToList()
+                            .ToList(),
+                        p.FriendId,
+                        p.Friend != null ? (p.Friend.FirstName + " " + p.Friend.LastName).Trim() : null,
+                        p.Friend != null ? p.Friend.UserName : null,
+                        p.Friend != null ? p.Friend.ProfilePictureUrl : null
                     ))
                     .ToListAsync();
             }
@@ -837,7 +868,11 @@ namespace FreeSpeakWeb.Repositories
                         p.Images
                             .OrderBy(i => i.DisplayOrder)
                             .Select(i => new PostImageDto(i.Id, i.ImageUrl, i.DisplayOrder))
-                            .ToList()
+                            .ToList(),
+                        p.FriendId,
+                        p.Friend != null ? (p.Friend.FirstName + " " + p.Friend.LastName).Trim() : null,
+                        p.Friend != null ? p.Friend.UserName : null,
+                        p.Friend != null ? p.Friend.ProfilePictureUrl : null
                     ))
                     .ToListAsync();
 
@@ -851,6 +886,76 @@ namespace FreeSpeakWeb.Repositories
             {
                 _logger.LogError(ex, "Error retrieving public post projections");
                 return (new List<PostListDto>(), false);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves posts for a specific user's profile feed with audience filtering for a viewer.
+        /// Includes both posts authored by the user and cross-feed posts made on their feed by friends.
+        /// Filters out MeOnly posts unless the viewer is the author.
+        /// Uses database-side projection to reduce data transfer by 50-70%.
+        /// </summary>
+        /// <param name="authorId">The ID of the user whose profile feed to retrieve.</param>
+        /// <param name="viewerId">The ID of the user viewing the posts.</param>
+        /// <param name="skip">Number of posts to skip for pagination.</param>
+        /// <param name="take">Number of posts to return.</param>
+        /// <returns>A list of PostListDto projections ordered by creation date descending, filtered by audience permissions.</returns>
+        public async Task<List<PostListDto>> GetByAuthorWithAudienceFilterAsync(string authorId, string viewerId, int skip = 0, int take = 20)
+        {
+            using var step = _profiler.Step($"PostRepository.GetByAuthorWithAudienceFilterAsync({authorId}, {viewerId})");
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                // Check if viewer is a friend of the author
+                var isFriend = await context.Friendships
+                    .AnyAsync(f => (f.RequesterId == viewerId && f.AddresseeId == authorId && f.Status == FriendshipStatus.Accepted) ||
+                                   (f.RequesterId == authorId && f.AddresseeId == viewerId && f.Status == FriendshipStatus.Accepted));
+
+                return await context.Posts
+                    .AsNoTracking()
+                    .Where(p => (p.AuthorId == authorId || p.FriendId == authorId) &&
+                               (
+                                   // MeOnly posts: ONLY visible to the author
+                                   (p.AudienceType == AudienceType.MeOnly && p.AuthorId == viewerId) ||
+                                   // FriendsOnly posts: visible to author and friends
+                                   (p.AudienceType == AudienceType.FriendsOnly && (p.AuthorId == viewerId || isFriend)) ||
+                                   // Public posts: visible to everyone
+                                   (p.AudienceType == AudienceType.Public) ||
+                                   // Cross-feed posts: visible to the profile owner and their friends
+                                   (p.FriendId == authorId && p.AudienceType != AudienceType.MeOnly)
+                               ))
+                    .OrderByDescending(p => p.CreatedAt)
+                    .Skip(skip)
+                    .Take(take)
+                    .Select(p => new PostListDto(
+                        p.Id,
+                        p.AuthorId,
+                        (p.Author.FirstName + " " + p.Author.LastName).Trim(),
+                        p.Author.UserName,
+                        p.Author.ProfilePictureUrl,
+                        p.Content,
+                        p.CreatedAt,
+                        p.UpdatedAt,
+                        p.LikeCount,
+                        p.CommentCount,
+                        p.ShareCount,
+                        p.AudienceType,
+                        p.Images
+                            .OrderBy(i => i.DisplayOrder)
+                            .Select(i => new PostImageDto(i.Id, i.ImageUrl, i.DisplayOrder))
+                            .ToList(),
+                        p.FriendId,
+                        p.Friend != null ? (p.Friend.FirstName + " " + p.Friend.LastName).Trim() : null,
+                        p.Friend != null ? p.Friend.UserName : null,
+                        p.Friend != null ? p.Friend.ProfilePictureUrl : null
+                    ))
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving filtered author posts for {AuthorId} viewed by {ViewerId}", authorId, viewerId);
+                return new List<PostListDto>();
             }
         }
 

@@ -30,6 +30,15 @@ namespace FreeSpeakWeb.Mapping
                     UserName = dto.AuthorUserName,
                     ProfilePictureUrl = dto.AuthorImageUrl
                 },
+                FriendId = dto.FriendId,
+                Friend = dto.FriendId != null ? new ApplicationUser
+                {
+                    Id = dto.FriendId,
+                    FirstName = dto.FriendDisplayName?.Split(' ').FirstOrDefault() ?? dto.FriendDisplayName ?? "",
+                    LastName = dto.FriendDisplayName?.Split(' ').Skip(1).FirstOrDefault() ?? "",
+                    UserName = dto.FriendUserName,
+                    ProfilePictureUrl = dto.FriendProfilePictureUrl
+                } : null,
                 Content = dto.Content,
                 CreatedAt = dto.CreatedAt,
                 UpdatedAt = dto.UpdatedAt,

@@ -257,6 +257,19 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         /// <returns>A tuple containing the list of projections and a flag indicating if more posts exist.</returns>
         Task<(List<PostListDto> Posts, bool HasMore)> GetPublicPostsAsProjectionAsync(int pageNumber = 1, int pageSize = 10);
 
+        /// <summary>
+        /// Retrieves posts for a specific user's profile feed with audience filtering for a viewer.
+        /// Includes both posts authored by the user and cross-feed posts made on their feed by friends.
+        /// Filters out MeOnly posts unless the viewer is the author.
+        /// Uses database-side projection to reduce data transfer by 50-70%.
+        /// </summary>
+        /// <param name="authorId">The ID of the user whose profile feed to retrieve.</param>
+        /// <param name="viewerId">The ID of the user viewing the posts.</param>
+        /// <param name="skip">Number of posts to skip for pagination.</param>
+        /// <param name="take">Number of posts to return.</param>
+        /// <returns>A list of PostListDto projections ordered by creation date descending, filtered by audience permissions.</returns>
+        Task<List<PostListDto>> GetByAuthorWithAudienceFilterAsync(string authorId, string viewerId, int skip = 0, int take = 20);
+
         #endregion
     }
 

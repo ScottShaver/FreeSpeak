@@ -51,6 +51,19 @@
                 {
                     @AuthorName
                 }
+                @if (!string.IsNullOrEmpty(FriendId))
+                {
+                    @* Cross-feed post: Show Author > Friend *@
+                    <span> &gt; </span>
+                    @if (FriendId != CurrentUserId && !IsOnFriendPage)
+                    {
+                        <a href="@($"/friend/{FriendId}")" class="friend-name-link">@FriendName</a>
+                    }
+                    else
+                    {
+                        @FriendName
+                    }
+                }
             </span>
             @if (GroupId.HasValue && EnablePointsSystem && AuthorGroupPoints.HasValue)
             {
@@ -241,6 +254,30 @@
     public string? AuthorId { get; set; }
 
     /// <summary>
+    /// The friend's user ID when this post was made on their feed (cross-feed post).
+    /// </summary>
+    [Parameter]
+    public string? FriendId { get; set; }
+
+    /// <summary>
+    /// The display name of the friend whose feed this post was made on, if applicable.
+    /// </summary>
+    [Parameter]
+    public string? FriendName { get; set; }
+
+    /// <summary>
+    /// The username of the friend whose feed this post was made on, if applicable.
+    /// </summary>
+    [Parameter]
+    public string? FriendUserName { get; set; }
+
+    /// <summary>
+    /// The profile picture URL of the friend whose feed this post was made on, if applicable.
+    /// </summary>
+    [Parameter]
+    public string? FriendProfilePictureUrl { get; set; }
+
+    /// <summary>
     /// The current logged-in user's ID, used to prevent linking to own profile.
     /// </summary>
     [Parameter]
@@ -419,6 +456,13 @@
     /// Gets whether the current user is the author of this post.
     /// </summary>
     private bool IsOwnAuthor => !string.IsNullOrEmpty(CurrentUserId) && !string.IsNullOrEmpty(AuthorId) && CurrentUserId == AuthorId;
+
+    /// <summary>
+    /// Gets whether the current page is the friend's profile page,
+    /// so we avoid rendering a redundant link to the page we're already on.
+    /// </summary>
+    private bool IsOnFriendPage => !string.IsNullOrEmpty(FriendId)
+        && NavigationManager.Uri.Contains($"/friend/{FriendId}", StringComparison.OrdinalIgnoreCase);
 
     private string FormattedTimestamp => TimestampFormatter.FormatTimeAgo(CreatedAt);
     private string FullTimestamp => CreatedAt.ToLocalTime().ToString("MMMM d, yyyy 'at' h:mm:ss tt");

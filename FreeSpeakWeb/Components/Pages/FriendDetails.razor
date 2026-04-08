@@ -9,6 +9,8 @@
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Data.AuditLogDetails
+@using FreeSpeakWeb.DTOs
+@using FreeSpeakWeb.Mapping
 @using FreeSpeakWeb.Helpers
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.SocialFeed
@@ -76,6 +78,16 @@
         <div class="friend-posts-section">
             <h4 class="mb-3">@Localizer["FriendPosts"]</h4>
 
+            <!-- Post to friend's feed -->
+            <div class="top-section mb-3">
+                <PostCreator 
+                    CurrentUserImageUrl="@currentUserImageUrl"
+                    CurrentUserName="@currentUserName"
+                    FriendId="@FriendId"
+                    FriendName="@friendDisplayName"
+                    OnPostCreated="HandleFriendPostCreated" />
+            </div>
+
             @if (isLoading)
             {
                 <div class="loading-indicator text-center py-3">
@@ -101,7 +113,7 @@
                         var refreshTrigger = postRefreshTriggers.ContainsKey(post.Id) ? postRefreshTriggers[post.Id] : 0;
                         var isPinned = pinnedPosts.ContainsKey(post.Id) && pinnedPosts[post.Id];
 
-                        var authorImageUrl = post.Author?.ProfilePictureUrl ?? friendUser?.ProfilePictureUrl;
+                        var authorImageUrl = post.Author?.ProfilePictureUrl;
 
                         <UnifiedArticle 
                             ArticlePostType="PostType.UserPost"
@@ -109,6 +121,10 @@
                             AuthorId="@post.AuthorId"
                             AuthorName="@authorName"
                             AuthorImageUrl="@authorImageUrl"
+                            FriendId="@post.FriendId"
+                            FriendName="@($"{post.Friend?.FirstName} {post.Friend?.LastName}".Trim())"
+                            FriendUserName="@post.Friend?.UserName"
+                            FriendProfilePictureUrl="@post.Friend?.ProfilePictureUrl"
                             CreatedAt="@post.CreatedAt"
                             LikeCount="@post.LikeCount"
                             CommentCount="@post.CommentCount"
@@ -167,7 +183,7 @@
     var postReactions = postReactionData.ContainsKey(selectedPost.Id) ? postReactionData[selectedPost.Id] : new Dictionary<LikeType, int>();
     var userReaction = postUserReactions.ContainsKey(selectedPost.Id) ? postUserReactions[selectedPost.Id] : null;
     var authorName = postAuthorNames.ContainsKey(selectedPost.Id) ? postAuthorNames[selectedPost.Id] : friendDisplayName;
-    var authorImageUrl = selectedPost.Author?.ProfilePictureUrl ?? friendUser?.ProfilePictureUrl;
+    var authorImageUrl = selectedPost.Author?.ProfilePictureUrl;
     var isPinnedModal = pinnedPosts.ContainsKey(selectedPost.Id) && pinnedPosts[selectedPost.Id];
 
     <PostDetailModal
@@ -175,6 +191,10 @@
         AuthorId="@selectedPost.AuthorId"
         AuthorName="@authorName"
         AuthorImageUrl="@authorImageUrl"
+        FriendId="@selectedPost.FriendId"
+        FriendName="@($"{selectedPost.Friend?.FirstName} {selectedPost.Friend?.LastName}".Trim())"
+        FriendUserName="@selectedPost.Friend?.UserName"
+        FriendProfilePictureUrl="@selectedPost.Friend?.ProfilePictureUrl"
         CreatedAt="@selectedPost.CreatedAt"
         LikeCount="@selectedPost.LikeCount"
         CommentCount="@selectedPost.CommentCount"
@@ -204,6 +224,14 @@
         </ArticleContent>
     </PostDetailModal>
 }
+
+<UploadProgressModal 
+    IsVisible="@showUploadProgress"
+    Title="@uploadProgressTitle"
+    Message="@uploadProgressMessage"
+    Progress="@uploadProgress"
+    CurrentStep="@uploadCurrentStep"
+    TotalSteps="@uploadTotalSteps" />
 
 @code {
     [Parameter] public string FriendId { get; set; } = string.Empty;
@@ -239,6 +267,14 @@
     // Post detail modal
     private bool showPostDetail = false;
     private Post? selectedPost = null;
+
+    // Upload progress state
+    private bool showUploadProgress = false;
+    private string uploadProgressTitle = "Creating Post";
+    private string uploadProgressMessage = "";
+    private int uploadProgress = 0;
+    private int uploadCurrentStep = 0;
+    private int uploadTotalSteps = 1;
 
     // Delete permission cache
     private Dictionary<int, bool> _canDeletePostCache = new();
@@ -461,6 +497,100 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Handles when a new post is created on the friend's feed, including image uploads and post creation via PostService.
+    /// </summary>
+    /// <param name="postData">Tuple containing the post content, audience type, and selected images.</param>
+    private async Task HandleFriendPostCreated((string Content, AudienceType AudienceType, List<ImageUploadModal.SelectedImage> Images) postData)
+    {
+        if (currentUserId == null || string.IsNullOrEmpty(FriendId)) return;
+
+        try
+        {
+            var imageUrls = new List<string>();
+
+            var hasImages = postData.Images != null && postData.Images.Any();
+            uploadTotalSteps = hasImages ? 2 : 1;
+            uploadCurrentStep = 0;
+
+            showUploadProgress = true;
+            uploadProgress = 0;
+            StateHasChanged();
+
+            // Step 1: Upload images if any
+            if (hasImages && postData.Images != null)
+            {
+                uploadCurrentStep = 1;
+                uploadProgressMessage = $"Uploading {postData.Images.Count} {(postData.Images.Count == 1 ? "image" : "images")}...";
+                StateHasChanged();
+
+                var imagesToUpload = postData.Images.Select(img => (
+                    FileName: img.FileName,
+                    Base64Data: img.DataUrl,
+                    ContentType: img.ContentType
+                )).ToList();
+
+                var progress = new Progress<int>(percent =>
+                {
+                    uploadProgress = percent / 2;
+                    InvokeAsync(StateHasChanged);
+                });
+
+                var uploadResult = await ImageUploadService.UploadImagesAsync(currentUserId, imagesToUpload, progress);
+
+                if (!uploadResult.Success)
+                {
+                    showUploadProgress = false;
+                    AlertService.ShowError("Failed to upload images.");
+                    StateHasChanged();
+                    return;
+                }
+
+                imageUrls = uploadResult.ImageUrls;
+                uploadProgress = 50;
+                StateHasChanged();
+            }
+
+            // Step 2: Create the post on the friend's feed
+            uploadCurrentStep = hasImages ? 2 : 1;
+            uploadProgressMessage = "Creating your post...";
+            uploadProgress = hasImages ? 50 : 0;
+            StateHasChanged();
+
+            var result = await PostService.CreatePostAsync(currentUserId, postData.Content, postData.AudienceType, imageUrls, FriendId);
+
+            if (result.Success && result.Post != null)
+            {
+                uploadProgress = 100;
+                StateHasChanged();
+
+                await Task.Delay(500);
+
+                showUploadProgress = false;
+                StateHasChanged();
+
+                // Reload the feed to include the new post
+                currentPage = 1;
+                await LoadPostsAsync();
+
+                StateHasChanged();
+            }
+            else
+            {
+                showUploadProgress = false;
+                AlertService.ShowError(result.ErrorMessage ?? "Failed to create post.");
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            showUploadProgress = false;
+            Logger.LogError(ex, "Error creating post on friend's feed for FriendId: {FriendId}", FriendId);
+            AlertService.ShowError("An error occurred while creating your post.");
+            StateHasChanged();
+        }
+    }
+
     #endregion
 
     #region Helper Methods
@@ -616,12 +746,15 @@
             isLoading = true;
             StateHasChanged();
 
-            // Load posts from the friend
-            var posts = await PostService.GetPostsByUserAsync(FriendId, pageSize, currentPage);
+            // Load posts from the friend with audience filtering - returns DTOs, convert to entities
+            var postDtos = await PostService.GetPostsByUserWithAudienceFilterAsync(FriendId, currentUserId, pageSize, currentPage);
+
+            // Convert DTOs to Post entities using mapping extension
+            var posts = postDtos.ToDisplayEntities();
 
             if (currentPage == 1)
             {
-                postsList = posts.ToList();
+                postsList = posts;
             }
             else
             {

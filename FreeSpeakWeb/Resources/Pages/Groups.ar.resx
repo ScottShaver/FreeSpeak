@@ -160,4 +160,7 @@
   <data name="PostReportedDescription" xml:space="preserve">
     <value>تم الإبلاغ عن هذا المنشور للمشرفين وهو قيد المراجعة.</value>
   </data>
+  <data name="JumpToGroup" xml:space="preserve">
+    <value>انتقل إلى المجموعة</value>
+  </data>
 </root>

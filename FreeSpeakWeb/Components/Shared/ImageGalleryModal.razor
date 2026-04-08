@@ -1,10 +1,13 @@
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.ImageGalleryModal> Localizer
+
 @if (IsVisible && Images != null && Images.Any())
 {
     <div class="image-gallery-backdrop" @onclick="Close">
         <div class="image-gallery-container" @onclick:stopPropagation="true">
             <div class="gallery-header">
-                <h3>All Images (@Images.Count)</h3>
-                <button type="button" class="close-button" @onclick="Close" title="Close">
+                <h3>@Localizer["AllImages"] (@Images.Count)</h3>
+                <button type="button" class="close-button" @onclick="Close" title="@Localizer["Close"]">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
                     </svg>
@@ -17,7 +20,7 @@
                     var index = i;
                     var imageUrl = Images[i];
                     <div class="gallery-item" @onclick="() => ViewImage(index)">
-                        <img src="@imageUrl" alt="Image @(index + 1)" />
+                        <img src="@imageUrl" alt="@Localizer["ImageAlt"] @(index + 1)" />
                         <div class="gallery-item-overlay">
                             <span>@(index + 1)</span>
                         </div>

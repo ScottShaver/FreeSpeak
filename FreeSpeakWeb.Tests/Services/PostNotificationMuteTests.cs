@@ -58,7 +58,7 @@ public class PostNotificationMuteTests : TestBase
         // Arrange
         var dbFactory = CreateDbContextFactory("MuteTest1");
         var logger = CreateMockLogger<PostService>();
-        var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object);
+        var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object, MockRepositories.CreateMockFriendshipRepository().Object);
 
                 var user = new ApplicationUser { Id = "user1", UserName = "testuser", Email = "test@test.com" };
                 using (var context = await dbFactory.CreateDbContextAsync())
@@ -95,7 +95,7 @@ public class PostNotificationMuteTests : TestBase
         // Arrange
         var dbFactory = CreateDbContextFactory("MuteTest2");
         var logger = CreateMockLogger<PostService>();
-        var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object);
+        var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object, MockRepositories.CreateMockFriendshipRepository().Object);
 
                 using (var context = await dbFactory.CreateDbContextAsync())
                 {
@@ -136,7 +136,7 @@ public class PostNotificationMuteTests : TestBase
         // Arrange
         var dbFactory = CreateDbContextFactory("MuteTest3");
         var logger = CreateMockLogger<PostService>();
-        var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object);
+        var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object, MockRepositories.CreateMockFriendshipRepository().Object);
 
                 var invalidPostId = 99999;
         var userId = "user1";
@@ -155,7 +155,7 @@ public class PostNotificationMuteTests : TestBase
         // Arrange
         var dbFactory = CreateDbContextFactory("MuteTest4");
         var logger = CreateMockLogger<PostService>();
-        var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object);
+        var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object, MockRepositories.CreateMockFriendshipRepository().Object);
 
                 using (var context = await dbFactory.CreateDbContextAsync())
                 {
@@ -197,7 +197,7 @@ public class PostNotificationMuteTests : TestBase
         // Arrange
         var dbFactory = CreateDbContextFactory("MuteTest5");
         var logger = CreateMockLogger<PostService>();
-        var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object);
+        var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object, MockRepositories.CreateMockFriendshipRepository().Object);
 
                 using (var context = await dbFactory.CreateDbContextAsync())
                 {
@@ -228,7 +228,7 @@ public class PostNotificationMuteTests : TestBase
         // Arrange
         var dbFactory = CreateDbContextFactory("MuteTest6");
         var logger = CreateMockLogger<PostService>();
-        var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object);
+        var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object, MockRepositories.CreateMockFriendshipRepository().Object);
 
                 using (var context = await dbFactory.CreateDbContextAsync())
                 {
@@ -265,7 +265,7 @@ public class PostNotificationMuteTests : TestBase
         // Arrange
         var dbFactory = CreateDbContextFactory("MuteTest7");
         var logger = CreateMockLogger<PostService>();
-        var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object);
+        var service = new PostService(dbFactory, MockRepositories.CreateMockFeedPostRepository().Object, MockRepositories.CreateMockFeedCommentRepository().Object, MockRepositories.CreateMockFeedPostLikeRepository().Object, MockRepositories.CreateMockFeedCommentLikeRepository().Object, MockRepositories.CreateMockPinnedPostRepository().Object, MockRepositories.CreateMockPostNotificationMuteRepository().Object, MockRepositories.CreateMockNotificationRepository().Object, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object, MockRepositories.CreateMockFriendshipRepository().Object);
 
                 using (var context = await dbFactory.CreateDbContextAsync())
                 {

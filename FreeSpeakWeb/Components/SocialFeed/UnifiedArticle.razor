@@ -4,7 +4,6 @@
 @using FreeSpeakWeb.Data.AuditLogDetails
 @using FreeSpeakWeb.Repositories.Abstractions
 @using FreeSpeakWeb.Services
-@using Microsoft.Extensions.Localization
 @inherits ArticleComponentBase
 
 <div class="feed-article @(showMenu ? "menu-open" : "")">
@@ -14,6 +13,10 @@
         GroupName="@(ArticlePostType == PostType.GroupPost ? GroupName : null)"
         AuthorImageUrl="@AuthorImageUrl"
         AuthorId="@AuthorId"
+        FriendId="@FriendId"
+        FriendName="@FriendName"
+        FriendUserName="@FriendUserName"
+        FriendProfilePictureUrl="@FriendProfilePictureUrl"
         CurrentUserId="@CurrentUserId"
         CreatedAt="@CreatedAt"
         AudienceType="@currentAudienceType"
@@ -154,19 +157,18 @@
                     </svg>
                 </div>
                 <p style="font-size: 15px; color: var(--text-primary); margin-bottom: 12px; line-height: 1.5;">
-                    <strong style="color: var(--warning-color);">Public posts are visible to everyone</strong> — not just your friends. 
-                    Anyone on the internet can see, share, and comment on your public post.
+                    <strong style="color: var(--warning-color);">@Localizer["PublicPostsWarningBold"]</strong> — @Localizer["PublicPostsWarningDetail"]
                 </p>
                 <p style="font-size: 15px; color: var(--text-secondary); margin: 0;">
-                    Are you sure you want to make this post public?
+                    @Localizer["PublicPostsConfirmQuestion"]
                 </p>
             </div>
             <div style="display: flex; gap: 12px; padding: 16px 24px; border-top: 1px solid var(--border-color); justify-content: flex-end;">
                 <button type="button" @onclick="CancelPublicConfirmation" style="padding: 10px 20px; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; background-color: var(--surface-secondary); color: var(--text-primary); transition: background-color 0.2s;">
-                    Cancel
+                    @Localizer["Cancel"]
                 </button>
                 <button type="button" @onclick="ConfirmPublicAudience" style="padding: 10px 20px; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; background-color: var(--warning-color); color: white; transition: background-color 0.2s;">
-                    Yes, Make it Public
+                    @Localizer["YesMakePublic"]
                 </button>
             </div>
         </div>

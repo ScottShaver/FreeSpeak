@@ -5,38 +5,40 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @using FreeSpeakWeb.Data
+@using Microsoft.Extensions.Localization
 
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.SystemModerator> Localizer
 
-<PageTitle>System Moderator Functions</PageTitle>
+<PageTitle>@Localizer["PageTitle"]</PageTitle>
 
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
             <h1 class="mb-4">
                 <i class="bi bi-shield-check me-2"></i>
-                System Moderator Functions
+                @Localizer["Heading"]
             </h1>
 
             <div class="alert alert-info" role="alert">
                 <i class="bi bi-info-circle me-2"></i>
-                <strong>Welcome, System Moderator!</strong> This page is accessible to users with the SystemAdministrator or SystemModerator role.
+                <strong>@Localizer["WelcomeGreeting"]</strong> @Localizer["WelcomeMessage"]
             </div>
 
             <div class="card mt-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Available Functions</h5>
+                    <h5 class="mb-0">@Localizer["AvailableFunctions"]</h5>
                 </div>
                 <div class="card-body">
-                    <p>This is a placeholder page for System Moderator functions. Future features may include:</p>
+                    <p>@Localizer["FunctionsDescription"]</p>
                     <ul>
-                        <li>Content moderation queue</li>
-                        <li>User reports review</li>
-                        <li>Flagged posts management</li>
-                        <li>Community guideline enforcement</li>
-                        <li>User warnings and suspensions</li>
-                        <li>Moderation activity logs</li>
+                        <li>@Localizer["ContentModerationQueue"]</li>
+                        <li>@Localizer["UserReportsReview"]</li>
+                        <li>@Localizer["FlaggedPostsManagement"]</li>
+                        <li>@Localizer["CommunityGuidelineEnforcement"]</li>
+                        <li>@Localizer["UserWarningsAndSuspensions"]</li>
+                        <li>@Localizer["ModerationActivityLogs"]</li>
                     </ul>
                 </div>
             </div>
@@ -45,12 +47,12 @@
             {
                 <div class="card mt-4">
                     <div class="card-header">
-                        <h5 class="mb-0">Your Information</h5>
+                        <h5 class="mb-0">@Localizer["YourInformation"]</h5>
                     </div>
                     <div class="card-body">
-                        <p><strong>Username:</strong> @currentUserName</p>
-                        <p><strong>Email:</strong> @currentUserEmail</p>
-                        <p class="mb-0"><strong>Roles:</strong> @string.Join(", ", userRoles)</p>
+                        <p><strong>@Localizer["Username"]</strong> @currentUserName</p>
+                        <p><strong>@Localizer["Email"]</strong> @currentUserEmail</p>
+                        <p class="mb-0"><strong>@Localizer["Roles"]</strong> @string.Join(", ", userRoles)</p>
                     </div>
                 </div>
             }

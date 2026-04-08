@@ -1,5 +1,7 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Components.Shared
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.FriendProfileHeader> Localizer
 
 <!-- Friend Header Information -->
 <div class="friend-header-card mb-4">
@@ -32,18 +34,18 @@
             }
             <div class="profile-stats mt-3">
                 <StatItem Value="@FriendCount" 
-                          Label="@(FriendCount == 1 ? "Friend" : "Friends")" />
+                          Label="@(FriendCount == 1 ? Localizer["FriendSingular"].Value : Localizer["FriendPlural"].Value)" />
                 @if (MutualFriendsCount > 0)
                 {
                     <StatItem Value="@MutualFriendsCount" 
-                              Label="Mutual" />
+                              Label="@Localizer["Mutual"]" />
                 }
                 <StatItem Value="@GroupCount" 
-                          Label="@(GroupCount == 1 ? "Group" : "Groups")" />
+                          Label="@(GroupCount == 1 ? Localizer["GroupSingular"].Value : Localizer["GroupPlural"].Value)" />
                 <StatItem Value="@GroupPostCount" 
-                          Label="Group Posts" />
+                          Label="@Localizer["GroupPosts"]" />
                 <StatItem Value="@PostCount" 
-                          Label="@(PostCount == 1 ? "Post" : "Posts")" />
+                          Label="@(PostCount == 1 ? Localizer["PostSingular"].Value : Localizer["PostPlural"].Value)" />
             </div>
         </div>
     </div>

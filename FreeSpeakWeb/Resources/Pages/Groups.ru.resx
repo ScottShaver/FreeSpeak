@@ -160,4 +160,7 @@
   <data name="PostReportedDescription" xml:space="preserve">
     <value>Этот пост был сообщен модераторам и ожидает проверки.</value>
   </data>
+  <data name="JumpToGroup" xml:space="preserve">
+    <value>Перейти к группе</value>
+  </data>
 </root>

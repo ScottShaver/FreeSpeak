@@ -6,6 +6,7 @@
 @using FreeSpeakWeb.Components.Pages.Base
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
 @inherits PostPageBase<GroupPost, GroupPostComment>
 @inject GroupPostService GroupPostService
 @inject GroupService GroupService
@@ -18,6 +19,7 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject FreeSpeakWeb.Repositories.Abstractions.IGroupCommentRepository GroupCommentRepository
 @inject FreeSpeakWeb.Services.Abstractions.IRoleService RoleService
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.SingleGroupPost> Localizer
 @attribute [AllowAnonymous]
 
 <PageTitle>@pageTitle</PageTitle>
@@ -37,10 +39,10 @@
         <div class="error-container">
             <div class="alert alert-warning" role="alert">
                 <i class="bi bi-exclamation-triangle-fill"></i>
-                <h4>Post Not Available</h4>
+                <h4>@Localizer["PostNotAvailable"]</h4>
                 <p>@errorMessage</p>
                 <button type="button" class="btn btn-primary mt-3" @onclick="NavigateToGroup">
-                    <i class="bi bi-people-fill"></i> Go to Group
+                    <i class="bi bi-people-fill"></i> @Localizer["GoToGroup"]
                 </button>
             </div>
         </div>

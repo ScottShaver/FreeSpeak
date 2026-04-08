@@ -1,5 +1,7 @@
 @using FreeSpeakWeb.Components.Shared
 @using FreeSpeakWeb.Services
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.MenuContainer> Localizer
 
 @code {
     private string _anchorId = $"menu-anchor-{Guid.NewGuid():N}";
@@ -26,7 +28,12 @@
     /// Tooltip text for the menu button.
     /// </summary>
     [Parameter]
-    public string Tooltip { get; set; } = "More options";
+    public string? Tooltip { get; set; }
+
+    /// <summary>
+    /// Gets the effective tooltip, using the localized default if not explicitly set.
+    /// </summary>
+    private string EffectiveTooltip => Tooltip ?? Localizer["MoreOptions"];
 
     /// <summary>
     /// Size of the menu icon: "sm" (16px), "md" (20px), "lg" (24px).
@@ -101,7 +108,7 @@
                 class="menu-trigger-button" 
                 @onclick="ToggleMenu"
                 @onclick:stopPropagation="true"
-                title="@Tooltip">
+                title="@EffectiveTooltip">
             <svg xmlns="http://www.w3.org/2000/svg" width="@IconSize" height="@IconSize" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
             </svg>

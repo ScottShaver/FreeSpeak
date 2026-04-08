@@ -269,4 +269,7 @@
   <data name="ChangeYourAccountSettings" xml:space="preserve">
     <value>تغيير إعدادات حسابك</value>
   </data>
+  <data name="AboutMe" xml:space="preserve">
+    <value>عنّي</value>
+  </data>
 </root>

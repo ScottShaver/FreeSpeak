@@ -160,4 +160,7 @@
   <data name="PostReportedDescription" xml:space="preserve">
     <value>Esta publicação foi reportada aos moderadores e está aguardando revisão.</value>
   </data>
+  <data name="JumpToGroup" xml:space="preserve">
+    <value>Ir para o grupo</value>
+  </data>
 </root>

@@ -136,4 +136,7 @@
   <data name="MakePublic" xml:space="preserve">
     <value>Да, сделать публичной</value>
   </data>
+  <data name="FailedToCopyLink" xml:space="preserve">
+    <value>Не удалось скопировать ссылку в буфер обмена.</value>
+  </data>
 </root>

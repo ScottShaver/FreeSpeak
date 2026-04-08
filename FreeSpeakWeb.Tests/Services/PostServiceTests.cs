@@ -72,7 +72,8 @@ namespace FreeSpeakWeb.Tests.Services
                 CreateNotificationService(repoFactory.ContextFactory),
                 CreateUserPreferenceService(repoFactory.ContextFactory),
                 CreatePostNotificationHelper(repoFactory.ContextFactory),
-                MockRepositories.CreateMockAuditLogRepository().Object);
+                MockRepositories.CreateMockAuditLogRepository().Object,
+                repoFactory.CreateFriendshipRepository());
         }
 
         /// <summary>
@@ -102,7 +103,8 @@ namespace FreeSpeakWeb.Tests.Services
                 CreateNotificationService(repoFactory.ContextFactory),
                 CreateUserPreferenceService(repoFactory.ContextFactory),
                 CreatePostNotificationHelper(repoFactory.ContextFactory),
-                MockRepositories.CreateMockAuditLogRepository().Object);
+                MockRepositories.CreateMockAuditLogRepository().Object,
+                repoFactory.CreateFriendshipRepository());
         }
 
         #region Post Operations Tests
@@ -904,7 +906,246 @@ namespace FreeSpeakWeb.Tests.Services
         }
 
         #endregion
+
+        #region Cross-Feed (FriendId) Post Creation Tests
+
+        [Fact]
+        public async Task CreatePostAsync_WithValidFriendId_ShouldCreatePostWithFriendId()
+        {
+            // Arrange
+            var repoFactory = CreateTestRepositoryFactory("CrossFeed1");
+            var service = CreatePostService(repoFactory);
+
+            var user1 = TestDataFactory.CreateTestUser(id: "user1", firstName: "Alice", lastName: "Smith");
+            var user2 = TestDataFactory.CreateTestUser(id: "user2", firstName: "Bob", lastName: "Jones");
+            var friendship = TestDataFactory.CreateTestFriendship("user1", "user2", FriendshipStatus.Accepted);
+
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Users.AddRange(user1, user2);
+                context.Friendships.Add(friendship);
+                await context.SaveChangesAsync();
+            }
+
+            // Act
+            var (success, errorMessage, post) = await service.CreatePostAsync("user1", "Post on friend's feed", AudienceType.FriendsOnly, null, "user2");
+
+            // Assert
+            success.Should().BeTrue();
+            errorMessage.Should().BeNull();
+            post.Should().NotBeNull();
+            post!.FriendId.Should().Be("user2");
+            post.AuthorId.Should().Be("user1");
+            post.Content.Should().Be("Post on friend's feed");
+
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                var savedPost = context.Posts.FirstOrDefault();
+                savedPost.Should().NotBeNull();
+                savedPost!.FriendId.Should().Be("user2");
+            }
+        }
+
+        [Fact]
+        public async Task CreatePostAsync_WithFriendId_NoFriendship_ShouldReturnError()
+        {
+            // Arrange
+            var repoFactory = CreateTestRepositoryFactory("CrossFeed2");
+            var service = CreatePostService(repoFactory);
+
+            var user1 = TestDataFactory.CreateTestUser(id: "user1");
+            var user2 = TestDataFactory.CreateTestUser(id: "user2");
+
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Users.AddRange(user1, user2);
+                await context.SaveChangesAsync();
+            }
+
+            // Act
+            var (success, errorMessage, post) = await service.CreatePostAsync("user1", "Post on stranger's feed", AudienceType.FriendsOnly, null, "user2");
+
+            // Assert
+            success.Should().BeFalse();
+            errorMessage.Should().Contain("No friendship relationship found");
+            post.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task CreatePostAsync_WithFriendId_PendingFriendship_ShouldReturnError()
+        {
+            // Arrange
+            var repoFactory = CreateTestRepositoryFactory("CrossFeed3");
+            var service = CreatePostService(repoFactory);
+
+            var user1 = TestDataFactory.CreateTestUser(id: "user1");
+            var user2 = TestDataFactory.CreateTestUser(id: "user2");
+            var friendship = TestDataFactory.CreateTestFriendship("user1", "user2", FriendshipStatus.Pending);
+
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Users.AddRange(user1, user2);
+                context.Friendships.Add(friendship);
+                await context.SaveChangesAsync();
+            }
+
+            // Act
+            var (success, errorMessage, post) = await service.CreatePostAsync("user1", "Post on pending friend's feed", AudienceType.FriendsOnly, null, "user2");
+
+            // Assert
+            success.Should().BeFalse();
+            errorMessage.Should().Contain("You can only post on the feed of accepted friends");
+            post.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task CreatePostAsync_WithNullFriendId_ShouldCreateNormalPost()
+        {
+            // Arrange
+            var repoFactory = CreateTestRepositoryFactory("CrossFeed4");
+            var service = CreatePostService(repoFactory);
+
+            var user = TestDataFactory.CreateTestUser(id: "user1");
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(user);
+                await context.SaveChangesAsync();
+            }
+
+            // Act
+            var (success, errorMessage, post) = await service.CreatePostAsync("user1", "Normal post", AudienceType.FriendsOnly, null, null);
+
+            // Assert
+            success.Should().BeTrue();
+            post.Should().NotBeNull();
+            post!.FriendId.Should().BeNull();
+        }
+
+        #endregion
+
+        #region Cross-Feed (FriendId) Feed Visibility Tests
+
+        [Fact]
+        public async Task GetFeedPostsAsync_CrossFeedPost_ShouldAppearInFriendsFeed()
+        {
+            // Arrange
+            var repoFactory = CreateTestRepositoryFactory("CrossFeedFeed1");
+            var service = CreatePostService(repoFactory);
+
+            var user1 = TestDataFactory.CreateTestUser(id: "user1", firstName: "Alice", lastName: "Smith");
+            var user2 = TestDataFactory.CreateTestUser(id: "user2", firstName: "Bob", lastName: "Jones");
+            var friendship = TestDataFactory.CreateTestFriendship("user1", "user2", FriendshipStatus.Accepted);
+
+            // User1 posts on User2's feed
+            var crossFeedPost = TestDataFactory.CreateTestPost("user1", "Hello Bob!", audienceType: AudienceType.FriendsOnly, friendId: "user2");
+
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Users.AddRange(user1, user2);
+                context.Friendships.Add(friendship);
+                context.Posts.Add(crossFeedPost);
+                await context.SaveChangesAsync();
+            }
+
+            // Act - User2 views their feed
+            var feedPosts = await service.GetFeedPostsAsync("user2");
+
+            // Assert - The cross-feed post should appear in User2's feed
+            feedPosts.Should().HaveCount(1);
+            feedPosts.Should().Contain(p => p.AuthorId == "user1" && p.FriendId == "user2");
+        }
+
+        [Fact]
+        public async Task GetFeedPostsAsync_CrossFeedPost_MeOnly_ShouldNotAppearInFriendsFeed()
+        {
+            // Arrange
+            var repoFactory = CreateTestRepositoryFactory("CrossFeedFeed2");
+            var service = CreatePostService(repoFactory);
+
+            var user1 = TestDataFactory.CreateTestUser(id: "user1", firstName: "Alice", lastName: "Smith");
+            var user2 = TestDataFactory.CreateTestUser(id: "user2", firstName: "Bob", lastName: "Jones");
+            var friendship = TestDataFactory.CreateTestFriendship("user1", "user2", FriendshipStatus.Accepted);
+
+            // User1 posts on User2's feed but with MeOnly audience
+            var crossFeedPost = TestDataFactory.CreateTestPost("user1", "Private cross post", audienceType: AudienceType.MeOnly, friendId: "user2");
+
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Users.AddRange(user1, user2);
+                context.Friendships.Add(friendship);
+                context.Posts.Add(crossFeedPost);
+                await context.SaveChangesAsync();
+            }
+
+            // Act - User2 views their feed
+            var feedPosts = await service.GetFeedPostsAsync("user2");
+
+            // Assert - MeOnly cross-feed post should NOT appear in User2's feed
+            feedPosts.Should().NotContain(p => p.FriendId == "user2" && p.AudienceType == AudienceType.MeOnly);
+        }
+
+        [Fact]
+        public async Task GetFeedPostsAsync_CrossFeedPost_ShouldAlsoAppearInAuthorsFeed()
+        {
+            // Arrange
+            var repoFactory = CreateTestRepositoryFactory("CrossFeedFeed3");
+            var service = CreatePostService(repoFactory);
+
+            var user1 = TestDataFactory.CreateTestUser(id: "user1", firstName: "Alice", lastName: "Smith");
+            var user2 = TestDataFactory.CreateTestUser(id: "user2", firstName: "Bob", lastName: "Jones");
+            var friendship = TestDataFactory.CreateTestFriendship("user1", "user2", FriendshipStatus.Accepted);
+
+            // User1 posts on User2's feed
+            var crossFeedPost = TestDataFactory.CreateTestPost("user1", "Hello Bob!", audienceType: AudienceType.FriendsOnly, friendId: "user2");
+
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Users.AddRange(user1, user2);
+                context.Friendships.Add(friendship);
+                context.Posts.Add(crossFeedPost);
+                await context.SaveChangesAsync();
+            }
+
+            // Act - User1 (author) views their own feed
+            var feedPosts = await service.GetFeedPostsAsync("user1");
+
+            // Assert - The cross-feed post should also appear in User1's own feed since they authored it
+            feedPosts.Should().HaveCount(1);
+            feedPosts.Should().Contain(p => p.AuthorId == "user1");
+        }
+
+        [Fact]
+        public async Task GetFeedPostsAsync_CrossFeedPost_ShouldIncludeFriendDisplayInfo()
+        {
+            // Arrange
+            var repoFactory = CreateTestRepositoryFactory("CrossFeedFeed4");
+            var service = CreatePostService(repoFactory);
+
+            var user1 = TestDataFactory.CreateTestUser(id: "user1", firstName: "Alice", lastName: "Smith");
+            var user2 = TestDataFactory.CreateTestUser(id: "user2", firstName: "Bob", lastName: "Jones");
+            var friendship = TestDataFactory.CreateTestFriendship("user1", "user2", FriendshipStatus.Accepted);
+
+            // User1 posts on User2's feed
+            var crossFeedPost = TestDataFactory.CreateTestPost("user1", "Hello Bob!", audienceType: AudienceType.FriendsOnly, friendId: "user2");
+
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Users.AddRange(user1, user2);
+                context.Friendships.Add(friendship);
+                context.Posts.Add(crossFeedPost);
+                await context.SaveChangesAsync();
+            }
+
+            // Act
+            var feedPosts = await service.GetFeedPostsAsync("user2");
+
+            // Assert - The DTO should contain the friend's display info
+            feedPosts.Should().HaveCount(1);
+            var post = feedPosts.First();
+            post.FriendId.Should().Be("user2");
+            post.FriendDisplayName.Should().Be("Bob Jones");
+        }
+
+        #endregion
     }
 }
-
-
