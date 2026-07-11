@@ -35,4 +35,10 @@ public class SiteSettings
     /// When false, all image upload functionality and My Uploads page are hidden.
     /// </summary>
     public bool AllowPostAttachments { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets whether the IdentityNoOpEmailSender is used for email sending. 
+    /// When true, actual email sending is disabled and email content is logged to the console.
+    /// </summary>
+    public bool UseIdentityNoOpEmailSender { get; set; } = true;
 }

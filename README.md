@@ -85,6 +85,61 @@ The application uses several custom settings in `appsettings.json` to control be
 - **Query Optimization**: Compiled queries, AsNoTracking, AsSplitQuery for 10-20% performance gains
 - **DTO Projections**: Reduces data transfer and memory usage by selecting only required fields
 
+#### Email Configuration
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `UseIdentityNoOpEmailSender` | bool | `true` | Controls email sending behavior. When `true`, emails are logged to the console instead of being sent (development mode). When `false`, uses the configured SMTP server to send real emails. |
+| `Smtp:Server` | string | `"localhost"` | SMTP server hostname or IP address (e.g., `smtp.gmail.com`, `smtp.office365.com`) |
+| `Smtp:Port` | int | `587` | SMTP server port. Common ports: `25` (unencrypted), `587` (STARTTLS), `465` (SSL) |
+| `Smtp:SenderName` | string | `"FreeSpeak System"` | Display name shown as the sender in received emails |
+| `Smtp:SenderEmail` | string | `""` | Email address that appears in the "From" field. Must be authorized by your SMTP server |
+| `Smtp:UseSsl` | bool | `true` | Enables SSL/TLS encryption for SMTP connection. When `true`, uses STARTTLS (recommended for port 587). When `false`, uses unencrypted connection (only for trusted networks) |
+| `Smtp:AuthenticationRequired` | bool | `true` | Controls whether SMTP authentication is required. When `true`, uses Account and Password for authentication. Set to `false` only for servers that don't require authentication (e.g., local relay servers) |
+| `Smtp:Account` | string | `""` | SMTP account username for authentication (often the same as SenderEmail) |
+| `Smtp:Password` | string | `""` | SMTP account password for authentication. For Gmail with 2FA, use an [App Password](https://support.google.com/accounts/answer/185833) |
+
+**Email Features:**
+- **Account Management**: Email confirmation for new registrations
+- **Password Reset**: Send password reset links and codes via email
+- **HTML Templates**: Professional HTML-formatted emails with user context
+- **Secure Connection**: Uses STARTTLS for secure SMTP communication
+- **Error Logging**: Comprehensive logging for email send operations
+
+**SSL/TLS Configuration:**
+- **Port 587 with STARTTLS** (Recommended): Set `UseSsl: true` and `Port: 587` - Most common and secure option
+- **Port 465 with SSL/TLS**: Set `UseSsl: true` and `Port: 465` - Legacy implicit SSL (some providers)
+- **Port 25 without encryption**: Set `UseSsl: false` and `Port: 25` - Only for local/trusted networks, not recommended for production
+- **No Authentication**: Set `AuthenticationRequired: false` - Only for relay servers that don't require credentials
+
+**Development Mode:**
+Set `UseIdentityNoOpEmailSender` to `true` to log emails to the console without requiring SMTP configuration. This is ideal for development and testing.
+
+**Gmail Configuration Example:**
+```json
+{
+  "UseIdentityNoOpEmailSender": false,
+  "Smtp": {
+    "Server": "smtp.gmail.com",
+    "Port": 587,
+    "SenderName": "FreeSpeak System",
+    "SenderEmail": "your-email@gmail.com",
+    "UseSsl": true,
+    "AuthenticationRequired": true,
+    "Account": "your-email@gmail.com",
+    "Password": "your-app-password-here"
+  }
+}
+```
+
+**Note:** For Gmail, you must enable 2-factor authentication and generate an [App Password](https://support.google.com/accounts/answer/185833). Regular Gmail passwords will not work due to Google's security policies.
+
+**Production Recommendations:**
+- Use a dedicated email service provider (e.g., SendGrid, Mailgun, AWS SES) for better deliverability
+- Store SMTP credentials in environment variables or Azure Key Vault, not in appsettings.json
+- Set `UseIdentityNoOpEmailSender` to `false` in production
+- Configure proper SPF, DKIM, and DMARC records for your sending domain
+
 ### Example Configuration
 
 ```json
@@ -93,12 +148,23 @@ The application uses several custom settings in `appsettings.json` to control be
   "AllowPostAttachments": true,
   "MaxFeedPostCommentDepth": 4,
   "MaxFeedPostDirectCommentCount": 30,
+  "UseIdentityNoOpEmailSender": true,
   "ConnectionStrings": {
     "DefaultConnection": "Host=localhost;Port=5432;Database=FreeSpeak;Username=youruser;Password=yourpassword"
   },
   "Caching": {
     "UseRedis": false,
     "RedisConnectionString": "localhost:6379,abortConnect=false"
+  },
+  "Smtp": {
+    "Server": "smtp.gmail.com",
+    "Port": 587,
+    "SenderName": "FreeSpeak System",
+    "SenderEmail": "your-email@gmail.com",
+    "UseSsl": true,
+    "AuthenticationRequired": true,
+    "Account": "your-email@gmail.com",
+    "Password": "your-app-password"
   }
 }
 ```
@@ -106,9 +172,20 @@ The application uses several custom settings in `appsettings.json` to control be
 **For Production with Redis:**
 ```json
 {
+  "UseIdentityNoOpEmailSender": false,
   "Caching": {
     "UseRedis": true,
     "RedisConnectionString": "your-redis-server:6379,password=yourpassword,ssl=true,abortConnect=false"
+  },
+  "Smtp": {
+    "Server": "smtp.yourprovider.com",
+    "Port": 587,
+    "SenderName": "FreeSpeak Production",
+    "SenderEmail": "noreply@yourdomain.com",
+    "UseSsl": true,
+    "AuthenticationRequired": true,
+    "Account": "noreply@yourdomain.com",
+    "Password": "use-environment-variable-or-keyvault"
   }
 }
 ```

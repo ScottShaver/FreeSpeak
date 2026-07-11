@@ -103,7 +103,16 @@ namespace FreeSpeakWeb
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
 
-            builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+            if(builder.Configuration.GetValue<bool>("UseIdentityNoOpEmailSender"))
+            {
+                builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+            }
+            else
+            {
+                builder.Services.AddSingleton<IEmailSender<ApplicationUser>, SmtpEmailSender>();
+            }
+
+            builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection(SmtpSettings.SectionName));
 
             // PERFORMANCE: Add memory cache for friend lists and other frequently accessed data
             builder.Services.AddMemoryCache();
@@ -372,6 +381,34 @@ namespace FreeSpeakWeb
 
             var app = builder.Build();
 
+            // create and seed database with everything that is not test data (roles, system administrator, etc.)
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                    var dbContext = services.GetRequiredService<ApplicationDbContext>();
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    var systemAdminConfig = services.GetRequiredService<Microsoft.Extensions.Options.IOptions<SystemAdministratorInitInfo>>().Value;
+
+                    // Applies migrations and creates the DB if it doesn't exist
+                    //dbContext.Database.Migrate(); 
+                    
+                    // Seed roles and system administrator first
+                    await DatabaseSeeder.SeedRolesAndSystemAdminAsync(roleManager, userManager, systemAdminConfig, logger);
+
+                    // Manage AuditLog table partitions
+                    await DatabaseSeeder.ManageAuditLogPartitionsAsync(dbContext, logger);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "[{ExceptionType}] An error occurred while seeding the database. Exception: {ExceptionMessage}", ex.GetType().Name, ex.Message);
+                }
+            }
+
             // Seed test users and migrate data in development environment
             if (app.Environment.IsDevelopment())
             {
@@ -384,12 +421,6 @@ namespace FreeSpeakWeb
                     var dbContext = services.GetRequiredService<ApplicationDbContext>();
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     var systemAdminConfig = services.GetRequiredService<Microsoft.Extensions.Options.IOptions<SystemAdministratorInitInfo>>().Value;
-
-                    // Seed roles and system administrator first
-                    await DatabaseSeeder.SeedRolesAndSystemAdminAsync(roleManager, userManager, systemAdminConfig, logger);
-
-                    // Manage AuditLog table partitions
-                    await DatabaseSeeder.ManageAuditLogPartitionsAsync(dbContext, logger);
 
                     // Then seed test users
                     await DatabaseSeeder.SeedTestUsersAsync(userManager, dbContext, logger);
