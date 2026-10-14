@@ -153,3 +153,37 @@ Charter format: **Persona** / **Allowed** / **Forbidden (must be denied)**. A fa
 - **`psql` not found**: pass `-PsqlPath "C:\Program Files\PostgreSQL\<ver>\bin\psql.exe"`.
 - **Seeding refused / app throws at startup**: the database name does not end with `_AgentTest`, or the environment is not Development. This is the safety check working.
 - **App log from the reset run**: `%TEMP%\FreeSpeak_AgentTest.app.log` and `.err`.
+- **`dotnet ef` not found**: run `dotnet tool restore` inside `FreeSpeakWeb` (the tool manifest lives there).
+- **Playwright certificate errors**: add `--ignore-https-errors` to the Playwright MCP args.
+- **`npx` blocked by execution policy**: use `npx.cmd` in the MCP config.
+
+## 9. Next steps
+
+Status after the first QA round (pilot as member, stranger, banned, moderator, owner, friend, sysadmin). The high and medium findings were fixed in PR #55.
+
+### Retest (narrow charters, fixed items only)
+- Banned user cannot read `/group/N/post/M`; public group `/group/1` is viewable by a non-member and shows Join; private group stays hidden.
+- Logout from any page, including with a modal open, returns to the home page.
+- A system admin cannot remove the last SystemAdministrator role; self role edit asks for confirmation; role changes appear in the audit log.
+- Moderator and owner see Delete on other members' group posts.
+- Confirmations appear for Ban Member, Unfriend and Delete comment; double-clicking Post creates one post; a 10k-character post shows "See more".
+
+### Not yet tested
+- Group join-request and post approval flows. The seed has no pending data, and the private group is not discoverable, so add pending requests and posts to `AgentTestSeeder`.
+- A creator leaving or being removed from a group (no Leave button for the creator today).
+- Demoting or deleting the last admin; suspend and ban from the admin UI (menu items are disabled).
+- Only-me post count leak on profiles (shows 6 posts to a friend, 5 visible).
+- Groups: stale member count on the Find Groups card after a ban.
+- Other feature areas: friend request acceptance, notifications (seed data is dated Jan 2026, so notifications showed 0), file uploads, group files, search, settings and the language switcher on admin pages.
+- Reply depth: UI showed 5 tiers; the documented maximum is 4.
+- `agent.newuser` persona and the cross-cutting probes in section 7.
+
+### Known open items (not from QA)
+- Dependency vulnerabilities: SixLabors.ImageSharp 3.1.12 (3 high, 2 moderate) and AngleSharp 0.17.1 (1 moderate). ImageSharp processes user uploads, so fix before launch.
+- Low-severity UI gaps: Mod Log tab is a stub, moderators have no member list or ban UI, Escape does not close the post popup menu, `/system-moderator` is a placeholder.
+- 43 unit tests fail (UnifiedArticle, PostEditModal, GroupFileService; missing DI/setup). Confirm they also fail on `master` and fix.
+- Dev-only 404 for `hot-reload-settings.json` on every page load.
+
+### Tips for the next run
+- Run `Reset-AgentTestDb.ps1` before each session. One browser session per persona, with a fresh browser context when switching users.
+- Keep charters short (about 35 actions per role) to control cost; browser testing is the most expensive part.
