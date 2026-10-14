@@ -29,6 +29,12 @@ namespace FreeSpeakWeb.Tests.Components
             mockLocalizer.Setup(l => l[It.IsAny<string>()])
                 .Returns((string key) => new LocalizedString(key, key));
             Services.AddSingleton(mockLocalizer.Object);
+
+            // Register ConfirmationDialog localizer mock (delete-comment confirmation)
+            var mockDialogLocalizer = new Mock<IStringLocalizer<FreeSpeakWeb.Resources.Shared.ConfirmationDialog>>();
+            mockDialogLocalizer.Setup(l => l[It.IsAny<string>()])
+                .Returns((string key) => new LocalizedString(key, key));
+            Services.AddSingleton(mockDialogLocalizer.Object);
         }
 
         [Fact]
