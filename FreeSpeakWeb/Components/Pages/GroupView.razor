@@ -522,14 +522,16 @@
                 }
 
                 await LoadGroupInformation();
-                await LoadGroupPosts();
 
-                // Check group-level permissions after group is loaded
+                // Group-level permissions must be known before posts load: LoadGroupPosts pre-computes
+                // and caches per-post delete permissions that depend on these flags.
                 if (group != null)
                 {
                     isGroupAdmin = await GroupMemberService.IsAdminAsync(GroupId, currentUserId);
                     isGroupModerator = await GroupMemberService.IsModeratorAsync(GroupId, currentUserId);
                 }
+
+                await LoadGroupPosts();
             }
         }
     }
