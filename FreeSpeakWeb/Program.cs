@@ -409,8 +409,22 @@ namespace FreeSpeakWeb
                 }
             }
 
+            // Deterministic personas for agentic testing (opt-in; guarded by environment and database name)
+            var agentTestEnabled = app.Configuration.GetValue<bool>(AgentTestSeeder.EnabledConfigKey);
+            if (agentTestEnabled)
+            {
+                using var scope = app.Services.CreateScope();
+                var services = scope.ServiceProvider;
+                await AgentTestSeeder.SeedAsync(
+                    services.GetRequiredService<UserManager<ApplicationUser>>(),
+                    services.GetRequiredService<ApplicationDbContext>(),
+                    app.Environment.IsDevelopment(),
+                    agentTestEnabled,
+                    services.GetRequiredService<ILogger<Program>>());
+            }
+
             // Seed test users and migrate data in development environment
-            if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment() && !agentTestEnabled)
             {
                 using var scope = app.Services.CreateScope();
                 var services = scope.ServiceProvider;
