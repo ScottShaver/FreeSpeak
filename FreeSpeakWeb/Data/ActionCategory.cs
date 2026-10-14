@@ -214,6 +214,12 @@ namespace FreeSpeakWeb.Data
         /// Action when a user pins or unpins a post.
         /// Tracks post pinning activities for user profiles.
         /// </summary>
-        UserPinPost = 34
+        UserPinPost = 34,
+
+        /// <summary>
+        /// Action when a system role (e.g. SystemAdministrator) is added to or removed from a user.
+        /// Tracks the acting user, the target user, and the role affected.
+        /// </summary>
+        SystemAdminChangeUserRole = 35
     }
 }
