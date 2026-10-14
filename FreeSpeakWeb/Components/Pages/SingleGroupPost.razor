@@ -11,6 +11,7 @@
 @inject GroupPostService GroupPostService
 @inject GroupService GroupService
 @inject GroupMemberService GroupMemberService
+@inject GroupAccessValidator GroupAccessValidator
 @inject PinnedGroupPostService PinnedGroupPostService
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -160,23 +161,13 @@
 
             groupName = group.Name;
 
-            // For private groups, verify user is a member
-            if (!group.IsPublic)
+            // Banned users are denied; private groups require membership
+            var (canView, viewError) = await GroupAccessValidator.ValidateUserCanViewAsync(GroupId, group.IsPublic, currentUserId);
+            if (!canView)
             {
-                if (string.IsNullOrEmpty(currentUserId))
-                {
-                    errorMessage = "You must be logged in to view posts in this private group.";
-                    isLoading = false;
-                    return;
-                }
-
-                var isMember = await GroupMemberService.IsMemberAsync(GroupId, currentUserId);
-                if (!isMember)
-                {
-                    errorMessage = "You must be a member of this group to view this post.";
-                    isLoading = false;
-                    return;
-                }
+                errorMessage = viewError;
+                isLoading = false;
+                return;
             }
 
             // Load the group post

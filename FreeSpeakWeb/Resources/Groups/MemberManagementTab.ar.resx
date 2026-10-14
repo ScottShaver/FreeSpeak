@@ -148,4 +148,7 @@
   <data name="ErrorRemovingMember" xml:space="preserve">
     <value>حدث خطأ أثناء إزالة العضو.</value>
   </data>
+  <data name="BanMemberConfirmTitle" xml:space="preserve"><value>حظر العضو؟</value></data>
+  <data name="BanMemberConfirmMessage" xml:space="preserve"><value>هل أنت متأكد أنك تريد حظر {0} من هذه المجموعة؟ ستتم إزالته ولن يتمكن من العرض أو النشر فيها.</value></data>
+  <data name="MemberBannedSuccess" xml:space="preserve"><value>تم حظر {0} من المجموعة.</value></data>
 </root>

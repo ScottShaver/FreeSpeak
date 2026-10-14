@@ -110,4 +110,16 @@
   <data name="Angry" xml:space="preserve">
     <value>화나요</value>
   </data>
+  <data name="DeleteCommentConfirmTitle" xml:space="preserve">
+    <value>댓글 삭제</value>
+  </data>
+  <data name="DeleteCommentConfirmMessage" xml:space="preserve">
+    <value>이 댓글을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</value>
+  </data>
+  <data name="DeleteCommentConfirmButton" xml:space="preserve">
+    <value>삭제</value>
+  </data>
+  <data name="DeleteCommentCancelButton" xml:space="preserve">
+    <value>취소</value>
+  </data>
 </root>

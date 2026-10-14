@@ -154,4 +154,10 @@
   <data name="Files" xml:space="preserve">
     <value>Pliki</value>
   </data>
+  <data name="NonMemberNotice" xml:space="preserve"><value>Przeglądasz tę grupę publiczną. Dołącz, aby publikować i brać udział.</value></data>
+  <data name="JoinRequestSent" xml:space="preserve"><value>Prośba wysłana</value></data>
+  <data name="RequestToJoin" xml:space="preserve"><value>Poproś o dołączenie</value></data>
+  <data name="JoinGroup" xml:space="preserve"><value>Dołącz do grupy</value></data>
+  <data name="JoinRequestSentMessage" xml:space="preserve"><value>Twoja prośba o dołączenie została wysłana.</value></data>
+  <data name="JoinGroupFailed" xml:space="preserve"><value>Nie można dołączyć do tej grupy.</value></data>
 </root>

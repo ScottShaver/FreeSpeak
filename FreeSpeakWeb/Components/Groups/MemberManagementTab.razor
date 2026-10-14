@@ -3,6 +3,7 @@
 @using FreeSpeakWeb.Services.Abstractions
 @using FreeSpeakWeb.Components.Shared
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
 
 @inject GroupMemberService GroupMemberService
 @inject GroupBannedMemberService GroupBannedMemberService
@@ -10,6 +11,17 @@
 @inject UserPreferenceService UserPreferenceService
 @inject IRoleService RoleService
 @inject ILogger<MemberManagementTab> Logger
+@inject AlertService AlertService
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Groups.MemberManagementTab> Localizer
+
+<ConfirmationDialog IsVisible="@(banCandidate != null)"
+                    Title="@Localizer["BanMemberConfirmTitle"]"
+                    Message="@(banCandidate == null ? null : string.Format(Localizer["BanMemberConfirmMessage"], GetMemberDisplayName(banCandidate.UserId)))"
+                    ConfirmText="@Localizer["BanMember"]"
+                    Type="ConfirmationDialog.ConfirmationType.Danger"
+                    IsProcessing="@(banCandidate != null && savingMemberId == banCandidate.UserId)"
+                    OnConfirm="ConfirmBanMember"
+                    OnCancel="CancelBanMember" />
 
 <div class="member-management-tab">
     <!-- Search Bar -->
@@ -152,7 +164,7 @@
                                     <div class="ban-controls">
                                         <button type="button" 
                                                 class="btn btn-danger btn-sm"
-                                                @onclick="@(async () => await HandleBanMember(member.UserId))"
+                                                @onclick="@(() => RequestBanMember(member))"
                                                 disabled="@(isSaving || !CanBanMember(member))">
                                             <i class="bi bi-slash-circle me-1"></i>Ban Member
                                         </button>
@@ -529,8 +541,46 @@
         }
     }
 
+    private GroupUser? banCandidate;
+
     /// <summary>
-    /// Handles banning a member from the group.
+    /// Gets the display name for a member, falling back to "Unknown".
+    /// </summary>
+    /// <param name="userId">The user ID of the member.</param>
+    /// <returns>The member's display name.</returns>
+    private string GetMemberDisplayName(string userId) =>
+        memberNames.TryGetValue(userId, out var name) ? name : "Unknown";
+
+    /// <summary>
+    /// Opens the ban confirmation dialog for a member.
+    /// </summary>
+    /// <param name="member">The member the user wants to ban.</param>
+    private void RequestBanMember(GroupUser member)
+    {
+        if (savingMemberId != null) return;
+        banCandidate = member;
+    }
+
+    /// <summary>
+    /// Closes the ban confirmation dialog without banning.
+    /// </summary>
+    private void CancelBanMember()
+    {
+        if (savingMemberId != null) return;
+        banCandidate = null;
+    }
+
+    /// <summary>
+    /// Bans the member chosen in the confirmation dialog.
+    /// </summary>
+    private async Task ConfirmBanMember()
+    {
+        if (banCandidate == null || savingMemberId != null) return;
+        await HandleBanMember(banCandidate.UserId);
+    }
+
+    /// <summary>
+    /// Handles banning a member from the group and shows a success or error toast.
     /// </summary>
     /// <param name="userId">The user ID of the member to ban.</param>
     private async Task HandleBanMember(string userId)
@@ -538,6 +588,7 @@
         ClearMessages();
         savingMemberId = userId;
         StateHasChanged();
+        var displayName = GetMemberDisplayName(userId);
 
         try
         {
@@ -548,24 +599,28 @@
                 // Remove from local list
                 members.RemoveAll(m => m.UserId == userId);
                 expandedMemberId = null;
+                AlertService.ShowSuccess(string.Format(Localizer["MemberBannedSuccess"], displayName));
 
                 await OnMemberActionPerformed.InvokeAsync();
             }
             else
             {
-                errorMessage = result.ErrorMessage ?? "An error occurred while banning the member.";
+                errorMessage = result.ErrorMessage ?? Localizer["ErrorBanningMember"];
                 errorMemberId = userId;
+                AlertService.ShowError(errorMessage);
             }
         }
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error banning user {UserId} from group {GroupId}", userId, Group.Id);
-            errorMessage = "An error occurred while banning the member.";
+            errorMessage = Localizer["ErrorBanningMember"];
             errorMemberId = userId;
+            AlertService.ShowError(errorMessage);
         }
         finally
         {
             savingMemberId = null;
+            banCandidate = null;
             StateHasChanged();
         }
     }

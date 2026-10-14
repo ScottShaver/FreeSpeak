@@ -2,6 +2,7 @@
 @using FreeSpeakWeb.Services.Abstractions
 @using Microsoft.AspNetCore.Identity
 @inject IRoleService RoleService
+@inject Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider AuthenticationStateProvider
 @inject ILogger<UserRoleManagementModal> Logger
 
 <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
@@ -92,6 +93,19 @@
                             </div>
                         }
 
+                        @if (showSelfEditConfirm)
+                        {
+                            <div class="alert alert-danger mt-3" role="alert">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                You are editing your own roles@(removingOwnAdminRole ? " and removing your SystemAdministrator role. You will lose access to system administration" : "").
+                                Are you sure you want to continue?
+                                <div class="mt-2 d-flex gap-2">
+                                    <button type="button" class="btn btn-danger btn-sm" @onclick="ConfirmSelfEditSave" disabled="@isSaving">Yes, save my role changes</button>
+                                    <button type="button" class="btn btn-secondary btn-sm" @onclick="CancelSelfEditConfirm" disabled="@isSaving">Cancel</button>
+                                </div>
+                            </div>
+                        }
+
                         @if (isSaving)
                         {
                             <div class="alert alert-info mt-3" role="alert">
@@ -165,7 +179,9 @@
     private bool hasChanges = false;
     private string? errorMessage;
     private string? successMessage;
-
+    private bool showSelfEditConfirm = false;
+    private bool removingOwnAdminRole = false;
+    private string? currentUserId;
     /// <summary>
     /// Initializes the modal by loading available roles and the user's current roles.
     /// </summary>
@@ -228,12 +244,13 @@
 
         // Check if there are changes compared to the original state
         hasChanges = !userRoles.SetEquals(originalUserRoles);
+        showSelfEditConfirm = false;
         successMessage = null;
         StateHasChanged();
     }
 
     /// <summary>
-    /// Saves the role changes to the database.
+    /// Starts saving role changes. When an administrator edits their own roles, a confirmation is shown first.
     /// </summary>
     private async Task SaveChanges()
     {
@@ -242,8 +259,42 @@
             return;
         }
 
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        currentUserId = authState.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (currentUserId == User.Id && !showSelfEditConfirm)
+        {
+            removingOwnAdminRole = originalUserRoles.Contains("SystemAdministrator") && !userRoles.Contains("SystemAdministrator");
+            showSelfEditConfirm = true;
+            return;
+        }
+
+        await PersistChangesAsync();
+    }
+
+    private async Task ConfirmSelfEditSave()
+    {
+        await PersistChangesAsync();
+    }
+
+    private void CancelSelfEditConfirm()
+    {
+        showSelfEditConfirm = false;
+    }
+
+    /// <summary>
+    /// Saves the role changes to the database.
+    /// </summary>
+    private async Task PersistChangesAsync()
+    {
+        if (User == null || !hasChanges || string.IsNullOrEmpty(currentUserId))
+        {
+            return;
+        }
+
         try
         {
+            showSelfEditConfirm = false;
             isSaving = true;
             errorMessage = null;
             successMessage = null;
@@ -256,7 +307,7 @@
             // Add new roles
             foreach (var role in rolesToAdd)
             {
-                var result = await RoleService.AddUserToRoleAsync(User.Id, role);
+                var result = await RoleService.AddUserToRoleAsync(User.Id, role, currentUserId);
                 if (!result)
                 {
                     throw new Exception($"Failed to add role: {role}");
@@ -266,10 +317,13 @@
             // Remove old roles
             foreach (var role in rolesToRemove)
             {
-                var result = await RoleService.RemoveUserFromRoleAsync(User.Id, role);
+                var result = await RoleService.RemoveUserFromRoleAsync(User.Id, role, currentUserId);
                 if (!result)
                 {
-                    throw new Exception($"Failed to remove role: {role}");
+                    var reason = role == "SystemAdministrator" && await RoleService.IsLastSystemAdministratorAsync(User.Id)
+                        ? "at least one system administrator must remain"
+                        : "operation was rejected";
+                    throw new Exception($"Failed to remove role: {role} ({reason})");
                 }
             }
 

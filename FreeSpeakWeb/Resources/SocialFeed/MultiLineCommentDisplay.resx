@@ -110,4 +110,16 @@
   <data name="Angry" xml:space="preserve">
     <value>Angry</value>
   </data>
+  <data name="DeleteCommentConfirmTitle" xml:space="preserve">
+    <value>Delete Comment</value>
+  </data>
+  <data name="DeleteCommentConfirmMessage" xml:space="preserve">
+    <value>Are you sure you want to delete this comment? This cannot be undone.</value>
+  </data>
+  <data name="DeleteCommentConfirmButton" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DeleteCommentCancelButton" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
 </root>

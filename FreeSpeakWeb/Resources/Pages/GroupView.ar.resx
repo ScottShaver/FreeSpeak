@@ -154,4 +154,10 @@
   <data name="Files" xml:space="preserve">
     <value>الملفات</value>
   </data>
+  <data name="NonMemberNotice" xml:space="preserve"><value>أنت تشاهد هذه المجموعة العامة. انضم للنشر والمشاركة.</value></data>
+  <data name="JoinRequestSent" xml:space="preserve"><value>تم إرسال الطلب</value></data>
+  <data name="RequestToJoin" xml:space="preserve"><value>طلب الانضمام</value></data>
+  <data name="JoinGroup" xml:space="preserve"><value>انضم إلى المجموعة</value></data>
+  <data name="JoinRequestSentMessage" xml:space="preserve"><value>تم إرسال طلب الانضمام.</value></data>
+  <data name="JoinGroupFailed" xml:space="preserve"><value>تعذر الانضمام إلى هذه المجموعة.</value></data>
 </root>

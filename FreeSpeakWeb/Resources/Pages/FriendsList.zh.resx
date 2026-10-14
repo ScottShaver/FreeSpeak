@@ -104,4 +104,16 @@
   <data name="SearchPrompt" xml:space="preserve">
     <value>输入用户名以搜索用户。</value>
   </data>
+  <data name="RemoveFriendConfirmTitle" xml:space="preserve">
+    <value>删除好友</value>
+  </data>
+  <data name="RemoveFriendConfirmMessage" xml:space="preserve">
+    <value>确定要将 {0} 从好友中删除吗？</value>
+  </data>
+  <data name="RemoveFriendConfirmButton" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="RemoveFriendCancelButton" xml:space="preserve">
+    <value>取消</value>
+  </data>
 </root>

@@ -242,7 +242,17 @@
     </div>
 </div>
 
+<ConfirmationDialog IsVisible="@(friendToRemove != null)"
+                    Title="@Localizer["RemoveFriendConfirmTitle"]"
+                    Message="@(friendToRemove == null ? string.Empty : string.Format(Localizer["RemoveFriendConfirmMessage"], GetDisplayName(friendToRemove)))"
+                    ConfirmText="@Localizer["RemoveFriendConfirmButton"]"
+                    CancelText="@Localizer["RemoveFriendCancelButton"]"
+                    Type="ConfirmationDialog.ConfirmationType.Danger"
+                    OnConfirm="@ConfirmRemoveFriend"
+                    OnCancel="@CancelRemoveFriend" />
+
 @code {
+    private ApplicationUser? friendToRemove;
     private List<ApplicationUser> friends = new();
     private List<(ApplicationUser User, int MutualFriendsCount)> peopleYouMayKnow = new();
     private List<(Friendship Friendship, ApplicationUser Requester)> pendingRequests = new();
@@ -553,7 +563,35 @@
         }
     }
 
-    private async Task HandleRemoveFriend(ApplicationUser friend)
+    /// <summary>
+    /// Opens the confirmation dialog before removing a friend.
+    /// </summary>
+    /// <param name="friend">The friend the user wants to remove.</param>
+    private void HandleRemoveFriend(ApplicationUser friend)
+    {
+        friendToRemove = friend;
+    }
+
+    /// <summary>
+    /// Dismisses the remove-friend confirmation dialog without removing anyone.
+    /// </summary>
+    private void CancelRemoveFriend()
+    {
+        friendToRemove = null;
+    }
+
+    /// <summary>
+    /// Removes the friend selected in the confirmation dialog.
+    /// </summary>
+    private async Task ConfirmRemoveFriend()
+    {
+        var friend = friendToRemove;
+        friendToRemove = null;
+        if (friend == null) return;
+        await RemoveFriendAsync(friend);
+    }
+
+    private async Task RemoveFriendAsync(ApplicationUser friend)
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
 

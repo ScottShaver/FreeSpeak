@@ -148,4 +148,7 @@
   <data name="ErrorRemovingMember" xml:space="preserve">
     <value>Wystąpił błąd podczas usuwania członka.</value>
   </data>
+  <data name="BanMemberConfirmTitle" xml:space="preserve"><value>Zablokować członka?</value></data>
+  <data name="BanMemberConfirmMessage" xml:space="preserve"><value>Czy na pewno chcesz zablokować {0} w tej grupie? Zostanie usunięty i nie będzie mógł jej przeglądać ani w niej publikować.</value></data>
+  <data name="MemberBannedSuccess" xml:space="preserve"><value>{0} został zablokowany w grupie.</value></data>
 </root>

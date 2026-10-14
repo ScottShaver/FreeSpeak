@@ -148,4 +148,7 @@
   <data name="ErrorRemovingMember" xml:space="preserve">
     <value>Si è verificato un errore durante la rimozione del membro.</value>
   </data>
+  <data name="BanMemberConfirmTitle" xml:space="preserve"><value>Bannare il membro?</value></data>
+  <data name="BanMemberConfirmMessage" xml:space="preserve"><value>Vuoi davvero bannare {0} da questo gruppo? Verrà rimosso e non potrà più vederlo né pubblicare.</value></data>
+  <data name="MemberBannedSuccess" xml:space="preserve"><value>{0} è stato bannato dal gruppo.</value></data>
 </root>

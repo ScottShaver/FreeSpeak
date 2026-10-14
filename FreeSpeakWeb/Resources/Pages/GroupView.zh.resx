@@ -154,4 +154,10 @@
   <data name="Files" xml:space="preserve">
     <value>文件</value>
   </data>
+  <data name="NonMemberNotice" xml:space="preserve"><value>您正在查看此公开群组。加入后即可发帖和参与。</value></data>
+  <data name="JoinRequestSent" xml:space="preserve"><value>请求已发送</value></data>
+  <data name="RequestToJoin" xml:space="preserve"><value>申请加入</value></data>
+  <data name="JoinGroup" xml:space="preserve"><value>加入群组</value></data>
+  <data name="JoinRequestSentMessage" xml:space="preserve"><value>您的加入申请已发送。</value></data>
+  <data name="JoinGroupFailed" xml:space="preserve"><value>无法加入此群组。</value></data>
 </root>

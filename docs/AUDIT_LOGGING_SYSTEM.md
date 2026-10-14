@@ -103,6 +103,12 @@ The `ActionCategory` enum defines all types of auditable actions in the system:
 | 28 | `UserGroupAgreeToRules` | User agrees to group rules |
 | 29 | `UserGroupDeclineRules` | User declines group rules |
 
+### System Administration (35)
+
+| Value | Name | Description |
+|-------|------|-------------|
+| 35 | `SystemAdminChangeUserRole` | A role (e.g. SystemAdministrator) is added to / removed from a user. Audit user = actor; details hold target user, role, and `Add`/`Remove` operation |
+
 ---
 
 ## AuditLogDetails Classes

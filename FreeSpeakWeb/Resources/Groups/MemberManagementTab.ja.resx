@@ -148,4 +148,7 @@
   <data name="ErrorRemovingMember" xml:space="preserve">
     <value>メンバーの削除中にエラーが発生しました。</value>
   </data>
+  <data name="BanMemberConfirmTitle" xml:space="preserve"><value>メンバーをBANしますか？</value></data>
+  <data name="BanMemberConfirmMessage" xml:space="preserve"><value>{0} をこのグループからBANしてもよろしいですか？削除され、閲覧や投稿ができなくなります。</value></data>
+  <data name="MemberBannedSuccess" xml:space="preserve"><value>{0} をグループからBANしました。</value></data>
 </root>

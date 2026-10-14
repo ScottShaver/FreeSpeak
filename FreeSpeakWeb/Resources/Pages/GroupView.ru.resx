@@ -154,4 +154,10 @@
   <data name="Files" xml:space="preserve">
     <value>Файлы</value>
   </data>
+  <data name="NonMemberNotice" xml:space="preserve"><value>Вы просматриваете эту публичную группу. Вступите, чтобы публиковать и участвовать.</value></data>
+  <data name="JoinRequestSent" xml:space="preserve"><value>Запрос отправлен</value></data>
+  <data name="RequestToJoin" xml:space="preserve"><value>Запросить вступление</value></data>
+  <data name="JoinGroup" xml:space="preserve"><value>Вступить в группу</value></data>
+  <data name="JoinRequestSentMessage" xml:space="preserve"><value>Ваш запрос на вступление отправлен.</value></data>
+  <data name="JoinGroupFailed" xml:space="preserve"><value>Не удалось вступить в эту группу.</value></data>
 </root>

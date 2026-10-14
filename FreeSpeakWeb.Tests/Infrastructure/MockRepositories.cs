@@ -422,11 +422,14 @@ namespace FreeSpeakWeb.Tests.Infrastructure
             mock.Setup(r => r.GetUserRolesAsync(It.IsAny<string>()))
                 .ReturnsAsync(new List<string>());
 
-            mock.Setup(r => r.AddUserToRoleAsync(It.IsAny<string>(), It.IsAny<string>()))
+            mock.Setup(r => r.AddUserToRoleAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(true);
 
-            mock.Setup(r => r.RemoveUserFromRoleAsync(It.IsAny<string>(), It.IsAny<string>()))
+            mock.Setup(r => r.RemoveUserFromRoleAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(true);
+
+            mock.Setup(r => r.IsLastSystemAdministratorAsync(It.IsAny<string>()))
+                .ReturnsAsync(false);
 
             mock.Setup(r => r.RoleExistsAsync(It.IsAny<string>()))
                 .ReturnsAsync(false);

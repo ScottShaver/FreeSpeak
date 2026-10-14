@@ -145,8 +145,17 @@ namespace FreeSpeakWeb
             builder.Services.AddScoped<QueryPerformanceLogger>();
 
             // PERFORMANCE: Configure MiniProfiler for profiling application code and EF queries
-            builder.Services.Configure<ProfilingSettings>(builder.Configuration.GetSection("Profiling"));
             var profilingSettings = builder.Configuration.GetSection("Profiling").Get<ProfilingSettings>() ?? new ProfilingSettings();
+
+            // SECURITY: Profiling exposes URLs, machine name and timings; only allow it in Development
+            // unless explicitly opted in via Profiling:AllowOutsideDevelopment.
+            if (!builder.Environment.IsDevelopment() && !profilingSettings.AllowOutsideDevelopment)
+            {
+                profilingSettings.Enabled = false;
+            }
+
+            builder.Services.Configure<ProfilingSettings>(builder.Configuration.GetSection("Profiling"));
+            builder.Services.PostConfigure<ProfilingSettings>(s => s.Enabled = profilingSettings.Enabled);
 
             if (profilingSettings.Enabled)
             {
@@ -157,8 +166,11 @@ namespace FreeSpeakWeb
                     options.EnableDebugMode = builder.Environment.IsDevelopment();
                     options.MaxUnviewedProfiles = profilingSettings.MaxResults;
 
-                    // Show profiling controls in UI if configured
-                    options.ShouldProfile = request => profilingSettings.ShowControls;
+                    // SECURITY: Profiler results and the results index require the SystemAdministrator role
+                    options.ResultsAuthorize = request => request.HttpContext.User.IsInRole("SystemAdministrator");
+                    options.ResultsListAuthorize = request => request.HttpContext.User.IsInRole("SystemAdministrator");
+                    options.ShouldProfile = request => profilingSettings.ShowControls
+                        && request.HttpContext.User.IsInRole("SystemAdministrator");
 
                     // Ignore profiling of static assets
                     options.IgnoredPaths.Add("/lib");
@@ -409,8 +421,22 @@ namespace FreeSpeakWeb
                 }
             }
 
+            // Deterministic personas for agentic testing (opt-in; guarded by environment and database name)
+            var agentTestEnabled = app.Configuration.GetValue<bool>(AgentTestSeeder.EnabledConfigKey);
+            if (agentTestEnabled)
+            {
+                using var scope = app.Services.CreateScope();
+                var services = scope.ServiceProvider;
+                await AgentTestSeeder.SeedAsync(
+                    services.GetRequiredService<UserManager<ApplicationUser>>(),
+                    services.GetRequiredService<ApplicationDbContext>(),
+                    app.Environment.IsDevelopment(),
+                    agentTestEnabled,
+                    services.GetRequiredService<ILogger<Program>>());
+            }
+
             // Seed test users and migrate data in development environment
-            if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment() && !agentTestEnabled)
             {
                 using var scope = app.Services.CreateScope();
                 var services = scope.ServiceProvider;

@@ -148,4 +148,7 @@
   <data name="ErrorRemovingMember" xml:space="preserve">
     <value>회원 제거 중 오류가 발생했습니다.</value>
   </data>
+  <data name="BanMemberConfirmTitle" xml:space="preserve"><value>멤버를 차단하시겠습니까?</value></data>
+  <data name="BanMemberConfirmMessage" xml:space="preserve"><value>{0}님을 이 그룹에서 차단하시겠습니까? 제거되며 더 이상 그룹을 보거나 게시할 수 없습니다.</value></data>
+  <data name="MemberBannedSuccess" xml:space="preserve"><value>{0}님이 그룹에서 차단되었습니다.</value></data>
 </root>

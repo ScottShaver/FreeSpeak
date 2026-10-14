@@ -110,4 +110,16 @@
   <data name="Angry" xml:space="preserve">
     <value>غاضب</value>
   </data>
+  <data name="DeleteCommentConfirmTitle" xml:space="preserve">
+    <value>حذف التعليق</value>
+  </data>
+  <data name="DeleteCommentConfirmMessage" xml:space="preserve">
+    <value>هل أنت متأكد أنك تريد حذف هذا التعليق؟ لا يمكن التراجع عن ذلك.</value>
+  </data>
+  <data name="DeleteCommentConfirmButton" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="DeleteCommentCancelButton" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
 </root>

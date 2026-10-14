@@ -1,4 +1,6 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.Data.AuditLogDetails;
+using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +13,12 @@ namespace FreeSpeakWeb.Services
     /// </summary>
     public class RoleService : IRoleService
     {
+        private const string SystemAdministratorRole = "SystemAdministrator";
+
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<RoleService> _logger;
+        private readonly IAuditLogRepository _auditLogRepository;
 
         /// <summary>
         /// Initializes a new instance of the RoleService class.
@@ -21,14 +26,39 @@ namespace FreeSpeakWeb.Services
         /// <param name="userManager">The UserManager for managing users.</param>
         /// <param name="roleManager">The RoleManager for managing roles.</param>
         /// <param name="logger">Logger for recording role operations and errors.</param>
+        /// <param name="auditLogRepository">Repository used to record role changes in the audit log.</param>
         public RoleService(
             UserManager<ApplicationUser> userManager, 
             RoleManager<IdentityRole> roleManager,
-            ILogger<RoleService> logger)
+            ILogger<RoleService> logger,
+            IAuditLogRepository auditLogRepository)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _logger = logger;
+            _auditLogRepository = auditLogRepository;
+        }
+
+        /// <summary>
+        /// Records a role change in the audit log without failing the operation if logging fails.
+        /// </summary>
+        private async Task LogRoleChangeAsync(string actorUserId, ApplicationUser target, string roleName, OperationTypeEnum operation)
+        {
+            try
+            {
+                await _auditLogRepository.LogActionAsync(actorUserId, ActionCategory.SystemAdminChangeUserRole,
+                    new SystemAdminChangeUserRoleDetails
+                    {
+                        OperationType = operation.ToString(),
+                        TargetUserId = target.Id,
+                        TargetUserDisplayName = $"{target.FirstName} {target.LastName}".Trim(),
+                        RoleName = roleName
+                    });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to write audit log for role {RoleName} change on user {UserId}", roleName, target.Id);
+            }
         }
 
         /// <summary>
@@ -84,8 +114,9 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         /// <param name="userId">The unique identifier of the user.</param>
         /// <param name="roleName">The name of the role to add.</param>
+        /// <param name="actorUserId">The identifier of the user performing the change.</param>
         /// <returns>True if the operation was successful; otherwise, false.</returns>
-        public async Task<bool> AddUserToRoleAsync(string userId, string roleName)
+        public async Task<bool> AddUserToRoleAsync(string userId, string roleName, string actorUserId)
         {
             try
             {
@@ -116,6 +147,7 @@ namespace FreeSpeakWeb.Services
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("Added user {UserId} to role {RoleName}", userId, roleName);
+                    await LogRoleChangeAsync(actorUserId, user, roleName, OperationTypeEnum.Add);
                     return true;
                 }
 
@@ -135,8 +167,9 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         /// <param name="userId">The unique identifier of the user.</param>
         /// <param name="roleName">The name of the role to remove.</param>
+        /// <param name="actorUserId">The identifier of the user performing the change.</param>
         /// <returns>True if the operation was successful; otherwise, false.</returns>
-        public async Task<bool> RemoveUserFromRoleAsync(string userId, string roleName)
+        public async Task<bool> RemoveUserFromRoleAsync(string userId, string roleName, string actorUserId)
         {
             try
             {
@@ -155,10 +188,17 @@ namespace FreeSpeakWeb.Services
                     return true;
                 }
 
+                if (roleName == SystemAdministratorRole && await IsLastSystemAdministratorAsync(userId))
+                {
+                    _logger.LogWarning("Refused to remove {RoleName} from {UserId}: last remaining system administrator", roleName, userId);
+                    return false;
+                }
+
                 var result = await _userManager.RemoveFromRoleAsync(user, roleName);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("Removed user {UserId} from role {RoleName}", userId, roleName);
+                    await LogRoleChangeAsync(actorUserId, user, roleName, OperationTypeEnum.Remove);
                     return true;
                 }
 
@@ -169,6 +209,25 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error removing user {UserId} from role {RoleName}", userId, roleName);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the given user is the only remaining system administrator.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>True if the user is a system administrator and no other system administrator exists.</returns>
+        public async Task<bool> IsLastSystemAdministratorAsync(string userId)
+        {
+            try
+            {
+                var admins = await _userManager.GetUsersInRoleAsync(SystemAdministratorRole);
+                return admins.Count > 0 && admins.All(a => a.Id == userId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking if user {UserId} is the last system administrator", userId);
                 throw;
             }
         }

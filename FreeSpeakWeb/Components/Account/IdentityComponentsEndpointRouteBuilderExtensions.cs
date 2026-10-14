@@ -57,8 +57,7 @@ namespace Microsoft.AspNetCore.Routing
                 ClaimsPrincipal user,
                 [FromServices] SignInManager<ApplicationUser> signInManager,
                 [FromServices] UserManager<ApplicationUser> userManager,
-                [FromServices] IAuditLogRepository auditLogRepository,
-                [FromForm] string returnUrl) =>
+                [FromServices] IAuditLogRepository auditLogRepository) =>
             {
                 var appUser = await userManager.GetUserAsync(user);
                 if (appUser != null)
@@ -73,7 +72,8 @@ namespace Microsoft.AspNetCore.Routing
                 }
 
                 await signInManager.SignOutAsync();
-                return TypedResults.LocalRedirect($"~/{returnUrl}");
+                // Logout always lands on the home page regardless of the page the user was on
+                return TypedResults.LocalRedirect("~/");
             });
 
             accountGroup.MapPost("/PasskeyCreationOptions", async (

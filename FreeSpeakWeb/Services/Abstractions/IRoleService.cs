@@ -24,16 +24,26 @@ namespace FreeSpeakWeb.Services.Abstractions
         /// </summary>
         /// <param name="userId">The unique identifier of the user.</param>
         /// <param name="roleName">The name of the role to add.</param>
+        /// <param name="actorUserId">The identifier of the user performing the change (recorded in the audit log).</param>
         /// <returns>True if the operation was successful; otherwise, false.</returns>
-        Task<bool> AddUserToRoleAsync(string userId, string roleName);
+        Task<bool> AddUserToRoleAsync(string userId, string roleName, string actorUserId);
 
         /// <summary>
         /// Removes a user from a specific role.
+        /// Removing the SystemAdministrator role from the last remaining system administrator is refused.
         /// </summary>
         /// <param name="userId">The unique identifier of the user.</param>
         /// <param name="roleName">The name of the role to remove.</param>
+        /// <param name="actorUserId">The identifier of the user performing the change (recorded in the audit log).</param>
         /// <returns>True if the operation was successful; otherwise, false.</returns>
-        Task<bool> RemoveUserFromRoleAsync(string userId, string roleName);
+        Task<bool> RemoveUserFromRoleAsync(string userId, string roleName, string actorUserId);
+
+        /// <summary>
+        /// Determines whether the given user is the only remaining system administrator.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>True if the user is a system administrator and no other system administrator exists.</returns>
+        Task<bool> IsLastSystemAdministratorAsync(string userId);
 
         /// <summary>
         /// Checks if a role exists in the system.

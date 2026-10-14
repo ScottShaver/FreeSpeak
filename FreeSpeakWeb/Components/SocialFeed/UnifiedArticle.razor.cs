@@ -1201,17 +1201,39 @@ public partial class UnifiedArticle : ArticleComponentBase
             // Initialize content measurement JS
             if (!IsModalView)
             {
-                try
-                {
-                    module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/UnifiedArticle.razor.js");
-                    dotNetHelper = DotNetObjectReference.Create(this);
-                    await module.InvokeVoidAsync("initializeContentMeasurement", contentElement, dotNetHelper);
-                }
-                catch (Exception)
-                {
-                    // Silently fail - content measurement optional
-                }
+                await TryInitializeContentMeasurementAsync();
             }
+        }
+        else if (!IsModalView && !contentMeasurementInitialized)
+        {
+            // The content element reference may only become available after the first render
+            await TryInitializeContentMeasurementAsync();
+        }
+    }
+
+    private bool contentMeasurementInitialized;
+
+    /// <summary>
+    /// Starts overflow measurement of the post content once its element reference is available,
+    /// so the "see full post" button is shown for long posts, including newly created ones.
+    /// </summary>
+    private async Task TryInitializeContentMeasurementAsync()
+    {
+        if (contentMeasurementInitialized || string.IsNullOrEmpty(contentElement.Id))
+        {
+            return;
+        }
+
+        try
+        {
+            module ??= await JS.InvokeAsync<IJSObjectReference>("import", "./Components/SocialFeed/UnifiedArticle.razor.js");
+            dotNetHelper ??= DotNetObjectReference.Create(this);
+            await module.InvokeVoidAsync("initializeContentMeasurement", contentElement, dotNetHelper);
+            contentMeasurementInitialized = true;
+        }
+        catch (Exception)
+        {
+            // Silently fail - content measurement optional
         }
     }
 

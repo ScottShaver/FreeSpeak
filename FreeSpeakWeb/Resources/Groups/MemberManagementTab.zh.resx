@@ -148,4 +148,7 @@
   <data name="ErrorRemovingMember" xml:space="preserve">
     <value>移除成员时发生错误。</value>
   </data>
+  <data name="BanMemberConfirmTitle" xml:space="preserve"><value>封禁成员？</value></data>
+  <data name="BanMemberConfirmMessage" xml:space="preserve"><value>确定要将 {0} 从此群组封禁吗？该成员将被移除，且无法再查看或在其中发帖。</value></data>
+  <data name="MemberBannedSuccess" xml:space="preserve"><value>{0} 已被群组封禁。</value></data>
 </root>

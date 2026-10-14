@@ -104,4 +104,16 @@
   <data name="SearchPrompt" xml:space="preserve">
     <value>사람을 검색하려면 사용자 이름을 입력하세요.</value>
   </data>
+  <data name="RemoveFriendConfirmTitle" xml:space="preserve">
+    <value>친구 삭제</value>
+  </data>
+  <data name="RemoveFriendConfirmMessage" xml:space="preserve">
+    <value>{0}님을 친구에서 삭제하시겠습니까?</value>
+  </data>
+  <data name="RemoveFriendConfirmButton" xml:space="preserve">
+    <value>삭제</value>
+  </data>
+  <data name="RemoveFriendCancelButton" xml:space="preserve">
+    <value>취소</value>
+  </data>
 </root>
