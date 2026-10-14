@@ -148,4 +148,7 @@
   <data name="ErrorRemovingMember" xml:space="preserve">
     <value>Er is een fout opgetreden bij het verwijderen van het lid.</value>
   </data>
+  <data name="BanMemberConfirmTitle" xml:space="preserve"><value>Lid verbannen?</value></data>
+  <data name="BanMemberConfirmMessage" xml:space="preserve"><value>Weet je zeker dat je {0} uit deze groep wilt verbannen? Het lid wordt verwijderd en kan de groep niet meer bekijken of erin plaatsen.</value></data>
+  <data name="MemberBannedSuccess" xml:space="preserve"><value>{0} is uit de groep verbannen.</value></data>
 </root>

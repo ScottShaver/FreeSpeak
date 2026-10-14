@@ -148,4 +148,7 @@
   <data name="ErrorRemovingMember" xml:space="preserve">
     <value>Beim Entfernen des Mitglieds ist ein Fehler aufgetreten.</value>
   </data>
+  <data name="BanMemberConfirmTitle" xml:space="preserve"><value>Mitglied sperren?</value></data>
+  <data name="BanMemberConfirmMessage" xml:space="preserve"><value>Möchten Sie {0} wirklich aus dieser Gruppe sperren? Das Mitglied wird entfernt und kann die Gruppe nicht mehr ansehen oder darin posten.</value></data>
+  <data name="MemberBannedSuccess" xml:space="preserve"><value>{0} wurde aus der Gruppe gesperrt.</value></data>
 </root>

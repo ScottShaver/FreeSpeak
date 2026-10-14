@@ -148,4 +148,7 @@
   <data name="ErrorRemovingMember" xml:space="preserve">
     <value>Ocorreu um erro ao remover o membro.</value>
   </data>
+  <data name="BanMemberConfirmTitle" xml:space="preserve"><value>Banir membro?</value></data>
+  <data name="BanMemberConfirmMessage" xml:space="preserve"><value>Tem certeza de que deseja banir {0} deste grupo? Ele será removido e não poderá mais visualizar nem publicar nele.</value></data>
+  <data name="MemberBannedSuccess" xml:space="preserve"><value>{0} foi banido do grupo.</value></data>
 </root>
