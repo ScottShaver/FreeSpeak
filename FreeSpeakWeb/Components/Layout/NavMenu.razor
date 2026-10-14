@@ -274,7 +274,7 @@
             </a>
         </div>
 
-        @if (ProfilingSettings.Value.Enabled)
+        @if (ProfilingSettings.Value.Enabled && isSystemAdministrator)
         {
             <div class="nav-item px-3">
                 <a class="nav-link" href="/profiler/results-index" target="_blank" rel="noopener noreferrer">

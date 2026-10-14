@@ -55,6 +55,56 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
+        /// Validates whether a user may read a group's content (posts, comments, authors).
+        /// Banned users are always denied, even for public groups. Private groups require membership.
+        /// Anonymous users (null/empty userId) may only read public groups.
+        /// </summary>
+        /// <param name="groupId">The group identifier.</param>
+        /// <param name="isPublic">Whether the group is public.</param>
+        /// <param name="userId">The current user's identifier, or null when anonymous.</param>
+        /// <returns>Success flag and, when denied, a user-facing message.</returns>
+        public async Task<(bool Success, string? ErrorMessage)> ValidateUserCanViewAsync(int groupId, bool isPublic, string? userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return isPublic
+                    ? (true, null)
+                    : (false, "You must be logged in to view posts in this private group.");
+            }
+
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var isBanned = await context.GroupBannedMembers
+                    .AnyAsync(gbm => gbm.GroupId == groupId && gbm.UserId == userId);
+
+                if (isBanned)
+                {
+                    return (false, "You have been banned from this group and can no longer view its content.");
+                }
+
+                if (!isPublic)
+                {
+                    var isMember = await context.GroupUsers
+                        .AnyAsync(gu => gu.GroupId == groupId && gu.UserId == userId);
+
+                    if (!isMember)
+                    {
+                        return (false, "You must be a member of this group to view this post.");
+                    }
+                }
+
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error validating view access for user {UserId} to group {GroupId}", userId, groupId);
+                return (false, "Unable to verify access to this group.");
+            }
+        }
+
+        /// <summary>
         /// Checks if a user is an admin or moderator of a group, or a system administrator.
         /// </summary>
         public async Task<bool> IsGroupAdminOrModeratorAsync(int groupId, string userId)

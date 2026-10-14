@@ -28,5 +28,11 @@ namespace FreeSpeakWeb
         /// Requires MiniProfiler.EntityFrameworkCore package.
         /// </summary>
         public bool ProfileDatabase { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether profiling may be enabled outside the Development environment.
+        /// Defaults to false. When enabled elsewhere, profiler results still require the SystemAdministrator role.
+        /// </summary>
+        public bool AllowOutsideDevelopment { get; set; } = false;
     }
 }
