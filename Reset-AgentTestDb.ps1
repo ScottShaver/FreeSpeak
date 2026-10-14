@@ -105,6 +105,8 @@ try {
 } finally { Pop-Location }
 
 Write-Host 'Applying migration script...'
+# dotnet ef writes a UTF-8 BOM that psql rejects; rewrite as BOM-less UTF-8.
+[IO.File]::WriteAllText($migrationsSql, [IO.File]::ReadAllText($migrationsSql), (New-Object Text.UTF8Encoding($false)))
 Invoke-Psql -Database $DatabaseName -PsqlArgs @('-q', '-f', $migrationsSql)
 Remove-Item $migrationsSql -ErrorAction SilentlyContinue
 
