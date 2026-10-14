@@ -110,4 +110,16 @@
   <data name="Angry" xml:space="preserve">
     <value>Возмутительно</value>
   </data>
+  <data name="DeleteCommentConfirmTitle" xml:space="preserve">
+    <value>Удалить комментарий</value>
+  </data>
+  <data name="DeleteCommentConfirmMessage" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить этот комментарий? Это действие нельзя отменить.</value>
+  </data>
+  <data name="DeleteCommentConfirmButton" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="DeleteCommentCancelButton" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
 </root>

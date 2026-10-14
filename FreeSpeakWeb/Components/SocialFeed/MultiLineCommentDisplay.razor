@@ -224,7 +224,18 @@
         OnMouseLeave="@HandlePopupMouseLeave" />
 }
 
+<ConfirmationDialog IsVisible="@showDeleteCommentConfirmation"
+                    Title="@Localizer["DeleteCommentConfirmTitle"]"
+                    Message="@Localizer["DeleteCommentConfirmMessage"]"
+                    ConfirmText="@Localizer["DeleteCommentConfirmButton"]"
+                    CancelText="@Localizer["DeleteCommentCancelButton"]"
+                    Type="ConfirmationDialog.ConfirmationType.Danger"
+                    OnConfirm="@ConfirmDeleteComment"
+                    OnCancel="@CancelDeleteComment" />
+
 @code {
+    private bool showDeleteCommentConfirmation;
+
     [Parameter]
     public int CommentId { get; set; }
 
@@ -423,11 +434,28 @@
     }
 
     /// <summary>
-    /// Handles the delete comment action by invoking the OnDeleteComment callback.
+    /// Handles the delete comment menu action by showing the confirmation dialog.
     /// </summary>
-    private async Task HandleDeleteComment()
+    private void HandleDeleteComment()
     {
         showCommentMenu = false;
+        showDeleteCommentConfirmation = true;
+    }
+
+    /// <summary>
+    /// Dismisses the delete comment confirmation dialog without deleting.
+    /// </summary>
+    private void CancelDeleteComment()
+    {
+        showDeleteCommentConfirmation = false;
+    }
+
+    /// <summary>
+    /// Confirms deletion and invokes the OnDeleteComment callback.
+    /// </summary>
+    private async Task ConfirmDeleteComment()
+    {
+        showDeleteCommentConfirmation = false;
         if (OnDeleteComment.HasDelegate)
         {
             await OnDeleteComment.InvokeAsync(CommentId);

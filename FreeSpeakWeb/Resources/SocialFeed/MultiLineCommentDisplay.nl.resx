@@ -110,4 +110,16 @@
   <data name="Angry" xml:space="preserve">
     <value>Boos</value>
   </data>
+  <data name="DeleteCommentConfirmTitle" xml:space="preserve">
+    <value>Reactie verwijderen</value>
+  </data>
+  <data name="DeleteCommentConfirmMessage" xml:space="preserve">
+    <value>Weet je zeker dat je deze reactie wilt verwijderen? Dit kan niet ongedaan worden gemaakt.</value>
+  </data>
+  <data name="DeleteCommentConfirmButton" xml:space="preserve">
+    <value>Verwijderen</value>
+  </data>
+  <data name="DeleteCommentCancelButton" xml:space="preserve">
+    <value>Annuleren</value>
+  </data>
 </root>

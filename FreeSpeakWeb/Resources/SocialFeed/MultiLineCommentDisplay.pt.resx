@@ -110,4 +110,16 @@
   <data name="Angry" xml:space="preserve">
     <value>Grr</value>
   </data>
+  <data name="DeleteCommentConfirmTitle" xml:space="preserve">
+    <value>Excluir comentário</value>
+  </data>
+  <data name="DeleteCommentConfirmMessage" xml:space="preserve">
+    <value>Tem certeza de que deseja excluir este comentário? Esta ação não pode ser desfeita.</value>
+  </data>
+  <data name="DeleteCommentConfirmButton" xml:space="preserve">
+    <value>Excluir</value>
+  </data>
+  <data name="DeleteCommentCancelButton" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
 </root>

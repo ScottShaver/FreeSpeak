@@ -104,4 +104,16 @@
   <data name="SearchPrompt" xml:space="preserve">
     <value>Ingresa un nombre de usuario para buscar personas.</value>
   </data>
+  <data name="RemoveFriendConfirmTitle" xml:space="preserve">
+    <value>Eliminar amigo</value>
+  </data>
+  <data name="RemoveFriendConfirmMessage" xml:space="preserve">
+    <value>¿Seguro que quieres eliminar a {0} de tus amigos?</value>
+  </data>
+  <data name="RemoveFriendConfirmButton" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="RemoveFriendCancelButton" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
 </root>
