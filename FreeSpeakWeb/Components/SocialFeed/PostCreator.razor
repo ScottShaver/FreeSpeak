@@ -117,8 +117,8 @@
             <button type="button" class="cancel-button" @onclick="Cancel" @onmousedown:preventDefault="true">@Localizer["Cancel"]</button>
             <button 
                 type="button" 
-                class="submit-button @(CanSubmit ? "active" : "disabled")"
-                disabled="@(!CanSubmit)"
+                class="submit-button @(CanSubmit && !isSubmitting ? "active" : "disabled")"
+                disabled="@(!CanSubmit || isSubmitting)"
                 @onclick="OnSubmitPost"
                 @onmousedown:preventDefault="true">
                 @Localizer["Post"]
@@ -346,9 +346,17 @@
         StateHasChanged();
     }
 
+    private bool isSubmitting;
+
     private async Task OnSubmitPost()
     {
-        if (CanSubmit && OnPostCreated.HasDelegate)
+        if (isSubmitting || !CanSubmit || !OnPostCreated.HasDelegate)
+        {
+            return;
+        }
+
+        isSubmitting = true;
+        try
         {
             await OnPostCreated.InvokeAsync((PostContent, SelectedAudienceType, selectedImages.ToList()));
             PostContent = "";
@@ -368,7 +376,10 @@
                     // Ignore errors
                 }
             }
-
+        }
+        finally
+        {
+            isSubmitting = false;
             StateHasChanged();
         }
     }
