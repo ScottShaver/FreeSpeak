@@ -154,4 +154,10 @@
   <data name="Files" xml:space="preserve">
     <value>File</value>
   </data>
+  <data name="NonMemberNotice" xml:space="preserve"><value>Stai visualizzando questo gruppo pubblico. Unisciti per pubblicare e partecipare.</value></data>
+  <data name="JoinRequestSent" xml:space="preserve"><value>Richiesta inviata</value></data>
+  <data name="RequestToJoin" xml:space="preserve"><value>Richiedi di unirti</value></data>
+  <data name="JoinGroup" xml:space="preserve"><value>Unisciti al gruppo</value></data>
+  <data name="JoinRequestSentMessage" xml:space="preserve"><value>La tua richiesta di adesione è stata inviata.</value></data>
+  <data name="JoinGroupFailed" xml:space="preserve"><value>Impossibile unirsi a questo gruppo.</value></data>
 </root>

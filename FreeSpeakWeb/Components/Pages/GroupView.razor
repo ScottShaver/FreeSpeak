@@ -28,6 +28,7 @@
 @inject PinnedGroupPostService PinnedGroupPostService
 @inject GroupService GroupService
 @inject GroupMemberService GroupMemberService
+@inject GroupAccessValidator GroupAccessValidator
 @inject UserManager<ApplicationUser> UserManager
 @inject UserPreferenceService UserPreferenceService
 @inject HtmlSanitizationService HtmlSanitizationService
@@ -135,6 +136,8 @@
                               Icon="bi-clock-history" />
                 </div>
 
+                @if (isMember)
+                {
                 <div class="user-stats-display mt-3 p-3 rounded border">
                     <div class="d-flex align-items-center gap-4 flex-wrap">
                         @* User's Post Count *@
@@ -168,6 +171,7 @@
                         }
                     </div>
                 </div>
+                }
             </div>
         </div>
 
@@ -186,13 +190,32 @@
             else
             {
                 <!-- Post Creator -->
-                <div class="group-post-creator mb-4">
-                    <PostCreator 
-                        CurrentUserImageUrl="@currentUserImageUrl"
-                        CurrentUserName="@currentUserName"
-                        ShowAudienceSelector="false"
-                        OnPostCreated="HandleGroupPostCreated" />
-                </div>
+                @if (isMember)
+                {
+                    <div class="group-post-creator mb-4">
+                        <PostCreator 
+                            CurrentUserImageUrl="@currentUserImageUrl"
+                            CurrentUserName="@currentUserName"
+                            ShowAudienceSelector="false"
+                            OnPostCreated="HandleGroupPostCreated" />
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4" role="status">
+                        <span><i class="bi bi-info-circle me-2"></i>@Localizer["NonMemberNotice"]</span>
+                        @if (joinRequestSent)
+                        {
+                            <span class="badge bg-secondary">@Localizer["JoinRequestSent"]</span>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-primary btn-sm" @onclick="JoinThisGroupAsync" disabled="@isJoining">
+                                @(group.RequiresJoinApproval ? Localizer["RequestToJoin"] : Localizer["JoinGroup"])
+                            </button>
+                        }
+                    </div>
+                }
 
                 <h3>@Localizer["RecentPosts"]</h3>
 
@@ -407,6 +430,16 @@
         OnReportSubmitted="HandleCommentReportSubmitted" />
 }
 
+@* Rules Acceptance Modal (join flow for non-members) *@
+@if (showRulesModal && group != null)
+{
+    <FreeSpeakWeb.Components.Groups.RulesAcceptanceModal 
+        Group="@group"
+        AgreeButtonText="@(group.RequiresJoinApproval ? Localizer["RequestToJoin"] : Localizer["JoinGroup"])"
+        OnClose="CloseRulesModal"
+        OnAgree="HandleRulesAgreedAsync" />
+}
+
 @* Edit Group Post Modal *@
 @if (showEditGroupPost && editGroupPost != null)
 {
@@ -454,6 +487,67 @@
     private DateTime? lastActivity;
 
     // Admin/Moderator permissions
+    private bool isMember = false;
+    private bool isJoining = false;
+    private bool joinRequestSent = false;
+    private bool showRulesModal = false;
+
+    /// <summary>
+    /// Starts the join flow for a non-member, showing the rules modal first when the group requires acceptance.
+    /// </summary>
+    private async Task JoinThisGroupAsync()
+    {
+        if (group == null || isJoining) return;
+        if (group.RequireAcceptRules)
+        {
+            showRulesModal = true;
+            return;
+        }
+        await PerformJoinAsync(false);
+    }
+
+    /// <summary>
+    /// Closes the rules acceptance modal without joining.
+    /// </summary>
+    private void CloseRulesModal() => showRulesModal = false;
+
+    /// <summary>
+    /// Handles the user agreeing to the group rules and continues the join flow.
+    /// </summary>
+    private async Task HandleRulesAgreedAsync()
+    {
+        showRulesModal = false;
+        await PerformJoinAsync(true);
+    }
+
+    /// <summary>
+    /// Joins the group or submits a join request depending on group settings.
+    /// </summary>
+    /// <param name="hasAgreedToRules">Whether the user accepted the group rules.</param>
+    private async Task PerformJoinAsync(bool hasAgreedToRules)
+    {
+        if (group == null || isJoining || currentUserId == null) return;
+        isJoining = true;
+        try
+        {
+            if (group.RequiresJoinApproval)
+            {
+                var (success, error, _) = await GroupMemberService.CreateJoinRequestAsync(GroupId, currentUserId, hasAgreedToRules);
+                if (success) { joinRequestSent = true; AlertService.ShowSuccess(Localizer["JoinRequestSentMessage"]); }
+                else AlertService.ShowError(error ?? Localizer["JoinGroupFailed"]);
+            }
+            else
+            {
+                var (success, error) = await GroupMemberService.JoinGroupAsync(GroupId, currentUserId, hasAgreedToRules);
+                if (success) NavigationManager.NavigateTo($"/group/{GroupId}", forceLoad: true);
+                else AlertService.ShowError(error ?? Localizer["JoinGroupFailed"]);
+            }
+        }
+        finally
+        {
+            isJoining = false;
+        }
+    }
     private bool isGroupAdmin = false;
     private bool isGroupModerator = false;
     private bool isSystemAdmin = false;
@@ -569,16 +663,6 @@
 
         try
         {
-            // Check if user is a member
-            var isMember = await GroupMemberService.IsMemberAsync(GroupId, currentUserId);
-            if (!isMember)
-            {
-                group = null;
-                isLoadingGroup = false;
-                StateHasChanged();
-                return;
-            }
-
             // Load group details
             group = await GroupService.GetGroupByIdAsync(GroupId);
             if (group == null)
@@ -587,6 +671,19 @@
                 StateHasChanged();
                 return;
             }
+
+            // Public groups are viewable by non-members; private groups need membership;
+            // banned users are denied; system administrators may view any group for moderation.
+            var (canView, _) = await GroupAccessValidator.ValidateUserCanViewGroupPageAsync(GroupId, group.IsPublic, currentUserId);
+            if (!canView)
+            {
+                group = null;
+                isLoadingGroup = false;
+                StateHasChanged();
+                return;
+            }
+
+            isMember = await GroupMemberService.IsMemberAsync(GroupId, currentUserId);
 
             // Load statistics
             memberCount = await GroupMemberService.GetMemberCountAsync(GroupId);

@@ -105,6 +105,37 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
+        /// Validates whether a user may open a group's home page.
+        /// System administrators may view any group for moderation purposes; everyone else
+        /// is subject to <see cref="ValidateUserCanViewAsync"/> (public groups are viewable by non-members,
+        /// private groups require membership, banned users are always denied).
+        /// </summary>
+        /// <param name="groupId">The group identifier.</param>
+        /// <param name="isPublic">Whether the group is public.</param>
+        /// <param name="userId">The current user's identifier.</param>
+        /// <returns>Success flag and, when denied, a user-facing message.</returns>
+        public async Task<(bool Success, string? ErrorMessage)> ValidateUserCanViewGroupPageAsync(int groupId, bool isPublic, string? userId)
+        {
+            if (!string.IsNullOrEmpty(userId))
+            {
+                try
+                {
+                    if (await _roleService.IsSystemAdministratorAsync(userId))
+                    {
+                        return (true, null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error checking system administrator status for user {UserId}", userId);
+                    return (false, "Unable to verify access to this group.");
+                }
+            }
+
+            return await ValidateUserCanViewAsync(groupId, isPublic, userId);
+        }
+
+        /// <summary>
         /// Checks if a user is an admin or moderator of a group, or a system administrator.
         /// </summary>
         public async Task<bool> IsGroupAdminOrModeratorAsync(int groupId, string userId)

@@ -154,4 +154,10 @@
   <data name="Files" xml:space="preserve">
     <value>Bestanden</value>
   </data>
+  <data name="NonMemberNotice" xml:space="preserve"><value>Je bekijkt deze openbare groep. Word lid om te plaatsen en deel te nemen.</value></data>
+  <data name="JoinRequestSent" xml:space="preserve"><value>Verzoek verzonden</value></data>
+  <data name="RequestToJoin" xml:space="preserve"><value>Verzoek om lid te worden</value></data>
+  <data name="JoinGroup" xml:space="preserve"><value>Lid worden van groep</value></data>
+  <data name="JoinRequestSentMessage" xml:space="preserve"><value>Je verzoek om lid te worden is verzonden.</value></data>
+  <data name="JoinGroupFailed" xml:space="preserve"><value>Kan niet lid worden van deze groep.</value></data>
 </root>
