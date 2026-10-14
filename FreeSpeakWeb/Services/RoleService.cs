@@ -11,6 +11,8 @@ namespace FreeSpeakWeb.Services
     /// </summary>
     public class RoleService : IRoleService
     {
+        private const string SystemAdministratorRole = "SystemAdministrator";
+
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<RoleService> _logger;
@@ -84,8 +86,9 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         /// <param name="userId">The unique identifier of the user.</param>
         /// <param name="roleName">The name of the role to add.</param>
+        /// <param name="actorUserId">The identifier of the user performing the change.</param>
         /// <returns>True if the operation was successful; otherwise, false.</returns>
-        public async Task<bool> AddUserToRoleAsync(string userId, string roleName)
+        public async Task<bool> AddUserToRoleAsync(string userId, string roleName, string actorUserId)
         {
             try
             {
@@ -135,8 +138,9 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         /// <param name="userId">The unique identifier of the user.</param>
         /// <param name="roleName">The name of the role to remove.</param>
+        /// <param name="actorUserId">The identifier of the user performing the change.</param>
         /// <returns>True if the operation was successful; otherwise, false.</returns>
-        public async Task<bool> RemoveUserFromRoleAsync(string userId, string roleName)
+        public async Task<bool> RemoveUserFromRoleAsync(string userId, string roleName, string actorUserId)
         {
             try
             {
@@ -155,6 +159,12 @@ namespace FreeSpeakWeb.Services
                     return true;
                 }
 
+                if (roleName == SystemAdministratorRole && await IsLastSystemAdministratorAsync(userId))
+                {
+                    _logger.LogWarning("Refused to remove {RoleName} from {UserId}: last remaining system administrator", roleName, userId);
+                    return false;
+                }
+
                 var result = await _userManager.RemoveFromRoleAsync(user, roleName);
                 if (result.Succeeded)
                 {
@@ -169,6 +179,25 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error removing user {UserId} from role {RoleName}", userId, roleName);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the given user is the only remaining system administrator.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>True if the user is a system administrator and no other system administrator exists.</returns>
+        public async Task<bool> IsLastSystemAdministratorAsync(string userId)
+        {
+            try
+            {
+                var admins = await _userManager.GetUsersInRoleAsync(SystemAdministratorRole);
+                return admins.Count > 0 && admins.All(a => a.Id == userId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking if user {UserId} is the last system administrator", userId);
                 throw;
             }
         }
