@@ -152,8 +152,8 @@ public class PostEditModalTests : TestContext
             .Add(p => p.OnImagesSelected, EventCallback.Factory.Create<List<ImageUploadModal.SelectedImage>>(this, _ => { }))
         );
 
-        // Assert - should say "Add Images" when no images
-        Assert.Contains("Add Images", cut.Markup);
+        // Assert - should use the AddImages label when no images
+        Assert.Contains("AddImages", cut.Markup);
 
         // Act - add new images via the public method
         var newImages = new List<ImageUploadModal.SelectedImage>
@@ -163,10 +163,10 @@ public class PostEditModalTests : TestContext
 
         cut.InvokeAsync(() => cut.Instance.AddNewImages(newImages));
 
-        // Assert - should say "Add More Images" when images exist
+        // Assert - should use the AddMoreImages label when images exist
         cut.WaitForAssertion(() =>
         {
-            Assert.Contains("Add More Images", cut.Markup);
+            Assert.Contains("AddMoreImages", cut.Markup);
         });
     }
 
