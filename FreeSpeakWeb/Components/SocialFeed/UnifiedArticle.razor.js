@@ -1,8 +1,7 @@
 // JavaScript for UnifiedArticle content measurement functionality
 
-let resizeObserver = null;
-let storedDotNetHelper = null;
-let storedContentElement = null;
+// One observer per content element; the module is shared by every article instance.
+const observers = new Map();
 
 /**
  * Measures whether the content element is overflowing (truncated).
@@ -29,8 +28,7 @@ function measureContent(contentElement, dotNetHelper) {
 export function initializeContentMeasurement(contentElement, dotNetHelper) {
     if (!contentElement) return;
 
-    storedContentElement = contentElement;
-    storedDotNetHelper = dotNetHelper;
+    cleanup(contentElement);
 
     try {
         // Use requestAnimationFrame to ensure layout is complete before measuring
@@ -45,10 +43,11 @@ export function initializeContentMeasurement(contentElement, dotNetHelper) {
 
         // Set up ResizeObserver to detect dynamic changes (e.g., window resize)
         if (typeof ResizeObserver !== 'undefined') {
-            resizeObserver = new ResizeObserver(() => {
-                measureContent(storedContentElement, storedDotNetHelper);
+            const observer = new ResizeObserver(() => {
+                measureContent(contentElement, dotNetHelper);
             });
-            resizeObserver.observe(contentElement);
+            observer.observe(contentElement);
+            observers.set(contentElement, observer);
         }
     } catch (error) {
         console.warn('Failed to initialize content measurement:', error);
@@ -58,13 +57,12 @@ export function initializeContentMeasurement(contentElement, dotNetHelper) {
 /**
  * Cleans up content measurement resources.
  */
-export function cleanup() {
-    if (resizeObserver) {
-        resizeObserver.disconnect();
-        resizeObserver = null;
+export function cleanup(contentElement) {
+    const observer = contentElement ? observers.get(contentElement) : null;
+    if (observer) {
+        observer.disconnect();
+        observers.delete(contentElement);
     }
-    storedDotNetHelper = null;
-    storedContentElement = null;
 }
 
 /**

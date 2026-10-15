@@ -1252,7 +1252,7 @@ public partial class UnifiedArticle : ArticleComponentBase
         {
             try
             {
-                await module.InvokeVoidAsync("cleanup");
+                await module.InvokeVoidAsync("cleanup", contentElement);
                 await module.DisposeAsync();
             }
             catch

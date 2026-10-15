@@ -57,7 +57,7 @@
                 var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
 
                 <UnifiedArticle 
-                    ArticlePostType="PostType.UserPost"
+                    @key="post.Id"                    ArticlePostType="PostType.UserPost"
                     PostId="@post.Id"
                     AuthorId="@post.AuthorId"
                     AuthorName="@authorName"
