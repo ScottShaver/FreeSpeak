@@ -278,6 +278,10 @@ namespace FreeSpeakWeb
 
             // Add RoleService for managing user roles
             builder.Services.AddScoped<IRoleService, RoleService>();
+            builder.Services.AddSingleton(TimeProvider.System);
+            builder.Services.AddScoped<ISystemSettingsRepository, SystemSettingsRepository>();
+            builder.Services.AddSingleton<FreeSpeakWeb.Services.Settings.IClamAvPinger, FreeSpeakWeb.Services.Settings.NClamPinger>();
+            builder.Services.AddScoped<FreeSpeakWeb.Services.Settings.ISystemSettingsService, FreeSpeakWeb.Services.Settings.SystemSettingsService>();
 
             // Add UserLockoutService for managing user account lockouts
             builder.Services.AddScoped<IUserLockoutService, UserLockoutService>();
