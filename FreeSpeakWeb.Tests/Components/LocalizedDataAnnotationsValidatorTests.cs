@@ -24,6 +24,10 @@ namespace FreeSpeakWeb.Tests.Components
 
             [StringLength(5, MinimumLength = 2)]
             public string? Code { get; set; } = "toolongvalue";
+
+            [Required]
+            [Display(Name = "New password")]
+            public string? NewPassword { get; set; }
         }
 
         private static IReadOnlyList<string> Validate(string culture)
@@ -69,6 +73,14 @@ namespace FreeSpeakWeb.Tests.Components
 
             Assert.Contains("El campo Nombre es obligatorio.", messages);
             Assert.Contains(messages, m => m.Contains("entre 2 y 5 caracteres"));
+        }
+
+        [Fact]
+        public void SpanishCulture_LocalizesMultiWordDisplayNames()
+        {
+            var messages = Validate("es");
+
+            Assert.Contains("El campo Nueva contraseña es obligatorio.", messages);
         }
 
         [Fact]

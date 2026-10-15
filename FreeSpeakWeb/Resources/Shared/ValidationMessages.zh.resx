@@ -82,4 +82,10 @@
   <data name="Field_RecoveryCode" xml:space="preserve">
     <value>恢复代码</value>
   </data>
+  <data name="Field_AboutMe" xml:space="preserve">
+    <value>关于我</value>
+  </data>
+  <data name="Field_Code" xml:space="preserve">
+    <value>代码</value>
+  </data>
 </root>

@@ -82,4 +82,10 @@
   <data name="Field_RecoveryCode" xml:space="preserve">
     <value>رمز الاسترداد</value>
   </data>
+  <data name="Field_AboutMe" xml:space="preserve">
+    <value>نبذة عني</value>
+  </data>
+  <data name="Field_Code" xml:space="preserve">
+    <value>الرمز</value>
+  </data>
 </root>
