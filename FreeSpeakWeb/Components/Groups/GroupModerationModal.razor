@@ -907,6 +907,7 @@
     {
         if (selectedReport == null) return;
 
+        ClearStatusMessages();
         processingReportId = selectedReport.Id;
         StateHasChanged();
 
@@ -949,6 +950,7 @@
     {
         if (selectedReport == null) return;
 
+        ClearStatusMessages();
         processingReportId = selectedReport.Id;
         StateHasChanged();
 
@@ -991,6 +993,7 @@
     {
         if (selectedReport == null) return;
 
+        ClearStatusMessages();
         processingReportId = selectedReport.Id;
         StateHasChanged();
 
@@ -1302,10 +1305,21 @@
     }
 
     /// <summary>
+    /// Clears any previous success or error message so stale status text does not linger
+    /// next to the result of a new action.
+    /// </summary>
+    private void ClearStatusMessages()
+    {
+        successMessage = null;
+        errorMessage = null;
+    }
+
+    /// <summary>
     /// Approves a pending post.
     /// </summary>
     private async Task ApprovePost(int postId)
     {
+        ClearStatusMessages();
         processingPostId = postId;
         StateHasChanged();
 
@@ -1342,6 +1356,7 @@
     /// </summary>
     private async Task DeclinePost(int postId)
     {
+        ClearStatusMessages();
         processingPostId = postId;
         StateHasChanged();
 
@@ -1406,6 +1421,7 @@
     /// <param name="fileId">The ID of the file to approve.</param>
     private async Task ApproveFile(int fileId)
     {
+        ClearStatusMessages();
         processingFileId = fileId;
         StateHasChanged();
 
@@ -1467,6 +1483,7 @@
     {
         if (fileToDecline == null) return;
 
+        ClearStatusMessages();
         processingFileId = fileToDecline.Id;
         StateHasChanged();
 
