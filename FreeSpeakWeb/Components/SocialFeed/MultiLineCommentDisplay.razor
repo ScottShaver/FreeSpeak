@@ -116,7 +116,7 @@
                     <span>@Localizer["Reply"]</span>
                 </button>
             }
-            else if (!string.IsNullOrEmpty(CurrentUserId) && Depth >= SiteSettings.Value.MaxFeedPostCommentDepth)
+            else if (!IsReadOnly && !string.IsNullOrEmpty(CurrentUserId) && Depth >= SiteSettings.Value.MaxFeedPostCommentDepth)
             {
                 <span class="comment-reply-disabled">@Localizer["NoMoreRepliesAllowed"]</span>
             }
@@ -187,6 +187,7 @@
                             CurrentUserId="@CurrentUserId"
                             CurrentUserImageUrl="@CurrentUserImageUrl"
                             CurrentUserName="@CurrentUserName"
+                            IsReadOnly="@IsReadOnly"
                             CommentAuthorId="@reply.CommentAuthorId"
                             Depth="@(Depth + 1)"
                             OnReactionChanged="@OnReactionChanged"
@@ -278,6 +279,13 @@
     [Parameter]
     public string? CurrentUserName { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether the comment is read-only (e.g. the viewer is not a group member),
+    /// which hides the Like and Reply controls.
+    /// </summary>
+    [Parameter]
+    public bool IsReadOnly { get; set; } = false;
+
     [Parameter]
     public int Depth { get; set; } = 0;
 
@@ -353,10 +361,10 @@
     private bool IsOwnComment => !string.IsNullOrEmpty(CurrentUserId) && !string.IsNullOrEmpty(CommentAuthorId) && CurrentUserId == CommentAuthorId;
 
     // Show like button if: user is logged in AND (either CommentAuthorId is missing OR it's not the user's own comment)
-    private bool ShouldShowLikeButton => !string.IsNullOrEmpty(CurrentUserId) && (string.IsNullOrEmpty(CommentAuthorId) || CurrentUserId != CommentAuthorId);
+    private bool ShouldShowLikeButton => !IsReadOnly && !string.IsNullOrEmpty(CurrentUserId) && (string.IsNullOrEmpty(CommentAuthorId) || CurrentUserId != CommentAuthorId);
 
     // Show reply button if: user is logged in AND depth hasn't reached the maximum
-    private bool ShouldShowReplyButton => !string.IsNullOrEmpty(CurrentUserId) && Depth < SiteSettings.Value.MaxFeedPostCommentDepth;
+    private bool ShouldShowReplyButton => !IsReadOnly && !string.IsNullOrEmpty(CurrentUserId) && Depth < SiteSettings.Value.MaxFeedPostCommentDepth;
 
     // Can save edit if the text is not empty, not just whitespace, and different from original
     private bool CanSaveEdit => !string.IsNullOrWhiteSpace(editedCommentText) && editedCommentText.Trim() != CommentText.Trim();

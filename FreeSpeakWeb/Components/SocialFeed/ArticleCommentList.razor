@@ -35,6 +35,7 @@
                 CurrentUserId="@CurrentUserId"
                 CurrentUserImageUrl="@CurrentUserImageUrl"
                 CurrentUserName="@CurrentUserName"
+                IsReadOnly="@IsReadOnly"
                 Depth="0"
                 OnReactionChanged="@OnCommentReactionChanged"
                 OnRemoveReaction="@OnRemoveCommentReaction"
@@ -83,6 +84,12 @@
     /// </summary>
     [Parameter]
     public string? CurrentUserName { get; set; }
+
+    /// <summary>
+    /// Gets or sets whether comments are read-only, which hides the Like and Reply controls.
+    /// </summary>
+    [Parameter]
+    public bool IsReadOnly { get; set; } = false;
 
     /// <summary>
     /// Event callback invoked when the "View More Comments" button is clicked.

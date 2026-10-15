@@ -35,6 +35,17 @@ namespace FreeSpeakWeb.Tests.Components
             mockDialogLocalizer.Setup(l => l[It.IsAny<string>()])
                 .Returns((string key) => new LocalizedString(key, key));
             Services.AddSingleton(mockDialogLocalizer.Object);
+
+            var mockMenuLocalizer = new Mock<IStringLocalizer<FreeSpeakWeb.Resources.Shared.MenuContainer>>();
+            mockMenuLocalizer.Setup(l => l[It.IsAny<string>()])
+                .Returns((string key) => new LocalizedString(key, key));
+            Services.AddSingleton(mockMenuLocalizer.Object);
+            Services.AddSingleton<PopupPortalService>();
+
+            var mockPickerLocalizer = new Mock<IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.ReactionPicker>>();
+            mockPickerLocalizer.Setup(l => l[It.IsAny<string>()])
+                .Returns((string key) => new LocalizedString(key, key));
+            Services.AddSingleton(mockPickerLocalizer.Object);
         }
 
         [Fact]
@@ -121,6 +132,23 @@ Line 3";
             // Assert
             // Should display relative time format (flexible for test execution time)
             cut.Markup.Should().MatchRegex(@"\d+"); // Should contain numbers for the time
+        }
+
+        [Theory]
+        [InlineData(false, true)]
+        [InlineData(true, false)]
+        public void MultiLineCommentDisplay_ReadOnly_HidesLikeAndReplyButtons(bool isReadOnly, bool expectButtons)
+        {
+            var cut = Render<MultiLineCommentDisplay>(parameters => parameters
+                .Add(p => p.UserName, "Test User")
+                .Add(p => p.CommentText, "Test comment")
+                .Add(p => p.CommentAuthorId, "author")
+                .Add(p => p.CurrentUserId, "viewer")
+                .Add(p => p.IsReadOnly, isReadOnly)
+                .Add(p => p.Timestamp, DateTime.Now));
+
+            cut.FindAll(".comment-like-button").Count.Should().Be(expectButtons ? 1 : 0);
+            cut.FindAll(".comment-reply-button").Count.Should().Be(expectButtons ? 1 : 0);
         }
     }
 }

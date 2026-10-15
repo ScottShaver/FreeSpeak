@@ -397,6 +397,52 @@ namespace FreeSpeakWeb.Tests.Services
             reactionOk.Should().BeFalse();
         }
 
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task CommentLikeAndReply_ByNonMemberOrBannedUser_AreRejected(bool banned)
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupCommentInteractReject" + banned);
+            var service = CreateGroupPostService(repoFactory);
+
+            var author = TestDataFactory.CreateTestUser(id: "user2");
+            var outsider = TestDataFactory.CreateTestUser(id: "user1");
+            var group = TestDataFactory.CreateTestGroup("user2");
+            int postId;
+            int commentId;
+
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Users.AddRange(author, outsider);
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+
+                context.GroupUsers.Add(TestDataFactory.CreateTestGroupUser(group.Id, "user2"));
+                if (banned)
+                {
+                    context.GroupUsers.Add(TestDataFactory.CreateTestGroupUser(group.Id, "user1"));
+                    var ban = TestDataFactory.CreateTestGroupBannedMember(group.Id, "user1");
+                    ban.GroupId = group.Id;
+                    context.GroupBannedMembers.Add(ban);
+                }
+                var post = TestDataFactory.CreateTestGroupPost(group.Id, "user2");
+                context.GroupPosts.Add(post);
+                await context.SaveChangesAsync();
+                postId = post.Id;
+
+                var comment = TestDataFactory.CreateTestGroupPostComment(postId, "user2");
+                context.GroupPostComments.Add(comment);
+                await context.SaveChangesAsync();
+                commentId = comment.Id;
+            }
+
+            var (likeOk, _) = await service.AddOrUpdateCommentReactionAsync(commentId, "user1");
+            var (replyOk, _, _) = await service.AddCommentAsync(postId, "user1", "reply", null, commentId);
+
+            likeOk.Should().BeFalse();
+            replyOk.Should().BeFalse();
+        }
+
         [Fact]
         public async Task DeleteCommentAsync_ByAuthor_ShouldDeleteComment()
         {
