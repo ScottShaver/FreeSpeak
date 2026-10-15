@@ -521,7 +521,7 @@
             // Load all stats in parallel for better performance
             var friendCountTask = FriendsService.GetFriendsCountAsync(currentUserId);
             var groupCountTask = GroupMemberService.GetUserGroupCountAsync(currentUserId);
-            var groupPostCountTask = GroupPostService.GetUserTotalGroupPostCountAsync(currentUserId);
+            var groupPostCountTask = GroupPostService.GetUserTotalGroupPostCountAsync(currentUserId, currentUserId);
             var postCountTask = PostService.GetUserPostCountAsync(currentUserId);
 
             await Task.WhenAll(friendCountTask, groupCountTask, groupPostCountTask, postCountTask);

@@ -575,6 +575,27 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <inheritdoc />
+        public async Task<int> GetVisibleCountByAuthorAsync(string authorId, string viewerId)
+        {
+            using var step = _profiler.Step($"GroupPostRepository.GetVisibleCountByAuthorAsync({authorId}, {viewerId})");
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                return await context.GroupPosts
+                    .Where(p => p.AuthorId == authorId && p.Status == PostStatus.Posted)
+                    .Where(p => (p.Group.IsPublic && !p.Group.IsHidden) ||
+                                context.GroupUsers.Any(gu => gu.GroupId == p.GroupId && gu.UserId == viewerId))
+                    .CountAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error counting visible group posts for author {AuthorId} viewed by {ViewerId}", authorId, viewerId);
+                return 0;
+            }
+        }
+
         public async Task<(bool CanPost, string? ErrorMessage)> CanUserPostAsync(int groupId, string userId)
         {
             return await _accessValidator.ValidateUserCanPostAsync(groupId, userId);
