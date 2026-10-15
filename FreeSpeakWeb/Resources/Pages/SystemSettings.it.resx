@@ -352,4 +352,34 @@
   <data name="EC_Value" xml:space="preserve">
     <value>Valore</value>
   </data>
+  <data name="SendTestEmail" xml:space="preserve">
+    <value>Invia e-mail di prova</value>
+  </data>
+  <data name="TestEmailHint" xml:space="preserve">
+    <value>Invia un messaggio di prova con le impostazioni attualmente salvate (salva prima se hai modificato qualcosa). Massimo 5 e-mail di prova all&apos;ora.</value>
+  </data>
+  <data name="TestEmailRecipient" xml:space="preserve">
+    <value>Indirizzo e-mail del destinatario</value>
+  </data>
+  <data name="TestEmailSuccess" xml:space="preserve">
+    <value>E-mail di prova inviata correttamente.</value>
+  </data>
+  <data name="TestEmailFailed" xml:space="preserve">
+    <value>E-mail di prova non riuscita: {0}</value>
+  </data>
+  <data name="E_TestRateLimited" xml:space="preserve">
+    <value>Hai raggiunto il limite di 5 e-mail di prova all&apos;ora. Riprova più tardi.</value>
+  </data>
+  <data name="E_SmtpAuth" xml:space="preserve">
+    <value>Il server SMTP ha rifiutato l&apos;account o la password.</value>
+  </data>
+  <data name="E_SmtpTls" xml:space="preserve">
+    <value>Impossibile stabilire una connessione sicura con il server SMTP.</value>
+  </data>
+  <data name="E_SmtpConnect" xml:space="preserve">
+    <value>Impossibile connettersi al server SMTP. Controlla server e porta.</value>
+  </data>
+  <data name="E_SmtpFailed" xml:space="preserve">
+    <value>Impossibile inviare l&apos;e-mail di prova.</value>
+  </data>
 </root>

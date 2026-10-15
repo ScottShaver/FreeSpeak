@@ -1,6 +1,5 @@
 using FreeSpeakWeb.Data;
-using MailKit.Net.Smtp;
-using MailKit.Security;
+using FreeSpeakWeb.Services.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -9,12 +8,15 @@ namespace FreeSpeakWeb.Components.Account;
 
 /// <summary>
 /// SMTP email sender implementation for Identity that sends emails using MailKit.
-/// Configured via SmtpSettings from appsettings.json.
+/// Reads the current SMTP settings on every send so administrator changes apply without a restart,
+/// and skips sending (log only) while the Enabled toggle is off.
 /// </summary>
-internal sealed class SmtpEmailSender : IEmailSender<ApplicationUser>
+public sealed class SmtpEmailSender : IEmailSender<ApplicationUser>
 {
     private readonly IOptionsMonitor<SmtpSettings> _smtpSettingsMonitor;
     private readonly IOptions<SiteSettings> _siteSettingsOptions;
+    private readonly IConfiguration _configuration;
+    private readonly ISmtpMailTransport _transport;
     private readonly ILogger<SmtpEmailSender> _logger;
 
     private SmtpSettings _smtpSettings => _smtpSettingsMonitor.CurrentValue;
@@ -25,9 +27,13 @@ internal sealed class SmtpEmailSender : IEmailSender<ApplicationUser>
     /// </summary>
     /// <param name="siteSettings">The site settings (live).</param>
     /// <param name="smtpSettings">Monitor for the SMTP configuration; changes apply to the next send.</param>
+    /// <param name="configuration">The live configuration, used to read the Enabled toggle.</param>
+    /// <param name="transport">The SMTP transport.</param>
     /// <param name="logger">The logger instance.</param>
-    public SmtpEmailSender(IOptions<SiteSettings> siteSettings, IOptionsMonitor<SmtpSettings> smtpSettings, ILogger<SmtpEmailSender> logger)
+    public SmtpEmailSender(IOptions<SiteSettings> siteSettings, IOptionsMonitor<SmtpSettings> smtpSettings, IConfiguration configuration, ISmtpMailTransport transport, ILogger<SmtpEmailSender> logger)
     {
+        _configuration = configuration;
+        _transport = transport;
         _siteSettingsOptions = siteSettings;
         _smtpSettingsMonitor = smtpSettings;
         _logger = logger;
@@ -100,6 +106,12 @@ internal sealed class SmtpEmailSender : IEmailSender<ApplicationUser>
     /// <returns>A task representing the asynchronous operation.</returns>
     private async Task SendEmailAsync(string toEmail, string subject, string htmlBody)
     {
+        if (_configuration.GetValue<bool>("UseIdentityNoOpEmailSender"))
+        {
+            _logger.LogInformation("Email sending is disabled; skipped email to {Email} with subject '{Subject}'", toEmail, subject);
+            return;
+        }
+
         try
         {
             var message = new MimeMessage();
@@ -113,23 +125,7 @@ internal sealed class SmtpEmailSender : IEmailSender<ApplicationUser>
             };
             message.Body = bodyBuilder.ToMessageBody();
 
-            using var client = new SmtpClient();
-
-            // Connect to the SMTP server
-            var secureSocketOptions = _smtpSettings.UseSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None;
-            await client.ConnectAsync(_smtpSettings.Server, _smtpSettings.Port, secureSocketOptions);
-
-            // Authenticate if credentials are provided
-            if (_smtpSettings.AuthenticationRequired && !string.IsNullOrEmpty(_smtpSettings.Account) && !string.IsNullOrEmpty(_smtpSettings.Password))
-            {
-                await client.AuthenticateAsync(_smtpSettings.Account, _smtpSettings.Password);
-            }
-
-            // Send the email
-            await client.SendAsync(message);
-
-            // Disconnect
-            await client.DisconnectAsync(true);
+            await _transport.SendAsync(_smtpSettings, message);
 
             _logger.LogInformation("Email sent successfully to {Email} with subject '{Subject}'", toEmail, subject);
         }

@@ -352,4 +352,34 @@
   <data name="EC_Value" xml:space="preserve">
     <value>Wert</value>
   </data>
+  <data name="SendTestEmail" xml:space="preserve">
+    <value>Test-E-Mail senden</value>
+  </data>
+  <data name="TestEmailHint" xml:space="preserve">
+    <value>Sendet eine Testnachricht mit den aktuell gespeicherten Einstellungen (zuerst speichern, falls Sie etwas geändert haben). Maximal 5 Test-E-Mails pro Stunde.</value>
+  </data>
+  <data name="TestEmailRecipient" xml:space="preserve">
+    <value>E-Mail-Adresse des Empfängers</value>
+  </data>
+  <data name="TestEmailSuccess" xml:space="preserve">
+    <value>Test-E-Mail erfolgreich gesendet.</value>
+  </data>
+  <data name="TestEmailFailed" xml:space="preserve">
+    <value>Test-E-Mail fehlgeschlagen: {0}</value>
+  </data>
+  <data name="E_TestRateLimited" xml:space="preserve">
+    <value>Sie haben das Limit von 5 Test-E-Mails pro Stunde erreicht. Versuchen Sie es später erneut.</value>
+  </data>
+  <data name="E_SmtpAuth" xml:space="preserve">
+    <value>Der SMTP-Server hat das Konto oder das Kennwort abgelehnt.</value>
+  </data>
+  <data name="E_SmtpTls" xml:space="preserve">
+    <value>Es konnte keine sichere Verbindung zum SMTP-Server hergestellt werden.</value>
+  </data>
+  <data name="E_SmtpConnect" xml:space="preserve">
+    <value>Verbindung zum SMTP-Server nicht möglich. Prüfen Sie Server und Port.</value>
+  </data>
+  <data name="E_SmtpFailed" xml:space="preserve">
+    <value>Die Test-E-Mail konnte nicht gesendet werden.</value>
+  </data>
 </root>

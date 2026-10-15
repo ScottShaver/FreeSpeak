@@ -352,4 +352,34 @@
   <data name="EC_Value" xml:space="preserve">
     <value>Waarde</value>
   </data>
+  <data name="SendTestEmail" xml:space="preserve">
+    <value>Testmail verzenden</value>
+  </data>
+  <data name="TestEmailHint" xml:space="preserve">
+    <value>Verzendt een testbericht met de momenteel opgeslagen instellingen (sla eerst op als u iets hebt gewijzigd). Maximaal 5 testmails per uur.</value>
+  </data>
+  <data name="TestEmailRecipient" xml:space="preserve">
+    <value>E-mailadres van de ontvanger</value>
+  </data>
+  <data name="TestEmailSuccess" xml:space="preserve">
+    <value>Testmail succesvol verzonden.</value>
+  </data>
+  <data name="TestEmailFailed" xml:space="preserve">
+    <value>Testmail mislukt: {0}</value>
+  </data>
+  <data name="E_TestRateLimited" xml:space="preserve">
+    <value>U heeft de limiet van 5 testmails per uur bereikt. Probeer het later opnieuw.</value>
+  </data>
+  <data name="E_SmtpAuth" xml:space="preserve">
+    <value>De SMTP-server heeft het account of wachtwoord geweigerd.</value>
+  </data>
+  <data name="E_SmtpTls" xml:space="preserve">
+    <value>Er kon geen beveiligde verbinding met de SMTP-server worden gemaakt.</value>
+  </data>
+  <data name="E_SmtpConnect" xml:space="preserve">
+    <value>Kan geen verbinding maken met de SMTP-server. Controleer server en poort.</value>
+  </data>
+  <data name="E_SmtpFailed" xml:space="preserve">
+    <value>De testmail kon niet worden verzonden.</value>
+  </data>
 </root>

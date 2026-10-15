@@ -9,6 +9,7 @@
 @using FreeSpeakWeb.Services.Settings
 
 @inject ISystemSettingsService SettingsService
+@inject IEmailTestService EmailTestService
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ILogger<SystemSettingsGroup> Logger
@@ -120,6 +121,25 @@
                 }
             </div>
         </form>
+
+        @if (_state.Group.Id == SettingsCatalog.SmtpGroupId)
+        {
+            <div class="card mt-4" data-testid="test-email-card">
+                <div class="card-body">
+                    <h5 class="card-title">@Localizer["SendTestEmail"]</h5>
+                    <p class="text-muted small">@Localizer["TestEmailHint"]</p>
+                    <div class="input-group">
+                        <input id="testEmailRecipient" class="form-control" type="email" data-testid="test-email-recipient"
+                               placeholder="@Localizer["TestEmailRecipient"]"
+                               aria-label="@Localizer["TestEmailRecipient"]"
+                               @bind="_testRecipient" @bind:event="oninput" />
+                        <button type="button" class="btn btn-outline-info" data-testid="test-email-send"
+                                disabled="@(_busy || string.IsNullOrWhiteSpace(_testRecipient))"
+                                @onclick="SendTestEmailAsync">@Localizer["SendTestEmail"]</button>
+                    </div>
+                </div>
+            </div>
+        }
     }
 </div>
 
@@ -135,6 +155,7 @@
     private bool _messageIsError;
     private bool _loading = true;
     private bool _busy;
+    private string? _testRecipient;
 
     /// <inheritdoc/>
     protected override async Task OnParametersSetAsync()
@@ -228,6 +249,34 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Failed to reset settings group {Group}", GroupId);
+            _message = Localizer["SaveFailed"];
+            _messageIsError = true;
+        }
+        finally
+        {
+            _busy = false;
+        }
+    }
+
+    private async Task SendTestEmailAsync()
+    {
+        if (_busy)
+        {
+            return;
+        }
+
+        _busy = true;
+        try
+        {
+            var result = await EmailTestService.SendTestEmailAsync(_testRecipient, _userId ?? string.Empty);
+            _message = result.Success
+                ? Localizer["TestEmailSuccess"]
+                : Localizer["TestEmailFailed", Localizer[result.ErrorKey ?? "E_SmtpFailed"]];
+            _messageIsError = !result.Success;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Test email failed");
             _message = Localizer["SaveFailed"];
             _messageIsError = true;
         }

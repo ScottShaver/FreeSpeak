@@ -127,14 +127,11 @@ namespace FreeSpeakWeb
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
 
-            if(builder.Configuration.GetValue<bool>("UseIdentityNoOpEmailSender"))
-            {
-                builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-            }
-            else
-            {
-                builder.Services.AddSingleton<IEmailSender<ApplicationUser>, SmtpEmailSender>();
-            }
+            // The sender is always SMTP-based; the Enabled toggle (UseIdentityNoOpEmailSender) is read live per send.
+            builder.Services.AddSingleton<FreeSpeakWeb.Services.Settings.ISmtpMailTransport, FreeSpeakWeb.Services.Settings.MailKitSmtpTransport>();
+            builder.Services.AddSingleton<IEmailSender<ApplicationUser>, SmtpEmailSender>();
+            builder.Services.AddSingleton<FreeSpeakWeb.Services.Settings.EmailTestRateLimiter>();
+            builder.Services.AddScoped<FreeSpeakWeb.Services.Settings.IEmailTestService, FreeSpeakWeb.Services.Settings.EmailTestService>();
 
             builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection(SmtpSettings.SectionName));
 
