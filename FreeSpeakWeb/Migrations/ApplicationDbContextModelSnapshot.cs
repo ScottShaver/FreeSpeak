@@ -592,6 +592,69 @@ namespace FreeSpeakWeb.Migrations
                     b.ToTable("GroupJoinRequests");
                 });
 
+            modelBuilder.Entity("FreeSpeakWeb.Data.GroupModerationLogEntry", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("Action")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ActorDisplayName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("ActorUserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Reason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("Summary")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("TargetId")
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)");
+
+                    b.Property<int>("TargetType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TargetUserDisplayName")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("TargetUserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("GroupId", "CreatedAt")
+                        .IsDescending(false, true);
+
+                    b.HasIndex("GroupId", "Action", "CreatedAt")
+                        .IsDescending(false, false, true);
+
+                    b.ToTable("GroupModerationLogEntries");
+                });
+
             modelBuilder.Entity("FreeSpeakWeb.Data.GroupPost", b =>
                 {
                     b.Property<int>("Id")
@@ -1552,6 +1615,17 @@ namespace FreeSpeakWeb.Migrations
                     b.Navigation("Group");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FreeSpeakWeb.Data.GroupModerationLogEntry", b =>
+                {
+                    b.HasOne("FreeSpeakWeb.Data.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("FreeSpeakWeb.Data.GroupPost", b =>

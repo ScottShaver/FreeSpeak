@@ -555,10 +555,7 @@
                         {
                             <div class="tab-pane fade show active">
                                 <h6 class="mb-3">@Localizer["ModerationLogDescription"]</h6>
-                                <div class="alert alert-info">
-                                    <i class="bi bi-info-circle me-2"></i>@Localizer["ModerationLogPlaceholder"]
-                                </div>
-                                <!-- Future: Log of moderation actions taken -->
+                                <ModerationLogTab Group="@Group" CurrentUserId="@CurrentUserId" />
                             </div>
                         }
                     </div>

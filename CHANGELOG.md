@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Group Moderation Log (Mod Log tab)**
+  - Dedicated `GroupModerationLogEntries` table recording post approve/decline, report dismiss/resolve, file approve/decline/remove and member ban/unban, with server-set UTC timestamps
+  - Moderator/admin-only Mod Log tab with action and date filters, paging and CSV export (exports are audited)
+  - `GroupModerationLogCleanupService` purges entries older than `GroupModerationLog:RetentionMonths` (default 6)
+
 - **Notification Translation Template System**
   - `NotificationTemplateService` for generating translated notifications
   - Template-based system using resource files for all 12 languages

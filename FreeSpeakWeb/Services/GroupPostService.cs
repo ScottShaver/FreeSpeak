@@ -2,6 +2,7 @@ using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
@@ -27,6 +28,7 @@ namespace FreeSpeakWeb.Services
         private readonly GroupAccessValidator _accessValidator;
         private readonly IAuditLogRepository _auditLogRepository;
         private readonly GroupPointsService _groupPointsService;
+        private readonly IGroupModerationLogService? _moderationLog;
         private readonly Microsoft.Extensions.Options.IOptions<SiteSettings>? _siteSettingsOptions;
         private int _maxCommentDepth => (_siteSettingsOptions?.Value ?? new SiteSettings()).MaxFeedPostCommentDepth;
         private int _maxDirectComments => (_siteSettingsOptions?.Value ?? new SiteSettings()).MaxFeedPostDirectCommentCount;
@@ -90,6 +92,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="auditLogRepository">Repository for audit log operations.</param>
         /// <param name="groupPointsService">Service for managing group member points.</param>
         /// <param name="siteSettings">Optional site settings (MaxFeedPostCommentDepth, MaxFeedPostDirectCommentCount from appsettings.json); code defaults apply when omitted.</param>
+        /// <param name="moderationLog">Optional per-group moderation log; when omitted nothing is recorded there.</param>
         public GroupPostService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             IGroupPostRepository<GroupPost, GroupPostImage> postRepository,
@@ -106,9 +109,11 @@ namespace FreeSpeakWeb.Services
             GroupAccessValidator accessValidator,
             IAuditLogRepository auditLogRepository,
             GroupPointsService groupPointsService,
-            Microsoft.Extensions.Options.IOptions<SiteSettings>? siteSettings)
+            Microsoft.Extensions.Options.IOptions<SiteSettings>? siteSettings,
+            IGroupModerationLogService? moderationLog = null)
         {
             _siteSettingsOptions = siteSettings;
+            _moderationLog = moderationLog;
             _contextFactory = contextFactory;
             _postRepository = postRepository;
             _commentRepository = commentRepository;
@@ -576,6 +581,7 @@ namespace FreeSpeakWeb.Services
                 }
 
                 _logger.LogInformation("Group post {PostId} approved by moderator {ModeratorId}", postId, moderatorId);
+                await RecordPostDecisionAsync(post, moderatorId, approved: true);
                 await NotifyAuthorOfModerationDecisionAsync(post, NotificationType.GroupPostApproved,
                     $"Your post in '{post.Group?.Name}' has been approved and is now visible to the group.");
                 return (true, null);
@@ -642,6 +648,7 @@ namespace FreeSpeakWeb.Services
                 }
 
                 _logger.LogInformation("Group post {PostId} declined by moderator {ModeratorId}", postId, moderatorId);
+                await RecordPostDecisionAsync(post, moderatorId, approved: false);
                 await NotifyAuthorOfModerationDecisionAsync(post, NotificationType.GroupPostDeclined,
                     $"Your post in '{post.Group?.Name}' was not approved by the group moderators.");
                 return (true, null);
@@ -650,6 +657,71 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogError(ex, "Error declining group post {PostId} by moderator {ModeratorId}", postId, moderatorId);
                 return (false, "An error occurred while declining the post.");
+            }
+        }
+
+        /// <summary>
+        /// Writes the global audit entry and the group moderation log entry for an approve or decline decision.
+        /// Failures are logged and never fail the decision itself.
+        /// </summary>
+        /// <param name="post">The moderated post (with its group loaded).</param>
+        /// <param name="moderatorId">The moderator who decided.</param>
+        /// <param name="approved">True when approved, false when declined.</param>
+        private async Task RecordPostDecisionAsync(GroupPost post, string moderatorId, bool approved)
+        {
+            try
+            {
+                using var lookupContext = await _contextFactory.CreateDbContextAsync();
+                var authorUser = await lookupContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == post.AuthorId);
+                var author = authorUser != null ? $"{authorUser.FirstName} {authorUser.LastName}" : null;
+                var summary = post.Content.Length > 200 ? post.Content[..200] : post.Content;
+
+                if (approved)
+                {
+                    await _auditLogRepository.LogActionAsync(moderatorId, ActionCategory.GroupModeratorApprovePost,
+                        new GroupModeratorApprovePostDetails
+                        {
+                            OperationType = nameof(OperationTypeEnum.Accept),
+                            GroupId = post.GroupId,
+                            GroupName = post.Group?.Name ?? string.Empty,
+                            PostId = post.Id,
+                            PostAuthorId = post.AuthorId,
+                            PostAuthorDisplayName = author,
+                            ContentSummary = summary
+                        });
+                }
+                else
+                {
+                    await _auditLogRepository.LogActionAsync(moderatorId, ActionCategory.GroupModeratorDeclinePost,
+                        new GroupModeratorDeclinePostDetails
+                        {
+                            OperationType = nameof(OperationTypeEnum.Decline),
+                            GroupId = post.GroupId,
+                            GroupName = post.Group?.Name ?? string.Empty,
+                            PostId = post.Id,
+                            PostAuthorId = post.AuthorId,
+                            PostAuthorDisplayName = author,
+                            ContentSummary = summary
+                        });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error writing audit entry for moderation decision on group post {PostId}", post.Id);
+            }
+
+            if (_moderationLog != null)
+            {
+                await _moderationLog.LogAsync(new GroupModerationLogRequest
+                {
+                    GroupId = post.GroupId,
+                    ActorUserId = moderatorId,
+                    Action = approved ? GroupModerationAction.PostApproved : GroupModerationAction.PostDeclined,
+                    TargetType = GroupModerationTargetType.Post,
+                    TargetId = post.Id.ToString(),
+                    TargetUserId = post.AuthorId,
+                    Summary = post.Content
+                });
             }
         }
 

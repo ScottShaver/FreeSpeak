@@ -101,6 +101,11 @@ namespace FreeSpeakWeb.Data
         public DbSet<GroupBannedMember> GroupBannedMembers { get; set; }
 
         /// <summary>
+        /// Gets or sets the DbSet for group moderation log entries.
+        /// </summary>
+        public DbSet<GroupModerationLogEntry> GroupModerationLogEntries { get; set; }
+
+        /// <summary>
         /// Gets or sets the DbSet for comments on group posts.
         /// </summary>
         public DbSet<GroupPostComment> GroupPostComments { get; set; }
@@ -615,6 +620,26 @@ namespace FreeSpeakWeb.Data
                 entity.HasIndex(gbm => gbm.GroupId);
                 entity.HasIndex(gbm => gbm.UserId);
                 entity.HasIndex(gbm => gbm.BannedAt);
+            });
+
+            // Configure GroupModerationLogEntry entity (no user FKs so history survives user deletion)
+            modelBuilder.Entity<GroupModerationLogEntry>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.Group)
+                    .WithMany()
+                    .HasForeignKey(e => e.GroupId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Property(e => e.Action).HasConversion<int>();
+                entity.Property(e => e.TargetType).HasConversion<int>();
+
+                entity.HasIndex(e => new { e.GroupId, e.CreatedAt })
+                    .IsDescending(false, true);
+                entity.HasIndex(e => new { e.GroupId, e.Action, e.CreatedAt })
+                    .IsDescending(false, false, true);
+                entity.HasIndex(e => e.CreatedAt);
             });
 
             // Configure GroupPostComment entity
