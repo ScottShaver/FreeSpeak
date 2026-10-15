@@ -110,6 +110,7 @@
                                 var canDelete = GetCanDeletePost(post.Id);
 
                                 <UnifiedArticle 
+                                    @key="post.Id"
                                     ArticlePostType="PostType.UserPost"
                                     PostId="@post.Id"
                                     AuthorId="@post.AuthorId"
@@ -199,6 +200,7 @@
                                 var canDelete = GetCanDeletePost(post.Id);
 
                                 <UnifiedArticle 
+                                    @key="post.Id"
                                     ArticlePostType="PostType.UserPost"
                                     PostId="@post.Id"
                                     AuthorId="@post.AuthorId"
