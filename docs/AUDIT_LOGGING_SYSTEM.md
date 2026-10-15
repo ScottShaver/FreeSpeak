@@ -89,6 +89,8 @@ The `ActionCategory` enum defines all types of auditable actions in the system:
 | 24 | `GroupModeratorRemovePost` | Moderator removes existing post |
 | 25 | `GroupModeratorRemovePostComment` | Moderator removes a comment |
 
+Additional group categories added with the moderation log: `40` `GroupAdminUnbanUser` (unban) and `41` `GroupModerationLogExport` (a moderator exports the group's moderation log as CSV). The moderation log itself is stored in the dedicated `GroupModerationLogEntries` table, separate from audit logs.
+
 ### System Moderator Actions (26-27)
 
 | Value | Name | Description |

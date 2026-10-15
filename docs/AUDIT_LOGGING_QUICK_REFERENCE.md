@@ -60,6 +60,8 @@ await _auditLogRepository.LogActionAsync(
 | Create group | `GroupAdminCreateGroup` | `GroupAdminCreateGroupDetails` |
 | Edit group | `GroupAdminEditGroup` | `GroupAdminEditGroupDetails` |
 | Ban user | `GroupAdminBanUser` | `GroupAdminBanUserDetails` |
+| Unban user | `GroupAdminUnbanUser` | `GroupAdminUnbanUserDetails` |
+| Export mod log | `GroupModerationLogExport` | `GroupModerationLogExportDetails` |
 | Close group | `GroupAdminCloseGroup` | `GroupAdminCloseGroupDetails` |
 | Approve join | `GroupAdminApproveJoinRequest` | `GroupAdminApproveJoinRequestDetails` |
 | Change role | `GroupAdminChangeMemberRole` | `GroupAdminChangeMemberRoleDetails` |

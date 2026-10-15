@@ -214,6 +214,26 @@ Specifies which hostnames are allowed to access the application.
 }
 ```
 
+### 6. Group Moderation Log
+
+Controls retention, purge and export of the per-group moderation log (`GroupModerationLogEntries`).
+
+```json
+{
+  "GroupModerationLog": {
+    "RetentionMonths": 6,
+    "ExportMaxRows": 10000,
+    "CleanupBatchSize": 1000
+  }
+}
+```
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `RetentionMonths` | 6 | Entries older than this are purged by `GroupModerationLogCleanupService`. |
+| `ExportMaxRows` | 10000 | Maximum rows in one CSV export (newest first); the export is flagged as truncated beyond this. |
+| `CleanupBatchSize` | 1000 | Rows removed per purge batch. |
+
 ## Database-Backed System Settings
 
 System administrators can override selected settings at runtime from **System Admin → System Settings** (`/system-admin/settings`). Overrides are stored in the `SystemSettings` table and layered over `appsettings*.json`, environment variables and command-line arguments (database rows win). Groups: Site, Smtp, VirusScan, RateLimiting, Profiling, Caching and Logging.
