@@ -198,6 +198,51 @@ namespace FreeSpeakWeb.Tests.Services
             errorMessage.Should().Contain("Moderators cannot ban administrators");
         }
 
+        private async Task<(GroupBannedMemberService Service, int GroupId)> SeedAdminBanScenarioAsync(string dbName)
+        {
+            var dbFactory = CreateDbContextFactory(dbName);
+            var service = new GroupBannedMemberService(dbFactory, CreateMockLogger<GroupBannedMemberService>(), CreateMockAuditLogRepository(), CreateMockRoleService());
+            var group = TestDataFactory.CreateTestGroup("creator1");
+            using var context = await dbFactory.CreateDbContextAsync();
+            context.Users.AddRange(
+                TestDataFactory.CreateTestUser(id: "creator1"),
+                TestDataFactory.CreateTestUser(id: "admin1"),
+                TestDataFactory.CreateTestUser(id: "admin2"));
+            context.Groups.Add(group);
+            await context.SaveChangesAsync();
+            var members = new[]
+            {
+                TestDataFactory.CreateTestGroupUser(group.Id, "creator1", isAdmin: true),
+                TestDataFactory.CreateTestGroupUser(group.Id, "admin1", isAdmin: true),
+                TestDataFactory.CreateTestGroupUser(group.Id, "admin2", isAdmin: true)
+            };
+            foreach (var m in members) m.GroupId = group.Id;
+            context.GroupUsers.AddRange(members);
+            await context.SaveChangesAsync();
+            return (service, group.Id);
+        }
+
+        [Fact]
+        public async Task BanUserAsync_AdminBanningAdmin_ShouldReturnError()
+        {
+            var (service, groupId) = await SeedAdminBanScenarioAsync("BanAdminByAdmin");
+
+            var (success, errorMessage) = await service.BanUserAsync(groupId, "admin2", "admin1");
+
+            success.Should().BeFalse();
+            errorMessage.Should().Contain("cannot ban");
+        }
+
+        [Fact]
+        public async Task BanUserAsync_CreatorBanningAdmin_ShouldSucceed()
+        {
+            var (service, groupId) = await SeedAdminBanScenarioAsync("BanAdminByCreator");
+
+            var (success, _) = await service.BanUserAsync(groupId, "admin2", "creator1");
+
+            success.Should().BeTrue();
+        }
+
         [Fact]
         public async Task BanUserAsync_AlreadyBanned_ShouldReturnError()
         {
