@@ -655,6 +655,47 @@ namespace FreeSpeakWeb.Tests.Services
         }
 
         [Fact]
+        public async Task CheckDownloadAvailabilityAsync_UnknownFile_ReturnsUnavailable()
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Availability1");
+            var service = CreateGroupFileService(repoFactory);
+
+            var (available, error) = await service.CheckDownloadAvailabilityAsync(999, "11111111-1111-1111-1111-111111111111");
+
+            available.Should().BeFalse();
+            error.Should().Contain("File not found");
+        }
+
+        [Fact]
+        public async Task CheckDownloadAvailabilityAsync_ExistingFile_ReturnsAvailable()
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Availability2");
+            var service = CreateGroupFileService(repoFactory);
+
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
+            group.EnableFileUploads = true;
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(user);
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+                groupUser.GroupId = group.Id;
+                context.GroupUsers.Add(groupUser);
+                await context.SaveChangesAsync();
+            }
+
+            var content = "Test file content"u8.ToArray();
+            var upload = await service.UploadFileAsync(group.Id, "11111111-1111-1111-1111-111111111111", "testfile.txt", null, new MemoryStream(content), "text/plain", content.Length);
+
+            var (available, error) = await service.CheckDownloadAvailabilityAsync(upload.File!.Id, "11111111-1111-1111-1111-111111111111");
+
+            available.Should().BeTrue();
+            error.Should().BeNull();
+        }
+
+        [Fact]
         public async Task GetFileForDownloadAsync_NonMember_ShouldFail()
         {
             // Arrange

@@ -72,4 +72,10 @@
   <data name="AboutToDecline" xml:space="preserve"><value>以下を却下しようとしています:</value></data>
   <data name="ReasonOptional" xml:space="preserve"><value>理由（任意）</value></data>
   <data name="DeclineReasonPlaceholder" xml:space="preserve"><value>このファイルを却下する理由を入力してください...</value></data>
+  <data name="FileUnavailable" xml:space="preserve">
+    <value>このファイルは利用できなくなりました。削除された可能性があります。一覧を更新しました。</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>ダウンロードに失敗しました: {0}</value>
+  </data>
 </root>

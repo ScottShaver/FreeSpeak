@@ -223,4 +223,10 @@
   <data name="DeclineReasonPlaceholder" xml:space="preserve">
     <value>قدم سبباً لرفض هذا الملف...</value>
   </data>
+  <data name="FileUnavailable" xml:space="preserve">
+    <value>لم يعد هذا الملف متاحًا. ربما تمت إزالته؛ تم تحديث القائمة.</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>فشل التنزيل: {0}</value>
+  </data>
 </root>

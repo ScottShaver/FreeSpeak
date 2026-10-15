@@ -767,19 +767,31 @@
     #region Download
 
     /// <summary>
-    /// Downloads a file.
+    /// Downloads a file. The file's availability is verified first so a missing or inaccessible
+    /// file produces an in-app error instead of opening a new tab with an error response.
     /// </summary>
     private async Task DownloadFile(int fileId)
     {
         try
         {
+            if (!string.IsNullOrEmpty(currentUserId))
+            {
+                var (available, _) = await GroupFileService.CheckDownloadAvailabilityAsync(fileId, currentUserId);
+                if (!available)
+                {
+                    AlertService.ShowError(Localizer["FileUnavailable"]);
+                    await LoadFiles();
+                    return;
+                }
+            }
+
             // Trigger download via navigation to the API endpoint
             var downloadUrl = $"/api/group-files/{fileId}/download";
             await JSRuntime.InvokeVoidAsync("open", downloadUrl, "_blank");
         }
         catch (Exception ex)
         {
-            AlertService.ShowError($"Download failed: {ex.Message}");
+            AlertService.ShowError(string.Format(Localizer["DownloadFailed"], ex.Message));
         }
     }
 

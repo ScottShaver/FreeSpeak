@@ -223,4 +223,10 @@
   <data name="DeclineReasonPlaceholder" xml:space="preserve">
     <value>Indiquez une raison pour refuser ce fichier...</value>
   </data>
+  <data name="FileUnavailable" xml:space="preserve">
+    <value>Ce fichier n&apos;est plus disponible. Il a peut-être été supprimé ; la liste a été actualisée.</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Échec du téléchargement : {0}</value>
+  </data>
 </root>

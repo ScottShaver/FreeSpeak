@@ -54,7 +54,12 @@ public class GroupFilesController : ControllerBase
             {
                 _logger.LogWarning("File download failed for user {UserId}, file {FileId}: {Error}",
                     userId, fileId, result.ErrorMessage);
-                return NotFound(result.ErrorMessage);
+                return NotFound(new ProblemDetails
+                {
+                    Status = StatusCodes.Status404NotFound,
+                    Title = "File unavailable",
+                    Detail = "This file is no longer available. Please go back to the group files page and refresh."
+                });
             }
 
             if (result.FileStream == null)

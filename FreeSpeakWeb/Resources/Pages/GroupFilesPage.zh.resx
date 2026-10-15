@@ -72,4 +72,10 @@
   <data name="AboutToDecline" xml:space="preserve"><value>您即将拒绝：</value></data>
   <data name="ReasonOptional" xml:space="preserve"><value>原因（可选）</value></data>
   <data name="DeclineReasonPlaceholder" xml:space="preserve"><value>请提供拒绝此文件的原因...</value></data>
+  <data name="FileUnavailable" xml:space="preserve">
+    <value>此文件已不可用，可能已被删除；列表已刷新。</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>下载失败：{0}</value>
+  </data>
 </root>
