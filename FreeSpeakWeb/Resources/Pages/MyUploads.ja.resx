@@ -109,4 +109,13 @@
   <data name="Uploaded" xml:space="preserve">
     <value>アップロード済み</value>
   </data>
+  <data name="DeleteUploadFailed" xml:space="preserve">
+    <value>アップロードを削除できませんでした。</value>
+  </data>
+  <data name="DeleteUpload" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="ConfirmDeleteUpload" xml:space="preserve">
+    <value>このアップロードを削除しますか？投稿からも削除されます。この操作は元に戻せません。</value>
+  </data>
 </root>

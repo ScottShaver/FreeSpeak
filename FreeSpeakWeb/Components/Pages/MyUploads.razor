@@ -76,6 +76,7 @@
                                 var index = i;
                                 var picture = pictures[index];
                                 <div class="media-item" @onclick="() => HandlePictureClick(picture, index)">
+                                    <button type="button" class="media-delete-btn" title="@Localizer["DeleteUpload"]" aria-label="@Localizer["DeleteUpload"]" @onclick="() => DeleteMedia(picture, true)" @onclick:stopPropagation="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg></button>
                                     <img src="@picture.ImageUrl" alt="Uploaded @picture.UploadedAt.ToShortDateString()" loading="lazy" />
                                     <div class="media-overlay">
                                         <span class="upload-date">@GetRelativeTime(picture.UploadedAt)</span>
@@ -130,6 +131,7 @@
                                 var index = i;
                                 var video = videos[index];
                                 <div class="media-item video-item" @onclick="() => OpenVideoViewer(video)">
+                                    <button type="button" class="media-delete-btn" title="@Localizer["DeleteUpload"]" aria-label="@Localizer["DeleteUpload"]" @onclick="() => DeleteMedia(video, false)" @onclick:stopPropagation="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg></button>
                                     <div class="video-placeholder">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="white" viewBox="0 0 16 16">
                                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -403,6 +405,34 @@
         // For now, just open in new tab
         // TODO: Create a video viewer modal
         JS.InvokeVoidAsync("open", video.ImageUrl, "_blank");
+    }
+
+    private async Task DeleteMedia(PostImage media, bool isPicture)
+    {
+        if (currentUserId == null) return;
+
+        var confirmed = await JS.InvokeAsync<bool>("confirm", Localizer["ConfirmDeleteUpload"].Value);
+        if (!confirmed) return;
+
+        var result = await PostService.DeleteUploadedImageAsync(media.Id, currentUserId);
+        if (!result.Success)
+        {
+            await JS.InvokeVoidAsync("alert", result.ErrorMessage ?? Localizer["DeleteUploadFailed"].Value);
+            return;
+        }
+
+        if (isPicture)
+        {
+            pictures.Remove(media);
+            totalPictures = Math.Max(0, totalPictures - 1);
+        }
+        else
+        {
+            videos.Remove(media);
+            totalVideos = Math.Max(0, totalVideos - 1);
+        }
+
+        StateHasChanged();
     }
 
     private void CloseImageViewer()

@@ -109,4 +109,13 @@
   <data name="Uploaded" xml:space="preserve">
     <value>업로드됨</value>
   </data>
+  <data name="DeleteUploadFailed" xml:space="preserve">
+    <value>업로드를 삭제할 수 없습니다.</value>
+  </data>
+  <data name="DeleteUpload" xml:space="preserve">
+    <value>삭제</value>
+  </data>
+  <data name="ConfirmDeleteUpload" xml:space="preserve">
+    <value>이 업로드를 삭제하시겠습니까? 게시물에서도 제거되며 되돌릴 수 없습니다.</value>
+  </data>
 </root>

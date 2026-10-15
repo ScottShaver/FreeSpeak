@@ -89,6 +89,68 @@ namespace FreeSpeakWeb.Tests.Services
 
         #endregion
 
+        /// <summary>
+        /// Seeds an author and a post with the given text and image URLs, returning the image ids.
+        /// </summary>
+        private static async Task<List<int>> SeedPostWithImagesAsync(TestRepositoryFactory repoFactory, string content, params string[] urls)
+        {
+            using var context = await repoFactory.ContextFactory.CreateDbContextAsync();
+            context.Users.Add(TestDataFactory.CreateTestUser(id: "author1"));
+            await context.SaveChangesAsync();
+            var post = new Post { AuthorId = "author1", Content = content };
+            context.Posts.Add(post);
+            await context.SaveChangesAsync();
+            var images = urls.Select((u, i) => new PostImage { PostId = post.Id, ImageUrl = u, DisplayOrder = i }).ToList();
+            context.PostImages.AddRange(images);
+            await context.SaveChangesAsync();
+            return images.Select(i => i.Id).ToList();
+        }
+
+        [Fact]
+        public async Task DeleteUploadedImageAsync_ByAuthor_RemovesImageButKeepsPost()
+        {
+            var repoFactory = CreateTestRepositoryFactory("DeleteUpload1");
+            var service = CreatePostService(repoFactory);
+            var ids = await SeedPostWithImagesAsync(repoFactory, "text", "/api/secure-files/post-image/author1/1/a.jpg", "/api/secure-files/post-image/author1/2/b.jpg");
+
+            var (success, error) = await service.DeleteUploadedImageAsync(ids[0], "author1");
+
+            success.Should().BeTrue();
+            error.Should().BeNull();
+            using var context = await repoFactory.ContextFactory.CreateDbContextAsync();
+            context.PostImages.Count().Should().Be(1);
+            context.Posts.Count().Should().Be(1);
+        }
+
+        [Fact]
+        public async Task DeleteUploadedImageAsync_ByOtherUser_IsRejected()
+        {
+            var repoFactory = CreateTestRepositoryFactory("DeleteUpload2");
+            var service = CreatePostService(repoFactory);
+            var ids = await SeedPostWithImagesAsync(repoFactory, "text", "/api/secure-files/post-image/author1/1/a.jpg");
+
+            var (success, _) = await service.DeleteUploadedImageAsync(ids[0], "someone-else");
+
+            success.Should().BeFalse();
+            using var context = await repoFactory.ContextFactory.CreateDbContextAsync();
+            context.PostImages.Count().Should().Be(1);
+        }
+
+        [Fact]
+        public async Task DeleteUploadedImageAsync_OnlyContentOfPost_IsRejected()
+        {
+            var repoFactory = CreateTestRepositoryFactory("DeleteUpload3");
+            var service = CreatePostService(repoFactory);
+            var ids = await SeedPostWithImagesAsync(repoFactory, "", "/api/secure-files/post-image/author1/1/a.jpg");
+
+            var (success, error) = await service.DeleteUploadedImageAsync(ids[0], "author1");
+
+            success.Should().BeFalse();
+            error.Should().Contain("Delete the post");
+            using var context = await repoFactory.ContextFactory.CreateDbContextAsync();
+            context.PostImages.Count().Should().Be(1);
+        }
+
         [Fact]
         public async Task CreatePostAsync_WithWhitespaceOnly_ShouldReturnError()
         {

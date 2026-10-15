@@ -109,4 +109,13 @@
   <data name="Uploaded" xml:space="preserve">
     <value>Caricato</value>
   </data>
+  <data name="DeleteUploadFailed" xml:space="preserve">
+    <value>Impossibile eliminare il caricamento.</value>
+  </data>
+  <data name="DeleteUpload" xml:space="preserve">
+    <value>Elimina</value>
+  </data>
+  <data name="ConfirmDeleteUpload" xml:space="preserve">
+    <value>Eliminare questo caricamento? Verrà rimosso anche dal tuo post. L&apos;azione non può essere annullata.</value>
+  </data>
 </root>

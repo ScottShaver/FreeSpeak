@@ -109,4 +109,13 @@
   <data name="Uploaded" xml:space="preserve">
     <value>已上传</value>
   </data>
+  <data name="DeleteUploadFailed" xml:space="preserve">
+    <value>无法删除上传内容。</value>
+  </data>
+  <data name="DeleteUpload" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="ConfirmDeleteUpload" xml:space="preserve">
+    <value>删除此上传内容？它也会从您的帖子中移除。此操作无法撤销。</value>
+  </data>
 </root>

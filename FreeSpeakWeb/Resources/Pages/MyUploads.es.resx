@@ -109,4 +109,13 @@
   <data name="Uploaded" xml:space="preserve">
     <value>Subido</value>
   </data>
+  <data name="DeleteUploadFailed" xml:space="preserve">
+    <value>No se pudo eliminar la carga.</value>
+  </data>
+  <data name="DeleteUpload" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="ConfirmDeleteUpload" xml:space="preserve">
+    <value>¿Eliminar esta carga? También se quitará de tu publicación. Esta acción no se puede deshacer.</value>
+  </data>
 </root>
