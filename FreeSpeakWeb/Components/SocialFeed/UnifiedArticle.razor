@@ -20,6 +20,7 @@
         CurrentUserId="@CurrentUserId"
         CreatedAt="@CreatedAt"
         AudienceType="@currentAudienceType"
+        IsPrivateGroup="@(ArticlePostType == PostType.GroupPost && IsPrivateGroup)"
         IsPinned="@currentIsPinned"
         LikeCount="@LikeCount"
         CommentCount="@(LoadCommentsInternally ? internalTotalCommentCount : CommentCount)"

@@ -72,6 +72,12 @@ public partial class UnifiedArticle : ArticleComponentBase
     public string GroupName { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets whether the group is private (GroupPost only); drives the audience icon.
+    /// </summary>
+    [Parameter]
+    public bool IsPrivateGroup { get; set; } = false;
+
+    /// <summary>
     /// Gets or sets the author's points in this group (GroupPost only).
     /// </summary>
     [Parameter]
