@@ -52,3 +52,10 @@
 - Implement strictly what the spec says. If the spec is ambiguous or incomplete, stop and ask instead of inventing scope.
 - Do not mark work complete until every acceptance criterion in the spec is met and the build and tests pass.
 - Commit messages: short imperative summary, with details in the body when needed.
+
+## Local database and agent testing
+- A local PostgreSQL server runs on localhost:5432. The disposable test database is `FreeSpeak_AgentTest`; see `docs/AGENT_TESTING.md` for the reset and start scripts, test personas and charters.
+- Only run `Reset-AgentTestDb.ps1` and `Start-AgentTestApp.ps1` for testing. They touch only `FreeSpeak_AgentTest`.
+- Never run migrations, resets, seeders or destructive SQL against any other database, and never change connection strings to point at one.
+- Database credentials live outside the repo (the user's `pgpass.conf`). Never read, print, log or commit them.
+- Run the scripts with `powershell -ExecutionPolicy Bypass -File ...`. The seeder only runs in Development with `AgentTest:Enabled` and a database name ending `_AgentTest`; do not weaken these guards.
