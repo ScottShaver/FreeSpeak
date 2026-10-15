@@ -160,7 +160,7 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    <UserAvatar ImageUrl="@file.UploaderImageUrl" Size="sm" />
+                                                    <UserAvatar ImageUrl="@file.UploaderImageUrl" Name="@file.UploaderName" Size="sm" />
                                                     <span class="ms-2">@file.UploaderName</span>
                                                 </div>
                                             </td>
@@ -168,10 +168,10 @@
                                             <td>@file.RelativeUploadTime</td>
                                             <td class="text-end">
                                                 <button class="btn btn-success btn-sm me-1" @onclick="() => ApproveFile(file.Id)" title="@Localizer["Approve"]">
-                                                    <i class="bi bi-check-lg"></i>
+                                                    <i class="bi bi-check-lg me-1"></i>@Localizer["Approve"]
                                                 </button>
                                                 <button class="btn btn-danger btn-sm" @onclick="() => OpenDeclineModal(file)" title="@Localizer["Decline"]">
-                                                    <i class="bi bi-x-lg"></i>
+                                                    <i class="bi bi-x-lg me-1"></i>@Localizer["Decline"]
                                                 </button>
                                             </td>
                                         </tr>
@@ -872,6 +872,7 @@
                 await LoadPendingFiles();
                 await LoadPendingFileCount();
                 await LoadFiles();
+                await LoadStorageStats();
             }
             else
             {
@@ -927,6 +928,8 @@
                 CloseDeclineModal();
                 await LoadPendingFiles();
                 await LoadPendingFileCount();
+                await LoadFiles();
+                await LoadStorageStats();
             }
             else
             {
