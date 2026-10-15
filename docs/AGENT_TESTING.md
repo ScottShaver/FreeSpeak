@@ -60,15 +60,33 @@ All personas share the dev-only password **`AgentTest123!`**. Emails end in `@ag
 | Username | Role / state | Notes |
 |---|---|---|
 | `agent.sysadmin` | System administrator | Global `SystemAdministrator` role (admin pages). |
-| `agent.owner` | Group owner | Creator and admin of both groups. |
-| `agent.moderator` | Group moderator | Moderator in both groups. |
-| `agent.member` | Group member | Member of the open group only. Author of 3 feed posts (public, friends-only, only-me). |
+| `agent.sysadmin2` | Second system administrator | Same role as `agent.sysadmin`; use it for last-admin / self-demotion tests so `agent.sysadmin` is untouched. |
+| `agent.owner` | Group owner | Creator and admin of all three groups. |
+| `agent.moderator` | Group moderator | Moderator in groups 1 and 2; the only non-creator **admin** of group 3. |
+| `agent.member` | Group member | Member of groups 1 and 3. Author of 7 feed posts (see below). |
 | `agent.banned` | Banned user | Banned from "Agent Test Open Group". |
-| `agent.newuser` | New user | No friends, groups, or posts. |
-| `agent.friend` | Friend | Accepted friend of `agent.member` and `agent.owner`. |
-| `agent.stranger` | Stranger | No friendships or groups. |
+| `agent.newuser` | New user | No friends, groups, or posts. Pending join request to the private group. |
+| `agent.friend` | Friend | Accepted friend of `agent.member` and `agent.owner`. Approved member of the private group with 2 pending posts. |
+| `agent.stranger` | Stranger | No accepted friendships or groups. Pending join request to the private group and pending friend request to `agent.member`. |
 
-Seeded data: 2 groups ("Agent Test Open Group": public; "Agent Test Private Group": private, join and post approval required), 3 group posts, 3 feed posts, 3 comments. Timestamps are fixed, so data is identical on every reset.
+Seeded data (timestamps are fixed from 2026-01-01 12:00 UTC, so data is identical on every reset). Original rows keep their IDs; new rows are appended.
+
+| Area | IDs / details |
+|---|---|
+| Groups | 1 Open Group (public), 2 Private Group (private, join and post approval), 3 Admin Group (public; owner creator + `agent.moderator` admin + `agent.member`) |
+| Pending join requests | `GroupJoinRequests` 1 (`agent.newuser`) and 2 (`agent.stranger`) to group 2 |
+| Pending group posts | `GroupPosts` 4 and 5 in group 2 by `agent.friend` (status Pending; 4 = approve, 5 = decline) |
+| Group posts | 1, 2 (group 1), 3 (group 2) approved |
+| Friend requests | `Friendships` 1, 2 accepted; 3 pending from `agent.stranger` to `agent.member` |
+| Feed posts by `agent.member` | 1 public, 2 friends-only, 3 only-me; 4 public, 5 friends-only, 6 only-me (extra); Posts 1,4,7 are public, 2,5 friends-only, 3,6 only-me. `agent.member` sees all 7, `agent.friend` 5, others 3; the profile Posts count still includes only-me posts (known issue reproducible) |
+| Comments | `Comments` 1, 2 on post 1; 3 to 7 on post 7: top-level comment 3 with a chain of replies 4, 5, 6, 7 (depth 0 to 4). `MaxFeedPostCommentDepth` is 4, so 7 is at the maximum and has no Reply button |
+| Group comments | `GroupPostComments` 1 on group post 2 |
+| Notifications | `UserNotifications` 1 to 3 for `agent.member` (friend request, unread system, read system); 4 to 6 for `agent.owner` (2 unread, 1 read) |
+| Group files | `GroupFiles` 1 (approved) and 2 (pending) in group 1, uploaded by `agent.member`. Records only; no file exists on disk, so listing and approval work but download does not |
+
+Notifications use `ExpiresAt = NULL`. Cleanup (`DeleteExpiredNotificationsAsync`, see `docs/NOTIFICATION_CLEANUP.md`) only deletes rows with `ExpiresAt < now`, so these never get purged even though `CreatedAt` is January 2026.
+
+Not seeded: image posts (`PostImages`/`GroupPostImages`). They need real image files on disk, and a record pointing at a missing file only shows a broken image.
 
 The system admin from `appsettings.json` (`sysadmin` / `SysAdmin123!`) also exists.
 
@@ -169,14 +187,20 @@ Status after the first QA round (pilot as member, stranger, banned, moderator, o
 - Confirmations appear for Ban Member, Unfriend and Delete comment; double-clicking Post creates one post; a 10k-character post shows "See more".
 
 ### Not yet tested
-- Group join-request and post approval flows. The seed has no pending data, and the private group is not discoverable, so add pending requests and posts to `AgentTestSeeder`.
-- A creator leaving or being removed from a group (no Leave button for the creator today).
-- Demoting or deleting the last admin; suspend and ban from the admin UI (menu items are disabled).
-- Only-me post count leak on profiles (shows 6 posts to a friend, 5 visible).
-- Groups: stale member count on the Find Groups card after a ban.
-- Other feature areas: friend request acceptance, notifications (seed data is dated Jan 2026, so notifications showed 0), file uploads, group files, search, settings and the language switcher on admin pages.
-- Reply depth: UI showed 5 tiers; the documented maximum is 4.
+Seed data now exists for the items below (see section 4); they still need a browser run:
+- Group join-request approval (group 2, requests from `agent.newuser` and `agent.stranger`) and post approval (group posts 4 and 5).
+- Demoting or removing the last admin: group 3 (`agent.moderator` is the only non-creator admin) and `agent.sysadmin2` for system admin role changes.
+- Only-me post count on profiles: compare `agent.member`'s profile as `agent.member` vs. as `agent.friend`.
+- Friend request acceptance (`agent.stranger` to `agent.member`) and notifications (never expire; `agent.member` and `agent.owner` have unread ones).
+- Reply depth: comment thread on post 7 is already at depth 4 (documented maximum); UI showed 5 tiers earlier, so verify what is counted.
+- Group files list and approval (records only, no downloads).
 - `agent.newuser` persona and the cross-cutting probes in section 7.
+
+Still without seed data or coverage:
+- A creator leaving or being removed from a group (no Leave button for the creator today).
+- Suspend and ban from the admin UI (menu items are disabled).
+- Groups: stale member count on the Find Groups card after a ban.
+- Real file and image uploads (image posts are not seeded), search, settings and the language switcher on admin pages.
 
 ### Known open items (not from QA)
 - Dependency vulnerabilities: SixLabors.ImageSharp (upgraded to 4.1.3) and AngleSharp (via HtmlSanitizer 9.2.1039) were patched. ImageSharp 4.x needs a Six Labors license for Release builds; manually check image upload and thumbnails.
