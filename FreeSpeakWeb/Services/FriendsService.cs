@@ -156,6 +156,7 @@ namespace FreeSpeakWeb.Services
             friendship.RespondedAt = DateTime.UtcNow;
 
             await _friendshipRepository.UpdateAsync(friendship);
+            await MarkFriendRequestNotificationsReadAsync(friendship);
 
             // PERFORMANCE: Invalidate friend list cache for both users
             _friendshipCache.InvalidateFriendshipCache(friendship.RequesterId, friendship.AddresseeId);
@@ -201,6 +202,39 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
+        /// Marks the addressee's unread friend-request notification(s) for a friendship as read once the request is answered.
+        /// Failures are swallowed so they never affect the accept/reject result.
+        /// </summary>
+        /// <param name="friendship">The friendship whose request was answered.</param>
+        private async Task MarkFriendRequestNotificationsReadAsync(Friendship friendship)
+        {
+            try
+            {
+                var marker = $"\"FriendshipId\":{friendship.Id},";
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var notifications = await context.UserNotifications
+                    .Where(n => n.UserId == friendship.AddresseeId
+                        && n.Type == NotificationType.FriendRequest
+                        && !n.IsRead
+                        && n.Data != null && n.Data.Contains(marker))
+                    .ToListAsync();
+
+                if (notifications.Count == 0) return;
+
+                foreach (var notification in notifications)
+                {
+                    notification.IsRead = true;
+                }
+
+                await context.SaveChangesAsync();
+            }
+            catch
+            {
+                // Best effort only
+            }
+        }
+
+        /// <summary>
         /// Rejects a pending friend request.
         /// </summary>
         /// <param name="friendshipId">The unique identifier of the friendship record.</param>
@@ -229,6 +263,7 @@ namespace FreeSpeakWeb.Services
             friendship.RespondedAt = DateTime.UtcNow;
 
             await _friendshipRepository.UpdateAsync(friendship);
+            await MarkFriendRequestNotificationsReadAsync(friendship);
 
             // Log friend request declined to audit log
             await _auditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
