@@ -217,4 +217,7 @@
   <data name="PreferencesSavedReloading" xml:space="preserve">
     <value>환경설정이 저장되었습니다. 언어 변경을 적용하기 위해 페이지를 다시 로드합니다...</value>
   </data>
+  <data name="ExpirationRangeError" xml:space="preserve">
+    <value>1에서 365 사이의 정수(일)를 입력하세요.</value>
+  </data>
 </root>

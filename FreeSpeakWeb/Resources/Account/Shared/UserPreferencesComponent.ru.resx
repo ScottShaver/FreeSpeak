@@ -217,4 +217,7 @@
   <data name="PreferencesSavedReloading" xml:space="preserve">
     <value>Настройки сохранены. Перезагрузка страницы для применения языка...</value>
   </data>
+  <data name="ExpirationRangeError" xml:space="preserve">
+    <value>Введите целое число дней от 1 до 365.</value>
+  </data>
 </root>

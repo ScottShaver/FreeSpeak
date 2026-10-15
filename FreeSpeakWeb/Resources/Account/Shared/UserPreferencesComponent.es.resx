@@ -217,4 +217,7 @@
   <data name="PreferencesSavedReloading" xml:space="preserve">
     <value>Preferencias guardadas. Recargando la página para aplicar el cambio de idioma...</value>
   </data>
+  <data name="ExpirationRangeError" xml:space="preserve">
+    <value>Introduce un número entero de días entre 1 y 365.</value>
+  </data>
 </root>

@@ -217,4 +217,7 @@
   <data name="PreferencesSavedReloading" xml:space="preserve">
     <value>設定を保存しました。言語の変更を適用するためページを再読み込みします...</value>
   </data>
+  <data name="ExpirationRangeError" xml:space="preserve">
+    <value>1〜365 の整数で日数を入力してください。</value>
+  </data>
 </root>
