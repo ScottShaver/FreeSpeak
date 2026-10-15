@@ -24,7 +24,8 @@ namespace FreeSpeakWeb.Services
         private readonly IPostNotificationMuteRepository _muteRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly ILogger<PostService> _logger;
-        private readonly SiteSettings _siteSettings;
+        private readonly IOptions<SiteSettings> _siteSettingsOptions;
+        private SiteSettings _siteSettings => _siteSettingsOptions.Value;
         private readonly IWebHostEnvironment _environment;
         private readonly NotificationService _notificationService;
         private readonly UserPreferenceService _userPreferenceService;
@@ -78,7 +79,7 @@ namespace FreeSpeakWeb.Services
             _muteRepository = muteRepository;
             _notificationRepository = notificationRepository;
             _logger = logger;
-            _siteSettings = siteSettings.Value;
+            _siteSettingsOptions = siteSettings;
             _environment = environment;
             _notificationService = notificationService;
             _userPreferenceService = userPreferenceService;

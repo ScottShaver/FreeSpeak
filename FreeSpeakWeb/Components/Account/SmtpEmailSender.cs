@@ -13,19 +13,23 @@ namespace FreeSpeakWeb.Components.Account;
 /// </summary>
 internal sealed class SmtpEmailSender : IEmailSender<ApplicationUser>
 {
-    private readonly SmtpSettings _smtpSettings;
-    private readonly SiteSettings _siteSettings;
+    private readonly IOptionsMonitor<SmtpSettings> _smtpSettingsMonitor;
+    private readonly IOptions<SiteSettings> _siteSettingsOptions;
     private readonly ILogger<SmtpEmailSender> _logger;
+
+    private SmtpSettings _smtpSettings => _smtpSettingsMonitor.CurrentValue;
+    private SiteSettings _siteSettings => _siteSettingsOptions.Value;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SmtpEmailSender"/> class.
     /// </summary>
-    /// <param name="smtpSettings">The SMTP configuration settings.</param>
+    /// <param name="siteSettings">The site settings (live).</param>
+    /// <param name="smtpSettings">Monitor for the SMTP configuration; changes apply to the next send.</param>
     /// <param name="logger">The logger instance.</param>
-    public SmtpEmailSender(IOptions<SiteSettings> siteSettings,IOptions<SmtpSettings> smtpSettings, ILogger<SmtpEmailSender> logger)
+    public SmtpEmailSender(IOptions<SiteSettings> siteSettings, IOptionsMonitor<SmtpSettings> smtpSettings, ILogger<SmtpEmailSender> logger)
     {
-        _siteSettings = siteSettings.Value;
-        _smtpSettings = smtpSettings.Value;
+        _siteSettingsOptions = siteSettings;
+        _smtpSettingsMonitor = smtpSettings;
         _logger = logger;
     }
 

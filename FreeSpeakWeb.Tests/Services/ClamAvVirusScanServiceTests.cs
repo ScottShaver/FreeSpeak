@@ -205,7 +205,7 @@ public class ClamAvVirusScanServiceTests
     public void Constructor_WithEmptyHost_DisablesScanningGracefully()
     {
         // Arrange
-        var settings = Options.Create(new VirusScanSettings
+        var settings = new FreeSpeakWeb.Tests.Helpers.TestOptionsMonitor<VirusScanSettings>(new VirusScanSettings
         {
             Enabled = true,
             ClamAvHost = "", // Empty host should be treated as disabled
@@ -221,7 +221,7 @@ public class ClamAvVirusScanServiceTests
     public void Constructor_WithNullHost_DisablesScanningGracefully()
     {
         // Arrange
-        var settings = Options.Create(new VirusScanSettings
+        var settings = new FreeSpeakWeb.Tests.Helpers.TestOptionsMonitor<VirusScanSettings>(new VirusScanSettings
         {
             Enabled = true,
             ClamAvHost = null!, // Null host should be treated as disabled
@@ -237,13 +237,13 @@ public class ClamAvVirusScanServiceTests
 
     #region Helper Methods
 
-    private static IOptions<VirusScanSettings> CreateSettings(
+    private static IOptionsMonitor<VirusScanSettings> CreateSettings(
         bool enabled = false,
         string host = "localhost",
         int port = 3310,
         bool failOpen = false)
     {
-        return Options.Create(new VirusScanSettings
+        return new FreeSpeakWeb.Tests.Helpers.TestOptionsMonitor<VirusScanSettings>(new VirusScanSettings
         {
             Enabled = enabled,
             ClamAvHost = host,

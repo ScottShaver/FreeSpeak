@@ -13,36 +13,68 @@ namespace FreeSpeakWeb.Services;
 public class ClamAvVirusScanService : IVirusScanService
 {
     private readonly ILogger<ClamAvVirusScanService> _logger;
-    private readonly VirusScanSettings _settings;
-    private readonly ClamClient? _clamClient;
+    private readonly IOptionsMonitor<VirusScanSettings> _settingsMonitor;
+    private readonly object _clientLock = new();
+    private VirusScanSettings? _clientSettings;
+    private ClamClient? _client;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ClamAvVirusScanService"/> class.
     /// </summary>
     /// <param name="logger">The logger instance for recording scan events.</param>
-    /// <param name="settings">The virus scan configuration settings.</param>
+    /// <param name="settings">Monitor for the virus scan configuration; changes apply without a restart.</param>
     public ClamAvVirusScanService(
         ILogger<ClamAvVirusScanService> logger,
-        IOptions<VirusScanSettings> settings)
+        IOptionsMonitor<VirusScanSettings> settings)
     {
         _logger = logger;
-        _settings = settings.Value;
+        _settingsMonitor = settings;
+        _ = _clamClient;
+    }
 
-        if (_settings.Enabled && !string.IsNullOrEmpty(_settings.ClamAvHost))
+    /// <summary>
+    /// Gets the current virus scan settings.
+    /// </summary>
+    private VirusScanSettings _settings => _settingsMonitor.CurrentValue;
+
+    /// <summary>
+    /// Gets a ClamAV client for the current settings, rebuilding it when the settings change.
+    /// Null when scanning is disabled or no host is configured.
+    /// </summary>
+    private ClamClient? _clamClient
+    {
+        get
         {
-            _clamClient = new ClamClient(_settings.ClamAvHost, _settings.ClamAvPort)
+            var settings = _settings;
+            lock (_clientLock)
             {
-                MaxStreamSize = _settings.MaxStreamSizeBytes
-            };
-            _logger.LogInformation(
-                "ClamAV virus scanning enabled. Connecting to {Host}:{Port}",
-                _settings.ClamAvHost, _settings.ClamAvPort);
-        }
-        else
-        {
-            _logger.LogWarning("Virus scanning is disabled. Files will not be scanned for malware.");
+                if (ReferenceEquals(settings, _clientSettings))
+                {
+                    return _client;
+                }
+
+                _clientSettings = settings;
+                if (settings.Enabled && !string.IsNullOrEmpty(settings.ClamAvHost))
+                {
+                    _client = new ClamClient(settings.ClamAvHost, settings.ClamAvPort)
+                    {
+                        MaxStreamSize = settings.MaxStreamSizeBytes
+                    };
+                    _logger.LogInformation(
+                        "ClamAV virus scanning enabled. Connecting to {Host}:{Port}",
+                        settings.ClamAvHost, settings.ClamAvPort);
+                }
+                else
+                {
+                    _client = null;
+                    _logger.LogWarning("Virus scanning is disabled. Files will not be scanned for malware.");
+                }
+
+                return _client;
+            }
         }
     }
+
 
     /// <inheritdoc/>
     public async Task<VirusScanResult> ScanAsync(byte[] fileBytes, string fileName, CancellationToken cancellationToken = default)
