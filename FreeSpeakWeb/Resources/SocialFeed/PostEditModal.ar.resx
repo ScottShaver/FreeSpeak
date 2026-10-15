@@ -12,4 +12,5 @@
   <data name="CancelChanges" xml:space="preserve"><value>إلغاء التغييرات</value></data>
   <data name="SaveChanges" xml:space="preserve"><value>حفظ التغييرات</value></data>
   <data name="Saving" xml:space="preserve"><value>جارٍ الحفظ...</value></data>
+  <data name="UploadFailedError" xml:space="preserve"><value>فشل رفع الصور. يرجى المحاولة مرة أخرى.</value></data>
 </root>

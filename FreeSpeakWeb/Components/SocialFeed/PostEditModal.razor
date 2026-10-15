@@ -7,6 +7,7 @@
 @inject Microsoft.Extensions.Options.IOptions<SiteSettings> SiteSettings
 @inject IJSRuntime JS
 @inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.PostEditModal> Localizer
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.ImageUploadModal> UploadLocalizer
 @implements IAsyncDisposable
 
 <div class="post-detail-modal-backdrop" @onclick="HandleCancelClick">
@@ -126,6 +127,15 @@
                     </div>
                 </div>
             }
+            @if (uploadErrors.Any())
+            {
+                <div class="alert alert-danger mt-2" role="alert">
+                    @foreach (var error in uploadErrors)
+                    {
+                        <div>@error</div>
+                    }
+                </div>
+            }
         </div>
 
         <!-- Footer with Action Buttons -->
@@ -168,6 +178,8 @@
     private List<ImageUploadModal.SelectedImage> newImages = new();
     private List<int> removedImageIds = new();
     private bool isSaving = false;
+    private List<string> uploadErrors = new();
+    private const long MaxNewImageSizeBytes = 10L * 1024 * 1024;
     private bool showEmojiPicker = false;
     private string emojiPickerAnchorId = $"emoji-picker-anchor-{Guid.NewGuid():N}";
     private ElementReference textareaElement;
@@ -336,6 +348,12 @@
             return;
         }
 
+        uploadErrors = ValidateNewImages();
+        if (uploadErrors.Any())
+        {
+            return;
+        }
+
         isSaving = true;
         StateHasChanged();
 
@@ -353,10 +371,13 @@
 
                 // Pass GroupId for group post images to ensure they're stored in the correct location
                 var uploadResult = await ImageUploadService.UploadImagesAsync(CurrentUserId, imagesToUpload, groupId: GroupId);
-                if (uploadResult.Success)
+                if (!uploadResult.Success)
                 {
-                    newImageUrls = uploadResult.ImageUrls;
+                    uploadErrors = new List<string> { Localizer["UploadFailedError"].Value };
+                    return;
                 }
+
+                newImageUrls = uploadResult.ImageUrls;
             }
 
             await OnSave.InvokeAsync((PostId, editedContent, newImageUrls, removedImageIds));
@@ -365,6 +386,39 @@
         {
             isSaving = false;
         }
+    }
+
+    /// <summary>
+    /// Validates newly added images with the same checks as the post composer (size limit and
+    /// magic-byte image signature), returning one localized error per offending file.
+    /// </summary>
+    /// <returns>The list of localized error messages; empty when all images are valid.</returns>
+    private List<string> ValidateNewImages()
+    {
+        var errors = new List<string>();
+        foreach (var image in newImages)
+        {
+            try
+            {
+                var base64 = image.DataUrl.Contains(',') ? image.DataUrl.Split(',')[1] : image.DataUrl;
+                var bytes = Convert.FromBase64String(base64);
+
+                if (bytes.Length > MaxNewImageSizeBytes)
+                {
+                    errors.Add(string.Format(UploadLocalizer["FileTooLargeError"].Value, image.FileName, MaxNewImageSizeBytes / 1024 / 1024));
+                }
+                else if (!ImageSignatureHelper.IsSupportedImage(bytes))
+                {
+                    errors.Add(string.Format(UploadLocalizer["InvalidImageFormatError"].Value, image.FileName));
+                }
+            }
+            catch (FormatException)
+            {
+                errors.Add(string.Format(UploadLocalizer["LoadFileError"].Value, image.FileName));
+            }
+        }
+
+        return errors;
     }
 
     private string GetTimeAgo(DateTime dateTime)

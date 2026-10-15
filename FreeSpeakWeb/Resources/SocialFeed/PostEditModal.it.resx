@@ -12,4 +12,5 @@
   <data name="CancelChanges" xml:space="preserve"><value>Annulla modifiche</value></data>
   <data name="SaveChanges" xml:space="preserve"><value>Salva modifiche</value></data>
   <data name="Saving" xml:space="preserve"><value>Salvataggio...</value></data>
+  <data name="UploadFailedError" xml:space="preserve"><value>Impossibile caricare le immagini. Riprova.</value></data>
 </root>

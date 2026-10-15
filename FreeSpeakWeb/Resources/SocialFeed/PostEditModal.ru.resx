@@ -12,4 +12,5 @@
   <data name="CancelChanges" xml:space="preserve"><value>Отменить изменения</value></data>
   <data name="SaveChanges" xml:space="preserve"><value>Сохранить изменения</value></data>
   <data name="Saving" xml:space="preserve"><value>Сохранение...</value></data>
+  <data name="UploadFailedError" xml:space="preserve"><value>Не удалось загрузить изображения. Попробуйте ещё раз.</value></data>
 </root>
