@@ -91,4 +91,7 @@
   <data name="Validation_DateOfBirth" xml:space="preserve">
     <value>{0} 필드는 과거 날짜여야 하며 {1}년 이전일 수 없습니다.</value>
   </data>
+  <data name="Validation_Phone" xml:space="preserve">
+    <value>{0} 필드가 유효한 전화번호가 아닙니다.</value>
+  </data>
 </root>

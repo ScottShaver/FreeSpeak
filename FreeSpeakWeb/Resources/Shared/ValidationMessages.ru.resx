@@ -91,4 +91,7 @@
   <data name="Validation_DateOfBirth" xml:space="preserve">
     <value>Поле «{0}» должно содержать прошедшую дату не ранее {1} года.</value>
   </data>
+  <data name="Validation_Phone" xml:space="preserve">
+    <value>Поле «{0}» содержит недопустимый номер телефона.</value>
+  </data>
 </root>

@@ -272,4 +272,28 @@
   <data name="AboutMe" xml:space="preserve">
     <value>Обо мне</value>
   </data>
+  <data name="ProfilePictureUpdated" xml:space="preserve">
+    <value>Фото профиля обновлено</value>
+  </data>
+  <data name="PasswordSet" xml:space="preserve">
+    <value>Пароль установлен.</value>
+  </data>
+  <data name="ErrorFieldTooLong" xml:space="preserve">
+    <value>Ошибка: {0} не может превышать {1} символов.</value>
+  </data>
+  <data name="ErrorInvalidDateOfBirth" xml:space="preserve">
+    <value>Ошибка: дата рождения должна быть прошедшей датой не ранее 1900 года.</value>
+  </data>
+  <data name="ProfilePictureTooLarge" xml:space="preserve">
+    <value>Файл слишком большой. Максимальный размер — 5 МБ.</value>
+  </data>
+  <data name="ProfileUpdated" xml:space="preserve">
+    <value>Ваш профиль обновлён</value>
+  </data>
+  <data name="ErrorSetPhone" xml:space="preserve">
+    <value>Ошибка: не удалось сохранить номер телефона.</value>
+  </data>
+  <data name="ErrorUpdateProfile" xml:space="preserve">
+    <value>Ошибка: не удалось обновить профиль.</value>
+  </data>
 </root>

@@ -28,6 +28,14 @@ namespace FreeSpeakWeb.Tests.Components
             [Required]
             [Display(Name = "New password")]
             public string? NewPassword { get; set; }
+
+            [Phone]
+            [Display(Name = "Phone number")]
+            public string? PhoneNumber { get; set; } = "abc";
+
+            [FreeSpeakWeb.Validation.DateOfBirth]
+            [Display(Name = "Date of Birth")]
+            public DateOnly? DateOfBirth { get; set; } = new DateOnly(2999, 1, 1);
         }
 
         private static IReadOnlyList<string> Validate(string culture)
@@ -81,6 +89,15 @@ namespace FreeSpeakWeb.Tests.Components
             var messages = Validate("es");
 
             Assert.Contains("El campo Nueva contraseña es obligatorio.", messages);
+        }
+
+        [Fact]
+        public void SpanishCulture_LocalizesPhoneAndDateOfBirth()
+        {
+            var messages = Validate("es");
+
+            Assert.Contains("El campo Número de teléfono no es un número de teléfono válido.", messages);
+            Assert.Contains(messages, m => m.StartsWith("El campo Fecha de nacimiento debe ser una fecha pasada"));
         }
 
         [Fact]

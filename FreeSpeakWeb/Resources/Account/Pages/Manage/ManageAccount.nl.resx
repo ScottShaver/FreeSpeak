@@ -272,4 +272,28 @@
   <data name="AboutMe" xml:space="preserve">
     <value>Over mij</value>
   </data>
+  <data name="ProfilePictureUpdated" xml:space="preserve">
+    <value>Uw profielfoto is bijgewerkt</value>
+  </data>
+  <data name="PasswordSet" xml:space="preserve">
+    <value>Uw wachtwoord is ingesteld.</value>
+  </data>
+  <data name="ErrorFieldTooLong" xml:space="preserve">
+    <value>Fout: {0} mag niet langer zijn dan {1} tekens.</value>
+  </data>
+  <data name="ErrorInvalidDateOfBirth" xml:space="preserve">
+    <value>Fout: de geboortedatum moet in het verleden liggen, niet eerder dan 1900.</value>
+  </data>
+  <data name="ProfilePictureTooLarge" xml:space="preserve">
+    <value>Het bestand is te groot. De maximale grootte is 5 MB.</value>
+  </data>
+  <data name="ProfileUpdated" xml:space="preserve">
+    <value>Uw profiel is bijgewerkt</value>
+  </data>
+  <data name="ErrorSetPhone" xml:space="preserve">
+    <value>Fout: het telefoonnummer kon niet worden opgeslagen.</value>
+  </data>
+  <data name="ErrorUpdateProfile" xml:space="preserve">
+    <value>Fout: het profiel kon niet worden bijgewerkt.</value>
+  </data>
 </root>

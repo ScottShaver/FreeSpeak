@@ -91,4 +91,7 @@
   <data name="Validation_DateOfBirth" xml:space="preserve">
     <value>O campo {0} deve ser uma data passada, não anterior a {1}.</value>
   </data>
+  <data name="Validation_Phone" xml:space="preserve">
+    <value>O campo {0} não é um número de telefone válido.</value>
+  </data>
 </root>

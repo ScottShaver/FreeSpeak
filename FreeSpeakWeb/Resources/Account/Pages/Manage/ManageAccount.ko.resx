@@ -272,4 +272,28 @@
   <data name="AboutMe" xml:space="preserve">
     <value>자기소개</value>
   </data>
+  <data name="ProfilePictureUpdated" xml:space="preserve">
+    <value>프로필 사진이 업데이트되었습니다</value>
+  </data>
+  <data name="PasswordSet" xml:space="preserve">
+    <value>비밀번호가 설정되었습니다.</value>
+  </data>
+  <data name="ErrorFieldTooLong" xml:space="preserve">
+    <value>오류: {0}은(는) {1}자를 초과할 수 없습니다.</value>
+  </data>
+  <data name="ErrorInvalidDateOfBirth" xml:space="preserve">
+    <value>오류: 생년월일은 1900년 이후의 과거 날짜여야 합니다.</value>
+  </data>
+  <data name="ProfilePictureTooLarge" xml:space="preserve">
+    <value>파일이 너무 큽니다. 최대 크기는 5MB입니다.</value>
+  </data>
+  <data name="ProfileUpdated" xml:space="preserve">
+    <value>프로필이 업데이트되었습니다</value>
+  </data>
+  <data name="ErrorSetPhone" xml:space="preserve">
+    <value>오류: 전화번호를 설정하지 못했습니다.</value>
+  </data>
+  <data name="ErrorUpdateProfile" xml:space="preserve">
+    <value>오류: 프로필을 업데이트하지 못했습니다.</value>
+  </data>
 </root>

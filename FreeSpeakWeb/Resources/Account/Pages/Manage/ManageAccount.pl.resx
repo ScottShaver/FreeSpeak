@@ -272,4 +272,28 @@
   <data name="AboutMe" xml:space="preserve">
     <value>O mnie</value>
   </data>
+  <data name="ProfilePictureUpdated" xml:space="preserve">
+    <value>Twoje zdjęcie profilowe zostało zaktualizowane</value>
+  </data>
+  <data name="PasswordSet" xml:space="preserve">
+    <value>Twoje hasło zostało ustawione.</value>
+  </data>
+  <data name="ErrorFieldTooLong" xml:space="preserve">
+    <value>Błąd: {0} nie może przekraczać {1} znaków.</value>
+  </data>
+  <data name="ErrorInvalidDateOfBirth" xml:space="preserve">
+    <value>Błąd: data urodzenia musi być z przeszłości, nie wcześniejsza niż 1900.</value>
+  </data>
+  <data name="ProfilePictureTooLarge" xml:space="preserve">
+    <value>Plik jest zbyt duży. Maksymalny rozmiar to 5 MB.</value>
+  </data>
+  <data name="ProfileUpdated" xml:space="preserve">
+    <value>Twój profil został zaktualizowany</value>
+  </data>
+  <data name="ErrorSetPhone" xml:space="preserve">
+    <value>Błąd: nie udało się ustawić numeru telefonu.</value>
+  </data>
+  <data name="ErrorUpdateProfile" xml:space="preserve">
+    <value>Błąd: nie udało się zaktualizować profilu.</value>
+  </data>
 </root>
