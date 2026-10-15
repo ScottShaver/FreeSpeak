@@ -179,7 +179,7 @@ Status after the first QA round (pilot as member, stranger, banned, moderator, o
 - `agent.newuser` persona and the cross-cutting probes in section 7.
 
 ### Known open items (not from QA)
-- Dependency vulnerabilities: SixLabors.ImageSharp 3.1.12 (3 high, 2 moderate) and AngleSharp 0.17.1 (1 moderate). ImageSharp processes user uploads, so fix before launch.
+- Dependency vulnerabilities: SixLabors.ImageSharp (upgraded to 4.1.3) and AngleSharp (via HtmlSanitizer 9.2.1039) were patched. ImageSharp 4.x needs a Six Labors license for Release builds; manually check image upload and thumbnails.
 - Low-severity UI gaps: Mod Log tab is a stub, moderators have no member list or ban UI, Escape does not close the post popup menu, `/system-moderator` is a placeholder.
 - 43 unit tests fail (UnifiedArticle, PostEditModal, GroupFileService; missing DI/setup). Confirm they also fail on `master` and fix.
 - Dev-only 404 for `hot-reload-settings.json` on every page load.
