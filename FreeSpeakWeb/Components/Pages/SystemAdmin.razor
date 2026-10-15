@@ -16,6 +16,7 @@
 @inject ILogger<SystemAdmin> Logger
 @inject IJSRuntime JSRuntime
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.SystemAdmin> Localizer
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.SystemSettings> SettingsLocalizer
 
 <PageTitle>@Localizer["PageTitle"]</PageTitle>
 
@@ -264,6 +265,10 @@
                         <i class="bi bi-gear me-2"></i>System Configuration
                     </h3>
                     <p class="text-muted">Configure system-wide settings and preferences.</p>
+                    <p>
+                        <a class="btn btn-outline-primary btn-sm me-2" href="/system-admin/settings">@SettingsLocalizer["IndexTitle"]</a>
+                        <a class="btn btn-outline-secondary btn-sm" href="/system-admin/effective-configuration">@SettingsLocalizer["EC_Title"]</a>
+                    </p>
 
                     <div class="row mt-4">
                         <div class="col-md-6 col-lg-4 mb-3">
@@ -271,7 +276,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title"><i class="bi bi-globe me-2"></i>Site Settings</h5>
                                     <p class="card-text">Configure site name, branding, and appearance.</p>
-                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                    <a class="btn btn-primary" href="/system-admin/settings/site">@SettingsLocalizer["Configure"]</a>
                                 </div>
                             </div>
                         </div>
@@ -280,7 +285,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title"><i class="bi bi-envelope me-2"></i>Email Configuration</h5>
                                     <p class="card-text">Set up email servers and notification templates.</p>
-                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                    <a class="btn btn-primary" href="/system-admin/settings/smtp">@SettingsLocalizer["Configure"]</a>
                                 </div>
                             </div>
                         </div>
@@ -289,7 +294,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title"><i class="bi bi-shield-lock me-2"></i>Security Settings</h5>
                                     <p class="card-text">Configure authentication and security policies.</p>
-                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                    <a class="btn btn-primary" href="/system-admin/settings/ratelimiting">@SettingsLocalizer["Configure"]</a>
                                 </div>
                             </div>
                         </div>
@@ -307,7 +312,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title"><i class="bi bi-hdd me-2"></i>Storage Settings</h5>
                                     <p class="card-text">Configure file upload limits and storage options.</p>
-                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                    <a class="btn btn-primary" href="/system-admin/settings/virusscan">@SettingsLocalizer["Configure"]</a>
                                 </div>
                             </div>
                         </div>
@@ -316,7 +321,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title"><i class="bi bi-speedometer me-2"></i>Performance</h5>
                                     <p class="card-text">Configure caching and performance settings.</p>
-                                    <button class="btn btn-primary" disabled>Coming Soon</button>
+                                    <a class="btn btn-primary" href="/system-admin/settings/caching">@SettingsLocalizer["Configure"]</a>
                                 </div>
                             </div>
                         </div>

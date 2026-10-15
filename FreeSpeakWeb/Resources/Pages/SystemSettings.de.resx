@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="IndexTitle" xml:space="preserve">
+    <value>Systemeinstellungen</value>
+  </data>
+  <data name="IndexIntro" xml:space="preserve">
+    <value>Systemweite Einstellungen anzeigen und ändern. Änderungen werden in der Datenbank gespeichert und überschreiben appsettings.json.</value>
+  </data>
+  <data name="BackToSystemAdmin" xml:space="preserve">
+    <value>Zurück zur Systemverwaltung</value>
+  </data>
+  <data name="BackToSettings" xml:space="preserve">
+    <value>Zurück zu den Systemeinstellungen</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>Konfigurieren</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Öffnen</value>
+  </data>
+  <data name="RestartRequiredBadge" xml:space="preserve">
+    <value>Neustart erforderlich</value>
+  </data>
+  <data name="RestartBanner" xml:space="preserve">
+    <value>Änderungen an dieser Gruppe werden erst nach einem Neustart der Anwendung wirksam.</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Wird geladen...</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>Diese Einstellungsgruppe existiert nicht.</value>
+  </data>
+  <data name="ValidationSummary" xml:space="preserve">
+    <value>Einige Werte sind ungültig. Korrigieren Sie die markierten Felder und versuchen Sie es erneut.</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>Auf Standard zurücksetzen</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Einstellungen gespeichert.</value>
+  </data>
+  <data name="SavedRestart" xml:space="preserve">
+    <value>Einstellungen gespeichert. Starten Sie die Anwendung neu, damit die Änderungen wirksam werden.</value>
+  </data>
+  <data name="ResetDone" xml:space="preserve">
+    <value>Einstellungen auf Standardwerte zurückgesetzt.</value>
+  </data>
+  <data name="SaveFailed" xml:space="preserve">
+    <value>Der Vorgang ist fehlgeschlagen. Bitte versuchen Sie es erneut.</value>
+  </data>
+  <data name="UsingDefault" xml:space="preserve">
+    <value>Standardwert aus appsettings.json wird verwendet</value>
+  </data>
+  <data name="SecretSet" xml:space="preserve">
+    <value>Gesetzt</value>
+  </data>
+  <data name="SecretNotSet" xml:space="preserve">
+    <value>Nicht gesetzt</value>
+  </data>
+  <data name="SecretReplacePlaceholder" xml:space="preserve">
+    <value>Neuen Wert zum Ersetzen eingeben (leer lassen, um beizubehalten)</value>
+  </data>
+  <data name="TestConnection" xml:space="preserve">
+    <value>Verbindung testen</value>
+  </data>
+  <data name="TestSuccess" xml:space="preserve">
+    <value>ClamAV hat erfolgreich geantwortet.</value>
+  </data>
+  <data name="TestFailed" xml:space="preserve">
+    <value>Verbindungstest fehlgeschlagen: {0}</value>
+  </data>
+  <data name="E_UnknownKey" xml:space="preserve">
+    <value>Diese Einstellung ist unbekannt.</value>
+  </data>
+  <data name="E_Boolean" xml:space="preserve">
+    <value>Wählen Sie Ein oder Aus.</value>
+  </data>
+  <data name="E_Integer" xml:space="preserve">
+    <value>Geben Sie eine ganze Zahl ein.</value>
+  </data>
+  <data name="E_Range" xml:space="preserve">
+    <value>Geben Sie einen Wert zwischen {0} und {1} ein.</value>
+  </data>
+  <data name="E_LogLevel" xml:space="preserve">
+    <value>Wählen Sie eine gültige Protokollebene.</value>
+  </data>
+  <data name="E_Required" xml:space="preserve">
+    <value>Dieser Wert ist erforderlich.</value>
+  </data>
+  <data name="E_Email" xml:space="preserve">
+    <value>Geben Sie eine gültige E-Mail-Adresse ein.</value>
+  </data>
+  <data name="E_Host" xml:space="preserve">
+    <value>Geben Sie einen gültigen Hostnamen oder eine IP-Adresse ein.</value>
+  </data>
+  <data name="E_TooLong" xml:space="preserve">
+    <value>Geben Sie höchstens {0} Zeichen ein.</value>
+  </data>
+  <data name="E_AccountRequired" xml:space="preserve">
+    <value>Ein Konto ist erforderlich, wenn die Authentifizierung aktiviert ist.</value>
+  </data>
+  <data name="E_RedisRequired" xml:space="preserve">
+    <value>Eine Redis-Verbindungszeichenfolge ist erforderlich, wenn Redis aktiviert ist.</value>
+  </data>
+  <data name="E_PingFailed" xml:space="preserve">
+    <value>keine Antwort vom ClamAV-Daemon</value>
+  </data>
+  <data name="G_Site" xml:space="preserve">
+    <value>Website-Einstellungen</value>
+  </data>
+  <data name="GD_Site" xml:space="preserve">
+    <value>Website-Name, Kommentarlimits sowie Gruppen- und Anhangsoptionen.</value>
+  </data>
+  <data name="G_Smtp" xml:space="preserve">
+    <value>E-Mail (SMTP)</value>
+  </data>
+  <data name="GD_Smtp" xml:space="preserve">
+    <value>SMTP-Server, Absender und Zugangsdaten zum Senden von E-Mails.</value>
+  </data>
+  <data name="G_VirusScan" xml:space="preserve">
+    <value>Virenprüfung</value>
+  </data>
+  <data name="GD_VirusScan" xml:space="preserve">
+    <value>ClamAV-Verbindung und Limits für das Prüfen hochgeladener Dateien.</value>
+  </data>
+  <data name="G_RateLimiting" xml:space="preserve">
+    <value>Ratenbegrenzung</value>
+  </data>
+  <data name="GD_RateLimiting" xml:space="preserve">
+    <value>Anfragelimits, die die Website vor Missbrauch schützen.</value>
+  </data>
+  <data name="G_Profiling" xml:space="preserve">
+    <value>Profiling</value>
+  </data>
+  <data name="GD_Profiling" xml:space="preserve">
+    <value>MiniProfiler-Optionen für die Leistungsdiagnose.</value>
+  </data>
+  <data name="G_Caching" xml:space="preserve">
+    <value>Caching</value>
+  </data>
+  <data name="GD_Caching" xml:space="preserve">
+    <value>Optionen für den verteilten Redis-Cache.</value>
+  </data>
+  <data name="G_Logging" xml:space="preserve">
+    <value>Protokollierung</value>
+  </data>
+  <data name="GD_Logging" xml:space="preserve">
+    <value>Minimale Protokollebene für die Standardkategorien.</value>
+  </data>
+  <data name="L_Enabled" xml:space="preserve">
+    <value>Aktiviert</value>
+  </data>
+  <data name="L_Host" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="L_Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="L_SenderName" xml:space="preserve">
+    <value>Absendername</value>
+  </data>
+  <data name="L_SenderEmail" xml:space="preserve">
+    <value>Absender-E-Mail</value>
+  </data>
+  <data name="L_AuthenticationRequired" xml:space="preserve">
+    <value>Authentifizierung erforderlich</value>
+  </data>
+  <data name="L_Account" xml:space="preserve">
+    <value>Konto</value>
+  </data>
+  <data name="L_Password" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="L_UseSsl" xml:space="preserve">
+    <value>SSL/TLS verwenden</value>
+  </data>
+  <data name="L_MaxStreamSizeBytes" xml:space="preserve">
+    <value>Maximale Prüfgröße (Bytes)</value>
+  </data>
+  <data name="L_FailOpen" xml:space="preserve">
+    <value>Dateien zulassen, wenn der Scanner nicht verfügbar ist</value>
+  </data>
+  <data name="L_TimeoutSeconds" xml:space="preserve">
+    <value>Zeitlimit (Sekunden)</value>
+  </data>
+  <data name="L_UseDistributed" xml:space="preserve">
+    <value>Verteilte (Redis) Ratenbegrenzung verwenden</value>
+  </data>
+  <data name="L_MaxRequests" xml:space="preserve">
+    <value>Maximale Anfragen</value>
+  </data>
+  <data name="L_WindowMinutes" xml:space="preserve">
+    <value>Zeitfenster (Minuten)</value>
+  </data>
+  <data name="L_QueueLimit" xml:space="preserve">
+    <value>Warteschlangenlimit</value>
+  </data>
+  <data name="L_ShowControls" xml:space="preserve">
+    <value>Profiler-Steuerelemente anzeigen</value>
+  </data>
+  <data name="L_MaxResults" xml:space="preserve">
+    <value>Maximal gespeicherte Ergebnisse</value>
+  </data>
+  <data name="L_ProfileDatabase" xml:space="preserve">
+    <value>Datenbankabfragen profilieren</value>
+  </data>
+  <data name="L_AllowOutsideDevelopment" xml:space="preserve">
+    <value>Außerhalb der Entwicklung zulassen</value>
+  </data>
+  <data name="L_UseRedis" xml:space="preserve">
+    <value>Redis verwenden</value>
+  </data>
+  <data name="L_RedisConnectionString" xml:space="preserve">
+    <value>Redis-Verbindungszeichenfolge</value>
+  </data>
+  <data name="L_SiteName" xml:space="preserve">
+    <value>Website-Name</value>
+  </data>
+  <data name="L_MaxCommentDepth" xml:space="preserve">
+    <value>Maximale Kommentartiefe</value>
+  </data>
+  <data name="L_MaxDirectComments" xml:space="preserve">
+    <value>Maximale direkte Kommentare pro Beitrag</value>
+  </data>
+  <data name="L_AllowOpenGroupCreation" xml:space="preserve">
+    <value>Jedem Benutzer das Erstellen von Gruppen erlauben</value>
+  </data>
+  <data name="L_AllowPostAttachments" xml:space="preserve">
+    <value>Beitragsanhänge erlauben</value>
+  </data>
+  <data name="S_Global" xml:space="preserve">
+    <value>Globales Limit</value>
+  </data>
+  <data name="S_FileDownload" xml:space="preserve">
+    <value>Limit für Dateidownloads</value>
+  </data>
+  <data name="S_Login" xml:space="preserve">
+    <value>Anmeldelimit</value>
+  </data>
+  <data name="S_Api" xml:space="preserve">
+    <value>API-Limit</value>
+  </data>
+  <data name="H_UseDistributed" xml:space="preserve">
+    <value>Erfordert aktiviertes Redis-Caching.</value>
+  </data>
+  <data name="H_SmtpEnabled" xml:space="preserve">
+    <value>Wenn deaktiviert, werden keine E-Mails gesendet und der Inhalt wird ins Protokoll geschrieben.</value>
+  </data>
+  <data name="H_Secret" xml:space="preserve">
+    <value>Wird verschlüsselt gespeichert und nie angezeigt. Geben Sie einen neuen Wert zum Ersetzen ein.</value>
+  </data>
+  <data name="H_FailOpen" xml:space="preserve">
+    <value>Wenn deaktiviert, werden Dateien abgelehnt, wenn die Prüfung fehlschlägt (sicherer).</value>
+  </data>
+  <data name="H_AllowOutsideDevelopment" xml:space="preserve">
+    <value>Profiling in der Produktion kann sensible Daten offenlegen. Mit Vorsicht verwenden.</value>
+  </data>
+  <data name="EC_Title" xml:space="preserve">
+    <value>Effektive Konfiguration</value>
+  </data>
+  <data name="EC_CardDescription" xml:space="preserve">
+    <value>Schreibgeschützte Ansicht der Einstellungen, die nur in Konfigurationsdateien geändert werden können.</value>
+  </data>
+  <data name="EC_Intro" xml:space="preserve">
+    <value>Diese Werte stammen aus Konfigurationsdateien und Umgebungsvariablen und können hier nicht bearbeitet werden. Passwörter und Zugangsdaten werden immer maskiert.</value>
+  </data>
+  <data name="EC_PasswordLabel" xml:space="preserve">
+    <value>Geben Sie Ihr Passwort erneut ein, um fortzufahren</value>
+  </data>
+  <data name="EC_Confirm" xml:space="preserve">
+    <value>Bestätigen</value>
+  </data>
+  <data name="EC_Invalid" xml:space="preserve">
+    <value>Das Passwort ist falsch.</value>
+  </data>
+  <data name="EC_LockedOut" xml:space="preserve">
+    <value>Zu viele fehlgeschlagene Versuche. Versuchen Sie es später erneut.</value>
+  </data>
+  <data name="EC_NoPassword" xml:space="preserve">
+    <value>Ihr Konto hat kein lokales Passwort und kann daher nicht erneut überprüft werden.</value>
+  </data>
+  <data name="EC_NotAuthorized" xml:space="preserve">
+    <value>Sie dürfen diese Seite nicht anzeigen.</value>
+  </data>
+  <data name="EC_ValidFor" xml:space="preserve">
+    <value>Der Zugriff ist 5 Minuten gültig. Geheime Werte werden nie angezeigt.</value>
+  </data>
+  <data name="EC_Key" xml:space="preserve">
+    <value>Schlüssel</value>
+  </data>
+  <data name="EC_Value" xml:space="preserve">
+    <value>Wert</value>
+  </data>
+</root>

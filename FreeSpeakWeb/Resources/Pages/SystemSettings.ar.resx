@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="IndexTitle" xml:space="preserve">
+    <value>إعدادات النظام</value>
+  </data>
+  <data name="IndexIntro" xml:space="preserve">
+    <value>عرض إعدادات النظام وتغييرها. تُحفظ التغييرات في قاعدة البيانات وتتجاوز appsettings.json.</value>
+  </data>
+  <data name="BackToSystemAdmin" xml:space="preserve">
+    <value>العودة إلى إدارة النظام</value>
+  </data>
+  <data name="BackToSettings" xml:space="preserve">
+    <value>العودة إلى إعدادات النظام</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>تكوين</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>فتح</value>
+  </data>
+  <data name="RestartRequiredBadge" xml:space="preserve">
+    <value>يتطلب إعادة التشغيل</value>
+  </data>
+  <data name="RestartBanner" xml:space="preserve">
+    <value>لا تسري تغييرات هذه المجموعة إلا بعد إعادة تشغيل التطبيق.</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>جارٍ التحميل...</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>مجموعة الإعدادات هذه غير موجودة.</value>
+  </data>
+  <data name="ValidationSummary" xml:space="preserve">
+    <value>بعض القيم غير صالحة. صحّح الحقول المحددة وحاول مرة أخرى.</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>إعادة التعيين إلى الافتراضي</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>تم حفظ الإعدادات.</value>
+  </data>
+  <data name="SavedRestart" xml:space="preserve">
+    <value>تم حفظ الإعدادات. أعد تشغيل التطبيق لتسري التغييرات.</value>
+  </data>
+  <data name="ResetDone" xml:space="preserve">
+    <value>تمت إعادة الإعدادات إلى قيمها الافتراضية.</value>
+  </data>
+  <data name="SaveFailed" xml:space="preserve">
+    <value>فشلت العملية. يرجى المحاولة مرة أخرى.</value>
+  </data>
+  <data name="UsingDefault" xml:space="preserve">
+    <value>يُستخدم الافتراضي من appsettings.json</value>
+  </data>
+  <data name="SecretSet" xml:space="preserve">
+    <value>مُعيَّن</value>
+  </data>
+  <data name="SecretNotSet" xml:space="preserve">
+    <value>غير مُعيَّن</value>
+  </data>
+  <data name="SecretReplacePlaceholder" xml:space="preserve">
+    <value>أدخل قيمة جديدة للاستبدال (اتركه فارغًا للإبقاء)</value>
+  </data>
+  <data name="TestConnection" xml:space="preserve">
+    <value>اختبار الاتصال</value>
+  </data>
+  <data name="TestSuccess" xml:space="preserve">
+    <value>استجاب ClamAV بنجاح.</value>
+  </data>
+  <data name="TestFailed" xml:space="preserve">
+    <value>فشل اختبار الاتصال: {0}</value>
+  </data>
+  <data name="E_UnknownKey" xml:space="preserve">
+    <value>هذا الإعداد غير معروف.</value>
+  </data>
+  <data name="E_Boolean" xml:space="preserve">
+    <value>اختر التشغيل أو الإيقاف.</value>
+  </data>
+  <data name="E_Integer" xml:space="preserve">
+    <value>أدخل عددًا صحيحًا.</value>
+  </data>
+  <data name="E_Range" xml:space="preserve">
+    <value>أدخل قيمة بين {0} و{1}.</value>
+  </data>
+  <data name="E_LogLevel" xml:space="preserve">
+    <value>اختر مستوى سجل صالحًا.</value>
+  </data>
+  <data name="E_Required" xml:space="preserve">
+    <value>هذه القيمة مطلوبة.</value>
+  </data>
+  <data name="E_Email" xml:space="preserve">
+    <value>أدخل عنوان بريد إلكتروني صالحًا.</value>
+  </data>
+  <data name="E_Host" xml:space="preserve">
+    <value>أدخل اسم مضيف أو عنوان IP صالحًا.</value>
+  </data>
+  <data name="E_TooLong" xml:space="preserve">
+    <value>أدخل {0} حرفًا كحد أقصى.</value>
+  </data>
+  <data name="E_AccountRequired" xml:space="preserve">
+    <value>الحساب مطلوب عند تفعيل المصادقة.</value>
+  </data>
+  <data name="E_RedisRequired" xml:space="preserve">
+    <value>سلسلة اتصال Redis مطلوبة عند تفعيل Redis.</value>
+  </data>
+  <data name="E_PingFailed" xml:space="preserve">
+    <value>لا توجد استجابة من خدمة ClamAV</value>
+  </data>
+  <data name="G_Site" xml:space="preserve">
+    <value>إعدادات الموقع</value>
+  </data>
+  <data name="GD_Site" xml:space="preserve">
+    <value>اسم الموقع وحدود التعليقات وخيارات المجموعات والمرفقات.</value>
+  </data>
+  <data name="G_Smtp" xml:space="preserve">
+    <value>البريد الإلكتروني (SMTP)</value>
+  </data>
+  <data name="GD_Smtp" xml:space="preserve">
+    <value>خادم SMTP والمرسل وبيانات الاعتماد المستخدمة لإرسال البريد.</value>
+  </data>
+  <data name="G_VirusScan" xml:space="preserve">
+    <value>فحص الفيروسات</value>
+  </data>
+  <data name="GD_VirusScan" xml:space="preserve">
+    <value>اتصال ClamAV وحدوده لفحص الملفات المرفوعة.</value>
+  </data>
+  <data name="G_RateLimiting" xml:space="preserve">
+    <value>تحديد المعدل</value>
+  </data>
+  <data name="GD_RateLimiting" xml:space="preserve">
+    <value>حدود الطلبات التي تحمي الموقع من إساءة الاستخدام.</value>
+  </data>
+  <data name="G_Profiling" xml:space="preserve">
+    <value>التنميط</value>
+  </data>
+  <data name="GD_Profiling" xml:space="preserve">
+    <value>خيارات MiniProfiler لتشخيص الأداء.</value>
+  </data>
+  <data name="G_Caching" xml:space="preserve">
+    <value>التخزين المؤقت</value>
+  </data>
+  <data name="GD_Caching" xml:space="preserve">
+    <value>خيارات ذاكرة التخزين المؤقت الموزعة Redis.</value>
+  </data>
+  <data name="G_Logging" xml:space="preserve">
+    <value>التسجيل</value>
+  </data>
+  <data name="GD_Logging" xml:space="preserve">
+    <value>الحد الأدنى لمستوى السجل للفئات القياسية.</value>
+  </data>
+  <data name="L_Enabled" xml:space="preserve">
+    <value>مُفعّل</value>
+  </data>
+  <data name="L_Host" xml:space="preserve">
+    <value>المضيف</value>
+  </data>
+  <data name="L_Port" xml:space="preserve">
+    <value>المنفذ</value>
+  </data>
+  <data name="L_SenderName" xml:space="preserve">
+    <value>اسم المرسل</value>
+  </data>
+  <data name="L_SenderEmail" xml:space="preserve">
+    <value>بريد المرسل</value>
+  </data>
+  <data name="L_AuthenticationRequired" xml:space="preserve">
+    <value>المصادقة مطلوبة</value>
+  </data>
+  <data name="L_Account" xml:space="preserve">
+    <value>الحساب</value>
+  </data>
+  <data name="L_Password" xml:space="preserve">
+    <value>كلمة المرور</value>
+  </data>
+  <data name="L_UseSsl" xml:space="preserve">
+    <value>استخدام SSL/TLS</value>
+  </data>
+  <data name="L_MaxStreamSizeBytes" xml:space="preserve">
+    <value>الحد الأقصى لحجم الفحص (بايت)</value>
+  </data>
+  <data name="L_FailOpen" xml:space="preserve">
+    <value>السماح بالملفات إذا كان الماسح غير متاح</value>
+  </data>
+  <data name="L_TimeoutSeconds" xml:space="preserve">
+    <value>المهلة (بالثواني)</value>
+  </data>
+  <data name="L_UseDistributed" xml:space="preserve">
+    <value>استخدام تحديد المعدل الموزع (Redis)</value>
+  </data>
+  <data name="L_MaxRequests" xml:space="preserve">
+    <value>الحد الأقصى للطلبات</value>
+  </data>
+  <data name="L_WindowMinutes" xml:space="preserve">
+    <value>النافذة (بالدقائق)</value>
+  </data>
+  <data name="L_QueueLimit" xml:space="preserve">
+    <value>حد قائمة الانتظار</value>
+  </data>
+  <data name="L_ShowControls" xml:space="preserve">
+    <value>إظهار عناصر تحكم المنمّط</value>
+  </data>
+  <data name="L_MaxResults" xml:space="preserve">
+    <value>الحد الأقصى للنتائج المخزنة</value>
+  </data>
+  <data name="L_ProfileDatabase" xml:space="preserve">
+    <value>تنميط استعلامات قاعدة البيانات</value>
+  </data>
+  <data name="L_AllowOutsideDevelopment" xml:space="preserve">
+    <value>السماح خارج بيئة التطوير</value>
+  </data>
+  <data name="L_UseRedis" xml:space="preserve">
+    <value>استخدام Redis</value>
+  </data>
+  <data name="L_RedisConnectionString" xml:space="preserve">
+    <value>سلسلة اتصال Redis</value>
+  </data>
+  <data name="L_SiteName" xml:space="preserve">
+    <value>اسم الموقع</value>
+  </data>
+  <data name="L_MaxCommentDepth" xml:space="preserve">
+    <value>الحد الأقصى لعمق التعليقات</value>
+  </data>
+  <data name="L_MaxDirectComments" xml:space="preserve">
+    <value>الحد الأقصى للتعليقات المباشرة لكل منشور</value>
+  </data>
+  <data name="L_AllowOpenGroupCreation" xml:space="preserve">
+    <value>السماح لأي مستخدم بإنشاء مجموعات</value>
+  </data>
+  <data name="L_AllowPostAttachments" xml:space="preserve">
+    <value>السماح بمرفقات المنشورات</value>
+  </data>
+  <data name="S_Global" xml:space="preserve">
+    <value>الحد العام</value>
+  </data>
+  <data name="S_FileDownload" xml:space="preserve">
+    <value>حد تنزيل الملفات</value>
+  </data>
+  <data name="S_Login" xml:space="preserve">
+    <value>حد تسجيل الدخول</value>
+  </data>
+  <data name="S_Api" xml:space="preserve">
+    <value>حد واجهة API</value>
+  </data>
+  <data name="H_UseDistributed" xml:space="preserve">
+    <value>يتطلب تفعيل التخزين المؤقت Redis.</value>
+  </data>
+  <data name="H_SmtpEnabled" xml:space="preserve">
+    <value>عند الإيقاف لا تُرسل رسائل البريد ويُكتب محتواها في السجل.</value>
+  </data>
+  <data name="H_Secret" xml:space="preserve">
+    <value>يُخزَّن مشفرًا ولا يُعرض أبدًا. أدخل قيمة جديدة لاستبداله.</value>
+  </data>
+  <data name="H_FailOpen" xml:space="preserve">
+    <value>عند الإيقاف تُرفض الملفات إذا فشل الفحص (أكثر أمانًا).</value>
+  </data>
+  <data name="H_AllowOutsideDevelopment" xml:space="preserve">
+    <value>قد يكشف التنميط في الإنتاج بيانات حساسة. استخدمه بحذر.</value>
+  </data>
+  <data name="EC_Title" xml:space="preserve">
+    <value>التكوين الفعلي</value>
+  </data>
+  <data name="EC_CardDescription" xml:space="preserve">
+    <value>عرض للقراءة فقط للإعدادات التي لا يمكن تغييرها إلا في ملفات التكوين.</value>
+  </data>
+  <data name="EC_Intro" xml:space="preserve">
+    <value>تأتي هذه القيم من ملفات التكوين ومتغيرات البيئة ولا يمكن تعديلها هنا. كلمات المرور وبيانات الاعتماد مخفية دائمًا.</value>
+  </data>
+  <data name="EC_PasswordLabel" xml:space="preserve">
+    <value>أعد إدخال كلمة المرور للمتابعة</value>
+  </data>
+  <data name="EC_Confirm" xml:space="preserve">
+    <value>تأكيد</value>
+  </data>
+  <data name="EC_Invalid" xml:space="preserve">
+    <value>كلمة المرور غير صحيحة.</value>
+  </data>
+  <data name="EC_LockedOut" xml:space="preserve">
+    <value>محاولات فاشلة كثيرة. حاول مرة أخرى لاحقًا.</value>
+  </data>
+  <data name="EC_NoPassword" xml:space="preserve">
+    <value>ليس لحسابك كلمة مرور محلية، لذا لا يمكن إعادة التحقق منه.</value>
+  </data>
+  <data name="EC_NotAuthorized" xml:space="preserve">
+    <value>غير مسموح لك بعرض هذه الصفحة.</value>
+  </data>
+  <data name="EC_ValidFor" xml:space="preserve">
+    <value>الوصول صالح لمدة 5 دقائق. لا تُعرض القيم السرية أبدًا.</value>
+  </data>
+  <data name="EC_Key" xml:space="preserve">
+    <value>المفتاح</value>
+  </data>
+  <data name="EC_Value" xml:space="preserve">
+    <value>القيمة</value>
+  </data>
+</root>

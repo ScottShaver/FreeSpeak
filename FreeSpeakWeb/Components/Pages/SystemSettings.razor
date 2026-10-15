@@ -1,0 +1,49 @@
+@page "/system-admin/settings"
+@rendermode InteractiveServer
+@attribute [Authorize(Roles = "SystemAdministrator")]
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using FreeSpeakWeb.Services.Settings
+
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.SystemSettings> Localizer
+
+<PageTitle>@Localizer["IndexTitle"]</PageTitle>
+
+<div class="container-fluid mt-4">
+    <nav aria-label="breadcrumb">
+        <a href="/system-admin" class="text-decoration-none"><i class="bi bi-arrow-left me-1"></i>@Localizer["BackToSystemAdmin"]</a>
+    </nav>
+    <h1 class="my-3"><i class="bi bi-sliders me-2"></i>@Localizer["IndexTitle"]</h1>
+    <p class="text-muted">@Localizer["IndexIntro"]</p>
+
+    <div class="row mt-4">
+        @foreach (var group in SettingsCatalog.Groups)
+        {
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card h-100" data-testid="group-card-@group.Id">
+                    <div class="card-body">
+                        <h5 class="card-title">@Localizer[group.NameKey]</h5>
+                        <p class="card-text">@Localizer[group.DescriptionKey]</p>
+                        @if (group.RestartRequired)
+                        {
+                            <span class="badge bg-warning text-dark mb-2">@Localizer["RestartRequiredBadge"]</span>
+                        }
+                        <div>
+                            <a class="btn btn-primary" href="/system-admin/settings/@group.Id">@Localizer["Configure"]</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="card h-100" data-testid="group-card-effective">
+                <div class="card-body">
+                    <h5 class="card-title">@Localizer["EC_Title"]</h5>
+                    <p class="card-text">@Localizer["EC_CardDescription"]</p>
+                    <a class="btn btn-outline-primary" href="/system-admin/effective-configuration">@Localizer["Open"]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
