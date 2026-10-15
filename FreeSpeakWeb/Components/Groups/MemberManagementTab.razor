@@ -193,10 +193,19 @@
                                             <button type="button" 
                                                     class="btn btn-outline-danger btn-sm"
                                                     @onclick="@(async () => await HandleRemoveMember(member.UserId))"
-                                                    disabled="@isSaving">
+                                                    disabled="@(isSaving || !CanRemoveSpecificMember(member))">
                                                 <i class="bi bi-person-x me-1"></i>Remove from Group
                                             </button>
-                                            <small class="text-muted d-block mt-1">This will permanently remove the member from the group</small>
+                                            <small class="text-muted d-block mt-1">
+                                                @if (!CanRemoveSpecificMember(member))
+                                                {
+                                                    <text>Only the group creator can remove administrators</text>
+                                                }
+                                                else
+                                                {
+                                                    <text>This will permanently remove the member from the group</text>
+                                                }
+                                            </small>
                                         </div>
                                     </div>
                                 }
@@ -687,6 +696,23 @@
 
         // Only the creator (or a system admin, handled above) can ban admins
         if (member.IsAdmin && !IsCurrentUserCreator)
+            return false;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Determines if the current user can remove a specific member from the group.
+    /// Only the creator or a system admin can remove administrators.
+    /// </summary>
+    /// <param name="member">The member to check.</param>
+    /// <returns>True if the current user can remove the member; otherwise, false.</returns>
+    private bool CanRemoveSpecificMember(GroupUser member)
+    {
+        if (member.UserId == Group.CreatorId)
+            return false;
+
+        if (member.IsAdmin && !IsCurrentUserCreator && !IsSystemAdmin)
             return false;
 
         return true;

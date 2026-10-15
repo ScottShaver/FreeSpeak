@@ -64,6 +64,12 @@ When a user is unbanned:
 - Moderators **cannot ban administrators**
 - A user already banned cannot be banned again
 
+### Who Can Remove Members ("Remove from Group")?
+- **Group Creator**: Can remove anyone except themselves (the creator can never be removed)
+- **Group Administrators**: Can remove regular members and moderators, but **NOT other administrators**
+- **System Administrators**: Can remove anyone except the group creator
+- Enforced in `GroupMemberService.RemoveMemberAsync`; the UI disables the button with an explanatory note.
+
 ## Implementation Details
 
 ### Database Tables Affected
