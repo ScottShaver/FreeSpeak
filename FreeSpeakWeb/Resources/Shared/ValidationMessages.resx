@@ -94,4 +94,7 @@
   <data name="Field_Code" xml:space="preserve">
     <value>Code</value>
   </data>
+  <data name="Validation_DateOfBirth" xml:space="preserve">
+    <value>The {0} must be a date in the past, no earlier than {1}.</value>
+  </data>
 </root>

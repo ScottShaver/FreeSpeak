@@ -88,4 +88,7 @@
   <data name="Field_Code" xml:space="preserve">
     <value>Kod</value>
   </data>
+  <data name="Validation_DateOfBirth" xml:space="preserve">
+    <value>Pole {0} musi zawierać datę z przeszłości, nie wcześniejszą niż {1}.</value>
+  </data>
 </root>

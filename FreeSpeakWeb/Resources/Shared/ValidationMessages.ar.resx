@@ -88,4 +88,7 @@
   <data name="Field_Code" xml:space="preserve">
     <value>الرمز</value>
   </data>
+  <data name="Validation_DateOfBirth" xml:space="preserve">
+    <value>يجب أن يكون {0} تاريخًا في الماضي وليس قبل عام {1}.</value>
+  </data>
 </root>

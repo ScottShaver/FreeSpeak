@@ -88,4 +88,7 @@
   <data name="Field_Code" xml:space="preserve">
     <value>代码</value>
   </data>
+  <data name="Validation_DateOfBirth" xml:space="preserve">
+    <value>{0} 必须是过去的日期，且不早于 {1} 年。</value>
+  </data>
 </root>

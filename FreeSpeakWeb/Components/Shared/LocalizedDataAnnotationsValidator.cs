@@ -109,6 +109,8 @@ namespace FreeSpeakWeb.Components.Shared
                 CompareAttribute c => Format("Validation_Compare", fallback, field,
                     GetOtherProperty(property, c) is { } other ? Localize(other) : c.OtherProperty),
                 RangeAttribute r => Format("Validation_Range", fallback, field, r.Minimum, r.Maximum),
+                Validation.DateOfBirthAttribute => Format("Validation_DateOfBirth", fallback, field,
+                    Validation.DateOfBirthAttribute.MinimumYear),
                 _ => fallback
             };
         }
