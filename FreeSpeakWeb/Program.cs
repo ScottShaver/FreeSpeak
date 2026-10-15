@@ -247,6 +247,10 @@ namespace FreeSpeakWeb
             // Add NotificationCleanupService as a background service for periodic cleanup
             builder.Services.AddHostedService<NotificationCleanupService>();
 
+            // Purges group moderation log entries older than the configured retention period
+            builder.Services.Configure<GroupModerationLogSettings>(builder.Configuration.GetSection(GroupModerationLogSettings.SectionName));
+            builder.Services.AddHostedService<GroupModerationLogCleanupService>();
+
             // Add ThemeService for color scheme management
             builder.Services.AddScoped<ThemeService>();
 
@@ -297,6 +301,8 @@ namespace FreeSpeakWeb
             builder.Services.AddScoped<GroupPointsService>();
             builder.Services.AddScoped<GroupContentReportService>();
             builder.Services.AddScoped<IGroupFileService, GroupFileService>();
+            builder.Services.AddScoped<IGroupModerationLogRepository, GroupModerationLogRepository>();
+            builder.Services.AddScoped<IGroupModerationLogService, GroupModerationLogService>();
 
             // Add helper services for shared functionality
             builder.Services.AddScoped<PostNotificationHelper>();

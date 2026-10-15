@@ -243,6 +243,16 @@ namespace FreeSpeakWeb.Data
         /// Action when a system administrator sends a test email from the SMTP settings.
         /// Records the recipient and outcome; never the SMTP password.
         /// </summary>
-        EmailTestSent = 39
+        EmailTestSent = 39,
+
+        /// <summary>
+        /// Action when a group moderator or administrator unbans a user from a group.
+        /// </summary>
+        GroupAdminUnbanUser = 40,
+
+        /// <summary>
+        /// Action when a group moderator or administrator exports a group's moderation log as CSV.
+        /// </summary>
+        GroupModerationLogExport = 41
     }
 }
