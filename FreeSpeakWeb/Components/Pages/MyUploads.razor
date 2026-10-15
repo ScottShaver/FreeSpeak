@@ -407,32 +407,63 @@
         JS.InvokeVoidAsync("open", video.ImageUrl, "_blank");
     }
 
+    private bool isDeletingMedia = false;
+
     private async Task DeleteMedia(PostImage media, bool isPicture)
     {
-        if (currentUserId == null) return;
+        // Prevents a second confirm/alert cycle (e.g. double-click) while one delete is in flight
+        if (currentUserId == null || isDeletingMedia) return;
 
-        var confirmed = await JS.InvokeAsync<bool>("confirm", Localizer["ConfirmDeleteUpload"].Value);
-        if (!confirmed) return;
-
-        var result = await PostService.DeleteUploadedImageAsync(media.Id, currentUserId);
-        if (!result.Success)
+        isDeletingMedia = true;
+        try
         {
-            await JS.InvokeVoidAsync("alert", result.ErrorMessage ?? Localizer["DeleteUploadFailed"].Value);
-            return;
-        }
+            var confirmed = await JS.InvokeAsync<bool>("confirm", Localizer["ConfirmDeleteUpload"].Value);
+            if (!confirmed) return;
 
-        if (isPicture)
-        {
-            pictures.Remove(media);
-            totalPictures = Math.Max(0, totalPictures - 1);
-        }
-        else
-        {
-            videos.Remove(media);
-            totalVideos = Math.Max(0, totalVideos - 1);
-        }
+            var result = await PostService.DeleteUploadedImageAsync(media.Id, currentUserId);
+            if (!result.Success)
+            {
+                await JS.InvokeVoidAsync("alert", result.ErrorMessage ?? Localizer["DeleteUploadFailed"].Value);
+                return;
+            }
 
-        StateHasChanged();
+            // Reload from the server so the count and paging offsets reflect the deletion
+            if (isPicture)
+            {
+                var loaded = Math.Max(pictures.Count - 1, 0);
+                pictures.Clear();
+                picturesPage = 1;
+                hasMorePictures = true;
+                totalPictures = Math.Max(0, totalPictures - 1);
+                StateHasChanged();
+                do
+                {
+                    var before = pictures.Count;
+                    await LoadPictures();
+                    if (pictures.Count == before) break;
+                } while (hasMorePictures && pictures.Count < loaded);
+            }
+            else
+            {
+                var loaded = Math.Max(videos.Count - 1, 0);
+                videos.Clear();
+                videosPage = 1;
+                hasMoreVideos = true;
+                totalVideos = Math.Max(0, totalVideos - 1);
+                StateHasChanged();
+                do
+                {
+                    var before = videos.Count;
+                    await LoadVideos();
+                    if (videos.Count == before) break;
+                } while (hasMoreVideos && videos.Count < loaded);
+            }
+        }
+        finally
+        {
+            isDeletingMedia = false;
+            StateHasChanged();
+        }
     }
 
     private void CloseImageViewer()
