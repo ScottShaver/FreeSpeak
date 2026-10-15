@@ -1,6 +1,6 @@
 # Spec: System Moderator Dashboard
 
-Status: APPROVED for implementation, except Q7 (a small default-filter detail). Owner decisions are recorded in section 10.
+Status: APPROVED for implementation. Owner decisions are recorded in section 10.
 Source: `gap-analysis-report.md`, gap #3. Depends on `feed-content-reporting.md` (approved), which supplies the reports this dashboard reviews.
 
 ## 1. Goal
@@ -124,6 +124,7 @@ PR 2 and PR 3 acceptance criteria:
 9. (PR 2) Moderators can warn and suspend up to 7 days. Only administrators can suspend longer. Users are notified, and suspended users see why at login.
 10. (PR 3) System moderators can review and act on group reports in any group. Group moderators see those actions in their group Mod Log.
 11. (PR 3) The activity tab lists system moderation actions with server-set timestamps and supports CSV export.
+12. (PR 1 for feed reports, PR 3 for group reports) A visible message appears when reports have been pending longer than the configured number of days (default 3), with a stale count and a one-click filter. Tests cover the threshold boundary.
 
 ## 10. Decisions (owner)
 
@@ -133,7 +134,7 @@ PR 2 and PR 3 acceptance criteria:
 - **Q4 Author notice:** yes, the author gets a neutral notification when content is removed.
 - **Q5 Appeals:** out of scope.
 - **Q6 Queue sort:** oldest first.
-- **Q7 (open, minor):** for group reports, should the default view show all pending reports (assumed) or only reports pending longer than N days (default 3)?
+- **Q7 Group report default view:** show all pending reports. In addition, display a prominent, localized banner/message when reports have been pending longer than N days (default 3, setting `Moderation:StaleReportDays`), for example "5 reports have been waiting more than 3 days". The banner shows on the Overview tab and at the top of the Group Reports tab, with a link or button that applies the "pending longer than N days" filter. The Overview also shows a stale count card. The same stale banner applies to the feed report queue.
 
 ## 11. Suggested Task Breakdown (PR 1)
 
