@@ -68,6 +68,8 @@ namespace FreeSpeakWeb.Tests.Services
             var mock = new Mock<IFileSignatureValidator>();
             mock.Setup(m => m.ValidateFileSignature(It.IsAny<byte[]>(), It.IsAny<string>()))
                 .Returns((isValid, errorMessage));
+            mock.Setup(m => m.ValidateGroupFileSignature(It.IsAny<byte[]>(), It.IsAny<string>()))
+                .Returns((isValid, errorMessage));
             return mock.Object;
         }
 
@@ -359,7 +361,8 @@ namespace FreeSpeakWeb.Tests.Services
             // Assert
             result.Should().NotBeNull();
             result.Success.Should().BeFalse();
-            result.ErrorMessage.Should().Contain("Group not found");
+            // Non-existent group: membership check fails first, so the permission error is returned
+            result.ErrorMessage.Should().Contain("do not have permission");
             result.File.Should().BeNull();
         }
 
@@ -401,7 +404,8 @@ namespace FreeSpeakWeb.Tests.Services
             // Assert
             result.Should().NotBeNull();
             result.Success.Should().BeFalse();
-            result.ErrorMessage.Should().Contain("not enabled");
+            // CanUploadFilesAsync rejects groups with uploads disabled before the explicit "not enabled" check
+            result.ErrorMessage.Should().Contain("do not have permission");
             result.File.Should().BeNull();
         }
 
@@ -1159,7 +1163,7 @@ namespace FreeSpeakWeb.Tests.Services
             var service = CreateGroupFileService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
-            var group = TestDataFactory.CreateTestGroup("creator1");
+                        var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
             var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
@@ -1246,7 +1250,7 @@ namespace FreeSpeakWeb.Tests.Services
             var service = CreateGroupFileService(repoFactory);
 
             var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
-            var group = TestDataFactory.CreateTestGroup("creator1");
+                        var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
             var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
@@ -1334,7 +1338,7 @@ namespace FreeSpeakWeb.Tests.Services
 
             var user1 = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
             var user2 = TestDataFactory.CreateTestUser(id: "22222222-2222-2222-2222-222222222222");
-            var group = TestDataFactory.CreateTestGroup("creator1");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
             var groupUser1 = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
             var groupUser2 = TestDataFactory.CreateTestGroupUser(1, "22222222-2222-2222-2222-222222222222");

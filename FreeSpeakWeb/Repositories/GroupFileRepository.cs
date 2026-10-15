@@ -250,14 +250,14 @@ namespace FreeSpeakWeb.Repositories
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
 
-                var searchPattern = $"%{searchTerm}%";
+                var term = searchTerm.ToLower();
 
                 return await context.GroupFiles
                     .Include(f => f.Uploader)
                     .Where(f => f.GroupId == groupId &&
                                 f.Status == GroupFileStatus.Approved &&
-                                (EF.Functions.ILike(f.OriginalFileName, searchPattern) ||
-                                 (f.Description != null && EF.Functions.ILike(f.Description, searchPattern))))
+                                (f.OriginalFileName.ToLower().Contains(term) ||
+                                 (f.Description != null && f.Description.ToLower().Contains(term))))
                     .OrderByDescending(f => f.UploadedAt)
                     .Skip(skip)
                     .Take(take)
