@@ -73,10 +73,12 @@ namespace FreeSpeakWeb.Services
                     return (false, "Cannot ban the group creator.");
                 }
 
-                // Prevent regular moderators from banning admins (unless banner is system admin)
-                if (!isSystemAdmin && userMembership.IsAdmin && bannerMembership != null && !bannerMembership.IsAdmin)
+                // Only the creator or a system admin may ban administrators
+                if (!isSystemAdmin && userMembership.IsAdmin && group?.CreatorId != bannedByUserId)
                 {
-                    return (false, "Moderators cannot ban administrators.");
+                    return (false, bannerMembership != null && bannerMembership.IsAdmin
+                        ? "Administrators cannot ban other administrators."
+                        : "Moderators cannot ban administrators.");
                 }
 
                 // Check if already banned

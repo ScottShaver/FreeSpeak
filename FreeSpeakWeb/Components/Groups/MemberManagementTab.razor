@@ -171,9 +171,9 @@
                                         @if (!CanBanMember(member))
                                         {
                                             <small class="text-muted d-block mt-1">
-                                                @if (member.IsAdmin && !IsCurrentUserAdmin)
+                                                @if (member.IsAdmin && !IsCurrentUserCreator)
                                                 {
-                                                    <text>Moderators cannot ban administrators</text>
+                                                    <text>Only the group creator can ban administrators</text>
                                                 }
                                                 else if (!CanSetModerator)
                                                 {
@@ -685,8 +685,8 @@
         if (member.UserId == Group.CreatorId)
             return false;
 
-        // Moderators cannot ban admins
-        if (member.IsAdmin && !IsCurrentUserAdmin)
+        // Only the creator (or a system admin, handled above) can ban admins
+        if (member.IsAdmin && !IsCurrentUserCreator)
             return false;
 
         return true;
