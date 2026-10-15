@@ -369,6 +369,24 @@ namespace FreeSpeakWeb.Tests.Services.Settings
             _upserts.Single(u => u.Key == field.Key).Value.Should().Be("false");
         }
 
+        /// <summary>Verifies the audit entry for an inverted field records the raw configuration values.</summary>
+        [Fact]
+        public async Task Save_SmtpEnabled_AuditsRawConfigurationValues()
+        {
+            var svc = Create();
+            var field = SettingsCatalog.Find("smtp")!.Fields.First(f => f.Invert);
+            var details = new List<SystemSettingChangedDetails>();
+            _audit.Setup(a => a.LogActionAsync("admin", ActionCategory.SystemSettingChanged, It.IsAny<SystemSettingChangedDetails>()))
+                .Callback<string, ActionCategory, SystemSettingChangedDetails>((_, _, d) => details.Add(d))
+                .Returns(Task.CompletedTask);
+
+            await svc.SaveGroupAsync("smtp", new Dictionary<string, string?> { [field.Key] = "true", ["Smtp:AuthenticationRequired"] = "false" }, "admin");
+
+            var entry = details.Single(d => d.Key == field.Key);
+            entry.NewValue.Should().Be(_upserts.Single(u => u.Key == field.Key).Value);
+            entry.OldValue.Should().NotBe(entry.NewValue);
+        }
+
         /// <summary>Verifies reset deletes rows and audits.</summary>
         [Fact]
         public async Task Reset_DeletesRows_AndAudits()
