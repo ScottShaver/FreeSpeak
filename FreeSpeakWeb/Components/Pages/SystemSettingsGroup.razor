@@ -169,7 +169,7 @@
         {
             foreach (var field in _state.Fields)
             {
-                _values[field.Definition.Key] = field.Value;
+                _values[field.Definition.Key] = field.Definition.IsSecret ? string.Empty : field.Value;
             }
         }
     }
