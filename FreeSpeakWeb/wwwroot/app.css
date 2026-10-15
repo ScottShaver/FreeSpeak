@@ -442,3 +442,8 @@ a.nav-icon-link.active {
 .nav-icon-link .bi {
     margin-right: 0;
 }
+
+/* The fixed top navigation bar stays above modal backdrops, so keep open modals below it */
+.modal.show {
+    padding-top: 3.5rem;
+}
