@@ -1067,6 +1067,7 @@
 
                 // Reload the feed to include the new post
                 await LoadInitialPosts();
+                await LoadCurrentUserStatsAsync();
 
                 // Scroll to top to show the new post
                 if (jsModule != null)

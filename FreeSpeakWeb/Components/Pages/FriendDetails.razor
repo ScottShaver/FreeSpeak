@@ -572,6 +572,7 @@
                 // Reload the feed to include the new post
                 currentPage = 1;
                 await LoadPostsAsync();
+                await LoadFriendStatsAsync();
 
                 StateHasChanged();
                 return true;
