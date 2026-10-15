@@ -177,35 +177,34 @@ Charter format: **Persona** / **Allowed** / **Forbidden (must be denied)**. A fa
 
 ## 9. Next steps
 
-Status after the first QA round (pilot as member, stranger, banned, moderator, owner, friend, sysadmin). The high and medium findings were fixed in PR #55.
+Status after QA rounds 1 and 2 plus two retests. Findings were fixed in PRs #55, #61, #62, #63 and #64 and verified in the browser.
 
-### Retest (narrow charters, fixed items only)
-- Banned user cannot read `/group/N/post/M`; public group `/group/1` is viewable by a non-member and shows Join; private group stays hidden.
-- Logout from any page, including with a modal open, returns to the home page.
-- A system admin cannot remove the last SystemAdministrator role; self role edit asks for confirmation; role changes appear in the audit log.
-- Moderator and owner see Delete on other members' group posts.
-- Confirmations appear for Ban Member, Unfriend and Delete comment; double-clicking Post creates one post; a 10k-character post shows "See more".
+### Covered and passing
+- Group join-request and post approval/decline (with author notifications), ban/unban with confirmation and success messages, consistent member counts.
+- Moderator and owner Delete on others' group posts; moderator denied `/system-admin`.
+- Last SystemAdministrator cannot be removed; role changes (and blocked attempts) appear in the target user's audit log.
+- Friend request accept, notifications mark-read, reply depth (5 tiers), double-click Post, confirmations, Escape on popup menus.
+- Profile post counts for self, friend and stranger; group visibility for non-members; logout from any page including with a modal open.
+- 10k-character post "See more", image upload validation (fake, oversized, non-image), search, language switcher, settings, 404 page, script/HTML rendered safely.
+
+### Design decisions
+- Unbanning a member does not restore group membership (intended).
+- Reply nesting is 5 tiers (`MaxFeedPostCommentDepth` = 4).
+- User search is word-based.
 
 ### Not yet tested
-Seed data now exists for the items below (see section 4); they still need a browser run:
-- Group join-request approval (group 2, requests from `agent.newuser` and `agent.stranger`) and post approval (group posts 4 and 5).
-- Demoting or removing the last admin: group 3 (`agent.moderator` is the only non-creator admin) and `agent.sysadmin2` for system admin role changes.
-- Only-me post count on profiles: compare `agent.member`'s profile as `agent.member` vs. as `agent.friend`.
-- Friend request acceptance (`agent.stranger` to `agent.member`) and notifications (never expire; `agent.member` and `agent.owner` have unread ones).
-- Reply depth: comment thread on post 7 is already at depth 4 (documented maximum); UI showed 5 tiers earlier, so verify what is counted.
 - Group files list and approval (records only, no downloads).
-- `agent.newuser` persona and the cross-cutting probes in section 7.
+- Group 3 last-admin demotion; creator leaving a group (no Leave button today).
+- Multi-image posts, My Uploads, theme and timezone settings, admin-page language switching, very long names.
+- Real file downloads and seeded image posts.
 
-Still without seed data or coverage:
-- A creator leaving or being removed from a group (no Leave button for the creator today).
-- Suspend and ban from the admin UI (menu items are disabled).
-- Groups: stale member count on the Find Groups card after a ban.
-- Real file and image uploads (image posts are not seeded), search, settings and the language switcher on admin pages.
-
-### Known open items (not from QA)
-- Dependency vulnerabilities: SixLabors.ImageSharp (upgraded to 4.1.3) and AngleSharp (via HtmlSanitizer 9.2.1039) were patched. ImageSharp 4.x needs a Six Labors license for Release builds; manually check image upload and thumbnails.
-- Low-severity UI gaps: Mod Log tab is a stub, moderators have no member list or ban UI, Escape does not close the post popup menu, `/system-moderator` is a placeholder.
-- 43 unit tests fail (UnifiedArticle, PostEditModal, GroupFileService; missing DI/setup). Confirm they also fail on `master` and fix.
+### Known open items
+- Localization: validation messages show English field names under non-English UI; `<html lang>` stays `en` after a language switch.
+- Audit log Details column is blank until "..." is clicked, then shows raw JSON.
+- Low-severity UI gaps: Mod Log tab is a stub, moderators have no member list or ban UI, `/system-moderator` is a placeholder, admin suspend/ban menu items are disabled.
+- Group-post count on profiles is not viewer-aware; PostEditModal upload errors are not localized.
+- About 24 unit tests fail on `master` (GroupFileService, UnifiedArticle); they need deeper setup or updated expectations.
+- ImageSharp 4.x needs a Six Labors license (committed as `sixlabors.lic`); confirm the community license covers 4.x.
 - Dev-only 404 for `hot-reload-settings.json` on every page load.
 
 ### Tips for the next run
