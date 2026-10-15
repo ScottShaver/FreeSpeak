@@ -1,7 +1,9 @@
 using FluentAssertions;
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Repositories;
 using FreeSpeakWeb.Services;
+using FreeSpeakWeb.Services.Abstractions;
 using FreeSpeakWeb.Tests.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -54,7 +56,7 @@ namespace FreeSpeakWeb.Tests.Services
         /// <summary>
         /// Creates a GroupPostService with real repositories using an in-memory database.
         /// </summary>
-        private GroupPostService CreateGroupPostService(TestRepositoryFactory repoFactory)
+        private GroupPostService CreateGroupPostService(TestRepositoryFactory repoFactory, IGroupModerationLogService? moderationLog = null)
         {
             var logger = CreateMockLogger<GroupPostService>();
             var pointsLogger = CreateMockLogger<GroupPointsService>();
@@ -75,7 +77,45 @@ namespace FreeSpeakWeb.Tests.Services
                 CreatePostNotificationHelper(repoFactory.ContextFactory),
                 repoFactory.CreateGroupAccessValidator(),
                 MockRepositories.CreateMockAuditLogRepository().Object,
-                groupPointsService);
+                groupPointsService,
+                siteSettings: null,
+                moderationLog: moderationLog);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task PostDecision_ByPlainMember_WritesNoModerationLogEntry(bool approve)
+        {
+            // Arrange
+            var repoFactory = CreateTestRepositoryFactory("GroupPostModLogDenied_" + approve);
+            var moderationLog = new Mock<IGroupModerationLogService>();
+            var service = CreateGroupPostService(repoFactory, moderationLog.Object);
+            int postId;
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Users.AddRange(TestDataFactory.CreateTestUser(id: "admin1"), TestDataFactory.CreateTestUser(id: "member1"));
+                var group = TestDataFactory.CreateTestGroup("admin1");
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+                context.GroupUsers.AddRange(
+                    TestDataFactory.CreateTestGroupUser(group.Id, "admin1", isAdmin: true),
+                    TestDataFactory.CreateTestGroupUser(group.Id, "member1"));
+                var post = TestDataFactory.CreateTestGroupPost(group.Id, "member1", "Pending");
+                post.Status = PostStatus.Pending;
+                context.GroupPosts.Add(post);
+                await context.SaveChangesAsync();
+                postId = post.Id;
+            }
+
+            // Act
+            var (success, _) = approve
+                ? await service.ApprovePostAsync(postId, "member1")
+                : await service.DeclinePostAsync(postId, "member1");
+
+            // Assert
+            success.Should().BeFalse();
+            moderationLog.Verify(m => m.LogAsync(It.IsAny<GroupModerationLogRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         #region Post Operations Tests
@@ -791,6 +831,12 @@ namespace FreeSpeakWeb.Tests.Services
                 var post1 = TestDataFactory.CreateTestGroupPost(group.Id, "user1", "Post 1");
                 var post2 = TestDataFactory.CreateTestGroupPost(group.Id, "user1", "Post 2");
                 var post3 = TestDataFactory.CreateTestGroupPost(group.Id, "user1", "Post 3");
+
+                // Explicit distinct timestamps: DateTime.UtcNow can tie between rapid calls, making the order nondeterministic
+                var baseTime = DateTime.UtcNow.AddMinutes(-10);
+                post1.CreatedAt = baseTime;
+                post2.CreatedAt = baseTime.AddMinutes(1);
+                post3.CreatedAt = baseTime.AddMinutes(2);
 
                 context.GroupPosts.AddRange(post1, post2, post3);
                 await context.SaveChangesAsync();

@@ -141,7 +141,9 @@ namespace FreeSpeakWeb.Services.Settings
                     UpdatedAtUtc = now,
                     UpdatedByUserId = adminUserId
                 });
-                audits.Add(CreateChangedDetails(group, field, current, submitted, $"changed from '{current}' to '{submitted}'"));
+                // Audit the raw configuration values so they match the key name (the UI may show an inverted toggle)
+                var auditOld = field.Invert ? (current == "true" ? "false" : "true") : current;
+                audits.Add(CreateChangedDetails(group, field, auditOld, stored, $"changed from '{auditOld}' to '{stored}'"));
             }
 
             if (upserts.Count > 0)
