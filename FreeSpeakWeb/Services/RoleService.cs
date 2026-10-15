@@ -40,20 +40,55 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Records a role change in the audit log without failing the operation if logging fails.
+        /// Records a role change (or a blocked attempt) in the audit log under both the actor and the target user,
+        /// without failing the operation if logging fails.
         /// </summary>
-        private async Task LogRoleChangeAsync(string actorUserId, ApplicationUser target, string roleName, OperationTypeEnum operation)
+        /// <param name="actorUserId">The user performing the change.</param>
+        /// <param name="target">The user whose role is changing.</param>
+        /// <param name="roleName">The role added or removed.</param>
+        /// <param name="operation">Whether the role is being added or removed.</param>
+        /// <param name="blocked">True when the change was refused.</param>
+        private async Task LogRoleChangeAsync(string actorUserId, ApplicationUser target, string roleName, OperationTypeEnum operation, bool blocked = false)
         {
             try
             {
-                await _auditLogRepository.LogActionAsync(actorUserId, ActionCategory.SystemAdminChangeUserRole,
-                    new SystemAdminChangeUserRoleDetails
-                    {
-                        OperationType = operation.ToString(),
-                        TargetUserId = target.Id,
-                        TargetUserDisplayName = $"{target.FirstName} {target.LastName}".Trim(),
-                        RoleName = roleName
-                    });
+                var actor = actorUserId == target.Id ? target : await _userManager.FindByIdAsync(actorUserId);
+                var actorName = actor != null ? $"{actor.FirstName} {actor.LastName}".Trim() : string.Empty;
+                if (string.IsNullOrEmpty(actorName))
+                {
+                    actorName = actorUserId;
+                }
+
+                var targetName = $"{target.FirstName} {target.LastName}".Trim();
+                if (string.IsNullOrEmpty(targetName))
+                {
+                    targetName = target.Id;
+                }
+
+                var verb = operation == OperationTypeEnum.Add ? "added to" : "removed from";
+                var description = blocked
+                    ? $"Attempt by {actorName} to remove role '{roleName}' from {targetName} was blocked: last remaining system administrator."
+                    : $"Role '{roleName}' was {verb} {targetName} by {actorName}.";
+
+                var details = new SystemAdminChangeUserRoleDetails
+                {
+                    OperationType = operation.ToString(),
+                    TargetUserId = target.Id,
+                    TargetUserDisplayName = targetName,
+                    RoleName = roleName,
+                    ActorUserId = actorUserId,
+                    ActorUserDisplayName = actorName,
+                    Blocked = blocked,
+                    Description = description
+                };
+
+                await _auditLogRepository.LogActionAsync(actorUserId, ActionCategory.SystemAdminChangeUserRole, details);
+
+                // Also record the entry under the target so it shows in the target user's audit log
+                if (actorUserId != target.Id)
+                {
+                    await _auditLogRepository.LogActionAsync(target.Id, ActionCategory.SystemAdminChangeUserRole, details);
+                }
             }
             catch (Exception ex)
             {
@@ -191,6 +226,7 @@ namespace FreeSpeakWeb.Services
                 if (roleName == SystemAdministratorRole && await IsLastSystemAdministratorAsync(userId))
                 {
                     _logger.LogWarning("Refused to remove {RoleName} from {UserId}: last remaining system administrator", roleName, userId);
+                    await LogRoleChangeAsync(actorUserId, user, roleName, OperationTypeEnum.Remove, blocked: true);
                     return false;
                 }
 
