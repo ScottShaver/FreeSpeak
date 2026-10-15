@@ -1019,6 +1019,12 @@ namespace FreeSpeakWeb.Services
                     return (false, "User is not a member of this group.");
                 }
 
+                // Only the creator or a system admin can remove another admin
+                if (groupUser.IsAdmin && !isSystemAdmin && !isCreator)
+                {
+                    return (false, "Only the group creator can remove administrators.");
+                }
+
                 context.GroupUsers.Remove(groupUser);
                 await context.SaveChangesAsync();
 
