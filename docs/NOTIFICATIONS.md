@@ -70,6 +70,8 @@ The FreeSpeak notification system provides real-time updates to users about soci
 **Triggered when**: System-generated notifications  
 **Badge display**: ℹ️ Info circle icon  
 
+**Feed report outcome** (`FeedReportReviewed` template): when a system moderator dismisses, resolves or takes action on a feed post/comment report, the reporter receives a `System` notification ("Your report was reviewed."). The outcome details are not disclosed.
+
 ## Smart Notification Logic
 
 ### When Notifications Are NOT Created:

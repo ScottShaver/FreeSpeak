@@ -27,6 +27,9 @@ The following tables have **automatic cascade delete** configured in `Applicatio
 6. **PostNotificationMutes** (`OnDelete(DeleteBehavior.Cascade)`)
    - All notification mute records for this post
 
+7. **FeedContentReports** (`OnDelete(DeleteBehavior.Cascade)`)
+   - Reports of the post and of its comments (via post and comment cascades)
+
 ### ⚠️ Manually Cleaned in DeletePostAsync
 The following items require manual cleanup because they don't have direct foreign key relationships or need file system operations:
 
