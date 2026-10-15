@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="FilterAction" xml:space="preserve"><value>アクション</value></data>
+  <data name="AllActions" xml:space="preserve"><value>すべてのアクション</value></data>
+  <data name="FilterFrom" xml:space="preserve"><value>開始日</value></data>
+  <data name="FilterTo" xml:space="preserve"><value>終了日</value></data>
+  <data name="ClearFilters" xml:space="preserve"><value>フィルターをクリア</value></data>
+  <data name="ExportCsv" xml:space="preserve"><value>CSVをエクスポート</value></data>
+  <data name="NoEntries" xml:space="preserve"><value>モデレーション操作はまだ記録されていません。</value></data>
+  <data name="NoMatchingEntries" xml:space="preserve"><value>現在のフィルターに一致する項目はありません。</value></data>
+  <data name="LoadMore" xml:space="preserve"><value>さらに読み込む</value></data>
+  <data name="Loading" xml:space="preserve"><value>読み込み中...</value></data>
+  <data name="LoadError" xml:space="preserve"><value>モデレーションログを読み込めませんでした。もう一度お試しください。</value></data>
+  <data name="NotAuthorized" xml:space="preserve"><value>モデレーションログを表示できるのは、グループの管理者とモデレーターのみです。</value></data>
+  <data name="RetentionNote" xml:space="preserve"><value>項目は{0}か月間保存されます。</value></data>
+  <data name="ExportLimitNote" xml:space="preserve"><value>CSVエクスポートには、一致する最新の項目が最大{0}件含まれます。</value></data>
+  <data name="ShowingCount" xml:space="preserve"><value>{1}件中{0}件を表示</value></data>
+  <data name="ByActor" xml:space="preserve"><value>実行者: {0}</value></data>
+  <data name="TargetUser" xml:space="preserve"><value>メンバー: {0}</value></data>
+  <data name="ReasonLabel" xml:space="preserve"><value>理由: {0}</value></data>
+  <data name="Action_PostApproved" xml:space="preserve"><value>投稿を承認</value></data>
+  <data name="Action_PostDeclined" xml:space="preserve"><value>投稿を却下</value></data>
+  <data name="Action_FileApproved" xml:space="preserve"><value>ファイルを承認</value></data>
+  <data name="Action_FileDeclined" xml:space="preserve"><value>ファイルを却下</value></data>
+  <data name="Action_FileRemoved" xml:space="preserve"><value>ファイルを削除</value></data>
+  <data name="Action_ReportDismissed" xml:space="preserve"><value>報告を却下</value></data>
+  <data name="Action_ReportResolved" xml:space="preserve"><value>報告を解決</value></data>
+  <data name="Action_MemberBanned" xml:space="preserve"><value>メンバーをBAN</value></data>
+  <data name="Action_MemberUnbanned" xml:space="preserve"><value>メンバーのBANを解除</value></data>
+</root>

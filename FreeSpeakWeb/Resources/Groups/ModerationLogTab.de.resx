@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="FilterAction" xml:space="preserve"><value>Aktion</value></data>
+  <data name="AllActions" xml:space="preserve"><value>Alle Aktionen</value></data>
+  <data name="FilterFrom" xml:space="preserve"><value>Von</value></data>
+  <data name="FilterTo" xml:space="preserve"><value>Bis</value></data>
+  <data name="ClearFilters" xml:space="preserve"><value>Filter zurücksetzen</value></data>
+  <data name="ExportCsv" xml:space="preserve"><value>CSV exportieren</value></data>
+  <data name="NoEntries" xml:space="preserve"><value>Es wurden noch keine Moderationsaktionen erfasst.</value></data>
+  <data name="NoMatchingEntries" xml:space="preserve"><value>Keine Einträge entsprechen den aktuellen Filtern.</value></data>
+  <data name="LoadMore" xml:space="preserve"><value>Mehr laden</value></data>
+  <data name="Loading" xml:space="preserve"><value>Wird geladen...</value></data>
+  <data name="LoadError" xml:space="preserve"><value>Das Moderationsprotokoll konnte nicht geladen werden. Bitte versuche es erneut.</value></data>
+  <data name="NotAuthorized" xml:space="preserve"><value>Nur Gruppenadministratoren und Moderatoren können das Moderationsprotokoll einsehen.</value></data>
+  <data name="RetentionNote" xml:space="preserve"><value>Einträge werden {0} Monate lang aufbewahrt.</value></data>
+  <data name="ExportLimitNote" xml:space="preserve"><value>Der CSV-Export enthält bis zu {0} der neuesten passenden Einträge.</value></data>
+  <data name="ShowingCount" xml:space="preserve"><value>{0} von {1} Einträgen angezeigt</value></data>
+  <data name="ByActor" xml:space="preserve"><value>Von {0}</value></data>
+  <data name="TargetUser" xml:space="preserve"><value>Mitglied: {0}</value></data>
+  <data name="ReasonLabel" xml:space="preserve"><value>Grund: {0}</value></data>
+  <data name="Action_PostApproved" xml:space="preserve"><value>Beitrag genehmigt</value></data>
+  <data name="Action_PostDeclined" xml:space="preserve"><value>Beitrag abgelehnt</value></data>
+  <data name="Action_FileApproved" xml:space="preserve"><value>Datei genehmigt</value></data>
+  <data name="Action_FileDeclined" xml:space="preserve"><value>Datei abgelehnt</value></data>
+  <data name="Action_FileRemoved" xml:space="preserve"><value>Datei entfernt</value></data>
+  <data name="Action_ReportDismissed" xml:space="preserve"><value>Meldung verworfen</value></data>
+  <data name="Action_ReportResolved" xml:space="preserve"><value>Meldung bearbeitet</value></data>
+  <data name="Action_MemberBanned" xml:space="preserve"><value>Mitglied gesperrt</value></data>
+  <data name="Action_MemberUnbanned" xml:space="preserve"><value>Mitglied entsperrt</value></data>
+</root>

@@ -1,0 +1,301 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.DTOs
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Services.Abstractions
+@using FreeSpeakWeb.Components.Shared
+@using Microsoft.Extensions.Localization
+@using Microsoft.Extensions.Options
+@inject IGroupModerationLogService ModerationLogService
+@inject IOptions<GroupModerationLogSettings> LogSettings
+@inject IJSRuntime JSRuntime
+@inject ILogger<ModerationLogTab> Logger
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Groups.ModerationLogTab> Localizer
+
+<div class="moderation-log-tab">
+    <div class="row g-2 align-items-end mb-3">
+        <div class="col-12 col-md-4">
+            <label class="form-label small mb-1" for="modlog-action">@Localizer["FilterAction"]</label>
+            <select id="modlog-action" class="form-select form-select-sm" @bind="selectedAction" @bind:after="ApplyFiltersAsync">
+                <option value="">@Localizer["AllActions"]</option>
+                @foreach (var action in FilterableActions)
+                {
+                    <option value="@action">@ActionLabel(action)</option>
+                }
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label small mb-1" for="modlog-from">@Localizer["FilterFrom"]</label>
+            <input id="modlog-from" type="date" class="form-control form-control-sm" @bind="fromDate" @bind:after="ApplyFiltersAsync" />
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label small mb-1" for="modlog-to">@Localizer["FilterTo"]</label>
+            <input id="modlog-to" type="date" class="form-control form-control-sm" @bind="toDate" @bind:after="ApplyFiltersAsync" />
+        </div>
+        <div class="col-12 col-md-2 d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="ClearFiltersAsync">@Localizer["ClearFilters"]</button>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <small class="text-muted">@string.Format(Localizer["RetentionNote"].Value, LogSettings.Value.RetentionMonths)</small>
+        @if (isAuthorized)
+        {
+            <button type="button" class="btn btn-outline-primary btn-sm" @onclick="ExportCsvAsync" disabled="@(totalCount == 0)">
+                <i class="bi bi-download me-1"></i>@Localizer["ExportCsv"]
+            </button>
+        }
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">@Localizer["Loading"]</span>
+            </div>
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(loadError))
+    {
+        <div class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>@loadError
+        </div>
+    }
+    else if (!isAuthorized)
+    {
+        <div class="alert alert-warning" role="alert">
+            <i class="bi bi-lock me-2"></i>@Localizer["NotAuthorized"]
+        </div>
+    }
+    else if (entries.Count == 0)
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>@(HasActiveFilter ? Localizer["NoMatchingEntries"] : Localizer["NoEntries"])
+        </div>
+    }
+    else
+    {
+        <div class="modlog-list">
+            @foreach (var entry in entries)
+            {
+                <div class="modlog-entry" @key="entry.Id">
+                    <div class="d-flex justify-content-between flex-wrap">
+                        <span class="modlog-action">@ActionLabel(entry.Action)</span>
+                        <span class="modlog-time" title="@entry.CreatedAtUtc.ToLocalTime().ToString("MMM d, yyyy 'at' h:mm:ss tt")">
+                            <TimestampDisplay Timestamp="@entry.CreatedAtUtc" Mode="relative" />
+                        </span>
+                    </div>
+                    <div class="small">@string.Format(Localizer["ByActor"].Value, entry.ActorDisplayName)</div>
+                    @if (!string.IsNullOrEmpty(entry.TargetUserDisplayName))
+                    {
+                        <div class="small">@string.Format(Localizer["TargetUser"].Value, entry.TargetUserDisplayName)</div>
+                    }
+                    @if (!string.IsNullOrEmpty(entry.Summary))
+                    {
+                        <div class="small text-muted text-break">@entry.Summary</div>
+                    }
+                    @if (!string.IsNullOrEmpty(entry.Reason))
+                    {
+                        <div class="small text-break">@string.Format(Localizer["ReasonLabel"].Value, entry.Reason)</div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="text-center mt-3">
+            @if (HasMore)
+            {
+                <button type="button" class="btn btn-outline-primary btn-sm" @onclick="LoadMoreAsync" disabled="@isLoadingMore">
+                    @if (isLoadingMore)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span>@Localizer["Loading"]</span>
+                    }
+                    else
+                    {
+                        <span>@Localizer["LoadMore"]</span>
+                    }
+                </button>
+            }
+            <div class="text-muted small mt-2">@string.Format(Localizer["ShowingCount"].Value, entries.Count, totalCount)</div>
+            <div class="text-muted small">@string.Format(Localizer["ExportLimitNote"].Value, LogSettings.Value.ExportMaxRows)</div>
+        </div>
+    }
+</div>
+
+@code {
+    private const int PageSize = 25;
+
+    /// <summary>
+    /// The group whose moderation log is shown.
+    /// </summary>
+    [Parameter]
+    public Group Group { get; set; } = null!;
+
+    /// <summary>
+    /// The current user's ID. The server re-checks authorization for every request.
+    /// </summary>
+    [Parameter]
+    public string CurrentUserId { get; set; } = string.Empty;
+
+    private static readonly GroupModerationAction[] FilterableActions =
+    {
+        GroupModerationAction.PostApproved, GroupModerationAction.PostDeclined,
+        GroupModerationAction.FileApproved, GroupModerationAction.FileDeclined, GroupModerationAction.FileRemoved,
+        GroupModerationAction.ReportDismissed, GroupModerationAction.ReportResolved,
+        GroupModerationAction.MemberBanned, GroupModerationAction.MemberUnbanned
+    };
+
+    private readonly List<GroupModerationLogEntryDto> entries = new();
+    private string selectedAction = string.Empty;
+    private DateTime? fromDate;
+    private DateTime? toDate;
+    private int currentPage;
+    private int totalCount;
+    private bool isLoading;
+    private bool isLoadingMore;
+    private bool isAuthorized = true;
+    private string? loadError;
+
+    private bool HasActiveFilter => selectedAction != string.Empty || fromDate.HasValue || toDate.HasValue;
+
+    private bool HasMore => entries.Count < totalCount;
+
+    /// <inheritdoc />
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync(reset: true);
+    }
+
+    /// <summary>
+    /// Builds the filter from the current UI selections. Local dates are converted to UTC bounds; the end date is inclusive.
+    /// </summary>
+    /// <returns>The filter to send to the service.</returns>
+    private GroupModerationLogFilter BuildFilter()
+    {
+        var filter = new GroupModerationLogFilter();
+        if (Enum.TryParse<GroupModerationAction>(selectedAction, out var action) && selectedAction != string.Empty)
+        {
+            filter.Action = action;
+        }
+
+        if (fromDate.HasValue)
+        {
+            filter.FromDate = DateTime.SpecifyKind(fromDate.Value.Date, DateTimeKind.Local).ToUniversalTime();
+        }
+
+        if (toDate.HasValue)
+        {
+            filter.ToDate = DateTime.SpecifyKind(toDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Local).ToUniversalTime();
+        }
+
+        return filter;
+    }
+
+    /// <summary>
+    /// Loads the first page (when resetting) or the next page of entries.
+    /// </summary>
+    /// <param name="reset">True to start again from the first page.</param>
+    private async Task LoadAsync(bool reset)
+    {
+        if (reset)
+        {
+            isLoading = true;
+            currentPage = 0;
+            entries.Clear();
+        }
+        else
+        {
+            isLoadingMore = true;
+        }
+
+        loadError = null;
+
+        try
+        {
+            var page = await ModerationLogService.GetLogAsync(Group.Id, CurrentUserId, BuildFilter(), currentPage + 1, PageSize);
+            isAuthorized = page.IsAuthorized;
+            totalCount = page.TotalCount;
+            entries.AddRange(page.Items);
+            currentPage++;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading moderation log for group {GroupId}", Group.Id);
+            loadError = Localizer["LoadError"];
+        }
+        finally
+        {
+            isLoading = false;
+            isLoadingMore = false;
+        }
+    }
+
+    /// <summary>
+    /// Reloads the log from the first page after a filter changed.
+    /// </summary>
+    private Task ApplyFiltersAsync() => LoadAsync(reset: true);
+
+    /// <summary>
+    /// Clears all filters and reloads.
+    /// </summary>
+    private async Task ClearFiltersAsync()
+    {
+        selectedAction = string.Empty;
+        fromDate = null;
+        toDate = null;
+        await LoadAsync(reset: true);
+    }
+
+    /// <summary>
+    /// Loads the next page of entries.
+    /// </summary>
+    private Task LoadMoreAsync() => LoadAsync(reset: false);
+
+    /// <summary>
+    /// Opens the CSV export endpoint with the current filters. The server authorizes and audits the export.
+    /// </summary>
+    private async Task ExportCsvAsync()
+    {
+        var filter = BuildFilter();
+        var query = new List<string>();
+        if (filter.Action.HasValue)
+        {
+            query.Add($"action={filter.Action.Value}");
+        }
+
+        if (filter.FromDate.HasValue)
+        {
+            query.Add($"from={Uri.EscapeDataString(filter.FromDate.Value.ToString("O"))}");
+        }
+
+        if (filter.ToDate.HasValue)
+        {
+            query.Add($"to={Uri.EscapeDataString(filter.ToDate.Value.ToString("O"))}");
+        }
+
+        var url = $"/api/groups/{Group.Id}/moderation-log/export" + (query.Count > 0 ? "?" + string.Join("&", query) : string.Empty);
+
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("open", url, "_blank");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error opening moderation log export for group {GroupId}", Group.Id);
+            loadError = Localizer["LoadError"];
+        }
+    }
+
+    /// <summary>
+    /// Gets the localized label for an action, falling back to a spaced version of the enum name.
+    /// </summary>
+    /// <param name="action">The action.</param>
+    /// <returns>The display label.</returns>
+    private string ActionLabel(GroupModerationAction action)
+    {
+        var localized = Localizer["Action_" + action];
+        return localized.ResourceNotFound
+            ? System.Text.RegularExpressions.Regex.Replace(action.ToString(), "(?<=[a-z])(?=[A-Z])", " ")
+            : localized.Value;
+    }
+}

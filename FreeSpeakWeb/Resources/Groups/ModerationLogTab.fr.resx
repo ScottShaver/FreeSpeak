@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="FilterAction" xml:space="preserve"><value>Action</value></data>
+  <data name="AllActions" xml:space="preserve"><value>Toutes les actions</value></data>
+  <data name="FilterFrom" xml:space="preserve"><value>Du</value></data>
+  <data name="FilterTo" xml:space="preserve"><value>Au</value></data>
+  <data name="ClearFilters" xml:space="preserve"><value>Effacer les filtres</value></data>
+  <data name="ExportCsv" xml:space="preserve"><value>Exporter en CSV</value></data>
+  <data name="NoEntries" xml:space="preserve"><value>Aucune action de modération n'a encore été enregistrée.</value></data>
+  <data name="NoMatchingEntries" xml:space="preserve"><value>Aucune entrée ne correspond aux filtres actuels.</value></data>
+  <data name="LoadMore" xml:space="preserve"><value>Charger plus</value></data>
+  <data name="Loading" xml:space="preserve"><value>Chargement...</value></data>
+  <data name="LoadError" xml:space="preserve"><value>Impossible de charger le journal de modération. Veuillez réessayer.</value></data>
+  <data name="NotAuthorized" xml:space="preserve"><value>Seuls les administrateurs et modérateurs du groupe peuvent consulter le journal de modération.</value></data>
+  <data name="RetentionNote" xml:space="preserve"><value>Les entrées sont conservées pendant {0} mois.</value></data>
+  <data name="ExportLimitNote" xml:space="preserve"><value>L'export CSV inclut jusqu'à {0} des entrées correspondantes les plus récentes.</value></data>
+  <data name="ShowingCount" xml:space="preserve"><value>{0} entrées affichées sur {1}</value></data>
+  <data name="ByActor" xml:space="preserve"><value>Par {0}</value></data>
+  <data name="TargetUser" xml:space="preserve"><value>Membre : {0}</value></data>
+  <data name="ReasonLabel" xml:space="preserve"><value>Motif : {0}</value></data>
+  <data name="Action_PostApproved" xml:space="preserve"><value>Publication approuvée</value></data>
+  <data name="Action_PostDeclined" xml:space="preserve"><value>Publication refusée</value></data>
+  <data name="Action_FileApproved" xml:space="preserve"><value>Fichier approuvé</value></data>
+  <data name="Action_FileDeclined" xml:space="preserve"><value>Fichier refusé</value></data>
+  <data name="Action_FileRemoved" xml:space="preserve"><value>Fichier supprimé</value></data>
+  <data name="Action_ReportDismissed" xml:space="preserve"><value>Signalement rejeté</value></data>
+  <data name="Action_ReportResolved" xml:space="preserve"><value>Signalement traité</value></data>
+  <data name="Action_MemberBanned" xml:space="preserve"><value>Membre banni</value></data>
+  <data name="Action_MemberUnbanned" xml:space="preserve"><value>Membre débanni</value></data>
+</root>
