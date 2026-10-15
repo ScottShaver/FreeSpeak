@@ -79,4 +79,7 @@
   <data name="Remove" xml:space="preserve">
     <value>删除</value>
   </data>
+  <data name="Pending" xml:space="preserve">
+    <value>待处理</value>
+  </data>
 </root>

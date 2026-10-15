@@ -28,7 +28,7 @@
         <section>
             <StatusMessage Message="@errorMessage" />
             <EditForm EditContext="editContext" method="post" OnSubmit="LoginUser" FormName="login">
-                <DataAnnotationsValidator />
+                <FreeSpeakWeb.Components.Shared.LocalizedDataAnnotationsValidator />
                 <h2>@Localizer["LocalAccountTitle"]</h2>
                 <hr />
                 <ValidationSummary class="text-danger" role="alert" />

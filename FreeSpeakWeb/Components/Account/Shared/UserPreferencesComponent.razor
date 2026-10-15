@@ -36,7 +36,7 @@
                     <select class="form-select" @bind="colorScheme">
                         @foreach (var theme in ThemeService.AvailableThemes)
                         {
-                            <option value="@theme.Key">@theme.Value</option>
+                            <option value="@theme.Key">@ThemeName(theme.Key, theme.Value)</option>
                         }
                     </select>
                     <div class="form-text">@Localizer["ColorSchemeHelpText"]</div>
@@ -214,7 +214,7 @@
 
                 @if (!string.IsNullOrEmpty(statusMessage))
                 {
-                    <div class="alert @(statusMessage.Contains("success") || statusMessage.Contains("✓") ? "alert-success" : "alert-danger")" role="alert">
+                    <div class="alert @(statusIsError ? "alert-danger" : "alert-success")" role="alert">
                         @statusMessage
                     </div>
                 }
@@ -243,6 +243,19 @@
     private bool isLoading = true;
     private bool isSaving = false;
     private string? statusMessage;
+    private bool statusIsError;
+
+    /// <summary>
+    /// Gets the localized display name for a theme, falling back to the English name.
+    /// </summary>
+    /// <param name="key">The theme key.</param>
+    /// <param name="fallback">The English display name.</param>
+    /// <returns>The localized theme name.</returns>
+    private string ThemeName(string key, string fallback)
+    {
+        var localized = Localizer["Theme_" + key];
+        return localized.ResourceNotFound ? fallback : localized.Value;
+    }
 
     // Preference values
     private string colorScheme = "default";
@@ -302,7 +315,8 @@
         }
         catch (Exception ex)
         {
-            statusMessage = $"Error loading preferences: {ex.Message}";
+            statusMessage = Localizer["ErrorLoadingPreferences"];
+            statusIsError = true;
         }
         finally
         {
@@ -317,6 +331,7 @@
     {
         isSaving = true;
         statusMessage = null;
+        statusIsError = false;
 
         try
         {
@@ -362,8 +377,8 @@
 
                 if (cultureChanged)
                 {
-                    statusMessage = "✓ Preferences saved successfully! Reloading page to apply language changes...";
-                    AlertService.ShowSuccess("Preferences saved. Reloading page to apply language changes...");
+                    statusMessage = Localizer["PreferencesSavedReloading"];
+                    AlertService.ShowSuccess(statusMessage);
 
                     // Reload the page after a short delay to apply new culture
                     await Task.Delay(1500);
@@ -371,20 +386,22 @@
                 }
                 else
                 {
-                    statusMessage = "✓ Preferences saved successfully!";
-                    AlertService.ShowSuccess("Your preferences have been saved.");
+                    statusMessage = Localizer["PreferencesSavedSuccess"];
+                    AlertService.ShowSuccess(statusMessage);
                 }
             }
             else
             {
-                statusMessage = "Error saving preferences. Please try again.";
-                AlertService.ShowError("Failed to save preferences. Please try again.");
+                statusMessage = Localizer["ErrorSavingPreferences"];
+                statusIsError = true;
+                AlertService.ShowError(statusMessage);
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            statusMessage = $"Error: {ex.Message}";
-            AlertService.ShowError($"An error occurred while saving preferences.");
+            statusMessage = Localizer["ErrorSavingPreferences"];
+            statusIsError = true;
+            AlertService.ShowError(statusMessage);
         }
         finally
         {

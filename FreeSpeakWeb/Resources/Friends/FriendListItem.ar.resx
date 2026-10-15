@@ -79,4 +79,7 @@
   <data name="Remove" xml:space="preserve">
     <value>إزالة</value>
   </data>
+  <data name="Pending" xml:space="preserve">
+    <value>قيد الانتظار</value>
+  </data>
 </root>

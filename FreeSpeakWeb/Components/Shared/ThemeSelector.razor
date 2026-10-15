@@ -40,7 +40,7 @@
                             class="theme-option @(theme.Key == ThemeService.CurrentTheme ? "active" : "")"
                             @onclick="() => SelectTheme(theme.Key)">
                         <span class="theme-color-preview" data-theme-preview="@theme.Key"></span>
-                        <span class="theme-name">@theme.Value</span>
+                        <span class="theme-name">@(Localizer["Theme_" + theme.Key].ResourceNotFound ? theme.Value : Localizer["Theme_" + theme.Key].Value)</span>
                         @if (theme.Key == ThemeService.CurrentTheme)
                         {
                             <span class="check-icon">✓</span>

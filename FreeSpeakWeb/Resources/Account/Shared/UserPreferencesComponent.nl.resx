@@ -190,4 +190,31 @@
   <data name="ErrorLoadingPreferences" xml:space="preserve">
     <value>Er is een fout opgetreden bij het laden van je voorkeuren.</value>
   </data>
+  <data name="Theme_default" xml:space="preserve">
+    <value>Standaard</value>
+  </data>
+  <data name="Theme_dark" xml:space="preserve">
+    <value>Donkere modus</value>
+  </data>
+  <data name="Theme_light" xml:space="preserve">
+    <value>Lichte modus</value>
+  </data>
+  <data name="Theme_ocean" xml:space="preserve">
+    <value>Oceaanblauw</value>
+  </data>
+  <data name="Theme_forest" xml:space="preserve">
+    <value>Bosgroen</value>
+  </data>
+  <data name="Theme_sunset" xml:space="preserve">
+    <value>Zonsondergangoranje</value>
+  </data>
+  <data name="Theme_purple" xml:space="preserve">
+    <value>Paarse droom</value>
+  </data>
+  <data name="Theme_high-contrast" xml:space="preserve">
+    <value>Hoog contrast</value>
+  </data>
+  <data name="PreferencesSavedReloading" xml:space="preserve">
+    <value>Voorkeuren opgeslagen. Pagina wordt opnieuw geladen om de taalwijziging toe te passen...</value>
+  </data>
 </root>

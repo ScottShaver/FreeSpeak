@@ -100,4 +100,13 @@
     <value>Bestand {0} is geen afbeelding.</value>
     <comment>{0} is the filename</comment>
   </data>
+  <data name="FileTooLargeError" xml:space="preserve">
+    <value>Bestand {0} overschrijdt de limiet van {1} MB.</value>
+  </data>
+  <data name="InvalidImageFormatError" xml:space="preserve">
+    <value>Ongeldig afbeeldingsformaat voor {0}. Upload een geldig afbeeldingsbestand.</value>
+  </data>
+  <data name="LoadFileError" xml:space="preserve">
+    <value>Kan {0} niet laden.</value>
+  </data>
 </root>

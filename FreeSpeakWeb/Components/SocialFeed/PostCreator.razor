@@ -211,8 +211,13 @@
     [Parameter]
     public string? FriendName { get; set; }
 
+    /// <summary>
+    /// Invoked when the user submits a post. The handler returns true when the post was created;
+    /// when it returns false (for example an image failed validation) the composer keeps its content
+    /// so the user does not lose their text or selected images.
+    /// </summary>
     [Parameter]
-    public EventCallback<(string Content, AudienceType AudienceType, List<ImageUploadModal.SelectedImage> Images)> OnPostCreated { get; set; }
+    public Func<(string Content, AudienceType AudienceType, List<ImageUploadModal.SelectedImage> Images), Task<bool>>? OnPostCreated { get; set; }
 
     private string PostContent 
     { 
@@ -350,7 +355,7 @@
 
     private async Task OnSubmitPost()
     {
-        if (isSubmitting || !CanSubmit || !OnPostCreated.HasDelegate)
+        if (isSubmitting || !CanSubmit || OnPostCreated is null)
         {
             return;
         }
@@ -358,7 +363,21 @@
         isSubmitting = true;
         try
         {
-            await OnPostCreated.InvokeAsync((PostContent, SelectedAudienceType, selectedImages.ToList()));
+            bool succeeded;
+            try
+            {
+                succeeded = await OnPostCreated((PostContent, SelectedAudienceType, selectedImages.ToList()));
+            }
+            catch
+            {
+                succeeded = false;
+            }
+
+            if (!succeeded)
+            {
+                return;
+            }
+
             PostContent = "";
             selectedImages.Clear();
             isExpanded = false;

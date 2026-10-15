@@ -42,7 +42,8 @@
     left: 0;
     right: 0;
     width: 100%;
-    z-index: 1001;
+    /* Above modal dialogs/backdrops (Bootstrap 1055, custom overlays 1100) so Logout and navigation stay clickable */
+    z-index: 1200;
     /*justify-content: flex-start;*/
 }
 

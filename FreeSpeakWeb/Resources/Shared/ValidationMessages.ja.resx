@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Validation_Required" xml:space="preserve">
+    <value>{0} は必須です。</value>
+  </data>
+  <data name="Validation_EmailAddress" xml:space="preserve">
+    <value>{0} は有効なメールアドレスではありません。</value>
+  </data>
+  <data name="Validation_StringLengthRange" xml:space="preserve">
+    <value>{0} は {2} 文字以上 {1} 文字以下で入力してください。</value>
+  </data>
+  <data name="Validation_StringLengthMax" xml:space="preserve">
+    <value>{0} は {1} 文字以内で入力してください。</value>
+  </data>
+  <data name="Validation_Compare" xml:space="preserve">
+    <value>{0} と {1} が一致しません。</value>
+  </data>
+  <data name="Validation_Range" xml:space="preserve">
+    <value>{0} は {1} から {2} の範囲で指定してください。</value>
+  </data>
+  <data name="Field_Email" xml:space="preserve">
+    <value>メールアドレス</value>
+  </data>
+  <data name="Field_NewEmail" xml:space="preserve">
+    <value>新しいメールアドレス</value>
+  </data>
+  <data name="Field_Password" xml:space="preserve">
+    <value>パスワード</value>
+  </data>
+  <data name="Field_ConfirmPassword" xml:space="preserve">
+    <value>パスワードの確認</value>
+  </data>
+  <data name="Field_CurrentPassword" xml:space="preserve">
+    <value>現在のパスワード</value>
+  </data>
+  <data name="Field_NewPassword" xml:space="preserve">
+    <value>新しいパスワード</value>
+  </data>
+  <data name="Field_ConfirmNewPassword" xml:space="preserve">
+    <value>新しいパスワードの確認</value>
+  </data>
+  <data name="Field_UserName" xml:space="preserve">
+    <value>ユーザー名</value>
+  </data>
+  <data name="Field_Username" xml:space="preserve">
+    <value>ユーザー名</value>
+  </data>
+  <data name="Field_FirstName" xml:space="preserve">
+    <value>名</value>
+  </data>
+  <data name="Field_LastName" xml:space="preserve">
+    <value>姓</value>
+  </data>
+  <data name="Field_NameSuffix" xml:space="preserve">
+    <value>名前の接尾辞</value>
+  </data>
+  <data name="Field_City" xml:space="preserve">
+    <value>市区町村</value>
+  </data>
+  <data name="Field_State" xml:space="preserve">
+    <value>州</value>
+  </data>
+  <data name="Field_Occupation" xml:space="preserve">
+    <value>職業</value>
+  </data>
+  <data name="Field_PhoneNumber" xml:space="preserve">
+    <value>電話番号</value>
+  </data>
+  <data name="Field_DateOfBirth" xml:space="preserve">
+    <value>生年月日</value>
+  </data>
+  <data name="Field_AuthenticatorCode" xml:space="preserve">
+    <value>認証コード</value>
+  </data>
+  <data name="Field_VerificationCode" xml:space="preserve">
+    <value>確認コード</value>
+  </data>
+  <data name="Field_RecoveryCode" xml:space="preserve">
+    <value>回復コード</value>
+  </data>
+</root>

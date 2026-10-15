@@ -76,4 +76,28 @@
   <data name="ChooseTheme" xml:space="preserve">
     <value>Thema Kiezen</value>
   </data>
+  <data name="Theme_default" xml:space="preserve">
+    <value>Standaard</value>
+  </data>
+  <data name="Theme_dark" xml:space="preserve">
+    <value>Donkere modus</value>
+  </data>
+  <data name="Theme_light" xml:space="preserve">
+    <value>Lichte modus</value>
+  </data>
+  <data name="Theme_ocean" xml:space="preserve">
+    <value>Oceaanblauw</value>
+  </data>
+  <data name="Theme_forest" xml:space="preserve">
+    <value>Bosgroen</value>
+  </data>
+  <data name="Theme_sunset" xml:space="preserve">
+    <value>Zonsondergangoranje</value>
+  </data>
+  <data name="Theme_purple" xml:space="preserve">
+    <value>Paarse droom</value>
+  </data>
+  <data name="Theme_high-contrast" xml:space="preserve">
+    <value>Hoog contrast</value>
+  </data>
 </root>

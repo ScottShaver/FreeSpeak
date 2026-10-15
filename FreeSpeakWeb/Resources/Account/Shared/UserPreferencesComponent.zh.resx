@@ -190,4 +190,31 @@
   <data name="ErrorLoadingPreferences" xml:space="preserve">
     <value>加载设置时发生错误。</value>
   </data>
+  <data name="Theme_default" xml:space="preserve">
+    <value>默认</value>
+  </data>
+  <data name="Theme_dark" xml:space="preserve">
+    <value>深色模式</value>
+  </data>
+  <data name="Theme_light" xml:space="preserve">
+    <value>浅色模式</value>
+  </data>
+  <data name="Theme_ocean" xml:space="preserve">
+    <value>海洋蓝</value>
+  </data>
+  <data name="Theme_forest" xml:space="preserve">
+    <value>森林绿</value>
+  </data>
+  <data name="Theme_sunset" xml:space="preserve">
+    <value>日落橙</value>
+  </data>
+  <data name="Theme_purple" xml:space="preserve">
+    <value>紫色梦境</value>
+  </data>
+  <data name="Theme_high-contrast" xml:space="preserve">
+    <value>高对比度</value>
+  </data>
+  <data name="PreferencesSavedReloading" xml:space="preserve">
+    <value>偏好设置已保存。正在重新加载页面以应用语言更改...</value>
+  </data>
 </root>

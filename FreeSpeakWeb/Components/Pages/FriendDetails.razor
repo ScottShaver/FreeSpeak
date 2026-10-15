@@ -501,9 +501,9 @@
     /// Handles when a new post is created on the friend's feed, including image uploads and post creation via PostService.
     /// </summary>
     /// <param name="postData">Tuple containing the post content, audience type, and selected images.</param>
-    private async Task HandleFriendPostCreated((string Content, AudienceType AudienceType, List<ImageUploadModal.SelectedImage> Images) postData)
+    private async Task<bool> HandleFriendPostCreated((string Content, AudienceType AudienceType, List<ImageUploadModal.SelectedImage> Images) postData)
     {
-        if (currentUserId == null || string.IsNullOrEmpty(FriendId)) return;
+        if (currentUserId == null || string.IsNullOrEmpty(FriendId)) return false;
 
         try
         {
@@ -541,9 +541,9 @@
                 if (!uploadResult.Success)
                 {
                     showUploadProgress = false;
-                    AlertService.ShowError("Failed to upload images.");
+                    AlertService.ShowError(uploadResult.ErrorMessage ?? "Failed to upload images.");
                     StateHasChanged();
-                    return;
+                    return false;
                 }
 
                 imageUrls = uploadResult.ImageUrls;
@@ -572,14 +572,17 @@
                 // Reload the feed to include the new post
                 currentPage = 1;
                 await LoadPostsAsync();
+                await LoadFriendStatsAsync();
 
                 StateHasChanged();
+                return true;
             }
             else
             {
                 showUploadProgress = false;
                 AlertService.ShowError(result.ErrorMessage ?? "Failed to create post.");
                 StateHasChanged();
+                return false;
             }
         }
         catch (Exception ex)
@@ -588,6 +591,7 @@
             Logger.LogError(ex, "Error creating post on friend's feed for FriendId: {FriendId}", FriendId);
             AlertService.ShowError("An error occurred while creating your post.");
             StateHasChanged();
+            return false;
         }
     }
 

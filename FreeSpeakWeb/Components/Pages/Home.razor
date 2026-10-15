@@ -989,9 +989,9 @@
         }
     }
 
-    private async Task HandlePostCreated((string Content, AudienceType AudienceType, List<ImageUploadModal.SelectedImage> Images) postData)
+    private async Task<bool> HandlePostCreated((string Content, AudienceType AudienceType, List<ImageUploadModal.SelectedImage> Images) postData)
     {
-        if (currentUserId == null) return;
+        if (currentUserId == null) return false;
 
         try
         {
@@ -1033,8 +1033,9 @@
                 if (!uploadResult.Success)
                 {
                     showUploadProgress = false;
+                    AlertService.ShowError(uploadResult.ErrorMessage ?? "Failed to upload images.");
                     StateHasChanged();
-                    return;
+                    return false;
                 }
 
                 imageUrls = uploadResult.ImageUrls;
@@ -1066,6 +1067,7 @@
 
                 // Reload the feed to include the new post
                 await LoadInitialPosts();
+                await LoadCurrentUserStatsAsync();
 
                 // Scroll to top to show the new post
                 if (jsModule != null)
@@ -1081,12 +1083,14 @@
                 }
 
                 StateHasChanged();
+                return true;
             }
             else
             {
                 showUploadProgress = false;
                 AlertService.ShowError(result.ErrorMessage ?? "Failed to create post.");
                 StateHasChanged();
+                return false;
             }
         }
         catch (Exception)
@@ -1094,6 +1098,7 @@
             showUploadProgress = false;
             AlertService.ShowError("An error occurred while creating your post.");
             StateHasChanged();
+            return false;
         }
     }
 

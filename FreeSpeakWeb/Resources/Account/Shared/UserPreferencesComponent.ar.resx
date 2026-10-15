@@ -190,4 +190,31 @@
   <data name="ErrorLoadingPreferences" xml:space="preserve">
     <value>حدث خطأ أثناء تحميل تفضيلاتك.</value>
   </data>
+  <data name="Theme_default" xml:space="preserve">
+    <value>الافتراضي</value>
+  </data>
+  <data name="Theme_dark" xml:space="preserve">
+    <value>الوضع الداكن</value>
+  </data>
+  <data name="Theme_light" xml:space="preserve">
+    <value>الوضع الفاتح</value>
+  </data>
+  <data name="Theme_ocean" xml:space="preserve">
+    <value>أزرق المحيط</value>
+  </data>
+  <data name="Theme_forest" xml:space="preserve">
+    <value>أخضر الغابة</value>
+  </data>
+  <data name="Theme_sunset" xml:space="preserve">
+    <value>برتقالي الغروب</value>
+  </data>
+  <data name="Theme_purple" xml:space="preserve">
+    <value>حلم أرجواني</value>
+  </data>
+  <data name="Theme_high-contrast" xml:space="preserve">
+    <value>تباين عالٍ</value>
+  </data>
+  <data name="PreferencesSavedReloading" xml:space="preserve">
+    <value>تم حفظ التفضيلات. جارٍ إعادة تحميل الصفحة لتطبيق تغيير اللغة...</value>
+  </data>
 </root>

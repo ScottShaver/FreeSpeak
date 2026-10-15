@@ -100,4 +100,13 @@
     <value>الملف {0} ليس صورة.</value>
     <comment>{0} is the filename</comment>
   </data>
+  <data name="FileTooLargeError" xml:space="preserve">
+    <value>الملف {0} يتجاوز الحد المسموح به وهو {1} ميغابايت.</value>
+  </data>
+  <data name="InvalidImageFormatError" xml:space="preserve">
+    <value>تنسيق الصورة غير صالح للملف {0}. يرجى تحميل ملف صورة صالح.</value>
+  </data>
+  <data name="LoadFileError" xml:space="preserve">
+    <value>تعذر تحميل {0}.</value>
+  </data>
 </root>

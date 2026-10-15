@@ -190,4 +190,31 @@
   <data name="ErrorLoadingPreferences" xml:space="preserve">
     <value>설정을 불러오는 중 오류가 발생했습니다.</value>
   </data>
+  <data name="Theme_default" xml:space="preserve">
+    <value>기본</value>
+  </data>
+  <data name="Theme_dark" xml:space="preserve">
+    <value>다크 모드</value>
+  </data>
+  <data name="Theme_light" xml:space="preserve">
+    <value>라이트 모드</value>
+  </data>
+  <data name="Theme_ocean" xml:space="preserve">
+    <value>오션 블루</value>
+  </data>
+  <data name="Theme_forest" xml:space="preserve">
+    <value>포레스트 그린</value>
+  </data>
+  <data name="Theme_sunset" xml:space="preserve">
+    <value>선셋 오렌지</value>
+  </data>
+  <data name="Theme_purple" xml:space="preserve">
+    <value>퍼플 드림</value>
+  </data>
+  <data name="Theme_high-contrast" xml:space="preserve">
+    <value>고대비</value>
+  </data>
+  <data name="PreferencesSavedReloading" xml:space="preserve">
+    <value>환경설정이 저장되었습니다. 언어 변경을 적용하기 위해 페이지를 다시 로드합니다...</value>
+  </data>
 </root>

@@ -190,4 +190,31 @@
   <data name="ErrorLoadingPreferences" xml:space="preserve">
     <value>Beim Laden Ihrer Einstellungen ist ein Fehler aufgetreten.</value>
   </data>
+  <data name="Theme_default" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Theme_dark" xml:space="preserve">
+    <value>Dunkelmodus</value>
+  </data>
+  <data name="Theme_light" xml:space="preserve">
+    <value>Hellmodus</value>
+  </data>
+  <data name="Theme_ocean" xml:space="preserve">
+    <value>Ozeanblau</value>
+  </data>
+  <data name="Theme_forest" xml:space="preserve">
+    <value>Waldgrün</value>
+  </data>
+  <data name="Theme_sunset" xml:space="preserve">
+    <value>Sonnenuntergangsorange</value>
+  </data>
+  <data name="Theme_purple" xml:space="preserve">
+    <value>Violetter Traum</value>
+  </data>
+  <data name="Theme_high-contrast" xml:space="preserve">
+    <value>Hoher Kontrast</value>
+  </data>
+  <data name="PreferencesSavedReloading" xml:space="preserve">
+    <value>Einstellungen gespeichert. Seite wird neu geladen, um die Sprachänderung zu übernehmen...</value>
+  </data>
 </root>

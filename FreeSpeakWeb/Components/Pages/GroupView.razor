@@ -1072,9 +1072,9 @@
     /// Uploads images if provided, creates the post, and refreshes the post list.
     /// </summary>
     /// <param name="postData">Tuple containing post content, audience type (unused for groups), and selected images.</param>
-    private async Task HandleGroupPostCreated((string Content, AudienceType AudienceType, List<ImageUploadModal.SelectedImage> Images) postData)
+    private async Task<bool> HandleGroupPostCreated((string Content, AudienceType AudienceType, List<ImageUploadModal.SelectedImage> Images) postData)
     {
-        if (string.IsNullOrEmpty(currentUserId) || group == null) return;
+        if (string.IsNullOrEmpty(currentUserId) || group == null) return false;
 
         try
         {
@@ -1116,8 +1116,9 @@
                 if (!uploadResult.Success)
                 {
                     showUploadProgress = false;
+                    AlertService.ShowError(uploadResult.ErrorMessage ?? "Failed to upload images.");
                     StateHasChanged();
-                    return;
+                    return false;
                 }
 
                 imageUrls = uploadResult.ImageUrls;
@@ -1170,12 +1171,14 @@
                 }
 
                 StateHasChanged();
+                return true;
             }
             else
             {
                 showUploadProgress = false;
                 AlertService.ShowError(result.ErrorMessage ?? "Failed to create post.");
                 StateHasChanged();
+                return false;
             }
         }
         catch (Exception)
@@ -1183,6 +1186,7 @@
             showUploadProgress = false;
             AlertService.ShowError("An error occurred while creating your post.");
             StateHasChanged();
+            return false;
         }
     }
 

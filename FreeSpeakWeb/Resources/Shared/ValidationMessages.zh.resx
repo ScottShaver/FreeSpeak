@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Validation_Required" xml:space="preserve">
+    <value>{0} 为必填项。</value>
+  </data>
+  <data name="Validation_EmailAddress" xml:space="preserve">
+    <value>{0} 不是有效的电子邮件地址。</value>
+  </data>
+  <data name="Validation_StringLengthRange" xml:space="preserve">
+    <value>{0} 的长度必须在 {2} 到 {1} 个字符之间。</value>
+  </data>
+  <data name="Validation_StringLengthMax" xml:space="preserve">
+    <value>{0} 的长度不能超过 {1} 个字符。</value>
+  </data>
+  <data name="Validation_Compare" xml:space="preserve">
+    <value>{0} 与 {1} 不匹配。</value>
+  </data>
+  <data name="Validation_Range" xml:space="preserve">
+    <value>{0} 必须介于 {1} 和 {2} 之间。</value>
+  </data>
+  <data name="Field_Email" xml:space="preserve">
+    <value>电子邮件</value>
+  </data>
+  <data name="Field_NewEmail" xml:space="preserve">
+    <value>新电子邮件</value>
+  </data>
+  <data name="Field_Password" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="Field_ConfirmPassword" xml:space="preserve">
+    <value>确认密码</value>
+  </data>
+  <data name="Field_CurrentPassword" xml:space="preserve">
+    <value>当前密码</value>
+  </data>
+  <data name="Field_NewPassword" xml:space="preserve">
+    <value>新密码</value>
+  </data>
+  <data name="Field_ConfirmNewPassword" xml:space="preserve">
+    <value>确认新密码</value>
+  </data>
+  <data name="Field_UserName" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="Field_Username" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="Field_FirstName" xml:space="preserve">
+    <value>名</value>
+  </data>
+  <data name="Field_LastName" xml:space="preserve">
+    <value>姓</value>
+  </data>
+  <data name="Field_NameSuffix" xml:space="preserve">
+    <value>姓名后缀</value>
+  </data>
+  <data name="Field_City" xml:space="preserve">
+    <value>城市</value>
+  </data>
+  <data name="Field_State" xml:space="preserve">
+    <value>州/省</value>
+  </data>
+  <data name="Field_Occupation" xml:space="preserve">
+    <value>职业</value>
+  </data>
+  <data name="Field_PhoneNumber" xml:space="preserve">
+    <value>电话号码</value>
+  </data>
+  <data name="Field_DateOfBirth" xml:space="preserve">
+    <value>出生日期</value>
+  </data>
+  <data name="Field_AuthenticatorCode" xml:space="preserve">
+    <value>验证器代码</value>
+  </data>
+  <data name="Field_VerificationCode" xml:space="preserve">
+    <value>验证码</value>
+  </data>
+  <data name="Field_RecoveryCode" xml:space="preserve">
+    <value>恢复代码</value>
+  </data>
+</root>

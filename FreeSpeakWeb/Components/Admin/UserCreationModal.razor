@@ -1,4 +1,4 @@
-@using FreeSpeakWeb.Data
+﻿@using FreeSpeakWeb.Data
 @using Microsoft.AspNetCore.Identity
 @using System.ComponentModel.DataAnnotations
 @inject UserManager<ApplicationUser> UserManager
@@ -16,7 +16,7 @@
             </div>
             <div class="modal-body">
                 <EditForm Model="@userModel" OnValidSubmit="CreateUser">
-                    <DataAnnotationsValidator />
+                    <FreeSpeakWeb.Components.Shared.LocalizedDataAnnotationsValidator />
 
                     @if (!string.IsNullOrEmpty(errorMessage))
                     {

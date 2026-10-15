@@ -79,4 +79,8 @@
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
   </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+    <comment>Badge shown on a user card after a friend request has been sent</comment>
+  </data>
 </root>

@@ -190,4 +190,31 @@
   <data name="ErrorLoadingPreferences" xml:space="preserve">
     <value>設定の読み込み中にエラーが発生しました。</value>
   </data>
+  <data name="Theme_default" xml:space="preserve">
+    <value>デフォルト</value>
+  </data>
+  <data name="Theme_dark" xml:space="preserve">
+    <value>ダークモード</value>
+  </data>
+  <data name="Theme_light" xml:space="preserve">
+    <value>ライトモード</value>
+  </data>
+  <data name="Theme_ocean" xml:space="preserve">
+    <value>オーシャンブルー</value>
+  </data>
+  <data name="Theme_forest" xml:space="preserve">
+    <value>フォレストグリーン</value>
+  </data>
+  <data name="Theme_sunset" xml:space="preserve">
+    <value>サンセットオレンジ</value>
+  </data>
+  <data name="Theme_purple" xml:space="preserve">
+    <value>パープルドリーム</value>
+  </data>
+  <data name="Theme_high-contrast" xml:space="preserve">
+    <value>ハイコントラスト</value>
+  </data>
+  <data name="PreferencesSavedReloading" xml:space="preserve">
+    <value>設定を保存しました。言語の変更を適用するためページを再読み込みします...</value>
+  </data>
 </root>

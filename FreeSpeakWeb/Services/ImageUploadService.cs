@@ -157,7 +157,7 @@ namespace FreeSpeakWeb.Services
                     {
                         _logger.LogWarning("Image {FileName} failed signature validation for user {UserId}: {Error}", 
                             image.FileName, userId, signatureValidation.ErrorMessage);
-                        return (false, new List<string>(), $"Image {image.FileName}: {signatureValidation.ErrorMessage}");
+                        return (false, new List<string>(), $"Invalid image format for {image.FileName}. Please upload a valid image file.");
                     }
 
                     // SECURITY: Scan for viruses/malware

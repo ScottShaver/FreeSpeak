@@ -1,5 +1,6 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.Extensions.Localization
+@using FreeSpeakWeb.Services
 @inject IJSRuntime JS
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.ImageUploadModal> Localizer
 
@@ -17,6 +18,16 @@
         </div>
 
         <div class="modal-body">
+            @if (errors.Count > 0)
+            {
+                <div class="error-message" role="alert">
+                    @foreach (var error in errors)
+                    {
+                        <div>@error</div>
+                    }
+                </div>
+            }
+
             <div class="upload-area">
                 <label for="imageFileInput" class="upload-label">
                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
@@ -56,10 +67,6 @@
                 </div>
             }
 
-            @if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <div class="error-message">@errorMessage</div>
-            }
         </div>
 
         <div class="modal-footer">
@@ -94,7 +101,7 @@
     public int MaxFileSizeMB { get; set; } = 10;
 
     private List<SelectedImage> selectedImages = new();
-    private string errorMessage = string.Empty;
+    private List<string> errors = new();
 
     protected override void OnParametersSet()
     {
@@ -107,7 +114,7 @@
         {
             // Clear when modal closes
             selectedImages.Clear();
-            errorMessage = string.Empty;
+            errors.Clear();
         }
     }
 
@@ -121,12 +128,12 @@
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
-        errorMessage = string.Empty;
+        errors.Clear();
 
         var remainingSlots = MaxImages - selectedImages.Count;
         if (remainingSlots <= 0)
         {
-            errorMessage = $"Maximum of {MaxImages} images allowed.";
+            errors.Add(string.Format(Localizer["MaxImagesError"].Value, MaxImages));
             return;
         }
 
@@ -137,25 +144,25 @@
         }
         catch (InvalidOperationException)
         {
-            errorMessage = $"You selected too many files. Please select up to {remainingSlots} image{(remainingSlots == 1 ? "" : "s")}.";
+            errors.Add(string.Format(Localizer["TooManyFilesError"].Value, remainingSlots));
             return;
         }
 
-        var maxFileSizeBytes = MaxFileSizeMB * 1024 * 1024;
+        var maxFileSizeBytes = MaxFileSizeMB * 1024L * 1024L;
 
         foreach (var file in filesToProcess)
         {
             // Validate file type
-            if (!file.ContentType.StartsWith("image/"))
+            if (!file.ContentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
             {
-                errorMessage = $"File {file.Name} is not an image.";
+                errors.Add(string.Format(Localizer["NotAnImageError"].Value, file.Name));
                 continue;
             }
 
             // Validate file size
             if (file.Size > maxFileSizeBytes)
             {
-                errorMessage = $"File {file.Name} exceeds {MaxFileSizeMB}MB limit.";
+                errors.Add(string.Format(Localizer["FileTooLargeError"].Value, file.Name, MaxFileSizeMB));
                 continue;
             }
 
@@ -174,6 +181,13 @@
                     totalBytesRead += bytesRead;
                 }
 
+                // Reject files whose content is not a real image (e.g. a text file renamed .png)
+                if (!ImageSignatureHelper.IsSupportedImage(buffer.AsSpan(0, totalBytesRead)))
+                {
+                    errors.Add(string.Format(Localizer["InvalidImageFormatError"].Value, file.Name));
+                    continue;
+                }
+
                 var base64 = Convert.ToBase64String(buffer);
                 var dataUrl = $"data:{file.ContentType};base64,{base64}";
 
@@ -188,9 +202,9 @@
                 // Force UI update after each image is loaded
                 StateHasChanged();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                errorMessage = $"Error loading {file.Name}: {ex.Message}";
+                errors.Add(string.Format(Localizer["LoadFileError"].Value, file.Name));
             }
         }
 
@@ -200,14 +214,14 @@
     private void RemoveImage(SelectedImage image)
     {
         selectedImages.Remove(image);
-        errorMessage = string.Empty;
+        errors.Clear();
         StateHasChanged();
     }
 
     private void ClearAll()
     {
         selectedImages.Clear();
-        errorMessage = string.Empty;
+        errors.Clear();
         StateHasChanged();
     }
 
@@ -217,14 +231,14 @@
         {
             await OnImagesSelected.InvokeAsync(selectedImages.ToList());
             selectedImages.Clear();
-            errorMessage = string.Empty;
+            errors.Clear();
         }
     }
 
     private async Task Close()
     {
         selectedImages.Clear();
-        errorMessage = string.Empty;
+        errors.Clear();
         await OnClose.InvokeAsync();
     }
 
