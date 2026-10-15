@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="ReportPost" xml:space="preserve"><value>الإبلاغ عن المنشور</value></data>
+  <data name="ReportComment" xml:space="preserve"><value>الإبلاغ عن التعليق</value></data>
+  <data name="ReportDescription" xml:space="preserve"><value>ساعدنا في فهم المشكلة في هذا المحتوى. سيقوم مشرفو الموقع بمراجعة بلاغك.</value></data>
+  <data name="SelectReason" xml:space="preserve"><value>لماذا تبلّغ عن هذا المحتوى؟</value></data>
+  <data name="AdditionalDetails" xml:space="preserve"><value>تفاصيل إضافية (اختياري)</value></data>
+  <data name="AdditionalDetailsDescription" xml:space="preserve"><value>قدّم أي سياق إضافي قد يساعد المشرفين على مراجعة هذا البلاغ.</value></data>
+  <data name="DescriptionPlaceholder" xml:space="preserve"><value>أدخل تفاصيل إضافية حول سبب إبلاغك عن هذا المحتوى...</value></data>
+  <data name="ReasonSpam" xml:space="preserve"><value>محتوى عشوائي أو غير مرغوب فيه</value></data>
+  <data name="ReasonHarassment" xml:space="preserve"><value>مضايقة أو تنمر</value></data>
+  <data name="ReasonHateSpeech" xml:space="preserve"><value>خطاب كراهية</value></data>
+  <data name="ReasonMisinformation" xml:space="preserve"><value>معلومات مضللة أو كاذبة</value></data>
+  <data name="ReasonAdultContent" xml:space="preserve"><value>عري أو محتوى جنسي</value></data>
+  <data name="ReasonViolence" xml:space="preserve"><value>عنف أو محتوى صادم</value></data>
+  <data name="ReasonCopyright" xml:space="preserve"><value>انتهاك حقوق النشر أو الملكية الفكرية</value></data>
+  <data name="ReasonPrivacy" xml:space="preserve"><value>انتهاك الخصوصية</value></data>
+  <data name="ReasonSelfHarm" xml:space="preserve"><value>إيذاء النفس أو الانتحار</value></data>
+  <data name="ReasonIllegal" xml:space="preserve"><value>نشاط غير قانوني</value></data>
+  <data name="ReasonOther" xml:space="preserve"><value>أخرى</value></data>
+  <data name="Back" xml:space="preserve"><value>رجوع</value></data>
+  <data name="Cancel" xml:space="preserve"><value>إلغاء</value></data>
+  <data name="ReportingFor" xml:space="preserve"><value>سبب البلاغ:</value></data>
+  <data name="SubmitReport" xml:space="preserve"><value>إرسال البلاغ</value></data>
+  <data name="Close" xml:space="preserve"><value>إغلاق</value></data>
+  <data name="ReportSubmitted" xml:space="preserve"><value>شكرًا على بلاغك. سيراجع المشرفون لدينا هذا المحتوى ويتخذون الإجراء المناسب.</value></data>
+  <data name="AlreadyReported" xml:space="preserve"><value>لقد أبلغت عن هذا المحتوى من قبل.</value></data>
+  <data name="SelectReasonError" xml:space="preserve"><value>يرجى اختيار سبب لبلاغك.</value></data>
+  <data name="ErrorSubmitting" xml:space="preserve"><value>حدث خطأ أثناء إرسال بلاغك. يرجى المحاولة مرة أخرى.</value></data>
+  <data name="ErrorOwnContent" xml:space="preserve"><value>لا يمكنك الإبلاغ عن المحتوى الخاص بك.</value></data>
+  <data name="ErrorRateLimited" xml:space="preserve"><value>لقد أرسلت عددًا كبيرًا من البلاغات مؤخرًا. يرجى المحاولة لاحقًا.</value></data>
+  <data name="ErrorContentNotFound" xml:space="preserve"><value>هذا المحتوى لم يعد متاحًا.</value></data>
+  <data name="ErrorNotAuthenticated" xml:space="preserve"><value>يجب تسجيل الدخول للإبلاغ عن المحتوى.</value></data>
+  <data name="ErrorDescriptionTooLong" xml:space="preserve"><value>التفاصيل الإضافية طويلة جدًا (الحد الأقصى 2000 حرف).</value></data>
+</root>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="ReportPost" xml:space="preserve"><value>举报帖子</value></data>
+  <data name="ReportComment" xml:space="preserve"><value>举报评论</value></data>
+  <data name="ReportDescription" xml:space="preserve"><value>请帮助我们了解此内容存在的问题。您的举报将由网站版主审核。</value></data>
+  <data name="SelectReason" xml:space="preserve"><value>您为什么举报此内容？</value></data>
+  <data name="AdditionalDetails" xml:space="preserve"><value>补充说明（可选）</value></data>
+  <data name="AdditionalDetailsDescription" xml:space="preserve"><value>请提供有助于版主审核此举报的任何其他背景信息。</value></data>
+  <data name="DescriptionPlaceholder" xml:space="preserve"><value>请输入您举报此内容的更多详情...</value></data>
+  <data name="ReasonSpam" xml:space="preserve"><value>垃圾信息或不需要的内容</value></data>
+  <data name="ReasonHarassment" xml:space="preserve"><value>骚扰或欺凌</value></data>
+  <data name="ReasonHateSpeech" xml:space="preserve"><value>仇恨言论</value></data>
+  <data name="ReasonMisinformation" xml:space="preserve"><value>虚假或误导信息</value></data>
+  <data name="ReasonAdultContent" xml:space="preserve"><value>裸露或色情内容</value></data>
+  <data name="ReasonViolence" xml:space="preserve"><value>暴力或血腥内容</value></data>
+  <data name="ReasonCopyright" xml:space="preserve"><value>侵犯版权或知识产权</value></data>
+  <data name="ReasonPrivacy" xml:space="preserve"><value>侵犯隐私</value></data>
+  <data name="ReasonSelfHarm" xml:space="preserve"><value>自残或自杀内容</value></data>
+  <data name="ReasonIllegal" xml:space="preserve"><value>非法活动</value></data>
+  <data name="ReasonOther" xml:space="preserve"><value>其他</value></data>
+  <data name="Back" xml:space="preserve"><value>返回</value></data>
+  <data name="Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="ReportingFor" xml:space="preserve"><value>举报原因：</value></data>
+  <data name="SubmitReport" xml:space="preserve"><value>提交举报</value></data>
+  <data name="Close" xml:space="preserve"><value>关闭</value></data>
+  <data name="ReportSubmitted" xml:space="preserve"><value>感谢您的举报。我们的版主将审核此内容并采取适当措施。</value></data>
+  <data name="AlreadyReported" xml:space="preserve"><value>您已经举报过此内容。</value></data>
+  <data name="SelectReasonError" xml:space="preserve"><value>请选择举报原因。</value></data>
+  <data name="ErrorSubmitting" xml:space="preserve"><value>提交举报时出错。请重试。</value></data>
+  <data name="ErrorOwnContent" xml:space="preserve"><value>您不能举报自己的内容。</value></data>
+  <data name="ErrorRateLimited" xml:space="preserve"><value>您最近提交的举报过多。请稍后再试。</value></data>
+  <data name="ErrorContentNotFound" xml:space="preserve"><value>此内容已不可用。</value></data>
+  <data name="ErrorNotAuthenticated" xml:space="preserve"><value>您必须登录才能举报内容。</value></data>
+  <data name="ErrorDescriptionTooLong" xml:space="preserve"><value>补充说明过长（最多 2000 个字符）。</value></data>
+</root>

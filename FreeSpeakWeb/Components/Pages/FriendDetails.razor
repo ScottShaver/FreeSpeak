@@ -233,6 +233,14 @@
     CurrentStep="@uploadCurrentStep"
     TotalSteps="@uploadTotalSteps" />
 
+@if (ReportingFeedCommentId.HasValue && CurrentUserId != null)
+{
+    <FreeSpeakWeb.Components.SocialFeed.ReportFeedContentModal
+        CommentId="@ReportingFeedCommentId"
+        ReporterId="@CurrentUserId"
+        OnClose="CloseFeedCommentReport" />
+}
+
 @code {
     [Parameter] public string FriendId { get; set; } = string.Empty;
 
@@ -395,12 +403,11 @@
         return (result.Success, result.ErrorMessage);
     }
 
-    protected override async Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
+    protected override Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
         int commentId, string userId)
     {
-        // TODO: Implement comment reporting when report system is available
-        await Task.CompletedTask;
-        return (true, null);
+        OpenFeedCommentReport(commentId);
+        return Task.FromResult<(bool Success, string? ErrorMessage)>((true, null));
     }
 
     protected override void DecrementPostCommentCount(int postId, int decrementBy = 1)

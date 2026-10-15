@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="ReportPost" xml:space="preserve"><value>Segnala post</value></data>
+  <data name="ReportComment" xml:space="preserve"><value>Segnala commento</value></data>
+  <data name="ReportDescription" xml:space="preserve"><value>Aiutaci a capire cosa non va in questo contenuto. La tua segnalazione sarà esaminata dai moderatori del sito.</value></data>
+  <data name="SelectReason" xml:space="preserve"><value>Perché segnali questo contenuto?</value></data>
+  <data name="AdditionalDetails" xml:space="preserve"><value>Dettagli aggiuntivi (facoltativo)</value></data>
+  <data name="AdditionalDetailsDescription" xml:space="preserve"><value>Fornisci eventuale contesto aggiuntivo che possa aiutare i moderatori a esaminare questa segnalazione.</value></data>
+  <data name="DescriptionPlaceholder" xml:space="preserve"><value>Inserisci ulteriori dettagli sul motivo della segnalazione...</value></data>
+  <data name="ReasonSpam" xml:space="preserve"><value>Spam o contenuto indesiderato</value></data>
+  <data name="ReasonHarassment" xml:space="preserve"><value>Molestie o bullismo</value></data>
+  <data name="ReasonHateSpeech" xml:space="preserve"><value>Incitamento all'odio</value></data>
+  <data name="ReasonMisinformation" xml:space="preserve"><value>Disinformazione o informazioni false</value></data>
+  <data name="ReasonAdultContent" xml:space="preserve"><value>Nudità o contenuto sessuale</value></data>
+  <data name="ReasonViolence" xml:space="preserve"><value>Violenza o contenuto esplicito</value></data>
+  <data name="ReasonCopyright" xml:space="preserve"><value>Violazione del copyright o della proprietà intellettuale</value></data>
+  <data name="ReasonPrivacy" xml:space="preserve"><value>Violazione della privacy</value></data>
+  <data name="ReasonSelfHarm" xml:space="preserve"><value>Autolesionismo o suicidio</value></data>
+  <data name="ReasonIllegal" xml:space="preserve"><value>Attività illegale</value></data>
+  <data name="ReasonOther" xml:space="preserve"><value>Altro</value></data>
+  <data name="Back" xml:space="preserve"><value>Indietro</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Annulla</value></data>
+  <data name="ReportingFor" xml:space="preserve"><value>Motivo della segnalazione:</value></data>
+  <data name="SubmitReport" xml:space="preserve"><value>Invia segnalazione</value></data>
+  <data name="Close" xml:space="preserve"><value>Chiudi</value></data>
+  <data name="ReportSubmitted" xml:space="preserve"><value>Grazie per la segnalazione. I nostri moderatori esamineranno questo contenuto e prenderanno i provvedimenti appropriati.</value></data>
+  <data name="AlreadyReported" xml:space="preserve"><value>Hai già segnalato questo contenuto.</value></data>
+  <data name="SelectReasonError" xml:space="preserve"><value>Seleziona un motivo per la tua segnalazione.</value></data>
+  <data name="ErrorSubmitting" xml:space="preserve"><value>Si è verificato un errore durante l'invio della segnalazione. Riprova.</value></data>
+  <data name="ErrorOwnContent" xml:space="preserve"><value>Non puoi segnalare i tuoi contenuti.</value></data>
+  <data name="ErrorRateLimited" xml:space="preserve"><value>Hai inviato troppe segnalazioni di recente. Riprova più tardi.</value></data>
+  <data name="ErrorContentNotFound" xml:space="preserve"><value>Questo contenuto non è più disponibile.</value></data>
+  <data name="ErrorNotAuthenticated" xml:space="preserve"><value>Devi aver effettuato l'accesso per segnalare contenuti.</value></data>
+  <data name="ErrorDescriptionTooLong" xml:space="preserve"><value>I dettagli aggiuntivi sono troppo lunghi (massimo 2000 caratteri).</value></data>
+</root>

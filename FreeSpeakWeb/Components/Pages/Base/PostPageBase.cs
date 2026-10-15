@@ -613,9 +613,8 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
     }
 
     /// <summary>
-    /// Handles when a user requests to report another user's comment.
-    /// TODO: Implement feed comment reporting similar to group comment reporting
-    /// Need to create: FeedContentReport entity, FeedContentReportService, and ReportFeedContentModal
+    /// Handles when a user requests to report another user's comment by delegating to the page's
+    /// <see cref="ReportCommentAsync"/> implementation, which opens the appropriate report modal.
     /// </summary>
     /// <param name="commentId">The ID of the comment to report</param>
     protected async Task HandleReportComment(int commentId)
@@ -624,14 +623,40 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
 
         try
         {
-            // TODO: Replace with actual report modal when implemented
-            // For now, show a "Coming Soon" message via AlertService
-            AlertService.ShowInfo("Report Comment - Coming Soon");
+            var result = await ReportCommentAsync(commentId, CurrentUserId);
+            if (!result.Success && !string.IsNullOrEmpty(result.ErrorMessage))
+            {
+                AlertService.ShowError(result.ErrorMessage);
+            }
         }
         catch (Exception)
         {
             AlertService.ShowError("An error occurred while submitting the report.");
         }
+    }
+
+    /// <summary>
+    /// Gets the ID of the feed comment whose report modal is open, or null when no feed comment report is in progress.
+    /// </summary>
+    protected int? ReportingFeedCommentId { get; private set; }
+
+    /// <summary>
+    /// Opens the feed comment report modal for the given comment.
+    /// </summary>
+    /// <param name="commentId">The ID of the feed comment to report.</param>
+    protected void OpenFeedCommentReport(int commentId)
+    {
+        ReportingFeedCommentId = commentId;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Closes the feed comment report modal.
+    /// </summary>
+    protected void CloseFeedCommentReport()
+    {
+        ReportingFeedCommentId = null;
+        StateHasChanged();
     }
 
     #endregion

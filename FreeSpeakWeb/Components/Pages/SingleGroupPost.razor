@@ -95,12 +95,24 @@
     }
 </div>
 
+@if (reportingGroupCommentId.HasValue && currentUserId != null)
+{
+    <FreeSpeakWeb.Components.Groups.ReportContentModal
+        GroupId="@GroupId"
+        CommentId="@reportingGroupCommentId"
+        ReporterId="@currentUserId"
+        OnClose="CloseGroupCommentReport"
+        OnReportSubmitted="HandleGroupCommentReported" />
+}
+
 @code {
     [Parameter]
     public int GroupId { get; set; }
 
     [Parameter]
     public int PostId { get; set; }
+
+    private int? reportingGroupCommentId;
 
     private GroupPost? post;
     private string? currentUserId;
@@ -568,14 +580,32 @@
     }
 
     /// <summary>
-    /// Reports a comment for moderation.
+    /// Reports a group comment by opening the group report modal.
     /// </summary>
-    protected override async Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
+    protected override Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
         int commentId, string userId)
     {
-        // TODO: Implement comment reporting when report system is available
-        await Task.CompletedTask;
-        return (true, null);
+        reportingGroupCommentId = commentId;
+        StateHasChanged();
+        return Task.FromResult<(bool Success, string? ErrorMessage)>((true, null));
+    }
+
+    /// <summary>
+    /// Closes the group comment report modal.
+    /// </summary>
+    private void CloseGroupCommentReport()
+    {
+        reportingGroupCommentId = null;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Handles a successfully submitted group comment report.
+    /// </summary>
+    private Task HandleGroupCommentReported()
+    {
+        AlertService.ShowSuccess("Report submitted successfully. Thank you for helping keep our community safe.");
+        return Task.CompletedTask;
     }
 
     /// <summary>

@@ -419,12 +419,11 @@ public partial class UnifiedArticle : ArticleComponentBase
                 });
             }
 
-            // TODO: Implement feed post reporting
             menuItems.Add(new PopupMenu.PopupMenuItem
             {
                 Text = Localizer["ReportPost"],
                 Icon = "bi bi-flag",
-                OnClick = EventCallback.Factory.Create(this, async () => await JS.InvokeVoidAsync("alert", "Report Post - Coming Soon"))
+                OnClick = EventCallback.Factory.Create(this, () => ShowReportModal())
             });
 
             if (currentAudienceType == AudienceType.Public)
@@ -479,7 +478,11 @@ public partial class UnifiedArticle : ArticleComponentBase
     /// </summary>
     private Task HandleReportSubmitted()
     {
-        AlertService.ShowSuccess("Report submitted successfully. Thank you for helping keep our community safe.");
+        if (ArticlePostType == PostType.GroupPost)
+        {
+            AlertService.ShowSuccess("Report submitted successfully. Thank you for helping keep our community safe.");
+        }
+
         return Task.CompletedTask;
     }
 
