@@ -139,4 +139,7 @@
   <data name="FailedToCopyLink" xml:space="preserve">
     <value>Link konnte nicht in die Zwischenablage kopiert werden.</value>
   </data>
+  <data name="SeeLess" xml:space="preserve">
+    <value>Weniger anzeigen</value>
+  </data>
 </root>

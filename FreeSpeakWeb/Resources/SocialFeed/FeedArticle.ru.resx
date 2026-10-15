@@ -139,4 +139,7 @@
   <data name="FailedToCopyLink" xml:space="preserve">
     <value>Не удалось скопировать ссылку в буфер обмена.</value>
   </data>
+  <data name="SeeLess" xml:space="preserve">
+    <value>Свернуть</value>
+  </data>
 </root>

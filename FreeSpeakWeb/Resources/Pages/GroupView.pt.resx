@@ -160,4 +160,10 @@
   <data name="JoinGroup" xml:space="preserve"><value>Participar do grupo</value></data>
   <data name="JoinRequestSentMessage" xml:space="preserve"><value>Sua solicitação de participação foi enviada.</value></data>
   <data name="JoinGroupFailed" xml:space="preserve"><value>Não foi possível participar deste grupo.</value></data>
+  <data name="AdminViewNotice" xml:space="preserve">
+    <value>Você está visualizando este grupo como administrador.</value>
+  </data>
+  <data name="NonMemberPrivateNotice" xml:space="preserve">
+    <value>Você está visualizando este grupo privado. Participe para publicar e interagir.</value>
+  </data>
 </root>

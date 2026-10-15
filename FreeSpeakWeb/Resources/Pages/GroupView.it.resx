@@ -160,4 +160,10 @@
   <data name="JoinGroup" xml:space="preserve"><value>Unisciti al gruppo</value></data>
   <data name="JoinRequestSentMessage" xml:space="preserve"><value>La tua richiesta di adesione è stata inviata.</value></data>
   <data name="JoinGroupFailed" xml:space="preserve"><value>Impossibile unirsi a questo gruppo.</value></data>
+  <data name="AdminViewNotice" xml:space="preserve">
+    <value>Stai visualizzando questo gruppo come amministratore.</value>
+  </data>
+  <data name="NonMemberPrivateNotice" xml:space="preserve">
+    <value>Stai visualizzando questo gruppo privato. Unisciti per pubblicare e partecipare.</value>
+  </data>
 </root>

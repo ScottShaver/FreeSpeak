@@ -18,4 +18,16 @@
   <data name="ShowingBannedMembersSingular" xml:space="preserve"><value>Affichage de {0} membre banni</value></data>
   <data name="ShowingBannedMembersPlural" xml:space="preserve"><value>Affichage de {0} membres bannis</value></data>
   <data name="MoreAvailable" xml:space="preserve"><value>Plus disponible</value></data>
+  <data name="UnbanMemberConfirmTitle" xml:space="preserve">
+    <value>Débannir le membre ?</value>
+  </data>
+  <data name="UnbanMemberConfirmMessage" xml:space="preserve">
+    <value>Voulez-vous vraiment débannir {0} ? Cette personne pourra rejoindre à nouveau ce groupe.</value>
+  </data>
+  <data name="MemberUnbannedSuccess" xml:space="preserve">
+    <value>{0} a été débanni.</value>
+  </data>
+  <data name="ErrorUnbanningMember" xml:space="preserve">
+    <value>Une erreur s'est produite lors du débannissement du membre.</value>
+  </data>
 </root>

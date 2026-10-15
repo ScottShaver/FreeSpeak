@@ -139,4 +139,7 @@
   <data name="FailedToCopyLink" xml:space="preserve">
     <value>Échec de la copie du lien dans le presse-papiers.</value>
   </data>
+  <data name="SeeLess" xml:space="preserve">
+    <value>Voir moins</value>
+  </data>
 </root>

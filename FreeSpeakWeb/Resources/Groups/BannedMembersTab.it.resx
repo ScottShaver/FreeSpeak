@@ -18,4 +18,16 @@
   <data name="ShowingBannedMembersSingular" xml:space="preserve"><value>Visualizzazione di {0} membro bannato</value></data>
   <data name="ShowingBannedMembersPlural" xml:space="preserve"><value>Visualizzazione di {0} membri bannati</value></data>
   <data name="MoreAvailable" xml:space="preserve"><value>Altri disponibili</value></data>
+  <data name="UnbanMemberConfirmTitle" xml:space="preserve">
+    <value>Revocare il ban del membro?</value>
+  </data>
+  <data name="UnbanMemberConfirmMessage" xml:space="preserve">
+    <value>Vuoi davvero revocare il ban di {0}? Potrà unirsi di nuovo a questo gruppo.</value>
+  </data>
+  <data name="MemberUnbannedSuccess" xml:space="preserve">
+    <value>Il ban di {0} è stato revocato.</value>
+  </data>
+  <data name="ErrorUnbanningMember" xml:space="preserve">
+    <value>Si è verificato un errore durante la revoca del ban del membro.</value>
+  </data>
 </root>

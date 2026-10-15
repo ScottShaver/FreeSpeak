@@ -18,4 +18,16 @@
   <data name="ShowingBannedMembersSingular" xml:space="preserve"><value>차단된 멤버 {0}명 표시 중</value></data>
   <data name="ShowingBannedMembersPlural" xml:space="preserve"><value>차단된 멤버 {0}명 표시 중</value></data>
   <data name="MoreAvailable" xml:space="preserve"><value>더 보기 가능</value></data>
+  <data name="UnbanMemberConfirmTitle" xml:space="preserve">
+    <value>회원 차단을 해제하시겠습니까?</value>
+  </data>
+  <data name="UnbanMemberConfirmMessage" xml:space="preserve">
+    <value>{0}님의 차단을 해제하시겠습니까? 이 그룹에 다시 가입할 수 있습니다.</value>
+  </data>
+  <data name="MemberUnbannedSuccess" xml:space="preserve">
+    <value>{0}님의 차단이 해제되었습니다.</value>
+  </data>
+  <data name="ErrorUnbanningMember" xml:space="preserve">
+    <value>회원 차단을 해제하는 중 오류가 발생했습니다.</value>
+  </data>
 </root>

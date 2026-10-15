@@ -18,4 +18,16 @@
   <data name="ShowingBannedMembersSingular" xml:space="preserve"><value>Wyświetlanie {0} zablokowanego członka</value></data>
   <data name="ShowingBannedMembersPlural" xml:space="preserve"><value>Wyświetlanie {0} zablokowanych członków</value></data>
   <data name="MoreAvailable" xml:space="preserve"><value>Więcej dostępnych</value></data>
+  <data name="UnbanMemberConfirmTitle" xml:space="preserve">
+    <value>Odblokować członka?</value>
+  </data>
+  <data name="UnbanMemberConfirmMessage" xml:space="preserve">
+    <value>Czy na pewno chcesz odblokować użytkownika {0}? Będzie mógł ponownie dołączyć do tej grupy.</value>
+  </data>
+  <data name="MemberUnbannedSuccess" xml:space="preserve">
+    <value>Użytkownik {0} został odblokowany.</value>
+  </data>
+  <data name="ErrorUnbanningMember" xml:space="preserve">
+    <value>Wystąpił błąd podczas odblokowywania członka.</value>
+  </data>
 </root>

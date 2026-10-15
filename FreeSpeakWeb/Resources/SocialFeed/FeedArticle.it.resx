@@ -139,4 +139,7 @@
   <data name="FailedToCopyLink" xml:space="preserve">
     <value>Impossibile copiare il link negli appunti.</value>
   </data>
+  <data name="SeeLess" xml:space="preserve">
+    <value>Mostra meno</value>
+  </data>
 </root>

@@ -18,4 +18,16 @@
   <data name="ShowingBannedMembersSingular" xml:space="preserve"><value>{0} 人の禁止メンバーを表示中</value></data>
   <data name="ShowingBannedMembersPlural" xml:space="preserve"><value>{0} 人の禁止メンバーを表示中</value></data>
   <data name="MoreAvailable" xml:space="preserve"><value>さらに利用可能</value></data>
+  <data name="UnbanMemberConfirmTitle" xml:space="preserve">
+    <value>メンバーのブロックを解除しますか?</value>
+  </data>
+  <data name="UnbanMemberConfirmMessage" xml:space="preserve">
+    <value>{0} のブロックを解除してもよろしいですか?このグループに再び参加できるようになります。</value>
+  </data>
+  <data name="MemberUnbannedSuccess" xml:space="preserve">
+    <value>{0} のブロックを解除しました。</value>
+  </data>
+  <data name="ErrorUnbanningMember" xml:space="preserve">
+    <value>メンバーのブロック解除中にエラーが発生しました。</value>
+  </data>
 </root>

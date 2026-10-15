@@ -139,4 +139,7 @@
   <data name="FailedToCopyLink" xml:space="preserve">
     <value>Nie udało się skopiować linku do schowka.</value>
   </data>
+  <data name="SeeLess" xml:space="preserve">
+    <value>Pokaż mniej</value>
+  </data>
 </root>

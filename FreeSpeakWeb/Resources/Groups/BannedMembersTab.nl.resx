@@ -18,4 +18,16 @@
   <data name="ShowingBannedMembersSingular" xml:space="preserve"><value>{0} geblokkeerd lid wordt weergegeven</value></data>
   <data name="ShowingBannedMembersPlural" xml:space="preserve"><value>{0} geblokkeerde leden worden weergegeven</value></data>
   <data name="MoreAvailable" xml:space="preserve"><value>Meer beschikbaar</value></data>
+  <data name="UnbanMemberConfirmTitle" xml:space="preserve">
+    <value>Lid deblokkeren?</value>
+  </data>
+  <data name="UnbanMemberConfirmMessage" xml:space="preserve">
+    <value>Weet u zeker dat u {0} wilt deblokkeren? Deze persoon kan zich weer bij deze groep aansluiten.</value>
+  </data>
+  <data name="MemberUnbannedSuccess" xml:space="preserve">
+    <value>{0} is gedeblokkeerd.</value>
+  </data>
+  <data name="ErrorUnbanningMember" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het deblokkeren van het lid.</value>
+  </data>
 </root>

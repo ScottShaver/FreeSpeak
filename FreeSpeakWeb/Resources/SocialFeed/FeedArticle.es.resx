@@ -139,4 +139,7 @@
   <data name="FailedToCopyLink" xml:space="preserve">
     <value>No se pudo copiar el enlace al portapapeles.</value>
   </data>
+  <data name="SeeLess" xml:space="preserve">
+    <value>Ver menos</value>
+  </data>
 </root>

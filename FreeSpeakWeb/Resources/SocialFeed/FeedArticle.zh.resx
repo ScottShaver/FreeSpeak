@@ -139,4 +139,7 @@
   <data name="FailedToCopyLink" xml:space="preserve">
     <value>无法将链接复制到剪贴板。</value>
   </data>
+  <data name="SeeLess" xml:space="preserve">
+    <value>收起</value>
+  </data>
 </root>

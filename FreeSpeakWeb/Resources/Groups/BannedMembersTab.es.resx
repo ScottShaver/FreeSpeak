@@ -18,4 +18,16 @@
   <data name="ShowingBannedMembersSingular" xml:space="preserve"><value>Mostrando {0} miembro bloqueado</value></data>
   <data name="ShowingBannedMembersPlural" xml:space="preserve"><value>Mostrando {0} miembros bloqueados</value></data>
   <data name="MoreAvailable" xml:space="preserve"><value>Más disponibles</value></data>
+  <data name="UnbanMemberConfirmTitle" xml:space="preserve">
+    <value>¿Desbloquear miembro?</value>
+  </data>
+  <data name="UnbanMemberConfirmMessage" xml:space="preserve">
+    <value>¿Seguro que quieres desbloquear a {0}? Podrá volver a unirse a este grupo.</value>
+  </data>
+  <data name="MemberUnbannedSuccess" xml:space="preserve">
+    <value>{0} ha sido desbloqueado.</value>
+  </data>
+  <data name="ErrorUnbanningMember" xml:space="preserve">
+    <value>Ocurrió un error al desbloquear al miembro.</value>
+  </data>
 </root>

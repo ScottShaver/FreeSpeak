@@ -18,4 +18,16 @@
   <data name="ShowingBannedMembersSingular" xml:space="preserve"><value>{0} gesperrtes Mitglied wird angezeigt</value></data>
   <data name="ShowingBannedMembersPlural" xml:space="preserve"><value>{0} gesperrte Mitglieder werden angezeigt</value></data>
   <data name="MoreAvailable" xml:space="preserve"><value>Weitere verfügbar</value></data>
+  <data name="UnbanMemberConfirmTitle" xml:space="preserve">
+    <value>Mitglied entsperren?</value>
+  </data>
+  <data name="UnbanMemberConfirmMessage" xml:space="preserve">
+    <value>Möchten Sie {0} wirklich entsperren? Die Person kann dieser Gruppe wieder beitreten.</value>
+  </data>
+  <data name="MemberUnbannedSuccess" xml:space="preserve">
+    <value>{0} wurde entsperrt.</value>
+  </data>
+  <data name="ErrorUnbanningMember" xml:space="preserve">
+    <value>Beim Entsperren des Mitglieds ist ein Fehler aufgetreten.</value>
+  </data>
 </root>

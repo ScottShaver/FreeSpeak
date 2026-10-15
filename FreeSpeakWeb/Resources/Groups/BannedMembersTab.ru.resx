@@ -18,4 +18,16 @@
   <data name="ShowingBannedMembersSingular" xml:space="preserve"><value>Показан {0} заблокированный участник</value></data>
   <data name="ShowingBannedMembersPlural" xml:space="preserve"><value>Показано {0} заблокированных участников</value></data>
   <data name="MoreAvailable" xml:space="preserve"><value>Доступно ещё</value></data>
+  <data name="UnbanMemberConfirmTitle" xml:space="preserve">
+    <value>Разблокировать участника?</value>
+  </data>
+  <data name="UnbanMemberConfirmMessage" xml:space="preserve">
+    <value>Вы действительно хотите разблокировать {0}? Этот участник сможет снова вступить в группу.</value>
+  </data>
+  <data name="MemberUnbannedSuccess" xml:space="preserve">
+    <value>Участник {0} разблокирован.</value>
+  </data>
+  <data name="ErrorUnbanningMember" xml:space="preserve">
+    <value>Произошла ошибка при разблокировке участника.</value>
+  </data>
 </root>
