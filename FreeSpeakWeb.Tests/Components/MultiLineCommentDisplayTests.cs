@@ -44,7 +44,7 @@ namespace FreeSpeakWeb.Tests.Components
             var userName = "Jane Smith";
 
             // Act
-            var cut = RenderComponent<MultiLineCommentDisplay>(parameters => parameters
+            var cut = Render<MultiLineCommentDisplay>(parameters => parameters
                 .Add(p => p.UserName, userName)
                 .Add(p => p.CommentText, "Test comment")
                 .Add(p => p.Timestamp, DateTime.Now));
@@ -60,7 +60,7 @@ namespace FreeSpeakWeb.Tests.Components
             var commentText = "This is a test comment";
 
             // Act
-            var cut = RenderComponent<MultiLineCommentDisplay>(parameters => parameters
+            var cut = Render<MultiLineCommentDisplay>(parameters => parameters
                 .Add(p => p.UserName, "Test User")
                 .Add(p => p.CommentText, commentText)
                 .Add(p => p.Timestamp, DateTime.Now));
@@ -78,7 +78,7 @@ Line 2
 Line 3";
 
             // Act
-            var cut = RenderComponent<MultiLineCommentDisplay>(parameters => parameters
+            var cut = Render<MultiLineCommentDisplay>(parameters => parameters
                 .Add(p => p.UserName, "Test User")
                 .Add(p => p.CommentText, multiLineComment)
                 .Add(p => p.Timestamp, DateTime.Now));
@@ -96,7 +96,7 @@ Line 3";
             var avatarUrl = "https://example.com/user.jpg";
 
             // Act
-            var cut = RenderComponent<MultiLineCommentDisplay>(parameters => parameters
+            var cut = Render<MultiLineCommentDisplay>(parameters => parameters
                 .Add(p => p.UserName, "Test User")
                 .Add(p => p.UserImageUrl, avatarUrl)
                 .Add(p => p.CommentText, "Test comment")
@@ -113,7 +113,7 @@ Line 3";
             var pastDate = DateTime.Now.AddMinutes(-30);
 
             // Act
-            var cut = RenderComponent<MultiLineCommentDisplay>(parameters => parameters
+            var cut = Render<MultiLineCommentDisplay>(parameters => parameters
                 .Add(p => p.UserName, "Test User")
                 .Add(p => p.CommentText, "Test comment")
                 .Add(p => p.Timestamp, pastDate));

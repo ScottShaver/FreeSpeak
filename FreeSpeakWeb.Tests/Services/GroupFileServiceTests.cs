@@ -142,10 +142,10 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Upload1");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
-            var group = TestDataFactory.CreateTestGroup("user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -163,7 +163,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Act
             var result = await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 "Test description",
                 fileStream,
@@ -297,8 +297,8 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Upload6");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
-            var group = TestDataFactory.CreateTestGroup("user2");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var group = TestDataFactory.CreateTestGroup("22222222-2222-2222-2222-222222222222");
             group.EnableFileUploads = true;
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
@@ -314,7 +314,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Act
             var result = await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 fileStream,
@@ -335,7 +335,7 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Upload7");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -349,7 +349,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Act
             var result = await service.UploadFileAsync(
                 999,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 fileStream,
@@ -370,10 +370,10 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Upload8");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
-            var group = TestDataFactory.CreateTestGroup("user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = false;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -391,7 +391,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Act
             var result = await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 fileStream,
@@ -413,10 +413,10 @@ namespace FreeSpeakWeb.Tests.Services
             var fileSignatureValidator = CreateMockFileSignatureValidator(false, "Invalid file signature");
             var service = CreateGroupFileService(repoFactory, fileSignatureValidator);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
-            var group = TestDataFactory.CreateTestGroup("user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -434,7 +434,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Act
             var result = await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 fileStream,
@@ -456,10 +456,10 @@ namespace FreeSpeakWeb.Tests.Services
             var virusScanService = CreateMockVirusScanService(isAvailable: true, isClean: false, virusName: "EICAR-Test-File");
             var service = CreateGroupFileService(repoFactory, virusScanService: virusScanService);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
-            var group = TestDataFactory.CreateTestGroup("user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -477,7 +477,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Act
             var result = await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 fileStream,
@@ -499,10 +499,10 @@ namespace FreeSpeakWeb.Tests.Services
             var virusScanService = CreateMockVirusScanService(isAvailable: false);
             var service = CreateGroupFileService(repoFactory, virusScanService: virusScanService);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
-            var group = TestDataFactory.CreateTestGroup("user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -520,7 +520,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Act
             var result = await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 fileStream,
@@ -542,11 +542,11 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Upload12");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
-            var group = TestDataFactory.CreateTestGroup("user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
             group.RequiresFileApproval = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -564,7 +564,7 @@ namespace FreeSpeakWeb.Tests.Services
             // Act
             var result = await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 fileStream,
@@ -590,10 +590,10 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Download1");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
-            var group = TestDataFactory.CreateTestGroup("user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -610,7 +610,7 @@ namespace FreeSpeakWeb.Tests.Services
 
             var uploadResult = await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 fileStream,
@@ -618,7 +618,7 @@ namespace FreeSpeakWeb.Tests.Services
                 fileContent.Length);
 
             // Act
-            var result = await service.GetFileForDownloadAsync(uploadResult.File!.Id, "user1");
+            var result = await service.GetFileForDownloadAsync(uploadResult.File!.Id, "11111111-1111-1111-1111-111111111111");
 
             // Assert
             result.Should().NotBeNull();
@@ -641,7 +641,7 @@ namespace FreeSpeakWeb.Tests.Services
             var service = CreateGroupFileService(repoFactory);
 
             // Act
-            var result = await service.GetFileForDownloadAsync(999, "user1");
+            var result = await service.GetFileForDownloadAsync(999, "11111111-1111-1111-1111-111111111111");
 
             // Assert
             result.Should().NotBeNull();
@@ -657,11 +657,11 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Download3");
             var service = CreateGroupFileService(repoFactory);
 
-            var user1 = TestDataFactory.CreateTestUser(id: "user1");
-            var user2 = TestDataFactory.CreateTestUser(id: "user2");
-            var group = TestDataFactory.CreateTestGroup("user1");
+            var user1 = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var user2 = TestDataFactory.CreateTestUser(id: "22222222-2222-2222-2222-222222222222");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
-            var groupUser1 = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser1 = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -678,7 +678,7 @@ namespace FreeSpeakWeb.Tests.Services
 
             var uploadResult = await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 fileStream,
@@ -686,7 +686,7 @@ namespace FreeSpeakWeb.Tests.Services
                 fileContent.Length);
 
             // Act
-            var result = await service.GetFileForDownloadAsync(uploadResult.File!.Id, "user2");
+            var result = await service.GetFileForDownloadAsync(uploadResult.File!.Id, "22222222-2222-2222-2222-222222222222");
 
             // Assert
             result.Should().NotBeNull();
@@ -706,11 +706,11 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_List1");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
-            var group = TestDataFactory.CreateTestGroup("user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
             group.RequiresFileApproval = false;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -726,7 +726,7 @@ namespace FreeSpeakWeb.Tests.Services
             var fileContent1 = "Test file 1"u8.ToArray();
             await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile1.txt",
                 null,
                 new MemoryStream(fileContent1),
@@ -736,7 +736,7 @@ namespace FreeSpeakWeb.Tests.Services
             var fileContent2 = "Test file 2"u8.ToArray();
             await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile2.txt",
                 null,
                 new MemoryStream(fileContent2),
@@ -759,10 +759,10 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Search1");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
-            var group = TestDataFactory.CreateTestGroup("user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -778,7 +778,7 @@ namespace FreeSpeakWeb.Tests.Services
             var fileContent1 = "Test file 1"u8.ToArray();
             await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "document.txt",
                 null,
                 new MemoryStream(fileContent1),
@@ -788,7 +788,7 @@ namespace FreeSpeakWeb.Tests.Services
             var fileContent2 = "Test file 2"u8.ToArray();
             await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "image.jpg",
                 null,
                 new MemoryStream(fileContent2),
@@ -811,10 +811,10 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Count1");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
-            var group = TestDataFactory.CreateTestGroup("user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -832,7 +832,7 @@ namespace FreeSpeakWeb.Tests.Services
                 var fileContent = System.Text.Encoding.UTF8.GetBytes($"Test file {i}");
                 await service.UploadFileAsync(
                     group.Id,
-                    "user1",
+                    "11111111-1111-1111-1111-111111111111",
                     $"testfile{i}.txt",
                     null,
                     new MemoryStream(fileContent),
@@ -858,11 +858,11 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Approval1");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
-            var group = TestDataFactory.CreateTestGroup("user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
             group.RequiresFileApproval = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -878,7 +878,7 @@ namespace FreeSpeakWeb.Tests.Services
             var fileContent = "Test file"u8.ToArray();
             await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 new MemoryStream(fileContent),
@@ -901,12 +901,12 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Approval2");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
             var admin = TestDataFactory.CreateTestUser(id: "admin1");
             var group = TestDataFactory.CreateTestGroup("admin1");
             group.EnableFileUploads = true;
             group.RequiresFileApproval = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
             var groupAdmin = TestDataFactory.CreateTestGroupUser(1, "admin1", isAdmin: true);
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
@@ -924,7 +924,7 @@ namespace FreeSpeakWeb.Tests.Services
             var fileContent = "Test file"u8.ToArray();
             var uploadResult = await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 new MemoryStream(fileContent),
@@ -951,13 +951,13 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Approval3");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
-            var user2 = TestDataFactory.CreateTestUser(id: "user2");
-            var group = TestDataFactory.CreateTestGroup("user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var user2 = TestDataFactory.CreateTestUser(id: "22222222-2222-2222-2222-222222222222");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
             group.RequiresFileApproval = true;
-            var groupUser1 = TestDataFactory.CreateTestGroupUser(1, "user1");
-            var groupUser2 = TestDataFactory.CreateTestGroupUser(1, "user2");
+            var groupUser1 = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
+            var groupUser2 = TestDataFactory.CreateTestGroupUser(1, "22222222-2222-2222-2222-222222222222");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -974,7 +974,7 @@ namespace FreeSpeakWeb.Tests.Services
             var fileContent = "Test file"u8.ToArray();
             var uploadResult = await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 new MemoryStream(fileContent),
@@ -982,7 +982,7 @@ namespace FreeSpeakWeb.Tests.Services
                 fileContent.Length);
 
             // Act - user2 tries to approve without permission
-            var (success, errorMessage) = await service.ApproveFileAsync(uploadResult.File!.Id, "user2");
+            var (success, errorMessage) = await service.ApproveFileAsync(uploadResult.File!.Id, "22222222-2222-2222-2222-222222222222");
 
             // Assert
             success.Should().BeFalse();
@@ -996,12 +996,12 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Approval4");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
             var admin = TestDataFactory.CreateTestUser(id: "admin1");
             var group = TestDataFactory.CreateTestGroup("admin1");
             group.EnableFileUploads = true;
             group.RequiresFileApproval = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
             var groupAdmin = TestDataFactory.CreateTestGroupUser(1, "admin1", isAdmin: true);
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
@@ -1019,7 +1019,7 @@ namespace FreeSpeakWeb.Tests.Services
             var fileContent = "Test file"u8.ToArray();
             var uploadResult = await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 new MemoryStream(fileContent),
@@ -1130,9 +1130,9 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Perm4");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
             var group = TestDataFactory.CreateTestGroup("creator1");
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -1145,7 +1145,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             // Act
-            var canManage = await service.CanManageFilesAsync(group.Id, "user1");
+            var canManage = await service.CanManageFilesAsync(group.Id, "11111111-1111-1111-1111-111111111111");
 
             // Assert
             canManage.Should().BeFalse();
@@ -1158,10 +1158,10 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Perm5");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
             var group = TestDataFactory.CreateTestGroup("creator1");
             group.EnableFileUploads = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -1174,7 +1174,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             // Act
-            var canUpload = await service.CanUploadFilesAsync(group.Id, "user1");
+            var canUpload = await service.CanUploadFilesAsync(group.Id, "11111111-1111-1111-1111-111111111111");
 
             // Assert
             canUpload.Should().BeTrue();
@@ -1187,7 +1187,7 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Perm6");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
             var group = TestDataFactory.CreateTestGroup("creator1");
             group.EnableFileUploads = true;
 
@@ -1199,7 +1199,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             // Act
-            var canUpload = await service.CanUploadFilesAsync(group.Id, "user1");
+            var canUpload = await service.CanUploadFilesAsync(group.Id, "11111111-1111-1111-1111-111111111111");
 
             // Assert
             canUpload.Should().BeFalse();
@@ -1212,10 +1212,10 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Perm7");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
             var group = TestDataFactory.CreateTestGroup("creator1");
             group.EnableFileUploads = false;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -1228,7 +1228,7 @@ namespace FreeSpeakWeb.Tests.Services
             }
 
             // Act
-            var canUpload = await service.CanUploadFilesAsync(group.Id, "user1");
+            var canUpload = await service.CanUploadFilesAsync(group.Id, "11111111-1111-1111-1111-111111111111");
 
             // Assert
             canUpload.Should().BeFalse();
@@ -1245,10 +1245,10 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Delete1");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
             var group = TestDataFactory.CreateTestGroup("creator1");
             group.EnableFileUploads = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -1263,7 +1263,7 @@ namespace FreeSpeakWeb.Tests.Services
             var fileContent = "Test file"u8.ToArray();
             var uploadResult = await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 new MemoryStream(fileContent),
@@ -1271,7 +1271,7 @@ namespace FreeSpeakWeb.Tests.Services
                 fileContent.Length);
 
             // Act
-            var (success, errorMessage) = await service.DeleteFileAsync(uploadResult.File!.Id, "user1");
+            var (success, errorMessage) = await service.DeleteFileAsync(uploadResult.File!.Id, "11111111-1111-1111-1111-111111111111");
 
             // Assert
             success.Should().BeTrue();
@@ -1289,11 +1289,11 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Delete2");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
             var admin = TestDataFactory.CreateTestUser(id: "admin1");
             var group = TestDataFactory.CreateTestGroup("admin1");
             group.EnableFileUploads = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
             var groupAdmin = TestDataFactory.CreateTestGroupUser(1, "admin1", isAdmin: true);
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
@@ -1310,7 +1310,7 @@ namespace FreeSpeakWeb.Tests.Services
             var fileContent = "Test file"u8.ToArray();
             var uploadResult = await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 new MemoryStream(fileContent),
@@ -1332,12 +1332,12 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Delete3");
             var service = CreateGroupFileService(repoFactory);
 
-            var user1 = TestDataFactory.CreateTestUser(id: "user1");
-            var user2 = TestDataFactory.CreateTestUser(id: "user2");
+            var user1 = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var user2 = TestDataFactory.CreateTestUser(id: "22222222-2222-2222-2222-222222222222");
             var group = TestDataFactory.CreateTestGroup("creator1");
             group.EnableFileUploads = true;
-            var groupUser1 = TestDataFactory.CreateTestGroupUser(1, "user1");
-            var groupUser2 = TestDataFactory.CreateTestGroupUser(1, "user2");
+            var groupUser1 = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
+            var groupUser2 = TestDataFactory.CreateTestGroupUser(1, "22222222-2222-2222-2222-222222222222");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -1353,7 +1353,7 @@ namespace FreeSpeakWeb.Tests.Services
             var fileContent = "Test file"u8.ToArray();
             var uploadResult = await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "testfile.txt",
                 null,
                 new MemoryStream(fileContent),
@@ -1361,7 +1361,7 @@ namespace FreeSpeakWeb.Tests.Services
                 fileContent.Length);
 
             // Act - user2 tries to delete user1's file
-            var (success, errorMessage) = await service.DeleteFileAsync(uploadResult.File!.Id, "user2");
+            var (success, errorMessage) = await service.DeleteFileAsync(uploadResult.File!.Id, "22222222-2222-2222-2222-222222222222");
 
             // Assert
             success.Should().BeFalse();
@@ -1379,10 +1379,10 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Stats1");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
-            var group = TestDataFactory.CreateTestGroup("user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -1398,7 +1398,7 @@ namespace FreeSpeakWeb.Tests.Services
             var file1Content = "Small file"u8.ToArray();
             await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "file1.txt",
                 null,
                 new MemoryStream(file1Content),
@@ -1408,7 +1408,7 @@ namespace FreeSpeakWeb.Tests.Services
             var file2Content = "Larger file content with more data"u8.ToArray();
             await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "file2.txt",
                 null,
                 new MemoryStream(file2Content),
@@ -1433,10 +1433,10 @@ namespace FreeSpeakWeb.Tests.Services
             var repoFactory = CreateTestRepositoryFactory("GroupFileTest_Stats2");
             var service = CreateGroupFileService(repoFactory);
 
-            var user = TestDataFactory.CreateTestUser(id: "user1");
-            var group = TestDataFactory.CreateTestGroup("user1");
+            var user = TestDataFactory.CreateTestUser(id: "11111111-1111-1111-1111-111111111111");
+            var group = TestDataFactory.CreateTestGroup("11111111-1111-1111-1111-111111111111");
             group.EnableFileUploads = true;
-            var groupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
+            var groupUser = TestDataFactory.CreateTestGroupUser(1, "11111111-1111-1111-1111-111111111111");
 
             using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
             {
@@ -1452,7 +1452,7 @@ namespace FreeSpeakWeb.Tests.Services
             var fileContent = "Test file content"u8.ToArray();
             await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "file1.txt",
                 null,
                 new MemoryStream(fileContent),
@@ -1461,7 +1461,7 @@ namespace FreeSpeakWeb.Tests.Services
 
             await service.UploadFileAsync(
                 group.Id,
-                "user1",
+                "11111111-1111-1111-1111-111111111111",
                 "file2.txt",
                 null,
                 new MemoryStream(fileContent),
@@ -1469,7 +1469,7 @@ namespace FreeSpeakWeb.Tests.Services
                 fileContent.Length);
 
             // Act
-            var storageUsed = await service.GetUserStorageUsedAsync(group.Id, "user1");
+            var storageUsed = await service.GetUserStorageUsedAsync(group.Id, "11111111-1111-1111-1111-111111111111");
 
             // Assert
             storageUsed.Should().Be(fileContent.Length * 2);

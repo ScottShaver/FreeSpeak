@@ -56,6 +56,8 @@ public class PostEditModalTests : TestContext
         Services.AddSingleton<IJSRuntime>(mockJsRuntime.Object);
         Services.AddSingleton(imageUploadService);
         Services.AddSingleton(mockEmojiPickerLocalizer.Object);
+        Services.AddSingleton(typeof(IStringLocalizer<>), typeof(PassthroughLocalizer<>));
+        Services.AddSingleton<PopupPortalService>();
     }
 
     [Fact]
@@ -67,7 +69,7 @@ public class PostEditModalTests : TestContext
         var authorName = "Test User";
 
         // Act
-        var cut = RenderComponent<PostEditModal>(parameters => parameters
+        var cut = Render<PostEditModal>(parameters => parameters
             .Add(p => p.PostId, postId)
             .Add(p => p.AuthorName, authorName)
             .Add(p => p.InitialContent, initialContent)
@@ -92,7 +94,7 @@ public class PostEditModalTests : TestContext
         };
 
         // Act
-        var cut = RenderComponent<PostEditModal>(parameters => parameters
+        var cut = Render<PostEditModal>(parameters => parameters
             .Add(p => p.PostId, 123)
             .Add(p => p.AuthorName, "Test User")
             .Add(p => p.InitialContent, "Content")
@@ -111,7 +113,7 @@ public class PostEditModalTests : TestContext
     public void AddNewImages_AddsImagesToNewImagesList()
     {
         // Arrange
-        var cut = RenderComponent<PostEditModal>(parameters => parameters
+        var cut = Render<PostEditModal>(parameters => parameters
             .Add(p => p.PostId, 123)
             .Add(p => p.AuthorName, "Test User")
             .Add(p => p.InitialContent, "Content")
@@ -139,7 +141,7 @@ public class PostEditModalTests : TestContext
     public void AddImages_Button_Text_Changes_Based_On_Images()
     {
         // Arrange - no images
-        var cut = RenderComponent<PostEditModal>(parameters => parameters
+        var cut = Render<PostEditModal>(parameters => parameters
             .Add(p => p.PostId, 123)
             .Add(p => p.AuthorName, "Test User")
             .Add(p => p.InitialContent, "Content")
@@ -180,7 +182,7 @@ public class PostEditModalTests : TestContext
         var saveWasCalled = false;
         var removedIds = new List<int>();
 
-        var cut = RenderComponent<PostEditModal>(parameters => parameters
+        var cut = Render<PostEditModal>(parameters => parameters
             .Add(p => p.PostId, 123)
             .Add(p => p.AuthorName, "Test User")
             .Add(p => p.InitialContent, "Content")
@@ -221,7 +223,7 @@ public class PostEditModalTests : TestContext
         // Arrange
         var saveWasCalled = false;
 
-        var cut = RenderComponent<PostEditModal>(parameters => parameters
+        var cut = Render<PostEditModal>(parameters => parameters
             .Add(p => p.PostId, 123)
             .Add(p => p.AuthorName, "Test User")
             .Add(p => p.InitialContent, "   ")  // Whitespace only
@@ -248,7 +250,7 @@ public class PostEditModalTests : TestContext
         // Arrange
         var cancelWasCalled = false;
 
-        var cut = RenderComponent<PostEditModal>(parameters => parameters
+        var cut = Render<PostEditModal>(parameters => parameters
             .Add(p => p.PostId, 123)
             .Add(p => p.AuthorName, "Test User")
             .Add(p => p.InitialContent, "Content")

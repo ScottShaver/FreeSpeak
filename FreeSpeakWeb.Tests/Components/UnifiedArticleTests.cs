@@ -121,6 +121,8 @@ namespace FreeSpeakWeb.Tests.Components
             mockTimeFormattingLocalizer.Setup(l => l[It.IsAny<string>()])
                 .Returns((string key) => new LocalizedString(key, key));
             Services.AddSingleton(mockTimeFormattingLocalizer.Object);
+            Services.AddSingleton(typeof(IStringLocalizer<>), typeof(PassthroughLocalizer<>));
+            Services.AddSingleton<PopupPortalService>();
 
             // Register FeedArticleHeader localizer mock
             var mockFeedArticleHeaderLocalizer = new Mock<IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.FeedArticleHeader>>();
@@ -159,7 +161,7 @@ namespace FreeSpeakWeb.Tests.Components
             var authorName = "John Doe";
 
             // Act
-            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+            var cut = Render<UnifiedArticle>(parameters => parameters
                 .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
@@ -180,7 +182,7 @@ namespace FreeSpeakWeb.Tests.Components
             var likeCount = 42;
 
             // Act
-            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+            var cut = Render<UnifiedArticle>(parameters => parameters
                 .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
@@ -202,7 +204,7 @@ namespace FreeSpeakWeb.Tests.Components
             var commentCount = 15;
 
             // Act
-            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+            var cut = Render<UnifiedArticle>(parameters => parameters
                 .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
@@ -225,7 +227,7 @@ namespace FreeSpeakWeb.Tests.Components
             var shareCount = 7;
 
             // Act
-            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+            var cut = Render<UnifiedArticle>(parameters => parameters
                 .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
@@ -253,7 +255,7 @@ namespace FreeSpeakWeb.Tests.Components
             var groupName = "Test Group";
 
             // Act
-            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+            var cut = Render<UnifiedArticle>(parameters => parameters
                 .Add(p => p.ArticlePostType, PostType.GroupPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.GroupId, 10)
@@ -275,7 +277,7 @@ namespace FreeSpeakWeb.Tests.Components
             var groupName = "Test Group";
 
             // Act
-            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+            var cut = Render<UnifiedArticle>(parameters => parameters
                 .Add(p => p.ArticlePostType, PostType.GroupPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.GroupId, 10)
@@ -297,7 +299,7 @@ namespace FreeSpeakWeb.Tests.Components
             var authorPoints = 150;
 
             // Act
-            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+            var cut = Render<UnifiedArticle>(parameters => parameters
                 .Add(p => p.ArticlePostType, PostType.GroupPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.GroupId, 10)
@@ -324,7 +326,7 @@ namespace FreeSpeakWeb.Tests.Components
             var contentText = "This is a test post content";
 
             // Act
-            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+            var cut = Render<UnifiedArticle>(parameters => parameters
                 .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
@@ -346,7 +348,7 @@ namespace FreeSpeakWeb.Tests.Components
         public void UnifiedArticle_HasActionButtons()
         {
             // Arrange & Act
-            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+            var cut = Render<UnifiedArticle>(parameters => parameters
                 .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
@@ -372,7 +374,7 @@ namespace FreeSpeakWeb.Tests.Components
             var avatarUrl = "https://example.com/avatar.jpg";
 
             // Act
-            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+            var cut = Render<UnifiedArticle>(parameters => parameters
                 .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
@@ -392,7 +394,7 @@ namespace FreeSpeakWeb.Tests.Components
         public void UnifiedArticle_DisplaysDefaultAvatarWhenNotProvided()
         {
             // Arrange & Act
-            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+            var cut = Render<UnifiedArticle>(parameters => parameters
                 .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
@@ -416,7 +418,7 @@ namespace FreeSpeakWeb.Tests.Components
             var pastDate = DateTime.Now.AddHours(-2);
 
             // Act
-            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+            var cut = Render<UnifiedArticle>(parameters => parameters
                 .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
@@ -435,7 +437,7 @@ namespace FreeSpeakWeb.Tests.Components
         public void UnifiedArticle_HasMenuButton()
         {
             // Arrange & Act
-            var cut = RenderComponent<UnifiedArticle>(parameters => parameters
+            var cut = Render<UnifiedArticle>(parameters => parameters
                 .Add(p => p.ArticlePostType, PostType.UserPost)
                 .Add(p => p.PostId, 1)
                 .Add(p => p.AuthorId, "test-user-id")
