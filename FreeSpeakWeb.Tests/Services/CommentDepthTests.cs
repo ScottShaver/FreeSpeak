@@ -53,7 +53,7 @@ namespace FreeSpeakWeb.Tests.Services
                 repoFactory.CreateFriendshipRepository());
         }
 
-        private GroupPostService CreateGroupPostService(TestRepositoryFactory repoFactory)
+        private GroupPostService CreateGroupPostService(TestRepositoryFactory repoFactory, int maxDirect = 1000)
         {
             var env = new Mock<IWebHostEnvironment>();
             env.Setup(m => m.ContentRootPath).Returns(Path.GetTempPath());
@@ -82,7 +82,7 @@ namespace FreeSpeakWeb.Tests.Services
                 repoFactory.CreateGroupAccessValidator(),
                 MockRepositories.CreateMockAuditLogRepository().Object,
                 new GroupPointsService(cf, CreateMockLogger<GroupPointsService>()),
-                Options.Create(new SiteSettings { SiteName = "TestSite", MaxFeedPostCommentDepth = MaxDepth }));
+                Options.Create(new SiteSettings { SiteName = "TestSite",                 MaxFeedPostCommentDepth = MaxDepth, MaxFeedPostDirectCommentCount = maxDirect }));
         }
 
         [Fact]
@@ -147,6 +147,36 @@ namespace FreeSpeakWeb.Tests.Services
             success.Should().BeFalse();
             error.Should().Contain("nested more than 4");
             rejected.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GroupAddCommentAsync_RejectsDirectCommentsBeyondConfiguredMax()
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupDirectMax");
+            int postId;
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(TestDataFactory.CreateTestUser(id: "u1"));
+                var group = TestDataFactory.CreateTestGroup("u1");
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+                context.GroupUsers.Add(TestDataFactory.CreateTestGroupUser(group.Id, "u1", isAdmin: true));
+                var post = TestDataFactory.CreateTestGroupPost(group.Id, "u1");
+                context.GroupPosts.Add(post);
+                await context.SaveChangesAsync();
+                postId = post.Id;
+            }
+            var service = CreateGroupPostService(repoFactory, maxDirect: 2);
+
+            var (_, _, first) = await service.AddCommentAsync(postId, "u1", "1", null, null);
+            (await service.AddCommentAsync(postId, "u1", "2", null, null)).Item1.Should().BeTrue();
+
+            var third = await service.AddCommentAsync(postId, "u1", "3", null, null);
+            third.Item1.Should().BeFalse();
+            third.Item2.Should().Contain("maximum of 2 direct comments");
+
+            // replies are not direct comments and remain allowed
+            (await service.AddCommentAsync(postId, "u1", "reply", null, first!.Id)).Item1.Should().BeTrue();
         }
     }
 }
