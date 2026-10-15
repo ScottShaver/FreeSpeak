@@ -235,6 +235,84 @@ namespace FreeSpeakWeb.Migrations
                     b.ToTable("CommentLikes");
                 });
 
+            modelBuilder.Entity("FreeSpeakWeb.Data.FeedContentReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CommentId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ContentAuthorId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<int?>("PostId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Reason")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ReporterId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)");
+
+                    b.Property<DateTime?>("ReviewedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ReviewerId")
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)");
+
+                    b.Property<string>("ReviewerNotes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("ReviewerId");
+
+                    b.HasIndex("ReporterId", "CommentId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_FeedContentReports_ReporterId_CommentId")
+                        .HasFilter("\"CommentId\" IS NOT NULL");
+
+                    b.HasIndex("ReporterId", "CreatedAt");
+
+                    b.HasIndex("ReporterId", "PostId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_FeedContentReports_ReporterId_PostId")
+                        .HasFilter("\"PostId\" IS NOT NULL");
+
+                    b.HasIndex("Status", "CreatedAt")
+                        .IsDescending(false, true)
+                        .HasDatabaseName("IX_FeedContentReports_Status_CreatedAt");
+
+                    b.ToTable("FeedContentReports", t =>
+                        {
+                            t.HasCheckConstraint("CK_FeedContentReports_ExactlyOneTarget", "(\"PostId\" IS NOT NULL AND \"CommentId\" IS NULL) OR (\"PostId\" IS NULL AND \"CommentId\" IS NOT NULL)");
+                        });
+                });
+
             modelBuilder.Entity("FreeSpeakWeb.Data.Friendship", b =>
                 {
                     b.Property<int>("Id")
@@ -1474,6 +1552,38 @@ namespace FreeSpeakWeb.Migrations
                     b.Navigation("Comment");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FreeSpeakWeb.Data.FeedContentReport", b =>
+                {
+                    b.HasOne("FreeSpeakWeb.Data.Comment", "Comment")
+                        .WithMany()
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("FreeSpeakWeb.Data.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("FreeSpeakWeb.Data.ApplicationUser", "Reporter")
+                        .WithMany()
+                        .HasForeignKey("ReporterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FreeSpeakWeb.Data.ApplicationUser", "Reviewer")
+                        .WithMany()
+                        .HasForeignKey("ReviewerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("Post");
+
+                    b.Navigation("Reporter");
+
+                    b.Navigation("Reviewer");
                 });
 
             modelBuilder.Entity("FreeSpeakWeb.Data.Friendship", b =>

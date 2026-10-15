@@ -131,6 +131,11 @@ namespace FreeSpeakWeb.Data
         public DbSet<GroupContentReport> GroupContentReports { get; set; }
 
         /// <summary>
+        /// Gets or sets the DbSet for reports submitted by users against feed posts and feed comments.
+        /// </summary>
+        public DbSet<FeedContentReport> FeedContentReports { get; set; }
+
+        /// <summary>
         /// Gets or sets the DbSet for files uploaded to groups for sharing with members.
         /// </summary>
         public DbSet<GroupFile> GroupFiles { get; set; }
@@ -788,6 +793,58 @@ namespace FreeSpeakWeb.Data
                 entity.HasIndex(r => r.Status);
                 entity.HasIndex(r => r.CreatedAt);
                 entity.HasIndex(r => new { r.GroupId, r.Status });
+            });
+
+            // Configure FeedContentReport entity
+            modelBuilder.Entity<FeedContentReport>(entity =>
+            {
+                entity.HasKey(r => r.Id);
+
+                // Deleting reported content removes its reports so none are orphaned
+                entity.HasOne(r => r.Post)
+                    .WithMany()
+                    .HasForeignKey(r => r.PostId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(r => r.Comment)
+                    .WithMany()
+                    .HasForeignKey(r => r.CommentId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(r => r.Reporter)
+                    .WithMany()
+                    .HasForeignKey(r => r.ReporterId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(r => r.Reviewer)
+                    .WithMany()
+                    .HasForeignKey(r => r.ReviewerId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(r => r.ContentAuthorId).IsRequired().HasMaxLength(450);
+                entity.Property(r => r.ReporterId).IsRequired().HasMaxLength(450);
+                entity.Property(r => r.ReviewerId).HasMaxLength(450);
+                entity.Property(r => r.Description).HasMaxLength(2000);
+                entity.Property(r => r.ReviewerNotes).HasMaxLength(2000);
+
+                entity.ToTable(t => t.HasCheckConstraint(
+                    "CK_FeedContentReports_ExactlyOneTarget",
+                    "(\"PostId\" IS NOT NULL AND \"CommentId\" IS NULL) OR (\"PostId\" IS NULL AND \"CommentId\" IS NOT NULL)"));
+
+                entity.HasIndex(r => new { r.Status, r.CreatedAt })
+                    .IsDescending(false, true)
+                    .HasDatabaseName("IX_FeedContentReports_Status_CreatedAt");
+                entity.HasIndex(r => r.PostId);
+                entity.HasIndex(r => r.CommentId);
+                entity.HasIndex(r => new { r.ReporterId, r.CreatedAt });
+                entity.HasIndex(r => new { r.ReporterId, r.PostId })
+                    .IsUnique()
+                    .HasFilter("\"PostId\" IS NOT NULL")
+                    .HasDatabaseName("UX_FeedContentReports_ReporterId_PostId");
+                entity.HasIndex(r => new { r.ReporterId, r.CommentId })
+                    .IsUnique()
+                    .HasFilter("\"CommentId\" IS NOT NULL")
+                    .HasDatabaseName("UX_FeedContentReports_ReporterId_CommentId");
             });
 
             // Configure GroupFile entity
