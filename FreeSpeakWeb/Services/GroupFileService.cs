@@ -21,6 +21,7 @@ namespace FreeSpeakWeb.Services
         private readonly IVirusScanService _virusScanService;
         private readonly UserPreferenceService _userPreferenceService;
         private readonly GroupMemberService _groupMemberService;
+        private readonly IGroupModerationLogService? _moderationLog;
         private readonly string _uploadsBasePath;
 
         /// <summary>
@@ -40,6 +41,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="virusScanService">Service for scanning files for viruses/malware.</param>
         /// <param name="userPreferenceService">Service for user preference operations.</param>
         /// <param name="groupMemberService">Service for group member operations.</param>
+        /// <param name="moderationLog">Optional per-group moderation log; when omitted nothing is recorded there.</param>
         public GroupFileService(
             IGroupFileRepository fileRepository,
             IGroupRepository groupRepository,
@@ -49,8 +51,10 @@ namespace FreeSpeakWeb.Services
             IFileSignatureValidator fileSignatureValidator,
             IVirusScanService virusScanService,
             UserPreferenceService userPreferenceService,
-            GroupMemberService groupMemberService)
+            GroupMemberService groupMemberService,
+            IGroupModerationLogService? moderationLog = null)
         {
+            _moderationLog = moderationLog;
             _fileRepository = fileRepository;
             _groupRepository = groupRepository;
             _contextFactory = contextFactory;
@@ -372,9 +376,37 @@ namespace FreeSpeakWeb.Services
             if (result.Success)
             {
                 _logger.LogInformation("File {FileId} approved by user {ReviewerId}", fileId, reviewerId);
+                await LogModerationAsync(file, reviewerId, GroupModerationAction.FileApproved, null);
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Records a file moderation action in the group moderation log. Logging failures never affect the caller.
+        /// </summary>
+        /// <param name="file">The moderated file.</param>
+        /// <param name="actorUserId">The moderator who acted.</param>
+        /// <param name="action">The action taken.</param>
+        /// <param name="reason">Optional reason given by the moderator.</param>
+        private async Task LogModerationAsync(GroupFile file, string actorUserId, GroupModerationAction action, string? reason)
+        {
+            if (_moderationLog == null)
+            {
+                return;
+            }
+
+            await _moderationLog.LogAsync(new GroupModerationLogRequest
+            {
+                GroupId = file.GroupId,
+                ActorUserId = actorUserId,
+                Action = action,
+                TargetType = GroupModerationTargetType.File,
+                TargetId = file.Id.ToString(),
+                TargetUserId = file.UploaderId,
+                Summary = file.OriginalFileName,
+                Reason = reason
+            });
         }
 
         /// <inheritdoc />
@@ -394,12 +426,17 @@ namespace FreeSpeakWeb.Services
 
             var result = await _fileRepository.DeclineFileAsync(fileId, reviewerId, reason);
 
-            if (result.Success && result.StoredFileName != null)
+            if (result.Success)
             {
-                // Delete the physical file
-                await DeletePhysicalFileAsync(file.GroupId, result.StoredFileName);
+                if (result.StoredFileName != null)
+                {
+                    // Delete the physical file
+                    await DeletePhysicalFileAsync(file.GroupId, result.StoredFileName);
+                }
+
                 _logger.LogInformation("File {FileId} declined and deleted by user {ReviewerId}. Reason: {Reason}",
                     fileId, reviewerId, reason);
+                await LogModerationAsync(file, reviewerId, GroupModerationAction.FileDeclined, reason);
             }
 
             return (result.Success, result.ErrorMessage);
@@ -435,6 +472,11 @@ namespace FreeSpeakWeb.Services
                 // Delete the physical file
                 await DeletePhysicalFileAsync(file.GroupId, result.StoredFileName);
                 _logger.LogInformation("File {FileId} deleted by user {DeleterId}", fileId, deleterId);
+            }
+
+            if (result.Success && file.UploaderId != deleterId)
+            {
+                await LogModerationAsync(file, deleterId, GroupModerationAction.FileRemoved, null);
             }
 
             return (result.Success, result.ErrorMessage);

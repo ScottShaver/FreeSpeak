@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
+using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ namespace FreeSpeakWeb.Services
         private readonly ILogger<GroupBannedMemberService> _logger;
         private readonly IAuditLogRepository _auditLogRepository;
         private readonly IRoleService _roleService;
+        private readonly IGroupModerationLogService? _moderationLog;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupBannedMemberService"/> class.
@@ -24,16 +26,19 @@ namespace FreeSpeakWeb.Services
         /// <param name="logger">Logger for recording service operations.</param>
         /// <param name="auditLogRepository">Repository for audit log operations.</param>
         /// <param name="roleService">Service for role operations.</param>
+        /// <param name="moderationLog">Optional per-group moderation log; when omitted nothing is recorded there.</param>
         public GroupBannedMemberService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupBannedMemberService> logger,
             IAuditLogRepository auditLogRepository,
-            IRoleService roleService)
+            IRoleService roleService,
+            IGroupModerationLogService? moderationLog = null)
         {
             _contextFactory = contextFactory;
             _logger = logger;
             _auditLogRepository = auditLogRepository;
             _roleService = roleService;
+            _moderationLog = moderationLog;
         }
 
         /// <summary>
@@ -123,6 +128,8 @@ namespace FreeSpeakWeb.Services
                     IsPermanent = true
                 });
 
+                await LogModerationAsync(groupId, bannedByUserId, GroupModerationAction.MemberBanned, userId);
+
                 return (true, null);
             }
             catch (Exception ex)
@@ -170,6 +177,27 @@ namespace FreeSpeakWeb.Services
                 await GroupMemberCountHelper.RecomputeAsync(context, groupId);
 
                 _logger.LogInformation("User {UserId} unbanned from group {GroupId} by {UnbannedByUserId}", userId, groupId, unbannedByUserId);
+
+                try
+                {
+                    var unbannedUser = await context.Users.FindAsync(userId);
+                    var unbanGroup = await context.Groups.FindAsync(groupId);
+                    await _auditLogRepository.LogActionAsync(unbannedByUserId, ActionCategory.GroupAdminUnbanUser, new GroupAdminUnbanUserDetails
+                    {
+                        OperationType = nameof(OperationTypeEnum.Remove),
+                        GroupId = groupId,
+                        GroupName = unbanGroup?.Name ?? string.Empty,
+                        UnbannedUserId = userId,
+                        UnbannedUserDisplayName = unbannedUser != null ? $"{unbannedUser.FirstName} {unbannedUser.LastName}" : null
+                    });
+                }
+                catch (Exception auditEx)
+                {
+                    _logger.LogError(auditEx, "Error writing unban audit entry for user {UserId} in group {GroupId}", userId, groupId);
+                }
+
+                await LogModerationAsync(groupId, unbannedByUserId, GroupModerationAction.MemberUnbanned, userId);
+
                 return (true, null);
             }
             catch (Exception ex)
@@ -177,6 +205,31 @@ namespace FreeSpeakWeb.Services
                 _logger.LogError(ex, "Error unbanning user {UserId} from group {GroupId}", userId, groupId);
                 return (false, "An error occurred while unbanning the user.");
             }
+        }
+
+        /// <summary>
+        /// Records a ban or unban in the group moderation log. Logging failures never affect the caller.
+        /// </summary>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="actorUserId">The moderator or admin who acted.</param>
+        /// <param name="action">The action taken.</param>
+        /// <param name="targetUserId">The affected member.</param>
+        private async Task LogModerationAsync(int groupId, string actorUserId, GroupModerationAction action, string targetUserId)
+        {
+            if (_moderationLog == null)
+            {
+                return;
+            }
+
+            await _moderationLog.LogAsync(new GroupModerationLogRequest
+            {
+                GroupId = groupId,
+                ActorUserId = actorUserId,
+                Action = action,
+                TargetType = GroupModerationTargetType.Member,
+                TargetId = targetUserId,
+                TargetUserId = targetUserId
+            });
         }
 
         /// <summary>

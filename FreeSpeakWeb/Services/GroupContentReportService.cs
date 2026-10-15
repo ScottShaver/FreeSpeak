@@ -1,4 +1,6 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.DTOs;
+using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
@@ -12,6 +14,7 @@ namespace FreeSpeakWeb.Services
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupContentReportService> _logger;
         private readonly GroupAccessValidator _accessValidator;
+        private readonly IGroupModerationLogService? _moderationLog;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupContentReportService"/> class.
@@ -19,14 +22,17 @@ namespace FreeSpeakWeb.Services
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording service operations.</param>
         /// <param name="accessValidator">Validator for group access permissions.</param>
+        /// <param name="moderationLog">Optional per-group moderation log; when omitted nothing is recorded there.</param>
         public GroupContentReportService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupContentReportService> logger,
-            GroupAccessValidator accessValidator)
+            GroupAccessValidator accessValidator,
+            IGroupModerationLogService? moderationLog = null)
         {
             _contextFactory = contextFactory;
             _logger = logger;
             _accessValidator = accessValidator;
+            _moderationLog = moderationLog;
         }
 
         #region Create Reports
@@ -461,6 +467,8 @@ namespace FreeSpeakWeb.Services
                 _logger.LogInformation("Report {ReportId} status updated to {Status} by reviewer {ReviewerId}",
                     reportId, newStatus, reviewerId);
 
+                await LogModerationAsync(context, report, reviewerId, newStatus);
+
                 return (true, null);
             }
             catch (Exception ex)
@@ -468,6 +476,70 @@ namespace FreeSpeakWeb.Services
                 _logger.LogError(ex, "Error updating report {ReportId} status", reportId);
                 return (false, "An error occurred while updating the report.");
             }
+        }
+
+        /// <summary>
+        /// Records a report decision (dismissed or resolved) in the group moderation log.
+        /// Other statuses are not logged. Logging failures never affect the caller.
+        /// </summary>
+        /// <param name="context">The active database context.</param>
+        /// <param name="report">The reviewed report.</param>
+        /// <param name="reviewerId">The moderator who reviewed it.</param>
+        /// <param name="status">The status that was set.</param>
+        private async Task LogModerationAsync(ApplicationDbContext context, GroupContentReport report, string reviewerId, ReportStatus status)
+        {
+            if (_moderationLog == null)
+            {
+                return;
+            }
+
+            GroupModerationAction action;
+            switch (status)
+            {
+                case ReportStatus.Dismissed:
+                    action = GroupModerationAction.ReportDismissed;
+                    break;
+                case ReportStatus.Resolved:
+                case ReportStatus.ActionTaken:
+                    action = GroupModerationAction.ReportResolved;
+                    break;
+                default:
+                    return;
+            }
+
+            string? targetUserId = null;
+            string? summary = null;
+            try
+            {
+                if (report.PostId.HasValue)
+                {
+                    var post = await context.GroupPosts.AsNoTracking().FirstOrDefaultAsync(p => p.Id == report.PostId.Value);
+                    targetUserId = post?.AuthorId;
+                    summary = post?.Content;
+                }
+                else if (report.CommentId.HasValue)
+                {
+                    var comment = await context.GroupPostComments.AsNoTracking().FirstOrDefaultAsync(c => c.Id == report.CommentId.Value);
+                    targetUserId = comment?.AuthorId;
+                    summary = comment?.Content;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error resolving reported content for report {ReportId}", report.Id);
+            }
+
+            await _moderationLog.LogAsync(new GroupModerationLogRequest
+            {
+                GroupId = report.GroupId,
+                ActorUserId = reviewerId,
+                Action = action,
+                TargetType = GroupModerationTargetType.Report,
+                TargetId = report.Id.ToString(),
+                TargetUserId = targetUserId,
+                Summary = summary,
+                Reason = report.ReviewerNotes
+            });
         }
 
         /// <summary>
