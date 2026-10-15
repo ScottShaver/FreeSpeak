@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Components;
+using FreeSpeakWeb.Configuration;
 using FreeSpeakWeb.Components.Account;
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories;
@@ -6,6 +7,8 @@ using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services;
 using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +30,24 @@ namespace FreeSpeakWeb
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Layer administrator-managed overrides (SystemSettings table) over the file/environment configuration.
+            // Must be added before any option binding or direct configuration reads below.
+            var settingsConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
+            var settingsProtector = new Lazy<Microsoft.AspNetCore.DataProtection.IDataProtector>(() =>
+                SystemSettingsProtection.CreateStandaloneProvider(builder.Environment.ContentRootPath)
+                    .CreateProtector(SystemSettingsProtection.Purpose));
+            var settingsSource = new DatabaseConfigurationSource
+            {
+                RowReader = new NpgsqlSystemSettingRowReader(settingsConnectionString),
+                Unprotect = value => settingsProtector.Value.Unprotect(value)
+            };
+            if (!string.IsNullOrEmpty(settingsConnectionString))
+            {
+                ((IConfigurationBuilder)builder.Configuration).Add(settingsSource);
+            }
+
+            builder.Services.AddSingleton<ISettingsConfigurationReloader>(settingsSource);
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
@@ -65,6 +86,9 @@ namespace FreeSpeakWeb
 
             // Configure SiteSettings
             builder.Services.Configure<SiteSettings>(builder.Configuration);
+
+            // Site settings are live: IOptions<SiteSettings> consumers read the current (reloaded) value.
+            builder.Services.AddSingleton<IOptions<SiteSettings>, LiveOptions<SiteSettings>>();
 
             // Configure SystemAdministratorInitInfo
             builder.Services.Configure<SystemAdministratorInitInfo>(builder.Configuration.GetSection("SystemAdministratorInitInfo"));
@@ -254,6 +278,13 @@ namespace FreeSpeakWeb
 
             // Add RoleService for managing user roles
             builder.Services.AddScoped<IRoleService, RoleService>();
+            builder.Services.AddSingleton(TimeProvider.System);
+            builder.Services.AddScoped<ISystemSettingsRepository, SystemSettingsRepository>();
+            builder.Services.AddSingleton<FreeSpeakWeb.Services.Settings.IClamAvPinger, FreeSpeakWeb.Services.Settings.NClamPinger>();
+            builder.Services.AddSingleton<FreeSpeakWeb.Services.Settings.ReauthenticationStore>();
+            builder.Services.AddScoped<FreeSpeakWeb.Services.Settings.IReauthenticationService, FreeSpeakWeb.Services.Settings.ReauthenticationService>();
+            builder.Services.AddScoped<FreeSpeakWeb.Services.Settings.IEffectiveConfigurationService, FreeSpeakWeb.Services.Settings.EffectiveConfigurationService>();
+            builder.Services.AddScoped<FreeSpeakWeb.Services.Settings.ISystemSettingsService, FreeSpeakWeb.Services.Settings.SystemSettingsService>();
 
             // Add UserLockoutService for managing user account lockouts
             builder.Services.AddScoped<IUserLockoutService, UserLockoutService>();

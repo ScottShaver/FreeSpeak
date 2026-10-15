@@ -139,4 +139,7 @@
   <data name="FailedToCopyLink" xml:space="preserve">
     <value>Kan link niet naar klembord kopiëren.</value>
   </data>
+  <data name="SeeLess" xml:space="preserve">
+    <value>Minder weergeven</value>
+  </data>
 </root>

@@ -85,4 +85,7 @@
   <data name="ClickToViewComments" xml:space="preserve">
     <value>Clicca per visualizzare i commenti</value>
   </data>
+  <data name="PrivateGroup" xml:space="preserve">
+    <value>Gruppo privato</value>
+  </data>
 </root>

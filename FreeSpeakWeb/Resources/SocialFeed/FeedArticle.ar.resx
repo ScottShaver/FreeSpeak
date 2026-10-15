@@ -139,4 +139,7 @@
   <data name="FailedToCopyLink" xml:space="preserve">
     <value>فشل نسخ الرابط إلى الحافظة.</value>
   </data>
+  <data name="SeeLess" xml:space="preserve">
+    <value>عرض أقل</value>
+  </data>
 </root>

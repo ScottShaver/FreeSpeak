@@ -108,6 +108,9 @@ The `ActionCategory` enum defines all types of auditable actions in the system:
 | Value | Name | Description |
 |-------|------|-------------|
 | 35 | `SystemAdminChangeUserRole` | A role (e.g. SystemAdministrator) is added to / removed from a user. Audit user = actor; details hold target user, role, and `Add`/`Remove` operation |
+| 36 | `SystemSettingChanged` | A system administrator changed a database-backed system setting. One entry per key (`SystemSettingChangedDetails`: group, key, old/new value). Secret values are never recorded, only "changed" |
+| 37 | `SystemSettingReset` | A system setting was reset to its appsettings.json default (`SystemSettingResetDetails`) |
+| 38 | `SystemAdminReauthentication` | A system administrator re-entered their password to open the Effective configuration page (`SystemAdminReauthenticationDetails`: `Success`, `Failure` or `LockedOut`) |
 
 ---
 

@@ -1123,6 +1123,31 @@ namespace FreeSpeakWeb.Migrations
                     b.ToTable("PostNotificationMutes");
                 });
 
+            modelBuilder.Entity("FreeSpeakWeb.Data.SystemSetting", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<bool>("IsSecret")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdatedByUserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("SystemSettings");
+                });
+
             modelBuilder.Entity("FreeSpeakWeb.Data.UserNotification", b =>
                 {
                     b.Property<int>("Id")

@@ -220,6 +220,23 @@ namespace FreeSpeakWeb.Data
         /// Action when a system role (e.g. SystemAdministrator) is added to or removed from a user.
         /// Tracks the acting user, the target user, and the role affected.
         /// </summary>
-        SystemAdminChangeUserRole = 35
+        SystemAdminChangeUserRole = 35,
+
+        /// <summary>
+        /// Action when a system administrator changes a database-backed system setting.
+        /// One entry is recorded per changed key; secret values are never recorded.
+        /// </summary>
+        SystemSettingChanged = 36,
+
+        /// <summary>
+        /// Action when a system administrator resets a system setting to its appsettings.json default.
+        /// </summary>
+        SystemSettingReset = 37,
+
+        /// <summary>
+        /// Action when a system administrator re-enters their password to view the effective configuration.
+        /// Records success, failure and lockout.
+        /// </summary>
+        SystemAdminReauthentication = 38
     }
 }

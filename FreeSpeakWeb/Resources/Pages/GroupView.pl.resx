@@ -160,4 +160,10 @@
   <data name="JoinGroup" xml:space="preserve"><value>Dołącz do grupy</value></data>
   <data name="JoinRequestSentMessage" xml:space="preserve"><value>Twoja prośba o dołączenie została wysłana.</value></data>
   <data name="JoinGroupFailed" xml:space="preserve"><value>Nie można dołączyć do tej grupy.</value></data>
+  <data name="AdminViewNotice" xml:space="preserve">
+    <value>Przeglądasz tę grupę jako administrator.</value>
+  </data>
+  <data name="NonMemberPrivateNotice" xml:space="preserve">
+    <value>Przeglądasz tę grupę prywatną. Dołącz, aby publikować i uczestniczyć.</value>
+  </data>
 </root>

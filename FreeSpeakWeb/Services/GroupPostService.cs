@@ -27,8 +27,9 @@ namespace FreeSpeakWeb.Services
         private readonly GroupAccessValidator _accessValidator;
         private readonly IAuditLogRepository _auditLogRepository;
         private readonly GroupPointsService _groupPointsService;
-        private readonly int _maxCommentDepth;
-        private readonly int _maxDirectComments;
+        private readonly Microsoft.Extensions.Options.IOptions<SiteSettings>? _siteSettingsOptions;
+        private int _maxCommentDepth => (_siteSettingsOptions?.Value ?? new SiteSettings()).MaxFeedPostCommentDepth;
+        private int _maxDirectComments => (_siteSettingsOptions?.Value ?? new SiteSettings()).MaxFeedPostDirectCommentCount;
 
         /// <summary>
         /// Initializes a new instance using default site settings (kept for existing callers and tests).
@@ -107,9 +108,7 @@ namespace FreeSpeakWeb.Services
             GroupPointsService groupPointsService,
             Microsoft.Extensions.Options.IOptions<SiteSettings>? siteSettings)
         {
-            var settings = siteSettings?.Value ?? new SiteSettings();
-            _maxCommentDepth = settings.MaxFeedPostCommentDepth;
-            _maxDirectComments = settings.MaxFeedPostDirectCommentCount;
+            _siteSettingsOptions = siteSettings;
             _contextFactory = contextFactory;
             _postRepository = postRepository;
             _commentRepository = commentRepository;

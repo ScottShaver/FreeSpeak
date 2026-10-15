@@ -85,4 +85,7 @@
   <data name="ClickToViewComments" xml:space="preserve">
     <value>点击查看评论</value>
   </data>
+  <data name="PrivateGroup" xml:space="preserve">
+    <value>私密群组</value>
+  </data>
 </root>

@@ -160,4 +160,10 @@
   <data name="JoinGroup" xml:space="preserve"><value>그룹 가입</value></data>
   <data name="JoinRequestSentMessage" xml:space="preserve"><value>가입 요청이 전송되었습니다.</value></data>
   <data name="JoinGroupFailed" xml:space="preserve"><value>이 그룹에 가입할 수 없습니다.</value></data>
+  <data name="AdminViewNotice" xml:space="preserve">
+    <value>관리자로서 이 그룹을 보고 있습니다.</value>
+  </data>
+  <data name="NonMemberPrivateNotice" xml:space="preserve">
+    <value>비공개 그룹을 보고 있습니다. 게시하고 참여하려면 가입하세요.</value>
+  </data>
 </root>

@@ -160,4 +160,10 @@
   <data name="JoinGroup" xml:space="preserve"><value>加入群组</value></data>
   <data name="JoinRequestSentMessage" xml:space="preserve"><value>您的加入申请已发送。</value></data>
   <data name="JoinGroupFailed" xml:space="preserve"><value>无法加入此群组。</value></data>
+  <data name="AdminViewNotice" xml:space="preserve">
+    <value>您正以管理员身份查看此群组。</value>
+  </data>
+  <data name="NonMemberPrivateNotice" xml:space="preserve">
+    <value>您正在查看此私密群组。加入后即可发帖和参与。</value>
+  </data>
 </root>

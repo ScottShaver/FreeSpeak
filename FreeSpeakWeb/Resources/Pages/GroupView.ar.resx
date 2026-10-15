@@ -160,4 +160,10 @@
   <data name="JoinGroup" xml:space="preserve"><value>انضم إلى المجموعة</value></data>
   <data name="JoinRequestSentMessage" xml:space="preserve"><value>تم إرسال طلب الانضمام.</value></data>
   <data name="JoinGroupFailed" xml:space="preserve"><value>تعذر الانضمام إلى هذه المجموعة.</value></data>
+  <data name="AdminViewNotice" xml:space="preserve">
+    <value>أنت تعرض هذه المجموعة بصفتك مسؤولاً.</value>
+  </data>
+  <data name="NonMemberPrivateNotice" xml:space="preserve">
+    <value>أنت تعرض هذه المجموعة الخاصة. انضم للنشر والمشاركة.</value>
+  </data>
 </root>

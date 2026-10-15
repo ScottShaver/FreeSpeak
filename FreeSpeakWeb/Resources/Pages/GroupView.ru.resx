@@ -160,4 +160,10 @@
   <data name="JoinGroup" xml:space="preserve"><value>Вступить в группу</value></data>
   <data name="JoinRequestSentMessage" xml:space="preserve"><value>Ваш запрос на вступление отправлен.</value></data>
   <data name="JoinGroupFailed" xml:space="preserve"><value>Не удалось вступить в эту группу.</value></data>
+  <data name="AdminViewNotice" xml:space="preserve">
+    <value>Вы просматриваете эту группу как администратор.</value>
+  </data>
+  <data name="NonMemberPrivateNotice" xml:space="preserve">
+    <value>Вы просматриваете эту закрытую группу. Вступите, чтобы публиковать записи и участвовать.</value>
+  </data>
 </root>

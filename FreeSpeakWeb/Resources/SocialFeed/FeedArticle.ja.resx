@@ -139,4 +139,7 @@
   <data name="FailedToCopyLink" xml:space="preserve">
     <value>リンクをクリップボードにコピーできませんでした。</value>
   </data>
+  <data name="SeeLess" xml:space="preserve">
+    <value>表示を減らす</value>
+  </data>
 </root>

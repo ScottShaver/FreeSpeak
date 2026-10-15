@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="IndexTitle" xml:space="preserve">
+    <value>Системные настройки</value>
+  </data>
+  <data name="IndexIntro" xml:space="preserve">
+    <value>Просмотр и изменение системных настроек. Изменения сохраняются в базе данных и переопределяют appsettings.json.</value>
+  </data>
+  <data name="BackToSystemAdmin" xml:space="preserve">
+    <value>Назад к администрированию системы</value>
+  </data>
+  <data name="BackToSettings" xml:space="preserve">
+    <value>Назад к системным настройкам</value>
+  </data>
+  <data name="Configure" xml:space="preserve">
+    <value>Настроить</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="RestartRequiredBadge" xml:space="preserve">
+    <value>Требуется перезапуск</value>
+  </data>
+  <data name="RestartBanner" xml:space="preserve">
+    <value>Изменения в этой группе вступают в силу только после перезапуска приложения.</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Загрузка...</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>Такой группы настроек не существует.</value>
+  </data>
+  <data name="ValidationSummary" xml:space="preserve">
+    <value>Некоторые значения недопустимы. Исправьте выделенные поля и повторите попытку.</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="ResetToDefault" xml:space="preserve">
+    <value>Сбросить к значениям по умолчанию</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Настройки сохранены.</value>
+  </data>
+  <data name="SavedRestart" xml:space="preserve">
+    <value>Настройки сохранены. Перезапустите приложение, чтобы изменения вступили в силу.</value>
+  </data>
+  <data name="ResetDone" xml:space="preserve">
+    <value>Настройки сброшены к значениям по умолчанию.</value>
+  </data>
+  <data name="SaveFailed" xml:space="preserve">
+    <value>Операция не удалась. Повторите попытку.</value>
+  </data>
+  <data name="UsingDefault" xml:space="preserve">
+    <value>Используется значение по умолчанию из appsettings.json</value>
+  </data>
+  <data name="SecretSet" xml:space="preserve">
+    <value>Задано</value>
+  </data>
+  <data name="SecretNotSet" xml:space="preserve">
+    <value>Не задано</value>
+  </data>
+  <data name="SecretReplacePlaceholder" xml:space="preserve">
+    <value>Введите новое значение для замены (оставьте пустым, чтобы сохранить)</value>
+  </data>
+  <data name="TestConnection" xml:space="preserve">
+    <value>Проверить подключение</value>
+  </data>
+  <data name="TestSuccess" xml:space="preserve">
+    <value>ClamAV успешно ответил.</value>
+  </data>
+  <data name="TestFailed" xml:space="preserve">
+    <value>Не удалось проверить подключение: {0}</value>
+  </data>
+  <data name="E_UnknownKey" xml:space="preserve">
+    <value>Эта настройка не распознана.</value>
+  </data>
+  <data name="E_Boolean" xml:space="preserve">
+    <value>Выберите «вкл.» или «выкл.».</value>
+  </data>
+  <data name="E_Integer" xml:space="preserve">
+    <value>Введите целое число.</value>
+  </data>
+  <data name="E_Range" xml:space="preserve">
+    <value>Введите значение от {0} до {1}.</value>
+  </data>
+  <data name="E_LogLevel" xml:space="preserve">
+    <value>Выберите допустимый уровень журнала.</value>
+  </data>
+  <data name="E_Required" xml:space="preserve">
+    <value>Это значение обязательно.</value>
+  </data>
+  <data name="E_Email" xml:space="preserve">
+    <value>Введите действительный адрес электронной почты.</value>
+  </data>
+  <data name="E_Host" xml:space="preserve">
+    <value>Введите допустимое имя хоста или IP-адрес.</value>
+  </data>
+  <data name="E_TooLong" xml:space="preserve">
+    <value>Введите не более {0} символов.</value>
+  </data>
+  <data name="E_AccountRequired" xml:space="preserve">
+    <value>При включённой аутентификации требуется учётная запись.</value>
+  </data>
+  <data name="E_RedisRequired" xml:space="preserve">
+    <value>При включённом Redis требуется строка подключения Redis.</value>
+  </data>
+  <data name="E_PingFailed" xml:space="preserve">
+    <value>нет ответа от демона ClamAV</value>
+  </data>
+  <data name="G_Site" xml:space="preserve">
+    <value>Настройки сайта</value>
+  </data>
+  <data name="GD_Site" xml:space="preserve">
+    <value>Название сайта, ограничения комментариев, параметры групп и вложений.</value>
+  </data>
+  <data name="G_Smtp" xml:space="preserve">
+    <value>Электронная почта (SMTP)</value>
+  </data>
+  <data name="GD_Smtp" xml:space="preserve">
+    <value>SMTP-сервер, отправитель и учётные данные для отправки почты.</value>
+  </data>
+  <data name="G_VirusScan" xml:space="preserve">
+    <value>Проверка на вирусы</value>
+  </data>
+  <data name="GD_VirusScan" xml:space="preserve">
+    <value>Подключение и ограничения ClamAV для проверки загружаемых файлов.</value>
+  </data>
+  <data name="G_RateLimiting" xml:space="preserve">
+    <value>Ограничение частоты запросов</value>
+  </data>
+  <data name="GD_RateLimiting" xml:space="preserve">
+    <value>Ограничения запросов, защищающие сайт от злоупотреблений.</value>
+  </data>
+  <data name="G_Profiling" xml:space="preserve">
+    <value>Профилирование</value>
+  </data>
+  <data name="GD_Profiling" xml:space="preserve">
+    <value>Параметры MiniProfiler для диагностики производительности.</value>
+  </data>
+  <data name="G_Caching" xml:space="preserve">
+    <value>Кэширование</value>
+  </data>
+  <data name="GD_Caching" xml:space="preserve">
+    <value>Параметры распределённого кэша Redis.</value>
+  </data>
+  <data name="G_Logging" xml:space="preserve">
+    <value>Журналирование</value>
+  </data>
+  <data name="GD_Logging" xml:space="preserve">
+    <value>Минимальный уровень журнала для стандартных категорий.</value>
+  </data>
+  <data name="L_Enabled" xml:space="preserve">
+    <value>Включено</value>
+  </data>
+  <data name="L_Host" xml:space="preserve">
+    <value>Хост</value>
+  </data>
+  <data name="L_Port" xml:space="preserve">
+    <value>Порт</value>
+  </data>
+  <data name="L_SenderName" xml:space="preserve">
+    <value>Имя отправителя</value>
+  </data>
+  <data name="L_SenderEmail" xml:space="preserve">
+    <value>Адрес отправителя</value>
+  </data>
+  <data name="L_AuthenticationRequired" xml:space="preserve">
+    <value>Требуется аутентификация</value>
+  </data>
+  <data name="L_Account" xml:space="preserve">
+    <value>Учётная запись</value>
+  </data>
+  <data name="L_Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="L_UseSsl" xml:space="preserve">
+    <value>Использовать SSL/TLS</value>
+  </data>
+  <data name="L_MaxStreamSizeBytes" xml:space="preserve">
+    <value>Максимальный размер проверки (байт)</value>
+  </data>
+  <data name="L_FailOpen" xml:space="preserve">
+    <value>Разрешать файлы, если сканер недоступен</value>
+  </data>
+  <data name="L_TimeoutSeconds" xml:space="preserve">
+    <value>Тайм-аут (секунды)</value>
+  </data>
+  <data name="L_UseDistributed" xml:space="preserve">
+    <value>Использовать распределённое (Redis) ограничение</value>
+  </data>
+  <data name="L_MaxRequests" xml:space="preserve">
+    <value>Максимум запросов</value>
+  </data>
+  <data name="L_WindowMinutes" xml:space="preserve">
+    <value>Окно (минуты)</value>
+  </data>
+  <data name="L_QueueLimit" xml:space="preserve">
+    <value>Лимит очереди</value>
+  </data>
+  <data name="L_ShowControls" xml:space="preserve">
+    <value>Показывать элементы управления профилировщика</value>
+  </data>
+  <data name="L_MaxResults" xml:space="preserve">
+    <value>Максимум сохраняемых результатов</value>
+  </data>
+  <data name="L_ProfileDatabase" xml:space="preserve">
+    <value>Профилировать запросы к базе данных</value>
+  </data>
+  <data name="L_AllowOutsideDevelopment" xml:space="preserve">
+    <value>Разрешить вне среды разработки</value>
+  </data>
+  <data name="L_UseRedis" xml:space="preserve">
+    <value>Использовать Redis</value>
+  </data>
+  <data name="L_RedisConnectionString" xml:space="preserve">
+    <value>Строка подключения Redis</value>
+  </data>
+  <data name="L_SiteName" xml:space="preserve">
+    <value>Название сайта</value>
+  </data>
+  <data name="L_MaxCommentDepth" xml:space="preserve">
+    <value>Максимальная глубина комментариев</value>
+  </data>
+  <data name="L_MaxDirectComments" xml:space="preserve">
+    <value>Максимум прямых комментариев к публикации</value>
+  </data>
+  <data name="L_AllowOpenGroupCreation" xml:space="preserve">
+    <value>Разрешить всем пользователям создавать группы</value>
+  </data>
+  <data name="L_AllowPostAttachments" xml:space="preserve">
+    <value>Разрешить вложения в публикациях</value>
+  </data>
+  <data name="S_Global" xml:space="preserve">
+    <value>Глобальное ограничение</value>
+  </data>
+  <data name="S_FileDownload" xml:space="preserve">
+    <value>Ограничение загрузки файлов</value>
+  </data>
+  <data name="S_Login" xml:space="preserve">
+    <value>Ограничение входа</value>
+  </data>
+  <data name="S_Api" xml:space="preserve">
+    <value>Ограничение API</value>
+  </data>
+  <data name="H_UseDistributed" xml:space="preserve">
+    <value>Требуется включённое кэширование Redis.</value>
+  </data>
+  <data name="H_SmtpEnabled" xml:space="preserve">
+    <value>Если выключено, письма не отправляются, а их содержимое записывается в журнал.</value>
+  </data>
+  <data name="H_Secret" xml:space="preserve">
+    <value>Хранится в зашифрованном виде и не отображается. Введите новое значение для замены.</value>
+  </data>
+  <data name="H_FailOpen" xml:space="preserve">
+    <value>Если выключено, файлы отклоняются при сбое проверки (безопаснее).</value>
+  </data>
+  <data name="H_AllowOutsideDevelopment" xml:space="preserve">
+    <value>Профилирование в рабочей среде может раскрыть конфиденциальные данные. Используйте осторожно.</value>
+  </data>
+  <data name="EC_Title" xml:space="preserve">
+    <value>Действующая конфигурация</value>
+  </data>
+  <data name="EC_CardDescription" xml:space="preserve">
+    <value>Просмотр настроек, которые можно изменить только в файлах конфигурации (только чтение).</value>
+  </data>
+  <data name="EC_Intro" xml:space="preserve">
+    <value>Эти значения берутся из файлов конфигурации и переменных среды и не могут быть изменены здесь. Пароли и учётные данные всегда скрыты.</value>
+  </data>
+  <data name="EC_PasswordLabel" xml:space="preserve">
+    <value>Повторно введите пароль, чтобы продолжить</value>
+  </data>
+  <data name="EC_Confirm" xml:space="preserve">
+    <value>Подтвердить</value>
+  </data>
+  <data name="EC_Invalid" xml:space="preserve">
+    <value>Неверный пароль.</value>
+  </data>
+  <data name="EC_LockedOut" xml:space="preserve">
+    <value>Слишком много неудачных попыток. Повторите позже.</value>
+  </data>
+  <data name="EC_NoPassword" xml:space="preserve">
+    <value>У вашей учётной записи нет локального пароля, поэтому повторная проверка невозможна.</value>
+  </data>
+  <data name="EC_NotAuthorized" xml:space="preserve">
+    <value>У вас нет прав для просмотра этой страницы.</value>
+  </data>
+  <data name="EC_ValidFor" xml:space="preserve">
+    <value>Доступ действует 5 минут. Секретные значения никогда не отображаются.</value>
+  </data>
+  <data name="EC_Key" xml:space="preserve">
+    <value>Ключ</value>
+  </data>
+  <data name="EC_Value" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+</root>

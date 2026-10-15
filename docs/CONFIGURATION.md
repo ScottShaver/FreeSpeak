@@ -214,6 +214,20 @@ Specifies which hostnames are allowed to access the application.
 }
 ```
 
+## Database-Backed System Settings
+
+System administrators can override selected settings at runtime from **System Admin → System Settings** (`/system-admin/settings`). Overrides are stored in the `SystemSettings` table and layered over `appsettings*.json`, environment variables and command-line arguments (database rows win). Groups: Site, Smtp, VirusScan, RateLimiting, Profiling, Caching and Logging.
+
+- Site, Smtp, VirusScan and Logging changes apply without a restart (consumers read `IOptionsMonitor`; `IOptions<SiteSettings>` is a live adapter). RateLimiting, Profiling and Caching take effect after a restart and show a banner.
+- Secrets (`Smtp:Password`, `Caching:RedisConnectionString`) are encrypted with ASP.NET Core Data Protection, never displayed and never written to the audit log.
+- "Reset to default" removes the group's rows so the file/environment values apply again.
+- Other instances pick up changes within about 60 seconds (polling).
+- `/system-admin/effective-configuration` shows the effective configuration with secrets masked and requires password re-authentication (valid for 5 minutes).
+- All changes are audited (`SystemSettingChanged`, `SystemSettingReset`, `SystemAdminReauthentication`).
+- Safety: the system administrator password and connection strings are never editable here; the database connection string stays in configuration files or secrets.
+
+See `docs/specs/system-settings-administration.md` for details.
+
 ## Environment-Specific Configuration
 
 ### appsettings.Development.json

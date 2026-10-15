@@ -1,0 +1,128 @@
+@page "/system-admin/effective-configuration"
+@rendermode InteractiveServer
+@attribute [Authorize(Roles = "SystemAdministrator")]
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Services.Settings
+
+@inject IReauthenticationService Reauthentication
+@inject IEffectiveConfigurationService EffectiveConfigService
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILogger<EffectiveConfiguration> Logger
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.SystemSettings> Localizer
+
+<PageTitle>@Localizer["EC_Title"]</PageTitle>
+
+<div class="container-fluid mt-4">
+    <nav aria-label="breadcrumb">
+        <a href="/system-admin/settings" class="text-decoration-none"><i class="bi bi-arrow-left me-1"></i>@Localizer["BackToSettings"]</a>
+    </nav>
+    <h1 class="my-3">@Localizer["EC_Title"]</h1>
+    <p class="text-muted">@Localizer["EC_Intro"]</p>
+
+    @if (_entries == null)
+    {
+        <form @onsubmit="ConfirmAsync" @onsubmit:preventDefault="true" class="col-md-6" data-testid="reauth-form">
+            <div class="mb-3">
+                <label for="reauth-password" class="form-label">@Localizer["EC_PasswordLabel"]</label>
+                <input id="reauth-password" type="password" class="form-control" autocomplete="current-password" @bind="_password" />
+            </div>
+            @if (!string.IsNullOrEmpty(_error))
+            {
+                <div class="alert alert-danger" role="alert" data-testid="reauth-error">@_error</div>
+            }
+            <button type="submit" class="btn btn-primary" disabled="@_busy">@Localizer["EC_Confirm"]</button>
+        </form>
+    }
+    else
+    {
+        <div class="alert alert-info" role="status">@Localizer["EC_ValidFor"]</div>
+        <table class="table table-sm" data-testid="effective-table">
+            <thead>
+                <tr><th>@Localizer["EC_Key"]</th><th>@Localizer["EC_Value"]</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var entry in _entries)
+                {
+                    <tr>
+                        <td><code>@entry.Key</code></td>
+                        <td><code>@entry.Value</code></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    private IReadOnlyList<EffectiveConfigurationEntry>? _entries;
+    private string _password = string.Empty;
+    private string? _error;
+    private string _userId = string.Empty;
+    private bool _busy;
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        _userId = UserManager.GetUserId(authState.User) ?? string.Empty;
+        if (Reauthentication.IsReauthenticated(_userId))
+        {
+            await LoadEntriesAsync();
+        }
+    }
+
+    private async Task ConfirmAsync()
+    {
+        if (_busy)
+        {
+            return;
+        }
+
+        _busy = true;
+        try
+        {
+            var outcome = await Reauthentication.ReauthenticateAsync(_userId, _password);
+            _password = string.Empty;
+            if (outcome == ReauthenticationOutcome.Success)
+            {
+                _error = null;
+                await LoadEntriesAsync();
+                return;
+            }
+
+            _error = Localizer[outcome switch
+            {
+                ReauthenticationOutcome.LockedOut => "EC_LockedOut",
+                ReauthenticationOutcome.NoPassword => "EC_NoPassword",
+                ReauthenticationOutcome.NotAuthorized => "EC_NotAuthorized",
+                _ => "EC_Invalid"
+            }];
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Re-authentication failed unexpectedly");
+            _error = Localizer["EC_Invalid"];
+        }
+        finally
+        {
+            _busy = false;
+        }
+    }
+
+    private async Task LoadEntriesAsync()
+    {
+        try
+        {
+            _entries = await EffectiveConfigService.GetEntriesAsync(_userId);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            _entries = null;
+        }
+    }
+}
