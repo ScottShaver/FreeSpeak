@@ -352,4 +352,34 @@
   <data name="EC_Value" xml:space="preserve">
     <value>値</value>
   </data>
+  <data name="SendTestEmail" xml:space="preserve">
+    <value>テストメールを送信</value>
+  </data>
+  <data name="TestEmailHint" xml:space="preserve">
+    <value>現在保存されている設定でテストメッセージを送信します（変更した場合は先に保存してください）。テストメールは1時間に5通までです。</value>
+  </data>
+  <data name="TestEmailRecipient" xml:space="preserve">
+    <value>受信者のメールアドレス</value>
+  </data>
+  <data name="TestEmailSuccess" xml:space="preserve">
+    <value>テストメールを送信しました。</value>
+  </data>
+  <data name="TestEmailFailed" xml:space="preserve">
+    <value>テストメールの送信に失敗しました: {0}</value>
+  </data>
+  <data name="E_TestRateLimited" xml:space="preserve">
+    <value>1時間あたり5通のテストメールの上限に達しました。後でもう一度お試しください。</value>
+  </data>
+  <data name="E_SmtpAuth" xml:space="preserve">
+    <value>SMTPサーバーがアカウントまたはパスワードを拒否しました。</value>
+  </data>
+  <data name="E_SmtpTls" xml:space="preserve">
+    <value>SMTPサーバーとの安全な接続を確立できませんでした。</value>
+  </data>
+  <data name="E_SmtpConnect" xml:space="preserve">
+    <value>SMTPサーバーに接続できませんでした。サーバーとポートを確認してください。</value>
+  </data>
+  <data name="E_SmtpFailed" xml:space="preserve">
+    <value>テストメールを送信できませんでした。</value>
+  </data>
 </root>

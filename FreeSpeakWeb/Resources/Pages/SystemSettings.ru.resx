@@ -352,4 +352,34 @@
   <data name="EC_Value" xml:space="preserve">
     <value>Значение</value>
   </data>
+  <data name="SendTestEmail" xml:space="preserve">
+    <value>Отправить тестовое письмо</value>
+  </data>
+  <data name="TestEmailHint" xml:space="preserve">
+    <value>Отправляет тестовое сообщение с текущими сохранёнными настройками (сначала сохраните, если что-то изменили). Не более 5 тестовых писем в час.</value>
+  </data>
+  <data name="TestEmailRecipient" xml:space="preserve">
+    <value>Адрес электронной почты получателя</value>
+  </data>
+  <data name="TestEmailSuccess" xml:space="preserve">
+    <value>Тестовое письмо успешно отправлено.</value>
+  </data>
+  <data name="TestEmailFailed" xml:space="preserve">
+    <value>Не удалось отправить тестовое письмо: {0}</value>
+  </data>
+  <data name="E_TestRateLimited" xml:space="preserve">
+    <value>Достигнут лимит в 5 тестовых писем в час. Повторите попытку позже.</value>
+  </data>
+  <data name="E_SmtpAuth" xml:space="preserve">
+    <value>SMTP-сервер отклонил учётную запись или пароль.</value>
+  </data>
+  <data name="E_SmtpTls" xml:space="preserve">
+    <value>Не удалось установить защищённое соединение с SMTP-сервером.</value>
+  </data>
+  <data name="E_SmtpConnect" xml:space="preserve">
+    <value>Не удалось подключиться к SMTP-серверу. Проверьте сервер и порт.</value>
+  </data>
+  <data name="E_SmtpFailed" xml:space="preserve">
+    <value>Не удалось отправить тестовое письмо.</value>
+  </data>
 </root>

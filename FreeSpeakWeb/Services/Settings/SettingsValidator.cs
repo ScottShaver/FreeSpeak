@@ -101,6 +101,10 @@ namespace FreeSpeakWeb.Services.Settings
                         {
                             errors.Add(new SettingValidationError(field.Key, "E_Host"));
                         }
+                        else if (field.Key == "Smtp:SenderName" && value.Length > 100)
+                        {
+                            errors.Add(new SettingValidationError(field.Key, "E_TooLong", 100));
+                        }
                         else if (value.Length > 500)
                         {
                             errors.Add(new SettingValidationError(field.Key, "E_TooLong", 500));
@@ -138,7 +142,12 @@ namespace FreeSpeakWeb.Services.Settings
             }
         }
 
-        private static bool IsEmail(string value)
+        /// <summary>
+        /// Determines whether a value is a plain, valid email address.
+        /// </summary>
+        /// <param name="value">The value to test.</param>
+        /// <returns>True if valid.</returns>
+        public static bool IsEmail(string value)
         {
             try
             {

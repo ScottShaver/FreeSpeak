@@ -81,6 +81,8 @@ namespace FreeSpeakWeb.Tests.Services.Settings
         {
             Run("smtp", ("Smtp:SenderEmail", "nope")).Should().Contain(e => e.Key == "Smtp:SenderEmail");
             Run("smtp", ("Smtp:SenderEmail", "a@b.com")).Should().BeEmpty();
+            Run("smtp", ("Smtp:SenderName", new string('x', 101))).Should().Contain(e => e.Key == "Smtp:SenderName");
+            Run("smtp", ("Smtp:SenderName", new string('x', 100))).Should().BeEmpty();
         }
 
         /// <summary>Verifies hosts are validated.</summary>

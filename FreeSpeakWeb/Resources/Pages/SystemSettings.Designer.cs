@@ -941,5 +941,95 @@ namespace FreeSpeakWeb.Resources.Pages {
                 resourceCulture = value;
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Send test email
+        /// </summary>
+        public static string SendTestEmail {
+            get {
+                return ResourceManager.GetString("SendTestEmail", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Sends a test message using the settings currently saved (save first if you changed anything). Limited to 5 test emails per hour.
+        /// </summary>
+        public static string TestEmailHint {
+            get {
+                return ResourceManager.GetString("TestEmailHint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Recipient email address
+        /// </summary>
+        public static string TestEmailRecipient {
+            get {
+                return ResourceManager.GetString("TestEmailRecipient", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Test email sent successfully.
+        /// </summary>
+        public static string TestEmailSuccess {
+            get {
+                return ResourceManager.GetString("TestEmailSuccess", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Test email failed: {0}
+        /// </summary>
+        public static string TestEmailFailed {
+            get {
+                return ResourceManager.GetString("TestEmailFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You have reached the limit of 5 test emails per hour. Try again later.
+        /// </summary>
+        public static string E_TestRateLimited {
+            get {
+                return ResourceManager.GetString("E_TestRateLimited", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The SMTP server rejected the account or password.
+        /// </summary>
+        public static string E_SmtpAuth {
+            get {
+                return ResourceManager.GetString("E_SmtpAuth", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to A secure connection to the SMTP server could not be established.
+        /// </summary>
+        public static string E_SmtpTls {
+            get {
+                return ResourceManager.GetString("E_SmtpTls", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Could not connect to the SMTP server. Check the server and port.
+        /// </summary>
+        public static string E_SmtpConnect {
+            get {
+                return ResourceManager.GetString("E_SmtpConnect", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The test email could not be sent.
+        /// </summary>
+        public static string E_SmtpFailed {
+            get {
+                return ResourceManager.GetString("E_SmtpFailed", resourceCulture);
+            }
+        }
     }
 }

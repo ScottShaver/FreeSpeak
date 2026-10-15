@@ -352,4 +352,34 @@
   <data name="EC_Value" xml:space="preserve">
     <value>值</value>
   </data>
+  <data name="SendTestEmail" xml:space="preserve">
+    <value>发送测试邮件</value>
+  </data>
+  <data name="TestEmailHint" xml:space="preserve">
+    <value>使用当前已保存的设置发送测试邮件（如有更改请先保存）。每小时最多发送 5 封测试邮件。</value>
+  </data>
+  <data name="TestEmailRecipient" xml:space="preserve">
+    <value>收件人邮箱地址</value>
+  </data>
+  <data name="TestEmailSuccess" xml:space="preserve">
+    <value>测试邮件发送成功。</value>
+  </data>
+  <data name="TestEmailFailed" xml:space="preserve">
+    <value>测试邮件失败：{0}</value>
+  </data>
+  <data name="E_TestRateLimited" xml:space="preserve">
+    <value>您已达到每小时 5 封测试邮件的上限，请稍后再试。</value>
+  </data>
+  <data name="E_SmtpAuth" xml:space="preserve">
+    <value>SMTP 服务器拒绝了账户或密码。</value>
+  </data>
+  <data name="E_SmtpTls" xml:space="preserve">
+    <value>无法与 SMTP 服务器建立安全连接。</value>
+  </data>
+  <data name="E_SmtpConnect" xml:space="preserve">
+    <value>无法连接到 SMTP 服务器。请检查服务器和端口。</value>
+  </data>
+  <data name="E_SmtpFailed" xml:space="preserve">
+    <value>无法发送测试邮件。</value>
+  </data>
 </root>

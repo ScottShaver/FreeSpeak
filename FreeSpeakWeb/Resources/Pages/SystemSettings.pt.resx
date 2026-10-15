@@ -352,4 +352,34 @@
   <data name="EC_Value" xml:space="preserve">
     <value>Valor</value>
   </data>
+  <data name="SendTestEmail" xml:space="preserve">
+    <value>Enviar e-mail de teste</value>
+  </data>
+  <data name="TestEmailHint" xml:space="preserve">
+    <value>Envia uma mensagem de teste com as configurações atualmente salvas (salve primeiro se alterou algo). Limite de 5 e-mails de teste por hora.</value>
+  </data>
+  <data name="TestEmailRecipient" xml:space="preserve">
+    <value>Endereço de e-mail do destinatário</value>
+  </data>
+  <data name="TestEmailSuccess" xml:space="preserve">
+    <value>E-mail de teste enviado com sucesso.</value>
+  </data>
+  <data name="TestEmailFailed" xml:space="preserve">
+    <value>Falha no e-mail de teste: {0}</value>
+  </data>
+  <data name="E_TestRateLimited" xml:space="preserve">
+    <value>Você atingiu o limite de 5 e-mails de teste por hora. Tente novamente mais tarde.</value>
+  </data>
+  <data name="E_SmtpAuth" xml:space="preserve">
+    <value>O servidor SMTP recusou a conta ou a senha.</value>
+  </data>
+  <data name="E_SmtpTls" xml:space="preserve">
+    <value>Não foi possível estabelecer uma conexão segura com o servidor SMTP.</value>
+  </data>
+  <data name="E_SmtpConnect" xml:space="preserve">
+    <value>Não foi possível conectar ao servidor SMTP. Verifique o servidor e a porta.</value>
+  </data>
+  <data name="E_SmtpFailed" xml:space="preserve">
+    <value>Não foi possível enviar o e-mail de teste.</value>
+  </data>
 </root>

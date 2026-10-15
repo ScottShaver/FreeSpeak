@@ -237,6 +237,12 @@ namespace FreeSpeakWeb.Data
         /// Action when a system administrator re-enters their password to view the effective configuration.
         /// Records success, failure and lockout.
         /// </summary>
-        SystemAdminReauthentication = 38
+        SystemAdminReauthentication = 38,
+
+        /// <summary>
+        /// Action when a system administrator sends a test email from the SMTP settings.
+        /// Records the recipient and outcome; never the SMTP password.
+        /// </summary>
+        EmailTestSent = 39
     }
 }

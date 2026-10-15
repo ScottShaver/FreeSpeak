@@ -352,4 +352,34 @@
   <data name="EC_Value" xml:space="preserve">
     <value>القيمة</value>
   </data>
+  <data name="SendTestEmail" xml:space="preserve">
+    <value>إرسال بريد إلكتروني تجريبي</value>
+  </data>
+  <data name="TestEmailHint" xml:space="preserve">
+    <value>يرسل رسالة تجريبية باستخدام الإعدادات المحفوظة حاليًا (احفظ أولًا إذا غيّرت شيئًا). الحد الأقصى 5 رسائل تجريبية في الساعة.</value>
+  </data>
+  <data name="TestEmailRecipient" xml:space="preserve">
+    <value>عنوان البريد الإلكتروني للمستلم</value>
+  </data>
+  <data name="TestEmailSuccess" xml:space="preserve">
+    <value>تم إرسال البريد التجريبي بنجاح.</value>
+  </data>
+  <data name="TestEmailFailed" xml:space="preserve">
+    <value>فشل البريد التجريبي: {0}</value>
+  </data>
+  <data name="E_TestRateLimited" xml:space="preserve">
+    <value>لقد وصلت إلى حد 5 رسائل تجريبية في الساعة. حاول لاحقًا.</value>
+  </data>
+  <data name="E_SmtpAuth" xml:space="preserve">
+    <value>رفض خادم SMTP الحساب أو كلمة المرور.</value>
+  </data>
+  <data name="E_SmtpTls" xml:space="preserve">
+    <value>تعذر إنشاء اتصال آمن بخادم SMTP.</value>
+  </data>
+  <data name="E_SmtpConnect" xml:space="preserve">
+    <value>تعذر الاتصال بخادم SMTP. تحقق من الخادم والمنفذ.</value>
+  </data>
+  <data name="E_SmtpFailed" xml:space="preserve">
+    <value>تعذر إرسال البريد التجريبي.</value>
+  </data>
 </root>
