@@ -155,6 +155,8 @@
     <value>Files</value>
   </data>
   <data name="NonMemberNotice" xml:space="preserve"><value>You are viewing this public group. Join to post and take part.</value></data>
+  <data name="AdminViewNotice" xml:space="preserve"><value>You are viewing this group as an administrator.</value></data>
+  <data name="NonMemberPrivateNotice" xml:space="preserve"><value>You are viewing this private group. Join to post and take part.</value></data>
   <data name="JoinRequestSent" xml:space="preserve"><value>Request sent</value></data>
   <data name="RequestToJoin" xml:space="preserve"><value>Request to Join</value></data>
   <data name="JoinGroup" xml:space="preserve"><value>Join Group</value></data>

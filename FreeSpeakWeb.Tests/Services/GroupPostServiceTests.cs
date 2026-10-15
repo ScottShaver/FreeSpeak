@@ -357,6 +357,46 @@ namespace FreeSpeakWeb.Tests.Services
             }
         }
 
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task CommentAndReaction_ByNonMemberOrBannedUser_AreRejected(bool banned)
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupPostInteractReject" + banned);
+            var service = CreateGroupPostService(repoFactory);
+
+            var author = TestDataFactory.CreateTestUser(id: "user2");
+            var outsider = TestDataFactory.CreateTestUser(id: "user1");
+            var group = TestDataFactory.CreateTestGroup("user2");
+            int postId;
+
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Users.AddRange(author, outsider);
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+
+                context.GroupUsers.Add(TestDataFactory.CreateTestGroupUser(group.Id, "user2"));
+                if (banned)
+                {
+                    context.GroupUsers.Add(TestDataFactory.CreateTestGroupUser(group.Id, "user1"));
+                    var ban = TestDataFactory.CreateTestGroupBannedMember(group.Id, "user1");
+                    ban.GroupId = group.Id;
+                    context.GroupBannedMembers.Add(ban);
+                }
+                var post = TestDataFactory.CreateTestGroupPost(group.Id, "user2");
+                context.GroupPosts.Add(post);
+                await context.SaveChangesAsync();
+                postId = post.Id;
+            }
+
+            var (commentOk, _, _) = await service.AddCommentAsync(postId, "user1", "hello");
+            var (reactionOk, _) = await service.AddOrUpdateReactionAsync(postId, "user1");
+
+            commentOk.Should().BeFalse();
+            reactionOk.Should().BeFalse();
+        }
+
         [Fact]
         public async Task DeleteCommentAsync_ByAuthor_ShouldDeleteComment()
         {
