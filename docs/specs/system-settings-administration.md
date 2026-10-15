@@ -1,6 +1,6 @@
 # Spec: System Settings Administration
 
-Status: Draft - awaiting approval of the open decisions in section 9.
+Status: Approved.
 Gap reference: the disabled "Site Settings", "Security Settings", "Storage Settings", "Performance" and
 "Email Configuration" cards on `SystemAdmin.razor`.
 Relationship to `email-settings.md`: this spec generalizes it. The Smtp group below is delivered by
@@ -30,7 +30,7 @@ toggle. `Program.cs` binds them (~L66-157, L242). No UI edits any of them.
 | RateLimiting | UseDistributed; Global, FileDownload, Login, Api each with MaxRequests, WindowMinutes, QueueLimit | Yes | Restart required (limiter policies are built at startup) |
 | Profiling | Enabled, ShowControls, MaxResults, ProfileDatabase, AllowOutsideDevelopment | Yes | Restart required |
 | Caching | UseRedis, RedisConnectionString | Yes (connection string is a secret) | Restart required |
-| Logging | LogLevel entries (Default, Microsoft.AspNetCore, EF Command, others) | Yes | Live (via `LoggerFilterOptions` reload) |
+| Logging | LogLevel for a fixed list of standard categories (see section 9) | Yes | Live (via `LoggerFilterOptions` reload) |
 | Moderation | StaleReportDays and other settings introduced by the moderation specs | Yes | Live |
 
 Not editable in the UI (bootstrap/secret, remain file/environment only, shown read-only where useful):
@@ -105,12 +105,22 @@ Not editable in the UI (bootstrap/secret, remain file/environment only, shown re
 6. Lockout-prone values are rejected by validation.
 7. Changes are audited with a UTC timestamp; non-administrators are denied.
 8. All strings exist in all 12 locales; build and tests pass.
+9. The Effective configuration page requires password re-authentication and always masks secrets.
+10. Logging accepts only the fixed category list and valid levels.
 
-## 9. Open decisions
-1. Database overrides the file (recommended, consistent with the email spec) - confirm for all groups.
-2. Keep `ConnectionStrings`, `SystemAdministratorInitInfo` and `AllowedHosts` file-only (recommended)?
-3. Include a read-only "effective configuration" view of the non-editable keys (secrets masked)?
-4. Should the Logging group allow arbitrary category names, or only a fixed list of known categories?
+## 9. Decisions (resolved)
+1. The database overrides the file for all editable groups.
+2. `ConnectionStrings`, `SystemAdministratorInitInfo` and `AllowedHosts` stay file-only.
+3. A read-only "Effective configuration" page shows those non-editable keys with secrets masked.
+   It is password protected: the administrator must re-enter their own account password to open it
+   (re-authentication, valid for 5 minutes, failed attempts audited and rate limited). The page
+   never reveals secret values even after re-authentication; passwords and connection-string
+   credentials stay masked.
+4. The Logging group is limited to a fixed list of standard ASP.NET categories: `Default`,
+   `Microsoft`, `Microsoft.AspNetCore`, `Microsoft.Hosting.Lifetime`,
+   `Microsoft.EntityFrameworkCore`, `Microsoft.EntityFrameworkCore.Database.Command`, and `System`.
+   Each takes a standard level (Trace, Debug, Information, Warning, Error, Critical, None).
+   No arbitrary category names.
 
 ## 10. Task breakdown
 1. `SystemSettings` entity, migration, repository, Data Protection encryption.
@@ -120,5 +130,6 @@ Not editable in the UI (bootstrap/secret, remain file/environment only, shown re
 5. Move live-group consumers to `IOptionsMonitor`.
 6. Smtp group: test email and `SmtpEmailSender` reads live settings (per `email-settings.md`).
 7. VirusScan test-connection action.
-8. Localization for 12 locales.
-9. Unit, bUnit and integration tests.
+8. Effective configuration read-only page with password re-authentication and masking.
+9. Localization for 12 locales.
+10. Unit, bUnit and integration tests (include re-auth expiry, failed-attempt audit, masking).
