@@ -1,14 +1,14 @@
 @inject IJSRuntime JS
 
-<div class="article-content @(!IsModalView ? "truncated" : "")" @ref="contentElementRef">
+<div class="article-content @(!IsModalView && !isExpanded ? "truncated" : "")" @ref="contentElementRef">
     @ArticleContent
 </div>
 
-@if (ShouldShowExpandButton && !IsModalView)
+@if ((ShouldShowExpandButton || isExpanded) && !IsModalView)
 {
     <div class="expand-post-section">
-        <button type="button" class="expand-post-button" @onclick="OnShowPostDetail">
-            @ClickToSeeFullPostText
+        <button type="button" class="expand-post-button" @onclick="ToggleExpanded">
+            @(isExpanded ? SeeLessText : ClickToSeeFullPostText)
         </button>
     </div>
 }
@@ -33,12 +33,21 @@
     public EventCallback<ElementReference> OnContentElementRendered { get; set; }
 
     /// <summary>
-    /// Localized text for the "Click to see full post" button.
+    /// Localized text for the "See more" button that expands the post inline.
     /// </summary>
     [Parameter]
-    public string ClickToSeeFullPostText { get; set; } = "... Click to see full post";
+    public string ClickToSeeFullPostText { get; set; } = "See more";
+
+    /// <summary>
+    /// Localized text for the "See less" button that collapses an expanded post.
+    /// </summary>
+    [Parameter]
+    public string SeeLessText { get; set; } = "See less";
 
     private ElementReference contentElementRef;
+    private bool isExpanded;
+
+    private void ToggleExpanded() => isExpanded = !isExpanded;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
