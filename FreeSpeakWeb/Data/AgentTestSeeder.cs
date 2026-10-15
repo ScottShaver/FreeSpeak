@@ -160,6 +160,8 @@ namespace FreeSpeakWeb.Data
                 CreatedAt = baseTime,
                 LastActiveAt = baseTime,
                 MemberCount = 3,
+                EnableFileUploads = true,
+                RequiresFileApproval = true,
             };
             var privateGroup = new Group
             {
