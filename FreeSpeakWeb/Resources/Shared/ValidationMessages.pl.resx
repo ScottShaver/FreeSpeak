@@ -82,4 +82,10 @@
   <data name="Field_RecoveryCode" xml:space="preserve">
     <value>Kod odzyskiwania</value>
   </data>
+  <data name="Field_AboutMe" xml:space="preserve">
+    <value>O mnie</value>
+  </data>
+  <data name="Field_Code" xml:space="preserve">
+    <value>Kod</value>
+  </data>
 </root>

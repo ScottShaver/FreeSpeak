@@ -12,4 +12,5 @@
   <data name="CancelChanges" xml:space="preserve"><value>変更をキャンセル</value></data>
   <data name="SaveChanges" xml:space="preserve"><value>変更を保存</value></data>
   <data name="Saving" xml:space="preserve"><value>保存中...</value></data>
+  <data name="UploadFailedError" xml:space="preserve"><value>画像のアップロードに失敗しました。もう一度お試しください。</value></data>
 </root>

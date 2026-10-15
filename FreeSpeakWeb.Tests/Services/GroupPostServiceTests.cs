@@ -1136,6 +1136,47 @@ namespace FreeSpeakWeb.Tests.Services
         }
 
         #endregion
+
+        #region Viewer-Aware Count Tests
+
+        [Fact]
+        public async Task GetUserTotalGroupPostCountAsync_CountsOnlyPostsVisibleToViewer()
+        {
+            // Arrange
+            var repoFactory = CreateTestRepositoryFactory("GroupPostTestViewerCount");
+            var service = CreateGroupPostService(repoFactory);
+
+            var author = TestDataFactory.CreateTestUser(id: "author1");
+            var viewer = TestDataFactory.CreateTestUser(id: "viewer1");
+            var publicGroup = TestDataFactory.CreateTestGroup("author1", "Public", isPublic: true);
+            var privateShared = TestDataFactory.CreateTestGroup("author1", "PrivateShared", isPublic: false);
+            var privateOther = TestDataFactory.CreateTestGroup("author1", "PrivateOther", isPublic: false);
+
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Users.AddRange(author, viewer);
+                context.Groups.AddRange(publicGroup, privateShared, privateOther);
+                await context.SaveChangesAsync();
+
+                context.GroupUsers.Add(TestDataFactory.CreateTestGroupUser(privateShared.Id, "viewer1"));
+                context.GroupPosts.AddRange(
+                    TestDataFactory.CreateTestGroupPost(publicGroup.Id, "author1"),
+                    TestDataFactory.CreateTestGroupPost(privateShared.Id, "author1"),
+                    TestDataFactory.CreateTestGroupPost(privateOther.Id, "author1"));
+                var pending = TestDataFactory.CreateTestGroupPost(publicGroup.Id, "author1");
+                pending.Status = PostStatus.Pending;
+                context.GroupPosts.Add(pending);
+                await context.SaveChangesAsync();
+            }
+
+            // Act
+            var viewerCount = await service.GetUserTotalGroupPostCountAsync("author1", "viewer1");
+
+            // Assert - public + shared private group; not the other private group or the pending post
+            viewerCount.Should().Be(2);
+        }
+
+        #endregion
     }
 }
 

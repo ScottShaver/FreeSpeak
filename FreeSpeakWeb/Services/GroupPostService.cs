@@ -810,13 +810,15 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Gets the total count of group posts by a user across all groups.
+        /// Gets the number of approved group posts by a user that the viewer is allowed to see
+        /// (posts in groups the viewer belongs to or in public groups).
         /// </summary>
-        /// <param name="userId">The unique identifier of the user.</param>
-        /// <returns>The total number of group posts by the user.</returns>
-        public async Task<int> GetUserTotalGroupPostCountAsync(string userId)
+        /// <param name="userId">The unique identifier of the post author.</param>
+        /// <param name="viewerId">The unique identifier of the viewing user.</param>
+        /// <returns>The number of group posts by the user visible to the viewer.</returns>
+        public async Task<int> GetUserTotalGroupPostCountAsync(string userId, string viewerId)
         {
-            return await _postRepository.GetCountByAuthorAsync(userId);
+            return await _postRepository.GetVisibleCountByAuthorAsync(userId, viewerId);
         }
 
         /// <summary>

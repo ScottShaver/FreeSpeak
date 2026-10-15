@@ -12,4 +12,5 @@
   <data name="CancelChanges" xml:space="preserve"><value>取消更改</value></data>
   <data name="SaveChanges" xml:space="preserve"><value>保存更改</value></data>
   <data name="Saving" xml:space="preserve"><value>保存中...</value></data>
+  <data name="UploadFailedError" xml:space="preserve"><value>图片上传失败，请重试。</value></data>
 </root>

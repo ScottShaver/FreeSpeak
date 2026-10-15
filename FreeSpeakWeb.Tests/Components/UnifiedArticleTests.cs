@@ -119,7 +119,13 @@ namespace FreeSpeakWeb.Tests.Components
             // Register TimeFormatting localizer mock required by TimestampFormattingService
             var mockTimeFormattingLocalizer = new Mock<IStringLocalizer<FreeSpeakWeb.Resources.Shared.TimeFormatting>>();
             mockTimeFormattingLocalizer.Setup(l => l[It.IsAny<string>()])
-                .Returns((string key) => new LocalizedString(key, key));
+                .Returns((string key) => new LocalizedString(key, key switch
+                {
+                    "HoursAgo" => "{0}h ago",
+                    "MinutesAgo" => "{0}m ago",
+                    "DaysAgo" => "{0}d ago",
+                    _ => key
+                }));
             Services.AddSingleton(mockTimeFormattingLocalizer.Object);
             Services.AddSingleton(typeof(IStringLocalizer<>), typeof(PassthroughLocalizer<>));
             Services.AddSingleton<PopupPortalService>();
@@ -266,8 +272,8 @@ namespace FreeSpeakWeb.Tests.Components
                 .Add(p => p.LikeCount, 0)
                 .Add(p => p.CommentCount, 0));
 
-            // Assert
-            cut.Find(".author-name").TextContent.Should().Be(authorName);
+            // Assert - the group name is rendered inside .author-name, the author in its own link
+            cut.Find(".author-name-link").TextContent.Should().Be(authorName);
         }
 
         [Fact]
@@ -307,12 +313,13 @@ namespace FreeSpeakWeb.Tests.Components
                 .Add(p => p.AuthorId, "test-user-id")
                 .Add(p => p.AuthorName, "Test User")
                 .Add(p => p.AuthorGroupPoints, authorPoints)
+                .Add(p => p.EnablePointsSystem, true)
                 .Add(p => p.CreatedAt, DateTime.Now)
                 .Add(p => p.LikeCount, 0)
                 .Add(p => p.CommentCount, 0));
 
-            // Assert
-            cut.Markup.Should().Contain(authorPoints.ToString());
+            // Assert - points are surfaced as a member-level badge (numeric points are hidden)
+            cut.FindAll(".member-level-badge").Should().NotBeEmpty();
         }
 
         #endregion

@@ -338,6 +338,15 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         Task<List<TPost>> GetAllGroupPostsForUserAsync(string userId, int skip = 0, int take = 20);
 
         /// <summary>
+        /// Gets the number of approved posts by an author that the viewer is allowed to see:
+        /// posts in groups the viewer belongs to, or in public, non-hidden groups.
+        /// </summary>
+        /// <param name="authorId">The ID of the post author.</param>
+        /// <param name="viewerId">The ID of the viewing user.</param>
+        /// <returns>The number of approved group posts by the author visible to the viewer.</returns>
+        Task<int> GetVisibleCountByAuthorAsync(string authorId, string viewerId);
+
+        /// <summary>
         /// Checks whether a user has permission to create posts in a specific group.
         /// Validates group membership and ban status.
         /// </summary>

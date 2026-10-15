@@ -82,4 +82,10 @@
   <data name="Field_RecoveryCode" xml:space="preserve">
     <value>복구 코드</value>
   </data>
+  <data name="Field_AboutMe" xml:space="preserve">
+    <value>자기소개</value>
+  </data>
+  <data name="Field_Code" xml:space="preserve">
+    <value>코드</value>
+  </data>
 </root>

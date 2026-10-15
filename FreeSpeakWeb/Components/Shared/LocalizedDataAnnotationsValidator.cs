@@ -98,7 +98,7 @@ namespace FreeSpeakWeb.Components.Shared
                 return fallback;
             }
 
-            var field = Localize(GetDisplayName(property));
+            var field = Localize(property);
             return attribute switch
             {
                 RequiredAttribute => Format("Validation_Required", fallback, field),
@@ -106,7 +106,8 @@ namespace FreeSpeakWeb.Components.Shared
                 StringLengthAttribute s when s.MinimumLength > 0 =>
                     Format("Validation_StringLengthRange", fallback, field, s.MaximumLength, s.MinimumLength),
                 StringLengthAttribute s => Format("Validation_StringLengthMax", fallback, field, s.MaximumLength),
-                CompareAttribute c => Format("Validation_Compare", fallback, field, Localize(GetOtherDisplayName(property, c))),
+                CompareAttribute c => Format("Validation_Compare", fallback, field,
+                    GetOtherProperty(property, c) is { } other ? Localize(other) : c.OtherProperty),
                 RangeAttribute r => Format("Validation_Range", fallback, field, r.Minimum, r.Maximum),
                 _ => fallback
             };
@@ -118,10 +119,34 @@ namespace FreeSpeakWeb.Components.Shared
             return template.ResourceNotFound ? fallback : string.Format(CultureInfo.CurrentUICulture, template.Value, args);
         }
 
-        private string Localize(string name)
+        private string Localize(PropertyInfo property)
         {
-            var localized = Localizer["Field_" + Regex.Replace(name, "[^A-Za-z0-9]", string.Empty)];
-            return localized.ResourceNotFound ? name : localized.Value;
+            foreach (var key in GetFieldKeys(property))
+            {
+                var localized = Localizer["Field_" + key];
+                if (!localized.ResourceNotFound)
+                {
+                    return localized.Value;
+                }
+            }
+
+            return GetDisplayName(property);
+        }
+
+        /// <summary>
+        /// Candidate resource key suffixes for a field: the PascalCased display name
+        /// (e.g. "New password" becomes "NewPassword") followed by the property name.
+        /// </summary>
+        private static IEnumerable<string> GetFieldKeys(PropertyInfo property)
+        {
+            var words = Regex.Split(GetDisplayName(property), "[^A-Za-z0-9]+").Where(w => w.Length > 0);
+            var pascal = string.Concat(words.Select(w => char.ToUpperInvariant(w[0]) + w[1..]));
+            if (pascal.Length > 0)
+            {
+                yield return pascal;
+            }
+
+            yield return property.Name;
         }
 
         private static string GetDisplayName(PropertyInfo property)
@@ -129,10 +154,9 @@ namespace FreeSpeakWeb.Components.Shared
             return property.GetCustomAttribute<DisplayAttribute>()?.GetName() ?? property.Name;
         }
 
-        private static string GetOtherDisplayName(PropertyInfo property, CompareAttribute compare)
+        private static PropertyInfo? GetOtherProperty(PropertyInfo property, CompareAttribute compare)
         {
-            var other = property.DeclaringType?.GetProperty(compare.OtherProperty);
-            return other == null ? compare.OtherProperty : GetDisplayName(other);
+            return property.DeclaringType?.GetProperty(compare.OtherProperty);
         }
 
         /// <inheritdoc />

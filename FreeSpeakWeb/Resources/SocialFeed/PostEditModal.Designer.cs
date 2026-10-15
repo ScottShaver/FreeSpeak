@@ -73,5 +73,9 @@ namespace FreeSpeakWeb.Resources.SocialFeed {
         public static string Saving {
             get { return ResourceManager.GetString("Saving", resourceCulture); }
         }
+
+        public static string UploadFailedError {
+            get { return ResourceManager.GetString("UploadFailedError", resourceCulture); }
+        }
     }
 }

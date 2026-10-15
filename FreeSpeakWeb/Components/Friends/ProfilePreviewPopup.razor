@@ -160,7 +160,9 @@
                 // Load all statistics in parallel for better performance
                 var friendCountTask = FriendsService.GetFriendsCountAsync(User.Id);
                 var groupCountTask = GroupMemberService.GetUserGroupCountAsync(User.Id);
-                var groupPostCountTask = GroupPostService.GetUserTotalGroupPostCountAsync(User.Id);
+                var groupPostCountTask = string.IsNullOrEmpty(viewerId)
+                    ? Task.FromResult(0)
+                    : GroupPostService.GetUserTotalGroupPostCountAsync(User.Id, viewerId);
                 var postCountTask = string.IsNullOrEmpty(viewerId)
                     ? Task.FromResult(0)
                     : PostService.GetVisibleUserPostCountAsync(User.Id, viewerId);

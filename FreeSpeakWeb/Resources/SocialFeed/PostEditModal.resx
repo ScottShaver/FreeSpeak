@@ -79,4 +79,7 @@
   <data name="Saving" xml:space="preserve">
     <value>Saving...</value>
   </data>
+  <data name="UploadFailedError" xml:space="preserve">
+    <value>Failed to upload images. Please try again.</value>
+  </data>
 </root>
