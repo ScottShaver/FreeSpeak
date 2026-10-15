@@ -281,6 +281,9 @@ namespace FreeSpeakWeb
             builder.Services.AddSingleton(TimeProvider.System);
             builder.Services.AddScoped<ISystemSettingsRepository, SystemSettingsRepository>();
             builder.Services.AddSingleton<FreeSpeakWeb.Services.Settings.IClamAvPinger, FreeSpeakWeb.Services.Settings.NClamPinger>();
+            builder.Services.AddSingleton<FreeSpeakWeb.Services.Settings.ReauthenticationStore>();
+            builder.Services.AddScoped<FreeSpeakWeb.Services.Settings.IReauthenticationService, FreeSpeakWeb.Services.Settings.ReauthenticationService>();
+            builder.Services.AddScoped<FreeSpeakWeb.Services.Settings.IEffectiveConfigurationService, FreeSpeakWeb.Services.Settings.EffectiveConfigurationService>();
             builder.Services.AddScoped<FreeSpeakWeb.Services.Settings.ISystemSettingsService, FreeSpeakWeb.Services.Settings.SystemSettingsService>();
 
             // Add UserLockoutService for managing user account lockouts
