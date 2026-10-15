@@ -49,6 +49,15 @@ namespace FreeSpeakWeb.Services.Abstractions
         Task<GroupFileDownloadResult> GetFileForDownloadAsync(int fileId, string userId);
 
         /// <summary>
+        /// Checks whether a file can currently be downloaded by the user (record exists, access allowed and the
+        /// stored file is present) without opening a stream or incrementing the download count.
+        /// </summary>
+        /// <param name="fileId">The ID of the file to check.</param>
+        /// <param name="userId">The ID of the user requesting the download.</param>
+        /// <returns>A tuple indicating availability and, when unavailable, a user-facing error message.</returns>
+        Task<(bool Available, string? ErrorMessage)> CheckDownloadAvailabilityAsync(int fileId, string userId);
+
+        /// <summary>
         /// Gets file metadata without the file content.
         /// </summary>
         /// <param name="fileId">The ID of the file.</param>

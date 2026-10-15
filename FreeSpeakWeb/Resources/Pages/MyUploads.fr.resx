@@ -109,4 +109,13 @@
   <data name="Uploaded" xml:space="preserve">
     <value>Téléchargé</value>
   </data>
+  <data name="DeleteUploadFailed" xml:space="preserve">
+    <value>Impossible de supprimer le fichier.</value>
+  </data>
+  <data name="DeleteUpload" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="ConfirmDeleteUpload" xml:space="preserve">
+    <value>Supprimer ce fichier ? Il sera également retiré de votre publication. Cette action est irréversible.</value>
+  </data>
 </root>

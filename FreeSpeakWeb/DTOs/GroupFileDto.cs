@@ -84,6 +84,9 @@ namespace FreeSpeakWeb.DTOs
         {
             get
             {
+                var byExtension = GetIconForExtension(FileExtension);
+                if (byExtension != null) return byExtension;
+
                 if (IsImage) return "bi-file-image";
                 if (IsPdf) return "bi-file-pdf";
                 if (IsDocument) return "bi-file-earmark-text";
@@ -93,6 +96,29 @@ namespace FreeSpeakWeb.DTOs
                 if (ContentType.StartsWith("text/", StringComparison.OrdinalIgnoreCase)) return "bi-file-code";
                 return "bi-file-earmark";
             }
+        }
+
+        /// <summary>
+        /// Maps an upper-case file extension (without the dot) to a Bootstrap icon class.
+        /// </summary>
+        /// <param name="extension">The upper-case extension, e.g. "PDF".</param>
+        /// <returns>The icon class, or null when the extension is not recognized.</returns>
+        public static string? GetIconForExtension(string extension)
+        {
+            return extension.ToUpperInvariant() switch
+            {
+                "PDF" => "bi-file-earmark-pdf",
+                "DOC" or "DOCX" or "ODT" or "RTF" => "bi-file-earmark-word",
+                "XLS" or "XLSX" or "ODS" or "CSV" => "bi-file-earmark-excel",
+                "PPT" or "PPTX" or "ODP" => "bi-file-earmark-ppt",
+                "TXT" or "MD" or "LOG" => "bi-file-earmark-text",
+                "ZIP" or "RAR" or "7Z" or "TAR" or "GZ" => "bi-file-earmark-zip",
+                "PNG" or "JPG" or "JPEG" or "GIF" or "BMP" or "WEBP" or "SVG" => "bi-file-earmark-image",
+                "MP3" or "WAV" or "OGG" or "FLAC" or "M4A" => "bi-file-earmark-music",
+                "MP4" or "MOV" or "AVI" or "MKV" or "WEBM" => "bi-file-earmark-play",
+                "JSON" or "XML" or "HTML" or "CS" or "JS" or "PY" => "bi-file-earmark-code",
+                _ => null
+            };
         }
 
         /// <summary>

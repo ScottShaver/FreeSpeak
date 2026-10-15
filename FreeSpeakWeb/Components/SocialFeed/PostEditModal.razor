@@ -97,8 +97,8 @@
                             {
                                 <div class="image-preview-container">
                                     <img src="@image.ImageUrl" alt="@Localizer["PostImage"]" class="image-preview" />
-                                    <button type="button" class="remove-image-btn" @onclick="() => RemoveImage(image)">
-                                        <i class="bi bi-x-circle-fill"></i>
+                                    <button type="button" class="remove-image-btn" @onclick="() => RemoveImage(image)" title="@Localizer["RemoveImage"]" aria-label="@Localizer["RemoveImage"]">
+                                        <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                             }
@@ -112,8 +112,8 @@
                             {
                                 <div class="image-preview-container">
                                     <img src="@image.DataUrl" alt="@Localizer["NewImage"]" class="image-preview" />
-                                    <button type="button" class="remove-image-btn" @onclick="() => RemoveNewImage(image)">
-                                        <i class="bi bi-x-circle-fill"></i>
+                                    <button type="button" class="remove-image-btn" @onclick="() => RemoveNewImage(image)" title="@Localizer["RemoveImage"]" aria-label="@Localizer["RemoveImage"]">
+                                        <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                             }
@@ -122,7 +122,7 @@
 
                     <div class="add-images-section">
                         <button type="button" class="btn-add-images" @onclick="OpenImageUpload">
-                            <i class="bi bi-image"></i> @((currentImages.Any() || newImages.Any()) ? "Add More Images" : "Add Images")
+                            <i class="bi bi-image"></i> @((currentImages.Any() || newImages.Any()) ? Localizer["AddMoreImages"] : Localizer["AddImages"])
                         </button>
                     </div>
                 </div>

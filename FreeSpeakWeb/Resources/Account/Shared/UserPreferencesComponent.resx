@@ -236,4 +236,7 @@
     <value>Preferences saved. Reloading page to apply language changes...</value>
     <comment>Shown after saving when the language changed and the page reloads</comment>
   </data>
+  <data name="ExpirationRangeError" xml:space="preserve">
+    <value>Enter a whole number of days between 1 and 365.</value>
+  </data>
 </root>

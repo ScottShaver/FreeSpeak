@@ -13,4 +13,13 @@
   <data name="SaveChanges" xml:space="preserve"><value>保存更改</value></data>
   <data name="Saving" xml:space="preserve"><value>保存中...</value></data>
   <data name="UploadFailedError" xml:space="preserve"><value>图片上传失败，请重试。</value></data>
+  <data name="AddImages" xml:space="preserve">
+    <value>添加图片</value>
+  </data>
+  <data name="AddMoreImages" xml:space="preserve">
+    <value>添加更多图片</value>
+  </data>
+  <data name="RemoveImage" xml:space="preserve">
+    <value>移除图片</value>
+  </data>
 </root>

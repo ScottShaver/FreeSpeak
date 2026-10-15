@@ -13,4 +13,13 @@
   <data name="SaveChanges" xml:space="preserve"><value>Salva modifiche</value></data>
   <data name="Saving" xml:space="preserve"><value>Salvataggio...</value></data>
   <data name="UploadFailedError" xml:space="preserve"><value>Impossibile caricare le immagini. Riprova.</value></data>
+  <data name="AddImages" xml:space="preserve">
+    <value>Aggiungi immagini</value>
+  </data>
+  <data name="AddMoreImages" xml:space="preserve">
+    <value>Aggiungi altre immagini</value>
+  </data>
+  <data name="RemoveImage" xml:space="preserve">
+    <value>Rimuovi immagine</value>
+  </data>
 </root>

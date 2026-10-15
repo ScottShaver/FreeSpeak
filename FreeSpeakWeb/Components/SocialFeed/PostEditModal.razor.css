@@ -165,8 +165,9 @@
     background-color: rgba(220, 53, 69, 0.9);
 }
 
-.remove-image-btn i {
-    font-size: 18px;
+.remove-image-btn span {
+    font-size: 22px;
+    line-height: 1;
 }
 
 .add-images-section {

@@ -82,7 +82,7 @@ Seeded data (timestamps are fixed from 2026-01-01 12:00 UTC, so data is identica
 | Comments | `Comments` 1, 2 on post 1; 3 to 7 on post 7: top-level comment 3 with a chain of replies 4, 5, 6, 7 (depth 0 to 4). `MaxFeedPostCommentDepth` is 4, so 7 is at the maximum and has no Reply button |
 | Group comments | `GroupPostComments` 1 on group post 2 |
 | Notifications | `UserNotifications` 1 to 3 for `agent.member` (friend request, unread system, read system); 4 to 6 for `agent.owner` (2 unread, 1 read) |
-| Group files | `GroupFiles` 1 (approved) and 2 (pending) in group 1, uploaded by `agent.member`. Records only; no file exists on disk, so listing and approval work but download does not |
+| Group files | File uploads and file approval are enabled on group 1 (the open group). `GroupFiles` 1 (approved) and 2 (pending) in group 1, uploaded by `agent.member`. Records only; no file exists on disk, so listing and approval work but download does not (the page shows a "file no longer available" message) |
 
 Notifications use `ExpiresAt = NULL`. Cleanup (`DeleteExpiredNotificationsAsync`, see `docs/NOTIFICATION_CLEANUP.md`) only deletes rows with `ExpiresAt < now`, so these never get purged even though `CreatedAt` is January 2026.
 

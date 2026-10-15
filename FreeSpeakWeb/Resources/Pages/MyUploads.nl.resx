@@ -109,4 +109,13 @@
   <data name="Uploaded" xml:space="preserve">
     <value>Geüpload</value>
   </data>
+  <data name="DeleteUploadFailed" xml:space="preserve">
+    <value>De upload kon niet worden verwijderd.</value>
+  </data>
+  <data name="DeleteUpload" xml:space="preserve">
+    <value>Verwijderen</value>
+  </data>
+  <data name="ConfirmDeleteUpload" xml:space="preserve">
+    <value>Deze upload verwijderen? Hij wordt ook uit uw bericht verwijderd. Dit kan niet ongedaan worden gemaakt.</value>
+  </data>
 </root>

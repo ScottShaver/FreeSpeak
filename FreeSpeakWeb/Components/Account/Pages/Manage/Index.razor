@@ -193,7 +193,7 @@
                     StoragePath = result.RelativeUrl
                 });
 
-                statusMessage = "Your profile picture has been updated";
+                statusMessage = Localizer["ProfilePictureUpdated"];
                 selectedFile = null;
                 profilePictureError = null;
             }
@@ -205,7 +205,7 @@
         catch (IOException ex)
         {
             Logger.LogError(ex, "[{ExceptionType}] IOException while uploading profile picture for user {UserId}. File size may exceed limit. Exception: {ExceptionMessage}", ex.GetType().Name, user.Id, ex.Message);
-            profilePictureError = "The file is too large. Maximum size is 5MB.";
+            profilePictureError = Localizer["ProfilePictureTooLarge"].Value;
         }
     }
 
@@ -228,27 +228,33 @@
         // Additional server-side validation for field lengths
         if (Input.NameSuffix?.Length > 75)
         {
-            statusMessage = "Error: Name Suffix cannot exceed 75 characters.";
+            statusMessage = Localizer["ErrorFieldTooLong", Localizer["NameSuffix"], 75];
             return;
         }
         if (Input.City?.Length > 75)
         {
-            statusMessage = "Error: City cannot exceed 75 characters.";
+            statusMessage = Localizer["ErrorFieldTooLong", Localizer["City"], 75];
             return;
         }
         if (Input.State?.Length > 75)
         {
-            statusMessage = "Error: State cannot exceed 75 characters.";
+            statusMessage = Localizer["ErrorFieldTooLong", Localizer["State"], 75];
             return;
         }
         if (Input.Occupation?.Length > 75)
         {
-            statusMessage = "Error: Occupation cannot exceed 75 characters.";
+            statusMessage = Localizer["ErrorFieldTooLong", Localizer["Occupation"], 75];
             return;
         }
         if (Input.AboutMe?.Length > 2000)
         {
-            statusMessage = "Error: About Me cannot exceed 2000 characters.";
+            statusMessage = Localizer["ErrorFieldTooLong", Localizer["AboutMe"], 2000];
+            return;
+        }
+
+        if (!FreeSpeakWeb.Validation.DateOfBirthAttribute.IsValidDateOfBirth(Input.DateOfBirth, DateOnly.FromDateTime(DateTime.UtcNow.AddHours(14))))
+        {
+            statusMessage = Localizer["ErrorInvalidDateOfBirth"];
             return;
         }
 
@@ -260,7 +266,7 @@
             var setPhoneResult = await UserManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
             if (!setPhoneResult.Succeeded)
             {
-                statusMessage = "Error: Failed to set phone number.";
+                statusMessage = Localizer["ErrorSetPhone"];
                 return;
             }
             hasChanges = true;
@@ -308,7 +314,7 @@
             var updateResult = await UserManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
             {
-                statusMessage = "Error: Failed to update profile.";
+                statusMessage = Localizer["ErrorUpdateProfile"];
                 return;
             }
 
@@ -319,7 +325,7 @@
                 Notes = "Profile information updated"
             });
 
-            statusMessage = "Your profile has been updated";
+            statusMessage = Localizer["ProfileUpdated"];
         }
     }
 
@@ -335,6 +341,7 @@
         public string? NameSuffix { get; set; }
 
         [Display(Name = "Date of Birth")]
+        [FreeSpeakWeb.Validation.DateOfBirth]
         public DateOnly? DateOfBirth { get; set; }
 
         [StringLength(75, ErrorMessage = "The {0} must be at max {1} characters long.")]

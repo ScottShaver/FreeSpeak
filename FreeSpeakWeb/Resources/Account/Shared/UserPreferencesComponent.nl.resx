@@ -217,4 +217,7 @@
   <data name="PreferencesSavedReloading" xml:space="preserve">
     <value>Voorkeuren opgeslagen. Pagina wordt opnieuw geladen om de taalwijziging toe te passen...</value>
   </data>
+  <data name="ExpirationRangeError" xml:space="preserve">
+    <value>Voer een geheel aantal dagen in tussen 1 en 365.</value>
+  </data>
 </root>

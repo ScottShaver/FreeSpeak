@@ -1635,6 +1635,97 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
+        /// Deletes an image or video that the user uploaded as part of one of their own posts.
+        /// The attachment is removed from its post; a post that would be left with neither text
+        /// nor attachments is not modified and must be deleted instead. The stored files are
+        /// removed only when no other post still references the same URL.
+        /// </summary>
+        /// <param name="imageId">The unique identifier of the post image to delete.</param>
+        /// <param name="userId">The user performing the deletion (must be the post author).</param>
+        /// <returns>A tuple containing success status and an error message if failed.</returns>
+        public async Task<(bool Success, string? ErrorMessage)> DeleteUploadedImageAsync(int imageId, string userId)
+        {
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var postImage = await context.PostImages
+                    .Include(pi => pi.Post)
+                    .FirstOrDefaultAsync(pi => pi.Id == imageId);
+
+                if (postImage == null)
+                {
+                    return (false, "Image not found.");
+                }
+
+                if (postImage.Post.AuthorId != userId)
+                {
+                    return (false, "You are not authorized to remove this image.");
+                }
+
+                var otherImageCount = await context.PostImages
+                    .CountAsync(pi => pi.PostId == postImage.PostId && pi.Id != imageId);
+
+                if (otherImageCount == 0 && string.IsNullOrWhiteSpace(postImage.Post.Content))
+                {
+                    return (false, "This is the only content of its post. Delete the post instead.");
+                }
+
+                var imageUrl = postImage.ImageUrl;
+                context.PostImages.Remove(postImage);
+                await context.SaveChangesAsync();
+
+                var stillReferenced = await context.PostImages.AnyAsync(pi => pi.ImageUrl == imageUrl);
+                if (!stillReferenced)
+                {
+                    DeleteStoredImageFiles(imageUrl);
+                }
+
+                _logger.LogInformation("Uploaded image {ImageId} deleted from post {PostId} by user {UserId}", imageId, postImage.PostId, userId);
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting uploaded image {ImageId} for user {UserId}", imageId, userId);
+                return (false, "An error occurred while deleting the image.");
+            }
+        }
+
+        /// <summary>
+        /// Best-effort removal of the stored original file for a post image URL.
+        /// ImageUrl format: /api/secure-files/post-image/{userId}/{imageId}/{filename}.
+        /// </summary>
+        /// <param name="imageUrl">The URL of the post image.</param>
+        private void DeleteStoredImageFiles(string imageUrl)
+        {
+            try
+            {
+                var urlParts = imageUrl.Split('/');
+                if (urlParts.Length < 3)
+                {
+                    return;
+                }
+
+                var imageUserId = urlParts[^3];
+                var filename = Path.GetFileName(urlParts[^1]);
+                if (string.IsNullOrEmpty(filename) || imageUserId.Contains("..", StringComparison.Ordinal))
+                {
+                    return;
+                }
+
+                var originalPath = Path.Combine(_environment.ContentRootPath, "AppData", "uploads", "posts", imageUserId, "images", filename);
+                if (File.Exists(originalPath))
+                {
+                    File.Delete(originalPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to delete stored file for {ImageUrl}", imageUrl);
+            }
+        }
+
+        /// <summary>
         /// Retrieves all images for a specific post ordered by display order.
         /// </summary>
         /// <param name="postId">The unique identifier of the post.</param>

@@ -72,4 +72,10 @@
   <data name="AboutToDecline" xml:space="preserve"><value>Você está prestes a recusar:</value></data>
   <data name="ReasonOptional" xml:space="preserve"><value>Motivo (opcional)</value></data>
   <data name="DeclineReasonPlaceholder" xml:space="preserve"><value>Forneça um motivo para recusar este arquivo...</value></data>
+  <data name="FileUnavailable" xml:space="preserve">
+    <value>Este arquivo não está mais disponível. Ele pode ter sido removido; a lista foi atualizada.</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Falha no download: {0}</value>
+  </data>
 </root>

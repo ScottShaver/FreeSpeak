@@ -176,35 +176,67 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">@Localizer["PostReactions"]</label>
-                            <input type="number" class="form-control" @bind="expirationPostLiked" min="1" max="365" />
+                            <input type="number" class="form-control @(ExpirationInvalid(expirationPostLiked) ? "is-invalid" : "")" @bind="expirationPostLiked" min="1" max="365" />
+                            @if (ExpirationInvalid(expirationPostLiked))
+                            {
+                                <div class="invalid-feedback d-block">@Localizer["ExpirationRangeError"]</div>
+                            }
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@Localizer["PostComments"]</label>
-                            <input type="number" class="form-control" @bind="expirationPostComment" min="1" max="365" />
+                            <input type="number" class="form-control @(ExpirationInvalid(expirationPostComment) ? "is-invalid" : "")" @bind="expirationPostComment" min="1" max="365" />
+                            @if (ExpirationInvalid(expirationPostComment))
+                            {
+                                <div class="invalid-feedback d-block">@Localizer["ExpirationRangeError"]</div>
+                            }
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@Localizer["CommentReplies"]</label>
-                            <input type="number" class="form-control" @bind="expirationCommentReply" min="1" max="365" />
+                            <input type="number" class="form-control @(ExpirationInvalid(expirationCommentReply) ? "is-invalid" : "")" @bind="expirationCommentReply" min="1" max="365" />
+                            @if (ExpirationInvalid(expirationCommentReply))
+                            {
+                                <div class="invalid-feedback d-block">@Localizer["ExpirationRangeError"]</div>
+                            }
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@Localizer["CommentReactions"]</label>
-                            <input type="number" class="form-control" @bind="expirationCommentLiked" min="1" max="365" />
+                            <input type="number" class="form-control @(ExpirationInvalid(expirationCommentLiked) ? "is-invalid" : "")" @bind="expirationCommentLiked" min="1" max="365" />
+                            @if (ExpirationInvalid(expirationCommentLiked))
+                            {
+                                <div class="invalid-feedback d-block">@Localizer["ExpirationRangeError"]</div>
+                            }
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@Localizer["FriendRequests"]</label>
-                            <input type="number" class="form-control" @bind="expirationFriendRequest" min="1" max="365" />
+                            <input type="number" class="form-control @(ExpirationInvalid(expirationFriendRequest) ? "is-invalid" : "")" @bind="expirationFriendRequest" min="1" max="365" />
+                            @if (ExpirationInvalid(expirationFriendRequest))
+                            {
+                                <div class="invalid-feedback d-block">@Localizer["ExpirationRangeError"]</div>
+                            }
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@Localizer["FriendAccepted"]</label>
-                            <input type="number" class="form-control" @bind="expirationFriendAccepted" min="1" max="365" />
+                            <input type="number" class="form-control @(ExpirationInvalid(expirationFriendAccepted) ? "is-invalid" : "")" @bind="expirationFriendAccepted" min="1" max="365" />
+                            @if (ExpirationInvalid(expirationFriendAccepted))
+                            {
+                                <div class="invalid-feedback d-block">@Localizer["ExpirationRangeError"]</div>
+                            }
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@Localizer["Mentions"]</label>
-                            <input type="number" class="form-control" @bind="expirationMention" min="1" max="365" />
+                            <input type="number" class="form-control @(ExpirationInvalid(expirationMention) ? "is-invalid" : "")" @bind="expirationMention" min="1" max="365" />
+                            @if (ExpirationInvalid(expirationMention))
+                            {
+                                <div class="invalid-feedback d-block">@Localizer["ExpirationRangeError"]</div>
+                            }
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">@Localizer["SystemNotifications"]</label>
-                            <input type="number" class="form-control" @bind="expirationSystem" min="1" max="365" />
+                            <input type="number" class="form-control @(ExpirationInvalid(expirationSystem) ? "is-invalid" : "")" @bind="expirationSystem" min="1" max="365" />
+                            @if (ExpirationInvalid(expirationSystem))
+                            {
+                                <div class="invalid-feedback d-block">@Localizer["ExpirationRangeError"]</div>
+                            }
                         </div>
                     </div>
                     <div class="form-text mt-2">
@@ -243,6 +275,22 @@
     private bool isLoading = true;
     private bool isSaving = false;
     private string? statusMessage;
+    private bool validationAttempted;
+
+    /// <summary>
+    /// Determines whether a notification expiration value should be flagged as invalid (empty or outside 1-365 days).
+    /// Errors are shown only after the first save attempt or once the user has edited a value to something invalid.
+    /// </summary>
+    /// <param name="value">The entered number of days, or null when the field is empty or unparsable.</param>
+    /// <returns>True when the value is not within the allowed range.</returns>
+    private static bool IsOutOfRange(int? value) => value is null or < 1 or > 365;
+
+    /// <summary>
+    /// Returns whether the validation message should be displayed for a given expiration value.
+    /// </summary>
+    /// <param name="value">The entered number of days.</param>
+    /// <returns>True when validation has been attempted and the value is invalid.</returns>
+    private bool ExpirationInvalid(int? value) => validationAttempted && IsOutOfRange(value);
     private bool statusIsError;
 
     /// <summary>
@@ -264,14 +312,14 @@
     private string timezone = "America/New_York";
     private string country = "US";
     private string culture = "en-US";
-    private int expirationPostLiked = 15;
-    private int expirationPostComment = 15;
-    private int expirationCommentReply = 15;
-    private int expirationCommentLiked = 15;
-    private int expirationFriendRequest = 30;
-    private int expirationFriendAccepted = 15;
-    private int expirationMention = 30;
-    private int expirationSystem = 30;
+    private int? expirationPostLiked = 15;
+    private int? expirationPostComment = 15;
+    private int? expirationCommentReply = 15;
+    private int? expirationCommentLiked = 15;
+    private int? expirationFriendRequest = 30;
+    private int? expirationFriendAccepted = 15;
+    private int? expirationMention = 30;
+    private int? expirationSystem = 30;
 
     protected override async Task OnInitializedAsync()
     {
@@ -329,9 +377,18 @@
     /// </summary>
     private async Task SavePreferences()
     {
-        isSaving = true;
         statusMessage = null;
         statusIsError = false;
+        validationAttempted = true;
+
+        if (new[] { expirationPostLiked, expirationPostComment, expirationCommentReply, expirationCommentLiked, expirationFriendRequest, expirationFriendAccepted, expirationMention, expirationSystem }.Any(v => ExpirationInvalid(v)))
+        {
+            statusMessage = Localizer["ExpirationRangeError"];
+            statusIsError = true;
+            return;
+        }
+
+        isSaving = true;
 
         try
         {
@@ -420,6 +477,7 @@
         timezone = "America/New_York";
         country = "US";
         culture = "en-US";
+        validationAttempted = false;
         expirationPostLiked = 15;
         expirationPostComment = 15;
         expirationCommentReply = 15;

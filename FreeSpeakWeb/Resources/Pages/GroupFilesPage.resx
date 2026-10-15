@@ -223,4 +223,10 @@
   <data name="DeclineReasonPlaceholder" xml:space="preserve">
     <value>Provide a reason for declining this file...</value>
   </data>
+  <data name="FileUnavailable" xml:space="preserve">
+    <value>This file is no longer available. It may have been removed; the list has been refreshed.</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Download failed: {0}</value>
+  </data>
 </root>

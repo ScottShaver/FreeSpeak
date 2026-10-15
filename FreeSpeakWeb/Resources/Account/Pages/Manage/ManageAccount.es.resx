@@ -272,4 +272,28 @@
   <data name="AboutMe" xml:space="preserve">
     <value>Sobre mí</value>
   </data>
+  <data name="ProfilePictureUpdated" xml:space="preserve">
+    <value>Tu foto de perfil ha sido actualizada</value>
+  </data>
+  <data name="PasswordSet" xml:space="preserve">
+    <value>Tu contraseña ha sido establecida.</value>
+  </data>
+  <data name="ErrorFieldTooLong" xml:space="preserve">
+    <value>Error: {0} no puede tener más de {1} caracteres.</value>
+  </data>
+  <data name="ErrorInvalidDateOfBirth" xml:space="preserve">
+    <value>Error: La fecha de nacimiento debe ser una fecha pasada, no anterior a 1900.</value>
+  </data>
+  <data name="ProfilePictureTooLarge" xml:space="preserve">
+    <value>El archivo es demasiado grande. El tamaño máximo es 5 MB.</value>
+  </data>
+  <data name="ProfileUpdated" xml:space="preserve">
+    <value>Tu perfil ha sido actualizado</value>
+  </data>
+  <data name="ErrorSetPhone" xml:space="preserve">
+    <value>Error: No se pudo establecer el número de teléfono.</value>
+  </data>
+  <data name="ErrorUpdateProfile" xml:space="preserve">
+    <value>Error: No se pudo actualizar el perfil.</value>
+  </data>
 </root>

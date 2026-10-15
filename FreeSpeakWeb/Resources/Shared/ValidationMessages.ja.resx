@@ -88,4 +88,10 @@
   <data name="Field_Code" xml:space="preserve">
     <value>コード</value>
   </data>
+  <data name="Validation_DateOfBirth" xml:space="preserve">
+    <value>{0} は過去の日付で、{1} 年以降を指定してください。</value>
+  </data>
+  <data name="Validation_Phone" xml:space="preserve">
+    <value>{0} は有効な電話番号ではありません。</value>
+  </data>
 </root>

@@ -272,4 +272,28 @@
   <data name="AboutMe" xml:space="preserve">
     <value>عنّي</value>
   </data>
+  <data name="ProfilePictureUpdated" xml:space="preserve">
+    <value>تم تحديث صورة ملفك الشخصي</value>
+  </data>
+  <data name="PasswordSet" xml:space="preserve">
+    <value>تم تعيين كلمة المرور.</value>
+  </data>
+  <data name="ErrorFieldTooLong" xml:space="preserve">
+    <value>خطأ: لا يمكن أن يتجاوز {0} {1} حرفًا.</value>
+  </data>
+  <data name="ErrorInvalidDateOfBirth" xml:space="preserve">
+    <value>خطأ: يجب أن يكون تاريخ الميلاد في الماضي وليس قبل عام 1900.</value>
+  </data>
+  <data name="ProfilePictureTooLarge" xml:space="preserve">
+    <value>الملف كبير جدًا. الحد الأقصى للحجم هو 5 ميغابايت.</value>
+  </data>
+  <data name="ProfileUpdated" xml:space="preserve">
+    <value>تم تحديث ملفك الشخصي</value>
+  </data>
+  <data name="ErrorSetPhone" xml:space="preserve">
+    <value>خطأ: فشل تعيين رقم الهاتف.</value>
+  </data>
+  <data name="ErrorUpdateProfile" xml:space="preserve">
+    <value>خطأ: فشل تحديث الملف الشخصي.</value>
+  </data>
 </root>

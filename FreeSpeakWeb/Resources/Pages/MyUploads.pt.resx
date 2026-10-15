@@ -109,4 +109,13 @@
   <data name="Uploaded" xml:space="preserve">
     <value>Enviado</value>
   </data>
+  <data name="DeleteUploadFailed" xml:space="preserve">
+    <value>Não foi possível excluir o envio.</value>
+  </data>
+  <data name="DeleteUpload" xml:space="preserve">
+    <value>Excluir</value>
+  </data>
+  <data name="ConfirmDeleteUpload" xml:space="preserve">
+    <value>Excluir este envio? Ele também será removido da sua publicação. Isso não pode ser desfeito.</value>
+  </data>
 </root>

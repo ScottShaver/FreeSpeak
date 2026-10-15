@@ -72,4 +72,10 @@
   <data name="AboutToDecline" xml:space="preserve"><value>Вы собираетесь отклонить:</value></data>
   <data name="ReasonOptional" xml:space="preserve"><value>Причина (необязательно)</value></data>
   <data name="DeclineReasonPlaceholder" xml:space="preserve"><value>Укажите причину отклонения этого файла...</value></data>
+  <data name="FileUnavailable" xml:space="preserve">
+    <value>Этот файл больше недоступен. Возможно, он был удалён; список обновлён.</value>
+  </data>
+  <data name="DownloadFailed" xml:space="preserve">
+    <value>Не удалось скачать: {0}</value>
+  </data>
 </root>

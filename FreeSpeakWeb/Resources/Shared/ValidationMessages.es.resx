@@ -88,4 +88,10 @@
   <data name="Field_Code" xml:space="preserve">
     <value>Código</value>
   </data>
+  <data name="Validation_DateOfBirth" xml:space="preserve">
+    <value>El campo {0} debe ser una fecha pasada, no anterior a {1}.</value>
+  </data>
+  <data name="Validation_Phone" xml:space="preserve">
+    <value>El campo {0} no es un número de teléfono válido.</value>
+  </data>
 </root>

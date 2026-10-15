@@ -160,7 +160,7 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    <UserAvatar ImageUrl="@file.UploaderImageUrl" Size="sm" />
+                                                    <UserAvatar ImageUrl="@file.UploaderImageUrl" Name="@file.UploaderName" Size="sm" />
                                                     <span class="ms-2">@file.UploaderName</span>
                                                 </div>
                                             </td>
@@ -168,10 +168,10 @@
                                             <td>@file.RelativeUploadTime</td>
                                             <td class="text-end">
                                                 <button class="btn btn-success btn-sm me-1" @onclick="() => ApproveFile(file.Id)" title="@Localizer["Approve"]">
-                                                    <i class="bi bi-check-lg"></i>
+                                                    <i class="bi bi-check-lg me-1"></i>@Localizer["Approve"]
                                                 </button>
                                                 <button class="btn btn-danger btn-sm" @onclick="() => OpenDeclineModal(file)" title="@Localizer["Decline"]">
-                                                    <i class="bi bi-x-lg"></i>
+                                                    <i class="bi bi-x-lg me-1"></i>@Localizer["Decline"]
                                                 </button>
                                             </td>
                                         </tr>
@@ -767,19 +767,31 @@
     #region Download
 
     /// <summary>
-    /// Downloads a file.
+    /// Downloads a file. The file's availability is verified first so a missing or inaccessible
+    /// file produces an in-app error instead of opening a new tab with an error response.
     /// </summary>
     private async Task DownloadFile(int fileId)
     {
         try
         {
+            if (!string.IsNullOrEmpty(currentUserId))
+            {
+                var (available, _) = await GroupFileService.CheckDownloadAvailabilityAsync(fileId, currentUserId);
+                if (!available)
+                {
+                    AlertService.ShowError(Localizer["FileUnavailable"]);
+                    await LoadFiles();
+                    return;
+                }
+            }
+
             // Trigger download via navigation to the API endpoint
             var downloadUrl = $"/api/group-files/{fileId}/download";
             await JSRuntime.InvokeVoidAsync("open", downloadUrl, "_blank");
         }
         catch (Exception ex)
         {
-            AlertService.ShowError($"Download failed: {ex.Message}");
+            AlertService.ShowError(string.Format(Localizer["DownloadFailed"], ex.Message));
         }
     }
 
@@ -872,6 +884,7 @@
                 await LoadPendingFiles();
                 await LoadPendingFileCount();
                 await LoadFiles();
+                await LoadStorageStats();
             }
             else
             {
@@ -927,6 +940,8 @@
                 CloseDeclineModal();
                 await LoadPendingFiles();
                 await LoadPendingFileCount();
+                await LoadFiles();
+                await LoadStorageStats();
             }
             else
             {

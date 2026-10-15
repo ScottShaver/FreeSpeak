@@ -214,36 +214,10 @@ namespace FreeSpeakWeb.Services
         {
             try
             {
-                var file = await _fileRepository.GetByIdAsync(fileId, includeUploader: true);
-                if (file == null)
+                var (file, filePath, error) = await ResolveDownloadAsync(fileId, userId);
+                if (file == null || filePath == null)
                 {
-                    return GroupFileDownloadResult.Failed("File not found.");
-                }
-
-                // Check if user is a member of the group
-                var isMember = await _groupMemberService.IsMemberAsync(file.GroupId, userId);
-                if (!isMember)
-                {
-                    return GroupFileDownloadResult.Failed("You do not have permission to access this file.");
-                }
-
-                // Check file status - only approved files or user's own files
-                if (file.Status != GroupFileStatus.Approved && file.UploaderId != userId)
-                {
-                    // Allow admins/moderators to download pending files
-                    var canManage = await CanManageFilesAsync(file.GroupId, userId);
-                    if (!canManage)
-                    {
-                        return GroupFileDownloadResult.Failed("This file is not yet available for download.");
-                    }
-                }
-
-                // Get file path
-                var filePath = Path.Combine(GetGroupFilesPath(file.GroupId), file.StoredFileName);
-                if (!File.Exists(filePath))
-                {
-                    _logger.LogWarning("File {FileId} physical file not found at {Path}", fileId, filePath);
-                    return GroupFileDownloadResult.Failed("File not found on disk.");
+                    return GroupFileDownloadResult.Failed(error ?? "File not found.");
                 }
 
                 // Increment download count (fire and forget)
@@ -259,6 +233,63 @@ namespace FreeSpeakWeb.Services
                 _logger.LogError(ex, "Error getting file {FileId} for download", fileId);
                 return GroupFileDownloadResult.Failed("An error occurred while accessing the file.");
             }
+        }
+
+        /// <inheritdoc />
+        public async Task<(bool Available, string? ErrorMessage)> CheckDownloadAvailabilityAsync(int fileId, string userId)
+        {
+            try
+            {
+                var (file, filePath, error) = await ResolveDownloadAsync(fileId, userId);
+                return file != null && filePath != null ? (true, null) : (false, error);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking download availability for file {FileId}", fileId);
+                return (false, "An error occurred while accessing the file.");
+            }
+        }
+
+        /// <summary>
+        /// Validates access to a file and resolves its physical path.
+        /// </summary>
+        /// <param name="fileId">The ID of the file.</param>
+        /// <param name="userId">The ID of the requesting user.</param>
+        /// <returns>The file record and its physical path when downloadable; otherwise an error message.</returns>
+        private async Task<(GroupFile? File, string? Path, string? Error)> ResolveDownloadAsync(int fileId, string userId)
+        {
+            var file = await _fileRepository.GetByIdAsync(fileId, includeUploader: true);
+            if (file == null)
+            {
+                return (null, null, "File not found.");
+            }
+
+            // Check if user is a member of the group
+            var isMember = await _groupMemberService.IsMemberAsync(file.GroupId, userId);
+            if (!isMember)
+            {
+                return (null, null, "You do not have permission to access this file.");
+            }
+
+            // Check file status - only approved files or user's own files
+            if (file.Status != GroupFileStatus.Approved && file.UploaderId != userId)
+            {
+                // Allow admins/moderators to download pending files
+                var canManage = await CanManageFilesAsync(file.GroupId, userId);
+                if (!canManage)
+                {
+                    return (null, null, "This file is not yet available for download.");
+                }
+            }
+
+            var filePath = Path.Combine(GetGroupFilesPath(file.GroupId), file.StoredFileName);
+            if (!File.Exists(filePath))
+            {
+                _logger.LogWarning("File {FileId} physical file not found at {Path}", fileId, filePath);
+                return (null, null, "File not found on disk.");
+            }
+
+            return (file, filePath, null);
         }
 
         /// <inheritdoc />
