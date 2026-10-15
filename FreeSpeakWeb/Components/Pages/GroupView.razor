@@ -203,8 +203,11 @@
                 else
                 {
                     <div class="alert alert-info d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4" role="status">
-                        <span><i class="bi bi-info-circle me-2"></i>@Localizer["NonMemberNotice"]</span>
-                        @if (joinRequestSent)
+                        <span><i class="bi bi-info-circle me-2"></i>@Localizer[HasAdminControls ? "AdminViewNotice" : (group.IsPublic ? "NonMemberNotice" : "NonMemberPrivateNotice")]</span>
+                        @if (HasAdminControls)
+                        {
+                        }
+                        else if (joinRequestSent)
                         {
                             <span class="badge bg-secondary">@Localizer["JoinRequestSent"]</span>
                         }
@@ -284,6 +287,8 @@
                         LikeCount="@post.LikeCount"
                         CommentCount="@post.CommentCount"
                         ShareCount="@post.ShareCount"
+                        IsReadOnly="@(!isMember)"
+                        IsPrivateGroup="@(!group.IsPublic)"
                         LoadCommentsInternally="true"
                         CommentsToShow="3"
                         RefreshTrigger="@refreshTrigger"
@@ -350,6 +355,7 @@
         EnablePointsSystem="@(group?.EnablePointsSystem ?? false)"
         IsGroupAdmin="@selectedGroupPost.IsGroupAdmin"
         IsGroupModerator="@selectedGroupPost.IsGroupModerator"
+        IsReadOnly="@(!isMember)"
         CurrentUserId="@currentUserId"
         CreatedAt="@selectedGroupPost.CreatedAt"
         LikeCount="@selectedGroupPost.LikeCount"
@@ -1725,6 +1731,12 @@
     #endregion
 
     #region Group Administration and Moderation
+
+    /// <summary>
+    /// Determines if the current user has any admin or moderation controls for this group,
+    /// in which case join controls are not offered.
+    /// </summary>
+    private bool HasAdminControls => CanAccessGroupAdministration || CanAccessGroupModeration;
 
     /// <summary>
     /// Determines if the current user can access group administration functions.

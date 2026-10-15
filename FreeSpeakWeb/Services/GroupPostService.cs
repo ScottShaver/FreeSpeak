@@ -577,6 +577,8 @@ namespace FreeSpeakWeb.Services
                 }
 
                 _logger.LogInformation("Group post {PostId} approved by moderator {ModeratorId}", postId, moderatorId);
+                await NotifyAuthorOfModerationDecisionAsync(post, NotificationType.GroupPostApproved,
+                    $"Your post in '{post.Group?.Name}' has been approved and is now visible to the group.");
                 return (true, null);
             }
             catch (Exception ex)
@@ -641,12 +643,36 @@ namespace FreeSpeakWeb.Services
                 }
 
                 _logger.LogInformation("Group post {PostId} declined by moderator {ModeratorId}", postId, moderatorId);
+                await NotifyAuthorOfModerationDecisionAsync(post, NotificationType.GroupPostDeclined,
+                    $"Your post in '{post.Group?.Name}' was not approved by the group moderators.");
                 return (true, null);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error declining group post {PostId} by moderator {ModeratorId}", postId, moderatorId);
                 return (false, "An error occurred while declining the post.");
+            }
+        }
+
+        /// <summary>
+        /// Notifies a post author about a moderation decision. Failures are logged and never fail the decision itself.
+        /// </summary>
+        /// <param name="post">The moderated post (with its group loaded).</param>
+        /// <param name="type">The notification type (approved or declined).</param>
+        /// <param name="message">The notification message.</param>
+        private async Task NotifyAuthorOfModerationDecisionAsync(GroupPost post, NotificationType type, string message)
+        {
+            try
+            {
+                await _notificationService.CreateNotificationAsync(
+                    post.AuthorId,
+                    type,
+                    message,
+                    new { GroupId = post.GroupId, GroupName = post.Group?.Name, PostId = post.Id });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error sending moderation notification for group post {PostId}", post.Id);
             }
         }
 

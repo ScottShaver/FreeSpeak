@@ -64,6 +64,9 @@
   <data name="FriendsOnly" xml:space="preserve">
     <value>Friends Only</value>
   </data>
+  <data name="PrivateGroup" xml:space="preserve">
+    <value>Private group</value>
+  </data>
   <data name="OnlyMe" xml:space="preserve">
     <value>Only Me</value>
   </data>

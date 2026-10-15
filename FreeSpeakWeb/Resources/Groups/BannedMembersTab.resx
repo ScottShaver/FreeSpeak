@@ -97,4 +97,16 @@
   <data name="MoreAvailable" xml:space="preserve">
     <value>More available</value>
   </data>
+  <data name="UnbanMemberConfirmTitle" xml:space="preserve">
+    <value>Unban Member?</value>
+  </data>
+  <data name="UnbanMemberConfirmMessage" xml:space="preserve">
+    <value>Are you sure you want to unban {0}? They will be able to rejoin this group.</value>
+  </data>
+  <data name="MemberUnbannedSuccess" xml:space="preserve">
+    <value>{0} has been unbanned.</value>
+  </data>
+  <data name="ErrorUnbanningMember" xml:space="preserve">
+    <value>An error occurred while unbanning the member.</value>
+  </data>
 </root>

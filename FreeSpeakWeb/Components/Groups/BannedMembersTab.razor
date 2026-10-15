@@ -10,8 +10,18 @@
 @inject UserPreferenceService UserPreferenceService
 @inject IRoleService RoleService
 @inject ILogger<BannedMembersTab> Logger
+@inject AlertService AlertService
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Groups.BannedMembersTab> Localizer
+
+<ConfirmationDialog IsVisible="@(unbanCandidate != null)"
+                    Title="@Localizer["UnbanMemberConfirmTitle"]"
+                    Message="@(unbanCandidate == null ? null : string.Format(Localizer["UnbanMemberConfirmMessage"], GetMemberDisplayName(unbanCandidate.UserId)))"
+                    ConfirmText="@Localizer["UnbanMember"]"
+                    Type="ConfirmationDialog.ConfirmationType.Warning"
+                    IsProcessing="@(unbanCandidate != null && unbanningMemberId == unbanCandidate.UserId)"
+                    OnConfirm="ConfirmUnbanMember"
+                    OnCancel="CancelUnbanMember" />
 
 <div class="banned-members-tab">
     <!-- Search Bar -->
@@ -96,7 +106,7 @@
                                         </p>
                                         <button type="button" 
                                                 class="btn btn-success btn-sm"
-                                                @onclick="@(async () => await HandleUnbanMember(banned.UserId))"
+                                                @onclick="@(() => RequestUnbanMember(banned))"
                                                 disabled="@(isUnbanning || !CanUnbanMember)">
                                             <i class="bi bi-check-circle me-1"></i>@Localizer["UnbanMember"]
                                         </button>
@@ -351,8 +361,46 @@
         StateHasChanged();
     }
 
+    private GroupBannedMember? unbanCandidate;
+
     /// <summary>
-    /// Handles unbanning a member from the group.
+    /// Gets the display name for a banned member, falling back to "Unknown".
+    /// </summary>
+    /// <param name="userId">The user ID of the banned member.</param>
+    /// <returns>The member's display name.</returns>
+    private string GetMemberDisplayName(string userId) =>
+        memberNames.TryGetValue(userId, out var name) ? name : "Unknown";
+
+    /// <summary>
+    /// Opens the unban confirmation dialog for a banned member.
+    /// </summary>
+    /// <param name="banned">The banned member the user wants to unban.</param>
+    private void RequestUnbanMember(GroupBannedMember banned)
+    {
+        if (unbanningMemberId != null) return;
+        unbanCandidate = banned;
+    }
+
+    /// <summary>
+    /// Closes the unban confirmation dialog without unbanning.
+    /// </summary>
+    private void CancelUnbanMember()
+    {
+        if (unbanningMemberId != null) return;
+        unbanCandidate = null;
+    }
+
+    /// <summary>
+    /// Unbans the member chosen in the confirmation dialog.
+    /// </summary>
+    private async Task ConfirmUnbanMember()
+    {
+        if (unbanCandidate == null || unbanningMemberId != null) return;
+        await HandleUnbanMember(unbanCandidate.UserId);
+    }
+
+    /// <summary>
+    /// Handles unbanning a member from the group and shows a success or error toast.
     /// </summary>
     /// <param name="userId">The user ID of the member to unban.</param>
     private async Task HandleUnbanMember(string userId)
@@ -360,6 +408,7 @@
         ClearMessages();
         unbanningMemberId = userId;
         StateHasChanged();
+        var displayName = GetMemberDisplayName(userId);
 
         try
         {
@@ -370,24 +419,28 @@
                 // Remove from local list
                 bannedMembers.RemoveAll(m => m.UserId == userId);
                 expandedMemberId = null;
+                AlertService.ShowSuccess(string.Format(Localizer["MemberUnbannedSuccess"], displayName));
 
                 await OnBannedMemberActionPerformed.InvokeAsync();
             }
             else
             {
-                errorMessage = result.ErrorMessage ?? "An error occurred while unbanning the member.";
+                errorMessage = result.ErrorMessage ?? Localizer["ErrorUnbanningMember"];
                 errorMemberId = userId;
+                AlertService.ShowError(errorMessage);
             }
         }
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error unbanning user {UserId} from group {GroupId}", userId, Group.Id);
-            errorMessage = "An error occurred while unbanning the member.";
+            errorMessage = Localizer["ErrorUnbanningMember"];
             errorMemberId = userId;
+            AlertService.ShowError(errorMessage);
         }
         finally
         {
             unbanningMemberId = null;
+            unbanCandidate = null;
             StateHasChanged();
         }
     }

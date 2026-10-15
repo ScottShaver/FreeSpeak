@@ -74,6 +74,18 @@ namespace FreeSpeakWeb.Data
         /// Notification that a user's request to join a group has been approved.
         /// Sent to the user who submitted the join request.
         /// </summary>
-        GroupJoinApproved = 12
+        GroupJoinApproved = 12,
+
+        /// <summary>
+        /// Notification that a user's pending group post was approved by a moderator.
+        /// Sent to the post author.
+        /// </summary>
+        GroupPostApproved = 13,
+
+        /// <summary>
+        /// Notification that a user's pending group post was declined by a moderator.
+        /// Sent to the post author.
+        /// </summary>
+        GroupPostDeclined = 14
     }
 }

@@ -62,7 +62,10 @@
     <value>View more comments</value>
   </data>
   <data name="ClickToSeeFullPost" xml:space="preserve">
-    <value>... Click to see full post</value>
+    <value>See more</value>
+  </data>
+  <data name="SeeLess" xml:space="preserve">
+    <value>See less</value>
   </data>
   <data name="Like" xml:space="preserve">
     <value>Like</value>

@@ -126,6 +126,38 @@ namespace FreeSpeakWeb.Tests.Services
             errorMessage.Should().Contain("pending");
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task RespondingToFriendRequest_MarksFriendRequestNotificationRead(bool accept)
+        {
+            var repoFactory = CreateTestRepositoryFactory("FriendsNotifRead" + accept);
+            var service = CreateFriendsService(repoFactory);
+
+            var friendship = TestDataFactory.CreateTestFriendship("user1", "user2", FriendshipStatus.Pending);
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Users.AddRange(TestDataFactory.CreateTestUser(id: "user1"), TestDataFactory.CreateTestUser(id: "user2"));
+                context.Friendships.Add(friendship);
+                await context.SaveChangesAsync();
+                context.UserNotifications.AddRange(
+                    new UserNotification { UserId = "user2", Type = NotificationType.FriendRequest, Message = "req", Data = $"{{\"NavigationUrl\":\"/friends\",\"FriendshipId\":{friendship.Id},\"RequesterId\":\"user1\"}}" },
+                    new UserNotification { UserId = "user2", Type = NotificationType.FriendRequest, Message = "other", Data = $"{{\"FriendshipId\":{friendship.Id + 100},\"RequesterId\":\"user3\"}}" });
+                await context.SaveChangesAsync();
+            }
+
+            var (success, _) = accept
+                ? await service.AcceptFriendRequestAsync(friendship.Id, "user2")
+                : await service.RejectFriendRequestAsync(friendship.Id, "user2");
+
+            success.Should().BeTrue();
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.UserNotifications.Single(n => n.Message == "req").IsRead.Should().BeTrue();
+                context.UserNotifications.Single(n => n.Message == "other").IsRead.Should().BeFalse();
+            }
+        }
+
         [Fact]
         public async Task AcceptFriendRequestAsync_WithValidRequest_ShouldUpdateStatusToAccepted()
         {

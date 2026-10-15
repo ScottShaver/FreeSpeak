@@ -263,7 +263,7 @@
         // Check if there are more notifications
         var nextPageNotifications = await NotificationService.GetUserNotificationsAsync(
             currentUserId,
-            1,
+            pageSize,
             pageNumber + 1,
             showOnlyUnread ? false : null
         );
@@ -291,7 +291,7 @@
         // Check if there are even more notifications
         var nextPageNotifications = await NotificationService.GetUserNotificationsAsync(
             currentUserId,
-            1,
+            pageSize,
             pageNumber + 1,
             showOnlyUnread ? false : null
         );

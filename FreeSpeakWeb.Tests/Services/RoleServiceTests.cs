@@ -70,7 +70,7 @@ namespace FreeSpeakWeb.Tests.Services
         }
 
         [Fact]
-        public async Task RemoveUserFromRole_Refused_DoesNotWriteAuditLog()
+        public async Task RemoveUserFromRole_Refused_LogsBlockedAttempt()
         {
             var admins = new List<ApplicationUser>();
             var user = SetupUser("admin1", admins, true);
@@ -78,7 +78,25 @@ namespace FreeSpeakWeb.Tests.Services
 
             await CreateService().RemoveUserFromRoleAsync("admin1", "SystemAdministrator", "admin1");
 
-            _auditLog.Verify(a => a.LogActionAsync(It.IsAny<string>(), It.IsAny<ActionCategory>(), It.IsAny<SystemAdminChangeUserRoleDetails>()), Times.Never);
+            _auditLog.Verify(a => a.LogActionAsync("admin1", ActionCategory.SystemAdminChangeUserRole,
+                It.Is<SystemAdminChangeUserRoleDetails>(d => d.Blocked && d.RoleName == "SystemAdministrator" && d.Description!.Contains("blocked"))), Times.Once);
+        }
+
+        [Fact]
+        public async Task AddUserToRole_ByDifferentActor_LogsEntryForTargetWithDescription()
+        {
+            var user = new ApplicationUser { Id = "u1", FirstName = "A", LastName = "B" };
+            var actor = new ApplicationUser { Id = "actor1", FirstName = "Ada", LastName = "Admin" };
+            _userManager.Setup(m => m.FindByIdAsync("u1")).ReturnsAsync(user);
+            _userManager.Setup(m => m.FindByIdAsync("actor1")).ReturnsAsync(actor);
+            _roleManager.Setup(m => m.RoleExistsAsync("SystemModerator")).ReturnsAsync(true);
+            _userManager.Setup(m => m.IsInRoleAsync(user, "SystemModerator")).ReturnsAsync(false);
+            _userManager.Setup(m => m.AddToRoleAsync(user, "SystemModerator")).ReturnsAsync(IdentityResult.Success);
+
+            await CreateService().AddUserToRoleAsync("u1", "SystemModerator", "actor1");
+
+            _auditLog.Verify(a => a.LogActionAsync("u1", ActionCategory.SystemAdminChangeUserRole,
+                It.Is<SystemAdminChangeUserRoleDetails>(d => d.Description == "Role 'SystemModerator' was added to A B by Ada Admin.")), Times.Once);
         }
 
         [Fact]

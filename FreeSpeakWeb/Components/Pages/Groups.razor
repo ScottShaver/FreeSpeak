@@ -141,6 +141,7 @@
                             PostId="@post.Id"
                             GroupId="@post.GroupId"
                             GroupName="@post.GroupName"
+                            IsPrivateGroup="@IsGroupPrivate(post.GroupId)"
                             AuthorId="@post.AuthorId"
                             AuthorName="@post.AuthorName"
                             AuthorImageUrl="@post.AuthorImageUrl"
@@ -242,6 +243,7 @@
                             PostId="@post.Id"
                             GroupId="@post.GroupId"
                             GroupName="@post.GroupName"
+                            IsPrivateGroup="@IsGroupPrivate(post.GroupId)"
                             AuthorId="@post.AuthorId"
                             AuthorName="@post.AuthorName"
                             AuthorImageUrl="@post.AuthorImageUrl"
@@ -695,6 +697,9 @@
     /// Loads the list of groups that the current user is a member of.
     /// Extracts unique groups from the user's group posts and populates the userGroups list.
     /// </summary>
+    private bool IsGroupPrivate(int groupId) =>
+        userGroups.FirstOrDefault(g => g.Id == groupId)?.IsPublic == false;
+
     private async Task LoadUserGroups()
     {
         if (string.IsNullOrEmpty(currentUserId)) return;
@@ -712,7 +717,17 @@
                 .OrderBy(g => g.Name)
                 .ToList();
 
-            userGroups = uniqueGroups;
+            // Include every group the user belongs to, even those without posts yet
+            var memberships = await GroupMemberService.GetUserGroupsAsync(currentUserId);
+            foreach (var membership in memberships)
+            {
+                if (membership.Group != null && uniqueGroups.All(g => g.Id != membership.GroupId))
+                {
+                    uniqueGroups.Add(membership.Group);
+                }
+            }
+
+            userGroups = uniqueGroups.OrderBy(g => g.Name).ToList();
         }
         catch (Exception)
         {
