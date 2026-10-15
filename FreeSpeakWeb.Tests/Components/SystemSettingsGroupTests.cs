@@ -31,6 +31,7 @@ namespace FreeSpeakWeb.Tests.Components
     public class SystemSettingsGroupTests : TestContext
     {
         private readonly Mock<ISystemSettingsService> _service = new();
+        private readonly Mock<IEmailTestService> _emailTest = new();
 
         public SystemSettingsGroupTests()
         {
@@ -39,6 +40,7 @@ namespace FreeSpeakWeb.Tests.Components
             userManager.Setup(m => m.GetUserId(It.IsAny<ClaimsPrincipal>())).Returns("admin");
 
             Services.AddSingleton(_service.Object);
+            Services.AddSingleton(_emailTest.Object);
             Services.AddSingleton(userManager.Object);
             Services.AddSingleton<IStringLocalizer<FreeSpeakWeb.Resources.Pages.SystemSettings>>(
                 new PassthroughLocalizer<FreeSpeakWeb.Resources.Pages.SystemSettings>());
@@ -115,6 +117,43 @@ namespace FreeSpeakWeb.Tests.Components
             cut.Find("[data-testid='settings-form']").Submit();
 
             cut.Find("[data-testid='error-VirusScan:ClamAvPort']").TextContent.Should().Contain("E_Required");
+        }
+
+        /// <summary>Verifies the test email card appears only for the Smtp group and the button is disabled until a recipient is entered.</summary>
+        [Fact]
+        public void TestEmail_OnlyForSmtp_AndButtonDisabledWithoutRecipient()
+        {
+            Setup("smtp", _ => false);
+            Setup("virusscan", _ => false);
+
+            var smtp = Render<SystemSettingsGroup>(p => p.Add(c => c.GroupId, "smtp"));
+            var other = Render<SystemSettingsGroup>(p => p.Add(c => c.GroupId, "virusscan"));
+
+            other.FindAll("[data-testid='test-email-card']").Should().BeEmpty();
+            smtp.Find("[data-testid='test-email-send']").HasAttribute("disabled").Should().BeTrue();
+            smtp.Find("[data-testid='test-email-recipient']").Input("x@example.com");
+            smtp.Find("[data-testid='test-email-send']").HasAttribute("disabled").Should().BeFalse();
+        }
+
+        /// <summary>Verifies the test button reports success and sanitized failure keys.</summary>
+        [Fact]
+        public void TestEmail_ShowsSuccessAndFailure()
+        {
+            Setup("smtp", _ => false);
+            _emailTest.Setup(s => s.SendTestEmailAsync("ok@example.com", "admin", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new TestEmailResult(true, null));
+            _emailTest.Setup(s => s.SendTestEmailAsync("bad@example.com", "admin", It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new TestEmailResult(false, "E_SmtpAuth"));
+            var cut = Render<SystemSettingsGroup>(p => p.Add(c => c.GroupId, "smtp"));
+
+            cut.Find("[data-testid='test-email-recipient']").Input("ok@example.com");
+            cut.Find("[data-testid='test-email-send']").Click();
+            cut.Find("[data-testid='result-message']").TextContent.Should().Contain("TestEmailSuccess");
+
+            cut.Find("[data-testid='test-email-recipient']").Input("bad@example.com");
+            cut.Find("[data-testid='test-email-send']").Click();
+            cut.Find("[data-testid='result-message']").TextContent.Should().Contain("TestEmailFailed");
+            cut.Find("[data-testid='result-message']").ClassList.Should().Contain("alert-danger");
         }
     }
 }
