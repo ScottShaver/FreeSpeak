@@ -36,7 +36,7 @@ Controls application-wide behavior and limits.
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
 | `SiteName` | string | `"FreeSpeak"` | Display name used throughout the application |
-| `MaxFeedPostCommentDepth` | int | `4` | Maximum nesting depth for comment replies |
+| `MaxFeedPostCommentDepth` | int | `4` | Maximum nesting depth for comment replies. Top-level comments are depth 0, so with `4` a thread has up to 5 tiers (depth 0-4); a reply to a depth-4 comment is rejected by the service and the UI hides Reply. Applies to feed posts and group posts |
 | `MaxFeedPostDirectCommentCount` | int | `30` | Maximum top-level comments per post |
 
 **Usage in Code:**

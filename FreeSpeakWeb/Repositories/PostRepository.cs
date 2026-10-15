@@ -912,19 +912,8 @@ namespace FreeSpeakWeb.Repositories
                     .AnyAsync(f => (f.RequesterId == viewerId && f.AddresseeId == authorId && f.Status == FriendshipStatus.Accepted) ||
                                    (f.RequesterId == authorId && f.AddresseeId == viewerId && f.Status == FriendshipStatus.Accepted));
 
-                return await context.Posts
+                return await VisibleProfileFeedPosts(context, authorId, viewerId, isFriend)
                     .AsNoTracking()
-                    .Where(p => (p.AuthorId == authorId || p.FriendId == authorId) &&
-                               (
-                                   // MeOnly posts: ONLY visible to the author
-                                   (p.AudienceType == AudienceType.MeOnly && p.AuthorId == viewerId) ||
-                                   // FriendsOnly posts: visible to author and friends
-                                   (p.AudienceType == AudienceType.FriendsOnly && (p.AuthorId == viewerId || isFriend)) ||
-                                   // Public posts: visible to everyone
-                                   (p.AudienceType == AudienceType.Public) ||
-                                   // Cross-feed posts: visible to the profile owner and their friends
-                                   (p.FriendId == authorId && p.AudienceType != AudienceType.MeOnly)
-                               ))
                     .OrderByDescending(p => p.CreatedAt)
                     .Skip(skip)
                     .Take(take)
@@ -957,6 +946,52 @@ namespace FreeSpeakWeb.Repositories
                 _logger.LogError(ex, "Error retrieving filtered author posts for {AuthorId} viewed by {ViewerId}", authorId, viewerId);
                 return new List<PostListDto>();
             }
+        }
+
+        /// <summary>
+        /// Counts the posts on a user's profile feed that the viewer is allowed to see,
+        /// using the same visibility rules as <see cref="GetByAuthorWithAudienceFilterAsync"/>.
+        /// </summary>
+        /// <param name="authorId">The ID of the user whose profile feed is being viewed.</param>
+        /// <param name="viewerId">The ID of the user viewing the profile.</param>
+        /// <returns>The number of posts visible to the viewer.</returns>
+        public async Task<int> GetCountByAuthorWithAudienceFilterAsync(string authorId, string viewerId)
+        {
+            using var step = _profiler.Step($"PostRepository.GetCountByAuthorWithAudienceFilterAsync({authorId}, {viewerId})");
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+
+                var isFriend = await context.Friendships
+                    .AnyAsync(f => (f.RequesterId == viewerId && f.AddresseeId == authorId && f.Status == FriendshipStatus.Accepted) ||
+                                   (f.RequesterId == authorId && f.AddresseeId == viewerId && f.Status == FriendshipStatus.Accepted));
+
+                return await VisibleProfileFeedPosts(context, authorId, viewerId, isFriend).CountAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error counting filtered author posts for {AuthorId} viewed by {ViewerId}", authorId, viewerId);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Builds the query of posts on an author's profile feed that are visible to the viewer.
+        /// </summary>
+        private static IQueryable<Post> VisibleProfileFeedPosts(ApplicationDbContext context, string authorId, string viewerId, bool isFriend)
+        {
+            return context.Posts
+                .Where(p => (p.AuthorId == authorId || p.FriendId == authorId) &&
+                           (
+                               // MeOnly posts: ONLY visible to the author
+                               (p.AudienceType == AudienceType.MeOnly && p.AuthorId == viewerId) ||
+                               // FriendsOnly posts: visible to author and friends
+                               (p.AudienceType == AudienceType.FriendsOnly && (p.AuthorId == viewerId || isFriend)) ||
+                               // Public posts: visible to everyone
+                               (p.AudienceType == AudienceType.Public) ||
+                               // Cross-feed posts: visible to the profile owner and their friends
+                               (p.FriendId == authorId && p.AudienceType != AudienceType.MeOnly)
+                           ));
         }
 
         #endregion

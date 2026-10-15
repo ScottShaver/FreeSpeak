@@ -560,6 +560,26 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
+        /// Gets the number of posts on a user's profile feed that the viewer is allowed to see.
+        /// Applies the same audience rules as <see cref="GetPostsByUserWithAudienceFilterAsync"/>.
+        /// </summary>
+        /// <param name="authorId">The unique identifier of the profile owner.</param>
+        /// <param name="viewerId">The unique identifier of the viewing user.</param>
+        /// <returns>The number of posts visible to the viewer.</returns>
+        public async Task<int> GetVisibleUserPostCountAsync(string authorId, string viewerId)
+        {
+            try
+            {
+                return await _postRepository.GetCountByAuthorWithAudienceFilterAsync(authorId, viewerId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting visible post count for user {AuthorId} viewed by {ViewerId}", authorId, viewerId);
+                return 0;
+            }
+        }
+
+        /// <summary>
         /// Gets the total count of posts authored by a specific user.
         /// </summary>
         /// <param name="userId">The unique identifier of the user.</param>
@@ -743,6 +763,24 @@ namespace FreeSpeakWeb.Services
         #region Comment Operations
 
         /// <summary>
+        /// Counts how many ancestors a comment has, starting from its parent id (0 for a top-level comment).
+        /// </summary>
+        /// <param name="comments">The comments set to walk.</param>
+        /// <param name="parentId">The parent comment id of the comment being measured.</param>
+        /// <returns>The nesting depth of the comment.</returns>
+        private static async Task<int> GetCommentDepthAsync(IQueryable<Comment> comments, int? parentId)
+        {
+            var depth = 0;
+            while (parentId.HasValue && depth <= 1000)
+            {
+                depth++;
+                var id = parentId.Value;
+                parentId = await comments.Where(c => c.Id == id).Select(c => c.ParentCommentId).FirstOrDefaultAsync();
+            }
+            return depth;
+        }
+
+        /// <summary>
         /// Adds a comment to a post, with optional image attachment and support for nested replies.
         /// Sends appropriate notifications to post author or parent comment author.
         /// </summary>
@@ -786,6 +824,13 @@ namespace FreeSpeakWeb.Services
                     if (parentComment.PostId != postId)
                     {
                         return (false, "Parent comment does not belong to this post.", null);
+                    }
+
+                    // Replies may be at most MaxFeedPostCommentDepth levels below a top-level comment (depth 0)
+                    var parentDepth = await GetCommentDepthAsync(context.Comments, parentComment.ParentCommentId);
+                    if (parentDepth + 1 > _siteSettings.MaxFeedPostCommentDepth)
+                    {
+                        return (false, $"Replies cannot be nested more than {_siteSettings.MaxFeedPostCommentDepth} levels deep.", null);
                     }
                 }
                 else

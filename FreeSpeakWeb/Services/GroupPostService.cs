@@ -27,9 +27,11 @@ namespace FreeSpeakWeb.Services
         private readonly GroupAccessValidator _accessValidator;
         private readonly IAuditLogRepository _auditLogRepository;
         private readonly GroupPointsService _groupPointsService;
+        private readonly int _maxCommentDepth;
+        private readonly int _maxDirectComments;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GroupPostService"/> class.
+        /// Initializes a new instance using default site settings (kept for existing callers and tests).
         /// </summary>
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="postRepository">Repository for group post operations.</param>
@@ -62,7 +64,52 @@ namespace FreeSpeakWeb.Services
             GroupAccessValidator accessValidator,
             IAuditLogRepository auditLogRepository,
             GroupPointsService groupPointsService)
+            : this(contextFactory, postRepository, commentRepository, likeRepository, commentLikeRepository,
+                groupRepository, notificationRepository, logger, notificationService, userPreferenceService,
+                environment, notificationHelper, accessValidator, auditLogRepository, groupPointsService, null)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupPostService"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="postRepository">Repository for group post operations.</param>
+        /// <param name="commentRepository">Repository for group comment operations.</param>
+        /// <param name="likeRepository">Repository for group post like operations.</param>
+        /// <param name="commentLikeRepository">Repository for group comment like operations.</param>
+        /// <param name="groupRepository">Repository for group operations.</param>
+        /// <param name="notificationRepository">Repository for notification operations.</param>
+        /// <param name="logger">Logger for recording service operations.</param>
+        /// <param name="notificationService">Service for sending notifications.</param>
+        /// <param name="userPreferenceService">Service for user display preferences.</param>
+        /// <param name="environment">Web hosting environment information.</param>
+        /// <param name="notificationHelper">Helper for creating post-related notifications.</param>
+        /// <param name="accessValidator">Validator for group access permissions.</param>
+        /// <param name="auditLogRepository">Repository for audit log operations.</param>
+        /// <param name="groupPointsService">Service for managing group member points.</param>
+        /// <param name="siteSettings">Optional site settings (MaxFeedPostCommentDepth, MaxFeedPostDirectCommentCount from appsettings.json); code defaults apply when omitted.</param>
+        public GroupPostService(
+            IDbContextFactory<ApplicationDbContext> contextFactory,
+            IGroupPostRepository<GroupPost, GroupPostImage> postRepository,
+            IGroupCommentRepository commentRepository,
+            IGroupPostLikeRepository likeRepository,
+            IGroupCommentLikeRepository commentLikeRepository,
+            IGroupRepository groupRepository,
+            INotificationRepository notificationRepository,
+            ILogger<GroupPostService> logger,
+            NotificationService notificationService,
+            UserPreferenceService userPreferenceService,
+            IWebHostEnvironment environment,
+            PostNotificationHelper notificationHelper,
+            GroupAccessValidator accessValidator,
+            IAuditLogRepository auditLogRepository,
+            GroupPointsService groupPointsService,
+            Microsoft.Extensions.Options.IOptions<SiteSettings>? siteSettings)
+        {
+            var settings = siteSettings?.Value ?? new SiteSettings();
+            _maxCommentDepth = settings.MaxFeedPostCommentDepth;
+            _maxDirectComments = settings.MaxFeedPostDirectCommentCount;
             _contextFactory = contextFactory;
             _postRepository = postRepository;
             _commentRepository = commentRepository;
@@ -878,6 +925,33 @@ namespace FreeSpeakWeb.Services
                     if (parentComment.PostId != postId)
                     {
                         return (false, "Parent comment does not belong to this post.", null);
+                    }
+
+                    // Replies may be at most MaxFeedPostCommentDepth levels below a top-level comment (depth 0)
+                    var parentDepth = 0;
+                    var ancestorId = parentComment.ParentCommentId;
+                    while (ancestorId.HasValue && parentDepth <= 1000)
+                    {
+                        parentDepth++;
+                        var id = ancestorId.Value;
+                        ancestorId = await context.GroupPostComments
+                            .Where(c => c.Id == id)
+                            .Select(c => c.ParentCommentId)
+                            .FirstOrDefaultAsync();
+                    }
+                    if (parentDepth + 1 > _maxCommentDepth)
+                    {
+                        return (false, $"Replies cannot be nested more than {_maxCommentDepth} levels deep.", null);
+                    }
+                }
+                else
+                {
+                    // Direct comment - enforce MaxFeedPostDirectCommentCount, as feed posts do
+                    var directCommentCount = await context.GroupPostComments
+                        .CountAsync(c => c.PostId == postId && c.ParentCommentId == null);
+                    if (directCommentCount >= _maxDirectComments)
+                    {
+                        return (false, $"This post has reached the maximum of {_maxDirectComments} direct comments.", null);
                     }
                 }
 

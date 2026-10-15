@@ -270,6 +270,15 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         /// <returns>A list of PostListDto projections ordered by creation date descending, filtered by audience permissions.</returns>
         Task<List<PostListDto>> GetByAuthorWithAudienceFilterAsync(string authorId, string viewerId, int skip = 0, int take = 20);
 
+        /// <summary>
+        /// Counts the posts on an author's profile feed that the viewer is allowed to see,
+        /// applying the same audience rules as the profile posts list.
+        /// </summary>
+        /// <param name="authorId">The ID of the profile owner.</param>
+        /// <param name="viewerId">The ID of the viewing user.</param>
+        /// <returns>The number of posts visible to the viewer.</returns>
+        Task<int> GetCountByAuthorWithAudienceFilterAsync(string authorId, string viewerId);
+
         #endregion
     }
 
