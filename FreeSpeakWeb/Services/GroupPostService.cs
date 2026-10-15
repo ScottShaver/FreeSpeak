@@ -31,6 +31,46 @@ namespace FreeSpeakWeb.Services
         private readonly int _maxDirectComments;
 
         /// <summary>
+        /// Initializes a new instance using default site settings (kept for existing callers and tests).
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="postRepository">Repository for group post operations.</param>
+        /// <param name="commentRepository">Repository for group comment operations.</param>
+        /// <param name="likeRepository">Repository for group post like operations.</param>
+        /// <param name="commentLikeRepository">Repository for group comment like operations.</param>
+        /// <param name="groupRepository">Repository for group operations.</param>
+        /// <param name="notificationRepository">Repository for notification operations.</param>
+        /// <param name="logger">Logger for recording service operations.</param>
+        /// <param name="notificationService">Service for sending notifications.</param>
+        /// <param name="userPreferenceService">Service for user display preferences.</param>
+        /// <param name="environment">Web hosting environment information.</param>
+        /// <param name="notificationHelper">Helper for creating post-related notifications.</param>
+        /// <param name="accessValidator">Validator for group access permissions.</param>
+        /// <param name="auditLogRepository">Repository for audit log operations.</param>
+        /// <param name="groupPointsService">Service for managing group member points.</param>
+        public GroupPostService(
+            IDbContextFactory<ApplicationDbContext> contextFactory,
+            IGroupPostRepository<GroupPost, GroupPostImage> postRepository,
+            IGroupCommentRepository commentRepository,
+            IGroupPostLikeRepository likeRepository,
+            IGroupCommentLikeRepository commentLikeRepository,
+            IGroupRepository groupRepository,
+            INotificationRepository notificationRepository,
+            ILogger<GroupPostService> logger,
+            NotificationService notificationService,
+            UserPreferenceService userPreferenceService,
+            IWebHostEnvironment environment,
+            PostNotificationHelper notificationHelper,
+            GroupAccessValidator accessValidator,
+            IAuditLogRepository auditLogRepository,
+            GroupPointsService groupPointsService)
+            : this(contextFactory, postRepository, commentRepository, likeRepository, commentLikeRepository,
+                groupRepository, notificationRepository, logger, notificationService, userPreferenceService,
+                environment, notificationHelper, accessValidator, auditLogRepository, groupPointsService, null)
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="GroupPostService"/> class.
         /// </summary>
         /// <param name="contextFactory">Factory for creating database contexts.</param>
@@ -65,7 +105,7 @@ namespace FreeSpeakWeb.Services
             GroupAccessValidator accessValidator,
             IAuditLogRepository auditLogRepository,
             GroupPointsService groupPointsService,
-            Microsoft.Extensions.Options.IOptions<SiteSettings>? siteSettings = null)
+            Microsoft.Extensions.Options.IOptions<SiteSettings>? siteSettings)
         {
             var settings = siteSettings?.Value ?? new SiteSettings();
             _maxCommentDepth = settings.MaxFeedPostCommentDepth;
