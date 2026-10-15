@@ -100,4 +100,13 @@
     <value>ファイル{0}は画像ではありません。</value>
     <comment>{0} is the filename</comment>
   </data>
+  <data name="FileTooLargeError" xml:space="preserve">
+    <value>ファイル {0} は {1}MB の上限を超えています。</value>
+  </data>
+  <data name="InvalidImageFormatError" xml:space="preserve">
+    <value>{0} の画像形式が無効です。有効な画像ファイルをアップロードしてください。</value>
+  </data>
+  <data name="LoadFileError" xml:space="preserve">
+    <value>{0} を読み込めませんでした。</value>
+  </data>
 </root>

@@ -100,4 +100,13 @@
     <value>Datei {0} ist kein Bild.</value>
     <comment>{0} is the filename</comment>
   </data>
+  <data name="FileTooLargeError" xml:space="preserve">
+    <value>Die Datei {0} überschreitet das Limit von {1} MB.</value>
+  </data>
+  <data name="InvalidImageFormatError" xml:space="preserve">
+    <value>Ungültiges Bildformat für {0}. Bitte lade eine gültige Bilddatei hoch.</value>
+  </data>
+  <data name="LoadFileError" xml:space="preserve">
+    <value>{0} konnte nicht geladen werden.</value>
+  </data>
 </root>

@@ -100,4 +100,13 @@
     <value>Файл {0} не является изображением.</value>
     <comment>{0} is the filename</comment>
   </data>
+  <data name="FileTooLargeError" xml:space="preserve">
+    <value>Файл {0} превышает лимит {1} МБ.</value>
+  </data>
+  <data name="InvalidImageFormatError" xml:space="preserve">
+    <value>Недопустимый формат изображения для {0}. Загрузите допустимый файл изображения.</value>
+  </data>
+  <data name="LoadFileError" xml:space="preserve">
+    <value>Не удалось загрузить {0}.</value>
+  </data>
 </root>
