@@ -354,5 +354,67 @@ namespace FreeSpeakWeb.Tests.Services
             // Assert
             count.Should().Be(2);
         }
+
+        [Theory]
+        [InlineData(false, false, true)]  // plain member: pinning is a personal bookmark, allowed
+        [InlineData(false, true, true)]   // moderator
+        [InlineData(true, false, true)]   // admin
+        public async Task PinGroupPostAsync_MemberRoles_CanPinForThemselves(bool isAdmin, bool isModerator, bool expected)
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory($"PinRoles_{isAdmin}_{isModerator}");
+            var service = new PinnedGroupPostService(dbFactory, CreateMockLogger<PinnedGroupPostService>());
+            int postId;
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(TestDataFactory.CreateTestUser(id: "owner"));
+                context.Users.Add(TestDataFactory.CreateTestUser(id: "member"));
+                var group = TestDataFactory.CreateTestGroup("owner");
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+                context.GroupUsers.Add(TestDataFactory.CreateTestGroupUser(group.Id, "member", isAdmin, isModerator));
+                var post = TestDataFactory.CreateTestGroupPost(group.Id, "owner");
+                context.GroupPosts.Add(post);
+                await context.SaveChangesAsync();
+                postId = post.Id;
+            }
+
+            // Act
+            var (success, _) = await service.PinGroupPostAsync("member", postId);
+
+            // Assert
+            success.Should().Be(expected);
+        }
+
+        [Fact]
+        public async Task PinGroupPostAsync_PinIsPerUser_DoesNotAffectOtherMembers()
+        {
+            // Arrange
+            var dbFactory = CreateDbContextFactory("PinPerUser");
+            var service = new PinnedGroupPostService(dbFactory, CreateMockLogger<PinnedGroupPostService>());
+            int postId;
+            using (var context = await dbFactory.CreateDbContextAsync())
+            {
+                context.Users.Add(TestDataFactory.CreateTestUser(id: "owner"));
+                context.Users.Add(TestDataFactory.CreateTestUser(id: "a"));
+                context.Users.Add(TestDataFactory.CreateTestUser(id: "b"));
+                var group = TestDataFactory.CreateTestGroup("owner");
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+                context.GroupUsers.Add(TestDataFactory.CreateTestGroupUser(group.Id, "a"));
+                context.GroupUsers.Add(TestDataFactory.CreateTestGroupUser(group.Id, "b"));
+                var post = TestDataFactory.CreateTestGroupPost(group.Id, "owner");
+                context.GroupPosts.Add(post);
+                await context.SaveChangesAsync();
+                postId = post.Id;
+            }
+
+            // Act
+            await service.PinGroupPostAsync("a", postId);
+
+            // Assert
+            (await service.IsGroupPostPinnedAsync("a", postId)).Should().BeTrue();
+            (await service.IsGroupPostPinnedAsync("b", postId)).Should().BeFalse();
+        }
     }
 }

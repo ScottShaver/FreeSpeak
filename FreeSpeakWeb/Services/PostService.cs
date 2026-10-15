@@ -2053,11 +2053,24 @@ namespace FreeSpeakWeb.Services
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
 
-                // Check if post exists
-                var postExists = await context.Posts.AnyAsync(p => p.Id == postId);
-                if (!postExists)
+                var post = await context.Posts
+                    .AsNoTracking()
+                    .Where(p => p.Id == postId)
+                    .Select(p => new { p.AuthorId, p.FriendId, p.AudienceType })
+                    .FirstOrDefaultAsync();
+                if (post == null)
                 {
                     return (false, "Post not found.");
+                }
+
+                // A user may only pin posts they are allowed to view
+                if (post.AudienceType != AudienceType.Public
+                    && post.AuthorId != userId
+                    && post.FriendId != userId
+                    && !await _friendshipRepository.AreFriendsAsync(post.AuthorId, userId))
+                {
+                    _logger.LogWarning("User {UserId} attempted to pin post {PostId} they cannot view", userId, postId);
+                    return (false, "You do not have permission to pin this post.");
                 }
 
                 // Check if already pinned
