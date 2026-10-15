@@ -763,6 +763,24 @@ namespace FreeSpeakWeb.Services
         #region Comment Operations
 
         /// <summary>
+        /// Counts how many ancestors a comment has, starting from its parent id (0 for a top-level comment).
+        /// </summary>
+        /// <param name="comments">The comments set to walk.</param>
+        /// <param name="parentId">The parent comment id of the comment being measured.</param>
+        /// <returns>The nesting depth of the comment.</returns>
+        private static async Task<int> GetCommentDepthAsync(IQueryable<Comment> comments, int? parentId)
+        {
+            var depth = 0;
+            while (parentId.HasValue && depth <= 1000)
+            {
+                depth++;
+                var id = parentId.Value;
+                parentId = await comments.Where(c => c.Id == id).Select(c => c.ParentCommentId).FirstOrDefaultAsync();
+            }
+            return depth;
+        }
+
+        /// <summary>
         /// Adds a comment to a post, with optional image attachment and support for nested replies.
         /// Sends appropriate notifications to post author or parent comment author.
         /// </summary>
@@ -806,6 +824,13 @@ namespace FreeSpeakWeb.Services
                     if (parentComment.PostId != postId)
                     {
                         return (false, "Parent comment does not belong to this post.", null);
+                    }
+
+                    // Replies may be at most MaxFeedPostCommentDepth levels below a top-level comment (depth 0)
+                    var parentDepth = await GetCommentDepthAsync(context.Comments, parentComment.ParentCommentId);
+                    if (parentDepth + 1 > _siteSettings.MaxFeedPostCommentDepth)
+                    {
+                        return (false, $"Replies cannot be nested more than {_siteSettings.MaxFeedPostCommentDepth} levels deep.", null);
                     }
                 }
                 else

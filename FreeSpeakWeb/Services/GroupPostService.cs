@@ -27,6 +27,7 @@ namespace FreeSpeakWeb.Services
         private readonly GroupAccessValidator _accessValidator;
         private readonly IAuditLogRepository _auditLogRepository;
         private readonly GroupPointsService _groupPointsService;
+        private readonly int _maxCommentDepth;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupPostService"/> class.
@@ -46,6 +47,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="accessValidator">Validator for group access permissions.</param>
         /// <param name="auditLogRepository">Repository for audit log operations.</param>
         /// <param name="groupPointsService">Service for managing group member points.</param>
+        /// <param name="siteSettings">Optional site settings supplying the maximum comment reply depth; defaults to 4 when omitted.</param>
         public GroupPostService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             IGroupPostRepository<GroupPost, GroupPostImage> postRepository,
@@ -61,8 +63,10 @@ namespace FreeSpeakWeb.Services
             PostNotificationHelper notificationHelper,
             GroupAccessValidator accessValidator,
             IAuditLogRepository auditLogRepository,
-            GroupPointsService groupPointsService)
+            GroupPointsService groupPointsService,
+            Microsoft.Extensions.Options.IOptions<SiteSettings>? siteSettings = null)
         {
+            _maxCommentDepth = siteSettings?.Value.MaxFeedPostCommentDepth ?? new SiteSettings().MaxFeedPostCommentDepth;
             _contextFactory = contextFactory;
             _postRepository = postRepository;
             _commentRepository = commentRepository;
@@ -878,6 +882,23 @@ namespace FreeSpeakWeb.Services
                     if (parentComment.PostId != postId)
                     {
                         return (false, "Parent comment does not belong to this post.", null);
+                    }
+
+                    // Replies may be at most MaxFeedPostCommentDepth levels below a top-level comment (depth 0)
+                    var parentDepth = 0;
+                    var ancestorId = parentComment.ParentCommentId;
+                    while (ancestorId.HasValue && parentDepth <= 1000)
+                    {
+                        parentDepth++;
+                        var id = ancestorId.Value;
+                        ancestorId = await context.GroupPostComments
+                            .Where(c => c.Id == id)
+                            .Select(c => c.ParentCommentId)
+                            .FirstOrDefaultAsync();
+                    }
+                    if (parentDepth + 1 > _maxCommentDepth)
+                    {
+                        return (false, $"Replies cannot be nested more than {_maxCommentDepth} levels deep.", null);
                     }
                 }
 
