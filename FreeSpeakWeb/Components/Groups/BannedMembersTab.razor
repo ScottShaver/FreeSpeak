@@ -72,7 +72,7 @@
                                         <span class="badge bg-danger ms-2">@Localizer["Banned"]</span>
                                     </div>
                                     <div class="banned-stats text-muted small">
-                                        @Localizer["BannedOn"] @banned.BannedAt.ToString("MMM dd, yyyy 'at' h:mm tt")
+                                        @Localizer["BannedOn"] @banned.BannedAt.ToLocalTime().ToString("MMM dd, yyyy 'at' h:mm tt")
                                     </div>
                                 </div>
                             </div>

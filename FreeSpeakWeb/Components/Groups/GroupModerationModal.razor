@@ -1140,7 +1140,7 @@
         if (timeSpan.TotalDays < 30)
             return string.Format(Localizer["DaysAgo"], (int)timeSpan.TotalDays);
 
-        return dateTime.ToString("MMM dd, yyyy");
+        return dateTime.ToLocalTime().ToString("MMM dd, yyyy");
     }
 
     #region Reported Post Detail Modal Methods
