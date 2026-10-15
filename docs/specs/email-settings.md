@@ -1,6 +1,6 @@
 # Spec: Email (SMTP) Settings Administration
 
-Status: Draft - awaiting approval of the open decisions in section 9.
+Status: Approved.
 Gap reference: #5 in the gap analysis (corrected: the sender exists; the admin UI is missing).
 
 ## 1. Goal
@@ -86,11 +86,13 @@ and send a test email, without editing `appsettings.json` or restarting the app.
 7. Non-administrators cannot view or call the settings.
 8. All strings exist in all 12 locales; build and tests pass.
 
-## 9. Open decisions
-1. Email templates ("notification templates" are mentioned on the card): out of scope for this
-   spec (recommended), or include?
-2. Rate-limit the test email (suggest 5 per administrator per hour)?
-3. Include an Enabled toggle in addition to `UseIdentityNoOpEmailSender` (recommended)?
+## 9. Decisions (resolved)
+1. Email templates are out of scope for this spec.
+2. The test email is limited to 5 per administrator per hour.
+3. An Enabled toggle is included in addition to `UseIdentityNoOpEmailSender`.
+
+Manual verification uses a real SMTP account (Mailgun). Credentials are entered through the
+admin UI at test time and must never be committed to the repository or appear in logs.
 
 ## 10. Task breakdown
 1. Entity, migration, repository, and Data Protection encryption.
