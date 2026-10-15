@@ -44,7 +44,7 @@ and send a test email, without editing `appsettings.json` or restarting the app.
   is false in the database the sender logs and skips sending instead of throwing.
 
 ### 3.3 UI
-- Enable the "Email Configuration" card on `SystemAdmin.razor`, routing to `/system-admin/email`.
+- Enable the "Email Configuration" card on `SystemAdmin.razor`, routing to `/system-admin/settings/smtp` (the generic settings group page from the system settings administration spec).
 - New page `EmailSettings.razor` (`[Authorize(Roles = "SystemAdministrator")]`) with fields for all
   settings, an Enabled toggle, a write-only password field, a "Send test email" input and button,
   and inline validation messages.
