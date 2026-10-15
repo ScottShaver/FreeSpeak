@@ -1,6 +1,8 @@
 @using FreeSpeakWeb.Services
-@implements IDisposable
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
 @inject PopupPortalService PortalService
+@inject IJSRuntime JSRuntime
 
 @if (!UsePortal)
 {
@@ -8,10 +10,10 @@
     @if (IsVisible)
     {
         <div class="popup-menu-backdrop" @onclick="Close"></div>
-        <div class="popup-menu" style="@PositionStyle">
+        <div class="popup-menu" role="menu" style="@PositionStyle">
             @foreach (var item in MenuItems)
             {
-                <button type="button" class="popup-menu-item" @onclick="@(() => HandleItemClick(item))">
+                <button type="button" role="menuitem" class="popup-menu-item" tabindex="-1" @onclick="@(() => HandleItemClick(item))">
                     @if (!string.IsNullOrEmpty(item.Icon))
                     {
                         <span class="@item.Icon"></span>
@@ -26,6 +28,9 @@
 @code {
     private bool _previousIsVisible;
     private bool _isShowingPortal;
+    private bool _keyboardActive;
+    private IJSObjectReference? _jsModule;
+    private DotNetObjectReference<PopupMenu>? _selfReference;
 
     /// <summary>
     /// Controls whether the popup menu is visible.
@@ -110,11 +115,13 @@
             var seq = 0;
             builder.OpenElement(seq++, "div");
             builder.AddAttribute(seq++, "class", "popup-menu popup-menu-portal");
+            builder.AddAttribute(seq++, "role", "menu");
 
             foreach (var item in MenuItems)
             {
                 builder.OpenElement(seq++, "button");
                 builder.AddAttribute(seq++, "type", "button");
+                builder.AddAttribute(seq++, "role", "menuitem");
                 builder.AddAttribute(seq++, "class", "popup-menu-item");
                 builder.AddAttribute(seq++, "tabindex", "-1"); // Prevent focus on click
                 builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(this, () => HandleItemClick(item)));
@@ -191,14 +198,71 @@
     }
 
     /// <summary>
-    /// Cleans up portal state when the component is disposed.
+    /// Registers or unregisters keyboard handling (Escape to close, arrow keys to move) as the menu opens and closes.
     /// </summary>
-    public void Dispose()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (IsVisible == _keyboardActive)
+        {
+            return;
+        }
+
+        try
+        {
+            _jsModule ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Shared/PopupMenu.razor.js");
+            if (IsVisible)
+            {
+                _selfReference ??= DotNetObjectReference.Create(this);
+                await _jsModule.InvokeVoidAsync("register", _selfReference, AnchorElementId);
+            }
+            else
+            {
+                await _jsModule.InvokeVoidAsync("unregister");
+            }
+            _keyboardActive = IsVisible;
+        }
+        catch (Exception)
+        {
+            // JS unavailable (prerender or disconnected circuit) - mouse interaction still works
+        }
+    }
+
+    /// <summary>
+    /// Invoked from JavaScript when Escape is pressed while the menu is open.
+    /// </summary>
+    [JSInvokable]
+    public async Task CloseFromKeyboardAsync()
+    {
+        await Close();
+    }
+
+    /// <summary>
+    /// Cleans up portal and keyboard state when the component is disposed.
+    /// </summary>
+    public async ValueTask DisposeAsync()
     {
         if (_isShowingPortal)
         {
             HidePortalPopup();
         }
+
+        if (_jsModule != null)
+        {
+            try
+            {
+                if (_keyboardActive)
+                {
+                    await _jsModule.InvokeVoidAsync("unregister");
+                }
+                await _jsModule.DisposeAsync();
+            }
+            catch (Exception)
+            {
+                // Circuit already disconnected
+            }
+        }
+
+        _selfReference?.Dispose();
     }
 
     /// <summary>
