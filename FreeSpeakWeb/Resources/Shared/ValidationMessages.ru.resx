@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Validation_Required" xml:space="preserve">
+    <value>Поле «{0}» обязательно для заполнения.</value>
+  </data>
+  <data name="Validation_EmailAddress" xml:space="preserve">
+    <value>Поле «{0}» содержит недопустимый адрес электронной почты.</value>
+  </data>
+  <data name="Validation_StringLengthRange" xml:space="preserve">
+    <value>Длина поля «{0}» должна быть от {2} до {1} символов.</value>
+  </data>
+  <data name="Validation_StringLengthMax" xml:space="preserve">
+    <value>Длина поля «{0}» не должна превышать {1} символов.</value>
+  </data>
+  <data name="Validation_Compare" xml:space="preserve">
+    <value>Поля «{0}» и «{1}» не совпадают.</value>
+  </data>
+  <data name="Validation_Range" xml:space="preserve">
+    <value>Значение поля «{0}» должно быть от {1} до {2}.</value>
+  </data>
+  <data name="Field_Email" xml:space="preserve">
+    <value>Эл. почта</value>
+  </data>
+  <data name="Field_NewEmail" xml:space="preserve">
+    <value>Новая эл. почта</value>
+  </data>
+  <data name="Field_Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="Field_ConfirmPassword" xml:space="preserve">
+    <value>Подтвердите пароль</value>
+  </data>
+  <data name="Field_CurrentPassword" xml:space="preserve">
+    <value>Текущий пароль</value>
+  </data>
+  <data name="Field_NewPassword" xml:space="preserve">
+    <value>Новый пароль</value>
+  </data>
+  <data name="Field_ConfirmNewPassword" xml:space="preserve">
+    <value>Подтвердите новый пароль</value>
+  </data>
+  <data name="Field_UserName" xml:space="preserve">
+    <value>Имя пользователя</value>
+  </data>
+  <data name="Field_Username" xml:space="preserve">
+    <value>Имя пользователя</value>
+  </data>
+  <data name="Field_FirstName" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="Field_LastName" xml:space="preserve">
+    <value>Фамилия</value>
+  </data>
+  <data name="Field_NameSuffix" xml:space="preserve">
+    <value>Суффикс имени</value>
+  </data>
+  <data name="Field_City" xml:space="preserve">
+    <value>Город</value>
+  </data>
+  <data name="Field_State" xml:space="preserve">
+    <value>Штат</value>
+  </data>
+  <data name="Field_Occupation" xml:space="preserve">
+    <value>Род занятий</value>
+  </data>
+  <data name="Field_PhoneNumber" xml:space="preserve">
+    <value>Номер телефона</value>
+  </data>
+  <data name="Field_DateOfBirth" xml:space="preserve">
+    <value>Дата рождения</value>
+  </data>
+  <data name="Field_AuthenticatorCode" xml:space="preserve">
+    <value>Код аутентификатора</value>
+  </data>
+  <data name="Field_VerificationCode" xml:space="preserve">
+    <value>Код подтверждения</value>
+  </data>
+  <data name="Field_RecoveryCode" xml:space="preserve">
+    <value>Код восстановления</value>
+  </data>
+</root>

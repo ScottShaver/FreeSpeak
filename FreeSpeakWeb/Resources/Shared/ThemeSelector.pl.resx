@@ -76,4 +76,28 @@
   <data name="ChooseTheme" xml:space="preserve">
     <value>Wybierz Motyw</value>
   </data>
+  <data name="Theme_default" xml:space="preserve">
+    <value>Domyślny</value>
+  </data>
+  <data name="Theme_dark" xml:space="preserve">
+    <value>Tryb ciemny</value>
+  </data>
+  <data name="Theme_light" xml:space="preserve">
+    <value>Tryb jasny</value>
+  </data>
+  <data name="Theme_ocean" xml:space="preserve">
+    <value>Błękit oceanu</value>
+  </data>
+  <data name="Theme_forest" xml:space="preserve">
+    <value>Leśna zieleń</value>
+  </data>
+  <data name="Theme_sunset" xml:space="preserve">
+    <value>Pomarańcz zachodu słońca</value>
+  </data>
+  <data name="Theme_purple" xml:space="preserve">
+    <value>Purpurowy sen</value>
+  </data>
+  <data name="Theme_high-contrast" xml:space="preserve">
+    <value>Wysoki kontrast</value>
+  </data>
 </root>

@@ -76,4 +76,28 @@
   <data name="ChooseTheme" xml:space="preserve">
     <value>테마 선택</value>
   </data>
+  <data name="Theme_default" xml:space="preserve">
+    <value>기본</value>
+  </data>
+  <data name="Theme_dark" xml:space="preserve">
+    <value>다크 모드</value>
+  </data>
+  <data name="Theme_light" xml:space="preserve">
+    <value>라이트 모드</value>
+  </data>
+  <data name="Theme_ocean" xml:space="preserve">
+    <value>오션 블루</value>
+  </data>
+  <data name="Theme_forest" xml:space="preserve">
+    <value>포레스트 그린</value>
+  </data>
+  <data name="Theme_sunset" xml:space="preserve">
+    <value>선셋 오렌지</value>
+  </data>
+  <data name="Theme_purple" xml:space="preserve">
+    <value>퍼플 드림</value>
+  </data>
+  <data name="Theme_high-contrast" xml:space="preserve">
+    <value>고대비</value>
+  </data>
 </root>

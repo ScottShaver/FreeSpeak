@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Validation_Required" xml:space="preserve">
+    <value>Het veld {0} is verplicht.</value>
+  </data>
+  <data name="Validation_EmailAddress" xml:space="preserve">
+    <value>Het veld {0} is geen geldig e-mailadres.</value>
+  </data>
+  <data name="Validation_StringLengthRange" xml:space="preserve">
+    <value>{0} moet minimaal {2} en maximaal {1} tekens lang zijn.</value>
+  </data>
+  <data name="Validation_StringLengthMax" xml:space="preserve">
+    <value>{0} mag maximaal {1} tekens lang zijn.</value>
+  </data>
+  <data name="Validation_Compare" xml:space="preserve">
+    <value>{0} en {1} komen niet overeen.</value>
+  </data>
+  <data name="Validation_Range" xml:space="preserve">
+    <value>Het veld {0} moet tussen {1} en {2} liggen.</value>
+  </data>
+  <data name="Field_Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Field_NewEmail" xml:space="preserve">
+    <value>Nieuw e-mailadres</value>
+  </data>
+  <data name="Field_Password" xml:space="preserve">
+    <value>Wachtwoord</value>
+  </data>
+  <data name="Field_ConfirmPassword" xml:space="preserve">
+    <value>Wachtwoord bevestigen</value>
+  </data>
+  <data name="Field_CurrentPassword" xml:space="preserve">
+    <value>Huidig wachtwoord</value>
+  </data>
+  <data name="Field_NewPassword" xml:space="preserve">
+    <value>Nieuw wachtwoord</value>
+  </data>
+  <data name="Field_ConfirmNewPassword" xml:space="preserve">
+    <value>Nieuw wachtwoord bevestigen</value>
+  </data>
+  <data name="Field_UserName" xml:space="preserve">
+    <value>Gebruikersnaam</value>
+  </data>
+  <data name="Field_Username" xml:space="preserve">
+    <value>Gebruikersnaam</value>
+  </data>
+  <data name="Field_FirstName" xml:space="preserve">
+    <value>Voornaam</value>
+  </data>
+  <data name="Field_LastName" xml:space="preserve">
+    <value>Achternaam</value>
+  </data>
+  <data name="Field_NameSuffix" xml:space="preserve">
+    <value>Naamachtervoegsel</value>
+  </data>
+  <data name="Field_City" xml:space="preserve">
+    <value>Stad</value>
+  </data>
+  <data name="Field_State" xml:space="preserve">
+    <value>Staat</value>
+  </data>
+  <data name="Field_Occupation" xml:space="preserve">
+    <value>Beroep</value>
+  </data>
+  <data name="Field_PhoneNumber" xml:space="preserve">
+    <value>Telefoonnummer</value>
+  </data>
+  <data name="Field_DateOfBirth" xml:space="preserve">
+    <value>Geboortedatum</value>
+  </data>
+  <data name="Field_AuthenticatorCode" xml:space="preserve">
+    <value>Authenticatiecode</value>
+  </data>
+  <data name="Field_VerificationCode" xml:space="preserve">
+    <value>Verificatiecode</value>
+  </data>
+  <data name="Field_RecoveryCode" xml:space="preserve">
+    <value>Herstelcode</value>
+  </data>
+</root>

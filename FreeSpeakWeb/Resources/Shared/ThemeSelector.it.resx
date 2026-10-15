@@ -76,4 +76,28 @@
   <data name="ChooseTheme" xml:space="preserve">
     <value>Scegli Tema</value>
   </data>
+  <data name="Theme_default" xml:space="preserve">
+    <value>Predefinito</value>
+  </data>
+  <data name="Theme_dark" xml:space="preserve">
+    <value>Modalità scura</value>
+  </data>
+  <data name="Theme_light" xml:space="preserve">
+    <value>Modalità chiara</value>
+  </data>
+  <data name="Theme_ocean" xml:space="preserve">
+    <value>Blu oceano</value>
+  </data>
+  <data name="Theme_forest" xml:space="preserve">
+    <value>Verde foresta</value>
+  </data>
+  <data name="Theme_sunset" xml:space="preserve">
+    <value>Arancione tramonto</value>
+  </data>
+  <data name="Theme_purple" xml:space="preserve">
+    <value>Sogno viola</value>
+  </data>
+  <data name="Theme_high-contrast" xml:space="preserve">
+    <value>Contrasto elevato</value>
+  </data>
 </root>

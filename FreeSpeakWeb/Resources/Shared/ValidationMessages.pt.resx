@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Validation_Required" xml:space="preserve">
+    <value>O campo {0} é obrigatório.</value>
+  </data>
+  <data name="Validation_EmailAddress" xml:space="preserve">
+    <value>O campo {0} não é um endereço de e-mail válido.</value>
+  </data>
+  <data name="Validation_StringLengthRange" xml:space="preserve">
+    <value>{0} deve ter entre {2} e {1} caracteres.</value>
+  </data>
+  <data name="Validation_StringLengthMax" xml:space="preserve">
+    <value>{0} não pode ter mais de {1} caracteres.</value>
+  </data>
+  <data name="Validation_Compare" xml:space="preserve">
+    <value>{0} e {1} não correspondem.</value>
+  </data>
+  <data name="Validation_Range" xml:space="preserve">
+    <value>O campo {0} deve estar entre {1} e {2}.</value>
+  </data>
+  <data name="Field_Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Field_NewEmail" xml:space="preserve">
+    <value>Novo e-mail</value>
+  </data>
+  <data name="Field_Password" xml:space="preserve">
+    <value>Senha</value>
+  </data>
+  <data name="Field_ConfirmPassword" xml:space="preserve">
+    <value>Confirmar senha</value>
+  </data>
+  <data name="Field_CurrentPassword" xml:space="preserve">
+    <value>Senha atual</value>
+  </data>
+  <data name="Field_NewPassword" xml:space="preserve">
+    <value>Nova senha</value>
+  </data>
+  <data name="Field_ConfirmNewPassword" xml:space="preserve">
+    <value>Confirmar nova senha</value>
+  </data>
+  <data name="Field_UserName" xml:space="preserve">
+    <value>Nome de usuário</value>
+  </data>
+  <data name="Field_Username" xml:space="preserve">
+    <value>Nome de usuário</value>
+  </data>
+  <data name="Field_FirstName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Field_LastName" xml:space="preserve">
+    <value>Sobrenome</value>
+  </data>
+  <data name="Field_NameSuffix" xml:space="preserve">
+    <value>Sufixo do nome</value>
+  </data>
+  <data name="Field_City" xml:space="preserve">
+    <value>Cidade</value>
+  </data>
+  <data name="Field_State" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="Field_Occupation" xml:space="preserve">
+    <value>Ocupação</value>
+  </data>
+  <data name="Field_PhoneNumber" xml:space="preserve">
+    <value>Número de telefone</value>
+  </data>
+  <data name="Field_DateOfBirth" xml:space="preserve">
+    <value>Data de nascimento</value>
+  </data>
+  <data name="Field_AuthenticatorCode" xml:space="preserve">
+    <value>Código do autenticador</value>
+  </data>
+  <data name="Field_VerificationCode" xml:space="preserve">
+    <value>Código de verificação</value>
+  </data>
+  <data name="Field_RecoveryCode" xml:space="preserve">
+    <value>Código de recuperação</value>
+  </data>
+</root>

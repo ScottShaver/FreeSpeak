@@ -76,4 +76,28 @@
   <data name="ChooseTheme" xml:space="preserve">
     <value>Выбрать Тему</value>
   </data>
+  <data name="Theme_default" xml:space="preserve">
+    <value>По умолчанию</value>
+  </data>
+  <data name="Theme_dark" xml:space="preserve">
+    <value>Тёмный режим</value>
+  </data>
+  <data name="Theme_light" xml:space="preserve">
+    <value>Светлый режим</value>
+  </data>
+  <data name="Theme_ocean" xml:space="preserve">
+    <value>Синий океан</value>
+  </data>
+  <data name="Theme_forest" xml:space="preserve">
+    <value>Зелёный лес</value>
+  </data>
+  <data name="Theme_sunset" xml:space="preserve">
+    <value>Оранжевый закат</value>
+  </data>
+  <data name="Theme_purple" xml:space="preserve">
+    <value>Пурпурная мечта</value>
+  </data>
+  <data name="Theme_high-contrast" xml:space="preserve">
+    <value>Высокая контрастность</value>
+  </data>
 </root>

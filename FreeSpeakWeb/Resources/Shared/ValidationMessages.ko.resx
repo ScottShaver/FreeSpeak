@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Validation_Required" xml:space="preserve">
+    <value>{0} 필드는 필수입니다.</value>
+  </data>
+  <data name="Validation_EmailAddress" xml:space="preserve">
+    <value>{0} 필드가 올바른 이메일 주소가 아닙니다.</value>
+  </data>
+  <data name="Validation_StringLengthRange" xml:space="preserve">
+    <value>{0}은(는) {2}자 이상 {1}자 이하여야 합니다.</value>
+  </data>
+  <data name="Validation_StringLengthMax" xml:space="preserve">
+    <value>{0}은(는) 최대 {1}자까지 입력할 수 있습니다.</value>
+  </data>
+  <data name="Validation_Compare" xml:space="preserve">
+    <value>{0}와(과) {1}이(가) 일치하지 않습니다.</value>
+  </data>
+  <data name="Validation_Range" xml:space="preserve">
+    <value>{0} 필드는 {1}에서 {2} 사이여야 합니다.</value>
+  </data>
+  <data name="Field_Email" xml:space="preserve">
+    <value>이메일</value>
+  </data>
+  <data name="Field_NewEmail" xml:space="preserve">
+    <value>새 이메일</value>
+  </data>
+  <data name="Field_Password" xml:space="preserve">
+    <value>비밀번호</value>
+  </data>
+  <data name="Field_ConfirmPassword" xml:space="preserve">
+    <value>비밀번호 확인</value>
+  </data>
+  <data name="Field_CurrentPassword" xml:space="preserve">
+    <value>현재 비밀번호</value>
+  </data>
+  <data name="Field_NewPassword" xml:space="preserve">
+    <value>새 비밀번호</value>
+  </data>
+  <data name="Field_ConfirmNewPassword" xml:space="preserve">
+    <value>새 비밀번호 확인</value>
+  </data>
+  <data name="Field_UserName" xml:space="preserve">
+    <value>사용자 이름</value>
+  </data>
+  <data name="Field_Username" xml:space="preserve">
+    <value>사용자 이름</value>
+  </data>
+  <data name="Field_FirstName" xml:space="preserve">
+    <value>이름</value>
+  </data>
+  <data name="Field_LastName" xml:space="preserve">
+    <value>성</value>
+  </data>
+  <data name="Field_NameSuffix" xml:space="preserve">
+    <value>이름 접미사</value>
+  </data>
+  <data name="Field_City" xml:space="preserve">
+    <value>도시</value>
+  </data>
+  <data name="Field_State" xml:space="preserve">
+    <value>주</value>
+  </data>
+  <data name="Field_Occupation" xml:space="preserve">
+    <value>직업</value>
+  </data>
+  <data name="Field_PhoneNumber" xml:space="preserve">
+    <value>전화번호</value>
+  </data>
+  <data name="Field_DateOfBirth" xml:space="preserve">
+    <value>생년월일</value>
+  </data>
+  <data name="Field_AuthenticatorCode" xml:space="preserve">
+    <value>인증 코드</value>
+  </data>
+  <data name="Field_VerificationCode" xml:space="preserve">
+    <value>확인 코드</value>
+  </data>
+  <data name="Field_RecoveryCode" xml:space="preserve">
+    <value>복구 코드</value>
+  </data>
+</root>

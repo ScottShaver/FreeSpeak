@@ -200,4 +200,40 @@
   <data name="ErrorLoadingPreferences" xml:space="preserve">
     <value>An error occurred while loading your preferences.</value>
   </data>
+  <data name="Theme_default" xml:space="preserve">
+    <value>Default</value>
+    <comment>Theme display name</comment>
+  </data>
+  <data name="Theme_dark" xml:space="preserve">
+    <value>Dark Mode</value>
+    <comment>Theme display name</comment>
+  </data>
+  <data name="Theme_light" xml:space="preserve">
+    <value>Light Mode</value>
+    <comment>Theme display name</comment>
+  </data>
+  <data name="Theme_ocean" xml:space="preserve">
+    <value>Ocean Blue</value>
+    <comment>Theme display name</comment>
+  </data>
+  <data name="Theme_forest" xml:space="preserve">
+    <value>Forest Green</value>
+    <comment>Theme display name</comment>
+  </data>
+  <data name="Theme_sunset" xml:space="preserve">
+    <value>Sunset Orange</value>
+    <comment>Theme display name</comment>
+  </data>
+  <data name="Theme_purple" xml:space="preserve">
+    <value>Purple Dream</value>
+    <comment>Theme display name</comment>
+  </data>
+  <data name="Theme_high-contrast" xml:space="preserve">
+    <value>High Contrast</value>
+    <comment>Theme display name</comment>
+  </data>
+  <data name="PreferencesSavedReloading" xml:space="preserve">
+    <value>Preferences saved. Reloading page to apply language changes...</value>
+    <comment>Shown after saving when the language changed and the page reloads</comment>
+  </data>
 </root>

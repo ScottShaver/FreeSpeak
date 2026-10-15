@@ -32,7 +32,7 @@
     <div class="col-lg-6">
         <StatusMessage Message="@Message" />
         <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register">
-            <DataAnnotationsValidator />
+            <FreeSpeakWeb.Components.Shared.LocalizedDataAnnotationsValidator />
             <h2>@Localizer["CreateAccountTitle"]</h2>
             <hr />
             <ValidationSummary class="text-danger" role="alert" />

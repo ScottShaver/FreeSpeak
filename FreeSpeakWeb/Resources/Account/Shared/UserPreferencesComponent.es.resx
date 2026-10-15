@@ -190,4 +190,31 @@
   <data name="ErrorLoadingPreferences" xml:space="preserve">
     <value>Se produjo un error al cargar tus preferencias.</value>
   </data>
+  <data name="Theme_default" xml:space="preserve">
+    <value>Predeterminado</value>
+  </data>
+  <data name="Theme_dark" xml:space="preserve">
+    <value>Modo oscuro</value>
+  </data>
+  <data name="Theme_light" xml:space="preserve">
+    <value>Modo claro</value>
+  </data>
+  <data name="Theme_ocean" xml:space="preserve">
+    <value>Azul océano</value>
+  </data>
+  <data name="Theme_forest" xml:space="preserve">
+    <value>Verde bosque</value>
+  </data>
+  <data name="Theme_sunset" xml:space="preserve">
+    <value>Naranja atardecer</value>
+  </data>
+  <data name="Theme_purple" xml:space="preserve">
+    <value>Sueño púrpura</value>
+  </data>
+  <data name="Theme_high-contrast" xml:space="preserve">
+    <value>Alto contraste</value>
+  </data>
+  <data name="PreferencesSavedReloading" xml:space="preserve">
+    <value>Preferencias guardadas. Recargando la página para aplicar el cambio de idioma...</value>
+  </data>
 </root>
