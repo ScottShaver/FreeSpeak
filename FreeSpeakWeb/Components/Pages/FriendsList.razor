@@ -215,11 +215,15 @@
                         <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 g-md-3">
                             @foreach (var user in searchResults)
                             {
+                                var requestSent = requestedUserIds.Contains(user.Id);
                                 <div class="col">
                                     <FriendListItem 
                                         User="@user"
-                                        ShowAddFriend="true"
-                                        OnAddFriend="@HandleAddFriendFromSearch" />
+                                        ShowAddFriend="@(!requestSent)"
+                                        ShowPending="@requestSent"
+                                        ShowCancel="@requestSent"
+                                        OnAddFriend="@HandleAddFriendFromSearch"
+                                        OnCancel="@HandleCancelRequestFromSearch" />
                                 </div>
                             }
                         </div>
@@ -258,6 +262,7 @@
     private List<(Friendship Friendship, ApplicationUser Requester)> pendingRequests = new();
     private List<(Friendship Friendship, ApplicationUser Addressee)> sentRequests = new();
     private List<ApplicationUser> searchResults = new();
+    private readonly HashSet<string> requestedUserIds = new();
     private bool isLoading = true;
     private bool isSearching = false;
     private bool hasSearched = false;
@@ -550,8 +555,8 @@
         {
             statusMessage = $"Friend request sent to {GetDisplayName(user)}.";
             AlertService.ShowSuccess($"Friend request sent to {GetDisplayName(user)}.");
-            // Remove from search results
-            searchResults = searchResults.Where(u => u.Id != user.Id).ToList();
+            // Keep the result visible, shown as Pending with a Cancel option
+            requestedUserIds.Add(user.Id);
             // Update sent requests count
             sentRequestsCount = await FriendsService.GetSentRequestsCountAsync(currentUserId);
             StateHasChanged();
@@ -560,6 +565,50 @@
         {
             errorMessage = result.ErrorMessage ?? "Failed to send friend request.";
             AlertService.ShowError(result.ErrorMessage ?? "Failed to send friend request.");
+        }
+    }
+
+    /// <summary>
+    /// Cancels a friend request that was sent from the Find People results and returns the card to its "Add Friend" state.
+    /// </summary>
+    /// <param name="user">The user the request was sent to.</param>
+    private async Task HandleCancelRequestFromSearch(ApplicationUser user)
+    {
+        if (string.IsNullOrEmpty(currentUserId)) return;
+
+        var friendship = await FriendsService.GetFriendshipAsync(currentUserId, user.Id);
+        if (friendship == null || friendship.Status != FriendshipStatus.Pending || friendship.RequesterId != currentUserId)
+        {
+            requestedUserIds.Remove(user.Id);
+            StateHasChanged();
+            return;
+        }
+
+        var result = await FriendsService.RemoveFriendAsync(friendship.Id, currentUserId);
+        if (result.Success)
+        {
+            requestedUserIds.Remove(user.Id);
+            statusMessage = $"Cancelled friend request to {GetDisplayName(user)}.";
+
+            try
+            {
+                await AuditLogRepository.LogActionAsync(currentUserId, ActionCategory.UserFriendsRequest, new UserFriendsRequestDetails
+                {
+                    OperationType = OperationTypeEnum.Cancel.ToString(),
+                    TargetUserId = user.Id,
+                    TargetUserDisplayName = GetDisplayName(user),
+                    IsInitiator = true
+                });
+            }
+            catch { /* Audit logging should not fail the operation */ }
+
+            sentRequestsCount = await FriendsService.GetSentRequestsCountAsync(currentUserId);
+            StateHasChanged();
+        }
+        else
+        {
+            errorMessage = result.ErrorMessage ?? "Failed to cancel friend request.";
+            AlertService.ShowError(result.ErrorMessage ?? "Failed to cancel friend request.");
         }
     }
 

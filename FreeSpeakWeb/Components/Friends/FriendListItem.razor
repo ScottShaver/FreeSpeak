@@ -87,6 +87,11 @@
                           FullWidth="true" />
         }
 
+        @if (ShowPending)
+        {
+            <span class="badge bg-warning text-dark mb-1">@Localizer["Pending"]</span>
+        }
+
         @if (ShowCancel)
         {
             <ActionButton Text="@Localizer["CancelRequest"]"
@@ -315,6 +320,12 @@
 
     [Parameter]
     public bool ShowCancel { get; set; }
+
+    /// <summary>
+    /// When true, shows a "Pending" badge indicating a friend request has already been sent.
+    /// </summary>
+    [Parameter]
+    public bool ShowPending { get; set; }
 
     [Parameter]
     public bool ShowRemove { get; set; }

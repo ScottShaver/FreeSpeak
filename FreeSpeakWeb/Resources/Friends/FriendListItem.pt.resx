@@ -79,4 +79,7 @@
   <data name="Remove" xml:space="preserve">
     <value>Remover</value>
   </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Pendente</value>
+  </data>
 </root>
