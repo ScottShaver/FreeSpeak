@@ -84,7 +84,7 @@
                                     }
                                 </div>
                                 <div class="member-stats text-muted small">
-                                    Joined: @member.JoinedAt.ToString("MMM dd, yyyy") | 
+                                    Joined: @member.JoinedAt.ToLocalTime().ToString("MMM dd, yyyy") | 
                                     Posts: @member.PostCount | 
                                     Points: @member.GroupPoints
                                 </div>
