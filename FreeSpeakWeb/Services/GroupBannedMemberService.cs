@@ -106,6 +106,9 @@ namespace FreeSpeakWeb.Services
 
                 await context.SaveChangesAsync();
 
+                // The ban removed the membership row, so keep the denormalized member count in sync
+                await GroupMemberCountHelper.RecomputeAsync(context, groupId);
+
                 _logger.LogInformation("User {UserId} banned from group {GroupId} by {BannedByUserId}", userId, groupId, bannedByUserId);
 
                 // Log ban action to audit log
@@ -160,6 +163,9 @@ namespace FreeSpeakWeb.Services
                 // Remove the ban
                 context.GroupBannedMembers.Remove(bannedMember);
                 await context.SaveChangesAsync();
+
+                // Unbanning does not restore membership, but recompute to heal any previously stale count
+                await GroupMemberCountHelper.RecomputeAsync(context, groupId);
 
                 _logger.LogInformation("User {UserId} unbanned from group {GroupId} by {UnbannedByUserId}", userId, groupId, unbannedByUserId);
                 return (true, null);

@@ -395,15 +395,9 @@ namespace FreeSpeakWeb.Services
                 };
 
                 context.GroupUsers.Add(groupUser);
-
-                // Update group member count
-                var group = await context.Groups.FindAsync(groupId);
-                if (group != null)
-                {
-                    group.MemberCount++;
-                }
-
                 await context.SaveChangesAsync();
+
+                await GroupMemberCountHelper.RecomputeAsync(context, groupId);
 
                 _logger.LogInformation("User {UserId} added to group {GroupId} with rules agreement: {HasAgreedToRules}", userId, groupId, hasAgreedToRules);
                 return (true, null);
@@ -958,15 +952,9 @@ namespace FreeSpeakWeb.Services
                 }
 
                 context.GroupUsers.Remove(groupUser);
-
-                // Update group member count
-                group.MemberCount--;
-                if (group.MemberCount < 0)
-                {
-                    group.MemberCount = 0;
-                }
-
                 await context.SaveChangesAsync();
+
+                await GroupMemberCountHelper.RecomputeAsync(context, groupId);
 
                                 // Log group leave to audit log
                                 await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserGroupLeave, new UserGroupLeaveDetails
@@ -1032,15 +1020,9 @@ namespace FreeSpeakWeb.Services
                 }
 
                 context.GroupUsers.Remove(groupUser);
-
-                // Update group member count
-                group.MemberCount--;
-                if (group.MemberCount < 0)
-                {
-                    group.MemberCount = 0;
-                }
-
                 await context.SaveChangesAsync();
+
+                await GroupMemberCountHelper.RecomputeAsync(context, groupId);
 
                 // Log member removal to audit log (logged from removed user's perspective)
                 await _auditLogRepository.LogActionAsync(targetUserId, ActionCategory.UserGroupLeave, new UserGroupLeaveDetails
