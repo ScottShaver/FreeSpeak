@@ -38,7 +38,8 @@ namespace FreeSpeakWeb.Data
             new("agent.newuser", "agent.newuser@agenttest.invalid", "Nina", "Newuser"),
             new("agent.friend", "agent.friend@agenttest.invalid", "Finn", "Friend"),
             new("agent.stranger", "agent.stranger@agenttest.invalid", "Stella", "Stranger"),
-        };
+                        new("agent.sysadmin2", "agent.sysadmin2@agenttest.invalid", "Sasha", "Sysadmin", "SystemAdministrator"),
+                    };
 
         /// <summary>
         /// Verifies that agent test seeding is allowed: Development environment, explicit opt-in
@@ -198,7 +199,158 @@ namespace FreeSpeakWeb.Data
             groupPost2.CommentCount = 1;
             await dbContext.SaveChangesAsync();
 
+            await SeedExtendedDataAsync(dbContext, users, openGroup, privateGroup, publicPost, baseTime);
+
             logger.LogInformation("Agent test seeding completed ({Count} personas).", Personas.Length);
+        }
+
+        /// <summary>
+        /// Appends the extended QA data after the original seed so existing IDs never shift:
+        /// pending join requests and posts, a pending friend request, notifications, a deep comment
+        /// thread, a third group with a non-creator admin, a group file record and extra member posts.
+        /// </summary>
+        /// <param name="dbContext">The database context used for related data.</param>
+        /// <param name="users">All seeded personas keyed by username.</param>
+        /// <param name="openGroup">The already saved open group (id 1).</param>
+        /// <param name="privateGroup">The already saved private group (id 2).</param>
+        /// <param name="publicPost">The already saved public feed post by agent.member.</param>
+        /// <param name="baseTime">Fixed anchor time for deterministic timestamps.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        private static async Task SeedExtendedDataAsync(
+            ApplicationDbContext dbContext,
+            Dictionary<string, ApplicationUser> users,
+            Group openGroup,
+            Group privateGroup,
+            Post publicPost,
+            DateTime baseTime)
+        {
+            var owner = users["agent.owner"];
+            var moderator = users["agent.moderator"];
+            var member = users["agent.member"];
+            var newUser = users["agent.newuser"];
+            var friend = users["agent.friend"];
+            var stranger = users["agent.stranger"];
+
+            // 1. Pending join requests to the private group.
+            dbContext.GroupJoinRequests.AddRange(
+                new GroupJoinRequest { GroupId = privateGroup.Id, UserId = newUser.Id, RequestedAt = baseTime.AddMinutes(30) },
+                new GroupJoinRequest { GroupId = privateGroup.Id, UserId = stranger.Id, RequestedAt = baseTime.AddMinutes(31) });
+
+            // 2. agent.friend is an approved private group member who has posts awaiting approval.
+            dbContext.GroupUsers.Add(new GroupUser { GroupId = privateGroup.Id, UserId = friend.Id, JoinedAt = baseTime.AddMinutes(25), LastActiveAt = baseTime.AddMinutes(25) });
+            privateGroup.MemberCount = 3;
+            var pendingPost1 = new GroupPost { GroupId = privateGroup.Id, AuthorId = friend.Id, Content = "Agent test: pending post 1 awaiting approval (approve me).", CreatedAt = baseTime.AddMinutes(32), Status = PostStatus.Pending };
+            var pendingPost2 = new GroupPost { GroupId = privateGroup.Id, AuthorId = friend.Id, Content = "Agent test: pending post 2 awaiting approval (decline me).", CreatedAt = baseTime.AddMinutes(33), Status = PostStatus.Pending };
+            dbContext.GroupPosts.AddRange(pendingPost1, pendingPost2);
+
+            // 3. Pending friend request from stranger to member.
+            var pendingFriendship = new Friendship { RequesterId = stranger.Id, AddresseeId = member.Id, Status = FriendshipStatus.Pending, RequestedAt = baseTime.AddMinutes(34) };
+            dbContext.Friendships.Add(pendingFriendship);
+
+            // 6. Group 3: owner is creator, agent.moderator is the only other admin; plus a second system admin.
+            var adminGroup = new Group
+            {
+                Name = "Agent Test Admin Group",
+                Description = "Creator plus one non-creator admin, for last-admin and self-demotion tests.",
+                CreatorId = owner.Id,
+                IsPublic = true,
+                IsActive = true,
+                CreatedAt = baseTime.AddMinutes(35),
+                LastActiveAt = baseTime.AddMinutes(35),
+                MemberCount = 3,
+            };
+            dbContext.Groups.Add(adminGroup);
+
+            // 8. Extra feed posts by member (public, friends-only, only-me).
+            dbContext.Posts.AddRange(
+                new Post { AuthorId = member.Id, Content = "Agent test: extra public post by member.", AudienceType = AudienceType.Public, CreatedAt = baseTime.AddMinutes(40) },
+                new Post { AuthorId = member.Id, Content = "Agent test: extra friends-only post by member.", AudienceType = AudienceType.FriendsOnly, CreatedAt = baseTime.AddMinutes(41) },
+                new Post { AuthorId = member.Id, Content = "Agent test: extra only-me post by member.", AudienceType = AudienceType.MeOnly, CreatedAt = baseTime.AddMinutes(42) });
+            var threadPost = new Post { AuthorId = member.Id, Content = "Agent test: post with a deeply nested comment thread.", AudienceType = AudienceType.Public, CreatedAt = baseTime.AddMinutes(43) };
+            dbContext.Posts.Add(threadPost);
+            await dbContext.SaveChangesAsync();
+
+            dbContext.GroupUsers.AddRange(
+                new GroupUser { GroupId = adminGroup.Id, UserId = owner.Id, IsAdmin = true, JoinedAt = baseTime.AddMinutes(35), LastActiveAt = baseTime.AddMinutes(35) },
+                new GroupUser { GroupId = adminGroup.Id, UserId = moderator.Id, IsAdmin = true, JoinedAt = baseTime.AddMinutes(35), LastActiveAt = baseTime.AddMinutes(35) },
+                new GroupUser { GroupId = adminGroup.Id, UserId = member.Id, JoinedAt = baseTime.AddMinutes(35), LastActiveAt = baseTime.AddMinutes(35) });
+
+            // 7. Group file records only; no binary is written, so listing works but downloads do not.
+            dbContext.GroupFiles.AddRange(
+                new GroupFile
+                {
+                    GroupId = openGroup.Id,
+                    UploaderId = member.Id,
+                    OriginalFileName = "agent-test-approved.txt",
+                    StoredFileName = "agent-test-approved.txt",
+                    Description = "Seeded approved file record (no file on disk).",
+                    FileSize = 1024,
+                    ContentType = "text/plain",
+                    UploadedAt = baseTime.AddMinutes(45),
+                    Status = GroupFileStatus.Approved,
+                    ReviewedById = owner.Id,
+                    ReviewedAt = baseTime.AddMinutes(46),
+                    VirusScanCompleted = true,
+                    VirusScanPassed = true,
+                    VirusScanCompletedAt = baseTime.AddMinutes(45),
+                },
+                new GroupFile
+                {
+                    GroupId = openGroup.Id,
+                    UploaderId = member.Id,
+                    OriginalFileName = "agent-test-pending.txt",
+                    StoredFileName = "agent-test-pending.txt",
+                    Description = "Seeded pending file record (no file on disk).",
+                    FileSize = 2048,
+                    ContentType = "text/plain",
+                    UploadedAt = baseTime.AddMinutes(47),
+                    Status = GroupFileStatus.Pending,
+                });
+
+            // 5. Comment chain: top-level comment plus 4 nested replies (depth 0..4). MaxFeedPostCommentDepth is 4.
+            Comment? parent = null;
+            for (var depth = 0; depth <= 4; depth++)
+            {
+                var comment = new Comment
+                {
+                    PostId = threadPost.Id,
+                    AuthorId = depth % 2 == 0 ? friend.Id : owner.Id,
+                    Content = $"Agent test: comment depth {depth}.",
+                    CreatedAt = baseTime.AddMinutes(50 + depth),
+                    ParentCommentId = parent?.Id,
+                };
+                dbContext.Comments.Add(comment);
+                await dbContext.SaveChangesAsync();
+                parent = comment;
+            }
+
+            threadPost.CommentCount = 5;
+
+            // 4. Notifications. ExpiresAt is null: cleanup only deletes rows with ExpiresAt < now, so these are never purged.
+            dbContext.UserNotifications.AddRange(
+                new UserNotification
+                {
+                    UserId = member.Id,
+                    Type = NotificationType.FriendRequest,
+                    TemplateKey = "FriendRequest",
+                    Data = System.Text.Json.JsonSerializer.Serialize(new
+                    {
+                        NavigationUrl = "/friends?tab=requests",
+                        FriendshipId = pendingFriendship.Id,
+                        RequesterId = stranger.Id,
+                        RequesterName = "Stella Stranger",
+                    }),
+                    IsRead = false,
+                    CreatedAt = baseTime.AddMinutes(34),
+                    ExpiresAt = null,
+                },
+                new UserNotification { UserId = member.Id, Type = NotificationType.System, Message = "Agent test: unread system notification for member.", IsRead = false, CreatedAt = baseTime.AddMinutes(60), ExpiresAt = null },
+                new UserNotification { UserId = member.Id, Type = NotificationType.System, Message = "Agent test: read system notification for member.", IsRead = true, CreatedAt = baseTime.AddMinutes(61), ExpiresAt = null },
+                new UserNotification { UserId = owner.Id, Type = NotificationType.System, Message = "Agent test: unread system notification for owner.", IsRead = false, CreatedAt = baseTime.AddMinutes(62), ExpiresAt = null },
+                new UserNotification { UserId = owner.Id, Type = NotificationType.System, Message = "Agent test: second unread notification for owner.", IsRead = false, CreatedAt = baseTime.AddMinutes(63), ExpiresAt = null },
+                new UserNotification { UserId = owner.Id, Type = NotificationType.System, Message = "Agent test: read system notification for owner.", IsRead = true, CreatedAt = baseTime.AddMinutes(64), ExpiresAt = null });
+
+            await dbContext.SaveChangesAsync();
         }
     }
 }
