@@ -94,9 +94,9 @@
                                 <input type="text" 
                                        class="form-control" 
                                        placeholder="@Localizer["SearchUsersPlaceholder"]" 
-                                       @bind="searchTerm"
-                                       @bind:event="oninput"
-                                       @onkeyup="HandleSearchKeyUp" />
+                                       value="@searchTerm"
+                                       @oninput="HandleSearchInput"
+                                       @onkeydown="HandleSearchKeyDown" />
                             </div>
 
                             @if (isSearching)
@@ -556,7 +556,8 @@
     private bool isSearching = false;
     private bool hasSearched = false;
     private string? errorMessage;
-    private System.Threading.Timer? searchDebounceTimer;
+    private CancellationTokenSource? searchDebounceCts;
+    private int searchVersion;
 
     // Role management modal state
     private bool showRoleModal = false;
@@ -597,53 +598,90 @@
     }
 
     /// <summary>
-    /// Handles the keyup event on the search input with debouncing.
-    /// Triggers a search 300ms after the user stops typing.
+    /// Handles typing in the search box. Triggers a search 300ms after the user stops typing.
     /// </summary>
-    private async Task HandleSearchKeyUp(KeyboardEventArgs e)
+    /// <param name="e">The input event containing the latest text.</param>
+    private async Task HandleSearchInput(ChangeEventArgs e)
     {
-        // Dispose existing timer
-        searchDebounceTimer?.Dispose();
+        searchTerm = e.Value?.ToString() ?? string.Empty;
 
-        // Capture the current search term value
-        var currentSearchTerm = searchTerm;
+        searchDebounceCts?.Cancel();
+        searchDebounceCts?.Dispose();
+        var cts = searchDebounceCts = new CancellationTokenSource();
 
-        // Create new timer that will trigger search after 300ms of no typing
-        searchDebounceTimer = new System.Threading.Timer(async _ =>
+        try
         {
-            await InvokeAsync(async () =>
-            {
-                // Use the captured search term to ensure we search for the correct value
-                if (string.IsNullOrWhiteSpace(currentSearchTerm))
-                {
-                    searchResults.Clear();
-                    hasSearched = false;
-                    StateHasChanged();
-                }
-                else if (!isSearching)
-                {
-                    isSearching = true;
-                    hasSearched = true;
-                    errorMessage = null;
+            await Task.Delay(300, cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
 
-                    try
-                    {
-                        searchResults = await UserRepository.AdminSearchUsersAsync(currentSearchTerm);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.LogError(ex, "[{ExceptionType}] Error occurred while searching for users. Search term: {SearchTerm}. Exception: {ExceptionMessage}", ex.GetType().Name, currentSearchTerm, ex.Message);
-                        errorMessage = "An error occurred while searching. Please try again.";
-                        searchResults.Clear();
-                    }
-                    finally
-                    {
-                        isSearching = false;
-                        StateHasChanged();
-                    }
-                }
-            });
-        }, null, 300, Timeout.Infinite);
+        await ExecuteSearchAsync();
+    }
+
+    /// <summary>
+    /// Runs the search immediately when Enter is pressed.
+    /// </summary>
+    /// <param name="e">The keyboard event.</param>
+    private async Task HandleSearchKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key != "Enter")
+        {
+            return;
+        }
+
+        searchDebounceCts?.Cancel();
+        await ExecuteSearchAsync();
+    }
+
+    /// <summary>
+    /// Searches for the current search term. Results from superseded searches are discarded
+    /// so the displayed results always match the latest text.
+    /// </summary>
+    private async Task ExecuteSearchAsync()
+    {
+        var term = searchTerm;
+        var version = ++searchVersion;
+
+        if (string.IsNullOrWhiteSpace(term))
+        {
+            searchResults.Clear();
+            hasSearched = false;
+            isSearching = false;
+            errorMessage = null;
+            StateHasChanged();
+            return;
+        }
+
+        isSearching = true;
+        hasSearched = true;
+        errorMessage = null;
+        StateHasChanged();
+
+        List<ApplicationUser>? results = null;
+        try
+        {
+            results = await UserRepository.AdminSearchUsersAsync(term);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "[{ExceptionType}] Error occurred while searching for users. Search term: {SearchTerm}. Exception: {ExceptionMessage}", ex.GetType().Name, term, ex.Message);
+            if (version == searchVersion)
+            {
+                errorMessage = "An error occurred while searching. Please try again.";
+            }
+        }
+
+        if (version != searchVersion)
+        {
+            return;
+        }
+
+        searchResults = results ?? new List<ApplicationUser>();
+        isSearching = false;
+        StateHasChanged();
     }
 
     /// <summary>
@@ -809,6 +847,7 @@
     /// </summary>
     public void Dispose()
     {
-        searchDebounceTimer?.Dispose();
+        searchDebounceCts?.Cancel();
+        searchDebounceCts?.Dispose();
     }
 }
