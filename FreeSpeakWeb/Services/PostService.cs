@@ -560,6 +560,26 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
+        /// Gets the number of posts on a user's profile feed that the viewer is allowed to see.
+        /// Applies the same audience rules as <see cref="GetPostsByUserWithAudienceFilterAsync"/>.
+        /// </summary>
+        /// <param name="authorId">The unique identifier of the profile owner.</param>
+        /// <param name="viewerId">The unique identifier of the viewing user.</param>
+        /// <returns>The number of posts visible to the viewer.</returns>
+        public async Task<int> GetVisibleUserPostCountAsync(string authorId, string viewerId)
+        {
+            try
+            {
+                return await _postRepository.GetCountByAuthorWithAudienceFilterAsync(authorId, viewerId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting visible post count for user {AuthorId} viewed by {ViewerId}", authorId, viewerId);
+                return 0;
+            }
+        }
+
+        /// <summary>
         /// Gets the total count of posts authored by a specific user.
         /// </summary>
         /// <param name="userId">The unique identifier of the user.</param>

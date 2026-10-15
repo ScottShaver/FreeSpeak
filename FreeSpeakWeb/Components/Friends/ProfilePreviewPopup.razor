@@ -7,6 +7,7 @@
 @inject GroupMemberService GroupMemberService
 @inject GroupPostService GroupPostService
 @inject PostService PostService
+@inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime JSRuntime
 
 @implements IAsyncDisposable
@@ -153,11 +154,16 @@
 
             try
             {
+                var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+                var viewerId = authState.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
                 // Load all statistics in parallel for better performance
                 var friendCountTask = FriendsService.GetFriendsCountAsync(User.Id);
                 var groupCountTask = GroupMemberService.GetUserGroupCountAsync(User.Id);
                 var groupPostCountTask = GroupPostService.GetUserTotalGroupPostCountAsync(User.Id);
-                var postCountTask = PostService.GetUserPostCountAsync(User.Id);
+                var postCountTask = string.IsNullOrEmpty(viewerId)
+                    ? Task.FromResult(0)
+                    : PostService.GetVisibleUserPostCountAsync(User.Id, viewerId);
 
                 await Task.WhenAll(friendCountTask, groupCountTask, groupPostCountTask, postCountTask);
 
