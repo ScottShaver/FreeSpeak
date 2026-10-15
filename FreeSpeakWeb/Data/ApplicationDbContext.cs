@@ -136,6 +136,11 @@ namespace FreeSpeakWeb.Data
         public DbSet<AuditLog> AuditLogs { get; set; }
 
         /// <summary>
+        /// Gets or sets the DbSet for administrator-managed configuration overrides.
+        /// </summary>
+        public DbSet<SystemSetting> SystemSettings { get; set; }
+
+        /// <summary>
         /// Configures the database model including relationships, indexes, constraints, and delete behaviors
         /// for all entities in the application. Called by EF Core during model creation.
         /// </summary>
