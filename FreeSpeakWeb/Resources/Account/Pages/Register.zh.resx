@@ -91,4 +91,13 @@
   <data name="ExternalRegisterTitle" xml:space="preserve">
     <value>使用其他服务注册。</value>
   </data>
+  <data name="ErrorWithDetails" xml:space="preserve">
+    <value>错误: {0}</value>
+  </data>
+  <data name="FirstNameTooLong" xml:space="preserve">
+    <value>名字不能超过 75 个字符。</value>
+  </data>
+  <data name="LastNameTooLong" xml:space="preserve">
+    <value>姓氏不能超过 75 个字符。</value>
+  </data>
 </root>

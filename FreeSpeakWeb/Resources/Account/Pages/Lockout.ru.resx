@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Заблокировано</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Учётная запись заблокирована</value>
+  </data>
+  <data name="PermanentTitle" xml:space="preserve">
+    <value>Учётная запись окончательно отключена</value>
+  </data>
+  <data name="PermanentDisabledMessage" xml:space="preserve">
+    <value>Ваша учётная запись была окончательно отключена системным администратором. Это действие нельзя отменить или обойти.</value>
+  </data>
+  <data name="ImportantLabel" xml:space="preserve">
+    <value>Важно:</value>
+  </data>
+  <data name="PermanentRecoveryNote" xml:space="preserve">
+    <value>Сброс пароля и другие способы восстановления учётной записи не разблокируют окончательно отключённую учётную запись.</value>
+  </data>
+  <data name="ContactAdminIfMistake" xml:space="preserve">
+    <value>Если вы считаете, что это ошибка, обратитесь к администратору сайта.</value>
+  </data>
+  <data name="TemporaryTitle" xml:space="preserve">
+    <value>Временная блокировка учётной записи</value>
+  </data>
+  <data name="TemporaryMessage" xml:space="preserve">
+    <value>Ваша учётная запись заблокирована из-за нескольких неудачных попыток входа.</value>
+  </data>
+  <data name="LockedUntilLabel" xml:space="preserve">
+    <value>Заблокировано до:</value>
+  </data>
+  <data name="TimeRemainingLabel" xml:space="preserve">
+    <value>Осталось времени:</value>
+  </data>
+  <data name="WhatYouCanDoLabel" xml:space="preserve">
+    <value>Что можно сделать:</value>
+  </data>
+  <data name="OptionWait" xml:space="preserve">
+    <value>Дождитесь окончания периода блокировки</value>
+  </data>
+  <data name="OptionForgotPassword" xml:space="preserve">
+    <value>Если вы забыли пароль, воспользуйтесь функцией «{0}»</value>
+  </data>
+  <data name="ForgotPasswordLink" xml:space="preserve">
+    <value>Забыли пароль</value>
+  </data>
+  <data name="OptionContactSupport" xml:space="preserve">
+    <value>Обратитесь в службу поддержки, если вам нужна срочная помощь</value>
+  </data>
+  <data name="AutoUnlockNote" xml:space="preserve">
+    <value>Ваша учётная запись будет разблокирована автоматически. Вы можете обновить эту страницу, чтобы повторить попытку входа.</value>
+  </data>
+  <data name="LockoutExpired" xml:space="preserve">
+    <value>Блокировка вашей учётной записи истекла. Теперь вы можете {0}.</value>
+  </data>
+  <data name="TryLoginLink" xml:space="preserve">
+    <value>повторить попытку входа</value>
+  </data>
+  <data name="ReturnHome" xml:space="preserve">
+    <value>Вернуться на главную</value>
+  </data>
+  <data name="StatusCardTitle" xml:space="preserve">
+    <value>Состояние учётной записи</value>
+  </data>
+  <data name="DetailsCardTitle" xml:space="preserve">
+    <value>Сведения о блокировке</value>
+  </data>
+  <data name="SecurityCardTitle" xml:space="preserve">
+    <value>Сведения о безопасности</value>
+  </data>
+  <data name="PermanentLockedByAdmin" xml:space="preserve">
+    <value>Ваша учётная запись была окончательно заблокирована системным администратором.</value>
+  </data>
+  <data name="PermanentTypicalCause" xml:space="preserve">
+    <value>Обычно это происходит из-за серьёзных или повторных нарушений условий использования сайта.</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+    <value>Состояние:</value>
+  </data>
+  <data name="PermanentlyDisabled" xml:space="preserve">
+    <value>Окончательно отключена</value>
+  </data>
+  <data name="RecoveryOptionsLabel" xml:space="preserve">
+    <value>Варианты восстановления:</value>
+  </data>
+  <data name="NoRecoveryOptions" xml:space="preserve">
+    <value>Нет — сброс пароля не разблокирует эту учётную запись</value>
+  </data>
+  <data name="ContactLabel" xml:space="preserve">
+    <value>Контакт:</value>
+  </data>
+  <data name="SiteAdminOnly" xml:space="preserve">
+    <value>Только администратор сайта</value>
+  </data>
+  <data name="OnlyAdminCanRemove" xml:space="preserve">
+    <value>Только системный администратор может снять постоянную блокировку учётной записи. Если вы считаете, что это ошибка, обратитесь в службу поддержки.</value>
+  </data>
+  <data name="TemporarilyLockedMessage" xml:space="preserve">
+    <value>Ваша учётная запись временно заблокирована из-за нескольких неудачных попыток входа.</value>
+  </data>
+  <data name="WhatToDoLabel" xml:space="preserve">
+    <value>Что делать:</value>
+  </data>
+  <data name="WhatToDoText" xml:space="preserve">
+    <value>Дождитесь окончания блокировки или воспользуйтесь функцией «{0}», чтобы разблокировать немедленно</value>
+  </data>
+  <data name="PasswordResetLink" xml:space="preserve">
+    <value>Сброс пароля</value>
+  </data>
+  <data name="SecurityExplanation" xml:space="preserve">
+    <value>В целях безопасности учётные записи временно блокируются после нескольких неудачных попыток входа. Это помогает защитить вашу учётную запись от попыток несанкционированного доступа.</value>
+  </data>
+  <data name="MaxAttemptsLabel" xml:space="preserve">
+    <value>Максимум попыток:</value>
+  </data>
+  <data name="MaxAttemptsValue" xml:space="preserve">
+    <value>Неудачных попыток входа: {0}</value>
+  </data>
+  <data name="LockoutDurationLabel" xml:space="preserve">
+    <value>Длительность блокировки:</value>
+  </data>
+  <data name="LockoutDurationValue" xml:space="preserve">
+    <value>{0} мин</value>
+  </data>
+  <data name="ResetLabel" xml:space="preserve">
+    <value>Сброс:</value>
+  </data>
+  <data name="ResetValue" xml:space="preserve">
+    <value>Успешный вход или сброс пароля обнулит счётчик неудачных попыток</value>
+  </data>
+  <data name="HoursSingular" xml:space="preserve">
+    <value>{0} ч</value>
+  </data>
+  <data name="HoursPlural" xml:space="preserve">
+    <value>{0} ч</value>
+  </data>
+  <data name="MinutesSingular" xml:space="preserve">
+    <value>{0} мин</value>
+  </data>
+  <data name="MinutesPlural" xml:space="preserve">
+    <value>{0} мин</value>
+  </data>
+  <data name="SecondsSingular" xml:space="preserve">
+    <value>{0} с</value>
+  </data>
+  <data name="SecondsPlural" xml:space="preserve">
+    <value>{0} с</value>
+  </data>
+</root>

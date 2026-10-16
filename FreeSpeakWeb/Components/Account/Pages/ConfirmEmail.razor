@@ -4,15 +4,17 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
 @using FreeSpeakWeb.Data
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
 @inject IOptions<SiteSettings> SiteSettings
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Account.Pages.ConfirmEmail> Localizer
 
-<PageTitle>@SiteSettings.Value.SiteName - Confirm email</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
 
-<h1>Confirm email</h1>
+<h1>@Localizer["Title"]</h1>
 <StatusMessage Message="@statusMessage" />
 
 @code {
@@ -39,13 +41,13 @@
         if (user is null)
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            statusMessage = $"Error loading user with ID {UserId}";
+            statusMessage = Localizer["ErrorLoadingUser", UserId];
         }
         else
         {
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Code));
             var result = await UserManager.ConfirmEmailAsync(user, code);
-            statusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            statusMessage = result.Succeeded ? Localizer["EmailConfirmed"] : Localizer["ErrorConfirmingEmail"];
         }
     }
 }

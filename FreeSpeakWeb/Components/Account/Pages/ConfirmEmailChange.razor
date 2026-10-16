@@ -4,16 +4,18 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
 @using FreeSpeakWeb.Data
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
 @inject IOptions<SiteSettings> SiteSettings
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Account.Pages.ConfirmEmailChange> Localizer
 
-<PageTitle>@SiteSettings.Value.SiteName - Confirm email change</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
 
-<h1>Confirm email change</h1>
+<h1>@Localizer["Title"]</h1>
 
 <StatusMessage Message="@message" />
 
@@ -37,14 +39,14 @@
         if (UserId is null || Email is null || Code is null)
         {
             RedirectManager.RedirectToWithStatus(
-                "Account/Login", "Error: Invalid email change confirmation link.", HttpContext);
+                "Account/Login", Localizer["ErrorInvalidLink"], HttpContext);
             return;
         }
 
         var user = await UserManager.FindByIdAsync(UserId);
         if (user is null)
         {
-            message = "Unable to find user with Id '{userId}'";
+            message = Localizer["UserNotFound", UserId];
             return;
         }
 
@@ -52,11 +54,11 @@
         var result = await UserManager.ChangeEmailAsync(user, Email, code);
         if (!result.Succeeded)
         {
-            message = "Error changing email.";
+            message = Localizer["ErrorChangingEmail"];
             return;
         }
 
         await SignInManager.RefreshSignInAsync(user);
-        message = "Thank you for confirming your email change.";
+        message = Localizer["EmailChangeConfirmed"];
     }
 }

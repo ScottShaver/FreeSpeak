@@ -91,4 +91,10 @@
   <data name="ExternalLoginTitle" xml:space="preserve">
     <value>Gebruik een andere dienst om in te loggen.</value>
   </data>
+  <data name="ErrorEmailNotConfirmed" xml:space="preserve">
+    <value>Fout: Je e-mailadres is niet bevestigd. Controleer je e-mail en bevestig je account.</value>
+  </data>
+  <data name="ErrorInvalidLogin" xml:space="preserve">
+    <value>Fout: Ongeldige gebruikersnaam of ongeldig wachtwoord. Probeer het opnieuw.</value>
+  </data>
 </root>

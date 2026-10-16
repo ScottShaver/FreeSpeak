@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Bloqueado</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Cuenta bloqueada</value>
+  </data>
+  <data name="PermanentTitle" xml:space="preserve">
+    <value>Cuenta deshabilitada permanentemente</value>
+  </data>
+  <data name="PermanentDisabledMessage" xml:space="preserve">
+    <value>Tu cuenta ha sido deshabilitada permanentemente por un administrador del sistema. Esta acción no se puede deshacer ni eludir.</value>
+  </data>
+  <data name="ImportantLabel" xml:space="preserve">
+    <value>Importante:</value>
+  </data>
+  <data name="PermanentRecoveryNote" xml:space="preserve">
+    <value>El restablecimiento de contraseña y otras opciones de recuperación de cuenta no desbloquearán una cuenta deshabilitada permanentemente.</value>
+  </data>
+  <data name="ContactAdminIfMistake" xml:space="preserve">
+    <value>Si crees que se trata de un error, ponte en contacto con el administrador del sitio para obtener ayuda.</value>
+  </data>
+  <data name="TemporaryTitle" xml:space="preserve">
+    <value>Bloqueo temporal de la cuenta</value>
+  </data>
+  <data name="TemporaryMessage" xml:space="preserve">
+    <value>Tu cuenta se ha bloqueado debido a varios intentos fallidos de inicio de sesión.</value>
+  </data>
+  <data name="LockedUntilLabel" xml:space="preserve">
+    <value>Bloqueado hasta:</value>
+  </data>
+  <data name="TimeRemainingLabel" xml:space="preserve">
+    <value>Tiempo restante:</value>
+  </data>
+  <data name="WhatYouCanDoLabel" xml:space="preserve">
+    <value>Lo que puedes hacer:</value>
+  </data>
+  <data name="OptionWait" xml:space="preserve">
+    <value>Espera a que termine el período de bloqueo</value>
+  </data>
+  <data name="OptionForgotPassword" xml:space="preserve">
+    <value>Si olvidaste tu contraseña, usa la opción {0}</value>
+  </data>
+  <data name="ForgotPasswordLink" xml:space="preserve">
+    <value>Olvidé mi contraseña</value>
+  </data>
+  <data name="OptionContactSupport" xml:space="preserve">
+    <value>Ponte en contacto con soporte si necesitas ayuda inmediata</value>
+  </data>
+  <data name="AutoUnlockNote" xml:space="preserve">
+    <value>Tu cuenta se desbloqueará automáticamente. Puedes actualizar esta página para intentar iniciar sesión de nuevo.</value>
+  </data>
+  <data name="LockoutExpired" xml:space="preserve">
+    <value>El bloqueo de tu cuenta ha expirado. Ahora puedes {0}.</value>
+  </data>
+  <data name="TryLoginLink" xml:space="preserve">
+    <value>intentar iniciar sesión de nuevo</value>
+  </data>
+  <data name="ReturnHome" xml:space="preserve">
+    <value>Volver al inicio</value>
+  </data>
+  <data name="StatusCardTitle" xml:space="preserve">
+    <value>Estado de la cuenta</value>
+  </data>
+  <data name="DetailsCardTitle" xml:space="preserve">
+    <value>Detalles de tu bloqueo</value>
+  </data>
+  <data name="SecurityCardTitle" xml:space="preserve">
+    <value>Información de seguridad</value>
+  </data>
+  <data name="PermanentLockedByAdmin" xml:space="preserve">
+    <value>Tu cuenta ha sido bloqueada permanentemente por un administrador del sistema.</value>
+  </data>
+  <data name="PermanentTypicalCause" xml:space="preserve">
+    <value>Esto suele ocurrir por infracciones graves o repetidas de los términos de servicio del sitio.</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+    <value>Estado:</value>
+  </data>
+  <data name="PermanentlyDisabled" xml:space="preserve">
+    <value>Deshabilitada permanentemente</value>
+  </data>
+  <data name="RecoveryOptionsLabel" xml:space="preserve">
+    <value>Opciones de recuperación:</value>
+  </data>
+  <data name="NoRecoveryOptions" xml:space="preserve">
+    <value>Ninguna: el restablecimiento de contraseña no desbloqueará esta cuenta</value>
+  </data>
+  <data name="ContactLabel" xml:space="preserve">
+    <value>Contacto:</value>
+  </data>
+  <data name="SiteAdminOnly" xml:space="preserve">
+    <value>Solo el administrador del sitio</value>
+  </data>
+  <data name="OnlyAdminCanRemove" xml:space="preserve">
+    <value>Solo un administrador del sistema puede eliminar un bloqueo permanente de la cuenta. Si crees que se trata de un error, ponte en contacto con soporte.</value>
+  </data>
+  <data name="TemporarilyLockedMessage" xml:space="preserve">
+    <value>Tu cuenta está bloqueada temporalmente debido a varios intentos fallidos de inicio de sesión.</value>
+  </data>
+  <data name="WhatToDoLabel" xml:space="preserve">
+    <value>Qué hacer:</value>
+  </data>
+  <data name="WhatToDoText" xml:space="preserve">
+    <value>Espera a que expire el bloqueo o usa {0} para desbloquear de inmediato</value>
+  </data>
+  <data name="PasswordResetLink" xml:space="preserve">
+    <value>restablecimiento de contraseña</value>
+  </data>
+  <data name="SecurityExplanation" xml:space="preserve">
+    <value>Por tu seguridad, las cuentas se bloquean temporalmente tras varios intentos fallidos de inicio de sesión. Esto ayuda a proteger tu cuenta de intentos de acceso no autorizados.</value>
+  </data>
+  <data name="MaxAttemptsLabel" xml:space="preserve">
+    <value>Intentos máximos:</value>
+  </data>
+  <data name="MaxAttemptsValue" xml:space="preserve">
+    <value>{0} intentos fallidos de inicio de sesión</value>
+  </data>
+  <data name="LockoutDurationLabel" xml:space="preserve">
+    <value>Duración del bloqueo:</value>
+  </data>
+  <data name="LockoutDurationValue" xml:space="preserve">
+    <value>{0} minutos</value>
+  </data>
+  <data name="ResetLabel" xml:space="preserve">
+    <value>Restablecimiento:</value>
+  </data>
+  <data name="ResetValue" xml:space="preserve">
+    <value>Un inicio de sesión correcto o el restablecimiento de contraseña borrará los intentos fallidos</value>
+  </data>
+  <data name="HoursSingular" xml:space="preserve">
+    <value>{0} hora</value>
+  </data>
+  <data name="HoursPlural" xml:space="preserve">
+    <value>{0} horas</value>
+  </data>
+  <data name="MinutesSingular" xml:space="preserve">
+    <value>{0} minuto</value>
+  </data>
+  <data name="MinutesPlural" xml:space="preserve">
+    <value>{0} minutos</value>
+  </data>
+  <data name="SecondsSingular" xml:space="preserve">
+    <value>{0} segundo</value>
+  </data>
+  <data name="SecondsPlural" xml:space="preserve">
+    <value>{0} segundos</value>
+  </data>
+</root>

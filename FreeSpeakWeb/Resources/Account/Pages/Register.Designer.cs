@@ -88,6 +88,15 @@ namespace FreeSpeakWeb.Resources.Account.Pages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error: {0}.
+        /// </summary>
+        public static string ErrorWithDetails {
+            get {
+                return ResourceManager.GetString("ErrorWithDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use another service to register..
         /// </summary>
         public static string ExternalRegisterTitle {
@@ -106,11 +115,29 @@ namespace FreeSpeakWeb.Resources.Account.Pages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to First Name cannot exceed 75 characters..
+        /// </summary>
+        public static string FirstNameTooLong {
+            get {
+                return ResourceManager.GetString("FirstNameTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last Name.
         /// </summary>
         public static string LastName {
             get {
                 return ResourceManager.GetString("LastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Name cannot exceed 75 characters..
+        /// </summary>
+        public static string LastNameTooLong {
+            get {
+                return ResourceManager.GetString("LastNameTooLong", resourceCulture);
             }
         }
         

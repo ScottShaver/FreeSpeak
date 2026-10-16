@@ -91,4 +91,13 @@
   <data name="ExternalRegisterTitle" xml:space="preserve">
     <value>別のサービスで登録してください。</value>
   </data>
+  <data name="ErrorWithDetails" xml:space="preserve">
+    <value>エラー: {0}</value>
+  </data>
+  <data name="FirstNameTooLong" xml:space="preserve">
+    <value>名は 75 文字以内で入力してください。</value>
+  </data>
+  <data name="LastNameTooLong" xml:space="preserve">
+    <value>姓は 75 文字以内で入力してください。</value>
+  </data>
 </root>

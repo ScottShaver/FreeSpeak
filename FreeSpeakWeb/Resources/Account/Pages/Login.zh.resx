@@ -91,4 +91,10 @@
   <data name="ExternalLoginTitle" xml:space="preserve">
     <value>使用其他服务登录。</value>
   </data>
+  <data name="ErrorEmailNotConfirmed" xml:space="preserve">
+    <value>错误: 您的电子邮件地址尚未确认。请查看您的电子邮件并确认您的帐户。</value>
+  </data>
+  <data name="ErrorInvalidLogin" xml:space="preserve">
+    <value>错误: 用户名或密码无效。请重试。</value>
+  </data>
 </root>

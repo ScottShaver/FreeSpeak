@@ -1,11 +1,13 @@
 ﻿@page "/Account/AccessDenied"
 
 @using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
 @inject IOptions<SiteSettings> SiteSettings
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Account.Pages.AccessDenied> Localizer
 
-<PageTitle>@SiteSettings.Value.SiteName - Access denied</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
 
 <header>
-    <h1 class="text-danger">Access denied</h1>
-    <p class="text-danger">You do not have access to this resource.</p>
+    <h1 class="text-danger">@Localizer["Title"]</h1>
+    <p class="text-danger">@Localizer["Message"]</p>
 </header>
