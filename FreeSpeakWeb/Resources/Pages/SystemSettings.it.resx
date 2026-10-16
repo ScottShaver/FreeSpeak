@@ -382,4 +382,16 @@
   <data name="E_SmtpFailed" xml:space="preserve">
     <value>Impossibile inviare l&apos;e-mail di prova.</value>
   </data>
+  <data name="G_Moderation" xml:space="preserve">
+    <value>Moderazione</value>
+  </data>
+  <data name="GD_Moderation" xml:space="preserve">
+    <value>Impostazioni della dashboard dei moderatori di sistema.</value>
+  </data>
+  <data name="L_StaleReportDays" xml:space="preserve">
+    <value>Soglia segnalazioni in ritardo (giorni)</value>
+  </data>
+  <data name="H_StaleReportDays" xml:space="preserve">
+    <value>Le segnalazioni in sospeso più vecchie di questi giorni sono contrassegnate come in ritardo nella dashboard.</value>
+  </data>
 </root>

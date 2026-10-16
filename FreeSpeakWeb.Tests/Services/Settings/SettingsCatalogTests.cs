@@ -24,6 +24,18 @@ namespace FreeSpeakWeb.Tests.Services.Settings
             actual.Should().Contain(keys.Split(','));
         }
 
+        /// <summary>Verifies the Moderation group exposes Moderation:StaleReportDays as a live (no restart) setting with the appsettings default.</summary>
+        [Fact]
+        public void Moderation_ExposesStaleReportDaysAsLiveSetting()
+        {
+            var group = SettingsCatalog.Find("moderation")!;
+
+            group.RestartRequired.Should().BeFalse();
+            var field = group.Fields.Should().ContainSingle().Subject;
+            field.Key.Should().Be("Moderation:StaleReportDays");
+            field.IsSecret.Should().BeFalse();
+        }
+
         /// <summary>Verifies each rate limit policy exposes MaxRequests, WindowMinutes and QueueLimit.</summary>
         [Fact]
         public void RateLimiting_ContainsAllPolicyKeys()

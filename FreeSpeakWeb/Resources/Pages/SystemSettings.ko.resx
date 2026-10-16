@@ -382,4 +382,16 @@
   <data name="E_SmtpFailed" xml:space="preserve">
     <value>테스트 이메일을 보낼 수 없습니다.</value>
   </data>
+  <data name="G_Moderation" xml:space="preserve">
+    <value>운영</value>
+  </data>
+  <data name="GD_Moderation" xml:space="preserve">
+    <value>시스템 운영자 대시보드 설정입니다.</value>
+  </data>
+  <data name="L_StaleReportDays" xml:space="preserve">
+    <value>지연된 신고 기준(일)</value>
+  </data>
+  <data name="H_StaleReportDays" xml:space="preserve">
+    <value>이 일수보다 오래 대기 중인 신고는 운영자 대시보드에서 지연으로 표시됩니다.</value>
+  </data>
 </root>

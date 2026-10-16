@@ -382,4 +382,16 @@
   <data name="E_SmtpFailed" xml:space="preserve">
     <value>تعذر إرسال البريد التجريبي.</value>
   </data>
+  <data name="G_Moderation" xml:space="preserve">
+    <value>الإشراف</value>
+  </data>
+  <data name="GD_Moderation" xml:space="preserve">
+    <value>إعدادات لوحة مشرفي النظام.</value>
+  </data>
+  <data name="L_StaleReportDays" xml:space="preserve">
+    <value>حد التقرير المتأخر (أيام)</value>
+  </data>
+  <data name="H_StaleReportDays" xml:space="preserve">
+    <value>تُعرض التقارير المعلقة الأقدم من هذا العدد من الأيام كمتأخرة في لوحة المشرف.</value>
+  </data>
 </root>

@@ -5,11 +5,13 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @using FreeSpeakWeb.Data
+@using FreeSpeakWeb.Components.Moderation
 @using Microsoft.Extensions.Localization
 
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.SystemModerator> Localizer
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.FeedReports> FeedLocalizer
 
 <PageTitle>@Localizer["PageTitle"]</PageTitle>
 
@@ -26,22 +28,27 @@
                 <strong>@Localizer["WelcomeGreeting"]</strong> @Localizer["WelcomeMessage"]
             </div>
 
-            <div class="card mt-4">
-                <div class="card-header">
-                    <h5 class="mb-0">@Localizer["AvailableFunctions"]</h5>
+            @if (!string.IsNullOrEmpty(currentUserId))
+            {
+                <ul class="nav nav-tabs mt-4" role="tablist">
+                    <li class="nav-item">
+                        <button type="button" class="nav-link @(activeTab == "overview" ? "active" : string.Empty)" @onclick='() => activeTab = "overview"' data-testid="tab-overview">@FeedLocalizer["TabOverview"]</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="nav-link @(activeTab == "feed" ? "active" : string.Empty)" @onclick='() => OpenFeedQueue(false)' data-testid="tab-feed-reports">@FeedLocalizer["TabFeedReports"]</button>
+                    </li>
+                </ul>
+                <div class="pt-3">
+                    @if (activeTab == "overview")
+                    {
+                        <ModerationOverviewPanel UserId="@currentUserId" OnOpenQueue="OpenFeedQueue" />
+                    }
+                    else
+                    {
+                        <FeedReportQueue @key="queueKey" UserId="@currentUserId" InitialStaleOnly="initialStaleOnly" />
+                    }
                 </div>
-                <div class="card-body">
-                    <p>@Localizer["FunctionsDescription"]</p>
-                    <ul>
-                        <li>@Localizer["ContentModerationQueue"]</li>
-                        <li>@Localizer["UserReportsReview"]</li>
-                        <li>@Localizer["FlaggedPostsManagement"]</li>
-                        <li>@Localizer["CommunityGuidelineEnforcement"]</li>
-                        <li>@Localizer["UserWarningsAndSuspensions"]</li>
-                        <li>@Localizer["ModerationActivityLogs"]</li>
-                    </ul>
-                </div>
-            </div>
+            }
 
             @if (!string.IsNullOrEmpty(currentUserName))
             {
@@ -61,6 +68,10 @@
 </div>
 
 @code {
+    private string? currentUserId;
+    private string activeTab = "overview";
+    private bool initialStaleOnly;
+    private int queueKey;
     private string? currentUserName;
     private string? currentUserEmail;
     private List<string> userRoles = new();
@@ -78,6 +89,7 @@
             var currentUser = await UserManager.GetUserAsync(user);
             if (currentUser != null)
             {
+                currentUserId = currentUser.Id;
                 currentUserName = currentUser.UserName;
                 currentUserEmail = currentUser.Email;
 
@@ -85,5 +97,16 @@
                 userRoles = roles.ToList();
             }
         }
+    }
+
+    /// <summary>
+    /// Switches to the feed reports tab, optionally restricted to stale reports.
+    /// </summary>
+    /// <param name="staleOnly">True to show only stale reports.</param>
+    private void OpenFeedQueue(bool staleOnly)
+    {
+        initialStaleOnly = staleOnly;
+        queueKey++;
+        activeTab = "feed";
     }
 }

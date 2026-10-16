@@ -20,7 +20,7 @@
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.MoreFunctions> Localizer
 
 @* Only show for authenticated users *@
-@if (isAuthenticated)
+@if (isAuthenticated && !isOnSystemModeratorPage)
 {
     <div class="more-functions-panel">
         <h5 class="panel-title">
@@ -165,6 +165,7 @@
     private bool canCreateGroup = false;
     private string currentUrl = string.Empty;
     private bool isOnGroupsPage = false;
+    private bool isOnSystemModeratorPage = false;
 
     // Create group modal state
     private bool showCreateGroupModal = false;
@@ -227,6 +228,9 @@
     {
         currentUrl = NavigationManager.Uri;
         var relativePath = NavigationManager.ToBaseRelativePath(currentUrl).ToLowerInvariant();
+
+        // The moderator dashboard has no use for this panel
+        isOnSystemModeratorPage = relativePath.StartsWith("system-moderator");
 
         // Check if we're on groups page or a specific group page
         isOnGroupsPage = relativePath.StartsWith("groups") || 

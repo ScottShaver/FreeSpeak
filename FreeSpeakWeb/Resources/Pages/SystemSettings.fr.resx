@@ -382,4 +382,16 @@
   <data name="E_SmtpFailed" xml:space="preserve">
     <value>L&apos;e-mail de test n&apos;a pas pu être envoyé.</value>
   </data>
+  <data name="G_Moderation" xml:space="preserve">
+    <value>Modération</value>
+  </data>
+  <data name="GD_Moderation" xml:space="preserve">
+    <value>Paramètres du tableau de bord des modérateurs système.</value>
+  </data>
+  <data name="L_StaleReportDays" xml:space="preserve">
+    <value>Seuil de signalement en retard (jours)</value>
+  </data>
+  <data name="H_StaleReportDays" xml:space="preserve">
+    <value>Les signalements en attente depuis plus de ce nombre de jours sont signalés comme en retard dans le tableau de bord.</value>
+  </data>
 </root>

@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabOverview" xml:space="preserve">
+    <value>Visão geral</value>
+  </data>
+  <data name="TabFeedReports" xml:space="preserve">
+    <value>Denúncias do feed</value>
+  </data>
+  <data name="OverviewPending" xml:space="preserve">
+    <value>Não revisadas</value>
+  </data>
+  <data name="OverviewUnderReview" xml:space="preserve">
+    <value>Em análise</value>
+  </data>
+  <data name="OverviewClosed" xml:space="preserve">
+    <value>Encerradas nos últimos 7 dias</value>
+  </data>
+  <data name="OverviewStale" xml:space="preserve">
+    <value>Atrasadas</value>
+  </data>
+  <data name="OverviewOpenQueue" xml:space="preserve">
+    <value>Abrir a fila</value>
+  </data>
+  <data name="StaleBanner" xml:space="preserve">
+    <value>{0} denúncia(s) pendente(s) aguardam há mais de {1} dias.</value>
+  </data>
+  <data name="StaleShow" xml:space="preserve">
+    <value>Mostrar denúncias atrasadas</value>
+  </data>
+  <data name="StaleClear" xml:space="preserve">
+    <value>Mostrar todas as denúncias</value>
+  </data>
+  <data name="StaleBadge" xml:space="preserve">
+    <value>Atrasada</value>
+  </data>
+  <data name="QueueTitle" xml:space="preserve">
+    <value>Fila de denúncias do feed</value>
+  </data>
+  <data name="FilterStatus" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="StatusAllOpen" xml:space="preserve">
+    <value>Todas abertas</value>
+  </data>
+  <data name="StatusNotReviewed" xml:space="preserve">
+    <value>Não revisada</value>
+  </data>
+  <data name="StatusUnderReview" xml:space="preserve">
+    <value>Em análise</value>
+  </data>
+  <data name="StatusActionTaken" xml:space="preserve">
+    <value>Ação tomada</value>
+  </data>
+  <data name="StatusDismissed" xml:space="preserve">
+    <value>Dispensada</value>
+  </data>
+  <data name="StatusResolved" xml:space="preserve">
+    <value>Resolvida</value>
+  </data>
+  <data name="FilterReason" xml:space="preserve">
+    <value>Motivo</value>
+  </data>
+  <data name="ReasonAll" xml:space="preserve">
+    <value>Todos os motivos</value>
+  </data>
+  <data name="FilterType" xml:space="preserve">
+    <value>Tipo de conteúdo</value>
+  </data>
+  <data name="TypeAll" xml:space="preserve">
+    <value>Todos os tipos</value>
+  </data>
+  <data name="TypePost" xml:space="preserve">
+    <value>Publicação</value>
+  </data>
+  <data name="TypeComment" xml:space="preserve">
+    <value>Comentário</value>
+  </data>
+  <data name="FilterFrom" xml:space="preserve">
+    <value>De</value>
+  </data>
+  <data name="FilterTo" xml:space="preserve">
+    <value>Até</value>
+  </data>
+  <data name="SortOldest" xml:space="preserve">
+    <value>Mais antigas primeiro</value>
+  </data>
+  <data name="SortNewest" xml:space="preserve">
+    <value>Mais recentes primeiro</value>
+  </data>
+  <data name="ClearFilters" xml:space="preserve">
+    <value>Limpar filtros</value>
+  </data>
+  <data name="ShowingCount" xml:space="preserve">
+    <value>Mostrando {0} de {1} denúncias</value>
+  </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>Carregar mais</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Carregando…</value>
+  </data>
+  <data name="QueueEmpty" xml:space="preserve">
+    <value>Nenhuma denúncia aguardando revisão.</value>
+  </data>
+  <data name="QueueEmptyFiltered" xml:space="preserve">
+    <value>Nenhuma denúncia corresponde aos filtros atuais.</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>Não foi possível carregar as denúncias.</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Tentar novamente</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Atualizar</value>
+  </data>
+  <data name="OtherReports" xml:space="preserve">
+    <value>+{0} outra(s) denúncia(s) sobre este conteúdo</value>
+  </data>
+  <data name="AuthorLabel" xml:space="preserve">
+    <value>Autor</value>
+  </data>
+  <data name="ReporterLabel" xml:space="preserve">
+    <value>Denunciante</value>
+  </data>
+  <data name="ReasonSpam" xml:space="preserve">
+    <value>Spam</value>
+  </data>
+  <data name="ReasonHarassment" xml:space="preserve">
+    <value>Assédio ou bullying</value>
+  </data>
+  <data name="ReasonHateSpeech" xml:space="preserve">
+    <value>Discurso de ódio</value>
+  </data>
+  <data name="ReasonMisinformation" xml:space="preserve">
+    <value>Desinformação</value>
+  </data>
+  <data name="ReasonAdultContent" xml:space="preserve">
+    <value>Conteúdo adulto</value>
+  </data>
+  <data name="ReasonViolence" xml:space="preserve">
+    <value>Violência ou conteúdo gráfico</value>
+  </data>
+  <data name="ReasonCopyright" xml:space="preserve">
+    <value>Violação de propriedade intelectual</value>
+  </data>
+  <data name="ReasonPrivacy" xml:space="preserve">
+    <value>Violação de privacidade</value>
+  </data>
+  <data name="ReasonSelfHarm" xml:space="preserve">
+    <value>Automutilação ou suicídio</value>
+  </data>
+  <data name="ReasonIllegal" xml:space="preserve">
+    <value>Atividade ilegal</value>
+  </data>
+  <data name="ReasonOther" xml:space="preserve">
+    <value>Outro</value>
+  </data>
+  <data name="ReasonViolatesGroupRule" xml:space="preserve">
+    <value>Viola uma regra do grupo</value>
+  </data>
+  <data name="ReasonOffTopic" xml:space="preserve">
+    <value>Fora do assunto</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Voltar à fila</value>
+  </data>
+  <data name="DetailTitle" xml:space="preserve">
+    <value>Denúncia n.º {0}</value>
+  </data>
+  <data name="ReportedContent" xml:space="preserve">
+    <value>Conteúdo denunciado</value>
+  </data>
+  <data name="ContentMissing" xml:space="preserve">
+    <value>O conteúdo denunciado não existe mais.</value>
+  </data>
+  <data name="ReporterDescription" xml:space="preserve">
+    <value>Descrição do denunciante</value>
+  </data>
+  <data name="NoDescription" xml:space="preserve">
+    <value>Nenhuma descrição foi fornecida.</value>
+  </data>
+  <data name="ReportedAt" xml:space="preserve">
+    <value>Denunciada</value>
+  </data>
+  <data name="OtherReportsOnContent" xml:space="preserve">
+    <value>Outras denúncias sobre este conteúdo</value>
+  </data>
+  <data name="AuthorHistory" xml:space="preserve">
+    <value>Foram feitas {0} outra(s) denúncia(s) contra este autor.</value>
+  </data>
+  <data name="NotesLabel" xml:space="preserve">
+    <value>Notas do moderador (opcional)</value>
+  </data>
+  <data name="ActionUnderReview" xml:space="preserve">
+    <value>Marcar em análise</value>
+  </data>
+  <data name="ActionDismiss" xml:space="preserve">
+    <value>Dispensar</value>
+  </data>
+  <data name="ActionResolve" xml:space="preserve">
+    <value>Resolver</value>
+  </data>
+  <data name="ActionRemove" xml:space="preserve">
+    <value>Remover conteúdo</value>
+  </data>
+  <data name="ConfirmDismiss" xml:space="preserve">
+    <value>Dispensar esta denúncia? As outras denúncias abertas sobre o mesmo conteúdo também serão encerradas.</value>
+  </data>
+  <data name="ConfirmResolve" xml:space="preserve">
+    <value>Marcar esta denúncia como resolvida sem remover o conteúdo? As outras denúncias abertas sobre o mesmo conteúdo também serão encerradas.</value>
+  </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>Marcar esta denúncia como em análise e assumi-la?</value>
+  </data>
+  <data name="ConfirmRemove" xml:space="preserve">
+    <value>Remover este conteúdo permanentemente? O autor e os denunciantes serão notificados.</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="DoneUnderReview" xml:space="preserve">
+    <value>A denúncia foi marcada como em análise.</value>
+  </data>
+  <data name="DoneDismissed" xml:space="preserve">
+    <value>A denúncia foi dispensada.</value>
+  </data>
+  <data name="DoneResolved" xml:space="preserve">
+    <value>A denúncia foi marcada como resolvida.</value>
+  </data>
+  <data name="DoneRemoved" xml:space="preserve">
+    <value>O conteúdo foi removido.</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>Você não tem permissão para fazer isso.</value>
+  </data>
+  <data name="ErrAlreadyReviewed" xml:space="preserve">
+    <value>Esta denúncia já foi tratada. A fila foi atualizada.</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>Esta denúncia não existe mais.</value>
+  </data>
+  <data name="ErrOwnContent" xml:space="preserve">
+    <value>Você não pode agir em denúncias sobre o seu próprio conteúdo.</value>
+  </data>
+  <data name="ErrOwnReport" xml:space="preserve">
+    <value>Você não pode agir em uma denúncia que você mesmo fez.</value>
+  </data>
+  <data name="ErrRemovalFailed" xml:space="preserve">
+    <value>Não foi possível remover o conteúdo. A denúncia não foi alterada.</value>
+  </data>
+  <data name="ErrTooLong" xml:space="preserve">
+    <value>As notas são muito longas (máximo de 2000 caracteres).</value>
+  </data>
+  <data name="ErrGeneric" xml:space="preserve">
+    <value>Algo deu errado. Tente novamente.</value>
+  </data>
+  <data name="CannotAct" xml:space="preserve">
+    <value>Você não pode agir nesta denúncia.</value>
+  </data>
+  <data name="ReviewedAlready" xml:space="preserve">
+    <value>Esta denúncia já foi encerrada.</value>
+  </data>
+  <data name="AgoJustNow" xml:space="preserve">
+    <value>agora mesmo</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>há {0} min</value>
+  </data>
+  <data name="AgoHours" xml:space="preserve">
+    <value>há {0} h</value>
+  </data>
+  <data name="AgoDays" xml:space="preserve">
+    <value>há {0} d</value>
+  </data>
+</root>

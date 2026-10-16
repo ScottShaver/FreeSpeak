@@ -40,6 +40,12 @@ namespace FreeSpeakWeb.DTOs
         /// <summary>The report was already reviewed.</summary>
         AlreadyReviewed,
 
+        /// <summary>A moderator tried to act on a report they filed themselves.</summary>
+        OwnReport,
+
+        /// <summary>The reported content could not be removed.</summary>
+        RemovalFailed,
+
         /// <summary>An unexpected failure occurred.</summary>
         Failed
     }

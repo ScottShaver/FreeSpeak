@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabOverview" xml:space="preserve">
+    <value>نظرة عامة</value>
+  </data>
+  <data name="TabFeedReports" xml:space="preserve">
+    <value>تقارير المنشورات</value>
+  </data>
+  <data name="OverviewPending" xml:space="preserve">
+    <value>لم تتم مراجعتها</value>
+  </data>
+  <data name="OverviewUnderReview" xml:space="preserve">
+    <value>قيد المراجعة</value>
+  </data>
+  <data name="OverviewClosed" xml:space="preserve">
+    <value>أُغلقت خلال آخر 7 أيام</value>
+  </data>
+  <data name="OverviewStale" xml:space="preserve">
+    <value>متأخرة</value>
+  </data>
+  <data name="OverviewOpenQueue" xml:space="preserve">
+    <value>فتح قائمة الانتظار</value>
+  </data>
+  <data name="StaleBanner" xml:space="preserve">
+    <value>{0} من التقارير المعلقة تنتظر منذ أكثر من {1} أيام.</value>
+  </data>
+  <data name="StaleShow" xml:space="preserve">
+    <value>عرض التقارير المتأخرة</value>
+  </data>
+  <data name="StaleClear" xml:space="preserve">
+    <value>عرض كل التقارير</value>
+  </data>
+  <data name="StaleBadge" xml:space="preserve">
+    <value>متأخر</value>
+  </data>
+  <data name="QueueTitle" xml:space="preserve">
+    <value>قائمة تقارير المنشورات</value>
+  </data>
+  <data name="FilterStatus" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="StatusAllOpen" xml:space="preserve">
+    <value>كل المفتوحة</value>
+  </data>
+  <data name="StatusNotReviewed" xml:space="preserve">
+    <value>لم تتم مراجعته</value>
+  </data>
+  <data name="StatusUnderReview" xml:space="preserve">
+    <value>قيد المراجعة</value>
+  </data>
+  <data name="StatusActionTaken" xml:space="preserve">
+    <value>تم اتخاذ إجراء</value>
+  </data>
+  <data name="StatusDismissed" xml:space="preserve">
+    <value>مرفوض</value>
+  </data>
+  <data name="StatusResolved" xml:space="preserve">
+    <value>تم الحل</value>
+  </data>
+  <data name="FilterReason" xml:space="preserve">
+    <value>السبب</value>
+  </data>
+  <data name="ReasonAll" xml:space="preserve">
+    <value>كل الأسباب</value>
+  </data>
+  <data name="FilterType" xml:space="preserve">
+    <value>نوع المحتوى</value>
+  </data>
+  <data name="TypeAll" xml:space="preserve">
+    <value>كل الأنواع</value>
+  </data>
+  <data name="TypePost" xml:space="preserve">
+    <value>منشور</value>
+  </data>
+  <data name="TypeComment" xml:space="preserve">
+    <value>تعليق</value>
+  </data>
+  <data name="FilterFrom" xml:space="preserve">
+    <value>من</value>
+  </data>
+  <data name="FilterTo" xml:space="preserve">
+    <value>إلى</value>
+  </data>
+  <data name="SortOldest" xml:space="preserve">
+    <value>الأقدم أولاً</value>
+  </data>
+  <data name="SortNewest" xml:space="preserve">
+    <value>الأحدث أولاً</value>
+  </data>
+  <data name="ClearFilters" xml:space="preserve">
+    <value>مسح عوامل التصفية</value>
+  </data>
+  <data name="ShowingCount" xml:space="preserve">
+    <value>عرض {0} من {1} تقرير</value>
+  </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>تحميل المزيد</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>جارٍ التحميل…</value>
+  </data>
+  <data name="QueueEmpty" xml:space="preserve">
+    <value>لا توجد تقارير في انتظار المراجعة.</value>
+  </data>
+  <data name="QueueEmptyFiltered" xml:space="preserve">
+    <value>لا توجد تقارير تطابق عوامل التصفية الحالية.</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>تعذر تحميل التقارير.</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>حاول مرة أخرى</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="OtherReports" xml:space="preserve">
+    <value>+{0} تقارير أخرى على هذا المحتوى</value>
+  </data>
+  <data name="AuthorLabel" xml:space="preserve">
+    <value>المؤلف</value>
+  </data>
+  <data name="ReporterLabel" xml:space="preserve">
+    <value>المُبلِّغ</value>
+  </data>
+  <data name="ReasonSpam" xml:space="preserve">
+    <value>بريد مزعج</value>
+  </data>
+  <data name="ReasonHarassment" xml:space="preserve">
+    <value>مضايقة أو تنمر</value>
+  </data>
+  <data name="ReasonHateSpeech" xml:space="preserve">
+    <value>خطاب كراهية</value>
+  </data>
+  <data name="ReasonMisinformation" xml:space="preserve">
+    <value>معلومات مضللة</value>
+  </data>
+  <data name="ReasonAdultContent" xml:space="preserve">
+    <value>محتوى للبالغين</value>
+  </data>
+  <data name="ReasonViolence" xml:space="preserve">
+    <value>عنف أو محتوى صادم</value>
+  </data>
+  <data name="ReasonCopyright" xml:space="preserve">
+    <value>انتهاك الملكية الفكرية</value>
+  </data>
+  <data name="ReasonPrivacy" xml:space="preserve">
+    <value>انتهاك الخصوصية</value>
+  </data>
+  <data name="ReasonSelfHarm" xml:space="preserve">
+    <value>إيذاء النفس أو الانتحار</value>
+  </data>
+  <data name="ReasonIllegal" xml:space="preserve">
+    <value>نشاط غير قانوني</value>
+  </data>
+  <data name="ReasonOther" xml:space="preserve">
+    <value>أخرى</value>
+  </data>
+  <data name="ReasonViolatesGroupRule" xml:space="preserve">
+    <value>ينتهك قاعدة المجموعة</value>
+  </data>
+  <data name="ReasonOffTopic" xml:space="preserve">
+    <value>خارج الموضوع</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>العودة إلى القائمة</value>
+  </data>
+  <data name="DetailTitle" xml:space="preserve">
+    <value>التقرير رقم {0}</value>
+  </data>
+  <data name="ReportedContent" xml:space="preserve">
+    <value>المحتوى المبلّغ عنه</value>
+  </data>
+  <data name="ContentMissing" xml:space="preserve">
+    <value>المحتوى المبلّغ عنه لم يعد موجوداً.</value>
+  </data>
+  <data name="ReporterDescription" xml:space="preserve">
+    <value>وصف المُبلِّغ</value>
+  </data>
+  <data name="NoDescription" xml:space="preserve">
+    <value>لم يتم تقديم وصف.</value>
+  </data>
+  <data name="ReportedAt" xml:space="preserve">
+    <value>تاريخ التبليغ</value>
+  </data>
+  <data name="OtherReportsOnContent" xml:space="preserve">
+    <value>تقارير أخرى على هذا المحتوى</value>
+  </data>
+  <data name="AuthorHistory" xml:space="preserve">
+    <value>تم تقديم {0} تقارير أخرى ضد هذا المؤلف.</value>
+  </data>
+  <data name="NotesLabel" xml:space="preserve">
+    <value>ملاحظات المشرف (اختياري)</value>
+  </data>
+  <data name="ActionUnderReview" xml:space="preserve">
+    <value>وضع قيد المراجعة</value>
+  </data>
+  <data name="ActionDismiss" xml:space="preserve">
+    <value>رفض</value>
+  </data>
+  <data name="ActionResolve" xml:space="preserve">
+    <value>حل</value>
+  </data>
+  <data name="ActionRemove" xml:space="preserve">
+    <value>إزالة المحتوى</value>
+  </data>
+  <data name="ConfirmDismiss" xml:space="preserve">
+    <value>هل تريد رفض هذا التقرير؟ سيتم أيضاً إغلاق أي تقارير مفتوحة أخرى على المحتوى نفسه.</value>
+  </data>
+  <data name="ConfirmResolve" xml:space="preserve">
+    <value>هل تريد وضع علامة تم الحل على هذا التقرير دون إزالة المحتوى؟ سيتم أيضاً إغلاق أي تقارير مفتوحة أخرى على المحتوى نفسه.</value>
+  </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>هل تريد وضع علامة قيد المراجعة على هذا التقرير وتولّيه؟</value>
+  </data>
+  <data name="ConfirmRemove" xml:space="preserve">
+    <value>هل تريد إزالة هذا المحتوى نهائياً؟ سيتم إشعار المؤلف والمُبلِّغين.</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>تأكيد</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="DoneUnderReview" xml:space="preserve">
+    <value>تم وضع التقرير قيد المراجعة.</value>
+  </data>
+  <data name="DoneDismissed" xml:space="preserve">
+    <value>تم رفض التقرير.</value>
+  </data>
+  <data name="DoneResolved" xml:space="preserve">
+    <value>تم وضع علامة تم الحل على التقرير.</value>
+  </data>
+  <data name="DoneRemoved" xml:space="preserve">
+    <value>تمت إزالة المحتوى.</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>غير مسموح لك بهذا الإجراء.</value>
+  </data>
+  <data name="ErrAlreadyReviewed" xml:space="preserve">
+    <value>تمت معالجة هذا التقرير بالفعل. تم تحديث القائمة.</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>هذا التقرير لم يعد موجوداً.</value>
+  </data>
+  <data name="ErrOwnContent" xml:space="preserve">
+    <value>لا يمكنك اتخاذ إجراء بشأن تقارير عن محتواك الخاص.</value>
+  </data>
+  <data name="ErrOwnReport" xml:space="preserve">
+    <value>لا يمكنك اتخاذ إجراء بشأن تقرير قدمته بنفسك.</value>
+  </data>
+  <data name="ErrRemovalFailed" xml:space="preserve">
+    <value>تعذرت إزالة المحتوى. لم يتغير التقرير.</value>
+  </data>
+  <data name="ErrTooLong" xml:space="preserve">
+    <value>الملاحظات طويلة جداً (الحد الأقصى 2000 حرف).</value>
+  </data>
+  <data name="ErrGeneric" xml:space="preserve">
+    <value>حدث خطأ ما. يرجى المحاولة مرة أخرى.</value>
+  </data>
+  <data name="CannotAct" xml:space="preserve">
+    <value>لا يمكنك اتخاذ إجراء بشأن هذا التقرير.</value>
+  </data>
+  <data name="ReviewedAlready" xml:space="preserve">
+    <value>تم إغلاق هذا التقرير بالفعل.</value>
+  </data>
+  <data name="AgoJustNow" xml:space="preserve">
+    <value>الآن</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>قبل {0} دقيقة</value>
+  </data>
+  <data name="AgoHours" xml:space="preserve">
+    <value>قبل {0} ساعة</value>
+  </data>
+  <data name="AgoDays" xml:space="preserve">
+    <value>قبل {0} يوم</value>
+  </data>
+</root>

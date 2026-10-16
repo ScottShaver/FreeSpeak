@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabOverview" xml:space="preserve">
+    <value>Обзор</value>
+  </data>
+  <data name="TabFeedReports" xml:space="preserve">
+    <value>Жалобы на ленту</value>
+  </data>
+  <data name="OverviewPending" xml:space="preserve">
+    <value>Не рассмотрены</value>
+  </data>
+  <data name="OverviewUnderReview" xml:space="preserve">
+    <value>На рассмотрении</value>
+  </data>
+  <data name="OverviewClosed" xml:space="preserve">
+    <value>Закрыты за последние 7 дней</value>
+  </data>
+  <data name="OverviewStale" xml:space="preserve">
+    <value>Просрочены</value>
+  </data>
+  <data name="OverviewOpenQueue" xml:space="preserve">
+    <value>Открыть очередь</value>
+  </data>
+  <data name="StaleBanner" xml:space="preserve">
+    <value>{0} ожидающих жалоб ждут более {1} дн.</value>
+  </data>
+  <data name="StaleShow" xml:space="preserve">
+    <value>Показать просроченные</value>
+  </data>
+  <data name="StaleClear" xml:space="preserve">
+    <value>Показать все жалобы</value>
+  </data>
+  <data name="StaleBadge" xml:space="preserve">
+    <value>Просрочено</value>
+  </data>
+  <data name="QueueTitle" xml:space="preserve">
+    <value>Очередь жалоб на ленту</value>
+  </data>
+  <data name="FilterStatus" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="StatusAllOpen" xml:space="preserve">
+    <value>Все открытые</value>
+  </data>
+  <data name="StatusNotReviewed" xml:space="preserve">
+    <value>Не рассмотрено</value>
+  </data>
+  <data name="StatusUnderReview" xml:space="preserve">
+    <value>На рассмотрении</value>
+  </data>
+  <data name="StatusActionTaken" xml:space="preserve">
+    <value>Меры приняты</value>
+  </data>
+  <data name="StatusDismissed" xml:space="preserve">
+    <value>Отклонено</value>
+  </data>
+  <data name="StatusResolved" xml:space="preserve">
+    <value>Решено</value>
+  </data>
+  <data name="FilterReason" xml:space="preserve">
+    <value>Причина</value>
+  </data>
+  <data name="ReasonAll" xml:space="preserve">
+    <value>Все причины</value>
+  </data>
+  <data name="FilterType" xml:space="preserve">
+    <value>Тип контента</value>
+  </data>
+  <data name="TypeAll" xml:space="preserve">
+    <value>Все типы</value>
+  </data>
+  <data name="TypePost" xml:space="preserve">
+    <value>Публикация</value>
+  </data>
+  <data name="TypeComment" xml:space="preserve">
+    <value>Комментарий</value>
+  </data>
+  <data name="FilterFrom" xml:space="preserve">
+    <value>С</value>
+  </data>
+  <data name="FilterTo" xml:space="preserve">
+    <value>По</value>
+  </data>
+  <data name="SortOldest" xml:space="preserve">
+    <value>Сначала старые</value>
+  </data>
+  <data name="SortNewest" xml:space="preserve">
+    <value>Сначала новые</value>
+  </data>
+  <data name="ClearFilters" xml:space="preserve">
+    <value>Сбросить фильтры</value>
+  </data>
+  <data name="ShowingCount" xml:space="preserve">
+    <value>Показано {0} из {1} жалоб</value>
+  </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>Загрузить ещё</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Загрузка…</value>
+  </data>
+  <data name="QueueEmpty" xml:space="preserve">
+    <value>Нет жалоб, ожидающих рассмотрения.</value>
+  </data>
+  <data name="QueueEmptyFiltered" xml:space="preserve">
+    <value>Нет жалоб, соответствующих текущим фильтрам.</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>Не удалось загрузить жалобы.</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Повторить</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="OtherReports" xml:space="preserve">
+    <value>+{0} других жалоб на этот контент</value>
+  </data>
+  <data name="AuthorLabel" xml:space="preserve">
+    <value>Автор</value>
+  </data>
+  <data name="ReporterLabel" xml:space="preserve">
+    <value>Автор жалобы</value>
+  </data>
+  <data name="ReasonSpam" xml:space="preserve">
+    <value>Спам</value>
+  </data>
+  <data name="ReasonHarassment" xml:space="preserve">
+    <value>Преследование или травля</value>
+  </data>
+  <data name="ReasonHateSpeech" xml:space="preserve">
+    <value>Разжигание ненависти</value>
+  </data>
+  <data name="ReasonMisinformation" xml:space="preserve">
+    <value>Дезинформация</value>
+  </data>
+  <data name="ReasonAdultContent" xml:space="preserve">
+    <value>Контент для взрослых</value>
+  </data>
+  <data name="ReasonViolence" xml:space="preserve">
+    <value>Насилие или шокирующий контент</value>
+  </data>
+  <data name="ReasonCopyright" xml:space="preserve">
+    <value>Нарушение интеллектуальной собственности</value>
+  </data>
+  <data name="ReasonPrivacy" xml:space="preserve">
+    <value>Нарушение конфиденциальности</value>
+  </data>
+  <data name="ReasonSelfHarm" xml:space="preserve">
+    <value>Самоповреждение или суицид</value>
+  </data>
+  <data name="ReasonIllegal" xml:space="preserve">
+    <value>Незаконная деятельность</value>
+  </data>
+  <data name="ReasonOther" xml:space="preserve">
+    <value>Другое</value>
+  </data>
+  <data name="ReasonViolatesGroupRule" xml:space="preserve">
+    <value>Нарушает правило группы</value>
+  </data>
+  <data name="ReasonOffTopic" xml:space="preserve">
+    <value>Не по теме</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Назад к очереди</value>
+  </data>
+  <data name="DetailTitle" xml:space="preserve">
+    <value>Жалоба №{0}</value>
+  </data>
+  <data name="ReportedContent" xml:space="preserve">
+    <value>Контент, на который пожаловались</value>
+  </data>
+  <data name="ContentMissing" xml:space="preserve">
+    <value>Контент, на который пожаловались, больше не существует.</value>
+  </data>
+  <data name="ReporterDescription" xml:space="preserve">
+    <value>Описание от автора жалобы</value>
+  </data>
+  <data name="NoDescription" xml:space="preserve">
+    <value>Описание не указано.</value>
+  </data>
+  <data name="ReportedAt" xml:space="preserve">
+    <value>Подана</value>
+  </data>
+  <data name="OtherReportsOnContent" xml:space="preserve">
+    <value>Другие жалобы на этот контент</value>
+  </data>
+  <data name="AuthorHistory" xml:space="preserve">
+    <value>На этого автора подано ещё жалоб: {0}.</value>
+  </data>
+  <data name="NotesLabel" xml:space="preserve">
+    <value>Заметки модератора (необязательно)</value>
+  </data>
+  <data name="ActionUnderReview" xml:space="preserve">
+    <value>Отметить как рассматриваемую</value>
+  </data>
+  <data name="ActionDismiss" xml:space="preserve">
+    <value>Отклонить</value>
+  </data>
+  <data name="ActionResolve" xml:space="preserve">
+    <value>Решить</value>
+  </data>
+  <data name="ActionRemove" xml:space="preserve">
+    <value>Удалить контент</value>
+  </data>
+  <data name="ConfirmDismiss" xml:space="preserve">
+    <value>Отклонить эту жалобу? Остальные открытые жалобы на тот же контент тоже будут закрыты.</value>
+  </data>
+  <data name="ConfirmResolve" xml:space="preserve">
+    <value>Отметить жалобу как решённую без удаления контента? Остальные открытые жалобы на тот же контент тоже будут закрыты.</value>
+  </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>Отметить жалобу как «на рассмотрении» и взять её в работу?</value>
+  </data>
+  <data name="ConfirmRemove" xml:space="preserve">
+    <value>Удалить этот контент навсегда? Автор и авторы жалоб получат уведомление.</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Подтвердить</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="DoneUnderReview" xml:space="preserve">
+    <value>Жалоба отмечена как рассматриваемая.</value>
+  </data>
+  <data name="DoneDismissed" xml:space="preserve">
+    <value>Жалоба отклонена.</value>
+  </data>
+  <data name="DoneResolved" xml:space="preserve">
+    <value>Жалоба отмечена как решённая.</value>
+  </data>
+  <data name="DoneRemoved" xml:space="preserve">
+    <value>Контент удалён.</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>У вас нет прав на это действие.</value>
+  </data>
+  <data name="ErrAlreadyReviewed" xml:space="preserve">
+    <value>Эта жалоба уже обработана. Очередь обновлена.</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>Эта жалоба больше не существует.</value>
+  </data>
+  <data name="ErrOwnContent" xml:space="preserve">
+    <value>Вы не можете обрабатывать жалобы на собственный контент.</value>
+  </data>
+  <data name="ErrOwnReport" xml:space="preserve">
+    <value>Вы не можете обрабатывать жалобу, поданную вами.</value>
+  </data>
+  <data name="ErrRemovalFailed" xml:space="preserve">
+    <value>Не удалось удалить контент. Жалоба осталась без изменений.</value>
+  </data>
+  <data name="ErrTooLong" xml:space="preserve">
+    <value>Заметки слишком длинные (максимум 2000 символов).</value>
+  </data>
+  <data name="ErrGeneric" xml:space="preserve">
+    <value>Что-то пошло не так. Повторите попытку.</value>
+  </data>
+  <data name="CannotAct" xml:space="preserve">
+    <value>Вы не можете обработать эту жалобу.</value>
+  </data>
+  <data name="ReviewedAlready" xml:space="preserve">
+    <value>Эта жалоба уже закрыта.</value>
+  </data>
+  <data name="AgoJustNow" xml:space="preserve">
+    <value>только что</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0} мин назад</value>
+  </data>
+  <data name="AgoHours" xml:space="preserve">
+    <value>{0} ч назад</value>
+  </data>
+  <data name="AgoDays" xml:space="preserve">
+    <value>{0} дн. назад</value>
+  </data>
+</root>

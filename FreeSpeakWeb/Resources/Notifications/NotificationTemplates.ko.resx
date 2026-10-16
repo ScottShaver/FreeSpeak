@@ -112,4 +112,7 @@
   <data name="FeedReportReviewed" xml:space="preserve">
     <value>회원님의 신고가 검토되었습니다.</value>
   </data>
+  <data name="FeedContentRemoved" xml:space="preserve">
+    <value>커뮤니티 가이드라인을 위반하여 회원님의 콘텐츠가 삭제되었습니다.</value>
+  </data>
 </root>

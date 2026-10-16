@@ -382,4 +382,16 @@
   <data name="E_SmtpFailed" xml:space="preserve">
     <value>Не удалось отправить тестовое письмо.</value>
   </data>
+  <data name="G_Moderation" xml:space="preserve">
+    <value>Модерация</value>
+  </data>
+  <data name="GD_Moderation" xml:space="preserve">
+    <value>Настройки панели системных модераторов.</value>
+  </data>
+  <data name="L_StaleReportDays" xml:space="preserve">
+    <value>Порог просроченных жалоб (дни)</value>
+  </data>
+  <data name="H_StaleReportDays" xml:space="preserve">
+    <value>Ожидающие жалобы старше этого числа дней отмечаются на панели модератора как просроченные.</value>
+  </data>
 </root>

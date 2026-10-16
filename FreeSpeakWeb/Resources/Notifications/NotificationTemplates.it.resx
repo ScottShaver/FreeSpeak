@@ -112,4 +112,7 @@
   <data name="FeedReportReviewed" xml:space="preserve">
     <value>La tua segnalazione è stata esaminata.</value>
   </data>
+  <data name="FeedContentRemoved" xml:space="preserve">
+    <value>Il tuo contenuto è stato rimosso perché viola le linee guida della community.</value>
+  </data>
 </root>

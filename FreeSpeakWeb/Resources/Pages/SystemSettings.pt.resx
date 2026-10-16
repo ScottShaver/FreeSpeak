@@ -382,4 +382,16 @@
   <data name="E_SmtpFailed" xml:space="preserve">
     <value>Não foi possível enviar o e-mail de teste.</value>
   </data>
+  <data name="G_Moderation" xml:space="preserve">
+    <value>Moderação</value>
+  </data>
+  <data name="GD_Moderation" xml:space="preserve">
+    <value>Configurações do painel de moderadores do sistema.</value>
+  </data>
+  <data name="L_StaleReportDays" xml:space="preserve">
+    <value>Limite de denúncias atrasadas (dias)</value>
+  </data>
+  <data name="H_StaleReportDays" xml:space="preserve">
+    <value>As denúncias pendentes há mais do que este número de dias são sinalizadas como atrasadas no painel de moderação.</value>
+  </data>
 </root>

@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabOverview" xml:space="preserve">
+    <value>Übersicht</value>
+  </data>
+  <data name="TabFeedReports" xml:space="preserve">
+    <value>Feed-Meldungen</value>
+  </data>
+  <data name="OverviewPending" xml:space="preserve">
+    <value>Nicht geprüft</value>
+  </data>
+  <data name="OverviewUnderReview" xml:space="preserve">
+    <value>In Prüfung</value>
+  </data>
+  <data name="OverviewClosed" xml:space="preserve">
+    <value>In den letzten 7 Tagen abgeschlossen</value>
+  </data>
+  <data name="OverviewStale" xml:space="preserve">
+    <value>Veraltet</value>
+  </data>
+  <data name="OverviewOpenQueue" xml:space="preserve">
+    <value>Warteschlange öffnen</value>
+  </data>
+  <data name="StaleBanner" xml:space="preserve">
+    <value>{0} offene Meldung(en) warten seit mehr als {1} Tagen.</value>
+  </data>
+  <data name="StaleShow" xml:space="preserve">
+    <value>Veraltete Meldungen anzeigen</value>
+  </data>
+  <data name="StaleClear" xml:space="preserve">
+    <value>Alle Meldungen anzeigen</value>
+  </data>
+  <data name="StaleBadge" xml:space="preserve">
+    <value>Veraltet</value>
+  </data>
+  <data name="QueueTitle" xml:space="preserve">
+    <value>Warteschlange der Feed-Meldungen</value>
+  </data>
+  <data name="FilterStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="StatusAllOpen" xml:space="preserve">
+    <value>Alle offenen</value>
+  </data>
+  <data name="StatusNotReviewed" xml:space="preserve">
+    <value>Nicht geprüft</value>
+  </data>
+  <data name="StatusUnderReview" xml:space="preserve">
+    <value>In Prüfung</value>
+  </data>
+  <data name="StatusActionTaken" xml:space="preserve">
+    <value>Maßnahme ergriffen</value>
+  </data>
+  <data name="StatusDismissed" xml:space="preserve">
+    <value>Abgelehnt</value>
+  </data>
+  <data name="StatusResolved" xml:space="preserve">
+    <value>Gelöst</value>
+  </data>
+  <data name="FilterReason" xml:space="preserve">
+    <value>Grund</value>
+  </data>
+  <data name="ReasonAll" xml:space="preserve">
+    <value>Alle Gründe</value>
+  </data>
+  <data name="FilterType" xml:space="preserve">
+    <value>Inhaltstyp</value>
+  </data>
+  <data name="TypeAll" xml:space="preserve">
+    <value>Alle Typen</value>
+  </data>
+  <data name="TypePost" xml:space="preserve">
+    <value>Beitrag</value>
+  </data>
+  <data name="TypeComment" xml:space="preserve">
+    <value>Kommentar</value>
+  </data>
+  <data name="FilterFrom" xml:space="preserve">
+    <value>Von</value>
+  </data>
+  <data name="FilterTo" xml:space="preserve">
+    <value>Bis</value>
+  </data>
+  <data name="SortOldest" xml:space="preserve">
+    <value>Älteste zuerst</value>
+  </data>
+  <data name="SortNewest" xml:space="preserve">
+    <value>Neueste zuerst</value>
+  </data>
+  <data name="ClearFilters" xml:space="preserve">
+    <value>Filter zurücksetzen</value>
+  </data>
+  <data name="ShowingCount" xml:space="preserve">
+    <value>{0} von {1} Meldungen werden angezeigt</value>
+  </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>Mehr laden</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Wird geladen…</value>
+  </data>
+  <data name="QueueEmpty" xml:space="preserve">
+    <value>Es warten keine Meldungen auf eine Prüfung.</value>
+  </data>
+  <data name="QueueEmptyFiltered" xml:space="preserve">
+    <value>Keine Meldungen entsprechen den aktuellen Filtern.</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>Die Meldungen konnten nicht geladen werden.</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Erneut versuchen</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
+  <data name="OtherReports" xml:space="preserve">
+    <value>+{0} weitere Meldung(en) zu diesem Inhalt</value>
+  </data>
+  <data name="AuthorLabel" xml:space="preserve">
+    <value>Autor</value>
+  </data>
+  <data name="ReporterLabel" xml:space="preserve">
+    <value>Meldende Person</value>
+  </data>
+  <data name="ReasonSpam" xml:space="preserve">
+    <value>Spam</value>
+  </data>
+  <data name="ReasonHarassment" xml:space="preserve">
+    <value>Belästigung oder Mobbing</value>
+  </data>
+  <data name="ReasonHateSpeech" xml:space="preserve">
+    <value>Hassrede</value>
+  </data>
+  <data name="ReasonMisinformation" xml:space="preserve">
+    <value>Falschinformationen</value>
+  </data>
+  <data name="ReasonAdultContent" xml:space="preserve">
+    <value>Inhalte für Erwachsene</value>
+  </data>
+  <data name="ReasonViolence" xml:space="preserve">
+    <value>Gewalt oder drastische Inhalte</value>
+  </data>
+  <data name="ReasonCopyright" xml:space="preserve">
+    <value>Verletzung geistigen Eigentums</value>
+  </data>
+  <data name="ReasonPrivacy" xml:space="preserve">
+    <value>Verletzung der Privatsphäre</value>
+  </data>
+  <data name="ReasonSelfHarm" xml:space="preserve">
+    <value>Selbstverletzung oder Suizid</value>
+  </data>
+  <data name="ReasonIllegal" xml:space="preserve">
+    <value>Illegale Aktivitäten</value>
+  </data>
+  <data name="ReasonOther" xml:space="preserve">
+    <value>Sonstiges</value>
+  </data>
+  <data name="ReasonViolatesGroupRule" xml:space="preserve">
+    <value>Verstößt gegen eine Gruppenregel</value>
+  </data>
+  <data name="ReasonOffTopic" xml:space="preserve">
+    <value>Themenfremd</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Zurück zur Warteschlange</value>
+  </data>
+  <data name="DetailTitle" xml:space="preserve">
+    <value>Meldung Nr. {0}</value>
+  </data>
+  <data name="ReportedContent" xml:space="preserve">
+    <value>Gemeldeter Inhalt</value>
+  </data>
+  <data name="ContentMissing" xml:space="preserve">
+    <value>Der gemeldete Inhalt existiert nicht mehr.</value>
+  </data>
+  <data name="ReporterDescription" xml:space="preserve">
+    <value>Beschreibung der meldenden Person</value>
+  </data>
+  <data name="NoDescription" xml:space="preserve">
+    <value>Es wurde keine Beschreibung angegeben.</value>
+  </data>
+  <data name="ReportedAt" xml:space="preserve">
+    <value>Gemeldet</value>
+  </data>
+  <data name="OtherReportsOnContent" xml:space="preserve">
+    <value>Weitere Meldungen zu diesem Inhalt</value>
+  </data>
+  <data name="AuthorHistory" xml:space="preserve">
+    <value>Gegen diese Person wurden {0} weitere Meldung(en) eingereicht.</value>
+  </data>
+  <data name="NotesLabel" xml:space="preserve">
+    <value>Notizen des Moderators (optional)</value>
+  </data>
+  <data name="ActionUnderReview" xml:space="preserve">
+    <value>Als in Prüfung markieren</value>
+  </data>
+  <data name="ActionDismiss" xml:space="preserve">
+    <value>Ablehnen</value>
+  </data>
+  <data name="ActionResolve" xml:space="preserve">
+    <value>Als gelöst markieren</value>
+  </data>
+  <data name="ActionRemove" xml:space="preserve">
+    <value>Inhalt entfernen</value>
+  </data>
+  <data name="ConfirmDismiss" xml:space="preserve">
+    <value>Diese Meldung ablehnen? Weitere offene Meldungen zum selben Inhalt werden ebenfalls geschlossen.</value>
+  </data>
+  <data name="ConfirmResolve" xml:space="preserve">
+    <value>Diese Meldung als gelöst markieren, ohne den Inhalt zu entfernen? Weitere offene Meldungen zum selben Inhalt werden ebenfalls geschlossen.</value>
+  </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>Diese Meldung als in Prüfung markieren und übernehmen?</value>
+  </data>
+  <data name="ConfirmRemove" xml:space="preserve">
+    <value>Diesen Inhalt dauerhaft entfernen? Die Autorin bzw. der Autor und die Meldenden werden benachrichtigt.</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Bestätigen</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="DoneUnderReview" xml:space="preserve">
+    <value>Die Meldung ist jetzt als in Prüfung markiert.</value>
+  </data>
+  <data name="DoneDismissed" xml:space="preserve">
+    <value>Die Meldung wurde abgelehnt.</value>
+  </data>
+  <data name="DoneResolved" xml:space="preserve">
+    <value>Die Meldung wurde als gelöst markiert.</value>
+  </data>
+  <data name="DoneRemoved" xml:space="preserve">
+    <value>Der Inhalt wurde entfernt.</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>Dazu bist du nicht berechtigt.</value>
+  </data>
+  <data name="ErrAlreadyReviewed" xml:space="preserve">
+    <value>Diese Meldung wurde bereits bearbeitet. Die Warteschlange wurde aktualisiert.</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>Diese Meldung existiert nicht mehr.</value>
+  </data>
+  <data name="ErrOwnContent" xml:space="preserve">
+    <value>Du kannst keine Meldungen zu deinen eigenen Inhalten bearbeiten.</value>
+  </data>
+  <data name="ErrOwnReport" xml:space="preserve">
+    <value>Du kannst keine Meldung bearbeiten, die du selbst eingereicht hast.</value>
+  </data>
+  <data name="ErrRemovalFailed" xml:space="preserve">
+    <value>Der Inhalt konnte nicht entfernt werden. Die Meldung blieb unverändert.</value>
+  </data>
+  <data name="ErrTooLong" xml:space="preserve">
+    <value>Die Notizen sind zu lang (maximal 2000 Zeichen).</value>
+  </data>
+  <data name="ErrGeneric" xml:space="preserve">
+    <value>Etwas ist schiefgelaufen. Bitte versuche es erneut.</value>
+  </data>
+  <data name="CannotAct" xml:space="preserve">
+    <value>Du kannst diese Meldung nicht bearbeiten.</value>
+  </data>
+  <data name="ReviewedAlready" xml:space="preserve">
+    <value>Diese Meldung wurde bereits geschlossen.</value>
+  </data>
+  <data name="AgoJustNow" xml:space="preserve">
+    <value>gerade eben</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>vor {0} Min.</value>
+  </data>
+  <data name="AgoHours" xml:space="preserve">
+    <value>vor {0} Std.</value>
+  </data>
+  <data name="AgoDays" xml:space="preserve">
+    <value>vor {0} Tg.</value>
+  </data>
+</root>

@@ -9,14 +9,6 @@
   <data name="Heading" xml:space="preserve"><value>Systeemmoderatorfuncties</value></data>
   <data name="WelcomeMessage" xml:space="preserve"><value>Deze pagina is toegankelijk voor gebruikers met de rol systeembeheerder of systeemmoderator.</value></data>
   <data name="WelcomeGreeting" xml:space="preserve"><value>Welkom, systeemmoderator!</value></data>
-  <data name="AvailableFunctions" xml:space="preserve"><value>Beschikbare functies</value></data>
-  <data name="FunctionsDescription" xml:space="preserve"><value>Dit is een tijdelijke pagina voor systeemmoderatorfuncties. Toekomstige functies kunnen zijn:</value></data>
-  <data name="ContentModerationQueue" xml:space="preserve"><value>Wachtrij voor inhoudsmoderatie</value></data>
-  <data name="UserReportsReview" xml:space="preserve"><value>Beoordeling van gebruikersmeldingen</value></data>
-  <data name="FlaggedPostsManagement" xml:space="preserve"><value>Beheer van gemarkeerde berichten</value></data>
-  <data name="CommunityGuidelineEnforcement" xml:space="preserve"><value>Handhaving van communityrichtlijnen</value></data>
-  <data name="UserWarningsAndSuspensions" xml:space="preserve"><value>Gebruikerswaarschuwingen en -schorsingen</value></data>
-  <data name="ModerationActivityLogs" xml:space="preserve"><value>Moderatie-activiteitenlogboeken</value></data>
   <data name="YourInformation" xml:space="preserve"><value>Uw informatie</value></data>
   <data name="Username" xml:space="preserve"><value>Gebruikersnaam:</value></data>
   <data name="Email" xml:space="preserve"><value>E-mail:</value></data>
