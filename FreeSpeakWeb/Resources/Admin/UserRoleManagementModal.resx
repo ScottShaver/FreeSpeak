@@ -101,4 +101,52 @@
   <data name="RoleUser" xml:space="preserve">
     <value>Standard user with basic access</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="SelfEditConfirm" xml:space="preserve">
+    <value>You are editing your own roles. Are you sure you want to continue?</value>
+  </data>
+  <data name="SelfEditConfirmRemovingAdmin" xml:space="preserve">
+    <value>You are editing your own roles and removing your SystemAdministrator role. You will lose access to system administration. Are you sure you want to continue?</value>
+  </data>
+  <data name="ConfirmSaveRoleChanges" xml:space="preserve">
+    <value>Yes, save my role changes</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ErrorLoadRoles" xml:space="preserve">
+    <value>Failed to load roles. Please try again.</value>
+  </data>
+  <data name="RoleChangesSaved" xml:space="preserve">
+    <value>Role changes saved successfully!</value>
+  </data>
+  <data name="FailedToSaveRoles" xml:space="preserve">
+    <value>Failed to save role changes: {0}</value>
+    <comment>{0} is the error detail</comment>
+  </data>
+  <data name="FailedToAddRole" xml:space="preserve">
+    <value>Failed to add role: {0}</value>
+    <comment>{0} is the role name</comment>
+  </data>
+  <data name="FailedToRemoveRole" xml:space="preserve">
+    <value>Failed to remove role: {0} ({1})</value>
+    <comment>{0} is the role name, {1} is the reason</comment>
+  </data>
+  <data name="ReasonLastAdministrator" xml:space="preserve">
+    <value>at least one system administrator must remain</value>
+  </data>
+  <data name="ReasonRejected" xml:space="preserve">
+    <value>operation was rejected</value>
+  </data>
+  <data name="RoleGroupAdministrator" xml:space="preserve">
+    <value>Can create and manage groups</value>
+  </data>
+  <data name="RoleGroupModerator" xml:space="preserve">
+    <value>Can moderate content within assigned groups</value>
+  </data>
+  <data name="RoleCustom" xml:space="preserve">
+    <value>Custom role</value>
+  </data>
 </root>

@@ -100,4 +100,49 @@
   <data name="RoleUser" xml:space="preserve">
     <value>具有基本访问权限的标准用户</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>个人资料</value>
+  </data>
+  <data name="SelfEditConfirm" xml:space="preserve">
+    <value>您正在编辑自己的角色。确定要继续吗？</value>
+  </data>
+  <data name="SelfEditConfirmRemovingAdmin" xml:space="preserve">
+    <value>您正在编辑自己的角色并移除您的 SystemAdministrator 角色。您将失去系统管理访问权限。确定要继续吗？</value>
+  </data>
+  <data name="ConfirmSaveRoleChanges" xml:space="preserve">
+    <value>是，保存我的角色更改</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="ErrorLoadRoles" xml:space="preserve">
+    <value>加载角色失败。请重试。</value>
+  </data>
+  <data name="RoleChangesSaved" xml:space="preserve">
+    <value>角色更改已成功保存！</value>
+  </data>
+  <data name="FailedToSaveRoles" xml:space="preserve">
+    <value>保存角色更改失败：{0}</value>
+  </data>
+  <data name="FailedToAddRole" xml:space="preserve">
+    <value>添加角色失败：{0}</value>
+  </data>
+  <data name="FailedToRemoveRole" xml:space="preserve">
+    <value>移除角色失败：{0}（{1}）</value>
+  </data>
+  <data name="ReasonLastAdministrator" xml:space="preserve">
+    <value>必须至少保留一名系统管理员</value>
+  </data>
+  <data name="ReasonRejected" xml:space="preserve">
+    <value>操作被拒绝</value>
+  </data>
+  <data name="RoleGroupAdministrator" xml:space="preserve">
+    <value>可以创建和管理群组</value>
+  </data>
+  <data name="RoleGroupModerator" xml:space="preserve">
+    <value>可以管理所分配群组内的内容</value>
+  </data>
+  <data name="RoleCustom" xml:space="preserve">
+    <value>自定义角色</value>
+  </data>
 </root>

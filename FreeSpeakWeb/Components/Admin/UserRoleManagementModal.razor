@@ -1,9 +1,11 @@
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Services.Abstractions
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
 @inject IRoleService RoleService
 @inject Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider AuthenticationStateProvider
 @inject ILogger<UserRoleManagementModal> Logger
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Admin.UserRoleManagementModal> Localizer
 
 <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
     <div class="modal-dialog modal-dialog-scrollable">
@@ -11,7 +13,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">
                     <i class="bi bi-person-badge me-2"></i>
-                    Manage Roles for @User?.UserName
+                    @string.Format(Localizer["TitleFormat"].Value, User?.UserName)
                 </h5>
                 <button type="button" class="btn-close" @onclick="Close" disabled="@isSaving"></button>
             </div>
@@ -22,7 +24,7 @@
                         <div class="d-flex align-items-center gap-3">
                             @if (!string.IsNullOrEmpty(User.ProfilePictureUrl))
                             {
-                                <img src="@User.ProfilePictureUrl" alt="Profile" class="rounded-circle" style="width: 48px; height: 48px; object-fit: cover;" />
+                                <img src="@User.ProfilePictureUrl" alt="@Localizer["ProfilePictureAlt"]" class="rounded-circle" style="width: 48px; height: 48px; object-fit: cover;" />
                             }
                             else
                             {
@@ -41,9 +43,9 @@
                     {
                         <div class="text-center py-4">
                             <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading roles...</span>
+                                <span class="visually-hidden">@Localizer["LoadingRoles"]</span>
                             </div>
-                            <p class="text-muted mt-2">Loading available roles...</p>
+                            <p class="text-muted mt-2">@Localizer["LoadingAvailableRoles"]</p>
                         </div>
                     }
                     else if (!string.IsNullOrEmpty(errorMessage))
@@ -56,14 +58,14 @@
                     {
                         <div class="alert alert-info" role="alert">
                             <i class="bi bi-info-circle me-2"></i>
-                            No roles available in the system.
+                            @Localizer["NoRolesAvailable"]
                         </div>
                     }
                     else
                     {
                         <div class="roles-section">
-                            <h6 class="mb-3">Available Roles</h6>
-                            <p class="text-muted small mb-3">Select or deselect roles to assign or remove them from this user.</p>
+                            <h6 class="mb-3">@Localizer["AvailableRoles"]</h6>
+                                                        <p class="text-muted small mb-3">@Localizer["RolesDescription"]</p>
 
                             @foreach (var role in availableRoles)
                             {
@@ -89,7 +91,7 @@
                         {
                             <div class="alert alert-warning mt-3" role="alert">
                                 <i class="bi bi-info-circle me-2"></i>
-                                You have unsaved changes. Click "Save Changes" to apply them.
+                                @Localizer["UnsavedChanges"]
                             </div>
                         }
 
@@ -97,11 +99,10 @@
                         {
                             <div class="alert alert-danger mt-3" role="alert">
                                 <i class="bi bi-exclamation-triangle me-2"></i>
-                                You are editing your own roles@(removingOwnAdminRole ? " and removing your SystemAdministrator role. You will lose access to system administration" : "").
-                                Are you sure you want to continue?
+                                @(removingOwnAdminRole ? Localizer["SelfEditConfirmRemovingAdmin"] : Localizer["SelfEditConfirm"])
                                 <div class="mt-2 d-flex gap-2">
-                                    <button type="button" class="btn btn-danger btn-sm" @onclick="ConfirmSelfEditSave" disabled="@isSaving">Yes, save my role changes</button>
-                                    <button type="button" class="btn btn-secondary btn-sm" @onclick="CancelSelfEditConfirm" disabled="@isSaving">Cancel</button>
+                                    <button type="button" class="btn btn-danger btn-sm" @onclick="ConfirmSelfEditSave" disabled="@isSaving">@Localizer["ConfirmSaveRoleChanges"]</button>
+                                    <button type="button" class="btn btn-secondary btn-sm" @onclick="CancelSelfEditConfirm" disabled="@isSaving">@Localizer["Cancel"]</button>
                                 </div>
                             </div>
                         }
@@ -111,9 +112,9 @@
                             <div class="alert alert-info mt-3" role="alert">
                                 <div class="d-flex align-items-center">
                                     <div class="spinner-border spinner-border-sm me-2" role="status">
-                                        <span class="visually-hidden">Saving...</span>
+                                        <span class=                                        "visually-hidden">@Localizer["Saving"]</span>
                                     </div>
-                                    <span>Saving role changes...</span>
+                                                                            <span>@Localizer["SavingRoleChanges"]</span>
                                 </div>
                             </div>
                         }
@@ -132,8 +133,7 @@
                         class="btn btn-secondary" 
                         @onclick="Close"
                         disabled="@isSaving">
-                    Close
-                </button>
+                    @Localizer["Close"]
                 @if (!isLoading && availableRoles.Count > 0)
                 {
                     <button type="button" 
@@ -144,7 +144,7 @@
                         {
                             <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                         }
-                        Save Changes
+                        @Localizer["SaveChanges"]
                     </button>
                 }
             </div>
@@ -217,7 +217,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error loading roles for user {UserId}", User?.Id);
-            errorMessage = "Failed to load roles. Please try again.";
+            errorMessage = Localizer["ErrorLoadRoles"];
         }
         finally
         {
@@ -310,7 +310,7 @@
                 var result = await RoleService.AddUserToRoleAsync(User.Id, role, currentUserId);
                 if (!result)
                 {
-                    throw new Exception($"Failed to add role: {role}");
+                    throw new Exception(string.Format(Localizer["FailedToAddRole"].Value, role));
                 }
             }
 
@@ -321,16 +321,16 @@
                 if (!result)
                 {
                     var reason = role == "SystemAdministrator" && await RoleService.IsLastSystemAdministratorAsync(User.Id)
-                        ? "at least one system administrator must remain"
-                        : "operation was rejected";
-                    throw new Exception($"Failed to remove role: {role} ({reason})");
+                        ? Localizer["ReasonLastAdministrator"].Value
+                        : Localizer["ReasonRejected"].Value;
+                    throw new Exception(string.Format(Localizer["FailedToRemoveRole"].Value, role, reason));
                 }
             }
 
             // Update the original state
             originalUserRoles = new HashSet<string>(userRoles);
             hasChanges = false;
-            successMessage = "Role changes saved successfully!";
+            successMessage = Localizer["RoleChangesSaved"];
 
             Logger.LogInformation("Updated roles for user {UserId}. Added: {AddedRoles}, Removed: {RemovedRoles}", 
                 User.Id, string.Join(", ", rolesToAdd), string.Join(", ", rolesToRemove));
@@ -341,7 +341,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error saving role changes for user {UserId}", User?.Id);
-            errorMessage = $"Failed to save role changes: {ex.Message}";
+            errorMessage = string.Format(Localizer["FailedToSaveRoles"].Value, ex.Message);
         }
         finally
         {
@@ -370,11 +370,11 @@
     {
         return roleName switch
         {
-            "SystemAdministrator" => "Full system access with all administrative privileges",
-            "SystemModerator" => "Site-wide content moderation and user management",
-            "GroupAdministrator" => "Can create and manage groups",
-            "GroupModerator" => "Can moderate content within assigned groups",
-            _ => "Custom role"
+            "SystemAdministrator" => Localizer["RoleSystemAdministrator"],
+            "SystemModerator" => Localizer["RoleSystemModerator"],
+            "GroupAdministrator" => Localizer["RoleGroupAdministrator"],
+            "GroupModerator" => Localizer["RoleGroupModerator"],
+            _ => Localizer["RoleCustom"]
         };
     }
 }

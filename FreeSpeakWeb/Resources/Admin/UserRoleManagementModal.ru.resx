@@ -100,4 +100,49 @@
   <data name="RoleUser" xml:space="preserve">
     <value>Стандартный пользователь с базовым доступом</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Профиль</value>
+  </data>
+  <data name="SelfEditConfirm" xml:space="preserve">
+    <value>Вы редактируете собственные роли. Вы уверены, что хотите продолжить?</value>
+  </data>
+  <data name="SelfEditConfirmRemovingAdmin" xml:space="preserve">
+    <value>Вы редактируете собственные роли и удаляете свою роль SystemAdministrator. Вы потеряете доступ к администрированию системы. Вы уверены, что хотите продолжить?</value>
+  </data>
+  <data name="ConfirmSaveRoleChanges" xml:space="preserve">
+    <value>Да, сохранить изменения моих ролей</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="ErrorLoadRoles" xml:space="preserve">
+    <value>Не удалось загрузить роли. Повторите попытку.</value>
+  </data>
+  <data name="RoleChangesSaved" xml:space="preserve">
+    <value>Изменения ролей успешно сохранены!</value>
+  </data>
+  <data name="FailedToSaveRoles" xml:space="preserve">
+    <value>Не удалось сохранить изменения ролей: {0}</value>
+  </data>
+  <data name="FailedToAddRole" xml:space="preserve">
+    <value>Не удалось добавить роль: {0}</value>
+  </data>
+  <data name="FailedToRemoveRole" xml:space="preserve">
+    <value>Не удалось удалить роль: {0} ({1})</value>
+  </data>
+  <data name="ReasonLastAdministrator" xml:space="preserve">
+    <value>должен остаться хотя бы один системный администратор</value>
+  </data>
+  <data name="ReasonRejected" xml:space="preserve">
+    <value>операция отклонена</value>
+  </data>
+  <data name="RoleGroupAdministrator" xml:space="preserve">
+    <value>Может создавать группы и управлять ими</value>
+  </data>
+  <data name="RoleGroupModerator" xml:space="preserve">
+    <value>Может модерировать контент в назначенных группах</value>
+  </data>
+  <data name="RoleCustom" xml:space="preserve">
+    <value>Пользовательская роль</value>
+  </data>
 </root>

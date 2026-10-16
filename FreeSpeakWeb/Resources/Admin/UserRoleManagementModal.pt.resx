@@ -100,4 +100,49 @@
   <data name="RoleUser" xml:space="preserve">
     <value>Usuário padrão com acesso básico</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="SelfEditConfirm" xml:space="preserve">
+    <value>Você está editando suas próprias funções. Tem certeza de que deseja continuar?</value>
+  </data>
+  <data name="SelfEditConfirmRemovingAdmin" xml:space="preserve">
+    <value>Você está editando suas próprias funções e removendo sua função SystemAdministrator. Você perderá o acesso à administração do sistema. Tem certeza de que deseja continuar?</value>
+  </data>
+  <data name="ConfirmSaveRoleChanges" xml:space="preserve">
+    <value>Sim, salvar minhas alterações de funções</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="ErrorLoadRoles" xml:space="preserve">
+    <value>Falha ao carregar as funções. Tente novamente.</value>
+  </data>
+  <data name="RoleChangesSaved" xml:space="preserve">
+    <value>Alterações de funções salvas com sucesso!</value>
+  </data>
+  <data name="FailedToSaveRoles" xml:space="preserve">
+    <value>Falha ao salvar as alterações de funções: {0}</value>
+  </data>
+  <data name="FailedToAddRole" xml:space="preserve">
+    <value>Falha ao adicionar a função: {0}</value>
+  </data>
+  <data name="FailedToRemoveRole" xml:space="preserve">
+    <value>Falha ao remover a função: {0} ({1})</value>
+  </data>
+  <data name="ReasonLastAdministrator" xml:space="preserve">
+    <value>pelo menos um administrador do sistema deve permanecer</value>
+  </data>
+  <data name="ReasonRejected" xml:space="preserve">
+    <value>a operação foi rejeitada</value>
+  </data>
+  <data name="RoleGroupAdministrator" xml:space="preserve">
+    <value>Pode criar e gerenciar grupos</value>
+  </data>
+  <data name="RoleGroupModerator" xml:space="preserve">
+    <value>Pode moderar o conteúdo dos grupos atribuídos</value>
+  </data>
+  <data name="RoleCustom" xml:space="preserve">
+    <value>Função personalizada</value>
+  </data>
 </root>

@@ -100,4 +100,49 @@
   <data name="RoleUser" xml:space="preserve">
     <value>Utilisateur standard avec accès de base</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="SelfEditConfirm" xml:space="preserve">
+    <value>Vous modifiez vos propres rôles. Voulez-vous vraiment continuer ?</value>
+  </data>
+  <data name="SelfEditConfirmRemovingAdmin" xml:space="preserve">
+    <value>Vous modifiez vos propres rôles et supprimez votre rôle SystemAdministrator. Vous perdrez l'accès à l'administration du système. Voulez-vous vraiment continuer ?</value>
+  </data>
+  <data name="ConfirmSaveRoleChanges" xml:space="preserve">
+    <value>Oui, enregistrer mes modifications de rôles</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="ErrorLoadRoles" xml:space="preserve">
+    <value>Échec du chargement des rôles. Veuillez réessayer.</value>
+  </data>
+  <data name="RoleChangesSaved" xml:space="preserve">
+    <value>Les modifications de rôles ont été enregistrées avec succès !</value>
+  </data>
+  <data name="FailedToSaveRoles" xml:space="preserve">
+    <value>Échec de l'enregistrement des modifications de rôles : {0}</value>
+  </data>
+  <data name="FailedToAddRole" xml:space="preserve">
+    <value>Échec de l'ajout du rôle : {0}</value>
+  </data>
+  <data name="FailedToRemoveRole" xml:space="preserve">
+    <value>Échec de la suppression du rôle : {0} ({1})</value>
+  </data>
+  <data name="ReasonLastAdministrator" xml:space="preserve">
+    <value>au moins un administrateur système doit rester</value>
+  </data>
+  <data name="ReasonRejected" xml:space="preserve">
+    <value>l'opération a été rejetée</value>
+  </data>
+  <data name="RoleGroupAdministrator" xml:space="preserve">
+    <value>Peut créer et gérer des groupes</value>
+  </data>
+  <data name="RoleGroupModerator" xml:space="preserve">
+    <value>Peut modérer le contenu des groupes attribués</value>
+  </data>
+  <data name="RoleCustom" xml:space="preserve">
+    <value>Rôle personnalisé</value>
+  </data>
 </root>
