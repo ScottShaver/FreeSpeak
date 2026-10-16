@@ -44,4 +44,5 @@
   <data name="ActionWarnUser" xml:space="preserve"><value>تم تحذير مستخدم</value></data>
   <data name="ActionSuspendUser" xml:space="preserve"><value>تم تعليق مستخدم</value></data>
   <data name="ActionUnsuspendUser" xml:space="preserve"><value>تم رفع التعليق</value></data>
+  <data name="AuthorUnknown" xml:space="preserve"><value>مستخدم محذوف أو غير معروف</value></data>
 </root>

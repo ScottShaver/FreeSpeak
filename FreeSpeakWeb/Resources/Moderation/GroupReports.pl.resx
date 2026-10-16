@@ -44,4 +44,5 @@
   <data name="ActionWarnUser" xml:space="preserve"><value>Ostrzeżono użytkownika</value></data>
   <data name="ActionSuspendUser" xml:space="preserve"><value>Zawieszono użytkownika</value></data>
   <data name="ActionUnsuspendUser" xml:space="preserve"><value>Zdjęto zawieszenie</value></data>
+  <data name="AuthorUnknown" xml:space="preserve"><value>Usunięty lub nieznany użytkownik</value></data>
 </root>

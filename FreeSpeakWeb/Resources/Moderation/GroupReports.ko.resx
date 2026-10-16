@@ -44,4 +44,5 @@
   <data name="ActionWarnUser" xml:space="preserve"><value>사용자 경고</value></data>
   <data name="ActionSuspendUser" xml:space="preserve"><value>사용자 정지</value></data>
   <data name="ActionUnsuspendUser" xml:space="preserve"><value>정지 해제</value></data>
+  <data name="AuthorUnknown" xml:space="preserve"><value>삭제되었거나 알 수 없는 사용자</value></data>
 </root>

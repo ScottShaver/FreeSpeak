@@ -44,4 +44,5 @@
   <data name="ActionWarnUser" xml:space="preserve"><value>Пользователю вынесено предупреждение</value></data>
   <data name="ActionSuspendUser" xml:space="preserve"><value>Пользователь заблокирован</value></data>
   <data name="ActionUnsuspendUser" xml:space="preserve"><value>Блокировка снята</value></data>
+  <data name="AuthorUnknown" xml:space="preserve"><value>Удалённый или неизвестный пользователь</value></data>
 </root>

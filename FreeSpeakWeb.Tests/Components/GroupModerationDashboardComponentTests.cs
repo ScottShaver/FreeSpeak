@@ -201,6 +201,46 @@ namespace FreeSpeakWeb.Tests.Components
             cut.Markup.Should().Contain("Beta").And.Contain("ActionRemovePost");
         }
 
+        /// <summary>Review rows show the localized status instead of the raw enum name.</summary>
+        [Theory]
+        [InlineData(ActionCategory.SystemModeratorReviewReport, "ActionTaken", "StatusActionTaken")]
+        [InlineData(ActionCategory.SystemModeratorReviewReport, "Resolved", "StatusResolved")]
+        [InlineData(ActionCategory.SystemModeratorRemovePost, "Spam — excerpt", "ReasonSpam — excerpt")]
+        public void Activity_Detail_IsLocalized(ActionCategory action, string detail, string expected)
+        {
+            _activity.Setup(s => s.GetModeratorOptionsAsync("m")).ReturnsAsync(new List<ModeratorOption>());
+            var entry = new ModeratorActivityEntry(1, Now, "m", "Mod M", action, null, null, detail, 2, "Beta");
+            _activity.Setup(s => s.GetActivityAsync("m", It.IsAny<ModeratorActivityFilter>(), 1, It.IsAny<int>())).ReturnsAsync(new ModeratorActivityPage(true, new List<ModeratorActivityEntry> { entry }, 1));
+
+            var cut = Render<ModerationActivityTab>(p => p.Add(c => c.UserId, "m"));
+
+            cut.Find("[data-testid='act-detail']").TextContent.Should().Be(expected);
+        }
+
+        /// <summary>A report whose content was removed shows a localized unknown-author label and no warn button.</summary>
+        [Fact]
+        public void Detail_ClosedAfterRemoval_ShowsUnknownAuthorAndHidesWarn()
+        {
+            _groups.Setup(s => s.GetDetailAsync("m", 7, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Detail(canAct: false, status: ReportStatus.ActionTaken) with { AuthorId = string.Empty, AuthorDisplayName = "?" });
+
+            var cut = Render<GroupReportDetailPanel>(p => p.Add(c => c.UserId, "m").Add(c => c.ReportId, 7));
+
+            cut.Markup.Should().Contain("AuthorUnknown").And.NotContain("Author: ?");
+            cut.FindAll("[data-testid='action-moderate-author']").Should().BeEmpty();
+        }
+
+        /// <summary>An open report the viewer can act on still offers the warn/suspend action.</summary>
+        [Fact]
+        public void Detail_Open_ShowsModerateAuthor()
+        {
+            _groups.Setup(s => s.GetDetailAsync("m", 7, It.IsAny<CancellationToken>())).ReturnsAsync(Detail());
+
+            var cut = Render<GroupReportDetailPanel>(p => p.Add(c => c.UserId, "m").Add(c => c.ReportId, 7));
+
+            cut.FindAll("[data-testid='action-moderate-author']").Should().HaveCount(1);
+        }
+
         /// <summary>Changing the moderator filter reloads the first page with that filter.</summary>
         [Fact]
         public void Activity_ModeratorFilter_ReloadsWithFilter()

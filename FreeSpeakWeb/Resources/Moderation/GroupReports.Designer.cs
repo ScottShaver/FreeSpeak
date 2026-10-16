@@ -165,5 +165,7 @@ namespace FreeSpeakWeb.Resources.Moderation {
 
         /// <summary>Looks up the localized string for ActionUnsuspendUser.</summary>
         public static string ActionUnsuspendUser { get { return ResourceManager.GetString("ActionUnsuspendUser", resourceCulture); } }
-    }
+
+                /// <summary>Looks up the localized string for AuthorUnknown.</summary>
+                public static string AuthorUnknown { get { return ResourceManager.GetString("AuthorUnknown", resourceCulture); } }    }
 }

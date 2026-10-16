@@ -90,7 +90,7 @@
                             <td>@ActionLabel(e.Action)</td>
                             <td>@e.TargetUserName</td>
                             <td>@e.GroupName</td>
-                            <td class="text-break">@e.Detail</td>
+                            <td class="text-break" data-testid="act-detail">@DetailText(e)</td>
                         </tr>
                     }
                 </tbody>
@@ -157,6 +157,37 @@
         ActionCategory.SystemModeratorSuspendUser => "ActionSuspendUser",
         _ => "ActionUnsuspendUser"
     }].Value;
+
+    /// <summary>
+    /// Gets the display text for the detail column, localizing stored report statuses and reasons.
+    /// </summary>
+    /// <param name="entry">The activity entry.</param>
+    /// <returns>The human-readable detail text.</returns>
+    private string? DetailText(ModeratorActivityEntry entry)
+    {
+        if (string.IsNullOrEmpty(entry.Detail))
+        {
+            return entry.Detail;
+        }
+
+        if (entry.Action == ActionCategory.SystemModeratorReviewReport
+            && Enum.TryParse<ReportStatus>(entry.Detail, out var status))
+        {
+            return Localizer[FeedReportDisplay.StatusKey(status)].Value;
+        }
+
+        if (entry.Action is ActionCategory.SystemModeratorRemovePost or ActionCategory.SystemModeratorRemovePostComment)
+        {
+            var parts = entry.Detail.Split(" — ", 2);
+            if (Enum.TryParse<ReportReason>(parts[0], out var reason))
+            {
+                var label = Localizer[FeedReportDisplay.ReasonKey(reason)].Value;
+                return parts.Length > 1 ? label + " — " + parts[1] : label;
+            }
+        }
+
+        return entry.Detail;
+    }
 
     /// <summary>
     /// Loads the current page of activity.

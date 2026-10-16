@@ -44,4 +44,5 @@
   <data name="ActionWarnUser" xml:space="preserve"><value>ユーザーに警告</value></data>
   <data name="ActionSuspendUser" xml:space="preserve"><value>ユーザーを停止</value></data>
   <data name="ActionUnsuspendUser" xml:space="preserve"><value>停止を解除</value></data>
+  <data name="AuthorUnknown" xml:space="preserve"><value>削除済みまたは不明なユーザー</value></data>
 </root>

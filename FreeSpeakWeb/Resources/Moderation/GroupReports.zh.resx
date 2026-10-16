@@ -44,4 +44,5 @@
   <data name="ActionWarnUser" xml:space="preserve"><value>已警告用户</value></data>
   <data name="ActionSuspendUser" xml:space="preserve"><value>已封禁用户</value></data>
   <data name="ActionUnsuspendUser" xml:space="preserve"><value>已解除封禁</value></data>
+  <data name="AuthorUnknown" xml:space="preserve"><value>已删除或未知的用户</value></data>
 </root>
