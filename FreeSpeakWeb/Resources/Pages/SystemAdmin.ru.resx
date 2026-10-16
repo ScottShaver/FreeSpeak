@@ -193,4 +193,65 @@
   <data name="Of" xml:space="preserve">
     <value>из</value>
   </data>
+  <data name="ProfileAlt" xml:space="preserve"><value>Профиль</value></data>
+  <data name="ShowingFirst100Results" xml:space="preserve"><value>Показаны первые 100 результатов. Уточните поиск, чтобы получить более точные результаты.</value></data>
+  <data name="NoUsersFoundMatching" xml:space="preserve"><value>Пользователи, соответствующие «{0}», не найдены.</value></data>
+  <data name="StartTypingToFindUsers" xml:space="preserve"><value>Начните вводить текст в поле поиска, чтобы найти пользователей.</value></data>
+  <data name="SearchError" xml:space="preserve"><value>При поиске произошла ошибка. Повторите попытку.</value></data>
+  <data name="AdditionalFeatures" xml:space="preserve"><value>Дополнительные возможности</value></data>
+  <data name="CreateUser" xml:space="preserve"><value>Создать пользователя</value></data>
+  <data name="CreateUserDescription" xml:space="preserve"><value>Добавляйте новых пользователей в систему вручную.</value></data>
+  <data name="CreateNewUser" xml:space="preserve"><value>Создать нового пользователя</value></data>
+  <data name="ExportUsers" xml:space="preserve"><value>Экспорт пользователей</value></data>
+  <data name="ExportUsersDescription" xml:space="preserve"><value>Экспортируйте данные пользователей для анализа или резервного копирования.</value></data>
+  <data name="ComingSoon" xml:space="preserve"><value>Скоро</value></data>
+  <data name="SystemConfigurationDescription" xml:space="preserve"><value>Настройка общесистемных параметров и предпочтений.</value></data>
+  <data name="SiteSettings" xml:space="preserve"><value>Настройки сайта</value></data>
+  <data name="SiteSettingsDescription" xml:space="preserve"><value>Настройка названия, оформления и внешнего вида сайта.</value></data>
+  <data name="EmailConfiguration" xml:space="preserve"><value>Настройка электронной почты</value></data>
+  <data name="EmailConfigurationDescription" xml:space="preserve"><value>Настройка почтовых серверов и шаблонов уведомлений.</value></data>
+  <data name="SecuritySettings" xml:space="preserve"><value>Настройки безопасности</value></data>
+  <data name="SecuritySettingsDescription" xml:space="preserve"><value>Настройка аутентификации и политик безопасности.</value></data>
+  <data name="ContentPolicies" xml:space="preserve"><value>Политики контента</value></data>
+  <data name="ContentPoliciesDescription" xml:space="preserve"><value>Управление правилами сообщества и условиями использования.</value></data>
+  <data name="StorageSettings" xml:space="preserve"><value>Настройки хранилища</value></data>
+  <data name="StorageSettingsDescription" xml:space="preserve"><value>Настройка ограничений на загрузку файлов и параметров хранения.</value></data>
+  <data name="Performance" xml:space="preserve"><value>Производительность</value></data>
+  <data name="PerformanceDescription" xml:space="preserve"><value>Настройка кэширования и параметров производительности.</value></data>
+  <data name="ContentModerationDescription" xml:space="preserve"><value>Мониторинг и модерация контента на всей платформе.</value></data>
+  <data name="FlaggedContent" xml:space="preserve"><value>Помеченный контент</value></data>
+  <data name="FlaggedContentDescription" xml:space="preserve"><value>Просмотр публикаций и комментариев, помеченных пользователями.</value></data>
+  <data name="ReportedUsers" xml:space="preserve"><value>Пользователи с жалобами</value></data>
+  <data name="ReportedUsersDescription" xml:space="preserve"><value>Просмотр и обработка жалоб пользователей.</value></data>
+  <data name="ContentRemoval" xml:space="preserve"><value>Удаление контента</value></data>
+  <data name="ContentRemovalDescription" xml:space="preserve"><value>Удаление неприемлемого контента на всём сайте.</value></data>
+  <data name="ContentSearch" xml:space="preserve"><value>Поиск контента</value></data>
+  <data name="ContentSearchDescription" xml:space="preserve"><value>Поиск определённого контента на всей платформе.</value></data>
+  <data name="ModerationLog" xml:space="preserve"><value>Журнал модерации</value></data>
+  <data name="ModerationLogDescription" xml:space="preserve"><value>Просмотр истории выполненных действий модерации.</value></data>
+  <data name="ContentFilters" xml:space="preserve"><value>Фильтры контента</value></data>
+  <data name="ContentFiltersDescription" xml:space="preserve"><value>Управление правилами автоматической фильтрации контента.</value></data>
+  <data name="AnalyticsDescription" xml:space="preserve"><value>Просмотр статистики и показателей, создание отчётов.</value></data>
+  <data name="Dashboard" xml:space="preserve"><value>Панель мониторинга</value></data>
+  <data name="DashboardDescription" xml:space="preserve"><value>Ключевые показатели и состояние системы с первого взгляда.</value></data>
+  <data name="UserStatistics" xml:space="preserve"><value>Статистика пользователей</value></data>
+  <data name="UserStatisticsDescription" xml:space="preserve"><value>Анализ роста, активности и вовлечённости пользователей.</value></data>
+  <data name="ContentAnalytics" xml:space="preserve"><value>Аналитика контента</value></data>
+  <data name="ContentAnalyticsDescription" xml:space="preserve"><value>Отслеживание публикаций, комментариев и тенденций контента.</value></data>
+  <data name="AuditLogSearch" xml:space="preserve"><value>Поиск по журналу аудита</value></data>
+  <data name="AuditLogSearchDescription" xml:space="preserve"><value>Поиск и анализ системных журналов аудита с помощью фильтров.</value></data>
+  <data name="SearchLogs" xml:space="preserve"><value>Поиск по журналам</value></data>
+  <data name="DatabaseDescription" xml:space="preserve"><value>Управление состоянием базы данных, резервными копиями и задачами обслуживания.</value></data>
+  <data name="BackupDatabase" xml:space="preserve"><value>Резервная копия базы данных</value></data>
+  <data name="BackupDatabaseDescription" xml:space="preserve"><value>Создание полной резервной копии базы данных.</value></data>
+  <data name="RestoreDatabase" xml:space="preserve"><value>Восстановление базы данных</value></data>
+  <data name="RestoreDatabaseDescription" xml:space="preserve"><value>Восстановление из предыдущей точки резервного копирования.</value></data>
+  <data name="RunMigrations" xml:space="preserve"><value>Запуск миграций</value></data>
+  <data name="RunMigrationsDescription" xml:space="preserve"><value>Применение ожидающих миграций схемы базы данных.</value></data>
+  <data name="CleanupTasks" xml:space="preserve"><value>Задачи очистки</value></data>
+  <data name="CleanupTasksDescription" xml:space="preserve"><value>Удаление старых уведомлений и временных данных.</value></data>
+  <data name="DatabaseStatistics" xml:space="preserve"><value>Статистика базы данных</value></data>
+  <data name="DatabaseStatisticsDescription" xml:space="preserve"><value>Просмотр размера базы данных, статистики таблиц и состояния.</value></data>
+  <data name="OptimizeTables" xml:space="preserve"><value>Оптимизация таблиц</value></data>
+  <data name="OptimizeTablesDescription" xml:space="preserve"><value>Оптимизация таблиц базы данных для повышения производительности.</value></data>
 </root>
