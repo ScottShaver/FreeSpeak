@@ -32,6 +32,9 @@ namespace FreeSpeakWeb.Services
         /// <summary>The minimum length of a user lookup term.</summary>
         public const int MinSearchLength = 2;
 
+        /// <summary>The longest temporary suspension in days (about 99 years); anything longer must be permanent.</summary>
+        public const int MaxDurationDays = 36000;
+
         private const int SearchLimit = 20;
         private const int HistoryLimit = 50;
         private const string SystemAdministratorRole = "SystemAdministrator";
@@ -170,7 +173,7 @@ namespace FreeSpeakWeb.Services
                 return UserModerationResult.Fail(gate.Error);
             }
 
-            if (duration.HasValue && duration.Value <= TimeSpan.Zero)
+            if (duration.HasValue && (duration.Value <= TimeSpan.Zero || duration.Value > TimeSpan.FromDays(MaxDurationDays)))
             {
                 return UserModerationResult.Fail(UserModerationError.InvalidDuration);
             }

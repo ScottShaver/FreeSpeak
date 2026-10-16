@@ -1,0 +1,45 @@
+@implements IDisposable
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Components.Authorization
+
+@code {
+    private bool _wasAuthenticated;
+
+    /// <summary>
+    /// Captures the initial authentication state and subscribes to later changes.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthStateProvider.GetAuthenticationStateAsync();
+        _wasAuthenticated = state.User.Identity?.IsAuthenticated == true;
+        AuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
+    }
+
+    /// <summary>
+    /// Forces a full page reload when an authenticated circuit becomes anonymous (for example, after
+    /// the user is suspended), so the server-side middleware can end the session and show the correct page.
+    /// </summary>
+    private void OnAuthenticationStateChanged(Task<AuthenticationState> task)
+    {
+        _ = InvokeAsync(async () =>
+        {
+            var state = await task;
+            var isAuthenticated = state.User.Identity?.IsAuthenticated == true;
+            if (_wasAuthenticated && !isAuthenticated)
+            {
+                Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+            }
+
+            _wasAuthenticated = isAuthenticated;
+        });
+    }
+
+    /// <summary>
+    /// Unsubscribes from authentication state changes.
+    /// </summary>
+    public void Dispose()
+    {
+        AuthStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChanged;
+    }
+}

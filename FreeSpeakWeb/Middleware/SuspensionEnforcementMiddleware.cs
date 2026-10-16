@@ -77,6 +77,7 @@ namespace FreeSpeakWeb.Middleware
 
         /// <summary>
         /// Determines whether a path is skipped: static files, framework assets and the pages a suspended user must still reach.
+        /// API routes are always checked, even when they end in a file name such as a video file.
         /// </summary>
         /// <param name="path">The request path.</param>
         /// <returns>True when the path is not checked.</returns>
@@ -87,7 +88,7 @@ namespace FreeSpeakWeb.Middleware
                 || value.StartsWith("/Account/Logout", StringComparison.OrdinalIgnoreCase)
                 || value.StartsWith("/_framework", StringComparison.OrdinalIgnoreCase)
                 || value.StartsWith("/_content", StringComparison.OrdinalIgnoreCase)
-                || Path.HasExtension(value);
+                || (Path.HasExtension(value) && !value.StartsWith("/api/", StringComparison.OrdinalIgnoreCase));
         }
     }
 }

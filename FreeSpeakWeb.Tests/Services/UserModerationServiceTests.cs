@@ -433,6 +433,96 @@ namespace FreeSpeakWeb.Tests.Services
             (await _service.SearchUsersAsync(Plain, "ab")).Should().BeEmpty();
         }
 
+        /// <summary>The moderator limit is inclusive at exactly 7 days and refused one minute beyond.</summary>
+        [Fact]
+        public async Task SuspendUserAsync_ModeratorBoundaryIsExact()
+        {
+            (await _service.SuspendUserAsync(Moderator, Target, "x", TimeSpan.FromDays(7).Add(TimeSpan.FromMinutes(1)))).Error.Should().Be(UserModerationError.DurationExceedsLimit);
+            (await _service.SuspendUserAsync(Moderator, Target, "x", TimeSpan.FromDays(7).Add(TimeSpan.FromTicks(1)))).Error.Should().Be(UserModerationError.DurationExceedsLimit);
+            _suspensions.Should().BeEmpty();
+
+            var exact = await _service.SuspendUserAsync(Moderator, Target, "x", TimeSpan.FromDays(7));
+
+            exact.Success.Should().BeTrue();
+            _suspensions.Single().EndsAt.Should().Be(Now.AddDays(7));
+        }
+
+        /// <summary>Zero, negative and absurdly long durations are invalid for everyone and write nothing.</summary>
+        [Theory]
+        [InlineData(Moderator, 0)]
+        [InlineData(Moderator, -1)]
+        [InlineData(Admin, 0)]
+        [InlineData(Admin, -365)]
+        [InlineData(Admin, 36001)]
+        [InlineData(Admin, 3000000)]
+        public async Task SuspendUserAsync_InvalidDurationsWriteNothing(string actor, double days)
+        {
+            var duration = TimeSpan.FromDays(days);
+
+            var result = await _service.SuspendUserAsync(actor, Target, "x", duration);
+
+            result.Error.Should().Be(UserModerationError.InvalidDuration);
+            _suspensions.Should().BeEmpty();
+            _lockoutEnd.Should().BeNull();
+        }
+
+        /// <summary>The longest allowed temporary suspension is accepted for administrators.</summary>
+        [Fact]
+        public async Task SuspendUserAsync_AdminMaximumDurationAccepted()
+        {
+            (await _service.SuspendUserAsync(Admin, Target, "x", TimeSpan.FromDays(UserModerationService.MaxDurationDays))).Success.Should().BeTrue();
+        }
+
+        /// <summary>A reason of exactly the maximum length is accepted, one more is refused, and markup is stored untouched for escaping at render time.</summary>
+        [Fact]
+        public async Task SuspendUserAsync_ReasonLengthBoundary()
+        {
+            (await _service.SuspendUserAsync(Moderator, Target, new string('x', UserModerationService.MaxTextLength + 1), TimeSpan.FromDays(1))).Error.Should().Be(UserModerationError.ReasonTooLong);
+            _suspensions.Should().BeEmpty();
+
+            var result = await _service.SuspendUserAsync(Moderator, Target, new string('x', UserModerationService.MaxTextLength), TimeSpan.FromDays(1));
+
+            result.Success.Should().BeTrue();
+        }
+
+        /// <summary>A suspension stops being active exactly at its end time.</summary>
+        [Fact]
+        public async Task GetActiveSuspensionAsync_EndsExactlyAtEndTime()
+        {
+            await _service.SuspendUserAsync(Moderator, Target, "Spam", TimeSpan.FromDays(1));
+            _suspensions.Single().EndsAt = Now;
+            _lockoutEnd = new DateTimeOffset(Now, TimeSpan.Zero);
+
+            (await _service.GetActiveSuspensionAsync(Target)).Should().BeNull();
+
+            _suspensions.Single().EndsAt = Now.AddTicks(1);
+            _lockoutEnd = new DateTimeOffset(Now.AddTicks(1), TimeSpan.Zero);
+
+            (await _service.GetActiveSuspensionAsync(Target)).Should().NotBeNull();
+        }
+
+        /// <summary>A moderator cannot lift a suspension an administrator issued.</summary>
+        [Fact]
+        public async Task LiftSuspensionAsync_ModeratorCannotLiftAdminSuspension()
+        {
+            var id = (await _service.SuspendUserAsync(Admin, Target, "x", null)).RecordId!.Value;
+
+            (await _service.LiftSuspensionAsync(Moderator, id, null)).Error.Should().Be(UserModerationError.CannotLift);
+            _lockoutEnd.Should().NotBeNull();
+        }
+
+        /// <summary>Warnings and suspensions notify the user neutrally: no moderator identity is in the message.</summary>
+        [Fact]
+        public async Task Notifications_DoNotRevealModerator()
+        {
+            await _service.WarnUserAsync(Moderator, Target, "x");
+            await _service.SuspendUserAsync(Moderator, Target, "x", TimeSpan.FromDays(1));
+
+            _notifications.Verify(n => n.CreateNotificationAsync(Target, NotificationType.System,
+                It.Is<string?>(m => m != null && !m.Contains(Moderator + "-name") && !m.Contains(Moderator + " Display")),
+                It.Is<object?>(d => d != null && !d.ToString()!.Contains(Moderator + "-name") && !d.ToString()!.Contains(Moderator + " Display")), It.IsAny<DateTime?>(), It.IsAny<string?>()), Times.Exactly(2));
+        }
+
         /// <summary>Acknowledging delegates to the repository with a server time.</summary>
         [Fact]
         public async Task AcknowledgeWarningAsync_UsesServerTime()

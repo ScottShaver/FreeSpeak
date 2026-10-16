@@ -129,6 +129,12 @@ public class NotificationTemplateService
                         value = TranslateReactionType(value);
                     }
 
+                    // Moderator-entered reasons are free text and the rendered message is shown as sanitized HTML
+                    if (fieldName == "Reason")
+                    {
+                        value = System.Net.WebUtility.HtmlEncode(value);
+                    }
+
                     result.Add(value);
                 }
                 else
