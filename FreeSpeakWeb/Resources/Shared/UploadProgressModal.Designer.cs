@@ -61,6 +61,33 @@ namespace FreeSpeakWeb.Resources.Shared {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Adding Your Post.
+        /// </summary>
+        public static string AddingPostTitle {
+            get {
+                return ResourceManager.GetString("AddingPostTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Creating your post....
+        /// </summary>
+        public static string CreatingPost {
+            get {
+                return ResourceManager.GetString("CreatingPost", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Creating Post.
+        /// </summary>
+        public static string CreatingPostTitle {
+            get {
+                return ResourceManager.GetString("CreatingPostTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Please wait while we process your request.
         /// </summary>
         public static string DefaultMessage {
@@ -79,11 +106,38 @@ namespace FreeSpeakWeb.Resources.Shared {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Please wait....
+        /// </summary>
+        public static string PleaseWait {
+            get {
+                return ResourceManager.GetString("PleaseWait", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Step {0} of {1}.
         /// </summary>
         public static string StepOfSteps {
             get {
                 return ResourceManager.GetString("StepOfSteps", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Uploading {0} images....
+        /// </summary>
+        public static string UploadingImages {
+            get {
+                return ResourceManager.GetString("UploadingImages", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Uploading 1 image....
+        /// </summary>
+        public static string UploadingOneImage {
+            get {
+                return ResourceManager.GetString("UploadingOneImage", resourceCulture);
             }
         }
     }

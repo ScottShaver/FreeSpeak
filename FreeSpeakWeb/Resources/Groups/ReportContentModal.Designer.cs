@@ -59,5 +59,302 @@ namespace FreeSpeakWeb.Resources.Groups {
                 resourceCulture = value;
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Additional Details (Optional).
+        /// </summary>
+        public static string AdditionalDetails {
+            get {
+                return ResourceManager.GetString("AdditionalDetails", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Provide any additional context that might help moderators review this report..
+        /// </summary>
+        public static string AdditionalDetailsDescription {
+            get {
+                return ResourceManager.GetString("AdditionalDetailsDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Back.
+        /// </summary>
+        public static string Back {
+            get {
+                return ResourceManager.GetString("Back", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Close {
+            get {
+                return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Enter additional details about why you're reporting this content....
+        /// </summary>
+        public static string DescriptionPlaceholder {
+            get {
+                return ResourceManager.GetString("DescriptionPlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while submitting your report. Please try again..
+        /// </summary>
+        public static string ErrorSubmitting {
+            get {
+                return ResourceManager.GetString("ErrorSubmitting", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        public static string Loading {
+            get {
+                return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        public static string Next {
+            get {
+                return ResourceManager.GetString("Next", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This group has no defined rules. Please select a different reason for your report..
+        /// </summary>
+        public static string NoGroupRules {
+            get {
+                return ResourceManager.GetString("NoGroupRules", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Nudity or sexual content.
+        /// </summary>
+        public static string ReasonAdultContent {
+            get {
+                return ResourceManager.GetString("ReasonAdultContent", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Copyright or intellectual property violation.
+        /// </summary>
+        public static string ReasonCopyright {
+            get {
+                return ResourceManager.GetString("ReasonCopyright", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Harassment or bullying.
+        /// </summary>
+        public static string ReasonHarassment {
+            get {
+                return ResourceManager.GetString("ReasonHarassment", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Hate speech.
+        /// </summary>
+        public static string ReasonHateSpeech {
+            get {
+                return ResourceManager.GetString("ReasonHateSpeech", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Illegal activity.
+        /// </summary>
+        public static string ReasonIllegal {
+            get {
+                return ResourceManager.GetString("ReasonIllegal", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Misinformation or false information.
+        /// </summary>
+        public static string ReasonMisinformation {
+            get {
+                return ResourceManager.GetString("ReasonMisinformation", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Off-topic or irrelevant content.
+        /// </summary>
+        public static string ReasonOffTopic {
+            get {
+                return ResourceManager.GetString("ReasonOffTopic", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Other.
+        /// </summary>
+        public static string ReasonOther {
+            get {
+                return ResourceManager.GetString("ReasonOther", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy violation.
+        /// </summary>
+        public static string ReasonPrivacy {
+            get {
+                return ResourceManager.GetString("ReasonPrivacy", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Self-harm or suicide content.
+        /// </summary>
+        public static string ReasonSelfHarm {
+            get {
+                return ResourceManager.GetString("ReasonSelfHarm", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Spam or unwanted content.
+        /// </summary>
+        public static string ReasonSpam {
+            get {
+                return ResourceManager.GetString("ReasonSpam", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Violates group rule.
+        /// </summary>
+        public static string ReasonViolatesGroupRule {
+            get {
+                return ResourceManager.GetString("ReasonViolatesGroupRule", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Violence or graphic content.
+        /// </summary>
+        public static string ReasonViolence {
+            get {
+                return ResourceManager.GetString("ReasonViolence", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Report Comment.
+        /// </summary>
+        public static string ReportComment {
+            get {
+                return ResourceManager.GetString("ReportComment", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Help us understand what's wrong with this content. Your report will be reviewed by group moderators..
+        /// </summary>
+        public static string ReportDescription {
+            get {
+                return ResourceManager.GetString("ReportDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Reporting for:.
+        /// </summary>
+        public static string ReportingFor {
+            get {
+                return ResourceManager.GetString("ReportingFor", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Report Post.
+        /// </summary>
+        public static string ReportPost {
+            get {
+                return ResourceManager.GetString("ReportPost", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Thank you for your report. Our moderators will review this content and take appropriate action..
+        /// </summary>
+        public static string ReportSubmitted {
+            get {
+                return ResourceManager.GetString("ReportSubmitted", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Why are you reporting this content?.
+        /// </summary>
+        public static string SelectReason {
+            get {
+                return ResourceManager.GetString("SelectReason", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a reason for your report..
+        /// </summary>
+        public static string SelectReasonError {
+            get {
+                return ResourceManager.GetString("SelectReasonError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Please select which group rule was violated..
+        /// </summary>
+        public static string SelectRuleError {
+            get {
+                return ResourceManager.GetString("SelectRuleError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Which group rule does this content violate?.
+        /// </summary>
+        public static string SelectViolatedRule {
+            get {
+                return ResourceManager.GetString("SelectViolatedRule", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Submit Report.
+        /// </summary>
+        public static string SubmitReport {
+            get {
+                return ResourceManager.GetString("SubmitReport", resourceCulture);
+            }
+        }
     }
 }

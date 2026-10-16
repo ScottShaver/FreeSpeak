@@ -59,5 +59,86 @@ namespace FreeSpeakWeb.Resources.SocialFeed {
                 resourceCulture = value;
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Angry.
+        /// </summary>
+        public static string Angry {
+            get {
+                return ResourceManager.GetString("Angry", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Care.
+        /// </summary>
+        public static string Care {
+            get {
+                return ResourceManager.GetString("Care", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Comment.
+        /// </summary>
+        public static string Comment {
+            get {
+                return ResourceManager.GetString("Comment", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Haha.
+        /// </summary>
+        public static string Haha {
+            get {
+                return ResourceManager.GetString("Haha", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Like.
+        /// </summary>
+        public static string Like {
+            get {
+                return ResourceManager.GetString("Like", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Love.
+        /// </summary>
+        public static string Love {
+            get {
+                return ResourceManager.GetString("Love", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Sad.
+        /// </summary>
+        public static string Sad {
+            get {
+                return ResourceManager.GetString("Sad", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Share.
+        /// </summary>
+        public static string Share {
+            get {
+                return ResourceManager.GetString("Share", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Wow.
+        /// </summary>
+        public static string Wow {
+            get {
+                return ResourceManager.GetString("Wow", resourceCulture);
+            }
+        }
     }
 }

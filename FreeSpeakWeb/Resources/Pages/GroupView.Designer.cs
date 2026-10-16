@@ -59,5 +59,365 @@ namespace FreeSpeakWeb.Resources.Pages {
                 resourceCulture = value;
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Admin.
+        /// </summary>
+        public static string Admin {
+            get {
+                return ResourceManager.GetString("Admin", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You are viewing this group as an administrator..
+        /// </summary>
+        public static string AdminViewNotice {
+            get {
+                return ResourceManager.GetString("AdminViewNotice", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Creator.
+        /// </summary>
+        public static string Creator {
+            get {
+                return ResourceManager.GetString("Creator", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Files.
+        /// </summary>
+        public static string Files {
+            get {
+                return ResourceManager.GetString("Files", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Go to Groups.
+        /// </summary>
+        public static string GoToGroups {
+            get {
+                return ResourceManager.GetString("GoToGroups", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group Administration.
+        /// </summary>
+        public static string GroupAdministration {
+            get {
+                return ResourceManager.GetString("GroupAdministration", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This group is currently not active. Posting and viewing posts is not available at this time. Please check back later or contact the group administrators for more information..
+        /// </summary>
+        public static string GroupInactiveMessage {
+            get {
+                return ResourceManager.GetString("GroupInactiveMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group Currently Inactive.
+        /// </summary>
+        public static string GroupInactiveTitle {
+            get {
+                return ResourceManager.GetString("GroupInactiveTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group Moderation.
+        /// </summary>
+        public static string GroupModeration {
+            get {
+                return ResourceManager.GetString("GroupModeration", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group Not Found.
+        /// </summary>
+        public static string GroupNotFound {
+            get {
+                return ResourceManager.GetString("GroupNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The group you're looking for doesn't exist or you don't have access to it..
+        /// </summary>
+        public static string GroupNotFoundMessage {
+            get {
+                return ResourceManager.GetString("GroupNotFoundMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Join Group.
+        /// </summary>
+        public static string JoinGroup {
+            get {
+                return ResourceManager.GetString("JoinGroup", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to join this group..
+        /// </summary>
+        public static string JoinGroupFailed {
+            get {
+                return ResourceManager.GetString("JoinGroupFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Request sent.
+        /// </summary>
+        public static string JoinRequestSent {
+            get {
+                return ResourceManager.GetString("JoinRequestSent", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Your request to join has been sent..
+        /// </summary>
+        public static string JoinRequestSentMessage {
+            get {
+                return ResourceManager.GetString("JoinRequestSentMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Last Activity.
+        /// </summary>
+        public static string LastActivity {
+            get {
+                return ResourceManager.GetString("LastActivity", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Loading group information....
+        /// </summary>
+        public static string LoadingGroupInformation {
+            get {
+                return ResourceManager.GetString("LoadingGroupInformation", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Loading posts....
+        /// </summary>
+        public static string LoadingPosts {
+            get {
+                return ResourceManager.GetString("LoadingPosts", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Members.
+        /// </summary>
+        public static string Members {
+            get {
+                return ResourceManager.GetString("Members", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Moderator.
+        /// </summary>
+        public static string Moderator {
+            get {
+                return ResourceManager.GetString("Moderator", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You are viewing this public group. Join to post and take part..
+        /// </summary>
+        public static string NonMemberNotice {
+            get {
+                return ResourceManager.GetString("NonMemberNotice", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You are viewing this private group. Join to post and take part..
+        /// </summary>
+        public static string NonMemberPrivateNotice {
+            get {
+                return ResourceManager.GetString("NonMemberPrivateNotice", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No posts in this group yet. Be the first to post!.
+        /// </summary>
+        public static string NoPostsYet {
+            get {
+                return ResourceManager.GetString("NoPostsYet", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Post Declined.
+        /// </summary>
+        public static string PostDeclined {
+            get {
+                return ResourceManager.GetString("PostDeclined", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This post was declined by a moderator. You can edit and resubmit it..
+        /// </summary>
+        public static string PostDeclinedDescription {
+            get {
+                return ResourceManager.GetString("PostDeclinedDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Pending Approval.
+        /// </summary>
+        public static string PostPending {
+            get {
+                return ResourceManager.GetString("PostPending", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This post is awaiting moderator approval before it will be visible to others..
+        /// </summary>
+        public static string PostPendingDescription {
+            get {
+                return ResourceManager.GetString("PostPendingDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Reported.
+        /// </summary>
+        public static string PostReported {
+            get {
+                return ResourceManager.GetString("PostReported", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This post has been reported to the moderators and is awaiting review..
+        /// </summary>
+        public static string PostReportedDescription {
+            get {
+                return ResourceManager.GetString("PostReportedDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Posts This Week.
+        /// </summary>
+        public static string PostsThisWeek {
+            get {
+                return ResourceManager.GetString("PostsThisWeek", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Posts Today.
+        /// </summary>
+        public static string PostsToday {
+            get {
+                return ResourceManager.GetString("PostsToday", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Recent Posts.
+        /// </summary>
+        public static string RecentPosts {
+            get {
+                return ResourceManager.GetString("RecentPosts", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Request to Join.
+        /// </summary>
+        public static string RequestToJoin {
+            get {
+                return ResourceManager.GetString("RequestToJoin", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Total Posts.
+        /// </summary>
+        public static string TotalPosts {
+            get {
+                return ResourceManager.GetString("TotalPosts", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You are an administrator of this group.
+        /// </summary>
+        public static string YouAreGroupAdmin {
+            get {
+                return ResourceManager.GetString("YouAreGroupAdmin", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You are the creator of this group.
+        /// </summary>
+        public static string YouAreGroupCreator {
+            get {
+                return ResourceManager.GetString("YouAreGroupCreator", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You are a moderator of this group.
+        /// </summary>
+        public static string YouAreGroupModerator {
+            get {
+                return ResourceManager.GetString("YouAreGroupModerator", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Your Points.
+        /// </summary>
+        public static string YourPoints {
+            get {
+                return ResourceManager.GetString("YourPoints", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Your Posts.
+        /// </summary>
+        public static string YourPosts {
+            get {
+                return ResourceManager.GetString("YourPosts", resourceCulture);
+            }
+        }
     }
 }

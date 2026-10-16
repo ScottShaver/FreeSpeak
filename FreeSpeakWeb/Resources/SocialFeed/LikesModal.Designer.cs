@@ -59,5 +59,140 @@ namespace FreeSpeakWeb.Resources.SocialFeed {
                 resourceCulture = value;
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Angry.
+        /// </summary>
+        public static string Angry {
+            get {
+                return ResourceManager.GetString("Angry", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Care.
+        /// </summary>
+        public static string Care {
+            get {
+                return ResourceManager.GetString("Care", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Close {
+            get {
+                return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}d ago.
+        /// </summary>
+        public static string DaysAgo {
+            get {
+                return ResourceManager.GetString("DaysAgo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Haha.
+        /// </summary>
+        public static string Haha {
+            get {
+                return ResourceManager.GetString("Haha", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}h ago.
+        /// </summary>
+        public static string HoursAgo {
+            get {
+                return ResourceManager.GetString("HoursAgo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Just now.
+        /// </summary>
+        public static string JustNow {
+            get {
+                return ResourceManager.GetString("JustNow", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Like.
+        /// </summary>
+        public static string Like {
+            get {
+                return ResourceManager.GetString("Like", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        public static string Loading {
+            get {
+                return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Love.
+        /// </summary>
+        public static string Love {
+            get {
+                return ResourceManager.GetString("Love", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}m ago.
+        /// </summary>
+        public static string MinutesAgo {
+            get {
+                return ResourceManager.GetString("MinutesAgo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No reactions yet..
+        /// </summary>
+        public static string NoReactionsYet {
+            get {
+                return ResourceManager.GetString("NoReactionsYet", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Reactions.
+        /// </summary>
+        public static string Reactions {
+            get {
+                return ResourceManager.GetString("Reactions", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Sad.
+        /// </summary>
+        public static string Sad {
+            get {
+                return ResourceManager.GetString("Sad", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Wow.
+        /// </summary>
+        public static string Wow {
+            get {
+                return ResourceManager.GetString("Wow", resourceCulture);
+            }
+        }
     }
 }

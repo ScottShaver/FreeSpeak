@@ -59,5 +59,95 @@ namespace FreeSpeakWeb.Resources.SocialFeed {
                 resourceCulture = value;
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Click to see who liked this post.
+        /// </summary>
+        public static string ClickToSeeLikes {
+            get {
+                return ResourceManager.GetString("ClickToSeeLikes", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Click to view comments.
+        /// </summary>
+        public static string ClickToViewComments {
+            get {
+                return ResourceManager.GetString("ClickToViewComments", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Comments.
+        /// </summary>
+        public static string Comments {
+            get {
+                return ResourceManager.GetString("Comments", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Friends Only.
+        /// </summary>
+        public static string FriendsOnly {
+            get {
+                return ResourceManager.GetString("FriendsOnly", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Likes.
+        /// </summary>
+        public static string Likes {
+            get {
+                return ResourceManager.GetString("Likes", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Only Me.
+        /// </summary>
+        public static string OnlyMe {
+            get {
+                return ResourceManager.GetString("OnlyMe", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Pinned post.
+        /// </summary>
+        public static string PinnedPost {
+            get {
+                return ResourceManager.GetString("PinnedPost", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Private group.
+        /// </summary>
+        public static string PrivateGroup {
+            get {
+                return ResourceManager.GetString("PrivateGroup", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Public.
+        /// </summary>
+        public static string Public {
+            get {
+                return ResourceManager.GetString("Public", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Shares.
+        /// </summary>
+        public static string Shares {
+            get {
+                return ResourceManager.GetString("Shares", resourceCulture);
+            }
+        }
     }
 }

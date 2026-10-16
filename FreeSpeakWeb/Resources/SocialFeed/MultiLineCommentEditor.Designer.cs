@@ -59,5 +59,23 @@ namespace FreeSpeakWeb.Resources.SocialFeed {
                 resourceCulture = value;
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Add emoji.
+        /// </summary>
+        public static string AddEmoji {
+            get {
+                return ResourceManager.GetString("AddEmoji", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Write a comment....
+        /// </summary>
+        public static string WriteAComment {
+            get {
+                return ResourceManager.GetString("WriteAComment", resourceCulture);
+            }
+        }
     }
 }

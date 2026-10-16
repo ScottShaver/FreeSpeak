@@ -59,5 +59,203 @@ namespace FreeSpeakWeb.Resources.SocialFeed {
                 resourceCulture = value;
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Angry.
+        /// </summary>
+        public static string Angry {
+            get {
+                return ResourceManager.GetString("Angry", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Care.
+        /// </summary>
+        public static string Care {
+            get {
+                return ResourceManager.GetString("Care", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string DeleteCommentCancelButton {
+            get {
+                return ResourceManager.GetString("DeleteCommentCancelButton", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string DeleteCommentConfirmButton {
+            get {
+                return ResourceManager.GetString("DeleteCommentConfirmButton", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this comment? This cannot be undone..
+        /// </summary>
+        public static string DeleteCommentConfirmMessage {
+            get {
+                return ResourceManager.GetString("DeleteCommentConfirmMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Comment.
+        /// </summary>
+        public static string DeleteCommentConfirmTitle {
+            get {
+                return ResourceManager.GetString("DeleteCommentConfirmTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete My Comment.
+        /// </summary>
+        public static string DeleteMyComment {
+            get {
+                return ResourceManager.GetString("DeleteMyComment", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Edit My Comment.
+        /// </summary>
+        public static string EditMyComment {
+            get {
+                return ResourceManager.GetString("EditMyComment", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Haha.
+        /// </summary>
+        public static string Haha {
+            get {
+                return ResourceManager.GetString("Haha", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Hide replies.
+        /// </summary>
+        public static string HideReplies {
+            get {
+                return ResourceManager.GetString("HideReplies", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Like.
+        /// </summary>
+        public static string Like {
+            get {
+                return ResourceManager.GetString("Like", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Love.
+        /// </summary>
+        public static string Love {
+            get {
+                return ResourceManager.GetString("Love", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to More options.
+        /// </summary>
+        public static string MoreOptions {
+            get {
+                return ResourceManager.GetString("MoreOptions", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No more replies allowed.
+        /// </summary>
+        public static string NoMoreRepliesAllowed {
+            get {
+                return ResourceManager.GetString("NoMoreRepliesAllowed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Remove Comment.
+        /// </summary>
+        public static string RemoveComment {
+            get {
+                return ResourceManager.GetString("RemoveComment", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Reply.
+        /// </summary>
+        public static string Reply {
+            get {
+                return ResourceManager.GetString("Reply", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Report Comment.
+        /// </summary>
+        public static string ReportComment {
+            get {
+                return ResourceManager.GetString("ReportComment", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Sad.
+        /// </summary>
+        public static string Sad {
+            get {
+                return ResourceManager.GetString("Sad", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to View replies ({0}).
+        /// </summary>
+        public static string ViewReplies {
+            get {
+                return ResourceManager.GetString("ViewReplies", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Wow.
+        /// </summary>
+        public static string Wow {
+            get {
+                return ResourceManager.GetString("Wow", resourceCulture);
+            }
+        }
     }
 }

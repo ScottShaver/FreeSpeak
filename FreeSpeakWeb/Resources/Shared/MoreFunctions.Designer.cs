@@ -106,11 +106,20 @@ namespace FreeSpeakWeb.Resources.Shared {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to An error occurred while creating the group..
+        ///   Looks up a localized string similar to Enable Points System.
         /// </summary>
-        public static string GroupCreationFailed {
+        public static string EnablePointsSystem {
             get {
-                return ResourceManager.GetString("GroupCreationFailed", resourceCulture);
+                return ResourceManager.GetString("EnablePointsSystem", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Members earn points for posts, comments, and likes. Members can achieve Rising Contributor, Top Contributor, and All-star Contributor badges..
+        /// </summary>
+        public static string EnablePointsSystemHelp {
+            get {
+                return ResourceManager.GetString("EnablePointsSystemHelp", resourceCulture);
             }
         }
 
@@ -120,6 +129,15 @@ namespace FreeSpeakWeb.Resources.Shared {
         public static string GroupCreatedSuccess {
             get {
                 return ResourceManager.GetString("GroupCreatedSuccess", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while creating the group..
+        /// </summary>
+        public static string GroupCreationFailed {
+            get {
+                return ResourceManager.GetString("GroupCreationFailed", resourceCulture);
             }
         }
 
@@ -160,6 +178,24 @@ namespace FreeSpeakWeb.Resources.Shared {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Hidden Group.
+        /// </summary>
+        public static string HiddenGroup {
+            get {
+                return ResourceManager.GetString("HiddenGroup", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Hidden groups cannot be found in searches. Members can only be added by group administrators..
+        /// </summary>
+        public static string HiddenGroupHelp {
+            get {
+                return ResourceManager.GetString("HiddenGroupHelp", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to No additional functions available..
         /// </summary>
         public static string NoFunctionsAvailable {
@@ -196,20 +232,20 @@ namespace FreeSpeakWeb.Resources.Shared {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Hidden Group.
+        ///   Looks up a localized string similar to Require Agreement to Group Rules.
         /// </summary>
-        public static string HiddenGroup {
+        public static string RequireAcceptRules {
             get {
-                return ResourceManager.GetString("HiddenGroup", resourceCulture);
+                return ResourceManager.GetString("RequireAcceptRules", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Hidden groups cannot be found in searches. Members can only be added by group administrators..
+        ///   Looks up a localized string similar to Users must agree to the group rules before joining or submitting a join request..
         /// </summary>
-        public static string HiddenGroupHelp {
+        public static string RequireAcceptRulesHelp {
             get {
-                return ResourceManager.GetString("HiddenGroupHelp", resourceCulture);
+                return ResourceManager.GetString("RequireAcceptRulesHelp", resourceCulture);
             }
         }
 
@@ -232,38 +268,20 @@ namespace FreeSpeakWeb.Resources.Shared {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Require Agreement to Group Rules.
+        ///   Looks up a localized string similar to Require Post Approval.
         /// </summary>
-        public static string RequireAcceptRules {
+        public static string RequiresPostApproval {
             get {
-                return ResourceManager.GetString("RequireAcceptRules", resourceCulture);
+                return ResourceManager.GetString("RequiresPostApproval", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Users must agree to the group rules before joining or submitting a join request..
+        ///   Looks up a localized string similar to New posts must be approved by a moderator before they are visible to other members..
         /// </summary>
-        public static string RequireAcceptRulesHelp {
+        public static string RequiresPostApprovalHelp {
             get {
-                return ResourceManager.GetString("RequireAcceptRulesHelp", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Enable Points System.
-        /// </summary>
-        public static string EnablePointsSystem {
-            get {
-                return ResourceManager.GetString("EnablePointsSystem", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Members earn points for posts, comments, and likes. Members can achieve Rising Contributor, Top Contributor, and All-star Contributor badges..
-        /// </summary>
-        public static string EnablePointsSystemHelp {
-            get {
-                return ResourceManager.GetString("EnablePointsSystemHelp", resourceCulture);
+                return ResourceManager.GetString("RequiresPostApprovalHelp", resourceCulture);
             }
         }
 

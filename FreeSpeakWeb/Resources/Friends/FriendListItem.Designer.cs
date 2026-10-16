@@ -115,6 +115,15 @@ namespace FreeSpeakWeb.Resources.Friends {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Pending.
+        /// </summary>
+        public static string Pending {
+            get {
+                return ResourceManager.GetString("Pending", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Remove.
         /// </summary>
         public static string Remove {

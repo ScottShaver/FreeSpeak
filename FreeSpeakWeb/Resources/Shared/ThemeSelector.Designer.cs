@@ -77,5 +77,77 @@ namespace FreeSpeakWeb.Resources.Shared {
                 return ResourceManager.GetString("ChooseTheme", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Dark Mode.
+        /// </summary>
+        public static string Theme_dark {
+            get {
+                return ResourceManager.GetString("Theme_dark", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Default.
+        /// </summary>
+        public static string Theme_default {
+            get {
+                return ResourceManager.GetString("Theme_default", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Forest Green.
+        /// </summary>
+        public static string Theme_forest {
+            get {
+                return ResourceManager.GetString("Theme_forest", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to High Contrast.
+        /// </summary>
+        public static string Theme_high_contrast {
+            get {
+                return ResourceManager.GetString("Theme_high-contrast", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Light Mode.
+        /// </summary>
+        public static string Theme_light {
+            get {
+                return ResourceManager.GetString("Theme_light", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Ocean Blue.
+        /// </summary>
+        public static string Theme_ocean {
+            get {
+                return ResourceManager.GetString("Theme_ocean", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Purple Dream.
+        /// </summary>
+        public static string Theme_purple {
+            get {
+                return ResourceManager.GetString("Theme_purple", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Sunset Orange.
+        /// </summary>
+        public static string Theme_sunset {
+            get {
+                return ResourceManager.GetString("Theme_sunset", resourceCulture);
+            }
+        }
     }
 }
