@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabUsers" xml:space="preserve">
+    <value>Usuarios</value>
+  </data>
+  <data name="SearchLabel" xml:space="preserve">
+    <value>Buscar un usuario</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>Nombre de usuario o nombre (al menos 2 caracteres)</value>
+  </data>
+  <data name="SearchButton" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
+  <data name="SelectUser" xml:space="preserve">
+    <value>Seleccionar</value>
+  </data>
+  <data name="NoResults" xml:space="preserve">
+    <value>No se encontraron usuarios.</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Cargando…</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>No se pudo cargar el usuario.</value>
+  </data>
+  <data name="PanelTitle" xml:space="preserve">
+    <value>Moderación: {0}</value>
+  </data>
+  <data name="StatusSuspendedUntil" xml:space="preserve">
+    <value>Suspendido hasta el {0} UTC</value>
+  </data>
+  <data name="StatusSuspendedPermanent" xml:space="preserve">
+    <value>Suspendido permanentemente</value>
+  </data>
+  <data name="StatusInGoodStanding" xml:space="preserve">
+    <value>No suspendido</value>
+  </data>
+  <data name="WarningsHeading" xml:space="preserve">
+    <value>Advertencias</value>
+  </data>
+  <data name="NoWarnings" xml:space="preserve">
+    <value>Sin advertencias.</value>
+  </data>
+  <data name="SuspensionsHeading" xml:space="preserve">
+    <value>Suspensiones</value>
+  </data>
+  <data name="NoSuspensions" xml:space="preserve">
+    <value>Sin suspensiones.</value>
+  </data>
+  <data name="ReportsHeading" xml:space="preserve">
+    <value>Denuncias sobre el contenido de este usuario</value>
+  </data>
+  <data name="NoReports" xml:space="preserve">
+    <value>Sin denuncias.</value>
+  </data>
+  <data name="RelatedReport" xml:space="preserve">
+    <value>Denuncia n.º {0}</value>
+  </data>
+  <data name="IssuedBy" xml:space="preserve">
+    <value>por {0}</value>
+  </data>
+  <data name="Acknowledged" xml:space="preserve">
+    <value>Confirmada</value>
+  </data>
+  <data name="NotAcknowledged" xml:space="preserve">
+    <value>No confirmada</value>
+  </data>
+  <data name="SuspensionActive" xml:space="preserve">
+    <value>Activa</value>
+  </data>
+  <data name="SuspensionEnded" xml:space="preserve">
+    <value>Finalizada</value>
+  </data>
+  <data name="SuspensionLifted" xml:space="preserve">
+    <value>Levantada el {0} UTC</value>
+  </data>
+  <data name="SuspensionLiftedState" xml:space="preserve">
+    <value>Levantada</value>
+  </data>
+  <data name="SuspensionPermanent" xml:space="preserve">
+    <value>Permanente</value>
+  </data>
+  <data name="SuspensionRange" xml:space="preserve">
+    <value>{0} UTC – {1} UTC</value>
+  </data>
+  <data name="WarnButton" xml:space="preserve">
+    <value>Advertir al usuario</value>
+  </data>
+  <data name="SuspendButton" xml:space="preserve">
+    <value>Suspender al usuario</value>
+  </data>
+  <data name="LiftButton" xml:space="preserve">
+    <value>Levantar suspensión</value>
+  </data>
+  <data name="ModerateAuthor" xml:space="preserve">
+    <value>Advertir o suspender al autor</value>
+  </data>
+  <data name="ReasonLabel" xml:space="preserve">
+    <value>Motivo (se muestra al usuario)</value>
+  </data>
+  <data name="DurationLabel" xml:space="preserve">
+    <value>Duración</value>
+  </data>
+  <data name="Duration1Day" xml:space="preserve">
+    <value>1 día</value>
+  </data>
+  <data name="Duration3Days" xml:space="preserve">
+    <value>3 días</value>
+  </data>
+  <data name="Duration7Days" xml:space="preserve">
+    <value>7 días</value>
+  </data>
+  <data name="Duration14Days" xml:space="preserve">
+    <value>14 días</value>
+  </data>
+  <data name="Duration30Days" xml:space="preserve">
+    <value>30 días</value>
+  </data>
+  <data name="DurationPermanent" xml:space="preserve">
+    <value>Permanente</value>
+  </data>
+  <data name="ModeratorLimitHint" xml:space="preserve">
+    <value>Los moderadores del sistema pueden suspender hasta {0} días. Las suspensiones más largas o permanentes requieren un administrador.</value>
+  </data>
+  <data name="LiftNoteLabel" xml:space="preserve">
+    <value>Nota (opcional)</value>
+  </data>
+  <data name="ConfirmWarn" xml:space="preserve">
+    <value>¿Enviar esta advertencia al usuario?</value>
+  </data>
+  <data name="ConfirmSuspend" xml:space="preserve">
+    <value>¿Suspender a este usuario? Se cerrará su sesión y no podrá iniciar sesión hasta que termine la suspensión.</value>
+  </data>
+  <data name="ConfirmLift" xml:space="preserve">
+    <value>¿Levantar esta suspensión ahora?</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="DoneWarned" xml:space="preserve">
+    <value>Se envió la advertencia.</value>
+  </data>
+  <data name="DoneSuspended" xml:space="preserve">
+    <value>Se suspendió al usuario.</value>
+  </data>
+  <data name="DoneLifted" xml:space="preserve">
+    <value>Se levantó la suspensión.</value>
+  </data>
+  <data name="CannotModerate" xml:space="preserve">
+    <value>No puedes advertir ni suspender a este usuario.</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>No tienes permiso para hacer esto.</value>
+  </data>
+  <data name="ErrUserNotFound" xml:space="preserve">
+    <value>No se encontró al usuario.</value>
+  </data>
+  <data name="ErrSelf" xml:space="preserve">
+    <value>No puedes advertirte ni suspenderte a ti mismo.</value>
+  </data>
+  <data name="ErrStaff" xml:space="preserve">
+    <value>No puedes advertir ni suspender a este usuario por su rol.</value>
+  </data>
+  <data name="ErrReasonRequired" xml:space="preserve">
+    <value>Introduce un motivo.</value>
+  </data>
+  <data name="ErrReasonTooLong" xml:space="preserve">
+    <value>El texto es demasiado largo.</value>
+  </data>
+  <data name="ErrInvalidDuration" xml:space="preserve">
+    <value>Elige una duración válida.</value>
+  </data>
+  <data name="ErrDurationLimit" xml:space="preserve">
+    <value>Los moderadores del sistema no pueden suspender por tanto tiempo. Consulta a un administrador.</value>
+  </data>
+  <data name="ErrPermanent" xml:space="preserve">
+    <value>Solo los administradores pueden suspender a un usuario de forma permanente.</value>
+  </data>
+  <data name="ErrAlreadySuspended" xml:space="preserve">
+    <value>Este usuario ya está suspendido. Levanta primero la suspensión.</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>No se encontró la suspensión.</value>
+  </data>
+  <data name="ErrNotActive" xml:space="preserve">
+    <value>Esta suspensión ya no está activa.</value>
+  </data>
+  <data name="ErrCannotLift" xml:space="preserve">
+    <value>Solo el moderador que impuso esta suspensión o un administrador puede levantarla.</value>
+  </data>
+  <data name="ErrFailed" xml:space="preserve">
+    <value>La acción falló. Inténtalo de nuevo.</value>
+  </data>
+  <data name="LockoutSuspendedTitle" xml:space="preserve">
+    <value>Cuenta suspendida</value>
+  </data>
+  <data name="LockoutSuspendedTemporary" xml:space="preserve">
+    <value>El equipo de moderación ha suspendido tu cuenta. Podrás iniciar sesión de nuevo cuando termine la suspensión.</value>
+  </data>
+  <data name="LockoutSuspendedPermanent" xml:space="preserve">
+    <value>El equipo de moderación ha suspendido tu cuenta de forma permanente.</value>
+  </data>
+  <data name="LockoutReasonLabel" xml:space="preserve">
+    <value>Motivo</value>
+  </data>
+  <data name="LockoutUntilLabel" xml:space="preserve">
+    <value>Suspendido hasta</value>
+  </data>
+  <data name="LockoutContact" xml:space="preserve">
+    <value>Si tienes preguntas, ponte en contacto con el administrador del sitio.</value>
+  </data>
+</root>

@@ -1067,5 +1067,23 @@ namespace FreeSpeakWeb.Resources.Pages {
                 return ResourceManager.GetString("H_StaleReportDays", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum suspension by system moderators (days).
+        /// </summary>
+        public static string L_MaxModeratorSuspensionDays {
+            get {
+                return ResourceManager.GetString("L_MaxModeratorSuspensionDays", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to System moderators can suspend users for up to this many days. Longer or permanent suspensions need a system administrator..
+        /// </summary>
+        public static string H_MaxModeratorSuspensionDays {
+            get {
+                return ResourceManager.GetString("H_MaxModeratorSuspensionDays", resourceCulture);
+            }
+        }
     }
 }

@@ -394,4 +394,10 @@
   <data name="H_StaleReportDays" xml:space="preserve">
     <value>Pending reports older than this many days are flagged as stale on the moderator dashboard.</value>
   </data>
+  <data name="L_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>Maximum suspension by system moderators (days)</value>
+  </data>
+  <data name="H_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>System moderators can suspend users for up to this many days. Longer or permanent suspensions need a system administrator.</value>
+  </data>
 </root>

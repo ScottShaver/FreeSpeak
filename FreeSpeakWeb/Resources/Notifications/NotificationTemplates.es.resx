@@ -115,4 +115,16 @@
   <data name="FeedContentRemoved" xml:space="preserve">
     <value>Tu contenido fue eliminado por incumplir las normas de la comunidad.</value>
   </data>
+  <data name="UserWarned" xml:space="preserve">
+    <value>Has recibido una advertencia del equipo de moderación: {0}</value>
+  </data>
+  <data name="UserSuspended" xml:space="preserve">
+    <value>Tu cuenta fue suspendida hasta el {1}. Motivo: {0}</value>
+  </data>
+  <data name="UserSuspendedPermanent" xml:space="preserve">
+    <value>Tu cuenta fue suspendida de forma permanente. Motivo: {0}</value>
+  </data>
+  <data name="UserSuspensionLifted" xml:space="preserve">
+    <value>Se levantó la suspensión de tu cuenta.</value>
+  </data>
 </root>

@@ -394,4 +394,10 @@
   <data name="H_StaleReportDays" xml:space="preserve">
     <value>As denúncias pendentes há mais do que este número de dias são sinalizadas como atrasadas no painel de moderação.</value>
   </data>
+  <data name="L_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>Suspensão máxima por moderadores do sistema (dias)</value>
+  </data>
+  <data name="H_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>Os moderadores do sistema podem suspender utilizadores até este número de dias. Suspensões mais longas ou permanentes exigem um administrador do sistema.</value>
+  </data>
 </root>

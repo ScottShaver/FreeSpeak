@@ -11,7 +11,7 @@ namespace FreeSpeakWeb.Components.Account
     /// A server-side AuthenticationStateProvider that periodically revalidates the security stamp
     /// for connected users. This ensures that if a user's security stamp changes (e.g., due to
     /// password change or security-related actions), their session is invalidated.
-    /// Revalidation occurs every 30 minutes while an interactive circuit is connected.
+    /// Revalidation occurs every minute while an interactive circuit is connected, which also ends the session of a suspended user.
     /// </summary>
     /// <param name="loggerFactory">The logger factory for creating loggers.</param>
     /// <param name="scopeFactory">The service scope factory for creating scopes to access services.</param>
@@ -25,7 +25,7 @@ namespace FreeSpeakWeb.Components.Account
         /// <summary>
         /// Gets the interval between authentication state revalidation checks.
         /// </summary>
-        protected override TimeSpan RevalidationInterval => TimeSpan.FromMinutes(30);
+        protected override TimeSpan RevalidationInterval => TimeSpan.FromMinutes(1);
 
         /// <summary>
         /// Validates the authentication state by checking if the user's security stamp is still valid.
@@ -39,7 +39,19 @@ namespace FreeSpeakWeb.Components.Account
             // Get the user manager from a new scope to ensure it fetches fresh data
             await using var scope = scopeFactory.CreateAsyncScope();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            return await ValidateSecurityStampAsync(userManager, authenticationState.User);
+            if (!await ValidateSecurityStampAsync(userManager, authenticationState.User))
+            {
+                return false;
+            }
+
+            var userId = userManager.GetUserId(authenticationState.User);
+            if (userId is null)
+            {
+                return false;
+            }
+
+            var moderationService = scope.ServiceProvider.GetRequiredService<FreeSpeakWeb.Services.Abstractions.IUserModerationService>();
+            return await moderationService.GetActiveSuspensionAsync(userId, cancellationToken) is null;
         }
 
         /// <summary>

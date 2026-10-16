@@ -115,4 +115,16 @@
   <data name="FeedContentRemoved" xml:space="preserve">
     <value>تمت إزالة المحتوى الخاص بك لمخالفته إرشادات المجتمع.</value>
   </data>
+  <data name="UserWarned" xml:space="preserve">
+    <value>تلقيت تحذيرًا من فريق الإشراف: {0}</value>
+  </data>
+  <data name="UserSuspended" xml:space="preserve">
+    <value>تم تعليق حسابك حتى {1}. السبب: {0}</value>
+  </data>
+  <data name="UserSuspendedPermanent" xml:space="preserve">
+    <value>تم تعليق حسابك نهائيًا. السبب: {0}</value>
+  </data>
+  <data name="UserSuspensionLifted" xml:space="preserve">
+    <value>تم رفع تعليق حسابك.</value>
+  </data>
 </root>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabUsers" xml:space="preserve">
+    <value>用户</value>
+  </data>
+  <data name="SearchLabel" xml:space="preserve">
+    <value>查找用户</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>用户名或姓名（至少 2 个字符）</value>
+  </data>
+  <data name="SearchButton" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="SelectUser" xml:space="preserve">
+    <value>选择</value>
+  </data>
+  <data name="NoResults" xml:space="preserve">
+    <value>未找到用户。</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>加载中…</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>无法加载该用户。</value>
+  </data>
+  <data name="PanelTitle" xml:space="preserve">
+    <value>审核：{0}</value>
+  </data>
+  <data name="StatusSuspendedUntil" xml:space="preserve">
+    <value>已封禁至 {0} UTC</value>
+  </data>
+  <data name="StatusSuspendedPermanent" xml:space="preserve">
+    <value>已永久封禁</value>
+  </data>
+  <data name="StatusInGoodStanding" xml:space="preserve">
+    <value>未封禁</value>
+  </data>
+  <data name="WarningsHeading" xml:space="preserve">
+    <value>警告</value>
+  </data>
+  <data name="NoWarnings" xml:space="preserve">
+    <value>没有警告。</value>
+  </data>
+  <data name="SuspensionsHeading" xml:space="preserve">
+    <value>封禁</value>
+  </data>
+  <data name="NoSuspensions" xml:space="preserve">
+    <value>没有封禁记录。</value>
+  </data>
+  <data name="ReportsHeading" xml:space="preserve">
+    <value>针对该用户内容的举报</value>
+  </data>
+  <data name="NoReports" xml:space="preserve">
+    <value>没有举报。</value>
+  </data>
+  <data name="RelatedReport" xml:space="preserve">
+    <value>举报 #{0}</value>
+  </data>
+  <data name="IssuedBy" xml:space="preserve">
+    <value>由 {0}</value>
+  </data>
+  <data name="Acknowledged" xml:space="preserve">
+    <value>已确认</value>
+  </data>
+  <data name="NotAcknowledged" xml:space="preserve">
+    <value>未确认</value>
+  </data>
+  <data name="SuspensionActive" xml:space="preserve">
+    <value>生效中</value>
+  </data>
+  <data name="SuspensionEnded" xml:space="preserve">
+    <value>已结束</value>
+  </data>
+  <data name="SuspensionLifted" xml:space="preserve">
+    <value>于 {0} UTC 解除</value>
+  </data>
+  <data name="SuspensionLiftedState" xml:space="preserve">
+    <value>已解除</value>
+  </data>
+  <data name="SuspensionPermanent" xml:space="preserve">
+    <value>永久</value>
+  </data>
+  <data name="SuspensionRange" xml:space="preserve">
+    <value>{0} UTC – {1} UTC</value>
+  </data>
+  <data name="WarnButton" xml:space="preserve">
+    <value>警告用户</value>
+  </data>
+  <data name="SuspendButton" xml:space="preserve">
+    <value>封禁用户</value>
+  </data>
+  <data name="LiftButton" xml:space="preserve">
+    <value>解除封禁</value>
+  </data>
+  <data name="ModerateAuthor" xml:space="preserve">
+    <value>警告或封禁作者</value>
+  </data>
+  <data name="ReasonLabel" xml:space="preserve">
+    <value>原因（将显示给用户）</value>
+  </data>
+  <data name="DurationLabel" xml:space="preserve">
+    <value>时长</value>
+  </data>
+  <data name="Duration1Day" xml:space="preserve">
+    <value>1 天</value>
+  </data>
+  <data name="Duration3Days" xml:space="preserve">
+    <value>3 天</value>
+  </data>
+  <data name="Duration7Days" xml:space="preserve">
+    <value>7 天</value>
+  </data>
+  <data name="Duration14Days" xml:space="preserve">
+    <value>14 天</value>
+  </data>
+  <data name="Duration30Days" xml:space="preserve">
+    <value>30 天</value>
+  </data>
+  <data name="DurationPermanent" xml:space="preserve">
+    <value>永久</value>
+  </data>
+  <data name="ModeratorLimitHint" xml:space="preserve">
+    <value>系统审核员最多可封禁 {0} 天。更长时间或永久封禁需要管理员。</value>
+  </data>
+  <data name="LiftNoteLabel" xml:space="preserve">
+    <value>备注（可选）</value>
+  </data>
+  <data name="ConfirmWarn" xml:space="preserve">
+    <value>向该用户发送此警告？</value>
+  </data>
+  <data name="ConfirmSuspend" xml:space="preserve">
+    <value>封禁此用户？该用户将被登出，且在封禁结束前无法登录。</value>
+  </data>
+  <data name="ConfirmLift" xml:space="preserve">
+    <value>立即解除此封禁？</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>确认</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="DoneWarned" xml:space="preserve">
+    <value>警告已发送。</value>
+  </data>
+  <data name="DoneSuspended" xml:space="preserve">
+    <value>该用户已被封禁。</value>
+  </data>
+  <data name="DoneLifted" xml:space="preserve">
+    <value>封禁已解除。</value>
+  </data>
+  <data name="CannotModerate" xml:space="preserve">
+    <value>您无法警告或封禁此用户。</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>您无权执行此操作。</value>
+  </data>
+  <data name="ErrUserNotFound" xml:space="preserve">
+    <value>未找到该用户。</value>
+  </data>
+  <data name="ErrSelf" xml:space="preserve">
+    <value>您无法警告或封禁自己。</value>
+  </data>
+  <data name="ErrStaff" xml:space="preserve">
+    <value>由于该用户的角色，您无法警告或封禁此用户。</value>
+  </data>
+  <data name="ErrReasonRequired" xml:space="preserve">
+    <value>请输入原因。</value>
+  </data>
+  <data name="ErrReasonTooLong" xml:space="preserve">
+    <value>文本过长。</value>
+  </data>
+  <data name="ErrInvalidDuration" xml:space="preserve">
+    <value>请选择有效的时长。</value>
+  </data>
+  <data name="ErrDurationLimit" xml:space="preserve">
+    <value>系统审核员无法封禁这么长时间。请联系管理员。</value>
+  </data>
+  <data name="ErrPermanent" xml:space="preserve">
+    <value>只有管理员才能永久封禁用户。</value>
+  </data>
+  <data name="ErrAlreadySuspended" xml:space="preserve">
+    <value>该用户已被封禁。请先解除封禁。</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>未找到该封禁记录。</value>
+  </data>
+  <data name="ErrNotActive" xml:space="preserve">
+    <value>此封禁已不再生效。</value>
+  </data>
+  <data name="ErrCannotLift" xml:space="preserve">
+    <value>只有实施此封禁的审核员或管理员才能解除。</value>
+  </data>
+  <data name="ErrFailed" xml:space="preserve">
+    <value>操作失败。请重试。</value>
+  </data>
+  <data name="LockoutSuspendedTitle" xml:space="preserve">
+    <value>账户已被封禁</value>
+  </data>
+  <data name="LockoutSuspendedTemporary" xml:space="preserve">
+    <value>您的账户已被审核团队封禁。封禁结束后您可以再次登录。</value>
+  </data>
+  <data name="LockoutSuspendedPermanent" xml:space="preserve">
+    <value>您的账户已被审核团队永久封禁。</value>
+  </data>
+  <data name="LockoutReasonLabel" xml:space="preserve">
+    <value>原因</value>
+  </data>
+  <data name="LockoutUntilLabel" xml:space="preserve">
+    <value>封禁至</value>
+  </data>
+  <data name="LockoutContact" xml:space="preserve">
+    <value>如有疑问，请联系网站管理员。</value>
+  </data>
+</root>

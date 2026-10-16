@@ -115,4 +115,16 @@
   <data name="FeedContentRemoved" xml:space="preserve">
     <value>Ваш контент удалён за нарушение правил сообщества.</value>
   </data>
+  <data name="UserWarned" xml:space="preserve">
+    <value>Вы получили предупреждение от команды модерации: {0}</value>
+  </data>
+  <data name="UserSuspended" xml:space="preserve">
+    <value>Ваша учётная запись заблокирована до {1}. Причина: {0}</value>
+  </data>
+  <data name="UserSuspendedPermanent" xml:space="preserve">
+    <value>Ваша учётная запись заблокирована навсегда. Причина: {0}</value>
+  </data>
+  <data name="UserSuspensionLifted" xml:space="preserve">
+    <value>Блокировка вашей учётной записи снята.</value>
+  </data>
 </root>

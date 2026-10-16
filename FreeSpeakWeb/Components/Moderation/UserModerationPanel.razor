@@ -1,0 +1,358 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.DTOs
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Services.Abstractions
+@using Microsoft.Extensions.Localization
+
+@inject IUserModerationService ModerationService
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.UserModeration> Localizer
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.FeedReports> FeedLocalizer
+
+<div class="card" data-testid="user-moderation-panel">
+    @if (loading)
+    {
+        <div class="card-body text-muted"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>@Localizer["Loading"]</div>
+    }
+    else if (history == null)
+    {
+        <div class="card-body"><div class="alert alert-danger mb-0" role="alert" data-testid="user-panel-error">@Localizer["LoadError"]</div></div>
+    }
+    else
+    {
+        <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <h5 class="mb-0" data-testid="user-panel-title">@string.Format(Localizer["PanelTitle"].Value, history.User.UserName)</h5>
+            @if (activeSuspension != null)
+            {
+                <span class="badge bg-danger" data-testid="user-status">@(activeSuspension.IsPermanent ? Localizer["StatusSuspendedPermanent"].Value : string.Format(Localizer["StatusSuspendedUntil"].Value, Utc(activeSuspension.EndsAt!.Value)))</span>
+            }
+            else
+            {
+                <span class="badge bg-success" data-testid="user-status">@Localizer["StatusInGoodStanding"]</span>
+            }
+        </div>
+        <div class="card-body">
+            @if (!string.IsNullOrEmpty(message))
+            {
+                <div class="alert @(messageIsError ? "alert-danger" : "alert-success")" role="alert" data-testid="user-panel-message">@message</div>
+            }
+
+            @if (!history.CanModerate)
+            {
+                <div class="alert alert-secondary" data-testid="user-cannot-moderate">@Localizer["CannotModerate"]</div>
+            }
+            else if (pending != PendingAction.None)
+            {
+                <div class="border rounded p-3 mb-3" data-testid="user-action-form">
+                    @if (pending is PendingAction.Warn or PendingAction.Suspend)
+                    {
+                        <div class="mb-2">
+                            <label class="form-label" for="user-mod-reason">@Localizer["ReasonLabel"]</label>
+                            <textarea id="user-mod-reason" class="form-control" rows="3" maxlength="@UserModerationService.MaxTextLength" @bind="reason" @bind:event="oninput" disabled="@busy" data-testid="user-reason"></textarea>
+                        </div>
+                    }
+                    @if (pending == PendingAction.Suspend)
+                    {
+                        <div class="mb-2">
+                            <label class="form-label" for="user-mod-duration">@Localizer["DurationLabel"]</label>
+                            <select id="user-mod-duration" class="form-select" @bind="durationDays" disabled="@busy" data-testid="user-duration">
+                                <option value="1">@Localizer["Duration1Day"]</option>
+                                <option value="3">@Localizer["Duration3Days"]</option>
+                                <option value="7">@Localizer["Duration7Days"]</option>
+                                <option value="14">@Localizer["Duration14Days"]</option>
+                                <option value="30">@Localizer["Duration30Days"]</option>
+                                <option value="0">@Localizer["DurationPermanent"]</option>
+                            </select>
+                            @if (!history.CanSuspendLong)
+                            {
+                                <div class="form-text" data-testid="user-limit-hint">@string.Format(Localizer["ModeratorLimitHint"].Value, history.MaxModeratorDays)</div>
+                            }
+                        </div>
+                    }
+                    @if (pending == PendingAction.Lift)
+                    {
+                        <div class="mb-2">
+                            <label class="form-label" for="user-mod-note">@Localizer["LiftNoteLabel"]</label>
+                            <textarea id="user-mod-note" class="form-control" rows="2" maxlength="@UserModerationService.MaxTextLength" @bind="reason" @bind:event="oninput" disabled="@busy" data-testid="user-lift-note"></textarea>
+                        </div>
+                    }
+                    <p class="mb-2">@Localizer[ConfirmKey]</p>
+                    <button type="button" class="btn btn-sm @(pending == PendingAction.Warn ? "btn-warning" : "btn-danger") me-2" disabled="@busy" @onclick="SubmitAsync" data-testid="user-confirm">@Localizer["Confirm"]</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@busy" @onclick="CancelAction" data-testid="user-cancel">@Localizer["Cancel"]</button>
+                </div>
+            }
+            else
+            {
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <button type="button" class="btn btn-warning" @onclick="() => StartAction(PendingAction.Warn)" data-testid="user-warn">@Localizer["WarnButton"]</button>
+                    <button type="button" class="btn btn-danger" @onclick="() => StartAction(PendingAction.Suspend)" data-testid="user-suspend">@Localizer["SuspendButton"]</button>
+                </div>
+            }
+
+            <h6>@Localizer["WarningsHeading"]</h6>
+            @if (history.Warnings.Count == 0)
+            {
+                <p class="text-muted" data-testid="user-no-warnings">@Localizer["NoWarnings"]</p>
+            }
+            else
+            {
+                <ul class="list-group mb-3" data-testid="user-warnings">
+                    @foreach (var warning in history.Warnings)
+                    {
+                        <li class="list-group-item">
+                            <div>@warning.Reason</div>
+                            <div class="small text-muted">
+                                @Utc(warning.CreatedAt) UTC · @string.Format(Localizer["IssuedBy"].Value, warning.IssuedByName)
+                                @if (warning.RelatedReportId.HasValue)
+                                {
+                                    <text> · @string.Format(Localizer["RelatedReport"].Value, warning.RelatedReportId)</text>
+                                }
+                                · @Localizer[warning.AcknowledgedAt.HasValue ? "Acknowledged" : "NotAcknowledged"]
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
+
+            <h6>@Localizer["SuspensionsHeading"]</h6>
+            @if (history.Suspensions.Count == 0)
+            {
+                <p class="text-muted" data-testid="user-no-suspensions">@Localizer["NoSuspensions"]</p>
+            }
+            else
+            {
+                <ul class="list-group mb-3" data-testid="user-suspensions">
+                    @foreach (var suspension in history.Suspensions)
+                    {
+                        <li class="list-group-item" data-testid="user-suspension-item">
+                            <div class="d-flex justify-content-between align-items-start gap-2">
+                                <div>@suspension.Reason</div>
+                                <span class="badge @SuspensionBadge(suspension)">@Localizer[SuspensionStateKey(suspension)]</span>
+                            </div>
+                            <div class="small text-muted">
+                                @(suspension.EndsAt.HasValue
+                                    ? string.Format(Localizer["SuspensionRange"].Value, Utc(suspension.CreatedAt), Utc(suspension.EndsAt.Value))
+                                    : Utc(suspension.CreatedAt) + " UTC · " + Localizer["SuspensionPermanent"].Value)
+                                · @string.Format(Localizer["IssuedBy"].Value, suspension.SuspendedByName)
+                                @if (suspension.RelatedReportId.HasValue)
+                                {
+                                    <text> · @string.Format(Localizer["RelatedReport"].Value, suspension.RelatedReportId)</text>
+                                }
+                                @if (suspension.LiftedAt.HasValue)
+                                {
+                                    <text> · @string.Format(Localizer["SuspensionLifted"].Value, Utc(suspension.LiftedAt.Value))</text>
+                                    @if (!string.IsNullOrWhiteSpace(suspension.LiftNote))
+                                    {
+                                        <text> (@suspension.LiftNote)</text>
+                                    }
+                                }
+                            </div>
+                            @if (suspension.CanLift && pending == PendingAction.None)
+                            {
+                                <button type="button" class="btn btn-sm btn-outline-success mt-2" @onclick="() => StartLift(suspension.Id)" data-testid="user-lift">@Localizer["LiftButton"]</button>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+
+            <h6>@Localizer["ReportsHeading"]</h6>
+            @if (history.Reports.Count == 0)
+            {
+                <p class="text-muted mb-0" data-testid="user-no-reports">@Localizer["NoReports"]</p>
+            }
+            else
+            {
+                <ul class="list-group" data-testid="user-reports">
+                    @foreach (var report in history.Reports)
+                    {
+                        <li class="list-group-item">
+                            @string.Format(Localizer["RelatedReport"].Value, report.ReportId) ·
+                            @FeedLocalizer[FeedReportDisplay.ReasonKey(report.Reason)] ·
+                            <span class="badge @FeedReportDisplay.StatusBadge(report.Status)">@FeedLocalizer[FeedReportDisplay.StatusKey(report.Status)]</span>
+                            <span class="text-muted small ms-1">@Utc(report.CreatedAt) UTC</span>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private enum PendingAction { None, Warn, Suspend, Lift }
+
+    private UserModerationHistory? history;
+    private ActiveSuspensionInfo? activeSuspension;
+    private bool loading = true;
+    private bool busy;
+    private string? message;
+    private bool messageIsError;
+    private string? reason;
+    private int durationDays = 1;
+    private int liftSuspensionId;
+    private PendingAction pending = PendingAction.None;
+    private string? loadedUserId;
+
+    /// <summary>
+    /// Gets or sets the ID of the signed-in moderator or administrator.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string ActorId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the ID of the user being moderated.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string TargetUserId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the feed report that prompted the action, recorded on warnings and suspensions.
+    /// </summary>
+    [Parameter]
+    public int? RelatedReportId { get; set; }
+
+    private string ConfirmKey => pending switch
+    {
+        PendingAction.Warn => "ConfirmWarn",
+        PendingAction.Suspend => "ConfirmSuspend",
+        _ => "ConfirmLift"
+    };
+
+    /// <inheritdoc/>
+    protected override async Task OnParametersSetAsync()
+    {
+        if (loadedUserId != TargetUserId)
+        {
+            loadedUserId = TargetUserId;
+            message = null;
+            pending = PendingAction.None;
+            await LoadAsync();
+        }
+    }
+
+    /// <summary>
+    /// Loads the user's moderation history and the current suspension.
+    /// </summary>
+    private async Task LoadAsync()
+    {
+        loading = history == null;
+        try
+        {
+            history = await ModerationService.GetUserHistoryAsync(ActorId, TargetUserId);
+            activeSuspension = history?.IsSuspended == true ? await ModerationService.GetActiveSuspensionAsync(TargetUserId) : null;
+        }
+        catch (Exception)
+        {
+            history = null;
+            activeSuspension = null;
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    /// <summary>
+    /// Opens the warn or suspend form.
+    /// </summary>
+    /// <param name="action">The action to start.</param>
+    private void StartAction(PendingAction action)
+    {
+        message = null;
+        reason = null;
+        durationDays = 1;
+        pending = action;
+    }
+
+    /// <summary>
+    /// Opens the lift form for a suspension.
+    /// </summary>
+    /// <param name="suspensionId">The suspension to lift.</param>
+    private void StartLift(int suspensionId)
+    {
+        message = null;
+        reason = null;
+        liftSuspensionId = suspensionId;
+        pending = PendingAction.Lift;
+    }
+
+    /// <summary>
+    /// Closes the open form without acting.
+    /// </summary>
+    private void CancelAction() => pending = PendingAction.None;
+
+    /// <summary>
+    /// Submits the open form through the moderation service and shows the outcome.
+    /// </summary>
+    private async Task SubmitAsync()
+    {
+        busy = true;
+        try
+        {
+            var action = pending;
+            var result = action switch
+            {
+                PendingAction.Warn => await ModerationService.WarnUserAsync(ActorId, TargetUserId, reason ?? string.Empty, RelatedReportId),
+                PendingAction.Suspend => await ModerationService.SuspendUserAsync(ActorId, TargetUserId, reason ?? string.Empty, durationDays == 0 ? null : TimeSpan.FromDays(durationDays), RelatedReportId),
+                _ => await ModerationService.LiftSuspensionAsync(ActorId, liftSuspensionId, reason)
+            };
+
+            if (result.Success)
+            {
+                message = Localizer[action switch { PendingAction.Warn => "DoneWarned", PendingAction.Suspend => "DoneSuspended", _ => "DoneLifted" }].Value;
+                messageIsError = false;
+                pending = PendingAction.None;
+                await LoadAsync();
+            }
+            else
+            {
+                message = Localizer[ErrorKey(result.Error)].Value;
+                messageIsError = true;
+            }
+        }
+        catch (Exception)
+        {
+            message = Localizer["ErrFailed"].Value;
+            messageIsError = true;
+        }
+        finally
+        {
+            busy = false;
+        }
+    }
+
+    /// <summary>
+    /// Maps a service error to its localization key.
+    /// </summary>
+    /// <param name="error">The error.</param>
+    /// <returns>The resource key.</returns>
+    private static string ErrorKey(UserModerationError error) => error switch
+    {
+        UserModerationError.NotAuthorized => "ErrNotAuthorized",
+        UserModerationError.UserNotFound => "ErrUserNotFound",
+        UserModerationError.CannotModerateSelf => "ErrSelf",
+        UserModerationError.CannotModerateStaff => "ErrStaff",
+        UserModerationError.ReasonRequired => "ErrReasonRequired",
+        UserModerationError.ReasonTooLong => "ErrReasonTooLong",
+        UserModerationError.InvalidDuration => "ErrInvalidDuration",
+        UserModerationError.DurationExceedsLimit => "ErrDurationLimit",
+        UserModerationError.PermanentNotAllowed => "ErrPermanent",
+        UserModerationError.AlreadySuspended => "ErrAlreadySuspended",
+        UserModerationError.NotFound => "ErrNotFound",
+        UserModerationError.NotActive => "ErrNotActive",
+        UserModerationError.CannotLift => "ErrCannotLift",
+        _ => "ErrFailed"
+    };
+
+    /// <summary>
+    /// Gets the localization key for the state of a suspension.
+    /// </summary>
+    private static string SuspensionStateKey(UserSuspensionItem suspension) => suspension.IsActive ? "SuspensionActive" : suspension.LiftedAt.HasValue ? "SuspensionLiftedState" : "SuspensionEnded";
+
+    private static string SuspensionBadge(UserSuspensionItem suspension) => suspension.IsActive ? "bg-danger" : "bg-secondary";
+
+    /// <summary>
+    /// Formats a UTC timestamp for display.
+    /// </summary>
+    private static string Utc(DateTime value) => DateTime.SpecifyKind(value, DateTimeKind.Utc).ToString("yyyy-MM-dd HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+}

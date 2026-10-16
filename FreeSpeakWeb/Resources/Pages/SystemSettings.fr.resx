@@ -394,4 +394,10 @@
   <data name="H_StaleReportDays" xml:space="preserve">
     <value>Les signalements en attente depuis plus de ce nombre de jours sont signalés comme en retard dans le tableau de bord.</value>
   </data>
+  <data name="L_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>Suspension maximale par les modérateurs système (jours)</value>
+  </data>
+  <data name="H_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>Les modérateurs système peuvent suspendre des utilisateurs jusqu'à ce nombre de jours. Les suspensions plus longues ou définitives nécessitent un administrateur système.</value>
+  </data>
 </root>

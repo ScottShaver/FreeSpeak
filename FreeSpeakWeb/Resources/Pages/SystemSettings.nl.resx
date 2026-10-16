@@ -394,4 +394,10 @@
   <data name="H_StaleReportDays" xml:space="preserve">
     <value>Openstaande meldingen die ouder zijn dan dit aantal dagen worden in het moderatordashboard als verouderd gemarkeerd.</value>
   </data>
+  <data name="L_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>Maximale schorsing door systeemmoderators (dagen)</value>
+  </data>
+  <data name="H_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>Systeemmoderators kunnen gebruikers voor maximaal dit aantal dagen schorsen. Langere of permanente schorsingen vereisen een systeembeheerder.</value>
+  </data>
 </root>

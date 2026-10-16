@@ -394,4 +394,10 @@
   <data name="H_StaleReportDays" xml:space="preserve">
     <value>Offene Meldungen, die älter als diese Anzahl Tage sind, werden im Moderator-Dashboard als veraltet markiert.</value>
   </data>
+  <data name="L_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>Maximale Sperrdauer durch Systemmoderatoren (Tage)</value>
+  </data>
+  <data name="H_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>Systemmoderatoren können Benutzer für bis zu diese Anzahl Tage sperren. Längere oder dauerhafte Sperrungen erfordern einen Systemadministrator.</value>
+  </data>
 </root>

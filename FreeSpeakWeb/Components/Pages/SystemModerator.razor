@@ -12,6 +12,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.SystemModerator> Localizer
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.FeedReports> FeedLocalizer
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.UserModeration> UserLocalizer
 
 <PageTitle>@Localizer["PageTitle"]</PageTitle>
 
@@ -37,11 +38,18 @@
                     <li class="nav-item">
                         <button type="button" class="nav-link @(activeTab == "feed" ? "active" : string.Empty)" @onclick='() => OpenFeedQueue(false)' data-testid="tab-feed-reports">@FeedLocalizer["TabFeedReports"]</button>
                     </li>
+                    <li class="nav-item">
+                        <button type="button" class="nav-link @(activeTab == "users" ? "active" : string.Empty)" @onclick='() => activeTab = "users"' data-testid="tab-users">@UserLocalizer["TabUsers"]</button>
+                    </li>
                 </ul>
                 <div class="pt-3">
                     @if (activeTab == "overview")
                     {
                         <ModerationOverviewPanel UserId="@currentUserId" OnOpenQueue="OpenFeedQueue" />
+                    }
+                    else if (activeTab == "users")
+                    {
+                        <UserModerationTab UserId="@currentUserId" />
                     }
                     else
                     {

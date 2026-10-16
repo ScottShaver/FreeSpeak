@@ -394,4 +394,10 @@
   <data name="H_StaleReportDays" xml:space="preserve">
     <value>تُعرض التقارير المعلقة الأقدم من هذا العدد من الأيام كمتأخرة في لوحة المشرف.</value>
   </data>
+  <data name="L_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>الحد الأقصى للتعليق من قبل مشرفي النظام (أيام)</value>
+  </data>
+  <data name="H_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>يمكن لمشرفي النظام تعليق المستخدمين لمدة تصل إلى هذا العدد من الأيام. أما التعليق الأطول أو الدائم فيتطلب مسؤول النظام.</value>
+  </data>
 </root>

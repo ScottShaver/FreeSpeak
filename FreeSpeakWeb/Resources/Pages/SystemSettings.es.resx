@@ -394,4 +394,10 @@
   <data name="H_StaleReportDays" xml:space="preserve">
     <value>Los reportes pendientes con más de estos días se marcan como antiguos en el panel de moderación.</value>
   </data>
+  <data name="L_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>Suspensión máxima por moderadores del sistema (días)</value>
+  </data>
+  <data name="H_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>Los moderadores del sistema pueden suspender a los usuarios hasta este número de días. Las suspensiones más largas o permanentes requieren un administrador del sistema.</value>
+  </data>
 </root>

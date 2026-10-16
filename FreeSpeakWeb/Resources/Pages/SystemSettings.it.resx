@@ -394,4 +394,10 @@
   <data name="H_StaleReportDays" xml:space="preserve">
     <value>Le segnalazioni in sospeso più vecchie di questi giorni sono contrassegnate come in ritardo nella dashboard.</value>
   </data>
+  <data name="L_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>Sospensione massima dei moderatori di sistema (giorni)</value>
+  </data>
+  <data name="H_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>I moderatori di sistema possono sospendere gli utenti per un massimo di questi giorni. Le sospensioni più lunghe o permanenti richiedono un amministratore di sistema.</value>
+  </data>
 </root>

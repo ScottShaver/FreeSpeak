@@ -31,9 +31,9 @@ namespace FreeSpeakWeb.Tests.Services.Settings
             var group = SettingsCatalog.Find("moderation")!;
 
             group.RestartRequired.Should().BeFalse();
-            var field = group.Fields.Should().ContainSingle().Subject;
-            field.Key.Should().Be("Moderation:StaleReportDays");
-            field.IsSecret.Should().BeFalse();
+            group.Fields.Select(f => f.Key).Should().BeEquivalentTo(
+                new[] { "Moderation:StaleReportDays", "Moderation:MaxModeratorSuspensionDays" });
+            group.Fields.Should().OnlyContain(f => !f.IsSecret);
         }
 
         /// <summary>Verifies each rate limit policy exposes MaxRequests, WindowMinutes and QueueLimit.</summary>

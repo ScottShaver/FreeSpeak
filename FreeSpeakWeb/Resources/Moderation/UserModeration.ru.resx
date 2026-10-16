@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabUsers" xml:space="preserve">
+    <value>Пользователи</value>
+  </data>
+  <data name="SearchLabel" xml:space="preserve">
+    <value>Найти пользователя</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>Имя пользователя или имя (не менее 2 символов)</value>
+  </data>
+  <data name="SearchButton" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="SelectUser" xml:space="preserve">
+    <value>Выбрать</value>
+  </data>
+  <data name="NoResults" xml:space="preserve">
+    <value>Пользователи не найдены.</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Загрузка…</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>Не удалось загрузить пользователя.</value>
+  </data>
+  <data name="PanelTitle" xml:space="preserve">
+    <value>Модерация: {0}</value>
+  </data>
+  <data name="StatusSuspendedUntil" xml:space="preserve">
+    <value>Заблокирован до {0} UTC</value>
+  </data>
+  <data name="StatusSuspendedPermanent" xml:space="preserve">
+    <value>Заблокирован навсегда</value>
+  </data>
+  <data name="StatusInGoodStanding" xml:space="preserve">
+    <value>Не заблокирован</value>
+  </data>
+  <data name="WarningsHeading" xml:space="preserve">
+    <value>Предупреждения</value>
+  </data>
+  <data name="NoWarnings" xml:space="preserve">
+    <value>Предупреждений нет.</value>
+  </data>
+  <data name="SuspensionsHeading" xml:space="preserve">
+    <value>Блокировки</value>
+  </data>
+  <data name="NoSuspensions" xml:space="preserve">
+    <value>Блокировок нет.</value>
+  </data>
+  <data name="ReportsHeading" xml:space="preserve">
+    <value>Жалобы на контент этого пользователя</value>
+  </data>
+  <data name="NoReports" xml:space="preserve">
+    <value>Жалоб нет.</value>
+  </data>
+  <data name="RelatedReport" xml:space="preserve">
+    <value>Жалоба №{0}</value>
+  </data>
+  <data name="IssuedBy" xml:space="preserve">
+    <value>от {0}</value>
+  </data>
+  <data name="Acknowledged" xml:space="preserve">
+    <value>Принято к сведению</value>
+  </data>
+  <data name="NotAcknowledged" xml:space="preserve">
+    <value>Не принято к сведению</value>
+  </data>
+  <data name="SuspensionActive" xml:space="preserve">
+    <value>Действует</value>
+  </data>
+  <data name="SuspensionEnded" xml:space="preserve">
+    <value>Закончилась</value>
+  </data>
+  <data name="SuspensionLifted" xml:space="preserve">
+    <value>Снята {0} UTC</value>
+  </data>
+  <data name="SuspensionLiftedState" xml:space="preserve">
+    <value>Снята</value>
+  </data>
+  <data name="SuspensionPermanent" xml:space="preserve">
+    <value>Постоянная</value>
+  </data>
+  <data name="SuspensionRange" xml:space="preserve">
+    <value>{0} UTC – {1} UTC</value>
+  </data>
+  <data name="WarnButton" xml:space="preserve">
+    <value>Предупредить пользователя</value>
+  </data>
+  <data name="SuspendButton" xml:space="preserve">
+    <value>Заблокировать пользователя</value>
+  </data>
+  <data name="LiftButton" xml:space="preserve">
+    <value>Снять блокировку</value>
+  </data>
+  <data name="ModerateAuthor" xml:space="preserve">
+    <value>Предупредить или заблокировать автора</value>
+  </data>
+  <data name="ReasonLabel" xml:space="preserve">
+    <value>Причина (видна пользователю)</value>
+  </data>
+  <data name="DurationLabel" xml:space="preserve">
+    <value>Срок</value>
+  </data>
+  <data name="Duration1Day" xml:space="preserve">
+    <value>1 день</value>
+  </data>
+  <data name="Duration3Days" xml:space="preserve">
+    <value>3 дня</value>
+  </data>
+  <data name="Duration7Days" xml:space="preserve">
+    <value>7 дней</value>
+  </data>
+  <data name="Duration14Days" xml:space="preserve">
+    <value>14 дней</value>
+  </data>
+  <data name="Duration30Days" xml:space="preserve">
+    <value>30 дней</value>
+  </data>
+  <data name="DurationPermanent" xml:space="preserve">
+    <value>Постоянная</value>
+  </data>
+  <data name="ModeratorLimitHint" xml:space="preserve">
+    <value>Системные модераторы могут блокировать на срок до {0} дн. Более длительные или постоянные блокировки требуют администратора.</value>
+  </data>
+  <data name="LiftNoteLabel" xml:space="preserve">
+    <value>Примечание (необязательно)</value>
+  </data>
+  <data name="ConfirmWarn" xml:space="preserve">
+    <value>Отправить это предупреждение пользователю?</value>
+  </data>
+  <data name="ConfirmSuspend" xml:space="preserve">
+    <value>Заблокировать этого пользователя? Он будет разлогинен и не сможет войти, пока блокировка не закончится.</value>
+  </data>
+  <data name="ConfirmLift" xml:space="preserve">
+    <value>Снять эту блокировку сейчас?</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Подтвердить</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="DoneWarned" xml:space="preserve">
+    <value>Предупреждение отправлено.</value>
+  </data>
+  <data name="DoneSuspended" xml:space="preserve">
+    <value>Пользователь заблокирован.</value>
+  </data>
+  <data name="DoneLifted" xml:space="preserve">
+    <value>Блокировка снята.</value>
+  </data>
+  <data name="CannotModerate" xml:space="preserve">
+    <value>Вы не можете предупредить или заблокировать этого пользователя.</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>У вас нет прав на это действие.</value>
+  </data>
+  <data name="ErrUserNotFound" xml:space="preserve">
+    <value>Пользователь не найден.</value>
+  </data>
+  <data name="ErrSelf" xml:space="preserve">
+    <value>Вы не можете предупредить или заблокировать себя.</value>
+  </data>
+  <data name="ErrStaff" xml:space="preserve">
+    <value>Вы не можете предупредить или заблокировать этого пользователя из-за его роли.</value>
+  </data>
+  <data name="ErrReasonRequired" xml:space="preserve">
+    <value>Укажите причину.</value>
+  </data>
+  <data name="ErrReasonTooLong" xml:space="preserve">
+    <value>Текст слишком длинный.</value>
+  </data>
+  <data name="ErrInvalidDuration" xml:space="preserve">
+    <value>Выберите допустимый срок.</value>
+  </data>
+  <data name="ErrDurationLimit" xml:space="preserve">
+    <value>Системные модераторы не могут блокировать на такой срок. Обратитесь к администратору.</value>
+  </data>
+  <data name="ErrPermanent" xml:space="preserve">
+    <value>Только администраторы могут заблокировать пользователя навсегда.</value>
+  </data>
+  <data name="ErrAlreadySuspended" xml:space="preserve">
+    <value>Этот пользователь уже заблокирован. Сначала снимите блокировку.</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>Блокировка не найдена.</value>
+  </data>
+  <data name="ErrNotActive" xml:space="preserve">
+    <value>Эта блокировка больше не действует.</value>
+  </data>
+  <data name="ErrCannotLift" xml:space="preserve">
+    <value>Снять эту блокировку может только модератор, который её наложил, или администратор.</value>
+  </data>
+  <data name="ErrFailed" xml:space="preserve">
+    <value>Не удалось выполнить действие. Повторите попытку.</value>
+  </data>
+  <data name="LockoutSuspendedTitle" xml:space="preserve">
+    <value>Аккаунт заблокирован</value>
+  </data>
+  <data name="LockoutSuspendedTemporary" xml:space="preserve">
+    <value>Ваш аккаунт заблокирован командой модерации. Вы сможете войти снова после окончания блокировки.</value>
+  </data>
+  <data name="LockoutSuspendedPermanent" xml:space="preserve">
+    <value>Ваш аккаунт заблокирован командой модерации навсегда.</value>
+  </data>
+  <data name="LockoutReasonLabel" xml:space="preserve">
+    <value>Причина</value>
+  </data>
+  <data name="LockoutUntilLabel" xml:space="preserve">
+    <value>Заблокирован до</value>
+  </data>
+  <data name="LockoutContact" xml:space="preserve">
+    <value>Если у вас есть вопросы, свяжитесь с администратором сайта.</value>
+  </data>
+</root>

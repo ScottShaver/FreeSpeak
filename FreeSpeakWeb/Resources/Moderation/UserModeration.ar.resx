@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabUsers" xml:space="preserve">
+    <value>المستخدمون</value>
+  </data>
+  <data name="SearchLabel" xml:space="preserve">
+    <value>البحث عن مستخدم</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>اسم المستخدم أو الاسم (حرفان على الأقل)</value>
+  </data>
+  <data name="SearchButton" xml:space="preserve">
+    <value>بحث</value>
+  </data>
+  <data name="SelectUser" xml:space="preserve">
+    <value>اختيار</value>
+  </data>
+  <data name="NoResults" xml:space="preserve">
+    <value>لم يتم العثور على مستخدمين.</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>جارٍ التحميل…</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>تعذّر تحميل المستخدم.</value>
+  </data>
+  <data name="PanelTitle" xml:space="preserve">
+    <value>الإشراف: {0}</value>
+  </data>
+  <data name="StatusSuspendedUntil" xml:space="preserve">
+    <value>موقوف حتى {0} UTC</value>
+  </data>
+  <data name="StatusSuspendedPermanent" xml:space="preserve">
+    <value>موقوف نهائيًا</value>
+  </data>
+  <data name="StatusInGoodStanding" xml:space="preserve">
+    <value>غير موقوف</value>
+  </data>
+  <data name="WarningsHeading" xml:space="preserve">
+    <value>التحذيرات</value>
+  </data>
+  <data name="NoWarnings" xml:space="preserve">
+    <value>لا توجد تحذيرات.</value>
+  </data>
+  <data name="SuspensionsHeading" xml:space="preserve">
+    <value>حالات الإيقاف</value>
+  </data>
+  <data name="NoSuspensions" xml:space="preserve">
+    <value>لا توجد حالات إيقاف.</value>
+  </data>
+  <data name="ReportsHeading" xml:space="preserve">
+    <value>البلاغات عن محتوى هذا المستخدم</value>
+  </data>
+  <data name="NoReports" xml:space="preserve">
+    <value>لا توجد بلاغات.</value>
+  </data>
+  <data name="RelatedReport" xml:space="preserve">
+    <value>البلاغ رقم {0}</value>
+  </data>
+  <data name="IssuedBy" xml:space="preserve">
+    <value>بواسطة {0}</value>
+  </data>
+  <data name="Acknowledged" xml:space="preserve">
+    <value>تم الإقرار</value>
+  </data>
+  <data name="NotAcknowledged" xml:space="preserve">
+    <value>لم يتم الإقرار</value>
+  </data>
+  <data name="SuspensionActive" xml:space="preserve">
+    <value>نشط</value>
+  </data>
+  <data name="SuspensionEnded" xml:space="preserve">
+    <value>منتهٍ</value>
+  </data>
+  <data name="SuspensionLifted" xml:space="preserve">
+    <value>تم الرفع في {0} UTC</value>
+  </data>
+  <data name="SuspensionLiftedState" xml:space="preserve">
+    <value>تم الرفع</value>
+  </data>
+  <data name="SuspensionPermanent" xml:space="preserve">
+    <value>نهائي</value>
+  </data>
+  <data name="SuspensionRange" xml:space="preserve">
+    <value>{0} UTC – {1} UTC</value>
+  </data>
+  <data name="WarnButton" xml:space="preserve">
+    <value>تحذير المستخدم</value>
+  </data>
+  <data name="SuspendButton" xml:space="preserve">
+    <value>إيقاف المستخدم</value>
+  </data>
+  <data name="LiftButton" xml:space="preserve">
+    <value>رفع الإيقاف</value>
+  </data>
+  <data name="ModerateAuthor" xml:space="preserve">
+    <value>تحذير الكاتب أو إيقافه</value>
+  </data>
+  <data name="ReasonLabel" xml:space="preserve">
+    <value>السبب (يظهر للمستخدم)</value>
+  </data>
+  <data name="DurationLabel" xml:space="preserve">
+    <value>المدة</value>
+  </data>
+  <data name="Duration1Day" xml:space="preserve">
+    <value>يوم واحد</value>
+  </data>
+  <data name="Duration3Days" xml:space="preserve">
+    <value>3 أيام</value>
+  </data>
+  <data name="Duration7Days" xml:space="preserve">
+    <value>7 أيام</value>
+  </data>
+  <data name="Duration14Days" xml:space="preserve">
+    <value>14 يومًا</value>
+  </data>
+  <data name="Duration30Days" xml:space="preserve">
+    <value>30 يومًا</value>
+  </data>
+  <data name="DurationPermanent" xml:space="preserve">
+    <value>نهائي</value>
+  </data>
+  <data name="ModeratorLimitHint" xml:space="preserve">
+    <value>يمكن لمشرفي النظام الإيقاف لمدة تصل إلى {0} يومًا. أما الإيقاف الأطول أو النهائي فيتطلب مسؤولًا.</value>
+  </data>
+  <data name="LiftNoteLabel" xml:space="preserve">
+    <value>ملاحظة (اختياري)</value>
+  </data>
+  <data name="ConfirmWarn" xml:space="preserve">
+    <value>هل تريد إرسال هذا التحذير إلى المستخدم؟</value>
+  </data>
+  <data name="ConfirmSuspend" xml:space="preserve">
+    <value>هل تريد إيقاف هذا المستخدم؟ سيتم تسجيل خروجه ولن يتمكن من تسجيل الدخول حتى ينتهي الإيقاف.</value>
+  </data>
+  <data name="ConfirmLift" xml:space="preserve">
+    <value>هل تريد رفع هذا الإيقاف الآن؟</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>تأكيد</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="DoneWarned" xml:space="preserve">
+    <value>تم إرسال التحذير.</value>
+  </data>
+  <data name="DoneSuspended" xml:space="preserve">
+    <value>تم إيقاف المستخدم.</value>
+  </data>
+  <data name="DoneLifted" xml:space="preserve">
+    <value>تم رفع الإيقاف.</value>
+  </data>
+  <data name="CannotModerate" xml:space="preserve">
+    <value>لا يمكنك تحذير هذا المستخدم أو إيقافه.</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>غير مسموح لك بالقيام بذلك.</value>
+  </data>
+  <data name="ErrUserNotFound" xml:space="preserve">
+    <value>لم يتم العثور على المستخدم.</value>
+  </data>
+  <data name="ErrSelf" xml:space="preserve">
+    <value>لا يمكنك تحذير نفسك أو إيقافها.</value>
+  </data>
+  <data name="ErrStaff" xml:space="preserve">
+    <value>لا يمكنك تحذير هذا المستخدم أو إيقافه بسبب دوره.</value>
+  </data>
+  <data name="ErrReasonRequired" xml:space="preserve">
+    <value>أدخل سببًا.</value>
+  </data>
+  <data name="ErrReasonTooLong" xml:space="preserve">
+    <value>النص طويل جدًا.</value>
+  </data>
+  <data name="ErrInvalidDuration" xml:space="preserve">
+    <value>اختر مدة صالحة.</value>
+  </data>
+  <data name="ErrDurationLimit" xml:space="preserve">
+    <value>لا يمكن لمشرفي النظام الإيقاف لهذه المدة الطويلة. اطلب من مسؤول.</value>
+  </data>
+  <data name="ErrPermanent" xml:space="preserve">
+    <value>يمكن للمسؤولين فقط إيقاف مستخدم نهائيًا.</value>
+  </data>
+  <data name="ErrAlreadySuspended" xml:space="preserve">
+    <value>هذا المستخدم موقوف بالفعل. ارفع الإيقاف أولًا.</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>لم يتم العثور على الإيقاف.</value>
+  </data>
+  <data name="ErrNotActive" xml:space="preserve">
+    <value>هذا الإيقاف لم يعد نشطًا.</value>
+  </data>
+  <data name="ErrCannotLift" xml:space="preserve">
+    <value>لا يمكن رفع هذا الإيقاف إلا بواسطة المشرف الذي أصدره أو أحد المسؤولين.</value>
+  </data>
+  <data name="ErrFailed" xml:space="preserve">
+    <value>فشل الإجراء. يرجى المحاولة مرة أخرى.</value>
+  </data>
+  <data name="LockoutSuspendedTitle" xml:space="preserve">
+    <value>الحساب موقوف</value>
+  </data>
+  <data name="LockoutSuspendedTemporary" xml:space="preserve">
+    <value>تم إيقاف حسابك من قِبل فريق الإشراف. يمكنك تسجيل الدخول مجددًا بعد انتهاء الإيقاف.</value>
+  </data>
+  <data name="LockoutSuspendedPermanent" xml:space="preserve">
+    <value>تم إيقاف حسابك نهائيًا من قِبل فريق الإشراف.</value>
+  </data>
+  <data name="LockoutReasonLabel" xml:space="preserve">
+    <value>السبب</value>
+  </data>
+  <data name="LockoutUntilLabel" xml:space="preserve">
+    <value>موقوف حتى</value>
+  </data>
+  <data name="LockoutContact" xml:space="preserve">
+    <value>إذا كانت لديك أسئلة، يرجى التواصل مع مسؤول الموقع.</value>
+  </data>
+</root>

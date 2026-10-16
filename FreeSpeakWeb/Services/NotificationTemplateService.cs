@@ -94,6 +94,9 @@ public class NotificationTemplateService
             "GroupPostReaction" => ExtractParameters(notification, "ReactorName", "ReactionType"),
             "CommentReaction" => ExtractParameters(notification, "ReactorName", "ReactionType"),
             "GroupCommentReaction" => ExtractParameters(notification, "ReactorName", "ReactionType"),
+            "UserWarned" => ExtractParameters(notification, "Reason"),
+            "UserSuspended" => ExtractParameters(notification, "Reason", "Until"),
+            "UserSuspendedPermanent" => ExtractParameters(notification, "Reason"),
             _ => Array.Empty<object>()
         };
     }

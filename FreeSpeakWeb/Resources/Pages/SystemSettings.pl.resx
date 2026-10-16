@@ -394,4 +394,10 @@
   <data name="H_StaleReportDays" xml:space="preserve">
     <value>Oczekujące zgłoszenia starsze niż ta liczba dni są oznaczane w panelu moderatora jako zaległe.</value>
   </data>
+  <data name="L_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>Maksymalne zawieszenie przez moderatorów systemu (dni)</value>
+  </data>
+  <data name="H_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>Moderatorzy systemu mogą zawiesić użytkowników na okres do tej liczby dni. Dłuższe lub stałe zawieszenia wymagają administratora systemu.</value>
+  </data>
 </root>
