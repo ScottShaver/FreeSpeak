@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+    <data name="PostNeedsContent" xml:space="preserve">
+    <value>帖子必须包含文字或图片。</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>创建帖子失败。</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>创建帖子时发生错误。</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>未找到帖子。</value>
+  </data>
+  <data name="NotAuthorizedEditPost" xml:space="preserve">
+    <value>您无权编辑此帖子。</value>
+  </data>
+  <data name="UpdatePostError" xml:space="preserve">
+    <value>更新帖子时发生错误。</value>
+  </data>
+  <data name="NotAuthorizedDeletePost" xml:space="preserve">
+    <value>您无权删除此帖子。</value>
+  </data>
+  <data name="DeletePostError" xml:space="preserve">
+    <value>删除帖子时发生错误。</value>
+  </data>
+  <data name="NotAuthorizedApprovePosts" xml:space="preserve">
+    <value>您无权批准此群组中的帖子。</value>
+  </data>
+  <data name="PostAlreadyApproved" xml:space="preserve">
+    <value>此帖子已被其他版主批准。</value>
+  </data>
+  <data name="PostAlreadyDeclined" xml:space="preserve">
+    <value>此帖子已被其他版主拒绝。</value>
+  </data>
+  <data name="PostNotPendingApprove" xml:space="preserve">
+    <value>此帖子不再处于待处理状态，无法批准。</value>
+  </data>
+  <data name="ApprovePostError" xml:space="preserve">
+    <value>批准帖子时发生错误。</value>
+  </data>
+  <data name="NotAuthorizedDeclinePosts" xml:space="preserve">
+    <value>您无权拒绝此群组中的帖子。</value>
+  </data>
+  <data name="PostNotPendingDecline" xml:space="preserve">
+    <value>此帖子不再处于待处理状态，无法拒绝。</value>
+  </data>
+  <data name="DeclinePostError" xml:space="preserve">
+    <value>拒绝帖子时发生错误。</value>
+  </data>
+  <data name="CommentEmpty" xml:space="preserve">
+    <value>评论内容不能为空。</value>
+  </data>
+  <data name="ParentCommentNotFound" xml:space="preserve">
+    <value>未找到父评论。</value>
+  </data>
+  <data name="ParentCommentWrongPost" xml:space="preserve">
+    <value>父评论不属于此帖子。</value>
+  </data>
+  <data name="ReplyDepthExceeded" xml:space="preserve">
+    <value>回复的嵌套层级不能超过{0}层。</value>
+  </data>
+  <data name="MaxDirectComments" xml:space="preserve">
+    <value>此帖子已达到 {0} 条直接评论的上限。</value>
+  </data>
+  <data name="AddCommentError" xml:space="preserve">
+    <value>添加评论时发生错误。</value>
+  </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>未找到评论。</value>
+  </data>
+  <data name="NotAuthorizedDeleteComment" xml:space="preserve">
+    <value>您无权删除此评论。</value>
+  </data>
+  <data name="DeleteCommentError" xml:space="preserve">
+    <value>删除评论时发生错误。</value>
+  </data>
+  <data name="LikeNotFound" xml:space="preserve">
+    <value>未找到点赞。</value>
+  </data>
+  <data name="LikePostError" xml:space="preserve">
+    <value>点赞帖子时发生错误。</value>
+  </data>
+  <data name="UnlikePostError" xml:space="preserve">
+    <value>取消点赞帖子时发生错误。</value>
+  </data>
+  <data name="LikeCommentError" xml:space="preserve">
+    <value>点赞评论时发生错误。</value>
+  </data>
+  <data name="UnlikeCommentError" xml:space="preserve">
+    <value>取消点赞评论时发生错误。</value>
+  </data>
+  <data name="MuteError" xml:space="preserve">
+    <value>静音通知时发生错误。</value>
+  </data>
+  <data name="UnmuteError" xml:space="preserve">
+    <value>取消静音通知时发生错误。</value>
+  </data>
+  <data name="NotAuthorizedAddImages" xml:space="preserve">
+    <value>您无权向此帖子添加图片。</value>
+  </data>
+  <data name="AddImageFailed" xml:space="preserve">
+    <value>添加图片失败。</value>
+  </data>
+  <data name="AddImageError" xml:space="preserve">
+    <value>添加图片时发生错误。</value>
+  </data>
+  <data name="ImageNotFound" xml:space="preserve">
+    <value>未找到图片。</value>
+  </data>
+  <data name="NotAuthorizedRemoveImage" xml:space="preserve">
+    <value>您无权移除此图片。</value>
+  </data>
+  <data name="RemoveImageError" xml:space="preserve">
+    <value>移除图片时发生错误。</value>
+  </data>
+</root>

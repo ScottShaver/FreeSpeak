@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="InvalidUserIdFormat" xml:space="preserve">
+    <value>Недопустимый формат идентификатора пользователя.</value>
+  </data>
+  <data name="FilenameIsRequired" xml:space="preserve">
+    <value>Требуется имя файла.</value>
+  </data>
+  <data name="InvalidFileSize" xml:space="preserve">
+    <value>Недопустимый размер файла.</value>
+  </data>
+  <data name="FileExceedsTheMaximum" xml:space="preserve">
+    <value>Файл превышает максимальный размер {0} МБ.</value>
+  </data>
+  <data name="NoPermissionToUpload" xml:space="preserve">
+    <value>У вас нет разрешения загружать файлы в эту группу.</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>Группа не найдена.</value>
+  </data>
+  <data name="FileUploadsNotEnabled" xml:space="preserve">
+    <value>Загрузка файлов для этой группы не включена.</value>
+  </data>
+  <data name="FileValidationFailed" xml:space="preserve">
+    <value>Не удалось проверить файл: {0}</value>
+  </data>
+  <data name="FileRejected" xml:space="preserve">
+    <value>Файл отклонён: {0}</value>
+  </data>
+  <data name="MalwareDetected" xml:space="preserve">
+    <value>Обнаружено вредоносное ПО: {0}</value>
+  </data>
+  <data name="VirusScanFailed" xml:space="preserve">
+    <value>Не удалось выполнить проверку на вирусы</value>
+  </data>
+  <data name="UploadError" xml:space="preserve">
+    <value>Произошла ошибка при загрузке файла.</value>
+  </data>
+  <data name="AccessError" xml:space="preserve">
+    <value>Произошла ошибка при доступе к файлу.</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>Файл не найден.</value>
+  </data>
+  <data name="NoPermissionToAccess" xml:space="preserve">
+    <value>У вас нет разрешения на доступ к этому файлу.</value>
+  </data>
+  <data name="FileNotYetAvailable" xml:space="preserve">
+    <value>Этот файл пока недоступен для скачивания.</value>
+  </data>
+  <data name="FileNotFoundOnDisk" xml:space="preserve">
+    <value>Файл не найден на диске.</value>
+  </data>
+  <data name="NoPermissionToApprove" xml:space="preserve">
+    <value>У вас нет разрешения одобрять файлы.</value>
+  </data>
+  <data name="NoPermissionToDecline" xml:space="preserve">
+    <value>У вас нет разрешения отклонять файлы.</value>
+  </data>
+  <data name="NoPermissionToDelete" xml:space="preserve">
+    <value>У вас нет разрешения удалять этот файл.</value>
+  </data>
+</root>

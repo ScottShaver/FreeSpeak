@@ -94,4 +94,10 @@
   <data name="ExpiresOn" xml:space="preserve">
     <value>{0}에 만료</value>
   </data>
+  <data name="DateFormatWithYear" xml:space="preserve">
+    <value>yyyy년 M월 d일</value>
+  </data>
+  <data name="DateFormatShort" xml:space="preserve">
+    <value>M월 d일</value>
+  </data>
 </root>

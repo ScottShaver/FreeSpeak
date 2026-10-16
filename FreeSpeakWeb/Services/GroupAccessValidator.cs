@@ -1,6 +1,7 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace FreeSpeakWeb.Services
 {
@@ -13,15 +14,26 @@ namespace FreeSpeakWeb.Services
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupAccessValidator> _logger;
         private readonly IRoleService _roleService;
+        private readonly IStringLocalizer<GroupAccessValidator> _localizer;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupAccessValidator"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording validation failures.</param>
+        /// <param name="roleService">Service for role operations.</param>
+        /// <param name="localizer">Optional localizer for user-facing result messages; when omitted the neutral (English) text is used.</param>
 
         public GroupAccessValidator(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupAccessValidator> logger,
-            IRoleService roleService)
+            IRoleService roleService,
+            IStringLocalizer<GroupAccessValidator>? localizer = null)
         {
             _contextFactory = contextFactory;
             _logger = logger;
             _roleService = roleService;
+            _localizer = ServiceLocalizer.Resolve(localizer);
         }
 
         /// <summary>
@@ -69,7 +81,7 @@ namespace FreeSpeakWeb.Services
             {
                 return isPublic
                     ? (true, null)
-                    : (false, "You must be logged in to view posts in this private group.");
+                    : (false, _localizer["LoginRequiredPrivateGroup"].Value);
             }
 
             try
@@ -81,7 +93,7 @@ namespace FreeSpeakWeb.Services
 
                 if (isBanned)
                 {
-                    return (false, "You have been banned from this group and can no longer view its content.");
+                    return (false, _localizer["BannedCannotViewContent"].Value);
                 }
 
                 if (!isPublic)
@@ -91,7 +103,7 @@ namespace FreeSpeakWeb.Services
 
                     if (!isMember)
                     {
-                        return (false, "You must be a member of this group to view this post.");
+                        return (false, _localizer["MustBeMemberToViewPost"].Value);
                     }
                 }
 
@@ -100,7 +112,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error validating view access for user {UserId} to group {GroupId}", userId, groupId);
-                return (false, "Unable to verify access to this group.");
+                return (false, _localizer["UnableToVerifyAccess"].Value);
             }
         }
 
@@ -128,7 +140,7 @@ namespace FreeSpeakWeb.Services
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error checking system administrator status for user {UserId}", userId);
-                    return (false, "Unable to verify access to this group.");
+                    return (false, _localizer["UnableToVerifyAccess"].Value);
                 }
             }
 
@@ -179,12 +191,12 @@ namespace FreeSpeakWeb.Services
 
             if (!isMember)
             {
-                return (false, "You must be a member of the group to perform this action.");
+                return (false, _localizer["MustBeMemberToPerformAction"].Value);
             }
 
             if (isBanned)
             {
-                return (false, "You are banned from this group.");
+                return (false, _localizer["BannedFromGroup"].Value);
             }
 
             return (true, null);
@@ -199,12 +211,12 @@ namespace FreeSpeakWeb.Services
 
             if (!isMember)
             {
-                return (false, "You must be a member of the group to post.");
+                return (false, _localizer["MustBeMemberToPost"].Value);
             }
 
             if (isBanned)
             {
-                return (false, "You are banned from this group.");
+                return (false, _localizer["BannedFromGroup"].Value);
             }
 
             return (true, null);
@@ -232,7 +244,7 @@ namespace FreeSpeakWeb.Services
                 return (true, null);
             }
 
-            return (false, "You are not authorized to delete this content.");
+            return (false, _localizer["NotAuthorizedToDelete"].Value);
         }
     }
 }

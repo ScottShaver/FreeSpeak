@@ -2,6 +2,7 @@ using FreeSpeakWeb.Data;
 using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace FreeSpeakWeb.Services
 {
@@ -15,6 +16,7 @@ namespace FreeSpeakWeb.Services
         private readonly ILogger<GroupContentReportService> _logger;
         private readonly GroupAccessValidator _accessValidator;
         private readonly IGroupModerationLogService? _moderationLog;
+        private readonly IStringLocalizer<GroupContentReportService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupContentReportService"/> class.
@@ -23,12 +25,15 @@ namespace FreeSpeakWeb.Services
         /// <param name="logger">Logger for recording service operations.</param>
         /// <param name="accessValidator">Validator for group access permissions.</param>
         /// <param name="moderationLog">Optional per-group moderation log; when omitted nothing is recorded there.</param>
+        /// <param name="localizer">Optional localizer for user-facing result messages; the neutral (English) text is used when omitted.</param>
         public GroupContentReportService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupContentReportService> logger,
             GroupAccessValidator accessValidator,
-            IGroupModerationLogService? moderationLog = null)
+            IGroupModerationLogService? moderationLog = null,
+            IStringLocalizer<GroupContentReportService>? localizer = null)
         {
+            _localizer = ServiceLocalizer.Resolve(localizer);
             _contextFactory = contextFactory;
             _logger = logger;
             _accessValidator = accessValidator;
@@ -57,7 +62,7 @@ namespace FreeSpeakWeb.Services
         {
             if (string.IsNullOrWhiteSpace(reporterId))
             {
-                return (false, "Reporter ID is required.", null);
+                return (false, _localizer["ReporterIdRequired"].Value, null);
             }
 
             try
@@ -68,21 +73,21 @@ namespace FreeSpeakWeb.Services
                 var group = await context.Groups.FindAsync(groupId);
                 if (group == null)
                 {
-                    return (false, "Group not found.", null);
+                    return (false, _localizer["GroupNotFound"].Value, null);
                 }
 
                 // Verify post exists and belongs to the group
                 var post = await context.GroupPosts.FirstOrDefaultAsync(p => p.Id == postId && p.GroupId == groupId);
                 if (post == null)
                 {
-                    return (false, "Post not found.", null);
+                    return (false, _localizer["PostNotFound"].Value, null);
                 }
 
                 // Check if user is a member of the group
                 var isMember = await context.GroupUsers.AnyAsync(gu => gu.GroupId == groupId && gu.UserId == reporterId);
                 if (!isMember)
                 {
-                    return (false, "You must be a member of the group to report content.", null);
+                    return (false, _localizer["MustBeMemberToReport"].Value, null);
                 }
 
                 // Check if user has already reported this post
@@ -90,7 +95,7 @@ namespace FreeSpeakWeb.Services
                     .AnyAsync(r => r.GroupId == groupId && r.PostId == postId && r.ReporterId == reporterId);
                 if (existingReport)
                 {
-                    return (false, "You have already reported this post.", null);
+                    return (false, _localizer["AlreadyReportedPost"].Value, null);
                 }
 
                 // Validate violated rule if reason is ViolatesGroupRule
@@ -98,13 +103,13 @@ namespace FreeSpeakWeb.Services
                 {
                     if (!violatedRuleId.HasValue)
                     {
-                        return (false, "Please select which group rule was violated.", null);
+                        return (false, _localizer["SelectRuleViolated"].Value, null);
                     }
 
                     var ruleExists = await context.GroupRules.AnyAsync(r => r.Id == violatedRuleId.Value && r.GroupId == groupId);
                     if (!ruleExists)
                     {
-                        return (false, "The selected rule does not exist.", null);
+                        return (false, _localizer["RuleDoesNotExist"].Value, null);
                     }
                 }
 
@@ -132,7 +137,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error reporting post {PostId} by user {ReporterId}", postId, reporterId);
-                return (false, "An error occurred while submitting the report.", null);
+                return (false, _localizer["ReportSubmitError"].Value, null);
             }
         }
 
@@ -156,7 +161,7 @@ namespace FreeSpeakWeb.Services
         {
             if (string.IsNullOrWhiteSpace(reporterId))
             {
-                return (false, "Reporter ID is required.", null);
+                return (false, _localizer["ReporterIdRequired"].Value, null);
             }
 
             try
@@ -167,7 +172,7 @@ namespace FreeSpeakWeb.Services
                 var group = await context.Groups.FindAsync(groupId);
                 if (group == null)
                 {
-                    return (false, "Group not found.", null);
+                    return (false, _localizer["GroupNotFound"].Value, null);
                 }
 
                 // Verify comment exists and belongs to a post in the group
@@ -176,14 +181,14 @@ namespace FreeSpeakWeb.Services
                     .FirstOrDefaultAsync(c => c.Id == commentId && c.Post.GroupId == groupId);
                 if (comment == null)
                 {
-                    return (false, "Comment not found.", null);
+                    return (false, _localizer["CommentNotFound"].Value, null);
                 }
 
                 // Check if user is a member of the group
                 var isMember = await context.GroupUsers.AnyAsync(gu => gu.GroupId == groupId && gu.UserId == reporterId);
                 if (!isMember)
                 {
-                    return (false, "You must be a member of the group to report content.", null);
+                    return (false, _localizer["MustBeMemberToReport"].Value, null);
                 }
 
                 // Check if user has already reported this comment
@@ -191,7 +196,7 @@ namespace FreeSpeakWeb.Services
                     .AnyAsync(r => r.GroupId == groupId && r.CommentId == commentId && r.ReporterId == reporterId);
                 if (existingReport)
                 {
-                    return (false, "You have already reported this comment.", null);
+                    return (false, _localizer["AlreadyReportedComment"].Value, null);
                 }
 
                 // Validate violated rule if reason is ViolatesGroupRule
@@ -199,13 +204,13 @@ namespace FreeSpeakWeb.Services
                 {
                     if (!violatedRuleId.HasValue)
                     {
-                        return (false, "Please select which group rule was violated.", null);
+                        return (false, _localizer["SelectRuleViolated"].Value, null);
                     }
 
                     var ruleExists = await context.GroupRules.AnyAsync(r => r.Id == violatedRuleId.Value && r.GroupId == groupId);
                     if (!ruleExists)
                     {
-                        return (false, "The selected rule does not exist.", null);
+                        return (false, _localizer["RuleDoesNotExist"].Value, null);
                     }
                 }
 
@@ -233,7 +238,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error reporting comment {CommentId} by user {ReporterId}", commentId, reporterId);
-                return (false, "An error occurred while submitting the report.", null);
+                return (false, _localizer["ReportSubmitError"].Value, null);
             }
         }
 
@@ -433,7 +438,7 @@ namespace FreeSpeakWeb.Services
         {
             if (string.IsNullOrWhiteSpace(reviewerId))
             {
-                return (false, "Reviewer ID is required.");
+                return (false, _localizer["ReviewerIdRequired"].Value);
             }
 
             try
@@ -443,20 +448,20 @@ namespace FreeSpeakWeb.Services
                 var report = await context.GroupContentReports.FindAsync(reportId);
                 if (report == null)
                 {
-                    return (false, "Report not found.");
+                    return (false, _localizer["ReportNotFound"].Value);
                 }
 
                 // Check if user is a group admin, moderator, or system administrator
                 var isAuthorized = await _accessValidator.IsGroupAdminOrModeratorAsync(report.GroupId, reviewerId);
                 if (!isAuthorized)
                 {
-                    return (false, "You are not authorized to review reports in this group.");
+                    return (false, _localizer["NotAuthorizedReviewReports"].Value);
                 }
 
                 // A report that was already closed (for example by a system moderator) must not be processed twice
                 if (report.Status is not (ReportStatus.NotReviewed or ReportStatus.UnderReview))
                 {
-                    return (false, "This report has already been reviewed.");
+                    return (false, _localizer["ReportAlreadyReviewed"].Value);
                 }
 
                 report.Status = newStatus;
@@ -480,7 +485,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating report {ReportId} status", reportId);
-                return (false, "An error occurred while updating the report.");
+                return (false, _localizer["ReportUpdateError"].Value);
             }
         }
 

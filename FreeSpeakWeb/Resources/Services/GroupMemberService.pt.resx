@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+      <data name="UserIdRequired" xml:space="preserve">
+    <value>O ID do usuÃ¡rio Ã© obrigatÃ³rio.</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>Grupo nÃ£o encontrado.</value>
+  </data>
+  <data name="MustAgreeToRulesBeforeJoinRequest" xml:space="preserve">
+    <value>VocÃª deve concordar com as regras do grupo antes de enviar uma solicitaÃ§Ã£o de entrada.</value>
+  </data>
+  <data name="AlreadyMember" xml:space="preserve">
+    <value>VocÃª jÃ¡ Ã© membro deste grupo.</value>
+  </data>
+  <data name="BannedCannotRequestJoin" xml:space="preserve">
+    <value>VocÃª estÃ¡ banido deste grupo e nÃ£o pode enviar uma solicitaÃ§Ã£o de entrada.</value>
+  </data>
+  <data name="PendingRequestExists" xml:space="preserve">
+    <value>VocÃª jÃ¡ tem uma solicitaÃ§Ã£o pendente para este grupo.</value>
+  </data>
+  <data name="ErrorCreatingJoinRequest" xml:space="preserve">
+    <value>Ocorreu um erro ao criar a solicitaÃ§Ã£o de entrada.</value>
+  </data>
+  <data name="JoinRequestNotFound" xml:space="preserve">
+    <value>SolicitaÃ§Ã£o de entrada nÃ£o encontrada.</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsApprove" xml:space="preserve">
+    <value>Somente o criador do grupo ou administradores podem aprovar solicitaÃ§Ãµes de entrada.</value>
+  </data>
+  <data name="ErrorApprovingJoinRequest" xml:space="preserve">
+    <value>Ocorreu um erro ao aprovar a solicitaÃ§Ã£o de entrada.</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsReject" xml:space="preserve">
+    <value>Somente o criador do grupo ou administradores podem rejeitar solicitaÃ§Ãµes de entrada.</value>
+  </data>
+  <data name="ErrorRejectingJoinRequest" xml:space="preserve">
+    <value>Ocorreu um erro ao rejeitar a solicitaÃ§Ã£o de entrada.</value>
+  </data>
+  <data name="ErrorCancellingJoinRequest" xml:space="preserve">
+    <value>Ocorreu um erro ao cancelar a solicitaÃ§Ã£o de entrada.</value>
+  </data>
+  <data name="UserAlreadyMember" xml:space="preserve">
+    <value>O usuÃ¡rio jÃ¡ Ã© membro.</value>
+  </data>
+  <data name="UserBannedCannotAdd" xml:space="preserve">
+    <value>O usuÃ¡rio estÃ¡ banido deste grupo e nÃ£o pode ser adicionado.</value>
+  </data>
+  <data name="ErrorAddingMember" xml:space="preserve">
+    <value>Ocorreu um erro ao adicionar o membro.</value>
+  </data>
+  <data name="NotPublicGroup" xml:space="preserve">
+    <value>Este nÃ£o Ã© um grupo pÃºblico.</value>
+  </data>
+  <data name="RequiresApprovalToJoin" xml:space="preserve">
+    <value>Este grupo requer aprovaÃ§Ã£o para entrar. Envie uma solicitaÃ§Ã£o de entrada.</value>
+  </data>
+  <data name="MustAgreeToRulesBeforeJoining" xml:space="preserve">
+    <value>VocÃª deve concordar com as regras do grupo antes de entrar.</value>
+  </data>
+  <data name="BannedCannotJoin" xml:space="preserve">
+    <value>VocÃª estÃ¡ banido deste grupo e nÃ£o pode entrar.</value>
+  </data>
+  <data name="ErrorJoiningGroup" xml:space="preserve">
+    <value>Ocorreu um erro ao entrar no grupo.</value>
+  </data>
+  <data name="NotMemberOfGroup" xml:space="preserve">
+    <value>VocÃª nÃ£o Ã© membro deste grupo.</value>
+  </data>
+  <data name="ErrorUpdatingRuleAgreement" xml:space="preserve">
+    <value>Ocorreu um erro ao atualizar a concordÃ¢ncia com as regras.</value>
+  </data>
+  <data name="OnlyCreatorAssignAdmin" xml:space="preserve">
+    <value>Somente o criador do grupo pode atribuir funÃ§Ãµes de administrador.</value>
+  </data>
+  <data name="UserNotMember" xml:space="preserve">
+    <value>O usuÃ¡rio nÃ£o Ã© membro deste grupo.</value>
+  </data>
+  <data name="ErrorUpdatingAdminStatus" xml:space="preserve">
+    <value>Ocorreu um erro ao atualizar o status de administrador.</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsAssignModerator" xml:space="preserve">
+    <value>Somente o criador do grupo ou administradores podem atribuir funÃ§Ãµes de moderador.</value>
+  </data>
+  <data name="ErrorUpdatingModeratorStatus" xml:space="preserve">
+    <value>Ocorreu um erro ao atualizar o status de moderador.</value>
+  </data>
+  <data name="CreatorCannotLeave" xml:space="preserve">
+    <value>O criador do grupo nÃ£o pode sair do grupo. Exclua o grupo em vez disso.</value>
+  </data>
+  <data name="ErrorLeavingGroup" xml:space="preserve">
+    <value>Ocorreu um erro ao sair do grupo.</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsRemoveMembers" xml:space="preserve">
+    <value>Somente o criador do grupo ou administradores podem remover membros.</value>
+  </data>
+  <data name="CannotRemoveCreator" xml:space="preserve">
+    <value>NÃ£o Ã© possÃ­vel remover o criador do grupo.</value>
+  </data>
+  <data name="OnlyCreatorRemoveAdmins" xml:space="preserve">
+    <value>Somente o criador do grupo pode remover administradores.</value>
+  </data>
+  <data name="ErrorRemovingMember" xml:space="preserve">
+    <value>Ocorreu um erro ao remover o membro.</value>
+  </data>
+</root>

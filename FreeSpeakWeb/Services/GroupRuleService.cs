@@ -2,6 +2,7 @@ using FreeSpeakWeb.Data;
 using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace FreeSpeakWeb.Services
 {
@@ -13,6 +14,7 @@ namespace FreeSpeakWeb.Services
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupRuleService> _logger;
         private readonly IGroupModerationLogService? _moderationLog;
+        private readonly IStringLocalizer<GroupRuleService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupRuleService"/> class.
@@ -20,14 +22,17 @@ namespace FreeSpeakWeb.Services
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording service operations.</param>
         /// <param name="moderationLog">Optional per-group moderation log; when omitted nothing is recorded there.</param>
+        /// <param name="localizer">Optional localizer for user-facing result messages; when omitted the neutral (English) text is used.</param>
         public GroupRuleService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupRuleService> logger,
-            IGroupModerationLogService? moderationLog = null)
+            IGroupModerationLogService? moderationLog = null,
+            IStringLocalizer<GroupRuleService>? localizer = null)
         {
             _contextFactory = contextFactory;
             _logger = logger;
             _moderationLog = moderationLog;
+            _localizer = ServiceLocalizer.Resolve(localizer);
         }
 
         /// <summary>
@@ -70,12 +75,12 @@ namespace FreeSpeakWeb.Services
         {
             if (string.IsNullOrWhiteSpace(title))
             {
-                return (false, "Rule title is required.", null);
+                return (false, _localizer["RuleTitleRequired"].Value, null);
             }
 
             if (string.IsNullOrWhiteSpace(description))
             {
-                return (false, "Rule description is required.", null);
+                return (false, _localizer["RuleDescriptionRequired"].Value, null);
             }
 
             try
@@ -86,7 +91,7 @@ namespace FreeSpeakWeb.Services
                 var group = await context.Groups.FindAsync(groupId);
                 if (group == null)
                 {
-                    return (false, "Group not found.", null);
+                    return (false, _localizer["GroupNotFound"].Value, null);
                 }
 
                 // Check if user is creator or admin
@@ -96,7 +101,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isCreator && !isAdmin)
                 {
-                    return (false, "Only group creator or admins can create rules.", null);
+                    return (false, _localizer["OnlyCreatorOrAdminsCreateRules"].Value, null);
                 }
 
                 // If no order specified, put it at the end
@@ -129,7 +134,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating rule for group {GroupId} by user {UserId}", groupId, userId);
-                return (false, "An error occurred while creating the rule.", null);
+                return (false, _localizer["ErrorCreatingRule"].Value, null);
             }
         }
 
@@ -200,7 +205,7 @@ namespace FreeSpeakWeb.Services
 
                 if (rule == null)
                 {
-                    return (false, "Rule not found.");
+                    return (false, _localizer["RuleNotFound"].Value);
                 }
 
                 // Check if user is creator or admin
@@ -210,7 +215,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isCreator && !isAdmin)
                 {
-                    return (false, "Only group creator or admins can update rules.");
+                    return (false, _localizer["OnlyCreatorOrAdminsUpdateRules"].Value);
                 }
 
                 // Update fields if provided
@@ -246,7 +251,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating rule {RuleId} by user {UserId}", ruleId, userId);
-                return (false, "An error occurred while updating the rule.");
+                return (false, _localizer["ErrorUpdatingRule"].Value);
             }
         }
 
@@ -265,7 +270,7 @@ namespace FreeSpeakWeb.Services
                 var group = await context.Groups.FindAsync(groupId);
                 if (group == null)
                 {
-                    return (false, "Group not found.");
+                    return (false, _localizer["GroupNotFound"].Value);
                 }
 
                 // Check if user is creator or admin
@@ -275,7 +280,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isCreator && !isAdmin)
                 {
-                    return (false, "Only group creator or admins can reorder rules.");
+                    return (false, _localizer["OnlyCreatorOrAdminsReorderRules"].Value);
                 }
 
                 var rules = await context.GroupRules
@@ -299,7 +304,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error reordering rules for group {GroupId} by user {UserId}", groupId, userId);
-                return (false, "An error occurred while reordering rules.");
+                return (false, _localizer["ErrorReorderingRules"].Value);
             }
         }
 
@@ -322,7 +327,7 @@ namespace FreeSpeakWeb.Services
 
                 if (rule == null)
                 {
-                    return (false, "Rule not found.");
+                    return (false, _localizer["RuleNotFound"].Value);
                 }
 
                 // Check if user is creator or admin
@@ -332,7 +337,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isCreator && !isAdmin)
                 {
-                    return (false, "Only group creator or admins can delete rules.");
+                    return (false, _localizer["OnlyCreatorOrAdminsDeleteRules"].Value);
                 }
 
                 context.GroupRules.Remove(rule);
@@ -346,7 +351,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting rule {RuleId} by user {UserId}", ruleId, userId);
-                return (false, "An error occurred while deleting the rule.");
+                return (false, _localizer["ErrorDeletingRule"].Value);
             }
         }
 

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+    <data name="CannotRequestSelf" xml:space="preserve">
+    <value>You cannot send a friend request to yourself.</value>
+  </data>
+  <data name="RequestAlreadyPending" xml:space="preserve">
+    <value>A friend request is already pending between you and this user.</value>
+  </data>
+  <data name="AlreadyFriends" xml:space="preserve">
+    <value>You are already friends with this user.</value>
+  </data>
+  <data name="UnableToSendRequestToUser" xml:space="preserve">
+    <value>Unable to send friend request to this user.</value>
+  </data>
+  <data name="PreviousRequestRejected" xml:space="preserve">
+    <value>A previous friend request was rejected. Please wait before sending another.</value>
+  </data>
+  <data name="UnableToSendRequest" xml:space="preserve">
+    <value>Unable to send friend request.</value>
+  </data>
+  <data name="RequestNotFound" xml:space="preserve">
+    <value>Friend request not found.</value>
+  </data>
+  <data name="NotAuthorizedToAccept" xml:space="preserve">
+    <value>You are not authorized to accept this friend request.</value>
+  </data>
+  <data name="RequestNotPending" xml:space="preserve">
+    <value>This friend request is not pending.</value>
+  </data>
+  <data name="NotAuthorizedToReject" xml:space="preserve">
+    <value>You are not authorized to reject this friend request.</value>
+  </data>
+  <data name="FriendshipNotFound" xml:space="preserve">
+    <value>Friendship not found.</value>
+  </data>
+  <data name="NotAuthorizedToRemove" xml:space="preserve">
+    <value>You are not authorized to remove this friendship.</value>
+  </data>
+  <data name="CannotBlockSelf" xml:space="preserve">
+    <value>You cannot block yourself.</value>
+  </data>
+</root>

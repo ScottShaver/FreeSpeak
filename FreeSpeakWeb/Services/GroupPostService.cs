@@ -4,6 +4,7 @@ using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace FreeSpeakWeb.Services
 {
@@ -29,6 +30,7 @@ namespace FreeSpeakWeb.Services
         private readonly IAuditLogRepository _auditLogRepository;
         private readonly GroupPointsService _groupPointsService;
         private readonly IGroupModerationLogService? _moderationLog;
+        private readonly IStringLocalizer<GroupPostService> _localizer;
         private readonly Microsoft.Extensions.Options.IOptions<SiteSettings>? _siteSettingsOptions;
         private int _maxCommentDepth => (_siteSettingsOptions?.Value ?? new SiteSettings()).MaxFeedPostCommentDepth;
         private int _maxDirectComments => (_siteSettingsOptions?.Value ?? new SiteSettings()).MaxFeedPostDirectCommentCount;
@@ -69,7 +71,7 @@ namespace FreeSpeakWeb.Services
             GroupPointsService groupPointsService)
             : this(contextFactory, postRepository, commentRepository, likeRepository, commentLikeRepository,
                 groupRepository, notificationRepository, logger, notificationService, userPreferenceService,
-                environment, notificationHelper, accessValidator, auditLogRepository, groupPointsService, null)
+                environment, notificationHelper, accessValidator, auditLogRepository, groupPointsService, null, null, null)
         {
         }
 
@@ -93,6 +95,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="groupPointsService">Service for managing group member points.</param>
         /// <param name="siteSettings">Optional site settings (MaxFeedPostCommentDepth, MaxFeedPostDirectCommentCount from appsettings.json); code defaults apply when omitted.</param>
         /// <param name="moderationLog">Optional per-group moderation log; when omitted nothing is recorded there.</param>
+        /// <param name="localizer">Optional localizer for user-facing result messages; the neutral (English) text is used when omitted.</param>
         public GroupPostService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             IGroupPostRepository<GroupPost, GroupPostImage> postRepository,
@@ -110,8 +113,10 @@ namespace FreeSpeakWeb.Services
             IAuditLogRepository auditLogRepository,
             GroupPointsService groupPointsService,
             Microsoft.Extensions.Options.IOptions<SiteSettings>? siteSettings,
-            IGroupModerationLogService? moderationLog = null)
+            IGroupModerationLogService? moderationLog = null,
+            IStringLocalizer<GroupPostService>? localizer = null)
         {
+            _localizer = ServiceLocalizer.Resolve(localizer);
             _siteSettingsOptions = siteSettings;
             _moderationLog = moderationLog;
             _contextFactory = contextFactory;
@@ -149,7 +154,7 @@ namespace FreeSpeakWeb.Services
         {
             if (string.IsNullOrWhiteSpace(content) && (imageUrls == null || !imageUrls.Any()))
             {
-                return (false, "Post must contain either text or images.", null);
+                return (false, _localizer["PostNeedsContent"].Value, null);
             }
 
             // Validate user can post in this group
@@ -177,7 +182,7 @@ namespace FreeSpeakWeb.Services
                 var result = await _postRepository.CreateAsync(post);
                 if (!result.Success || result.Post == null)
                 {
-                    return (false, result.ErrorMessage ?? "Failed to create post.", null);
+                    return (false, result.ErrorMessage ?? _localizer["CreatePostFailed"].Value, null);
                 }
 
                 // Add images if provided
@@ -220,7 +225,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating group post for user {AuthorId} in group {GroupId}", authorId, groupId);
-                return (false, "An error occurred while creating the post.", null);
+                return (false, _localizer["CreatePostError"].Value, null);
             }
         }
 
@@ -244,7 +249,7 @@ namespace FreeSpeakWeb.Services
 
             if (string.IsNullOrWhiteSpace(newContent) && !hasImages && (removedImageIds == null || !removedImageIds.Any()))
             {
-                return (false, "Post must contain either text or images.", null);
+                return (false, _localizer["PostNeedsContent"].Value, null);
             }
 
             try
@@ -257,12 +262,12 @@ namespace FreeSpeakWeb.Services
 
                 if (post == null)
                 {
-                    return (false, "Post not found.", null);
+                    return (false, _localizer["PostNotFound"].Value, null);
                 }
 
                 if (post.AuthorId != userId)
                 {
-                    return (false, "You are not authorized to edit this post.", null);
+                    return (false, _localizer["NotAuthorizedEditPost"].Value, null);
                 }
 
                 // If the post is Pending or Declined and in a group requiring approval,
@@ -317,7 +322,7 @@ namespace FreeSpeakWeb.Services
                 // Verify post still has content or images
                 if (string.IsNullOrWhiteSpace(post.Content) && !post.Images.Any())
                 {
-                    return (false, "Post must contain either text or images.", null);
+                    return (false, _localizer["PostNeedsContent"].Value, null);
                 }
 
                 _logger.LogInformation("Group post {PostId} updated by user {UserId}", postId, userId);
@@ -326,7 +331,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating group post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while updating the post.", null);
+                return (false, _localizer["UpdatePostError"].Value, null);
             }
         }
 
@@ -351,7 +356,7 @@ namespace FreeSpeakWeb.Services
 
                 if (post == null)
                 {
-                    return (false, "Post not found.");
+                    return (false, _localizer["PostNotFound"].Value);
                 }
 
                 // Check if user is the author or a group admin/moderator
@@ -361,7 +366,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isAuthor && !isAdminOrModerator)
                 {
-                    return (false, "You are not authorized to delete this post.");
+                    return (false, _localizer["NotAuthorizedDeletePost"].Value);
                 }
 
                 // Delete all pinned group post records
@@ -526,7 +531,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting group post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while deleting the post.");
+                return (false, _localizer["DeletePostError"].Value);
             }
         }
 
@@ -550,7 +555,7 @@ namespace FreeSpeakWeb.Services
 
                 if (post == null)
                 {
-                    return (false, "Post not found.");
+                    return (false, _localizer["PostNotFound"].Value);
                 }
 
                 // Check if user is a group admin, moderator, or system administrator
@@ -558,7 +563,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isModeratorOrAdmin)
                 {
-                    return (false, "You are not authorized to approve posts in this group.");
+                    return (false, _localizer["NotAuthorizedApprovePosts"].Value);
                 }
 
                 // Use ExecuteUpdateAsync with a WHERE clause to atomically check and update
@@ -573,14 +578,14 @@ namespace FreeSpeakWeb.Services
                     var currentPost = await context.GroupPosts.AsNoTracking().FirstOrDefaultAsync(p => p.Id == postId);
                     if (currentPost == null)
                     {
-                        return (false, "Post not found.");
+                        return (false, _localizer["PostNotFound"].Value);
                     }
 
                     return currentPost.Status switch
                     {
-                        PostStatus.Posted => (false, "This post has already been approved by another moderator."),
-                        PostStatus.Declined => (false, "This post has already been declined by another moderator."),
-                        _ => (false, "This post is no longer pending and cannot be approved.")
+                        PostStatus.Posted => (false, _localizer["PostAlreadyApproved"].Value),
+                        PostStatus.Declined => (false, _localizer["PostAlreadyDeclined"].Value),
+                        _ => (false, _localizer["PostNotPendingApprove"].Value)
                     };
                 }
 
@@ -593,7 +598,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error approving group post {PostId} by moderator {ModeratorId}", postId, moderatorId);
-                return (false, "An error occurred while approving the post.");
+                return (false, _localizer["ApprovePostError"].Value);
             }
         }
 
@@ -617,7 +622,7 @@ namespace FreeSpeakWeb.Services
 
                 if (post == null)
                 {
-                    return (false, "Post not found.");
+                    return (false, _localizer["PostNotFound"].Value);
                 }
 
                 // Check if user is a group admin, moderator, or system administrator
@@ -625,7 +630,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isModeratorOrAdmin)
                 {
-                    return (false, "You are not authorized to decline posts in this group.");
+                    return (false, _localizer["NotAuthorizedDeclinePosts"].Value);
                 }
 
                 // Use ExecuteUpdateAsync with a WHERE clause to atomically check and update
@@ -640,14 +645,14 @@ namespace FreeSpeakWeb.Services
                     var currentPost = await context.GroupPosts.AsNoTracking().FirstOrDefaultAsync(p => p.Id == postId);
                     if (currentPost == null)
                     {
-                        return (false, "Post not found.");
+                        return (false, _localizer["PostNotFound"].Value);
                     }
 
                     return currentPost.Status switch
                     {
-                        PostStatus.Posted => (false, "This post has already been approved by another moderator."),
-                        PostStatus.Declined => (false, "This post has already been declined by another moderator."),
-                        _ => (false, "This post is no longer pending and cannot be declined.")
+                        PostStatus.Posted => (false, _localizer["PostAlreadyApproved"].Value),
+                        PostStatus.Declined => (false, _localizer["PostAlreadyDeclined"].Value),
+                        _ => (false, _localizer["PostNotPendingDecline"].Value)
                     };
                 }
 
@@ -660,7 +665,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error declining group post {PostId} by moderator {ModeratorId}", postId, moderatorId);
-                return (false, "An error occurred while declining the post.");
+                return (false, _localizer["DeclinePostError"].Value);
             }
         }
 
@@ -990,7 +995,7 @@ namespace FreeSpeakWeb.Services
         {
             if (string.IsNullOrWhiteSpace(content))
             {
-                return (false, "Comment content cannot be empty.", null);
+                return (false, _localizer["CommentEmpty"].Value, null);
             }
 
             try
@@ -1004,7 +1009,7 @@ namespace FreeSpeakWeb.Services
                     .FirstOrDefaultAsync(p => p.Id == postId);
                 if (post == null)
                 {
-                    return (false, "Post not found.", null);
+                    return (false, _localizer["PostNotFound"].Value, null);
                 }
 
                 // Validate user can act in this group
@@ -1023,11 +1028,11 @@ namespace FreeSpeakWeb.Services
                         .FirstOrDefaultAsync(c => c.Id == parentCommentId.Value);
                     if (parentComment == null)
                     {
-                        return (false, "Parent comment not found.", null);
+                        return (false, _localizer["ParentCommentNotFound"].Value, null);
                     }
                     if (parentComment.PostId != postId)
                     {
-                        return (false, "Parent comment does not belong to this post.", null);
+                        return (false, _localizer["ParentCommentWrongPost"].Value, null);
                     }
 
                     // Replies may be at most MaxFeedPostCommentDepth levels below a top-level comment (depth 0)
@@ -1044,7 +1049,7 @@ namespace FreeSpeakWeb.Services
                     }
                     if (parentDepth + 1 > _maxCommentDepth)
                     {
-                        return (false, $"Replies cannot be nested more than {_maxCommentDepth} levels deep.", null);
+                        return (false, string.Format(_localizer["ReplyDepthExceeded"].Value, _maxCommentDepth), null);
                     }
                 }
                 else
@@ -1054,7 +1059,7 @@ namespace FreeSpeakWeb.Services
                         .CountAsync(c => c.PostId == postId && c.ParentCommentId == null);
                     if (directCommentCount >= _maxDirectComments)
                     {
-                        return (false, $"This post has reached the maximum of {_maxDirectComments} direct comments.", null);
+                        return (false, string.Format(_localizer["MaxDirectComments"].Value, _maxDirectComments), null);
                     }
                 }
 
@@ -1144,7 +1149,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error adding comment to group post {PostId} for user {AuthorId}", postId, authorId);
-                return (false, "An error occurred while adding the comment.", null);
+                return (false, _localizer["AddCommentError"].Value, null);
             }
         }
 
@@ -1182,7 +1187,7 @@ namespace FreeSpeakWeb.Services
 
                 if (comment == null)
                 {
-                    return (false, "Comment not found.", 0);
+                    return (false, _localizer["CommentNotFound"].Value, 0);
                 }
 
                 // Comment author and post author may delete; otherwise group admin/moderator (or system role) may remove
@@ -1194,7 +1199,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isAuthor && !isPostAuthor && !isAdminOrModerator)
                 {
-                    return (false, "You are not authorized to delete this comment.", 0);
+                    return (false, _localizer["NotAuthorizedDeleteComment"].Value, 0);
                 }
 
                 var post = comment.Post;
@@ -1241,7 +1246,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting group post comment {CommentId} for user {UserId}", commentId, userId);
-                return (false, "An error occurred while deleting the comment.", 0);
+                return (false, _localizer["DeleteCommentError"].Value, 0);
             }
         }
 
@@ -1390,7 +1395,7 @@ namespace FreeSpeakWeb.Services
                 var post = await _postRepository.GetByIdAsync(postId);
                 if (post == null)
                 {
-                    return (false, "Post not found.");
+                    return (false, _localizer["PostNotFound"].Value);
                 }
 
                 // Validate user can act in this group
@@ -1465,7 +1470,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error liking group post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while liking the post.");
+                return (false, _localizer["LikePostError"].Value);
             }
         }
 
@@ -1483,7 +1488,7 @@ namespace FreeSpeakWeb.Services
                 var existingLike = await _likeRepository.GetUserLikeAsync(postId, userId);
                 if (existingLike == null)
                 {
-                    return (false, "Like not found.");
+                    return (false, _localizer["LikeNotFound"].Value);
                 }
 
                 var result = await _likeRepository.RemoveAsync(postId, userId);
@@ -1511,7 +1516,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error unliking group post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while unliking the post.");
+                return (false, _localizer["UnlikePostError"].Value);
             }
         }
 
@@ -1546,14 +1551,14 @@ namespace FreeSpeakWeb.Services
                 var comment = await _commentRepository.GetByIdAsync(commentId, includeAuthor: true, includeReplies: false);
                 if (comment == null)
                 {
-                    return (false, "Comment not found.");
+                    return (false, _localizer["CommentNotFound"].Value);
                 }
 
                 // Get post for group ID
                 var post = await _postRepository.GetByIdAsync(comment.PostId);
                 if (post == null)
                 {
-                    return (false, "Post not found.");
+                    return (false, _localizer["PostNotFound"].Value);
                 }
 
                 // Validate user can act in this group
@@ -1616,7 +1621,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error liking group post comment {CommentId} for user {UserId}", commentId, userId);
-                return (false, "An error occurred while liking the comment.");
+                return (false, _localizer["LikeCommentError"].Value);
             }
         }
 
@@ -1634,7 +1639,7 @@ namespace FreeSpeakWeb.Services
                 var existingLike = await _commentLikeRepository.GetUserLikeAsync(commentId, userId);
                 if (existingLike == null)
                 {
-                    return (false, "Like not found.");
+                    return (false, _localizer["LikeNotFound"].Value);
                 }
 
                 // Get comment to retrieve PostId for audit log
@@ -1665,7 +1670,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error unliking group post comment {CommentId} for user {UserId}", commentId, userId);
-                return (false, "An error occurred while unliking the comment.");
+                return (false, _localizer["UnlikeCommentError"].Value);
             }
         }
 
@@ -1700,7 +1705,7 @@ namespace FreeSpeakWeb.Services
                 var post = await context.GroupPosts.FindAsync(postId);
                 if (post == null)
                 {
-                    return (false, "Post not found.");
+                    return (false, _localizer["PostNotFound"].Value);
                 }
 
                 // Check if already muted
@@ -1729,7 +1734,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error muting notifications for group post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while muting notifications.");
+                return (false, _localizer["MuteError"].Value);
             }
         }
 
@@ -1762,7 +1767,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error unmuting notifications for group post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while unmuting notifications.");
+                return (false, _localizer["UnmuteError"].Value);
             }
         }
 
@@ -2077,13 +2082,13 @@ namespace FreeSpeakWeb.Services
                 var post = await _postRepository.GetByIdAsync(postId, includeAuthor: false, includeImages: false);
                 if (post == null)
                 {
-                    return (false, "Post not found.", null);
+                    return (false, _localizer["PostNotFound"].Value, null);
                 }
 
                 // Validate user can modify this post (must be author)
                 if (post.AuthorId != userId)
                 {
-                    return (false, "You are not authorized to add images to this post.", null);
+                    return (false, _localizer["NotAuthorizedAddImages"].Value, null);
                 }
 
                 // Validate user can still act in this group
@@ -2097,7 +2102,7 @@ namespace FreeSpeakWeb.Services
                 var result = await _postRepository.AddImagesAsync(postId, userId, [imageUrl]);
                 if (!result.Success || result.Images == null || !result.Images.Any())
                 {
-                    return (false, result.ErrorMessage ?? "Failed to add image.", null);
+                    return (false, result.ErrorMessage ?? _localizer["AddImageFailed"].Value, null);
                 }
 
                 _logger.LogInformation("Image added to group post {PostId} by user {UserId}", postId, userId);
@@ -2106,7 +2111,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error adding image to group post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while adding the image.", null);
+                return (false, _localizer["AddImageError"].Value, null);
             }
         }
 
@@ -2128,7 +2133,7 @@ namespace FreeSpeakWeb.Services
 
                 if (postImage == null)
                 {
-                    return (false, "Image not found.");
+                    return (false, _localizer["ImageNotFound"].Value);
                 }
 
                 // Check if user is author or group admin/moderator
@@ -2137,7 +2142,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isAuthor && !isAdminOrMod)
                 {
-                    return (false, "You are not authorized to remove this image.");
+                    return (false, _localizer["NotAuthorizedRemoveImage"].Value);
                 }
 
                 // Validate user can still act in this group
@@ -2156,7 +2161,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error removing image {ImageId} for user {UserId}", imageId, userId);
-                return (false, "An error occurred while removing the image.");
+                return (false, _localizer["RemoveImageError"].Value);
             }
         }
 

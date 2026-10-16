@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+      <data name="UserIdRequired" xml:space="preserve">
+    <value>ãƒ¦ãƒ¼ã‚¶ãƒ¼ ID ã¯å¿…é ˆã§ã™ã€‚</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>ã‚°ãƒ«ãƒ¼ãƒ—ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚</value>
+  </data>
+  <data name="MustAgreeToRulesBeforeJoinRequest" xml:space="preserve">
+    <value>å‚åŠ ãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’é€ä¿¡ã™ã‚‹å‰ã«ã€ã‚°ãƒ«ãƒ¼ãƒ—ã®ãƒ«ãƒ¼ãƒ«ã«åŒæ„ã™ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚</value>
+  </data>
+  <data name="AlreadyMember" xml:space="preserve">
+    <value>ã™ã§ã«ã“ã®ã‚°ãƒ«ãƒ¼ãƒ—ã®ãƒ¡ãƒ³ãƒãƒ¼ã§ã™ã€‚</value>
+  </data>
+  <data name="BannedCannotRequestJoin" xml:space="preserve">
+    <value>ã“ã®ã‚°ãƒ«ãƒ¼ãƒ—ã‹ã‚‰è¿½æ”¾ã•ã‚Œã¦ã„ã‚‹ãŸã‚ã€å‚åŠ ãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’é€ä¿¡ã§ãã¾ã›ã‚“ã€‚</value>
+  </data>
+  <data name="PendingRequestExists" xml:space="preserve">
+    <value>ã“ã®ã‚°ãƒ«ãƒ¼ãƒ—ã«ã¯ã™ã§ã«ä¿ç•™ä¸­ã®ãƒªã‚¯ã‚¨ã‚¹ãƒˆãŒã‚ã‚Šã¾ã™ã€‚</value>
+  </data>
+  <data name="ErrorCreatingJoinRequest" xml:space="preserve">
+    <value>å‚åŠ ãƒªã‚¯ã‚¨ã‚¹ãƒˆã®ä½œæˆä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚</value>
+  </data>
+  <data name="JoinRequestNotFound" xml:space="preserve">
+    <value>å‚åŠ ãƒªã‚¯ã‚¨ã‚¹ãƒˆãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsApprove" xml:space="preserve">
+    <value>å‚åŠ ãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’æ‰¿èªã§ãã‚‹ã®ã¯ã€ã‚°ãƒ«ãƒ¼ãƒ—ã®ä½œæˆè€…ã¾ãŸã¯ç®¡ç†è€…ã®ã¿ã§ã™ã€‚</value>
+  </data>
+  <data name="ErrorApprovingJoinRequest" xml:space="preserve">
+    <value>å‚åŠ ãƒªã‚¯ã‚¨ã‚¹ãƒˆã®æ‰¿èªä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsReject" xml:space="preserve">
+    <value>å‚åŠ ãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’æ‹’å¦ã§ãã‚‹ã®ã¯ã€ã‚°ãƒ«ãƒ¼ãƒ—ã®ä½œæˆè€…ã¾ãŸã¯ç®¡ç†è€…ã®ã¿ã§ã™ã€‚</value>
+  </data>
+  <data name="ErrorRejectingJoinRequest" xml:space="preserve">
+    <value>å‚åŠ ãƒªã‚¯ã‚¨ã‚¹ãƒˆã®æ‹’å¦ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚</value>
+  </data>
+  <data name="ErrorCancellingJoinRequest" xml:space="preserve">
+    <value>å‚åŠ ãƒªã‚¯ã‚¨ã‚¹ãƒˆã®ã‚­ãƒ£ãƒ³ã‚»ãƒ«ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚</value>
+  </data>
+  <data name="UserAlreadyMember" xml:space="preserve">
+    <value>ãƒ¦ãƒ¼ã‚¶ãƒ¼ã¯ã™ã§ã«ãƒ¡ãƒ³ãƒãƒ¼ã§ã™ã€‚</value>
+  </data>
+  <data name="UserBannedCannotAdd" xml:space="preserve">
+    <value>ã“ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ã¯ã‚°ãƒ«ãƒ¼ãƒ—ã‹ã‚‰è¿½æ”¾ã•ã‚Œã¦ã„ã‚‹ãŸã‚ã€è¿½åŠ ã§ãã¾ã›ã‚“ã€‚</value>
+  </data>
+  <data name="ErrorAddingMember" xml:space="preserve">
+    <value>ãƒ¡ãƒ³ãƒãƒ¼ã®è¿½åŠ ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚</value>
+  </data>
+  <data name="NotPublicGroup" xml:space="preserve">
+    <value>ã“ã‚Œã¯å…¬é–‹ã‚°ãƒ«ãƒ¼ãƒ—ã§ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚</value>
+  </data>
+  <data name="RequiresApprovalToJoin" xml:space="preserve">
+    <value>ã“ã®ã‚°ãƒ«ãƒ¼ãƒ—ã¸ã®å‚åŠ ã«ã¯æ‰¿èªãŒå¿…è¦ã§ã™ã€‚å‚åŠ ãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’é€ä¿¡ã—ã¦ãã ã•ã„ã€‚</value>
+  </data>
+  <data name="MustAgreeToRulesBeforeJoining" xml:space="preserve">
+    <value>å‚åŠ ã™ã‚‹å‰ã«ã€ã‚°ãƒ«ãƒ¼ãƒ—ã®ãƒ«ãƒ¼ãƒ«ã«åŒæ„ã™ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚</value>
+  </data>
+  <data name="BannedCannotJoin" xml:space="preserve">
+    <value>ã“ã®ã‚°ãƒ«ãƒ¼ãƒ—ã‹ã‚‰è¿½æ”¾ã•ã‚Œã¦ã„ã‚‹ãŸã‚ã€å‚åŠ ã§ãã¾ã›ã‚“ã€‚</value>
+  </data>
+  <data name="ErrorJoiningGroup" xml:space="preserve">
+    <value>ã‚°ãƒ«ãƒ¼ãƒ—ã¸ã®å‚åŠ ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚</value>
+  </data>
+  <data name="NotMemberOfGroup" xml:space="preserve">
+    <value>ã“ã®ã‚°ãƒ«ãƒ¼ãƒ—ã®ãƒ¡ãƒ³ãƒãƒ¼ã§ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚</value>
+  </data>
+  <data name="ErrorUpdatingRuleAgreement" xml:space="preserve">
+    <value>ãƒ«ãƒ¼ãƒ«ã¸ã®åŒæ„ã®æ›´æ–°ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚</value>
+  </data>
+  <data name="OnlyCreatorAssignAdmin" xml:space="preserve">
+    <value>ç®¡ç†è€…ãƒ­ãƒ¼ãƒ«ã‚’å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã‚‹ã®ã¯ã€ã‚°ãƒ«ãƒ¼ãƒ—ã®ä½œæˆè€…ã®ã¿ã§ã™ã€‚</value>
+  </data>
+  <data name="UserNotMember" xml:space="preserve">
+    <value>ãƒ¦ãƒ¼ã‚¶ãƒ¼ã¯ã“ã®ã‚°ãƒ«ãƒ¼ãƒ—ã®ãƒ¡ãƒ³ãƒãƒ¼ã§ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚</value>
+  </data>
+  <data name="ErrorUpdatingAdminStatus" xml:space="preserve">
+    <value>ç®¡ç†è€…ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã®æ›´æ–°ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsAssignModerator" xml:space="preserve">
+    <value>ãƒ¢ãƒ‡ãƒ¬ãƒ¼ã‚¿ãƒ¼ãƒ­ãƒ¼ãƒ«ã‚’å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã‚‹ã®ã¯ã€ã‚°ãƒ«ãƒ¼ãƒ—ã®ä½œæˆè€…ã¾ãŸã¯ç®¡ç†è€…ã®ã¿ã§ã™ã€‚</value>
+  </data>
+  <data name="ErrorUpdatingModeratorStatus" xml:space="preserve">
+    <value>ãƒ¢ãƒ‡ãƒ¬ãƒ¼ã‚¿ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã®æ›´æ–°ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚</value>
+  </data>
+  <data name="CreatorCannotLeave" xml:space="preserve">
+    <value>ã‚°ãƒ«ãƒ¼ãƒ—ã®ä½œæˆè€…ã¯ã‚°ãƒ«ãƒ¼ãƒ—ã‚’é€€ä¼šã§ãã¾ã›ã‚“ã€‚ä»£ã‚ã‚Šã«ã‚°ãƒ«ãƒ¼ãƒ—ã‚’å‰Šé™¤ã—ã¦ãã ã•ã„ã€‚</value>
+  </data>
+  <data name="ErrorLeavingGroup" xml:space="preserve">
+    <value>ã‚°ãƒ«ãƒ¼ãƒ—ã®é€€ä¼šä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsRemoveMembers" xml:space="preserve">
+    <value>ãƒ¡ãƒ³ãƒãƒ¼ã‚’å‰Šé™¤ã§ãã‚‹ã®ã¯ã€ã‚°ãƒ«ãƒ¼ãƒ—ã®ä½œæˆè€…ã¾ãŸã¯ç®¡ç†è€…ã®ã¿ã§ã™ã€‚</value>
+  </data>
+  <data name="CannotRemoveCreator" xml:space="preserve">
+    <value>ã‚°ãƒ«ãƒ¼ãƒ—ã®ä½œæˆè€…ã‚’å‰Šé™¤ã™ã‚‹ã“ã¨ã¯ã§ãã¾ã›ã‚“ã€‚</value>
+  </data>
+  <data name="OnlyCreatorRemoveAdmins" xml:space="preserve">
+    <value>ç®¡ç†è€…ã‚’å‰Šé™¤ã§ãã‚‹ã®ã¯ã€ã‚°ãƒ«ãƒ¼ãƒ—ã®ä½œæˆè€…ã®ã¿ã§ã™ã€‚</value>
+  </data>
+  <data name="ErrorRemovingMember" xml:space="preserve">
+    <value>ãƒ¡ãƒ³ãƒãƒ¼ã®å‰Šé™¤ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚</value>
+  </data>
+</root>

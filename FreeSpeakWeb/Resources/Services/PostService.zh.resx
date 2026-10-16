@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PostRequiresContent" xml:space="preserve">
+    <value>帖子必须包含文字或图片。</value>
+  </data>
+  <data name="NoFriendshipFound" xml:space="preserve">
+    <value>未找到好友关系。</value>
+  </data>
+  <data name="FriendsFeedOnly" xml:space="preserve">
+    <value>您只能在已接受的好友的动态中发帖。</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>创建帖子失败。</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>创建帖子时出错。</value>
+  </data>
+  <data name="UpdatePostError" xml:space="preserve">
+    <value>更新帖子时出错。</value>
+  </data>
+  <data name="UpdateAudienceError" xml:space="preserve">
+    <value>更新帖子受众时出错。</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>未找到帖子。</value>
+  </data>
+  <data name="NotAuthorizedDeletePost" xml:space="preserve">
+    <value>您无权删除此帖子。</value>
+  </data>
+  <data name="DeletePostError" xml:space="preserve">
+    <value>删除帖子时出错。</value>
+  </data>
+  <data name="PostUnavailable" xml:space="preserve">
+    <value>抱歉，此帖子已不可用。</value>
+  </data>
+  <data name="LoadPostError" xml:space="preserve">
+    <value>加载此帖子时出错。</value>
+  </data>
+  <data name="CommentEmpty" xml:space="preserve">
+    <value>评论内容不能为空。</value>
+  </data>
+  <data name="ParentCommentNotFound" xml:space="preserve">
+    <value>未找到父评论。</value>
+  </data>
+  <data name="ParentCommentMismatch" xml:space="preserve">
+    <value>父评论不属于此帖子。</value>
+  </data>
+  <data name="ReplyDepthExceeded" xml:space="preserve">
+    <value>回复的嵌套层级不能超过 {0} 层。</value>
+  </data>
+  <data name="MaxDirectComments" xml:space="preserve">
+    <value>此帖子已达到 {0} 条直接评论的上限。</value>
+  </data>
+  <data name="AddCommentError" xml:space="preserve">
+    <value>添加评论时出错。</value>
+  </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>未找到评论。</value>
+  </data>
+  <data name="NotAuthorizedDeleteComment" xml:space="preserve">
+    <value>您无权删除此评论。</value>
+  </data>
+  <data name="DeleteCommentError" xml:space="preserve">
+    <value>删除评论时出错。</value>
+  </data>
+  <data name="LikeError" xml:space="preserve">
+    <value>处理您的点赞时出错。</value>
+  </data>
+  <data name="ReactionError" xml:space="preserve">
+    <value>处理您的回应时出错。</value>
+  </data>
+  <data name="NoReactionToRemove" xml:space="preserve">
+    <value>没有可移除的回应。</value>
+  </data>
+  <data name="RemoveReactionError" xml:space="preserve">
+    <value>移除您的回应时出错。</value>
+  </data>
+  <data name="NotAuthorizedAddImages" xml:space="preserve">
+    <value>您无权向此帖子添加图片。</value>
+  </data>
+  <data name="AddImageError" xml:space="preserve">
+    <value>添加图片时出错。</value>
+  </data>
+  <data name="ImageNotFound" xml:space="preserve">
+    <value>未找到图片。</value>
+  </data>
+  <data name="NotAuthorizedRemoveImage" xml:space="preserve">
+    <value>您无权移除此图片。</value>
+  </data>
+  <data name="RemoveImageError" xml:space="preserve">
+    <value>移除图片时出错。</value>
+  </data>
+  <data name="OnlyContentDeletePost" xml:space="preserve">
+    <value>这是该帖子的唯一内容。请改为删除整个帖子。</value>
+  </data>
+  <data name="DeleteImageError" xml:space="preserve">
+    <value>删除图片时出错。</value>
+  </data>
+  <data name="NoPermissionToPin" xml:space="preserve">
+    <value>您没有置顶此帖子的权限。</value>
+  </data>
+  <data name="PinError" xml:space="preserve">
+    <value>置顶帖子时出错。</value>
+  </data>
+  <data name="UnpinError" xml:space="preserve">
+    <value>取消置顶帖子时出错。</value>
+  </data>
+  <data name="MuteError" xml:space="preserve">
+    <value>静音通知时出错。</value>
+  </data>
+  <data name="UnmuteError" xml:space="preserve">
+    <value>取消静音通知时出错。</value>
+  </data>
+  <data name="RetrieveImagesError" xml:space="preserve">
+    <value>检索您的图片时出错。</value>
+  </data>
+  <data name="RetrieveVideosError" xml:space="preserve">
+    <value>检索您的视频时出错。</value>
+  </data>
+</root>

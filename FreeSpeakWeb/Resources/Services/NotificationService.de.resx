@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+    <data name="UserIdRequired" xml:space="preserve">
+    <value>Die Benutzer-ID ist erforderlich.</value>
+  </data>
+  <data name="MessageOrTemplateRequired" xml:space="preserve">
+    <value>Entweder eine Nachricht oder ein Vorlagenschlüssel ist erforderlich.</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>Benutzer nicht gefunden.</value>
+  </data>
+  <data name="CreateError" xml:space="preserve">
+    <value>Beim Erstellen der Benachrichtigung ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="AtLeastOneUserId" xml:space="preserve">
+    <value>Mindestens eine Benutzer-ID ist erforderlich.</value>
+  </data>
+  <data name="MaxRecipientsExceeded" xml:space="preserve">
+    <value>Pro Massenvorgang sind maximal {0} Empfänger zulässig.</value>
+  </data>
+  <data name="MessageRequired" xml:space="preserve">
+    <value>Eine Nachricht ist erforderlich.</value>
+  </data>
+  <data name="NoValidUsers" xml:space="preserve">
+    <value>Keine gültigen Benutzer gefunden.</value>
+  </data>
+  <data name="CreateManyError" xml:space="preserve">
+    <value>Beim Erstellen der Benachrichtigungen ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="NotificationNotFound" xml:space="preserve">
+    <value>Benachrichtigung nicht gefunden.</value>
+  </data>
+  <data name="UpdateError" xml:space="preserve">
+    <value>Beim Aktualisieren der Benachrichtigung ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="UpdateManyError" xml:space="preserve">
+    <value>Beim Aktualisieren der Benachrichtigungen ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="DeleteError" xml:space="preserve">
+    <value>Beim Löschen der Benachrichtigung ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="DeleteManyError" xml:space="preserve">
+    <value>Beim Löschen der Benachrichtigungen ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="DeleteExpiredError" xml:space="preserve">
+    <value>Beim Löschen abgelaufener Benachrichtigungen ist ein Fehler aufgetreten.</value>
+  </data>
+</root>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PostRequiresContent" xml:space="preserve">
+    <value>Post musi zawierać tekst lub obrazy.</value>
+  </data>
+  <data name="NoFriendshipFound" xml:space="preserve">
+    <value>Nie znaleziono relacji znajomości.</value>
+  </data>
+  <data name="FriendsFeedOnly" xml:space="preserve">
+    <value>Możesz publikować tylko na tablicy zaakceptowanych znajomych.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Nie udało się utworzyć posta.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Podczas tworzenia posta wystąpił błąd.</value>
+  </data>
+  <data name="UpdatePostError" xml:space="preserve">
+    <value>Podczas aktualizowania posta wystąpił błąd.</value>
+  </data>
+  <data name="UpdateAudienceError" xml:space="preserve">
+    <value>Podczas aktualizowania odbiorców posta wystąpił błąd.</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>Nie znaleziono posta.</value>
+  </data>
+  <data name="NotAuthorizedDeletePost" xml:space="preserve">
+    <value>Nie masz uprawnień do usunięcia tego posta.</value>
+  </data>
+  <data name="DeletePostError" xml:space="preserve">
+    <value>Podczas usuwania posta wystąpił błąd.</value>
+  </data>
+  <data name="PostUnavailable" xml:space="preserve">
+    <value>Przepraszamy, ten post nie jest już dostępny.</value>
+  </data>
+  <data name="LoadPostError" xml:space="preserve">
+    <value>Podczas ładowania tego posta wystąpił błąd.</value>
+  </data>
+  <data name="CommentEmpty" xml:space="preserve">
+    <value>Treść komentarza nie może być pusta.</value>
+  </data>
+  <data name="ParentCommentNotFound" xml:space="preserve">
+    <value>Nie znaleziono komentarza nadrzędnego.</value>
+  </data>
+  <data name="ParentCommentMismatch" xml:space="preserve">
+    <value>Komentarz nadrzędny nie należy do tego posta.</value>
+  </data>
+  <data name="ReplyDepthExceeded" xml:space="preserve">
+    <value>Odpowiedzi nie mogą być zagnieżdżone głębiej niż na {0} poziomów.</value>
+  </data>
+  <data name="MaxDirectComments" xml:space="preserve">
+    <value>Ten post osiągnął maksymalną liczbę {0} komentarzy bezpośrednich.</value>
+  </data>
+  <data name="AddCommentError" xml:space="preserve">
+    <value>Podczas dodawania komentarza wystąpił błąd.</value>
+  </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>Nie znaleziono komentarza.</value>
+  </data>
+  <data name="NotAuthorizedDeleteComment" xml:space="preserve">
+    <value>Nie masz uprawnień do usunięcia tego komentarza.</value>
+  </data>
+  <data name="DeleteCommentError" xml:space="preserve">
+    <value>Podczas usuwania komentarza wystąpił błąd.</value>
+  </data>
+  <data name="LikeError" xml:space="preserve">
+    <value>Podczas przetwarzania Twojego polubienia wystąpił błąd.</value>
+  </data>
+  <data name="ReactionError" xml:space="preserve">
+    <value>Podczas przetwarzania Twojej reakcji wystąpił błąd.</value>
+  </data>
+  <data name="NoReactionToRemove" xml:space="preserve">
+    <value>Brak reakcji do usunięcia.</value>
+  </data>
+  <data name="RemoveReactionError" xml:space="preserve">
+    <value>Podczas usuwania Twojej reakcji wystąpił błąd.</value>
+  </data>
+  <data name="NotAuthorizedAddImages" xml:space="preserve">
+    <value>Nie masz uprawnień do dodawania obrazów do tego posta.</value>
+  </data>
+  <data name="AddImageError" xml:space="preserve">
+    <value>Podczas dodawania obrazu wystąpił błąd.</value>
+  </data>
+  <data name="ImageNotFound" xml:space="preserve">
+    <value>Nie znaleziono obrazu.</value>
+  </data>
+  <data name="NotAuthorizedRemoveImage" xml:space="preserve">
+    <value>Nie masz uprawnień do usunięcia tego obrazu.</value>
+  </data>
+  <data name="RemoveImageError" xml:space="preserve">
+    <value>Podczas usuwania obrazu wystąpił błąd.</value>
+  </data>
+  <data name="OnlyContentDeletePost" xml:space="preserve">
+    <value>To jedyna zawartość tego posta. Zamiast tego usuń cały post.</value>
+  </data>
+  <data name="DeleteImageError" xml:space="preserve">
+    <value>Podczas usuwania obrazu wystąpił błąd.</value>
+  </data>
+  <data name="NoPermissionToPin" xml:space="preserve">
+    <value>Nie masz uprawnień do przypięcia tego posta.</value>
+  </data>
+  <data name="PinError" xml:space="preserve">
+    <value>Podczas przypinania posta wystąpił błąd.</value>
+  </data>
+  <data name="UnpinError" xml:space="preserve">
+    <value>Podczas odpinania posta wystąpił błąd.</value>
+  </data>
+  <data name="MuteError" xml:space="preserve">
+    <value>Podczas wyciszania powiadomień wystąpił błąd.</value>
+  </data>
+  <data name="UnmuteError" xml:space="preserve">
+    <value>Podczas włączania powiadomień wystąpił błąd.</value>
+  </data>
+  <data name="RetrieveImagesError" xml:space="preserve">
+    <value>Podczas pobierania Twoich obrazów wystąpił błąd.</value>
+  </data>
+  <data name="RetrieveVideosError" xml:space="preserve">
+    <value>Podczas pobierania Twoich filmów wystąpił błąd.</value>
+  </data>
+</root>

@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Services.Abstractions;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using nClam;
@@ -14,6 +15,7 @@ public class ClamAvVirusScanService : IVirusScanService
 {
     private readonly ILogger<ClamAvVirusScanService> _logger;
     private readonly IOptionsMonitor<VirusScanSettings> _settingsMonitor;
+    private readonly IStringLocalizer<ClamAvVirusScanService> _localizer;
     private readonly object _clientLock = new();
     private VirusScanSettings? _clientSettings;
     private ClamClient? _client;
@@ -23,12 +25,15 @@ public class ClamAvVirusScanService : IVirusScanService
     /// </summary>
     /// <param name="logger">The logger instance for recording scan events.</param>
     /// <param name="settings">Monitor for the virus scan configuration; changes apply without a restart.</param>
+    /// <param name="localizer">Optional localizer for user-facing scan result messages.</param>
     public ClamAvVirusScanService(
         ILogger<ClamAvVirusScanService> logger,
-        IOptionsMonitor<VirusScanSettings> settings)
+        IOptionsMonitor<VirusScanSettings> settings,
+        IStringLocalizer<ClamAvVirusScanService>? localizer = null)
     {
         _logger = logger;
         _settingsMonitor = settings;
+        _localizer = ServiceLocalizer.Resolve(localizer);
         _ = _clamClient;
     }
 
@@ -159,7 +164,7 @@ public class ClamAvVirusScanService : IVirusScanService
                 return VirusScanResult.Clean(rawResult);
 
             case ClamScanResults.VirusDetected:
-                var virusName = scanResult.InfectedFiles?.FirstOrDefault()?.VirusName ?? "Unknown";
+                var virusName = scanResult.InfectedFiles?.FirstOrDefault()?.VirusName ?? _localizer["UnknownVirusName"].Value;
                 _logger.LogWarning(
                     "VIRUS DETECTED in file {FileName}: {VirusName}",
                     fileName, virusName);
@@ -179,7 +184,7 @@ public class ClamAvVirusScanService : IVirusScanService
                     return VirusScanResult.Clean(rawResult);
                 }
 
-                return VirusScanResult.Error($"Scan error: {rawResult}");
+                return VirusScanResult.Error(string.Format(_localizer["ScanError"], rawResult));
 
             default:
                 _logger.LogWarning(
@@ -191,7 +196,7 @@ public class ClamAvVirusScanService : IVirusScanService
                     return VirusScanResult.Clean(rawResult);
                 }
 
-                return VirusScanResult.Error($"Unknown result: {scanResult.Result}");
+                return VirusScanResult.Error(string.Format(_localizer["UnknownResult"], scanResult.Result));
         }
     }
 
@@ -214,7 +219,7 @@ public class ClamAvVirusScanService : IVirusScanService
             return VirusScanResult.Clean($"Exception: {ex.Message}");
         }
 
-        return VirusScanResult.Error($"Scan failed: {ex.Message}");
+        return VirusScanResult.Error(string.Format(_localizer["ScanFailed"], ex.Message));
     }
 }
 
