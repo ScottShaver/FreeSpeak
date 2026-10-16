@@ -497,7 +497,9 @@ namespace FreeSpeakWeb.Services
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
 
+                // No-tracking so replies loaded via Replies are not fixed up into Post.Comments (top-level only)
                 return await context.Posts
+                    .AsNoTracking()
                     .Include(p => p.Author)
                     .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
                     .Include(p => p.Comments.Where(c => c.ParentCommentId == null))

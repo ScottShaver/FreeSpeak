@@ -74,6 +74,14 @@ dotnet test --filter "Category=Unit"
 dotnet test --filter "Category=Integration"
 ```
 
+### Run integration tests
+
+`FreeSpeakWeb.IntegrationTests` starts a disposable PostgreSQL container via Testcontainers, so **Docker must be running**. Services under test should be built with real repositories (see `PostServiceIntegrationTests.CreatePostService`); passing `null!` for a repository the code path uses fails with a swallowed `NullReferenceException`.
+
+```bash
+dotnet test FreeSpeakWeb.IntegrationTests
+```
+
 ## Test Infrastructure
 
 ### TestBase Class

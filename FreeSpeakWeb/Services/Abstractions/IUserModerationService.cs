@@ -74,7 +74,7 @@ namespace FreeSpeakWeb.Services.Abstractions
         /// <param name="userId">The warned user's ID.</param>
         /// <param name="warningId">The warning ID.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>True when the warning belongs to the user.</returns>
+        /// <returns>True when the warning belongs to the user and was newly acknowledged.</returns>
         Task<bool> AcknowledgeWarningAsync(string userId, int warningId, CancellationToken cancellationToken = default);
     }
 }

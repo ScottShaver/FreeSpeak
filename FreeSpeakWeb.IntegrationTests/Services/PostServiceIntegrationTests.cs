@@ -1,9 +1,11 @@
 using FluentAssertions;
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.IntegrationTests.Infrastructure;
+using FreeSpeakWeb.Repositories;
 using FreeSpeakWeb.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
@@ -133,6 +135,21 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             }
         }
 
+        /// <summary>
+        /// Creates a PostService backed by the real post and friendship repositories so
+        /// feed and post creation behavior is exercised against the test database.
+        /// </summary>
+        private PostService CreatePostService()
+        {
+            var factory = CreateDbContextFactory();
+            var profiler = new ProfilerHelper(Options.Create(new ProfilingSettings { Enabled = false }));
+            var friendshipRepo = new FriendshipRepository(factory, CreateLogger<FriendshipRepository>(), profiler);
+            var friendshipCache = new FriendshipCacheService(new MemoryCache(new MemoryCacheOptions()), factory, CreateLogger<FriendshipCacheService>());
+            var postRepo = new PostRepository(factory, CreateLogger<PostRepository>(), friendshipCache, profiler);
+
+            return new PostService(factory, postRepo, null!, null!, null!, null!, null!, null!, CreateLogger<PostService>(), CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object, friendshipRepo);
+        }
+
         [Fact]
         public async Task GetPostByIdAsync_WithNestedComments_ShouldLoadAllData()
         {
@@ -217,7 +234,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, null!, null!, null!, null!, null!, null!, null!, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object, null!);
+            var service = CreatePostService();
 
                         var user1 = CreateTestUser("user1", "user1", "User", "One");
             var user2 = CreateTestUser("user2", "user2", "User", "Two");
@@ -274,7 +291,7 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             // Arrange
             var factory = CreateDbContextFactory();
             var logger = CreateLogger<PostService>();
-            var service = new PostService(factory, null!, null!, null!, null!, null!, null!, null!, logger, CreateTestSiteSettings(), CreateMockWebHostEnvironment(), CreateMockNotificationService(), CreateMockUserPreferenceService(), CreateMockPostNotificationHelper(), MockRepositories.CreateMockAuditLogRepository().Object, null!);
+            var service = CreatePostService();
 
                         var author = CreateTestUser("author1", "author", "Post", "Author");
                         var commenter = CreateTestUser("commenter1", "commenter", "Comment", "Author");

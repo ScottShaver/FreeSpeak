@@ -985,12 +985,11 @@ namespace FreeSpeakWeb.Repositories
                            (
                                // MeOnly posts: ONLY visible to the author
                                (p.AudienceType == AudienceType.MeOnly && p.AuthorId == viewerId) ||
-                               // FriendsOnly posts: visible to author and friends
-                               (p.AudienceType == AudienceType.FriendsOnly && (p.AuthorId == viewerId || isFriend)) ||
+                               // FriendsOnly posts (including cross-feed posts): visible to the post author,
+                               // the feed owner the post was made on, and friends of the profile owner
+                               (p.AudienceType == AudienceType.FriendsOnly && (p.AuthorId == viewerId || p.FriendId == viewerId || isFriend)) ||
                                // Public posts: visible to everyone
-                               (p.AudienceType == AudienceType.Public) ||
-                               // Cross-feed posts: visible to the profile owner and their friends
-                               (p.FriendId == authorId && p.AudienceType != AudienceType.MeOnly)
+                               (p.AudienceType == AudienceType.Public)
                            ));
         }
 
