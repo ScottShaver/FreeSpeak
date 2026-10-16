@@ -9,14 +9,6 @@
   <data name="Heading" xml:space="preserve"><value>Funzioni del moderatore di sistema</value></data>
   <data name="WelcomeMessage" xml:space="preserve"><value>Questa pagina è accessibile agli utenti con il ruolo di amministratore di sistema o moderatore di sistema.</value></data>
   <data name="WelcomeGreeting" xml:space="preserve"><value>Benvenuto, moderatore di sistema!</value></data>
-  <data name="AvailableFunctions" xml:space="preserve"><value>Funzioni disponibili</value></data>
-  <data name="FunctionsDescription" xml:space="preserve"><value>Questa è una pagina segnaposto per le funzioni del moderatore di sistema. Le funzionalità future possono includere:</value></data>
-  <data name="ContentModerationQueue" xml:space="preserve"><value>Coda di moderazione dei contenuti</value></data>
-  <data name="UserReportsReview" xml:space="preserve"><value>Revisione delle segnalazioni degli utenti</value></data>
-  <data name="FlaggedPostsManagement" xml:space="preserve"><value>Gestione dei post segnalati</value></data>
-  <data name="CommunityGuidelineEnforcement" xml:space="preserve"><value>Applicazione delle linee guida della comunità</value></data>
-  <data name="UserWarningsAndSuspensions" xml:space="preserve"><value>Avvertimenti e sospensioni degli utenti</value></data>
-  <data name="ModerationActivityLogs" xml:space="preserve"><value>Registri delle attività di moderazione</value></data>
   <data name="YourInformation" xml:space="preserve"><value>Le tue informazioni</value></data>
   <data name="Username" xml:space="preserve"><value>Nome utente:</value></data>
   <data name="Email" xml:space="preserve"><value>E-mail:</value></data>

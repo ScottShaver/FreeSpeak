@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabOverview" xml:space="preserve">
+    <value>概要</value>
+  </data>
+  <data name="TabFeedReports" xml:space="preserve">
+    <value>フィードの通報</value>
+  </data>
+  <data name="OverviewPending" xml:space="preserve">
+    <value>未確認</value>
+  </data>
+  <data name="OverviewUnderReview" xml:space="preserve">
+    <value>確認中</value>
+  </data>
+  <data name="OverviewClosed" xml:space="preserve">
+    <value>過去7日間に完了</value>
+  </data>
+  <data name="OverviewStale" xml:space="preserve">
+    <value>未対応</value>
+  </data>
+  <data name="OverviewOpenQueue" xml:space="preserve">
+    <value>キューを開く</value>
+  </data>
+  <data name="StaleBanner" xml:space="preserve">
+    <value>{0} 件の保留中の通報が {1} 日以上対応されていません。</value>
+  </data>
+  <data name="StaleShow" xml:space="preserve">
+    <value>未対応の通報を表示</value>
+  </data>
+  <data name="StaleClear" xml:space="preserve">
+    <value>すべての通報を表示</value>
+  </data>
+  <data name="StaleBadge" xml:space="preserve">
+    <value>未対応</value>
+  </data>
+  <data name="QueueTitle" xml:space="preserve">
+    <value>フィード通報キュー</value>
+  </data>
+  <data name="FilterStatus" xml:space="preserve">
+    <value>状態</value>
+  </data>
+  <data name="StatusAllOpen" xml:space="preserve">
+    <value>未完了すべて</value>
+  </data>
+  <data name="StatusNotReviewed" xml:space="preserve">
+    <value>未確認</value>
+  </data>
+  <data name="StatusUnderReview" xml:space="preserve">
+    <value>確認中</value>
+  </data>
+  <data name="StatusActionTaken" xml:space="preserve">
+    <value>対応済み</value>
+  </data>
+  <data name="StatusDismissed" xml:space="preserve">
+    <value>却下</value>
+  </data>
+  <data name="StatusResolved" xml:space="preserve">
+    <value>解決済み</value>
+  </data>
+  <data name="FilterReason" xml:space="preserve">
+    <value>理由</value>
+  </data>
+  <data name="ReasonAll" xml:space="preserve">
+    <value>すべての理由</value>
+  </data>
+  <data name="FilterType" xml:space="preserve">
+    <value>コンテンツの種類</value>
+  </data>
+  <data name="TypeAll" xml:space="preserve">
+    <value>すべての種類</value>
+  </data>
+  <data name="TypePost" xml:space="preserve">
+    <value>投稿</value>
+  </data>
+  <data name="TypeComment" xml:space="preserve">
+    <value>コメント</value>
+  </data>
+  <data name="FilterFrom" xml:space="preserve">
+    <value>開始日</value>
+  </data>
+  <data name="FilterTo" xml:space="preserve">
+    <value>終了日</value>
+  </data>
+  <data name="SortOldest" xml:space="preserve">
+    <value>古い順</value>
+  </data>
+  <data name="SortNewest" xml:space="preserve">
+    <value>新しい順</value>
+  </data>
+  <data name="ClearFilters" xml:space="preserve">
+    <value>フィルターをクリア</value>
+  </data>
+  <data name="ShowingCount" xml:space="preserve">
+    <value>{1} 件中 {0} 件を表示</value>
+  </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>さらに読み込む</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>読み込み中…</value>
+  </data>
+  <data name="QueueEmpty" xml:space="preserve">
+    <value>確認待ちの通報はありません。</value>
+  </data>
+  <data name="QueueEmptyFiltered" xml:space="preserve">
+    <value>現在のフィルターに一致する通報はありません。</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>通報を読み込めませんでした。</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>再試行</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="OtherReports" xml:space="preserve">
+    <value>このコンテンツへの他の通報 +{0} 件</value>
+  </data>
+  <data name="AuthorLabel" xml:space="preserve">
+    <value>投稿者</value>
+  </data>
+  <data name="ReporterLabel" xml:space="preserve">
+    <value>通報者</value>
+  </data>
+  <data name="ReasonSpam" xml:space="preserve">
+    <value>スパム</value>
+  </data>
+  <data name="ReasonHarassment" xml:space="preserve">
+    <value>嫌がらせ・いじめ</value>
+  </data>
+  <data name="ReasonHateSpeech" xml:space="preserve">
+    <value>ヘイトスピーチ</value>
+  </data>
+  <data name="ReasonMisinformation" xml:space="preserve">
+    <value>誤情報</value>
+  </data>
+  <data name="ReasonAdultContent" xml:space="preserve">
+    <value>成人向けコンテンツ</value>
+  </data>
+  <data name="ReasonViolence" xml:space="preserve">
+    <value>暴力・過激な内容</value>
+  </data>
+  <data name="ReasonCopyright" xml:space="preserve">
+    <value>知的財産権の侵害</value>
+  </data>
+  <data name="ReasonPrivacy" xml:space="preserve">
+    <value>プライバシーの侵害</value>
+  </data>
+  <data name="ReasonSelfHarm" xml:space="preserve">
+    <value>自傷・自殺</value>
+  </data>
+  <data name="ReasonIllegal" xml:space="preserve">
+    <value>違法行為</value>
+  </data>
+  <data name="ReasonOther" xml:space="preserve">
+    <value>その他</value>
+  </data>
+  <data name="ReasonViolatesGroupRule" xml:space="preserve">
+    <value>グループルール違反</value>
+  </data>
+  <data name="ReasonOffTopic" xml:space="preserve">
+    <value>話題から外れている</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>キューに戻る</value>
+  </data>
+  <data name="DetailTitle" xml:space="preserve">
+    <value>通報 #{0}</value>
+  </data>
+  <data name="ReportedContent" xml:space="preserve">
+    <value>通報されたコンテンツ</value>
+  </data>
+  <data name="ContentMissing" xml:space="preserve">
+    <value>通報されたコンテンツはすでに存在しません。</value>
+  </data>
+  <data name="ReporterDescription" xml:space="preserve">
+    <value>通報者の説明</value>
+  </data>
+  <data name="NoDescription" xml:space="preserve">
+    <value>説明はありません。</value>
+  </data>
+  <data name="ReportedAt" xml:space="preserve">
+    <value>通報日時</value>
+  </data>
+  <data name="OtherReportsOnContent" xml:space="preserve">
+    <value>このコンテンツへの他の通報</value>
+  </data>
+  <data name="AuthorHistory" xml:space="preserve">
+    <value>この投稿者に対する他の通報が {0} 件あります。</value>
+  </data>
+  <data name="NotesLabel" xml:space="preserve">
+    <value>モデレーターのメモ（任意）</value>
+  </data>
+  <data name="ActionUnderReview" xml:space="preserve">
+    <value>確認中にする</value>
+  </data>
+  <data name="ActionDismiss" xml:space="preserve">
+    <value>却下</value>
+  </data>
+  <data name="ActionResolve" xml:space="preserve">
+    <value>解決</value>
+  </data>
+  <data name="ActionRemove" xml:space="preserve">
+    <value>コンテンツを削除</value>
+  </data>
+  <data name="ConfirmDismiss" xml:space="preserve">
+    <value>この通報を却下しますか？同じコンテンツへの他の未処理の通報もすべて終了します。</value>
+  </data>
+  <data name="ConfirmResolve" xml:space="preserve">
+    <value>コンテンツを削除せずにこの通報を解決済みにしますか？同じコンテンツへの他の未処理の通報もすべて終了します。</value>
+  </data>
+  <data name="ConfirmRemove" xml:space="preserve">
+    <value>このコンテンツを完全に削除しますか？投稿者と通報者に通知されます。</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>確認</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="DoneUnderReview" xml:space="preserve">
+    <value>通報を確認中にしました。</value>
+  </data>
+  <data name="DoneDismissed" xml:space="preserve">
+    <value>通報を却下しました。</value>
+  </data>
+  <data name="DoneResolved" xml:space="preserve">
+    <value>通報を解決済みにしました。</value>
+  </data>
+  <data name="DoneRemoved" xml:space="preserve">
+    <value>コンテンツを削除しました。</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>この操作を行う権限がありません。</value>
+  </data>
+  <data name="ErrAlreadyReviewed" xml:space="preserve">
+    <value>この通報はすでに処理されています。キューを更新しました。</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>この通報はすでに存在しません。</value>
+  </data>
+  <data name="ErrOwnContent" xml:space="preserve">
+    <value>自分のコンテンツに関する通報は処理できません。</value>
+  </data>
+  <data name="ErrOwnReport" xml:space="preserve">
+    <value>自分が行った通報は処理できません。</value>
+  </data>
+  <data name="ErrRemovalFailed" xml:space="preserve">
+    <value>コンテンツを削除できませんでした。通報は変更されていません。</value>
+  </data>
+  <data name="ErrTooLong" xml:space="preserve">
+    <value>メモが長すぎます（最大2000文字）。</value>
+  </data>
+  <data name="ErrGeneric" xml:space="preserve">
+    <value>問題が発生しました。もう一度お試しください。</value>
+  </data>
+  <data name="CannotAct" xml:space="preserve">
+    <value>この通報は処理できません。</value>
+  </data>
+  <data name="ReviewedAlready" xml:space="preserve">
+    <value>この通報はすでに終了しています。</value>
+  </data>
+  <data name="AgoJustNow" xml:space="preserve">
+    <value>たった今</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0}分前</value>
+  </data>
+  <data name="AgoHours" xml:space="preserve">
+    <value>{0}時間前</value>
+  </data>
+  <data name="AgoDays" xml:space="preserve">
+    <value>{0}日前</value>
+  </data>
+</root>

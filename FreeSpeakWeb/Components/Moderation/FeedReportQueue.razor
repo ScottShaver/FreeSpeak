@@ -1,0 +1,297 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.DTOs
+@using FreeSpeakWeb.Services.Abstractions
+@using Microsoft.Extensions.Localization
+
+@inject ISystemModerationService ModerationService
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.FeedReports> Localizer
+@inject TimeProvider Clock
+
+@if (selectedReportId != null)
+{
+    <FeedReportDetailPanel UserId="@UserId" ReportId="@selectedReportId.Value" OnClose="CloseDetailAsync" OnChanged="OnDetailChangedAsync" />
+}
+else
+{
+    <div data-testid="feed-report-queue">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="mb-0">@Localizer["QueueTitle"]</h5>
+            <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="ReloadAsync" data-testid="queue-refresh"><i class="bi bi-arrow-clockwise me-1"></i>@Localizer["Refresh"]</button>
+        </div>
+
+        @if (overview != null && overview.Stale > 0)
+        {
+            <div class="alert alert-warning d-flex justify-content-between align-items-center" role="alert" data-testid="stale-banner">
+                <span><i class="bi bi-clock-history me-2"></i>@string.Format(Localizer["StaleBanner"].Value, overview.Stale, overview.StaleDays)</span>
+                @if (staleOnly)
+                {
+                    <button type="button" class="btn btn-sm btn-outline-dark" @onclick="() => SetStaleOnlyAsync(false)" data-testid="stale-clear">@Localizer["StaleClear"]</button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-sm btn-warning" @onclick="() => SetStaleOnlyAsync(true)" data-testid="stale-show">@Localizer["StaleShow"]</button>
+                }
+            </div>
+        }
+
+        <div class="row g-2 mb-3">
+            <div class="col-6 col-md-3">
+                <label class="form-label small" for="flt-status">@Localizer["FilterStatus"]</label>
+                <select id="flt-status" class="form-select form-select-sm" @onchange="OnStatusChanged" data-testid="flt-status">
+                    <option value="" selected="@(status == null)">@Localizer["StatusAllOpen"]</option>
+                    <option value="@((int)ReportStatus.NotReviewed)" selected="@(status == ReportStatus.NotReviewed)">@Localizer["StatusNotReviewed"]</option>
+                    <option value="@((int)ReportStatus.UnderReview)" selected="@(status == ReportStatus.UnderReview)">@Localizer["StatusUnderReview"]</option>
+                </select>
+            </div>
+            <div class="col-6 col-md-3">
+                <label class="form-label small" for="flt-reason">@Localizer["FilterReason"]</label>
+                <select id="flt-reason" class="form-select form-select-sm" @onchange="OnReasonChanged" data-testid="flt-reason">
+                    <option value="" selected="@(reason == null)">@Localizer["ReasonAll"]</option>
+                    @foreach (var r in FeedReasons)
+                    {
+                        <option value="@((int)r)" selected="@(reason == r)">@Localizer[FeedReportDisplay.ReasonKey(r)]</option>
+                    }
+                </select>
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small" for="flt-type">@Localizer["FilterType"]</label>
+                <select id="flt-type" class="form-select form-select-sm" @onchange="OnTypeChanged" data-testid="flt-type">
+                    <option value="" selected="@(contentType == null)">@Localizer["TypeAll"]</option>
+                    <option value="@((int)FeedReportContentType.Post)" selected="@(contentType == FeedReportContentType.Post)">@Localizer["TypePost"]</option>
+                    <option value="@((int)FeedReportContentType.Comment)" selected="@(contentType == FeedReportContentType.Comment)">@Localizer["TypeComment"]</option>
+                </select>
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small" for="flt-from">@Localizer["FilterFrom"]</label>
+                <input id="flt-from" type="date" class="form-control form-control-sm" value="@fromDate?.ToString("yyyy-MM-dd")" @onchange="OnFromChanged" data-testid="flt-from" />
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small" for="flt-to">@Localizer["FilterTo"]</label>
+                <input id="flt-to" type="date" class="form-control form-control-sm" value="@toDate?.ToString("yyyy-MM-dd")" @onchange="OnToChanged" data-testid="flt-to" />
+            </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="ToggleSortAsync" data-testid="sort-toggle">
+                <i class="bi @(newestFirst ? "bi-sort-down" : "bi-sort-up") me-1"></i>@Localizer[newestFirst ? "SortNewest" : "SortOldest"]
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="ClearFiltersAsync" data-testid="clear-filters">@Localizer["ClearFilters"]</button>
+        </div>
+
+        @if (loading && items.Count == 0)
+        {
+            <div class="text-muted"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>@Localizer["Loading"]</div>
+        }
+        else if (loadFailed)
+        {
+            <div class="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
+                <span>@Localizer["LoadError"]</span>
+                <button type="button" class="btn btn-sm btn-outline-danger" @onclick="ReloadAsync">@Localizer["Retry"]</button>
+            </div>
+        }
+        else if (items.Count == 0)
+        {
+            <div class="text-muted" data-testid="queue-empty">@Localizer[HasActiveFilters ? "QueueEmptyFiltered" : "QueueEmpty"]</div>
+        }
+        else
+        {
+            <div class="small text-muted mb-2" data-testid="queue-count">@string.Format(Localizer["ShowingCount"].Value, items.Count, totalCount)</div>
+            <div class="list-group mb-3">
+                @foreach (var item in items)
+                {
+                    <button type="button" class="list-group-item list-group-item-action" @onclick="() => OpenDetail(item.Id)" data-testid="queue-row" data-report-id="@item.Id">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <i class="@FeedReportDisplay.ReasonIcon(item.Reason) me-1"></i>
+                                <strong>@Localizer[FeedReportDisplay.ReasonKey(item.Reason)]</strong>
+                                <span class="badge bg-light text-dark border ms-1">@Localizer[item.ContentType == FeedReportContentType.Post ? "TypePost" : "TypeComment"]</span>
+                                <span class="badge @FeedReportDisplay.StatusBadge(item.Status) ms-1">@Localizer[FeedReportDisplay.StatusKey(item.Status)]</span>
+                                @if (item.IsStale)
+                                {
+                                    <span class="badge bg-warning text-dark ms-1" data-testid="row-stale">@Localizer["StaleBadge"]</span>
+                                }
+                                @if (item.OtherPendingReports > 0)
+                                {
+                                    <span class="badge bg-secondary ms-1">@string.Format(Localizer["OtherReports"].Value, item.OtherPendingReports)</span>
+                                }
+                            </div>
+                            <small class="text-muted text-nowrap ms-2" title="@FeedReportDisplay.Absolute(item.CreatedAt)">@FeedReportDisplay.Ago(item.CreatedAt, Clock.GetUtcNow().UtcDateTime, Localizer)</small>
+                        </div>
+                        <div class="mt-1 text-truncate">@item.ContentExcerpt</div>
+                        <div class="small text-muted">@Localizer["AuthorLabel"]: @item.AuthorDisplayName · @Localizer["ReporterLabel"]: @item.ReporterDisplayName</div>
+                    </button>
+                }
+            </div>
+            @if (items.Count < totalCount)
+            {
+                <button type="button" class="btn btn-outline-primary" disabled="@loading" @onclick="LoadMoreAsync" data-testid="load-more">@Localizer["LoadMore"]</button>
+            }
+        }
+    </div>
+}
+
+@code {
+    private const int PageSize = 25;
+
+    private static readonly ReportReason[] FeedReasons =
+    {
+        ReportReason.Spam, ReportReason.HarassmentOrBullying, ReportReason.HateSpeech, ReportReason.Misinformation,
+        ReportReason.AdultContent, ReportReason.ViolenceOrGraphicContent, ReportReason.IntellectualPropertyViolation,
+        ReportReason.PrivacyViolation, ReportReason.SelfHarmOrSuicide, ReportReason.IllegalActivity, ReportReason.Other
+    };
+
+    private readonly List<FeedReportQueueItem> items = new();
+    private ModerationOverview? overview;
+    private int totalCount;
+    private int page;
+    private bool loading;
+    private bool loadFailed;
+    private int? selectedReportId;
+    private ReportStatus? status;
+    private ReportReason? reason;
+    private FeedReportContentType? contentType;
+    private DateTime? fromDate;
+    private DateTime? toDate;
+    private bool staleOnly;
+    private bool newestFirst;
+
+    /// <summary>
+    /// Gets or sets the ID of the signed-in moderator.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string UserId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets whether the queue starts filtered to stale reports only.
+    /// </summary>
+    [Parameter]
+    public bool InitialStaleOnly { get; set; }
+
+    private bool HasActiveFilters => status != null || reason != null || contentType != null || fromDate != null || toDate != null || staleOnly;
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        staleOnly = InitialStaleOnly;
+        await ReloadAsync();
+    }
+
+    private FeedReportQueueFilter BuildFilter() => new(
+        status,
+        reason,
+        contentType,
+        fromDate.HasValue ? DateTime.SpecifyKind(fromDate.Value.Date, DateTimeKind.Utc) : null,
+        toDate.HasValue ? DateTime.SpecifyKind(toDate.Value.Date.AddDays(1), DateTimeKind.Utc) : null,
+        staleOnly,
+        newestFirst);
+
+    /// <summary>
+    /// Reloads the overview counts and the first page of the queue.
+    /// </summary>
+    private async Task ReloadAsync()
+    {
+        page = 0;
+        items.Clear();
+        try
+        {
+            overview = await ModerationService.GetOverviewAsync(UserId);
+        }
+        catch (Exception)
+        {
+            overview = null;
+        }
+
+        await LoadPageAsync();
+    }
+
+    /// <summary>
+    /// Loads the next page of the queue and appends it to the list.
+    /// </summary>
+    private async Task LoadPageAsync()
+    {
+        loading = true;
+        loadFailed = false;
+        try
+        {
+            var result = await ModerationService.GetFeedReportQueueAsync(UserId, BuildFilter(), page, PageSize);
+            items.AddRange(result.Items);
+            totalCount = result.TotalCount;
+        }
+        catch (Exception)
+        {
+            loadFailed = true;
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    private async Task LoadMoreAsync()
+    {
+        page++;
+        await LoadPageAsync();
+    }
+
+    private Task OnStatusChanged(ChangeEventArgs e)
+    {
+        status = int.TryParse(e.Value?.ToString(), out var v) ? (ReportStatus)v : null;
+        return ReloadAsync();
+    }
+
+    private Task OnReasonChanged(ChangeEventArgs e)
+    {
+        reason = int.TryParse(e.Value?.ToString(), out var v) ? (ReportReason)v : null;
+        return ReloadAsync();
+    }
+
+    private Task OnTypeChanged(ChangeEventArgs e)
+    {
+        contentType = int.TryParse(e.Value?.ToString(), out var v) ? (FeedReportContentType)v : null;
+        return ReloadAsync();
+    }
+
+    private Task OnFromChanged(ChangeEventArgs e)
+    {
+        fromDate = DateTime.TryParse(e.Value?.ToString(), out var d) ? d : null;
+        return ReloadAsync();
+    }
+
+    private Task OnToChanged(ChangeEventArgs e)
+    {
+        toDate = DateTime.TryParse(e.Value?.ToString(), out var d) ? d : null;
+        return ReloadAsync();
+    }
+
+    private Task SetStaleOnlyAsync(bool value)
+    {
+        staleOnly = value;
+        return ReloadAsync();
+    }
+
+    private Task ToggleSortAsync()
+    {
+        newestFirst = !newestFirst;
+        return ReloadAsync();
+    }
+
+    private Task ClearFiltersAsync()
+    {
+        status = null;
+        reason = null;
+        contentType = null;
+        fromDate = null;
+        toDate = null;
+        staleOnly = false;
+        return ReloadAsync();
+    }
+
+    private void OpenDetail(int reportId) => selectedReportId = reportId;
+
+    private async Task CloseDetailAsync()
+    {
+        selectedReportId = null;
+        await ReloadAsync();
+    }
+
+    private Task OnDetailChangedAsync(bool closed) => Task.CompletedTask;
+}

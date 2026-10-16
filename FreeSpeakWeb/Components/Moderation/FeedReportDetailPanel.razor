@@ -1,0 +1,272 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.DTOs
+@using FreeSpeakWeb.Services.Abstractions
+@using Microsoft.Extensions.Localization
+
+@inject ISystemModerationService ModerationService
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.FeedReports> Localizer
+@inject TimeProvider Clock
+
+<div data-testid="feed-report-detail">
+    <button type="button" class="btn btn-link ps-0 mb-2" @onclick="() => OnClose.InvokeAsync()" data-testid="detail-back">
+        <i class="bi bi-arrow-left me-1"></i>@Localizer["Back"]
+    </button>
+
+    @if (loading)
+    {
+        <div class="text-muted"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>@Localizer["Loading"]</div>
+    }
+    else if (detail == null)
+    {
+        <div class="alert @(!string.IsNullOrEmpty(message) && !messageIsError ? "alert-success" : "alert-danger")" role="alert" data-testid="detail-message">@(!string.IsNullOrEmpty(message) ? message : Localizer["ErrNotFound"].Value)</div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <h5 class="mb-0">@string.Format(Localizer["DetailTitle"].Value, detail.Id)</h5>
+                <span>
+                    @if (detail.IsStale)
+                    {
+                        <span class="badge bg-warning text-dark me-1" data-testid="detail-stale">@Localizer["StaleBadge"]</span>
+                    }
+                    <span class="badge @FeedReportDisplay.StatusBadge(detail.Status)" data-testid="detail-status">@Localizer[FeedReportDisplay.StatusKey(detail.Status)]</span>
+                </span>
+            </div>
+            <div class="card-body">
+                @if (!string.IsNullOrEmpty(message))
+                {
+                    <div class="alert @(messageIsError ? "alert-danger" : "alert-success")" role="alert" data-testid="detail-message">@message</div>
+                }
+
+                <p class="mb-1">
+                    <i class="@FeedReportDisplay.ReasonIcon(detail.Reason) me-1"></i>
+                    <strong data-testid="detail-reason">@Localizer[FeedReportDisplay.ReasonKey(detail.Reason)]</strong>
+                    <span class="text-muted ms-2">@Localizer["ReportedAt"]: <span title="@FeedReportDisplay.Absolute(detail.CreatedAt)">@FeedReportDisplay.Ago(detail.CreatedAt, Clock.GetUtcNow().UtcDateTime, Localizer)</span></span>
+                </p>
+                <p class="mb-1 text-muted">@Localizer["ReporterLabel"]: @detail.ReporterDisplayName</p>
+                <p class="mb-3 text-muted">@Localizer["AuthorLabel"]: @detail.AuthorDisplayName</p>
+
+                <h6>@Localizer["ReporterDescription"]</h6>
+                <p data-testid="detail-description">@(string.IsNullOrWhiteSpace(detail.Description) ? Localizer["NoDescription"].Value : detail.Description)</p>
+
+                <h6>@Localizer["ReportedContent"]</h6>
+                <div class="border rounded p-3 mb-3" data-testid="detail-content">
+                    @if (string.IsNullOrWhiteSpace(detail.ContentHtml))
+                    {
+                        <span class="text-muted">@Localizer["ContentMissing"]</span>
+                    }
+                    else
+                    {
+                        @((MarkupString)detail.ContentHtml)
+                    }
+                </div>
+
+                @if (detail.OtherReports.Count > 0)
+                {
+                    <h6>@Localizer["OtherReportsOnContent"]</h6>
+                    <ul class="list-group mb-3" data-testid="detail-other-reports">
+                        @foreach (var other in detail.OtherReports)
+                        {
+                            <li class="list-group-item">
+                                <i class="@FeedReportDisplay.ReasonIcon(other.Reason) me-1"></i>@Localizer[FeedReportDisplay.ReasonKey(other.Reason)]
+                                <span class="badge @FeedReportDisplay.StatusBadge(other.Status) ms-1">@Localizer[FeedReportDisplay.StatusKey(other.Status)]</span>
+                                <span class="text-muted ms-2">@other.ReporterDisplayName · @FeedReportDisplay.Ago(other.CreatedAt, Clock.GetUtcNow().UtcDateTime, Localizer)</span>
+                                @if (!string.IsNullOrWhiteSpace(other.Description))
+                                {
+                                    <div class="small">@other.Description</div>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+
+                @if (detail.AuthorOtherReportCount > 0)
+                {
+                    <p class="text-muted" data-testid="detail-author-history">@string.Format(Localizer["AuthorHistory"].Value, detail.AuthorOtherReportCount)</p>
+                }
+
+                @if (!detail.CanAct)
+                {
+                    <div class="alert alert-secondary" data-testid="detail-cannot-act">@Localizer[detail.Status is ReportStatus.NotReviewed or ReportStatus.UnderReview ? "CannotAct" : "ReviewedAlready"]</div>
+                }
+                else
+                {
+                    <div class="mb-3">
+                        <label class="form-label" for="mod-notes">@Localizer["NotesLabel"]</label>
+                        <textarea id="mod-notes" class="form-control" rows="3" maxlength="2000" @bind="notes" @bind:event="oninput" disabled="@busy"></textarea>
+                    </div>
+
+                    @if (pending != PendingAction.None)
+                    {
+                        <div class="alert alert-warning" role="alert" data-testid="detail-confirm">
+                            <p class="mb-2">@Localizer[ConfirmKey]</p>
+                            <button type="button" class="btn btn-sm @(pending == PendingAction.Remove ? "btn-danger" : "btn-primary") me-2" disabled="@busy" @onclick="ConfirmAsync" data-testid="detail-confirm-yes">@Localizer["Confirm"]</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@busy" @onclick="() => pending = PendingAction.None">@Localizer["Cancel"]</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-flex flex-wrap gap-2">
+                            @if (detail.Status == ReportStatus.NotReviewed)
+                            {
+                                <button type="button" class="btn btn-outline-info" disabled="@busy" @onclick="MarkUnderReviewAsync" data-testid="action-under-review">@Localizer["ActionUnderReview"]</button>
+                            }
+                            <button type="button" class="btn btn-outline-secondary" disabled="@busy" @onclick="() => pending = PendingAction.Dismiss" data-testid="action-dismiss">@Localizer["ActionDismiss"]</button>
+                            <button type="button" class="btn btn-outline-success" disabled="@busy" @onclick="() => pending = PendingAction.Resolve" data-testid="action-resolve">@Localizer["ActionResolve"]</button>
+                            <button type="button" class="btn btn-danger" disabled="@busy" @onclick="() => pending = PendingAction.Remove" data-testid="action-remove">@Localizer["ActionRemove"]</button>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private enum PendingAction { None, Dismiss, Resolve, Remove }
+
+    private FeedReportDetail? detail;
+    private bool loading = true;
+    private bool busy;
+    private string? notes;
+    private string? message;
+    private bool messageIsError;
+    private PendingAction pending = PendingAction.None;
+    private int loadedReportId;
+
+    /// <summary>
+    /// Gets or sets the ID of the signed-in moderator.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string UserId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the ID of the report to display.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public int ReportId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the callback invoked when the user leaves the detail view.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    /// <summary>
+    /// Gets or sets the callback invoked after an action changed the queue (the argument is true when the report was closed).
+    /// </summary>
+    [Parameter]
+    public EventCallback<bool> OnChanged { get; set; }
+
+    private string ConfirmKey => pending switch
+    {
+        PendingAction.Dismiss => "ConfirmDismiss",
+        PendingAction.Resolve => "ConfirmResolve",
+        _ => "ConfirmRemove"
+    };
+
+    /// <inheritdoc/>
+    protected override async Task OnParametersSetAsync()
+    {
+        if (loadedReportId != ReportId)
+        {
+            loadedReportId = ReportId;
+            message = null;
+            pending = PendingAction.None;
+            await LoadAsync();
+        }
+    }
+
+    /// <summary>
+    /// Loads the report detail from the moderation service.
+    /// </summary>
+    private async Task LoadAsync()
+    {
+        loading = true;
+        try
+        {
+            detail = await ModerationService.GetFeedReportDetailAsync(UserId, ReportId);
+        }
+        catch (Exception)
+        {
+            detail = null;
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    /// <summary>
+    /// Marks the report as under review.
+    /// </summary>
+    private async Task MarkUnderReviewAsync()
+    {
+        busy = true;
+        try
+        {
+            var result = await ModerationService.MarkUnderReviewAsync(UserId, ReportId);
+            await HandleResultAsync(result, "DoneUnderReview", closed: false);
+        }
+        finally
+        {
+            busy = false;
+        }
+    }
+
+    /// <summary>
+    /// Runs the confirmed dismiss, resolve or remove action.
+    /// </summary>
+    private async Task ConfirmAsync()
+    {
+        var action = pending;
+        busy = true;
+        try
+        {
+            var result = action switch
+            {
+                PendingAction.Dismiss => await ModerationService.DismissAsync(UserId, ReportId, notes),
+                PendingAction.Resolve => await ModerationService.ResolveAsync(UserId, ReportId, notes),
+                _ => await ModerationService.RemoveContentAsync(UserId, ReportId, notes)
+            };
+            var doneKey = action switch
+            {
+                PendingAction.Dismiss => "DoneDismissed",
+                PendingAction.Resolve => "DoneResolved",
+                _ => "DoneRemoved"
+            };
+            await HandleResultAsync(result, doneKey, closed: true);
+        }
+        finally
+        {
+            busy = false;
+            pending = PendingAction.None;
+        }
+    }
+
+    /// <summary>
+    /// Shows the outcome of an action and refreshes the view and queue.
+    /// </summary>
+    private async Task HandleResultAsync(FeedReportResult result, string doneKey, bool closed)
+    {
+        if (result.Success)
+        {
+            message = Localizer[doneKey].Value;
+            messageIsError = false;
+            notes = null;
+            await LoadAsync();
+            await OnChanged.InvokeAsync(closed);
+        }
+        else
+        {
+            message = Localizer[FeedReportDisplay.ErrorKey(result.Error)].Value;
+            messageIsError = true;
+            if (result.Error == FeedReportError.AlreadyReviewed)
+            {
+                await LoadAsync();
+                await OnChanged.InvokeAsync(true);
+            }
+        }
+    }
+}

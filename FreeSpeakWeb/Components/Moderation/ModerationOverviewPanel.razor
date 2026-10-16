@@ -1,0 +1,104 @@
+@using FreeSpeakWeb.DTOs
+@using FreeSpeakWeb.Services.Abstractions
+@using Microsoft.Extensions.Localization
+
+@inject ISystemModerationService ModerationService
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.FeedReports> Localizer
+
+<div class="moderation-overview" data-testid="moderation-overview">
+    @if (loading)
+    {
+        <div class="text-muted"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>@Localizer["Loading"]</div>
+    }
+    else if (loadFailed || overview == null)
+    {
+        <div class="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
+            <span>@Localizer["LoadError"]</span>
+            <button type="button" class="btn btn-sm btn-outline-danger" @onclick="LoadAsync">@Localizer["Retry"]</button>
+        </div>
+    }
+    else
+    {
+        @if (overview.Stale > 0)
+        {
+            <div class="alert alert-warning d-flex justify-content-between align-items-center" role="alert" data-testid="stale-banner">
+                <span><i class="bi bi-clock-history me-2"></i>@string.Format(Localizer["StaleBanner"].Value, overview.Stale, overview.StaleDays)</span>
+                <button type="button" class="btn btn-sm btn-warning" @onclick="() => OnOpenQueue.InvokeAsync(true)">@Localizer["StaleShow"]</button>
+            </div>
+        }
+
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-md-3">
+                <div class="card h-100 text-center"><div class="card-body">
+                    <div class="display-6" data-testid="count-pending">@overview.Pending</div>
+                    <div class="text-muted">@Localizer["OverviewPending"]</div>
+                </div></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card h-100 text-center"><div class="card-body">
+                    <div class="display-6" data-testid="count-under-review">@overview.UnderReview</div>
+                    <div class="text-muted">@Localizer["OverviewUnderReview"]</div>
+                </div></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card h-100 text-center"><div class="card-body">
+                    <div class="display-6" data-testid="count-closed">@overview.ClosedLast7Days</div>
+                    <div class="text-muted">@Localizer["OverviewClosed"]</div>
+                </div></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card h-100 text-center"><div class="card-body">
+                    <div class="display-6 @(overview.Stale > 0 ? "text-warning" : string.Empty)" data-testid="count-stale">@overview.Stale</div>
+                    <div class="text-muted">@Localizer["OverviewStale"]</div>
+                </div></div>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" @onclick="() => OnOpenQueue.InvokeAsync(false)">
+            <i class="bi bi-flag me-1"></i>@Localizer["OverviewOpenQueue"]
+        </button>
+    }
+</div>
+
+@code {
+    private ModerationOverview? overview;
+    private bool loading = true;
+    private bool loadFailed;
+
+    /// <summary>
+    /// Gets or sets the ID of the signed-in moderator.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string UserId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the callback invoked to open the feed report queue; the argument is true when only stale reports should be shown.
+    /// </summary>
+    [Parameter]
+    public EventCallback<bool> OnOpenQueue { get; set; }
+
+    /// <inheritdoc/>
+    protected override Task OnInitializedAsync() => LoadAsync();
+
+    /// <summary>
+    /// Loads the overview counts from the moderation service.
+    /// </summary>
+    private async Task LoadAsync()
+    {
+        loading = true;
+        loadFailed = false;
+        try
+        {
+            overview = await ModerationService.GetOverviewAsync(UserId);
+            loadFailed = overview == null;
+        }
+        catch (Exception)
+        {
+            loadFailed = true;
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+}

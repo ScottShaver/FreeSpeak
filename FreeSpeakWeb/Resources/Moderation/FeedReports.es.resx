@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabOverview" xml:space="preserve">
+    <value>Resumen</value>
+  </data>
+  <data name="TabFeedReports" xml:space="preserve">
+    <value>Reportes del feed</value>
+  </data>
+  <data name="OverviewPending" xml:space="preserve">
+    <value>Sin revisar</value>
+  </data>
+  <data name="OverviewUnderReview" xml:space="preserve">
+    <value>En revisión</value>
+  </data>
+  <data name="OverviewClosed" xml:space="preserve">
+    <value>Cerrados en los últimos 7 días</value>
+  </data>
+  <data name="OverviewStale" xml:space="preserve">
+    <value>Antiguos</value>
+  </data>
+  <data name="OverviewOpenQueue" xml:space="preserve">
+    <value>Abrir la cola</value>
+  </data>
+  <data name="StaleBanner" xml:space="preserve">
+    <value>{0} reporte(s) pendiente(s) llevan esperando más de {1} días.</value>
+  </data>
+  <data name="StaleShow" xml:space="preserve">
+    <value>Mostrar reportes antiguos</value>
+  </data>
+  <data name="StaleClear" xml:space="preserve">
+    <value>Mostrar todos los reportes</value>
+  </data>
+  <data name="StaleBadge" xml:space="preserve">
+    <value>Antiguo</value>
+  </data>
+  <data name="QueueTitle" xml:space="preserve">
+    <value>Cola de reportes del feed</value>
+  </data>
+  <data name="FilterStatus" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="StatusAllOpen" xml:space="preserve">
+    <value>Todos los abiertos</value>
+  </data>
+  <data name="StatusNotReviewed" xml:space="preserve">
+    <value>Sin revisar</value>
+  </data>
+  <data name="StatusUnderReview" xml:space="preserve">
+    <value>En revisión</value>
+  </data>
+  <data name="StatusActionTaken" xml:space="preserve">
+    <value>Acción tomada</value>
+  </data>
+  <data name="StatusDismissed" xml:space="preserve">
+    <value>Descartado</value>
+  </data>
+  <data name="StatusResolved" xml:space="preserve">
+    <value>Resuelto</value>
+  </data>
+  <data name="FilterReason" xml:space="preserve">
+    <value>Motivo</value>
+  </data>
+  <data name="ReasonAll" xml:space="preserve">
+    <value>Todos los motivos</value>
+  </data>
+  <data name="FilterType" xml:space="preserve">
+    <value>Tipo de contenido</value>
+  </data>
+  <data name="TypeAll" xml:space="preserve">
+    <value>Todos los tipos</value>
+  </data>
+  <data name="TypePost" xml:space="preserve">
+    <value>Publicación</value>
+  </data>
+  <data name="TypeComment" xml:space="preserve">
+    <value>Comentario</value>
+  </data>
+  <data name="FilterFrom" xml:space="preserve">
+    <value>Desde</value>
+  </data>
+  <data name="FilterTo" xml:space="preserve">
+    <value>Hasta</value>
+  </data>
+  <data name="SortOldest" xml:space="preserve">
+    <value>Más antiguos primero</value>
+  </data>
+  <data name="SortNewest" xml:space="preserve">
+    <value>Más recientes primero</value>
+  </data>
+  <data name="ClearFilters" xml:space="preserve">
+    <value>Borrar filtros</value>
+  </data>
+  <data name="ShowingCount" xml:space="preserve">
+    <value>Mostrando {0} de {1} reportes</value>
+  </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>Cargar más</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Cargando…</value>
+  </data>
+  <data name="QueueEmpty" xml:space="preserve">
+    <value>No hay reportes pendientes de revisión.</value>
+  </data>
+  <data name="QueueEmptyFiltered" xml:space="preserve">
+    <value>Ningún reporte coincide con los filtros actuales.</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>No se pudieron cargar los reportes.</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Reintentar</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Actualizar</value>
+  </data>
+  <data name="OtherReports" xml:space="preserve">
+    <value>+{0} reporte(s) más sobre este contenido</value>
+  </data>
+  <data name="AuthorLabel" xml:space="preserve">
+    <value>Autor</value>
+  </data>
+  <data name="ReporterLabel" xml:space="preserve">
+    <value>Quien reporta</value>
+  </data>
+  <data name="ReasonSpam" xml:space="preserve">
+    <value>Spam</value>
+  </data>
+  <data name="ReasonHarassment" xml:space="preserve">
+    <value>Acoso o intimidación</value>
+  </data>
+  <data name="ReasonHateSpeech" xml:space="preserve">
+    <value>Discurso de odio</value>
+  </data>
+  <data name="ReasonMisinformation" xml:space="preserve">
+    <value>Desinformación</value>
+  </data>
+  <data name="ReasonAdultContent" xml:space="preserve">
+    <value>Contenido para adultos</value>
+  </data>
+  <data name="ReasonViolence" xml:space="preserve">
+    <value>Violencia o contenido gráfico</value>
+  </data>
+  <data name="ReasonCopyright" xml:space="preserve">
+    <value>Infracción de propiedad intelectual</value>
+  </data>
+  <data name="ReasonPrivacy" xml:space="preserve">
+    <value>Violación de la privacidad</value>
+  </data>
+  <data name="ReasonSelfHarm" xml:space="preserve">
+    <value>Autolesión o suicidio</value>
+  </data>
+  <data name="ReasonIllegal" xml:space="preserve">
+    <value>Actividad ilegal</value>
+  </data>
+  <data name="ReasonOther" xml:space="preserve">
+    <value>Otro</value>
+  </data>
+  <data name="ReasonViolatesGroupRule" xml:space="preserve">
+    <value>Infringe una regla del grupo</value>
+  </data>
+  <data name="ReasonOffTopic" xml:space="preserve">
+    <value>Fuera de tema</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Volver a la cola</value>
+  </data>
+  <data name="DetailTitle" xml:space="preserve">
+    <value>Reporte n.º {0}</value>
+  </data>
+  <data name="ReportedContent" xml:space="preserve">
+    <value>Contenido reportado</value>
+  </data>
+  <data name="ContentMissing" xml:space="preserve">
+    <value>El contenido reportado ya no existe.</value>
+  </data>
+  <data name="ReporterDescription" xml:space="preserve">
+    <value>Descripción de quien reporta</value>
+  </data>
+  <data name="NoDescription" xml:space="preserve">
+    <value>No se proporcionó ninguna descripción.</value>
+  </data>
+  <data name="ReportedAt" xml:space="preserve">
+    <value>Reportado</value>
+  </data>
+  <data name="OtherReportsOnContent" xml:space="preserve">
+    <value>Otros reportes sobre este contenido</value>
+  </data>
+  <data name="AuthorHistory" xml:space="preserve">
+    <value>Se han presentado {0} reporte(s) más contra este autor.</value>
+  </data>
+  <data name="NotesLabel" xml:space="preserve">
+    <value>Notas del moderador (opcional)</value>
+  </data>
+  <data name="ActionUnderReview" xml:space="preserve">
+    <value>Marcar en revisión</value>
+  </data>
+  <data name="ActionDismiss" xml:space="preserve">
+    <value>Descartar</value>
+  </data>
+  <data name="ActionResolve" xml:space="preserve">
+    <value>Resolver</value>
+  </data>
+  <data name="ActionRemove" xml:space="preserve">
+    <value>Eliminar contenido</value>
+  </data>
+  <data name="ConfirmDismiss" xml:space="preserve">
+    <value>¿Descartar este reporte? También se cerrarán los demás reportes abiertos sobre el mismo contenido.</value>
+  </data>
+  <data name="ConfirmResolve" xml:space="preserve">
+    <value>¿Marcar este reporte como resuelto sin eliminar el contenido? También se cerrarán los demás reportes abiertos sobre el mismo contenido.</value>
+  </data>
+  <data name="ConfirmRemove" xml:space="preserve">
+    <value>¿Eliminar este contenido de forma permanente? Se notificará al autor y a quienes reportaron.</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="DoneUnderReview" xml:space="preserve">
+    <value>El reporte ahora está marcado como en revisión.</value>
+  </data>
+  <data name="DoneDismissed" xml:space="preserve">
+    <value>El reporte fue descartado.</value>
+  </data>
+  <data name="DoneResolved" xml:space="preserve">
+    <value>El reporte fue marcado como resuelto.</value>
+  </data>
+  <data name="DoneRemoved" xml:space="preserve">
+    <value>El contenido fue eliminado.</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>No tienes permiso para hacer esto.</value>
+  </data>
+  <data name="ErrAlreadyReviewed" xml:space="preserve">
+    <value>Este reporte ya fue gestionado. La cola se ha actualizado.</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>Este reporte ya no existe.</value>
+  </data>
+  <data name="ErrOwnContent" xml:space="preserve">
+    <value>No puedes actuar sobre reportes de tu propio contenido.</value>
+  </data>
+  <data name="ErrOwnReport" xml:space="preserve">
+    <value>No puedes actuar sobre un reporte que presentaste tú.</value>
+  </data>
+  <data name="ErrRemovalFailed" xml:space="preserve">
+    <value>No se pudo eliminar el contenido. El reporte no se modificó.</value>
+  </data>
+  <data name="ErrTooLong" xml:space="preserve">
+    <value>Las notas son demasiado largas (máximo 2000 caracteres).</value>
+  </data>
+  <data name="ErrGeneric" xml:space="preserve">
+    <value>Algo salió mal. Inténtalo de nuevo.</value>
+  </data>
+  <data name="CannotAct" xml:space="preserve">
+    <value>No puedes actuar sobre este reporte.</value>
+  </data>
+  <data name="ReviewedAlready" xml:space="preserve">
+    <value>Este reporte ya está cerrado.</value>
+  </data>
+  <data name="AgoJustNow" xml:space="preserve">
+    <value>justo ahora</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>hace {0} min</value>
+  </data>
+  <data name="AgoHours" xml:space="preserve">
+    <value>hace {0} h</value>
+  </data>
+  <data name="AgoDays" xml:space="preserve">
+    <value>hace {0} d</value>
+  </data>
+</root>

@@ -46,14 +46,6 @@ namespace FreeSpeakWeb.Resources.Pages {
         public static string Heading { get { return ResourceManager.GetString("Heading", resourceCulture); } }
         public static string WelcomeGreeting { get { return ResourceManager.GetString("WelcomeGreeting", resourceCulture); } }
         public static string WelcomeMessage { get { return ResourceManager.GetString("WelcomeMessage", resourceCulture); } }
-        public static string AvailableFunctions { get { return ResourceManager.GetString("AvailableFunctions", resourceCulture); } }
-        public static string FunctionsDescription { get { return ResourceManager.GetString("FunctionsDescription", resourceCulture); } }
-        public static string ContentModerationQueue { get { return ResourceManager.GetString("ContentModerationQueue", resourceCulture); } }
-        public static string UserReportsReview { get { return ResourceManager.GetString("UserReportsReview", resourceCulture); } }
-        public static string FlaggedPostsManagement { get { return ResourceManager.GetString("FlaggedPostsManagement", resourceCulture); } }
-        public static string CommunityGuidelineEnforcement { get { return ResourceManager.GetString("CommunityGuidelineEnforcement", resourceCulture); } }
-        public static string UserWarningsAndSuspensions { get { return ResourceManager.GetString("UserWarningsAndSuspensions", resourceCulture); } }
-        public static string ModerationActivityLogs { get { return ResourceManager.GetString("ModerationActivityLogs", resourceCulture); } }
         public static string YourInformation { get { return ResourceManager.GetString("YourInformation", resourceCulture); } }
         public static string Username { get { return ResourceManager.GetString("Username", resourceCulture); } }
         public static string Email { get { return ResourceManager.GetString("Email", resourceCulture); } }

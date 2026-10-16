@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabOverview" xml:space="preserve">
+    <value>Overzicht</value>
+  </data>
+  <data name="TabFeedReports" xml:space="preserve">
+    <value>Feedmeldingen</value>
+  </data>
+  <data name="OverviewPending" xml:space="preserve">
+    <value>Niet beoordeeld</value>
+  </data>
+  <data name="OverviewUnderReview" xml:space="preserve">
+    <value>In behandeling</value>
+  </data>
+  <data name="OverviewClosed" xml:space="preserve">
+    <value>Afgesloten in de afgelopen 7 dagen</value>
+  </data>
+  <data name="OverviewStale" xml:space="preserve">
+    <value>Verouderd</value>
+  </data>
+  <data name="OverviewOpenQueue" xml:space="preserve">
+    <value>Wachtrij openen</value>
+  </data>
+  <data name="StaleBanner" xml:space="preserve">
+    <value>{0} openstaande melding(en) wachten al meer dan {1} dagen.</value>
+  </data>
+  <data name="StaleShow" xml:space="preserve">
+    <value>Verouderde meldingen tonen</value>
+  </data>
+  <data name="StaleClear" xml:space="preserve">
+    <value>Alle meldingen tonen</value>
+  </data>
+  <data name="StaleBadge" xml:space="preserve">
+    <value>Verouderd</value>
+  </data>
+  <data name="QueueTitle" xml:space="preserve">
+    <value>Wachtrij feedmeldingen</value>
+  </data>
+  <data name="FilterStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="StatusAllOpen" xml:space="preserve">
+    <value>Alle open</value>
+  </data>
+  <data name="StatusNotReviewed" xml:space="preserve">
+    <value>Niet beoordeeld</value>
+  </data>
+  <data name="StatusUnderReview" xml:space="preserve">
+    <value>In behandeling</value>
+  </data>
+  <data name="StatusActionTaken" xml:space="preserve">
+    <value>Actie ondernomen</value>
+  </data>
+  <data name="StatusDismissed" xml:space="preserve">
+    <value>Afgewezen</value>
+  </data>
+  <data name="StatusResolved" xml:space="preserve">
+    <value>Opgelost</value>
+  </data>
+  <data name="FilterReason" xml:space="preserve">
+    <value>Reden</value>
+  </data>
+  <data name="ReasonAll" xml:space="preserve">
+    <value>Alle redenen</value>
+  </data>
+  <data name="FilterType" xml:space="preserve">
+    <value>Inhoudstype</value>
+  </data>
+  <data name="TypeAll" xml:space="preserve">
+    <value>Alle typen</value>
+  </data>
+  <data name="TypePost" xml:space="preserve">
+    <value>Bericht</value>
+  </data>
+  <data name="TypeComment" xml:space="preserve">
+    <value>Reactie</value>
+  </data>
+  <data name="FilterFrom" xml:space="preserve">
+    <value>Van</value>
+  </data>
+  <data name="FilterTo" xml:space="preserve">
+    <value>Tot</value>
+  </data>
+  <data name="SortOldest" xml:space="preserve">
+    <value>Oudste eerst</value>
+  </data>
+  <data name="SortNewest" xml:space="preserve">
+    <value>Nieuwste eerst</value>
+  </data>
+  <data name="ClearFilters" xml:space="preserve">
+    <value>Filters wissen</value>
+  </data>
+  <data name="ShowingCount" xml:space="preserve">
+    <value>{0} van {1} meldingen weergegeven</value>
+  </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>Meer laden</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Laden…</value>
+  </data>
+  <data name="QueueEmpty" xml:space="preserve">
+    <value>Er wachten geen meldingen op beoordeling.</value>
+  </data>
+  <data name="QueueEmptyFiltered" xml:space="preserve">
+    <value>Geen meldingen komen overeen met de huidige filters.</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>De meldingen konden niet worden geladen.</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Opnieuw proberen</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Vernieuwen</value>
+  </data>
+  <data name="OtherReports" xml:space="preserve">
+    <value>+{0} andere melding(en) over deze inhoud</value>
+  </data>
+  <data name="AuthorLabel" xml:space="preserve">
+    <value>Auteur</value>
+  </data>
+  <data name="ReporterLabel" xml:space="preserve">
+    <value>Melder</value>
+  </data>
+  <data name="ReasonSpam" xml:space="preserve">
+    <value>Spam</value>
+  </data>
+  <data name="ReasonHarassment" xml:space="preserve">
+    <value>Pesten of intimidatie</value>
+  </data>
+  <data name="ReasonHateSpeech" xml:space="preserve">
+    <value>Haatzaaien</value>
+  </data>
+  <data name="ReasonMisinformation" xml:space="preserve">
+    <value>Desinformatie</value>
+  </data>
+  <data name="ReasonAdultContent" xml:space="preserve">
+    <value>Inhoud voor volwassenen</value>
+  </data>
+  <data name="ReasonViolence" xml:space="preserve">
+    <value>Geweld of schokkende inhoud</value>
+  </data>
+  <data name="ReasonCopyright" xml:space="preserve">
+    <value>Schending van intellectueel eigendom</value>
+  </data>
+  <data name="ReasonPrivacy" xml:space="preserve">
+    <value>Privacyschending</value>
+  </data>
+  <data name="ReasonSelfHarm" xml:space="preserve">
+    <value>Zelfbeschadiging of zelfmoord</value>
+  </data>
+  <data name="ReasonIllegal" xml:space="preserve">
+    <value>Illegale activiteit</value>
+  </data>
+  <data name="ReasonOther" xml:space="preserve">
+    <value>Overig</value>
+  </data>
+  <data name="ReasonViolatesGroupRule" xml:space="preserve">
+    <value>Schendt een groepsregel</value>
+  </data>
+  <data name="ReasonOffTopic" xml:space="preserve">
+    <value>Off-topic</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Terug naar wachtrij</value>
+  </data>
+  <data name="DetailTitle" xml:space="preserve">
+    <value>Melding #{0}</value>
+  </data>
+  <data name="ReportedContent" xml:space="preserve">
+    <value>Gemelde inhoud</value>
+  </data>
+  <data name="ContentMissing" xml:space="preserve">
+    <value>De gemelde inhoud bestaat niet meer.</value>
+  </data>
+  <data name="ReporterDescription" xml:space="preserve">
+    <value>Beschrijving van de melder</value>
+  </data>
+  <data name="NoDescription" xml:space="preserve">
+    <value>Er is geen beschrijving opgegeven.</value>
+  </data>
+  <data name="ReportedAt" xml:space="preserve">
+    <value>Gemeld</value>
+  </data>
+  <data name="OtherReportsOnContent" xml:space="preserve">
+    <value>Andere meldingen over deze inhoud</value>
+  </data>
+  <data name="AuthorHistory" xml:space="preserve">
+    <value>Er zijn {0} andere melding(en) tegen deze auteur ingediend.</value>
+  </data>
+  <data name="NotesLabel" xml:space="preserve">
+    <value>Notities van de moderator (optioneel)</value>
+  </data>
+  <data name="ActionUnderReview" xml:space="preserve">
+    <value>Markeer als in behandeling</value>
+  </data>
+  <data name="ActionDismiss" xml:space="preserve">
+    <value>Afwijzen</value>
+  </data>
+  <data name="ActionResolve" xml:space="preserve">
+    <value>Oplossen</value>
+  </data>
+  <data name="ActionRemove" xml:space="preserve">
+    <value>Inhoud verwijderen</value>
+  </data>
+  <data name="ConfirmDismiss" xml:space="preserve">
+    <value>Deze melding afwijzen? Andere openstaande meldingen over dezelfde inhoud worden ook gesloten.</value>
+  </data>
+  <data name="ConfirmResolve" xml:space="preserve">
+    <value>Deze melding als opgelost markeren zonder de inhoud te verwijderen? Andere openstaande meldingen over dezelfde inhoud worden ook gesloten.</value>
+  </data>
+  <data name="ConfirmRemove" xml:space="preserve">
+    <value>Deze inhoud definitief verwijderen? De auteur en de melders worden op de hoogte gesteld.</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Bevestigen</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuleren</value>
+  </data>
+  <data name="DoneUnderReview" xml:space="preserve">
+    <value>De melding is nu gemarkeerd als in behandeling.</value>
+  </data>
+  <data name="DoneDismissed" xml:space="preserve">
+    <value>De melding is afgewezen.</value>
+  </data>
+  <data name="DoneResolved" xml:space="preserve">
+    <value>De melding is als opgelost gemarkeerd.</value>
+  </data>
+  <data name="DoneRemoved" xml:space="preserve">
+    <value>De inhoud is verwijderd.</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>Je hebt hiervoor geen toestemming.</value>
+  </data>
+  <data name="ErrAlreadyReviewed" xml:space="preserve">
+    <value>Deze melding is al afgehandeld. De wachtrij is vernieuwd.</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>Deze melding bestaat niet meer.</value>
+  </data>
+  <data name="ErrOwnContent" xml:space="preserve">
+    <value>Je kunt geen meldingen over je eigen inhoud afhandelen.</value>
+  </data>
+  <data name="ErrOwnReport" xml:space="preserve">
+    <value>Je kunt geen melding afhandelen die je zelf hebt ingediend.</value>
+  </data>
+  <data name="ErrRemovalFailed" xml:space="preserve">
+    <value>De inhoud kon niet worden verwijderd. De melding is ongewijzigd gebleven.</value>
+  </data>
+  <data name="ErrTooLong" xml:space="preserve">
+    <value>De notities zijn te lang (maximaal 2000 tekens).</value>
+  </data>
+  <data name="ErrGeneric" xml:space="preserve">
+    <value>Er is iets misgegaan. Probeer het opnieuw.</value>
+  </data>
+  <data name="CannotAct" xml:space="preserve">
+    <value>Je kunt deze melding niet afhandelen.</value>
+  </data>
+  <data name="ReviewedAlready" xml:space="preserve">
+    <value>Deze melding is al gesloten.</value>
+  </data>
+  <data name="AgoJustNow" xml:space="preserve">
+    <value>zojuist</value>
+  </data>
+  <data name="AgoMinutes" xml:space="preserve">
+    <value>{0} min geleden</value>
+  </data>
+  <data name="AgoHours" xml:space="preserve">
+    <value>{0} u geleden</value>
+  </data>
+  <data name="AgoDays" xml:space="preserve">
+    <value>{0} d geleden</value>
+  </data>
+</root>
