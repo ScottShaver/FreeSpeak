@@ -293,6 +293,62 @@ namespace FreeSpeakWeb.Tests.Services
             result.Error.Should().Be(FeedReportError.AlreadyReviewed);
         }
 
+        /// <summary>The report timestamp is set by the server in UTC, and the rate limit looks back one hour.</summary>
+        [Fact]
+        public async Task ReportPostAsync_SetsServerUtcTimestamp_AndOneHourWindow()
+        {
+            var fixedNow = new DateTimeOffset(2026, 3, 1, 12, 0, 0, TimeSpan.FromHours(-5));
+            var clock = new Mock<TimeProvider>();
+            clock.Setup(c => c.GetUtcNow()).Returns(fixedNow);
+            var service = new FeedContentReportService(
+                _repo.Object, _friends.Object, _roles.Object, _audit.Object, _notifications.Object,
+                Options.Create(new FeedReportSettings { MaxReportsPerUserPerHour = 5 }), clock.Object, NullLogger<FeedContentReportService>.Instance);
+
+            await service.ReportPostAsync(1, Reporter, ReportReason.Spam, null);
+
+            _repo.Verify(r => r.AddAsync(It.Is<FeedContentReport>(x => x.CreatedAt == fixedNow.UtcDateTime), It.IsAny<CancellationToken>()), Times.Once);
+            _repo.Verify(r => r.CountReportsSinceAsync(Reporter, fixedNow.UtcDateTime.AddHours(-1), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        /// <summary>The reporter notification is neutral and carries no moderator identity or notes.</summary>
+        [Fact]
+        public async Task ReviewDecision_Notification_IsNeutral()
+        {
+            var report = new FeedContentReport { Id = 42, PostId = 1, ReporterId = Reporter, ContentAuthorId = Author, Status = ReportStatus.NotReviewed };
+            _repo.Setup(r => r.GetByIdAsync(42, It.IsAny<CancellationToken>())).ReturnsAsync(report);
+            _repo.Setup(r => r.UpdateReviewAsync(42, ReportStatus.ActionTaken, Moderator, It.IsAny<DateTime>(), "secret note", It.IsAny<CancellationToken>())).ReturnsAsync(report);
+
+            await _service.MarkActionTakenAsync(Moderator, 42, "secret note");
+
+            _notifications.Verify(n => n.CreateNotificationAsync(
+                Reporter, NotificationType.System,
+                It.Is<string?>(m => m != null && !m.Contains(Moderator) && !m.Contains("secret") && !m.Contains("action", StringComparison.OrdinalIgnoreCase)),
+                It.Is<object?>(d => d != null && !d.ToString()!.Contains(Moderator) && !d.ToString()!.Contains("secret")),
+                It.IsAny<DateTime?>(), FeedContentReportService.ReviewedTemplateKey), Times.Once);
+        }
+
+        /// <summary>Submitting a report never calls anything that hides or removes content, and sends no notification.</summary>
+        [Fact]
+        public async Task ReportPostAsync_DoesNotNotifyOrHideContent()
+        {
+            await _service.ReportPostAsync(1, Reporter, ReportReason.Spam, null);
+
+            _notifications.Verify(n => n.CreateNotificationAsync(It.IsAny<string>(), It.IsAny<NotificationType>(), It.IsAny<string?>(), It.IsAny<object?>(), It.IsAny<DateTime?>(), It.IsAny<string?>()), Times.Never);
+            _repo.Verify(r => r.UpdateReviewAsync(It.IsAny<int>(), It.IsAny<ReportStatus>(), It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        /// <summary>A comment on content the reporter cannot see is indistinguishable from a missing comment.</summary>
+        [Fact]
+        public async Task ReportCommentAsync_CommentOnInvisiblePost_ContentNotFound()
+        {
+            _repo.Setup(r => r.GetCommentTargetAsync(6, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new FeedReportTarget(2, 6, Author, Author, null, AudienceType.MeOnly));
+
+            var result = await _service.ReportCommentAsync(6, Reporter, ReportReason.Spam, null);
+
+            result.Error.Should().Be(FeedReportError.ContentNotFound);
+        }
+
         /// <summary>The allowed reason list excludes the two group-specific reasons only.</summary>
         [Fact]
         public void AllowedReasons_ExcludesGroupSpecificReasons()
