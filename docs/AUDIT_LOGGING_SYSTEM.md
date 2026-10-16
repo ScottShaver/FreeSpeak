@@ -100,6 +100,8 @@ Feed reporting categories: `42` `UserReportContent` (a user reports a feed post 
 | 26 | `SystemModeratorRemovePost` | System mod removes post (platform-wide) |
 | 27 | `SystemModeratorRemovePostComment` | System mod removes comment (platform-wide) |
 
+Categories 26 and 27 are written by `SystemModerationService.RemoveContentAsync` when a moderator removes reported feed content from the dashboard (`SystemModeratorRemovePostDetails` / `SystemModeratorRemovePostCommentDetails`, including the content summary, violation reason and moderator notes). Dashboard dismiss and resolve actions write category `43`, one entry per report closed.
+
 ### User Group Participation (28-29)
 
 | Value | Name | Description |

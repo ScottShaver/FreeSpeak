@@ -61,6 +61,7 @@ All personas share the dev-only password **`AgentTest123!`**. Emails end in `@ag
 |---|---|---|
 | `agent.sysadmin` | System administrator | Global `SystemAdministrator` role (admin pages). |
 | `agent.sysadmin2` | Second system administrator | Same role as `agent.sysadmin`; use it for last-admin / self-demotion tests so `agent.sysadmin` is untouched. |
+| `agent.sysmod` | System moderator | Global `SystemModerator` role (moderator dashboard at `/system-moderator`; cannot manage users or settings). |
 | `agent.owner` | Group owner | Creator and admin of all three groups. |
 | `agent.moderator` | Group moderator | Moderator in groups 1 and 2; the only non-creator **admin** of group 3. |
 | `agent.member` | Group member | Member of groups 1 and 3. Author of 7 feed posts (see below). |
@@ -81,6 +82,7 @@ Seeded data (timestamps are fixed from 2026-01-01 12:00 UTC, so data is identica
 | Feed posts by `agent.member` | 1 public, 2 friends-only, 3 only-me; 4 public, 5 friends-only, 6 only-me (extra); Posts 1,4,7 are public, 2,5 friends-only, 3,6 only-me. `agent.member` sees all 7, `agent.friend` 5, others 3; the profile Posts count still includes only-me posts (known issue reproducible) |
 | Comments | `Comments` 1, 2 on post 1; 3 to 7 on post 7: top-level comment 3 with a chain of replies 4, 5, 6, 7 (depth 0 to 4). `MaxFeedPostCommentDepth` is 4, so 7 is at the maximum and has no Reply button |
 | Group comments | `GroupPostComments` 1 on group post 2 |
+| Feed content reports | `FeedContentReports` 1 to 5: report 1 (Spam, 5 days old) and 2 (Harassment, 4 days old) on public post 1 by `agent.member`; 3 (Misinformation, 10 days old) on a post by `agent.friend`; 4 (Spam, 2 h old) on a post by `agent.stranger`; 5 (HateSpeech, 1 h old) on `agent.stranger`'s comment. Ages are relative to seeding time, so with `Moderation:StaleReportDays` = 3 reports 1 to 3 are stale. |
 | Notifications | `UserNotifications` 1 to 3 for `agent.member` (friend request, unread system, read system); 4 to 6 for `agent.owner` (2 unread, 1 read) |
 | Group files | File uploads and file approval are enabled on group 1 (the open group). `GroupFiles` 1 (approved) and 2 (pending) in group 1, uploaded by `agent.member`. Records only; no file exists on disk, so listing and approval work but download does not (the page shows a "file no longer available" message) |
 

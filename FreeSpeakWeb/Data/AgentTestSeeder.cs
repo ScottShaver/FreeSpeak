@@ -39,6 +39,7 @@ namespace FreeSpeakWeb.Data
             new("agent.friend", "agent.friend@agenttest.invalid", "Finn", "Friend"),
             new("agent.stranger", "agent.stranger@agenttest.invalid", "Stella", "Stranger"),
                         new("agent.sysadmin2", "agent.sysadmin2@agenttest.invalid", "Sasha", "Sysadmin", "SystemAdministrator"),
+        new("agent.sysmod", "agent.sysmod@agenttest.invalid", "Sydney", "Sysmod", "SystemModerator"),
                     };
 
         /// <summary>
@@ -352,6 +353,23 @@ namespace FreeSpeakWeb.Data
                 new UserNotification { UserId = owner.Id, Type = NotificationType.System, Message = "Agent test: second unread notification for owner.", IsRead = false, CreatedAt = baseTime.AddMinutes(63), ExpiresAt = null },
                 new UserNotification { UserId = owner.Id, Type = NotificationType.System, Message = "Agent test: read system notification for owner.", IsRead = true, CreatedAt = baseTime.AddMinutes(64), ExpiresAt = null });
 
+            await dbContext.SaveChangesAsync();
+
+            // 5. Feed content reports for the system moderator dashboard. Times are relative to now so
+            // that the stale/fresh split (Moderation:StaleReportDays, default 3) holds on every seed run.
+            var now = DateTime.UtcNow;
+            var spamPost = new Post { AuthorId = stranger.Id, Content = "Agent test: spammy post by stranger.", AudienceType = AudienceType.Public, CreatedAt = baseTime.AddMinutes(70) };
+            var dubiousPost = new Post { AuthorId = friend.Id, Content = "Agent test: dubious claim post by friend.", AudienceType = AudienceType.Public, CreatedAt = baseTime.AddMinutes(71) };
+            dbContext.Posts.AddRange(spamPost, dubiousPost);
+            await dbContext.SaveChangesAsync();
+
+            var strangerComment = await dbContext.Comments.FirstAsync(c => c.PostId == publicPost.Id && c.AuthorId == stranger.Id);
+            dbContext.FeedContentReports.AddRange(
+                new FeedContentReport { PostId = publicPost.Id, ContentAuthorId = publicPost.AuthorId, ReporterId = friend.Id, Reason = ReportReason.Spam, Description = "Agent test: stale report (5 days old).", CreatedAt = now.AddDays(-5) },
+                new FeedContentReport { PostId = publicPost.Id, ContentAuthorId = publicPost.AuthorId, ReporterId = owner.Id, Reason = ReportReason.HarassmentOrBullying, Description = "Agent test: second report on the same post (4 days old).", CreatedAt = now.AddDays(-4) },
+                new FeedContentReport { PostId = dubiousPost.Id, ContentAuthorId = friend.Id, ReporterId = stranger.Id, Reason = ReportReason.Misinformation, Description = "Agent test: stale report (10 days old).", CreatedAt = now.AddDays(-10) },
+                new FeedContentReport { PostId = spamPost.Id, ContentAuthorId = stranger.Id, ReporterId = member.Id, Reason = ReportReason.Spam, Description = "Agent test: fresh report (2 hours old).", CreatedAt = now.AddHours(-2) },
+                new FeedContentReport { CommentId = strangerComment.Id, ContentAuthorId = stranger.Id, ReporterId = friend.Id, Reason = ReportReason.HateSpeech, Description = "Agent test: fresh comment report (1 hour old).", CreatedAt = now.AddHours(-1) });
             await dbContext.SaveChangesAsync();
         }
     }
