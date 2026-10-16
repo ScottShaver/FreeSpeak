@@ -33,6 +33,13 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>신고 처리됨</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>멤버 차단됨</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>멤버 차단 해제됨</value></data>
-  <data name="SystemAction" xml:space="preserve"><value>시스템</value></data>
+    <data name="Action_MemberRemoved" xml:space="preserve"><value>멤버 제거됨</value></data>
+    <data name="Action_MemberRoleChanged" xml:space="preserve"><value>멤버 역할 변경됨</value></data>
+    <data name="Action_JoinRequestApproved" xml:space="preserve"><value>가입 요청 승인됨</value></data>
+    <data name="Action_JoinRequestDenied" xml:space="preserve"><value>가입 요청 거부됨</value></data>
+    <data name="Action_GroupSettingsChanged" xml:space="preserve"><value>그룹 설정 변경됨</value></data>
+    <data name="Action_RuleAdded" xml:space="preserve"><value>규칙 추가됨</value></data>
+    <data name="Action_RuleEdited" xml:space="preserve"><value>규칙 수정됨</value></data>
+    <data name="Action_RuleDeleted" xml:space="preserve"><value>규칙 삭제됨</value></data>  <data name="SystemAction" xml:space="preserve"><value>시스템</value></data>
   <data name="SystemActionHint" xml:space="preserve"><value>시스템 중재자 또는 관리자가 시스템 수준에서 수행함</value></data>
 </root>

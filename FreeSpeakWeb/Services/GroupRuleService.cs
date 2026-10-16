@@ -1,19 +1,59 @@
 using FreeSpeakWeb.Data;
+using FreeSpeakWeb.DTOs;
+using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreeSpeakWeb.Services
 {
+    /// <summary>
+    /// Service for managing group rules. Rule changes are also recorded in the group moderation log.
+    /// </summary>
     public class GroupRuleService
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupRuleService> _logger;
+        private readonly IGroupModerationLogService? _moderationLog;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupRuleService"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="logger">Logger for recording service operations.</param>
+        /// <param name="moderationLog">Optional per-group moderation log; when omitted nothing is recorded there.</param>
         public GroupRuleService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<GroupRuleService> logger)
+            ILogger<GroupRuleService> logger,
+            IGroupModerationLogService? moderationLog = null)
         {
             _contextFactory = contextFactory;
             _logger = logger;
+            _moderationLog = moderationLog;
+        }
+
+        /// <summary>
+        /// Records a rule change in the group moderation log. Logging failures never affect the caller.
+        /// </summary>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="actorUserId">The admin who changed the rule.</param>
+        /// <param name="action">The rule action taken.</param>
+        /// <param name="ruleId">The rule id.</param>
+        /// <param name="ruleTitle">The rule title, used as the entry summary.</param>
+        private async Task LogModerationAsync(int groupId, string actorUserId, GroupModerationAction action, int ruleId, string ruleTitle)
+        {
+            if (_moderationLog == null)
+            {
+                return;
+            }
+
+            await _moderationLog.LogAsync(new GroupModerationLogRequest
+            {
+                GroupId = groupId,
+                ActorUserId = actorUserId,
+                Action = action,
+                TargetType = GroupModerationTargetType.Group,
+                TargetId = ruleId.ToString(),
+                Summary = ruleTitle
+            });
         }
 
         #region Create Rules
@@ -78,6 +118,8 @@ namespace FreeSpeakWeb.Services
 
                 context.GroupRules.Add(rule);
                 await context.SaveChangesAsync();
+
+                await LogModerationAsync(groupId, userId, GroupModerationAction.RuleAdded, rule.Id, rule.Title);
 
                 _logger.LogInformation("Rule {RuleId} created for group {GroupId} by user {UserId}", 
                     rule.Id, groupId, userId);
@@ -172,22 +214,31 @@ namespace FreeSpeakWeb.Services
                 }
 
                 // Update fields if provided
+                var changed = false;
                 if (!string.IsNullOrWhiteSpace(title))
                 {
+                    changed |= rule.Title != title;
                     rule.Title = title;
                 }
 
                 if (!string.IsNullOrWhiteSpace(description))
                 {
+                    changed |= rule.Description != description;
                     rule.Description = description;
                 }
 
                 if (order.HasValue)
                 {
+                    changed |= rule.Order != order.Value;
                     rule.Order = order.Value;
                 }
 
                 await context.SaveChangesAsync();
+
+                if (changed)
+                {
+                    await LogModerationAsync(rule.GroupId, userId, GroupModerationAction.RuleEdited, rule.Id, rule.Title);
+                }
 
                 _logger.LogInformation("Rule {RuleId} updated by user {UserId}", ruleId, userId);
                 return (true, null);
@@ -286,6 +337,8 @@ namespace FreeSpeakWeb.Services
 
                 context.GroupRules.Remove(rule);
                 await context.SaveChangesAsync();
+
+                await LogModerationAsync(rule.GroupId, userId, GroupModerationAction.RuleDeleted, rule.Id, rule.Title);
 
                 _logger.LogInformation("Rule {RuleId} deleted by user {UserId}", ruleId, userId);
                 return (true, null);

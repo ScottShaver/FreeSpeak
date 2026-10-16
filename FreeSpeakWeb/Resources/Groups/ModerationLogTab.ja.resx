@@ -33,6 +33,13 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>報告を解決</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>メンバーをBAN</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>メンバーのBANを解除</value></data>
-  <data name="SystemAction" xml:space="preserve"><value>システム</value></data>
+    <data name="Action_MemberRemoved" xml:space="preserve"><value>メンバーを削除</value></data>
+    <data name="Action_MemberRoleChanged" xml:space="preserve"><value>メンバーの役割を変更</value></data>
+    <data name="Action_JoinRequestApproved" xml:space="preserve"><value>参加リクエストを承認</value></data>
+    <data name="Action_JoinRequestDenied" xml:space="preserve"><value>参加リクエストを拒否</value></data>
+    <data name="Action_GroupSettingsChanged" xml:space="preserve"><value>グループ設定を変更</value></data>
+    <data name="Action_RuleAdded" xml:space="preserve"><value>ルールを追加</value></data>
+    <data name="Action_RuleEdited" xml:space="preserve"><value>ルールを編集</value></data>
+    <data name="Action_RuleDeleted" xml:space="preserve"><value>ルールを削除</value></data>  <data name="SystemAction" xml:space="preserve"><value>システム</value></data>
   <data name="SystemActionHint" xml:space="preserve"><value>システムモデレーターまたは管理者がシステムレベルで実行しました</value></data>
 </root>

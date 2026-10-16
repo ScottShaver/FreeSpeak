@@ -33,6 +33,13 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>تمت معالجة البلاغ</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>تم حظر العضو</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>تم إلغاء حظر العضو</value></data>
-  <data name="SystemAction" xml:space="preserve"><value>النظام</value></data>
+    <data name="Action_MemberRemoved" xml:space="preserve"><value>تمت إزالة العضو</value></data>
+    <data name="Action_MemberRoleChanged" xml:space="preserve"><value>تم تغيير دور العضو</value></data>
+    <data name="Action_JoinRequestApproved" xml:space="preserve"><value>تمت الموافقة على طلب الانضمام</value></data>
+    <data name="Action_JoinRequestDenied" xml:space="preserve"><value>تم رفض طلب الانضمام</value></data>
+    <data name="Action_GroupSettingsChanged" xml:space="preserve"><value>تم تغيير إعدادات المجموعة</value></data>
+    <data name="Action_RuleAdded" xml:space="preserve"><value>تمت إضافة قاعدة</value></data>
+    <data name="Action_RuleEdited" xml:space="preserve"><value>تم تعديل القاعدة</value></data>
+    <data name="Action_RuleDeleted" xml:space="preserve"><value>تم حذف القاعدة</value></data>  <data name="SystemAction" xml:space="preserve"><value>النظام</value></data>
   <data name="SystemActionHint" xml:space="preserve"><value>تم اتخاذ الإجراء على مستوى النظام بواسطة مشرف النظام أو مسؤوله</value></data>
 </root>

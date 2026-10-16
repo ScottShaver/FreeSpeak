@@ -91,6 +91,8 @@ The `ActionCategory` enum defines all types of auditable actions in the system:
 
 Additional group categories added with the moderation log: `40` `GroupAdminUnbanUser` (unban) and `41` `GroupModerationLogExport` (a moderator exports the group's moderation log as CSV). The moderation log itself is stored in the dedicated `GroupModerationLogEntries` table, separate from audit logs.
 
+Mod Log actions added in PR 2 (all written by the owning service, failures never block the action): `PostRemoved`/`CommentRemoved` (a non-author admin/moderator deleting via `GroupPostService`, which also writes audit categories 24/25; system-report removals skip this because `SystemGroupReportService` logs them), `MemberRemoved`, `MemberRoleChanged` (only when the role changes), `JoinRequestApproved`/`JoinRequestDenied` (`GroupMemberService`), `GroupSettingsChanged` (`GroupService.UpdateGroupAsync`, summary lists changed field names) and `RuleAdded`/`RuleEdited`/`RuleDeleted` (`GroupRuleService`, target type `Group`, summary is the rule title).
+
 Feed reporting categories: `42` `UserReportContent` (a user reports a feed post or comment; stores report ID, target, content author and reason, never the free-text description) and `43` `SystemModeratorReviewReport` (a system moderator or administrator dismisses, resolves or marks action taken on a report).
 
 User moderation categories (written by `UserModerationService`, timestamps in UTC): `44` `SystemModeratorWarnUser`, `45` `SystemModeratorSuspendUser` (reason, duration or permanent, end time) and `46` `SystemModeratorUnsuspendUser` (suspension ID and lift note).

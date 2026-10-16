@@ -150,6 +150,38 @@ namespace FreeSpeakWeb.Resources.Groups {
             get { return ResourceManager.GetString("Action_MemberUnbanned", resourceCulture); }
         }
 
+        public static string Action_MemberRemoved {
+            get { return ResourceManager.GetString("Action_MemberRemoved", resourceCulture); }
+        }
+
+        public static string Action_MemberRoleChanged {
+            get { return ResourceManager.GetString("Action_MemberRoleChanged", resourceCulture); }
+        }
+
+        public static string Action_JoinRequestApproved {
+            get { return ResourceManager.GetString("Action_JoinRequestApproved", resourceCulture); }
+        }
+
+        public static string Action_JoinRequestDenied {
+            get { return ResourceManager.GetString("Action_JoinRequestDenied", resourceCulture); }
+        }
+
+        public static string Action_GroupSettingsChanged {
+            get { return ResourceManager.GetString("Action_GroupSettingsChanged", resourceCulture); }
+        }
+
+        public static string Action_RuleAdded {
+            get { return ResourceManager.GetString("Action_RuleAdded", resourceCulture); }
+        }
+
+        public static string Action_RuleEdited {
+            get { return ResourceManager.GetString("Action_RuleEdited", resourceCulture); }
+        }
+
+        public static string Action_RuleDeleted {
+            get { return ResourceManager.GetString("Action_RuleDeleted", resourceCulture); }
+        }
+
         public static string SystemAction {
             get { return ResourceManager.GetString("SystemAction", resourceCulture); }
         }

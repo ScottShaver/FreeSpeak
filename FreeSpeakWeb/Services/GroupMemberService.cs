@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
+using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,19 @@ namespace FreeSpeakWeb.Services
         private readonly IAuditLogRepository _auditLogRepository;
         private readonly NotificationService _notificationService;
         private readonly IRoleService _roleService;
+        private readonly IGroupModerationLogService? _moderationLog;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupMemberService"/> class.
+        /// </summary>
+        /// <param name="contextFactory">Factory for creating database contexts.</param>
+        /// <param name="memberRepository">Repository for group member operations.</param>
+        /// <param name="groupRepository">Repository for group operations.</param>
+        /// <param name="logger">Logger for recording service operations.</param>
+        /// <param name="auditLogRepository">Repository for audit log operations.</param>
+        /// <param name="notificationService">Service for sending notifications.</param>
+        /// <param name="roleService">Service for role operations.</param>
+        /// <param name="moderationLog">Optional per-group moderation log; when omitted nothing is recorded there.</param>
         public GroupMemberService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             IGroupMemberRepository memberRepository,
@@ -23,7 +36,8 @@ namespace FreeSpeakWeb.Services
             ILogger<GroupMemberService> logger,
             IAuditLogRepository auditLogRepository,
             NotificationService notificationService,
-            IRoleService roleService)
+            IRoleService roleService,
+            IGroupModerationLogService? moderationLog = null)
         {
             _contextFactory = contextFactory;
             _memberRepository = memberRepository;
@@ -32,6 +46,34 @@ namespace FreeSpeakWeb.Services
             _auditLogRepository = auditLogRepository;
             _notificationService = notificationService;
             _roleService = roleService;
+            _moderationLog = moderationLog;
+        }
+
+        /// <summary>
+        /// Records a member-related action in the group moderation log. Logging failures never affect the caller.
+        /// </summary>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="actorUserId">The admin or moderator who acted.</param>
+        /// <param name="action">The action taken.</param>
+        /// <param name="targetUserId">The affected member.</param>
+        /// <param name="summary">Optional short plain-text detail, such as the old and new role.</param>
+        private async Task LogModerationAsync(int groupId, string actorUserId, GroupModerationAction action, string targetUserId, string? summary = null)
+        {
+            if (_moderationLog == null)
+            {
+                return;
+            }
+
+            await _moderationLog.LogAsync(new GroupModerationLogRequest
+            {
+                GroupId = groupId,
+                ActorUserId = actorUserId,
+                Action = action,
+                TargetType = GroupModerationTargetType.Member,
+                TargetId = targetUserId,
+                TargetUserId = targetUserId,
+                Summary = summary
+            });
         }
 
         #region Join Requests
@@ -223,6 +265,8 @@ namespace FreeSpeakWeb.Services
                     RequestedAt = request.RequestedAt
                 });
 
+                await LogModerationAsync(request.GroupId, approverId, GroupModerationAction.JoinRequestApproved, request.UserId);
+
                 // Send notification to the user that their join request was approved
                 await _notificationService.CreateNotificationAsync(
                     request.UserId,
@@ -293,6 +337,8 @@ namespace FreeSpeakWeb.Services
                     DeniedUserDisplayName = deniedUserDisplayName,
                     RequestedAt = requestedAt
                 });
+
+                await LogModerationAsync(groupId, rejecterId, GroupModerationAction.JoinRequestDenied, deniedUserId);
 
                 return (true, null);
             }
@@ -838,6 +884,11 @@ namespace FreeSpeakWeb.Services
                     NewRole = newRole
                 });
 
+                if (oldRole != newRole)
+                {
+                    await LogModerationAsync(groupId, requesterId, GroupModerationAction.MemberRoleChanged, targetUserId, $"{oldRole} -> {newRole}");
+                }
+
                 return (true, null);
             }
             catch (Exception ex)
@@ -908,6 +959,11 @@ namespace FreeSpeakWeb.Services
                     OldRole = oldRole,
                     NewRole = newRole
                 });
+
+                if (oldRole != newRole)
+                {
+                    await LogModerationAsync(groupId, requesterId, GroupModerationAction.MemberRoleChanged, targetUserId, $"{oldRole} -> {newRole}");
+                }
 
                 return (true, null);
             }
@@ -1037,6 +1093,8 @@ namespace FreeSpeakWeb.Services
                     GroupId = groupId,
                     GroupName = group.Name
                 });
+
+                await LogModerationAsync(groupId, requesterId, GroupModerationAction.MemberRemoved, targetUserId);
 
                 _logger.LogInformation("User {TargetUserId} removed from group {GroupId} by {RequesterId}", 
                     targetUserId, groupId, requesterId);

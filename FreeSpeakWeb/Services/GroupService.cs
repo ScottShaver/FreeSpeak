@@ -1,5 +1,6 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
+using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ namespace FreeSpeakWeb.Services
         private readonly IAuditLogRepository _auditLogRepository;
         private readonly GroupMemberService _groupMemberService;
         private readonly IRoleService _roleService;
+        private readonly IGroupModerationLogService? _moderationLog;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupService"/> class.
@@ -30,6 +32,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="auditLogRepository">Repository for audit log operations.</param>
         /// <param name="groupMemberService">Service for group member operations.</param>
         /// <param name="roleService">Service for role operations.</param>
+        /// <param name="moderationLog">Optional per-group moderation log; when omitted nothing is recorded there.</param>
         public GroupService(
             IGroupRepository groupRepository,
             IUserRepository userRepository,
@@ -37,8 +40,10 @@ namespace FreeSpeakWeb.Services
             ILogger<GroupService> logger,
             IAuditLogRepository auditLogRepository,
             GroupMemberService groupMemberService,
-            IRoleService roleService)
+            IRoleService roleService,
+            IGroupModerationLogService? moderationLog = null)
         {
+            _moderationLog = moderationLog;
             _groupRepository = groupRepository;
             _userRepository = userRepository;
             _contextFactory = contextFactory;
@@ -678,6 +683,19 @@ namespace FreeSpeakWeb.Services
                         OldIsPublic = changedFields.Contains("IsPublic") ? oldIsPublic : null,
                         NewIsPublic = changedFields.Contains("IsPublic") ? group.IsPublic : null
                     });
+
+                    if (_moderationLog != null)
+                    {
+                        await _moderationLog.LogAsync(new GroupModerationLogRequest
+                        {
+                            GroupId = groupId,
+                            ActorUserId = userId,
+                            Action = GroupModerationAction.GroupSettingsChanged,
+                            TargetType = GroupModerationTargetType.Group,
+                            TargetId = groupId.ToString(),
+                            Summary = string.Join(", ", changedFields)
+                        });
+                    }
                 }
 
                 return (true, null);
