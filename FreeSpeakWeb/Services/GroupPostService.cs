@@ -1188,7 +1188,8 @@ namespace FreeSpeakWeb.Services
                 // Comment author and post author may delete; otherwise group admin/moderator (or system role) may remove
                 var isAuthor = comment.AuthorId == userId;
                 var isPostAuthor = comment.Post.AuthorId == userId;
-                var isAdminOrModerator = !isAuthor && !isPostAuthor
+                // Evaluated for any non-author so a moderator who also wrote the post is still logged in the Mod Log
+                var isAdminOrModerator = !isAuthor
                     && await _accessValidator.IsGroupAdminOrModeratorAsync(comment.Post.GroupId, userId);
 
                 if (!isAuthor && !isPostAuthor && !isAdminOrModerator)
