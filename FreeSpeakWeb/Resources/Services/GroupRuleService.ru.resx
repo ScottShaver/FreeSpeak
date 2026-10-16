@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+      <data name="RuleTitleRequired" xml:space="preserve">
+    <value>Ð¢Ñ€ÐµÐ±ÑƒÐµÑ‚ÑÑ Ð½Ð°Ð·Ð²Ð°Ð½Ð¸Ðµ Ð¿Ñ€Ð°Ð²Ð¸Ð»Ð°.</value>
+  </data>
+  <data name="RuleDescriptionRequired" xml:space="preserve">
+    <value>Ð¢Ñ€ÐµÐ±ÑƒÐµÑ‚ÑÑ Ð¾Ð¿Ð¸ÑÐ°Ð½Ð¸Ðµ Ð¿Ñ€Ð°Ð²Ð¸Ð»Ð°.</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>Ð“Ñ€ÑƒÐ¿Ð¿Ð° Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð°.</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsCreateRules" xml:space="preserve">
+    <value>Ð¢Ð¾Ð»ÑŒÐºÐ¾ ÑÐ¾Ð·Ð´Ð°Ñ‚ÐµÐ»ÑŒ Ð³Ñ€ÑƒÐ¿Ð¿Ñ‹ Ð¸Ð»Ð¸ Ð°Ð´Ð¼Ð¸Ð½Ð¸ÑÑ‚Ñ€Ð°Ñ‚Ð¾Ñ€Ñ‹ Ð¼Ð¾Ð³ÑƒÑ‚ ÑÐ¾Ð·Ð´Ð°Ð²Ð°Ñ‚ÑŒ Ð¿Ñ€Ð°Ð²Ð¸Ð»Ð°.</value>
+  </data>
+  <data name="ErrorCreatingRule" xml:space="preserve">
+    <value>ÐŸÑ€Ð¾Ð¸Ð·Ð¾ÑˆÐ»Ð° Ð¾ÑˆÐ¸Ð±ÐºÐ° Ð¿Ñ€Ð¸ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ð¸ Ð¿Ñ€Ð°Ð²Ð¸Ð»Ð°.</value>
+  </data>
+  <data name="RuleNotFound" xml:space="preserve">
+    <value>ÐŸÑ€Ð°Ð²Ð¸Ð»Ð¾ Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾.</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsUpdateRules" xml:space="preserve">
+    <value>Ð¢Ð¾Ð»ÑŒÐºÐ¾ ÑÐ¾Ð·Ð´Ð°Ñ‚ÐµÐ»ÑŒ Ð³Ñ€ÑƒÐ¿Ð¿Ñ‹ Ð¸Ð»Ð¸ Ð°Ð´Ð¼Ð¸Ð½Ð¸ÑÑ‚Ñ€Ð°Ñ‚Ð¾Ñ€Ñ‹ Ð¼Ð¾Ð³ÑƒÑ‚ Ð¾Ð±Ð½Ð¾Ð²Ð»ÑÑ‚ÑŒ Ð¿Ñ€Ð°Ð²Ð¸Ð»Ð°.</value>
+  </data>
+  <data name="ErrorUpdatingRule" xml:space="preserve">
+    <value>ÐŸÑ€Ð¾Ð¸Ð·Ð¾ÑˆÐ»Ð° Ð¾ÑˆÐ¸Ð±ÐºÐ° Ð¿Ñ€Ð¸ Ð¾Ð±Ð½Ð¾Ð²Ð»ÐµÐ½Ð¸Ð¸ Ð¿Ñ€Ð°Ð²Ð¸Ð»Ð°.</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsReorderRules" xml:space="preserve">
+    <value>Ð¢Ð¾Ð»ÑŒÐºÐ¾ ÑÐ¾Ð·Ð´Ð°Ñ‚ÐµÐ»ÑŒ Ð³Ñ€ÑƒÐ¿Ð¿Ñ‹ Ð¸Ð»Ð¸ Ð°Ð´Ð¼Ð¸Ð½Ð¸ÑÑ‚Ñ€Ð°Ñ‚Ð¾Ñ€Ñ‹ Ð¼Ð¾Ð³ÑƒÑ‚ Ð¼ÐµÐ½ÑÑ‚ÑŒ Ð¿Ð¾Ñ€ÑÐ´Ð¾Ðº Ð¿Ñ€Ð°Ð²Ð¸Ð».</value>
+  </data>
+  <data name="ErrorReorderingRules" xml:space="preserve">
+    <value>ÐŸÑ€Ð¾Ð¸Ð·Ð¾ÑˆÐ»Ð° Ð¾ÑˆÐ¸Ð±ÐºÐ° Ð¿Ñ€Ð¸ Ð¸Ð·Ð¼ÐµÐ½ÐµÐ½Ð¸Ð¸ Ð¿Ð¾Ñ€ÑÐ´ÐºÐ° Ð¿Ñ€Ð°Ð²Ð¸Ð».</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsDeleteRules" xml:space="preserve">
+    <value>Ð¢Ð¾Ð»ÑŒÐºÐ¾ ÑÐ¾Ð·Ð´Ð°Ñ‚ÐµÐ»ÑŒ Ð³Ñ€ÑƒÐ¿Ð¿Ñ‹ Ð¸Ð»Ð¸ Ð°Ð´Ð¼Ð¸Ð½Ð¸ÑÑ‚Ñ€Ð°Ñ‚Ð¾Ñ€Ñ‹ Ð¼Ð¾Ð³ÑƒÑ‚ ÑƒÐ´Ð°Ð»ÑÑ‚ÑŒ Ð¿Ñ€Ð°Ð²Ð¸Ð»Ð°.</value>
+  </data>
+  <data name="ErrorDeletingRule" xml:space="preserve">
+    <value>ÐŸÑ€Ð¾Ð¸Ð·Ð¾ÑˆÐ»Ð° Ð¾ÑˆÐ¸Ð±ÐºÐ° Ð¿Ñ€Ð¸ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ð¸ Ð¿Ñ€Ð°Ð²Ð¸Ð»Ð°.</value>
+  </data>
+</root>

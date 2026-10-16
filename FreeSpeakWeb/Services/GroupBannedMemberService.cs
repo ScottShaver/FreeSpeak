@@ -4,6 +4,7 @@ using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace FreeSpeakWeb.Services
 {
@@ -18,6 +19,7 @@ namespace FreeSpeakWeb.Services
         private readonly IAuditLogRepository _auditLogRepository;
         private readonly IRoleService _roleService;
         private readonly IGroupModerationLogService? _moderationLog;
+        private readonly IStringLocalizer<Resources.Services.GroupBannedMemberService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupBannedMemberService"/> class.
@@ -27,18 +29,21 @@ namespace FreeSpeakWeb.Services
         /// <param name="auditLogRepository">Repository for audit log operations.</param>
         /// <param name="roleService">Service for role operations.</param>
         /// <param name="moderationLog">Optional per-group moderation log; when omitted nothing is recorded there.</param>
+        /// <param name="localizer">Optional localizer for user-facing result messages; when omitted the neutral (English) text is used.</param>
         public GroupBannedMemberService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupBannedMemberService> logger,
             IAuditLogRepository auditLogRepository,
             IRoleService roleService,
-            IGroupModerationLogService? moderationLog = null)
+            IGroupModerationLogService? moderationLog = null,
+            IStringLocalizer<Resources.Services.GroupBannedMemberService>? localizer = null)
         {
             _contextFactory = contextFactory;
             _logger = logger;
             _auditLogRepository = auditLogRepository;
             _roleService = roleService;
             _moderationLog = moderationLog;
+            _localizer = ServiceLocalizer.Resolve(localizer);
         }
 
         /// <summary>
@@ -59,7 +64,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isSystemAdmin && (bannerMembership == null || (!bannerMembership.IsAdmin && !bannerMembership.IsModerator)))
                 {
-                    return (false, "You must be an admin or moderator to ban users.");
+                    return (false, _localizer["MustBeAdminOrModToBan"].Value);
                 }
 
                 // Verify the user to be banned is a member
@@ -68,22 +73,22 @@ namespace FreeSpeakWeb.Services
 
                 if (userMembership == null)
                 {
-                    return (false, "User is not a member of this group.");
+                    return (false, _localizer["UserNotMember"].Value);
                 }
 
                 // Prevent banning the group creator
                 var group = await context.Groups.FindAsync(groupId);
                 if (group != null && group.CreatorId == userId)
                 {
-                    return (false, "Cannot ban the group creator.");
+                    return (false, _localizer["CannotBanCreator"].Value);
                 }
 
                 // Only the creator or a system admin may ban administrators
                 if (!isSystemAdmin && userMembership.IsAdmin && group?.CreatorId != bannedByUserId)
                 {
                     return (false, bannerMembership != null && bannerMembership.IsAdmin
-                        ? "Administrators cannot ban other administrators."
-                        : "Moderators cannot ban administrators.");
+                        ? _localizer["AdminsCannotBanAdmins"].Value
+                        : _localizer["ModeratorsCannotBanAdmins"].Value);
                 }
 
                 // Check if already banned
@@ -92,7 +97,7 @@ namespace FreeSpeakWeb.Services
 
                 if (existingBan != null)
                 {
-                    return (false, "User is already banned from this group.");
+                    return (false, _localizer["UserAlreadyBanned"].Value);
                 }
 
                 // Get user details for audit log
@@ -135,7 +140,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error banning user {UserId} from group {GroupId}", userId, groupId);
-                return (false, "An error occurred while banning the user.");
+                return (false, _localizer["ErrorBanningUser"].Value);
             }
         }
 
@@ -157,7 +162,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isSystemAdmin && (unbannerMembership == null || (!unbannerMembership.IsAdmin && !unbannerMembership.IsModerator)))
                 {
-                    return (false, "You must be an admin or moderator to unban users.");
+                    return (false, _localizer["MustBeAdminOrModToUnban"].Value);
                 }
 
                 // Find the ban record
@@ -166,7 +171,7 @@ namespace FreeSpeakWeb.Services
 
                 if (bannedMember == null)
                 {
-                    return (false, "User is not banned from this group.");
+                    return (false, _localizer["UserNotBanned"].Value);
                 }
 
                 // Remove the ban
@@ -203,7 +208,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error unbanning user {UserId} from group {GroupId}", userId, groupId);
-                return (false, "An error occurred while unbanning the user.");
+                return (false, _localizer["ErrorUnbanningUser"].Value);
             }
         }
 

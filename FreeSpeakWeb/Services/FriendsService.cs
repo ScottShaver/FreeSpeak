@@ -2,6 +2,7 @@ using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace FreeSpeakWeb.Services
 {
@@ -18,6 +19,7 @@ namespace FreeSpeakWeb.Services
         private readonly UserPreferenceService _userPreferenceService;
         private readonly FriendshipCacheService _friendshipCache;
         private readonly IAuditLogRepository _auditLogRepository;
+        private readonly IStringLocalizer<Resources.Services.FriendsService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FriendsService"/> class.
@@ -29,6 +31,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="userPreferenceService">Service for user display preferences.</param>
         /// <param name="friendshipCache">Cache service for friend lists.</param>
         /// <param name="auditLogRepository">Repository for audit log operations.</param>
+        /// <param name="localizer">Localizer for user-facing result messages. Falls back to the neutral (English) text when omitted.</param>
         public FriendsService(
             IFriendshipRepository friendshipRepository,
             IUserRepository userRepository,
@@ -36,7 +39,8 @@ namespace FreeSpeakWeb.Services
             NotificationService notificationService,
             UserPreferenceService userPreferenceService,
             FriendshipCacheService friendshipCache,
-            IAuditLogRepository auditLogRepository)
+            IAuditLogRepository auditLogRepository,
+            IStringLocalizer<Resources.Services.FriendsService>? localizer = null)
         {
             _friendshipRepository = friendshipRepository;
             _userRepository = userRepository;
@@ -45,6 +49,7 @@ namespace FreeSpeakWeb.Services
             _userPreferenceService = userPreferenceService;
             _friendshipCache = friendshipCache;
             _auditLogRepository = auditLogRepository;
+            _localizer = ServiceLocalizer.Resolve(localizer);
         }
 
         /// <summary>
@@ -58,7 +63,7 @@ namespace FreeSpeakWeb.Services
         {
             if (requesterId == addresseeId)
             {
-                return (false, "You cannot send a friend request to yourself.");
+                return (false, _localizer["CannotRequestSelf"].Value);
             }
 
             // Check if a friendship already exists between these users
@@ -68,11 +73,11 @@ namespace FreeSpeakWeb.Services
             {
                 return existingFriendship.Status switch
                 {
-                    FriendshipStatus.Pending => (false, "A friend request is already pending between you and this user."),
-                    FriendshipStatus.Accepted => (false, "You are already friends with this user."),
-                    FriendshipStatus.Blocked => (false, "Unable to send friend request to this user."),
-                    FriendshipStatus.Rejected => (false, "A previous friend request was rejected. Please wait before sending another."),
-                    _ => (false, "Unable to send friend request.")
+                    FriendshipStatus.Pending => (false, _localizer["RequestAlreadyPending"].Value),
+                    FriendshipStatus.Accepted => (false, _localizer["AlreadyFriends"].Value),
+                    FriendshipStatus.Blocked => (false, _localizer["UnableToSendRequestToUser"].Value),
+                    FriendshipStatus.Rejected => (false, _localizer["PreviousRequestRejected"].Value),
+                    _ => (false, _localizer["UnableToSendRequest"].Value)
                 };
             }
 
@@ -139,17 +144,17 @@ namespace FreeSpeakWeb.Services
 
             if (friendship == null)
             {
-                return (false, "Friend request not found.");
+                return (false, _localizer["RequestNotFound"].Value);
             }
 
             if (friendship.AddresseeId != currentUserId)
             {
-                return (false, "You are not authorized to accept this friend request.");
+                return (false, _localizer["NotAuthorizedToAccept"].Value);
             }
 
             if (friendship.Status != FriendshipStatus.Pending)
             {
-                return (false, "This friend request is not pending.");
+                return (false, _localizer["RequestNotPending"].Value);
             }
 
             friendship.Status = FriendshipStatus.Accepted;
@@ -246,17 +251,17 @@ namespace FreeSpeakWeb.Services
 
             if (friendship == null)
             {
-                return (false, "Friend request not found.");
+                return (false, _localizer["RequestNotFound"].Value);
             }
 
             if (friendship.AddresseeId != currentUserId)
             {
-                return (false, "You are not authorized to reject this friend request.");
+                return (false, _localizer["NotAuthorizedToReject"].Value);
             }
 
             if (friendship.Status != FriendshipStatus.Pending)
             {
-                return (false, "This friend request is not pending.");
+                return (false, _localizer["RequestNotPending"].Value);
             }
 
             friendship.Status = FriendshipStatus.Rejected;
@@ -289,12 +294,12 @@ namespace FreeSpeakWeb.Services
 
             if (friendship == null)
             {
-                return (false, "Friendship not found.");
+                return (false, _localizer["FriendshipNotFound"].Value);
             }
 
             if (friendship.RequesterId != currentUserId && friendship.AddresseeId != currentUserId)
             {
-                return (false, "You are not authorized to remove this friendship.");
+                return (false, _localizer["NotAuthorizedToRemove"].Value);
             }
 
             await _friendshipRepository.DeleteAsync(friendship);
@@ -327,7 +332,7 @@ namespace FreeSpeakWeb.Services
         {
             if (blockerId == blockedUserId)
             {
-                return (false, "You cannot block yourself.");
+                return (false, _localizer["CannotBlockSelf"].Value);
             }
 
             var existingFriendship = await _friendshipRepository.GetFriendshipAsync(blockerId, blockedUserId);

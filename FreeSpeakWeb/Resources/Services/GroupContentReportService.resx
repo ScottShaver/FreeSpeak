@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+    <data name="ReporterIdRequired" xml:space="preserve">
+    <value>Reporter ID is required.</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>Group not found.</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>Post not found.</value>
+  </data>
+  <data name="MustBeMemberToReport" xml:space="preserve">
+    <value>You must be a member of the group to report content.</value>
+  </data>
+  <data name="AlreadyReportedPost" xml:space="preserve">
+    <value>You have already reported this post.</value>
+  </data>
+  <data name="SelectRuleViolated" xml:space="preserve">
+    <value>Please select which group rule was violated.</value>
+  </data>
+  <data name="RuleDoesNotExist" xml:space="preserve">
+    <value>The selected rule does not exist.</value>
+  </data>
+  <data name="ReportSubmitError" xml:space="preserve">
+    <value>An error occurred while submitting the report.</value>
+  </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>Comment not found.</value>
+  </data>
+  <data name="AlreadyReportedComment" xml:space="preserve">
+    <value>You have already reported this comment.</value>
+  </data>
+  <data name="ReviewerIdRequired" xml:space="preserve">
+    <value>Reviewer ID is required.</value>
+  </data>
+  <data name="ReportNotFound" xml:space="preserve">
+    <value>Report not found.</value>
+  </data>
+  <data name="NotAuthorizedReviewReports" xml:space="preserve">
+    <value>You are not authorized to review reports in this group.</value>
+  </data>
+  <data name="ReportAlreadyReviewed" xml:space="preserve">
+    <value>This report has already been reviewed.</value>
+  </data>
+  <data name="ReportUpdateError" xml:space="preserve">
+    <value>An error occurred while updating the report.</value>
+  </data>
+</root>

@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.DTOs;
@@ -55,7 +55,8 @@ namespace FreeSpeakWeb.Tests.Services
                 Mock.Of<IDbContextFactory<ApplicationDbContext>>(),
                 NullLogger<NotificationService>.Instance,
                 Mock.Of<IServiceScopeFactory>(),
-                Mock.Of<IAuditLogRepository>());
+                Mock.Of<IAuditLogRepository>(),
+                null);
             _notifications
                 .Setup(n => n.CreateNotificationAsync(It.IsAny<string>(), It.IsAny<NotificationType>(), It.IsAny<string?>(), It.IsAny<object?>(), It.IsAny<DateTime?>(), It.IsAny<string?>()))
                 .ReturnsAsync((true, null, null));

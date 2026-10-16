@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+      <data name="LoginRequiredPrivateGroup" xml:space="preserve">
+    <value>ì´ ë¹„ê³µê°œ ê·¸ë£¹ì˜ ê²Œì‹œë¬¼ì„ ë³´ë ¤ë©´ ë¡œê·¸ì¸í•´ì•¼ í•©ë‹ˆë‹¤.</value>
+  </data>
+  <data name="BannedCannotViewContent" xml:space="preserve">
+    <value>ì´ ê·¸ë£¹ì—ì„œ ì°¨ë‹¨ë˜ì–´ ë” ì´ìƒ ì½˜í…ì¸ ë¥¼ ë³¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.</value>
+  </data>
+  <data name="MustBeMemberToViewPost" xml:space="preserve">
+    <value>ì´ ê²Œì‹œë¬¼ì„ ë³´ë ¤ë©´ ì´ ê·¸ë£¹ì˜ íšŒì›ì´ì–´ì•¼ í•©ë‹ˆë‹¤.</value>
+  </data>
+  <data name="UnableToVerifyAccess" xml:space="preserve">
+    <value>ì´ ê·¸ë£¹ì— ëŒ€í•œ ì•¡ì„¸ìŠ¤ë¥¼ í™•ì¸í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.</value>
+  </data>
+  <data name="MustBeMemberToPerformAction" xml:space="preserve">
+    <value>ì´ ìž‘ì—…ì„ ìˆ˜í–‰í•˜ë ¤ë©´ ê·¸ë£¹ íšŒì›ì´ì–´ì•¼ í•©ë‹ˆë‹¤.</value>
+  </data>
+  <data name="BannedFromGroup" xml:space="preserve">
+    <value>ì´ ê·¸ë£¹ì—ì„œ ì°¨ë‹¨ë˜ì—ˆìŠµë‹ˆë‹¤.</value>
+  </data>
+  <data name="MustBeMemberToPost" xml:space="preserve">
+    <value>ê²Œì‹œí•˜ë ¤ë©´ ê·¸ë£¹ íšŒì›ì´ì–´ì•¼ í•©ë‹ˆë‹¤.</value>
+  </data>
+  <data name="NotAuthorizedToDelete" xml:space="preserve">
+    <value>ì´ ì½˜í…ì¸ ë¥¼ ì‚­ì œí•  ê¶Œí•œì´ ì—†ìŠµë‹ˆë‹¤.</value>
+  </data>
+</root>

@@ -2,6 +2,7 @@ using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace FreeSpeakWeb.Repositories
 {
@@ -15,6 +16,7 @@ namespace FreeSpeakWeb.Repositories
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupFileRepository> _logger;
         private readonly ProfilerHelper _profiler;
+        private readonly IStringLocalizer<Resources.Repositories.GroupFileRepository> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupFileRepository"/> class.
@@ -22,14 +24,17 @@ namespace FreeSpeakWeb.Repositories
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording repository operations.</param>
         /// <param name="profiler">Helper for profiling repository operations.</param>
+        /// <param name="localizer">Optional localizer for user-facing result messages.</param>
         public GroupFileRepository(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupFileRepository> logger,
-            ProfilerHelper profiler)
+            ProfilerHelper profiler,
+            IStringLocalizer<Resources.Repositories.GroupFileRepository>? localizer = null)
         {
             _contextFactory = contextFactory;
             _logger = logger;
             _profiler = profiler;
+            _localizer = ServiceLocalizer.Resolve(localizer);
         }
 
         #region Basic CRUD Operations
@@ -342,12 +347,12 @@ namespace FreeSpeakWeb.Repositories
                 var file = await context.GroupFiles.FindAsync(fileId);
                 if (file == null)
                 {
-                    return (false, "File not found.");
+                    return (false, _localizer["FileNotFound"]);
                 }
 
                 if (file.Status != GroupFileStatus.Pending)
                 {
-                    return (false, "File is not pending approval.");
+                    return (false, _localizer["FileNotPendingApproval"]);
                 }
 
                 file.Status = GroupFileStatus.Approved;
@@ -363,7 +368,7 @@ namespace FreeSpeakWeb.Repositories
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error approving file {FileId}", fileId);
-                return (false, "An error occurred while approving the file.");
+                return (false, _localizer["ApproveError"]);
             }
         }
 
@@ -378,12 +383,12 @@ namespace FreeSpeakWeb.Repositories
                 var file = await context.GroupFiles.FindAsync(fileId);
                 if (file == null)
                 {
-                    return (false, "File not found.", null);
+                    return (false, _localizer["FileNotFound"], null);
                 }
 
                 if (file.Status != GroupFileStatus.Pending)
                 {
-                    return (false, "File is not pending approval.", null);
+                    return (false, _localizer["FileNotPendingApproval"], null);
                 }
 
                 var storedFileName = file.StoredFileName;
@@ -401,7 +406,7 @@ namespace FreeSpeakWeb.Repositories
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error declining file {FileId}", fileId);
-                return (false, "An error occurred while declining the file.", null);
+                return (false, _localizer["DeclineError"], null);
             }
         }
 
@@ -416,7 +421,7 @@ namespace FreeSpeakWeb.Repositories
                 var file = await context.GroupFiles.FindAsync(fileId);
                 if (file == null)
                 {
-                    return (false, "File not found.", null);
+                    return (false, _localizer["FileNotFound"], null);
                 }
 
                 var storedFileName = file.StoredFileName;
@@ -430,7 +435,7 @@ namespace FreeSpeakWeb.Repositories
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting file {FileId}", fileId);
-                return (false, "An error occurred while deleting the file.", null);
+                return (false, _localizer["DeleteError"], null);
             }
         }
 

@@ -5,6 +5,7 @@ using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services.Abstractions;
 using MailKit.Security;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
@@ -74,6 +75,7 @@ namespace FreeSpeakWeb.Services.Settings
         private readonly EmailTestRateLimiter _rateLimiter;
         private readonly TimeProvider _timeProvider;
         private readonly ILogger<EmailTestService> _logger;
+        private readonly IStringLocalizer<Resources.Services.Settings.EmailTestService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmailTestService"/> class.
@@ -86,6 +88,7 @@ namespace FreeSpeakWeb.Services.Settings
         /// <param name="rateLimiter">The per-administrator rate limiter.</param>
         /// <param name="timeProvider">The time provider.</param>
         /// <param name="logger">The logger.</param>
+        /// <param name="localizer">Optional localizer for the test email subject and body.</param>
         public EmailTestService(
             IOptionsMonitor<SmtpSettings> smtpSettings,
             IOptions<SiteSettings> siteSettings,
@@ -94,8 +97,10 @@ namespace FreeSpeakWeb.Services.Settings
             IAuditLogRepository auditLogRepository,
             EmailTestRateLimiter rateLimiter,
             TimeProvider timeProvider,
-            ILogger<EmailTestService> logger)
+            ILogger<EmailTestService> logger,
+            IStringLocalizer<Resources.Services.Settings.EmailTestService>? localizer = null)
         {
+            _localizer = ServiceLocalizer.Resolve(localizer);
             _smtpSettings = smtpSettings;
             _siteSettings = siteSettings;
             _transport = transport;
@@ -133,10 +138,10 @@ namespace FreeSpeakWeb.Services.Settings
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress(settings.SenderName, settings.SenderEmail));
                 message.To.Add(new MailboxAddress(to, to));
-                message.Subject = $"{_siteSettings.Value.SiteName} - Test email";
+                message.Subject = string.Format(_localizer["TestEmailSubject"], _siteSettings.Value.SiteName);
                 message.Body = new BodyBuilder
                 {
-                    HtmlBody = "<p>This is a test email sent from the FreeSpeak system administration area. Your SMTP settings work.</p>"
+                    HtmlBody = _localizer["TestEmailBody"]
                 }.ToMessageBody();
 
                 await _transport.SendAsync(settings, message, cancellationToken);

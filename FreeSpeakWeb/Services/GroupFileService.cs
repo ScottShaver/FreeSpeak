@@ -3,6 +3,7 @@ using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace FreeSpeakWeb.Services
 {
@@ -24,6 +25,7 @@ namespace FreeSpeakWeb.Services
         private readonly IGroupModerationLogService? _moderationLog;
         private readonly IRoleService? _roleService;
         private readonly string _uploadsBasePath;
+        private readonly IStringLocalizer<Resources.Services.GroupFileService> _localizer;
 
         /// <summary>
         /// Maximum allowed size for a single file upload (50MB).
@@ -44,7 +46,8 @@ namespace FreeSpeakWeb.Services
         /// <param name="groupMemberService">Service for group member operations.</param>
         /// <param name="moderationLog">Optional per-group moderation log; when omitted nothing is recorded there.</param>
         /// <param name="roleService">Optional role service; when provided, system moderators and administrators may manage files in any group.</param>
-        public GroupFileService(
+                /// <param name="localizer">Optional localizer for user-facing result messages.</param>
+                public GroupFileService(
             IGroupFileRepository fileRepository,
             IGroupRepository groupRepository,
             IDbContextFactory<ApplicationDbContext> contextFactory,
@@ -55,9 +58,11 @@ namespace FreeSpeakWeb.Services
             UserPreferenceService userPreferenceService,
             GroupMemberService groupMemberService,
             IGroupModerationLogService? moderationLog = null,
-            IRoleService? roleService = null)
-        {
-            _moderationLog = moderationLog;
+            IRoleService? roleService = null,
+                IStringLocalizer<Resources.Services.GroupFileService>? localizer = null)
+            {
+                _localizer = ServiceLocalizer.Resolve(localizer);
+                _moderationLog = moderationLog;
             _roleService = roleService;
             _fileRepository = fileRepository;
             _groupRepository = groupRepository;
@@ -89,40 +94,40 @@ namespace FreeSpeakWeb.Services
                 // Validate inputs
                 if (string.IsNullOrEmpty(uploaderId) || !Guid.TryParse(uploaderId, out _))
                 {
-                    return GroupFileUploadResult.Failed("Invalid user ID format.");
+                    return GroupFileUploadResult.Failed(_localizer["InvalidUserIdFormat"]);
                 }
 
                 if (string.IsNullOrWhiteSpace(fileName))
                 {
-                    return GroupFileUploadResult.Failed("Filename is required.");
+                    return GroupFileUploadResult.Failed(_localizer["FilenameIsRequired"]);
                 }
 
                 if (fileSize <= 0)
                 {
-                    return GroupFileUploadResult.Failed("Invalid file size.");
+                    return GroupFileUploadResult.Failed(_localizer["InvalidFileSize"]);
                 }
 
                 if (fileSize > MaxFileSizeBytes)
                 {
-                    return GroupFileUploadResult.Failed($"File exceeds the maximum size of {MaxFileSizeBytes / 1024 / 1024}MB.");
+                    return GroupFileUploadResult.Failed(string.Format(_localizer["FileExceedsTheMaximum"], MaxFileSizeBytes / 1024 / 1024));
                 }
 
                 // Check if user can upload files
                 if (!await CanUploadFilesAsync(groupId, uploaderId))
                 {
-                    return GroupFileUploadResult.Failed("You do not have permission to upload files to this group.");
+                    return GroupFileUploadResult.Failed(_localizer["NoPermissionToUpload"]);
                 }
 
                 // Get group to check settings
                 var group = await _groupRepository.GetByIdAsync(groupId);
                 if (group == null)
                 {
-                    return GroupFileUploadResult.Failed("Group not found.");
+                    return GroupFileUploadResult.Failed(_localizer["GroupNotFound"]);
                 }
 
                 if (!group.EnableFileUploads)
                 {
-                    return GroupFileUploadResult.Failed("File uploads are not enabled for this group.");
+                    return GroupFileUploadResult.Failed(_localizer["FileUploadsNotEnabled"]);
                 }
 
                 // Read file bytes for validation
@@ -137,7 +142,7 @@ namespace FreeSpeakWeb.Services
                 {
                     _logger.LogWarning("File {FileName} failed signature validation for user {UploaderId}: {Error}",
                         fileName, uploaderId, signatureValidation.ErrorMessage);
-                    return GroupFileUploadResult.Failed($"File validation failed: {signatureValidation.ErrorMessage}");
+                    return GroupFileUploadResult.Failed(string.Format(_localizer["FileValidationFailed"], signatureValidation.ErrorMessage));
                 }
 
                 // SECURITY: Scan for viruses/malware (synchronous for immediate feedback)
@@ -152,9 +157,9 @@ namespace FreeSpeakWeb.Services
                         _logger.LogWarning("File {FileName} failed virus scan for user {UploaderId}: {Virus}",
                             fileName, uploaderId, virusScanResult.VirusName ?? virusScanResult.ErrorMessage);
                         var reason = virusScanResult.VirusName != null
-                            ? $"Malware detected: {virusScanResult.VirusName}"
-                            : virusScanResult.ErrorMessage ?? "Virus scan failed";
-                        return GroupFileUploadResult.Failed($"File rejected: {reason}");
+                            ? string.Format(_localizer["MalwareDetected"], virusScanResult.VirusName)
+                            : virusScanResult.ErrorMessage ?? _localizer["VirusScanFailed"].Value;
+                        return GroupFileUploadResult.Failed(string.Format(_localizer["FileRejected"], reason));
                     }
                 }
                 else
@@ -209,7 +214,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error uploading file {FileName} to group {GroupId}", fileName, groupId);
-                return GroupFileUploadResult.Failed("An error occurred while uploading the file.");
+                return GroupFileUploadResult.Failed(_localizer["UploadError"]);
             }
         }
 
@@ -225,7 +230,7 @@ namespace FreeSpeakWeb.Services
                 var (file, filePath, error) = await ResolveDownloadAsync(fileId, userId);
                 if (file == null || filePath == null)
                 {
-                    return GroupFileDownloadResult.Failed(error ?? "File not found.");
+                    return GroupFileDownloadResult.Failed(error ?? _localizer["FileNotFound"].Value);
                 }
 
                 // Increment download count (fire and forget)
@@ -239,7 +244,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting file {FileId} for download", fileId);
-                return GroupFileDownloadResult.Failed("An error occurred while accessing the file.");
+                return GroupFileDownloadResult.Failed(_localizer["AccessError"]);
             }
         }
 
@@ -254,7 +259,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error checking download availability for file {FileId}", fileId);
-                return (false, "An error occurred while accessing the file.");
+                return (false, _localizer["AccessError"]);
             }
         }
 
@@ -269,14 +274,14 @@ namespace FreeSpeakWeb.Services
             var file = await _fileRepository.GetByIdAsync(fileId, includeUploader: true);
             if (file == null)
             {
-                return (null, null, "File not found.");
+                return (null, null, _localizer["FileNotFound"]);
             }
 
             // Check if user is a member of the group
             var isMember = await _groupMemberService.IsMemberAsync(file.GroupId, userId);
             if (!isMember)
             {
-                return (null, null, "You do not have permission to access this file.");
+                return (null, null, _localizer["NoPermissionToAccess"]);
             }
 
             // Check file status - only approved files or user's own files
@@ -286,7 +291,7 @@ namespace FreeSpeakWeb.Services
                 var canManage = await CanManageFilesAsync(file.GroupId, userId);
                 if (!canManage)
                 {
-                    return (null, null, "This file is not yet available for download.");
+                    return (null, null, _localizer["FileNotYetAvailable"]);
                 }
             }
 
@@ -294,7 +299,7 @@ namespace FreeSpeakWeb.Services
             if (!File.Exists(filePath))
             {
                 _logger.LogWarning("File {FileId} physical file not found at {Path}", fileId, filePath);
-                return (null, null, "File not found on disk.");
+                return (null, null, _localizer["FileNotFoundOnDisk"]);
             }
 
             return (file, filePath, null);
@@ -366,13 +371,13 @@ namespace FreeSpeakWeb.Services
             var file = await _fileRepository.GetByIdAsync(fileId);
             if (file == null)
             {
-                return (false, "File not found.");
+                return (false, _localizer["FileNotFound"]);
             }
 
             var canManage = await CanManageFilesAsync(file.GroupId, reviewerId);
             if (!canManage)
             {
-                return (false, "You do not have permission to approve files.");
+                return (false, _localizer["NoPermissionToApprove"]);
             }
 
             var result = await _fileRepository.ApproveFileAsync(fileId, reviewerId);
@@ -430,13 +435,13 @@ namespace FreeSpeakWeb.Services
             var file = await _fileRepository.GetByIdAsync(fileId);
             if (file == null)
             {
-                return (false, "File not found.");
+                return (false, _localizer["FileNotFound"]);
             }
 
             var canManage = await CanManageFilesAsync(file.GroupId, reviewerId);
             if (!canManage)
             {
-                return (false, "You do not have permission to decline files.");
+                return (false, _localizer["NoPermissionToDecline"]);
             }
 
             var result = await _fileRepository.DeclineFileAsync(fileId, reviewerId, reason);
@@ -467,7 +472,7 @@ namespace FreeSpeakWeb.Services
             var file = await _fileRepository.GetByIdAsync(fileId);
             if (file == null)
             {
-                return (false, "File not found.");
+                return (false, _localizer["FileNotFound"]);
             }
 
             // Check permissions - uploader can delete their own files, or admins/mods
@@ -476,7 +481,7 @@ namespace FreeSpeakWeb.Services
                 var canManage = await CanManageFilesAsync(file.GroupId, deleterId);
                 if (!canManage)
                 {
-                    return (false, "You do not have permission to delete this file.");
+                    return (false, _localizer["NoPermissionToDelete"]);
                 }
             }
 

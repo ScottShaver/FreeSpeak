@@ -6,6 +6,7 @@ using FreeSpeakWeb.Mapping;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 
 namespace FreeSpeakWeb.Services
@@ -33,6 +34,7 @@ namespace FreeSpeakWeb.Services
         private readonly PostNotificationHelper _notificationHelper;
         private readonly IAuditLogRepository _auditLogRepository;
         private readonly IFriendshipRepository _friendshipRepository;
+        private readonly IStringLocalizer<Resources.Services.PostService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PostService"/> class.
@@ -53,6 +55,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="notificationHelper">Helper for creating post-related notifications.</param>
         /// <param name="auditLogRepository">Repository for audit log operations.</param>
         /// <param name="friendshipRepository">Repository for friendship operations.</param>
+        /// <param name="localizer">Localizer for user-facing result messages. Falls back to the neutral (English) text when omitted.</param>
         public PostService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             IFeedPostRepository<Post, PostImage> postRepository,
@@ -69,7 +72,8 @@ namespace FreeSpeakWeb.Services
             UserPreferenceService userPreferenceService,
             PostNotificationHelper notificationHelper,
             IAuditLogRepository auditLogRepository,
-            IFriendshipRepository friendshipRepository)
+            IFriendshipRepository friendshipRepository,
+            IStringLocalizer<Resources.Services.PostService>? localizer = null)
         {
             _contextFactory = contextFactory;
             _postRepository = postRepository;
@@ -87,6 +91,7 @@ namespace FreeSpeakWeb.Services
             _notificationHelper = notificationHelper;
             _auditLogRepository = auditLogRepository;
             _friendshipRepository = friendshipRepository;
+            _localizer = ServiceLocalizer.Resolve(localizer);
         }
 
         #region Post Operations
@@ -105,7 +110,7 @@ namespace FreeSpeakWeb.Services
             // Allow empty content if images are provided
             if (string.IsNullOrWhiteSpace(content) && (imageUrls == null || !imageUrls.Any()))
             {
-                return (false, "Post must contain either text or images.", null);
+                return (false, _localizer["PostRequiresContent"].Value, null);
             }
 
             // Validate friendId if provided
@@ -114,12 +119,12 @@ namespace FreeSpeakWeb.Services
                 var friendship = await _friendshipRepository.GetFriendshipAsync(authorId, friendId);
                 if (friendship == null)
                 {
-                    return (false, "No friendship relationship found.", null);
+                    return (false, _localizer["NoFriendshipFound"].Value, null);
                 }
 
                 if (friendship.Status != FriendshipStatus.Accepted)
                 {
-                    return (false, "You can only post on the feed of accepted friends.", null);
+                    return (false, _localizer["FriendsFeedOnly"].Value, null);
                 }
             }
 
@@ -137,7 +142,7 @@ namespace FreeSpeakWeb.Services
                 var result = await _postRepository.CreateAsync(post);
                 if (!result.Success || result.Post == null)
                 {
-                    return (false, result.ErrorMessage ?? "Failed to create post.", null);
+                    return (false, result.ErrorMessage ?? _localizer["CreatePostFailed"].Value, null);
                 }
 
                 // Add images if provided
@@ -169,7 +174,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating post for user {AuthorId}", authorId);
-                return (false, "An error occurred while creating the post.", null);
+                return (false, _localizer["CreatePostError"].Value, null);
             }
         }
 
@@ -194,7 +199,7 @@ namespace FreeSpeakWeb.Services
 
             if (string.IsNullOrWhiteSpace(newContent) && !hasImages && (removedImageIds == null || !removedImageIds.Any()))
             {
-                return (false, "Post must contain either text or images.", null);
+                return (false, _localizer["PostRequiresContent"].Value, null);
             }
 
             try
@@ -233,7 +238,7 @@ namespace FreeSpeakWeb.Services
                 var post = await _postRepository.GetByIdAsync(postId, includeAuthor: false, includeImages: false);
                 if (post != null && string.IsNullOrWhiteSpace(post.Content) && !updatedImages.Any())
                 {
-                    return (false, "Post must contain either text or images.", null);
+                    return (false, _localizer["PostRequiresContent"].Value, null);
                 }
 
                 _logger.LogInformation("Post {PostId} updated by user {UserId}", postId, userId);
@@ -242,7 +247,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while updating the post.", null);
+                return (false, _localizer["UpdatePostError"].Value, null);
             }
         }
 
@@ -273,7 +278,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating post {PostId} audience for user {UserId}", postId, userId);
-                return (false, "An error occurred while updating the post audience.");
+                return (false, _localizer["UpdateAudienceError"].Value);
             }
         }
 
@@ -315,12 +320,12 @@ namespace FreeSpeakWeb.Services
 
                 if (post == null)
                 {
-                    return (false, "Post not found.");
+                    return (false, _localizer["PostNotFound"].Value);
                 }
 
                 if (!asModerator && post.AuthorId != userId)
                 {
-                    return (false, "You are not authorized to delete this post.");
+                    return (false, _localizer["NotAuthorizedDeletePost"].Value);
                 }
 
                 // Delete all pinned post records
@@ -482,7 +487,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while deleting the post.");
+                return (false, _localizer["DeletePostError"].Value);
             }
         }
 
@@ -677,13 +682,13 @@ namespace FreeSpeakWeb.Services
                 // Check if post exists
                 if (post == null)
                 {
-                    return (false, "Sorry, this post is no longer available.", null);
+                    return (false, _localizer["PostUnavailable"].Value, null);
                 }
 
                 // Check if post is public
                 if (post.AudienceType != AudienceType.Public)
                 {
-                    return (false, "Sorry, this post is no longer available.", null);
+                    return (false, _localizer["PostUnavailable"].Value, null);
                 }
 
                 // Build the PostViewModel
@@ -737,7 +742,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving public post {PostId}", postId);
-                return (false, "An error occurred while loading this post.", null);
+                return (false, _localizer["LoadPostError"].Value, null);
             }
         }
 
@@ -816,7 +821,7 @@ namespace FreeSpeakWeb.Services
         {
             if (string.IsNullOrWhiteSpace(content))
             {
-                return (false, "Comment content cannot be empty.", null);
+                return (false, _localizer["CommentEmpty"].Value, null);
             }
 
             try
@@ -829,7 +834,7 @@ namespace FreeSpeakWeb.Services
                     .FirstOrDefaultAsync(p => p.Id == postId);
                 if (post == null)
                 {
-                    return (false, "Post not found.", null);
+                    return (false, _localizer["PostNotFound"].Value, null);
                 }
 
                 Comment? parentComment = null;
@@ -841,18 +846,18 @@ namespace FreeSpeakWeb.Services
                         .FirstOrDefaultAsync(c => c.Id == parentCommentId.Value);
                     if (parentComment == null)
                     {
-                        return (false, "Parent comment not found.", null);
+                        return (false, _localizer["ParentCommentNotFound"].Value, null);
                     }
                     if (parentComment.PostId != postId)
                     {
-                        return (false, "Parent comment does not belong to this post.", null);
+                        return (false, _localizer["ParentCommentMismatch"].Value, null);
                     }
 
                     // Replies may be at most MaxFeedPostCommentDepth levels below a top-level comment (depth 0)
                     var parentDepth = await GetCommentDepthAsync(context.Comments, parentComment.ParentCommentId);
                     if (parentDepth + 1 > _siteSettings.MaxFeedPostCommentDepth)
                     {
-                        return (false, $"Replies cannot be nested more than {_siteSettings.MaxFeedPostCommentDepth} levels deep.", null);
+                        return (false, string.Format(_localizer["ReplyDepthExceeded"], _siteSettings.MaxFeedPostCommentDepth), null);
                     }
                 }
                 else
@@ -863,7 +868,7 @@ namespace FreeSpeakWeb.Services
 
                     if (directCommentCount >= _siteSettings.MaxFeedPostDirectCommentCount)
                     {
-                        return (false, $"This post has reached the maximum of {_siteSettings.MaxFeedPostDirectCommentCount} direct comments.", null);
+                        return (false, string.Format(_localizer["MaxDirectComments"], _siteSettings.MaxFeedPostDirectCommentCount), null);
                     }
                 }
 
@@ -924,7 +929,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error adding comment to post {PostId} for user {AuthorId}", postId, authorId);
-                return (false, "An error occurred while adding the comment.", null);
+                return (false, _localizer["AddCommentError"].Value, null);
             }
         }
 
@@ -962,12 +967,12 @@ namespace FreeSpeakWeb.Services
 
                 if (comment == null)
                 {
-                    return (false, "Comment not found.", 0);
+                    return (false, _localizer["CommentNotFound"].Value, 0);
                 }
 
                 if (!asModerator && comment.AuthorId != userId)
                 {
-                    return (false, "You are not authorized to delete this comment.", 0);
+                    return (false, _localizer["NotAuthorizedDeleteComment"].Value, 0);
                 }
 
                 var post = comment.Post;
@@ -1003,7 +1008,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting comment {CommentId} for user {UserId}", commentId, userId);
-                return (false, "An error occurred while deleting the comment.", 0);
+                return (false, _localizer["DeleteCommentError"].Value, 0);
             }
         }
 
@@ -1222,7 +1227,7 @@ namespace FreeSpeakWeb.Services
                 var post = await context.Posts.FindAsync(postId);
                 if (post == null)
                 {
-                    return (false, "Post not found.", false);
+                    return (false, _localizer["PostNotFound"].Value, false);
                 }
 
                 var existingLike = await context.Likes
@@ -1259,7 +1264,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error toggling like on post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while processing your like.", false);
+                return (false, _localizer["LikeError"].Value, false);
             }
         }
 
@@ -1352,7 +1357,7 @@ namespace FreeSpeakWeb.Services
                     .FirstOrDefaultAsync(p => p.Id == postId);
                 if (post == null)
                 {
-                    return (false, "Post not found.");
+                    return (false, _localizer["PostNotFound"].Value);
                 }
 
                 var existingLike = await context.Likes
@@ -1411,7 +1416,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error adding/updating reaction on post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while processing your reaction.");
+                return (false, _localizer["ReactionError"].Value);
             }
         }
 
@@ -1517,7 +1522,7 @@ namespace FreeSpeakWeb.Services
                 var post = await context.Posts.FindAsync(postId);
                 if (post == null)
                 {
-                    return (false, "Post not found.");
+                    return (false, _localizer["PostNotFound"].Value);
                 }
 
                 var existingLike = await context.Likes
@@ -1543,12 +1548,12 @@ namespace FreeSpeakWeb.Services
                     return (true, null);
                 }
 
-                return (false, "No reaction to remove.");
+                return (false, _localizer["NoReactionToRemove"].Value);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error removing reaction from post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while removing your reaction.");
+                return (false, _localizer["RemoveReactionError"].Value);
             }
         }
 
@@ -1601,12 +1606,12 @@ namespace FreeSpeakWeb.Services
                 var post = await context.Posts.FindAsync(postId);
                 if (post == null)
                 {
-                    return (false, "Post not found.", null);
+                    return (false, _localizer["PostNotFound"].Value, null);
                 }
 
                 if (post.AuthorId != userId)
                 {
-                    return (false, "You are not authorized to add images to this post.", null);
+                    return (false, _localizer["NotAuthorizedAddImages"].Value, null);
                 }
 
                 // Get the next display order
@@ -1631,7 +1636,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error adding image to post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while adding the image.", null);
+                return (false, _localizer["AddImageError"].Value, null);
             }
         }
 
@@ -1653,12 +1658,12 @@ namespace FreeSpeakWeb.Services
 
                 if (postImage == null)
                 {
-                    return (false, "Image not found.");
+                    return (false, _localizer["ImageNotFound"].Value);
                 }
 
                 if (postImage.Post.AuthorId != userId)
                 {
-                    return (false, "You are not authorized to remove this image.");
+                    return (false, _localizer["NotAuthorizedRemoveImage"].Value);
                 }
 
                 context.PostImages.Remove(postImage);
@@ -1670,7 +1675,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error removing image {ImageId} for user {UserId}", imageId, userId);
-                return (false, "An error occurred while removing the image.");
+                return (false, _localizer["RemoveImageError"].Value);
             }
         }
 
@@ -1695,12 +1700,12 @@ namespace FreeSpeakWeb.Services
 
                 if (postImage == null)
                 {
-                    return (false, "Image not found.");
+                    return (false, _localizer["ImageNotFound"].Value);
                 }
 
                 if (postImage.Post.AuthorId != userId)
                 {
-                    return (false, "You are not authorized to remove this image.");
+                    return (false, _localizer["NotAuthorizedRemoveImage"].Value);
                 }
 
                 var otherImageCount = await context.PostImages
@@ -1708,7 +1713,7 @@ namespace FreeSpeakWeb.Services
 
                 if (otherImageCount == 0 && string.IsNullOrWhiteSpace(postImage.Post.Content))
                 {
-                    return (false, "This is the only content of its post. Delete the post instead.");
+                    return (false, _localizer["OnlyContentDeletePost"].Value);
                 }
 
                 var imageUrl = postImage.ImageUrl;
@@ -1727,7 +1732,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting uploaded image {ImageId} for user {UserId}", imageId, userId);
-                return (false, "An error occurred while deleting the image.");
+                return (false, _localizer["DeleteImageError"].Value);
             }
         }
 
@@ -1814,7 +1819,7 @@ namespace FreeSpeakWeb.Services
                     .FirstOrDefaultAsync(c => c.Id == commentId);
                 if (comment == null)
                 {
-                    return (false, "Comment not found.");
+                    return (false, _localizer["CommentNotFound"].Value);
                 }
 
                 var existingLike = await context.CommentLikes
@@ -1873,7 +1878,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error adding/updating reaction on comment {CommentId} for user {UserId}", commentId, userId);
-                return (false, "An error occurred while processing your reaction.");
+                return (false, _localizer["ReactionError"].Value);
             }
         }
 
@@ -1892,7 +1897,7 @@ namespace FreeSpeakWeb.Services
                 var comment = await context.Comments.FindAsync(commentId);
                 if (comment == null)
                 {
-                    return (false, "Comment not found.");
+                    return (false, _localizer["CommentNotFound"].Value);
                 }
 
                 var existingLike = await context.CommentLikes
@@ -1917,12 +1922,12 @@ namespace FreeSpeakWeb.Services
                     return (true, null);
                 }
 
-                return (false, "No reaction to remove.");
+                return (false, _localizer["NoReactionToRemove"].Value);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error removing reaction from comment {CommentId} for user {UserId}", commentId, userId);
-                return (false, "An error occurred while removing your reaction.");
+                return (false, _localizer["RemoveReactionError"].Value);
             }
         }
 
@@ -2099,7 +2104,7 @@ namespace FreeSpeakWeb.Services
                     .FirstOrDefaultAsync();
                 if (post == null)
                 {
-                    return (false, "Post not found.");
+                    return (false, _localizer["PostNotFound"].Value);
                 }
 
                 // A user may only pin posts they are allowed to view
@@ -2109,7 +2114,7 @@ namespace FreeSpeakWeb.Services
                     && !await _friendshipRepository.AreFriendsAsync(post.AuthorId, userId))
                 {
                     _logger.LogWarning("User {UserId} attempted to pin post {PostId} they cannot view", userId, postId);
-                    return (false, "You do not have permission to pin this post.");
+                    return (false, _localizer["NoPermissionToPin"].Value);
                 }
 
                 // Check if already pinned
@@ -2144,7 +2149,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error pinning post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while pinning the post.");
+                return (false, _localizer["PinError"].Value);
             }
         }
 
@@ -2183,7 +2188,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error unpinning post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while unpinning the post.");
+                return (false, _localizer["UnpinError"].Value);
             }
         }
 
@@ -2265,7 +2270,7 @@ namespace FreeSpeakWeb.Services
                 var postExists = await context.Posts.AnyAsync(p => p.Id == postId);
                 if (!postExists)
                 {
-                    return (false, "Post not found.");
+                    return (false, _localizer["PostNotFound"].Value);
                 }
 
                 // Check if already muted
@@ -2294,7 +2299,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error muting notifications for post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while muting notifications.");
+                return (false, _localizer["MuteError"].Value);
             }
         }
 
@@ -2327,7 +2332,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error unmuting notifications for post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while unmuting notifications.");
+                return (false, _localizer["UnmuteError"].Value);
             }
         }
 
@@ -2427,7 +2432,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting uploaded images for user {UserId}", userId);
-                return (false, null, 0, "An error occurred while retrieving your images.");
+                return (false, null, 0, _localizer["RetrieveImagesError"].Value);
             }
         }
 
@@ -2468,7 +2473,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting uploaded videos for user {UserId}", userId);
-                return (false, null, 0, "An error occurred while retrieving your videos.");
+                return (false, null, 0, _localizer["RetrieveVideosError"].Value);
             }
         }
 

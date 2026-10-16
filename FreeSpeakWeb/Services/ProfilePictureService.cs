@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Localization;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Formats.Jpeg;
@@ -12,6 +13,7 @@ public class ProfilePictureService
 {
     private readonly IWebHostEnvironment _environment;
     private readonly ILogger<ProfilePictureService> _logger;
+    private readonly IStringLocalizer<Resources.Services.ProfilePictureService> _localizer;
 
     /// <summary>
     /// Target size in pixels for profile picture dimensions (square).
@@ -28,10 +30,12 @@ public class ProfilePictureService
     /// </summary>
     /// <param name="environment">The web host environment for accessing content paths.</param>
     /// <param name="logger">The logger for diagnostic output.</param>
-    public ProfilePictureService(IWebHostEnvironment environment, ILogger<ProfilePictureService> logger)
+    /// <param name="localizer">Localizer for user-facing result messages. Falls back to the neutral (English) text when omitted.</param>
+    public ProfilePictureService(IWebHostEnvironment environment, ILogger<ProfilePictureService> logger, IStringLocalizer<Resources.Services.ProfilePictureService>? localizer = null)
     {
         _environment = environment;
         _logger = logger;
+        _localizer = ServiceLocalizer.Resolve(localizer);
     }
 
     /// <summary>
@@ -55,7 +59,7 @@ public class ProfilePictureService
             // Validate userId length to ensure generated URL won't exceed database limit
             if (string.IsNullOrWhiteSpace(userId))
             {
-                return (false, "User ID is required.", null);
+                return (false, _localizer["UserIdRequired"].Value, null);
             }
 
             // The generated URL format is: /api/secure-files/profile-picture/{userId}
@@ -64,13 +68,13 @@ public class ProfilePictureService
             if (relativeUrl.Length > 75)
             {
                 _logger.LogError("Generated profile picture URL exceeds 75 character limit for user {UserId}. URL: {Url}", userId, relativeUrl);
-                return (false, "Unable to generate profile picture URL. User ID is too long.", null);
+                return (false, _localizer["UserIdTooLong"].Value, null);
             }
 
             // Check file size
             if (imageStream.Length > MaxFileSizeBytes)
             {
-                return (false, "Image file size must not exceed 5MB.", null);
+                return (false, _localizer["FileTooLarge"].Value, null);
             }
 
             // Ensure the profiles directory exists
@@ -109,12 +113,12 @@ public class ProfilePictureService
         }
         catch (UnknownImageFormatException)
         {
-            return (false, "Invalid image format. Please upload a valid image file.", null);
+            return (false, _localizer["InvalidImageFormat"].Value, null);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error saving profile picture for user {UserId}", userId);
-            return (false, "An error occurred while processing the image.", null);
+            return (false, _localizer["ProcessingError"].Value, null);
         }
     }
 

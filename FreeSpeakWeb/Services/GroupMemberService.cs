@@ -4,6 +4,7 @@ using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace FreeSpeakWeb.Services
 {
@@ -17,6 +18,7 @@ namespace FreeSpeakWeb.Services
         private readonly NotificationService _notificationService;
         private readonly IRoleService _roleService;
         private readonly IGroupModerationLogService? _moderationLog;
+        private readonly IStringLocalizer<Resources.Services.GroupMemberService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupMemberService"/> class.
@@ -29,6 +31,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="notificationService">Service for sending notifications.</param>
         /// <param name="roleService">Service for role operations.</param>
         /// <param name="moderationLog">Optional per-group moderation log; when omitted nothing is recorded there.</param>
+        /// <param name="localizer">Optional localizer for user-facing result messages; when omitted the neutral (English) text is used.</param>
         public GroupMemberService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             IGroupMemberRepository memberRepository,
@@ -37,7 +40,8 @@ namespace FreeSpeakWeb.Services
             IAuditLogRepository auditLogRepository,
             NotificationService notificationService,
             IRoleService roleService,
-            IGroupModerationLogService? moderationLog = null)
+            IGroupModerationLogService? moderationLog = null,
+            IStringLocalizer<Resources.Services.GroupMemberService>? localizer = null)
         {
             _contextFactory = contextFactory;
             _memberRepository = memberRepository;
@@ -47,6 +51,7 @@ namespace FreeSpeakWeb.Services
             _notificationService = notificationService;
             _roleService = roleService;
             _moderationLog = moderationLog;
+            _localizer = ServiceLocalizer.Resolve(localizer);
         }
 
         /// <summary>
@@ -91,7 +96,7 @@ namespace FreeSpeakWeb.Services
         {
             if (string.IsNullOrWhiteSpace(userId))
             {
-                return (false, "User ID is required.", null);
+                return (false, _localizer["UserIdRequired"].Value, null);
             }
 
             try
@@ -102,13 +107,13 @@ namespace FreeSpeakWeb.Services
                 var group = await context.Groups.FindAsync(groupId);
                 if (group == null)
                 {
-                    return (false, "Group not found.", null);
+                    return (false, _localizer["GroupNotFound"].Value, null);
                 }
 
                 // Check if group requires rules acceptance
                 if (group.RequireAcceptRules && !hasAgreedToRules)
                 {
-                    return (false, "You must agree to the group rules before submitting a join request.", null);
+                    return (false, _localizer["MustAgreeToRulesBeforeJoinRequest"].Value, null);
                 }
 
                 // Check if user is already a member
@@ -116,7 +121,7 @@ namespace FreeSpeakWeb.Services
                     .AnyAsync(gu => gu.GroupId == groupId && gu.UserId == userId);
                 if (isMember)
                 {
-                    return (false, "You are already a member of this group.", null);
+                    return (false, _localizer["AlreadyMember"].Value, null);
                 }
 
                 // Check if user is banned from the group
@@ -124,7 +129,7 @@ namespace FreeSpeakWeb.Services
                     .AnyAsync(gbm => gbm.GroupId == groupId && gbm.UserId == userId);
                 if (isBanned)
                 {
-                    return (false, "You are banned from this group and cannot submit a join request.", null);
+                    return (false, _localizer["BannedCannotRequestJoin"].Value, null);
                 }
 
                 // Check if there's already a pending request
@@ -132,7 +137,7 @@ namespace FreeSpeakWeb.Services
                     .FirstOrDefaultAsync(jr => jr.GroupId == groupId && jr.UserId == userId);
                 if (existingRequest != null)
                 {
-                    return (false, "You already have a pending request for this group.", null);
+                    return (false, _localizer["PendingRequestExists"].Value, null);
                 }
 
                 var request = new GroupJoinRequest
@@ -162,7 +167,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating join request for group {GroupId} by user {UserId}", groupId, userId);
-                return (false, "An error occurred while creating the join request.", null);
+                return (false, _localizer["ErrorCreatingJoinRequest"].Value, null);
             }
         }
 
@@ -228,7 +233,7 @@ namespace FreeSpeakWeb.Services
 
                 if (request == null)
                 {
-                    return (false, "Join request not found.");
+                    return (false, _localizer["JoinRequestNotFound"].Value);
                 }
 
                 // Check if approver is creator or admin
@@ -238,7 +243,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isCreator && !isAdmin)
                 {
-                    return (false, "Only group creator or admins can approve join requests.");
+                    return (false, _localizer["OnlyCreatorOrAdminsApprove"].Value);
                 }
 
                 // Add user as member (with rules agreement true since they made it through the join request)
@@ -280,7 +285,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error approving join request {RequestId} by user {ApproverId}", requestId, approverId);
-                return (false, "An error occurred while approving the join request.");
+                return (false, _localizer["ErrorApprovingJoinRequest"].Value);
             }
         }
 
@@ -302,7 +307,7 @@ namespace FreeSpeakWeb.Services
 
                 if (request == null)
                 {
-                    return (false, "Join request not found.");
+                    return (false, _localizer["JoinRequestNotFound"].Value);
                 }
 
                 // Check if rejecter is creator or admin
@@ -312,7 +317,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isCreator && !isAdmin)
                 {
-                    return (false, "Only group creator or admins can reject join requests.");
+                    return (false, _localizer["OnlyCreatorOrAdminsReject"].Value);
                 }
 
                 // Capture details before removing
@@ -345,7 +350,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error rejecting join request {RequestId} by user {RejecterId}", requestId, rejecterId);
-                return (false, "An error occurred while rejecting the join request.");
+                return (false, _localizer["ErrorRejectingJoinRequest"].Value);
             }
         }
 
@@ -366,7 +371,7 @@ namespace FreeSpeakWeb.Services
 
                 if (request == null)
                 {
-                    return (false, "Join request not found.");
+                    return (false, _localizer["JoinRequestNotFound"].Value);
                 }
 
                 // Capture details before removing
@@ -391,7 +396,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error cancelling join request {RequestId} by user {UserId}", requestId, userId);
-                return (false, "An error occurred while cancelling the join request.");
+                return (false, _localizer["ErrorCancellingJoinRequest"].Value);
             }
         }
 
@@ -416,7 +421,7 @@ namespace FreeSpeakWeb.Services
                     .AnyAsync(gu => gu.GroupId == groupId && gu.UserId == userId);
                 if (isMember)
                 {
-                    return (false, "User is already a member.");
+                    return (false, _localizer["UserAlreadyMember"].Value);
                 }
 
                 // Check if user is banned from the group
@@ -424,7 +429,7 @@ namespace FreeSpeakWeb.Services
                     .AnyAsync(gbm => gbm.GroupId == groupId && gbm.UserId == userId);
                 if (isBanned)
                 {
-                    return (false, "User is banned from this group and cannot be added.");
+                    return (false, _localizer["UserBannedCannotAdd"].Value);
                 }
 
                 var groupUser = new GroupUser
@@ -451,7 +456,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error adding user {UserId} to group {GroupId}", userId, groupId);
-                return (false, "An error occurred while adding the member.");
+                return (false, _localizer["ErrorAddingMember"].Value);
             }
         }
 
@@ -470,23 +475,23 @@ namespace FreeSpeakWeb.Services
                 var group = await context.Groups.FindAsync(groupId);
                 if (group == null)
                 {
-                    return (false, "Group not found.");
+                    return (false, _localizer["GroupNotFound"].Value);
                 }
 
                 if (!group.IsPublic)
                 {
-                    return (false, "This is not a public group.");
+                    return (false, _localizer["NotPublicGroup"].Value);
                 }
 
                 if (group.RequiresJoinApproval)
                 {
-                    return (false, "This group requires approval to join. Please submit a join request.");
+                    return (false, _localizer["RequiresApprovalToJoin"].Value);
                 }
 
                 // Check if group requires rules acceptance
                 if (group.RequireAcceptRules && !hasAgreedToRules)
                 {
-                    return (false, "You must agree to the group rules before joining.");
+                    return (false, _localizer["MustAgreeToRulesBeforeJoining"].Value);
                 }
 
                 // Check if user is banned from the group
@@ -494,7 +499,7 @@ namespace FreeSpeakWeb.Services
                     .AnyAsync(gbm => gbm.GroupId == groupId && gbm.UserId == userId);
                 if (isBanned)
                 {
-                    return (false, "You are banned from this group and cannot join.");
+                    return (false, _localizer["BannedCannotJoin"].Value);
                 }
 
                 var result = await AddMemberAsync(groupId, userId, hasAgreedToRules);
@@ -514,7 +519,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error joining group {GroupId} by user {UserId}", groupId, userId);
-                return (false, "An error occurred while joining the group.");
+                return (false, _localizer["ErrorJoiningGroup"].Value);
             }
         }
 
@@ -705,7 +710,7 @@ namespace FreeSpeakWeb.Services
 
                 if (groupUser == null)
                 {
-                    return (false, "You are not a member of this group.");
+                    return (false, _localizer["NotMemberOfGroup"].Value);
                 }
 
                 var isFirstAgreement = !groupUser.HasAgreedToRules;
@@ -731,7 +736,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating rule agreement for user {UserId} in group {GroupId}", userId, groupId);
-                return (false, "An error occurred while updating rule agreement.");
+                return (false, _localizer["ErrorUpdatingRuleAgreement"].Value);
             }
         }
 
@@ -840,7 +845,7 @@ namespace FreeSpeakWeb.Services
                 var group = await context.Groups.FindAsync(groupId);
                 if (group == null)
                 {
-                    return (false, "Group not found.");
+                    return (false, _localizer["GroupNotFound"].Value);
                 }
 
                 // Check if requester is creator or system administrator
@@ -849,7 +854,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isCreator && !isSysAdmin)
                 {
-                    return (false, "Only the group creator can assign admin roles.");
+                    return (false, _localizer["OnlyCreatorAssignAdmin"].Value);
                 }
 
                 var groupUser = await context.GroupUsers
@@ -858,7 +863,7 @@ namespace FreeSpeakWeb.Services
 
                 if (groupUser == null)
                 {
-                    return (false, "User is not a member of this group.");
+                    return (false, _localizer["UserNotMember"].Value);
                 }
 
                 // Determine old role for audit
@@ -894,7 +899,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error setting admin status for user {TargetUserId} in group {GroupId}", targetUserId, groupId);
-                return (false, "An error occurred while updating admin status.");
+                return (false, _localizer["ErrorUpdatingAdminStatus"].Value);
             }
         }
 
@@ -914,7 +919,7 @@ namespace FreeSpeakWeb.Services
                 var group = await context.Groups.FindAsync(groupId);
                 if (group == null)
                 {
-                    return (false, "Group not found.");
+                    return (false, _localizer["GroupNotFound"].Value);
                 }
 
                 // Check if requester is creator, admin, or system administrator
@@ -925,7 +930,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isCreator && !isAdmin && !isSysAdmin)
                 {
-                    return (false, "Only group creator or admins can assign moderator roles.");
+                    return (false, _localizer["OnlyCreatorOrAdminsAssignModerator"].Value);
                 }
 
                 var groupUser = await context.GroupUsers
@@ -934,7 +939,7 @@ namespace FreeSpeakWeb.Services
 
                 if (groupUser == null)
                 {
-                    return (false, "User is not a member of this group.");
+                    return (false, _localizer["UserNotMember"].Value);
                 }
 
                 // Determine old role for audit
@@ -970,7 +975,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error setting moderator status for user {TargetUserId} in group {GroupId}", targetUserId, groupId);
-                return (false, "An error occurred while updating moderator status.");
+                return (false, _localizer["ErrorUpdatingModeratorStatus"].Value);
             }
         }
 
@@ -990,13 +995,13 @@ namespace FreeSpeakWeb.Services
                 var group = await context.Groups.FindAsync(groupId);
                 if (group == null)
                 {
-                    return (false, "Group not found.");
+                    return (false, _localizer["GroupNotFound"].Value);
                 }
 
                 // Prevent creator from leaving their own group
                 if (group.CreatorId == userId)
                 {
-                    return (false, "Group creator cannot leave the group. Delete the group instead.");
+                    return (false, _localizer["CreatorCannotLeave"].Value);
                 }
 
                 var groupUser = await context.GroupUsers
@@ -1004,7 +1009,7 @@ namespace FreeSpeakWeb.Services
 
                 if (groupUser == null)
                 {
-                    return (false, "You are not a member of this group.");
+                    return (false, _localizer["NotMemberOfGroup"].Value);
                 }
 
                 context.GroupUsers.Remove(groupUser);
@@ -1026,7 +1031,7 @@ namespace FreeSpeakWeb.Services
                             catch (Exception ex)
                             {
                                 _logger.LogError(ex, "Error leaving group {GroupId} by user {UserId}", groupId, userId);
-                                return (false, "An error occurred while leaving the group.");
+                                return (false, _localizer["ErrorLeavingGroup"].Value);
                             }
                         }
 
@@ -1045,7 +1050,7 @@ namespace FreeSpeakWeb.Services
                 var group = await context.Groups.FindAsync(groupId);
                 if (group == null)
                 {
-                    return (false, "Group not found.");
+                    return (false, _localizer["GroupNotFound"].Value);
                 }
 
                 // Check if requester is system administrator
@@ -1058,13 +1063,13 @@ namespace FreeSpeakWeb.Services
 
                 if (!isSystemAdmin && !isCreator && !isAdmin)
                 {
-                    return (false, "Only group creator or admins can remove members.");
+                    return (false, _localizer["OnlyCreatorOrAdminsRemoveMembers"].Value);
                 }
 
                 // Cannot remove the creator
                 if (group.CreatorId == targetUserId)
                 {
-                    return (false, "Cannot remove the group creator.");
+                    return (false, _localizer["CannotRemoveCreator"].Value);
                 }
 
                 var groupUser = await context.GroupUsers
@@ -1072,13 +1077,13 @@ namespace FreeSpeakWeb.Services
 
                 if (groupUser == null)
                 {
-                    return (false, "User is not a member of this group.");
+                    return (false, _localizer["UserNotMember"].Value);
                 }
 
                 // Only the creator or a system admin can remove another admin
                 if (groupUser.IsAdmin && !isSystemAdmin && !isCreator)
                 {
-                    return (false, "Only the group creator can remove administrators.");
+                    return (false, _localizer["OnlyCreatorRemoveAdmins"].Value);
                 }
 
                 context.GroupUsers.Remove(groupUser);
@@ -1104,7 +1109,7 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogError(ex, "Error removing user {TargetUserId} from group {GroupId} by {RequesterId}", 
                     targetUserId, groupId, requesterId);
-                return (false, "An error occurred while removing the member.");
+                return (false, _localizer["ErrorRemovingMember"].Value);
             }
         }
 

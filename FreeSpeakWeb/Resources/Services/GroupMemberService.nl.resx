@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+      <data name="UserIdRequired" xml:space="preserve">
+    <value>Gebruikers-ID is vereist.</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>Groep niet gevonden.</value>
+  </data>
+  <data name="MustAgreeToRulesBeforeJoinRequest" xml:space="preserve">
+    <value>U moet akkoord gaan met de groepsregels voordat u een verzoek om lid te worden indient.</value>
+  </data>
+  <data name="AlreadyMember" xml:space="preserve">
+    <value>U bent al lid van deze groep.</value>
+  </data>
+  <data name="BannedCannotRequestJoin" xml:space="preserve">
+    <value>U bent geblokkeerd in deze groep en kunt geen verzoek om lid te worden indienen.</value>
+  </data>
+  <data name="PendingRequestExists" xml:space="preserve">
+    <value>U heeft al een openstaand verzoek voor deze groep.</value>
+  </data>
+  <data name="ErrorCreatingJoinRequest" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het maken van het verzoek om lid te worden.</value>
+  </data>
+  <data name="JoinRequestNotFound" xml:space="preserve">
+    <value>Verzoek om lid te worden niet gevonden.</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsApprove" xml:space="preserve">
+    <value>Alleen de groepsmaker of beheerders kunnen verzoeken om lid te worden goedkeuren.</value>
+  </data>
+  <data name="ErrorApprovingJoinRequest" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het goedkeuren van het verzoek om lid te worden.</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsReject" xml:space="preserve">
+    <value>Alleen de groepsmaker of beheerders kunnen verzoeken om lid te worden afwijzen.</value>
+  </data>
+  <data name="ErrorRejectingJoinRequest" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het afwijzen van het verzoek om lid te worden.</value>
+  </data>
+  <data name="ErrorCancellingJoinRequest" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het annuleren van het verzoek om lid te worden.</value>
+  </data>
+  <data name="UserAlreadyMember" xml:space="preserve">
+    <value>De gebruiker is al lid.</value>
+  </data>
+  <data name="UserBannedCannotAdd" xml:space="preserve">
+    <value>De gebruiker is geblokkeerd in deze groep en kan niet worden toegevoegd.</value>
+  </data>
+  <data name="ErrorAddingMember" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het toevoegen van het lid.</value>
+  </data>
+  <data name="NotPublicGroup" xml:space="preserve">
+    <value>Dit is geen openbare groep.</value>
+  </data>
+  <data name="RequiresApprovalToJoin" xml:space="preserve">
+    <value>Voor deelname aan deze groep is goedkeuring vereist. Dien een verzoek om lid te worden in.</value>
+  </data>
+  <data name="MustAgreeToRulesBeforeJoining" xml:space="preserve">
+    <value>U moet akkoord gaan met de groepsregels voordat u lid wordt.</value>
+  </data>
+  <data name="BannedCannotJoin" xml:space="preserve">
+    <value>U bent geblokkeerd in deze groep en kunt niet lid worden.</value>
+  </data>
+  <data name="ErrorJoiningGroup" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het lid worden van de groep.</value>
+  </data>
+  <data name="NotMemberOfGroup" xml:space="preserve">
+    <value>U bent geen lid van deze groep.</value>
+  </data>
+  <data name="ErrorUpdatingRuleAgreement" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het bijwerken van de akkoordverklaring met de regels.</value>
+  </data>
+  <data name="OnlyCreatorAssignAdmin" xml:space="preserve">
+    <value>Alleen de groepsmaker kan beheerdersrollen toewijzen.</value>
+  </data>
+  <data name="UserNotMember" xml:space="preserve">
+    <value>De gebruiker is geen lid van deze groep.</value>
+  </data>
+  <data name="ErrorUpdatingAdminStatus" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het bijwerken van de beheerdersstatus.</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsAssignModerator" xml:space="preserve">
+    <value>Alleen de groepsmaker of beheerders kunnen moderatorrollen toewijzen.</value>
+  </data>
+  <data name="ErrorUpdatingModeratorStatus" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het bijwerken van de moderatorstatus.</value>
+  </data>
+  <data name="CreatorCannotLeave" xml:space="preserve">
+    <value>De groepsmaker kan de groep niet verlaten. Verwijder in plaats daarvan de groep.</value>
+  </data>
+  <data name="ErrorLeavingGroup" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het verlaten van de groep.</value>
+  </data>
+  <data name="OnlyCreatorOrAdminsRemoveMembers" xml:space="preserve">
+    <value>Alleen de groepsmaker of beheerders kunnen leden verwijderen.</value>
+  </data>
+  <data name="CannotRemoveCreator" xml:space="preserve">
+    <value>De groepsmaker kan niet worden verwijderd.</value>
+  </data>
+  <data name="OnlyCreatorRemoveAdmins" xml:space="preserve">
+    <value>Alleen de groepsmaker kan beheerders verwijderen.</value>
+  </data>
+  <data name="ErrorRemovingMember" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het verwijderen van het lid.</value>
+  </data>
+</root>

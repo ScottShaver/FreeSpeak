@@ -61,6 +61,33 @@ namespace FreeSpeakWeb.Resources.Shared {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to just now.
+        /// </summary>
+        public static string JustNow {
+            get {
+                return ResourceManager.GetString("JustNow", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}m ago.
+        /// </summary>
+        public static string MinutesAgo {
+            get {
+                return ResourceManager.GetString("MinutesAgo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}h ago.
+        /// </summary>
+        public static string HoursAgo {
+            get {
+                return ResourceManager.GetString("HoursAgo", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to {0}d ago.
         /// </summary>
         public static string DaysAgo {
@@ -70,11 +97,38 @@ namespace FreeSpeakWeb.Resources.Shared {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to expires in {0}d.
+        ///   Looks up a localized string similar to {0}w ago.
         /// </summary>
-        public static string ExpiresInDays {
+        public static string WeeksAgo {
             get {
-                return ResourceManager.GetString("ExpiresInDays", resourceCulture);
+                return ResourceManager.GetString("WeeksAgo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}mo ago.
+        /// </summary>
+        public static string MonthsAgo {
+            get {
+                return ResourceManager.GetString("MonthsAgo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to expires soon.
+        /// </summary>
+        public static string ExpiresSoon {
+            get {
+                return ResourceManager.GetString("ExpiresSoon", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to expires in {0}m.
+        /// </summary>
+        public static string ExpiresInMinutes {
+            get {
+                return ResourceManager.GetString("ExpiresInMinutes", resourceCulture);
             }
         }
 
@@ -88,11 +142,11 @@ namespace FreeSpeakWeb.Resources.Shared {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to expires in {0}m.
+        ///   Looks up a localized string similar to expires in {0}d.
         /// </summary>
-        public static string ExpiresInMinutes {
+        public static string ExpiresInDays {
             get {
-                return ResourceManager.GetString("ExpiresInMinutes", resourceCulture);
+                return ResourceManager.GetString("ExpiresInDays", resourceCulture);
             }
         }
 
@@ -115,56 +169,20 @@ namespace FreeSpeakWeb.Resources.Shared {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to expires soon.
+        ///   Looks up a localized string similar to MMM d, yyyy.
         /// </summary>
-        public static string ExpiresSoon {
+        public static string DateFormatWithYear {
             get {
-                return ResourceManager.GetString("ExpiresSoon", resourceCulture);
+                return ResourceManager.GetString("DateFormatWithYear", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to {0}h ago.
+        ///   Looks up a localized string similar to MMM d.
         /// </summary>
-        public static string HoursAgo {
+        public static string DateFormatShort {
             get {
-                return ResourceManager.GetString("HoursAgo", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to just now.
-        /// </summary>
-        public static string JustNow {
-            get {
-                return ResourceManager.GetString("JustNow", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to {0}m ago.
-        /// </summary>
-        public static string MinutesAgo {
-            get {
-                return ResourceManager.GetString("MinutesAgo", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to {0}mo ago.
-        /// </summary>
-        public static string MonthsAgo {
-            get {
-                return ResourceManager.GetString("MonthsAgo", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to {0}w ago.
-        /// </summary>
-        public static string WeeksAgo {
-            get {
-                return ResourceManager.GetString("WeeksAgo", resourceCulture);
+                return ResourceManager.GetString("DateFormatShort", resourceCulture);
             }
         }
     }

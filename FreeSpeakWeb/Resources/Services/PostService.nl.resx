@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PostRequiresContent" xml:space="preserve">
+    <value>Een bericht moet tekst of afbeeldingen bevatten.</value>
+  </data>
+  <data name="NoFriendshipFound" xml:space="preserve">
+    <value>Geen vriendschapsrelatie gevonden.</value>
+  </data>
+  <data name="FriendsFeedOnly" xml:space="preserve">
+    <value>Je kunt alleen berichten plaatsen op de feed van geaccepteerde vrienden.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Het bericht kon niet worden gemaakt.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het maken van het bericht.</value>
+  </data>
+  <data name="UpdatePostError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het bijwerken van het bericht.</value>
+  </data>
+  <data name="UpdateAudienceError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het bijwerken van het publiek van het bericht.</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>Bericht niet gevonden.</value>
+  </data>
+  <data name="NotAuthorizedDeletePost" xml:space="preserve">
+    <value>Je bent niet gemachtigd om dit bericht te verwijderen.</value>
+  </data>
+  <data name="DeletePostError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het verwijderen van het bericht.</value>
+  </data>
+  <data name="PostUnavailable" xml:space="preserve">
+    <value>Sorry, dit bericht is niet meer beschikbaar.</value>
+  </data>
+  <data name="LoadPostError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het laden van dit bericht.</value>
+  </data>
+  <data name="CommentEmpty" xml:space="preserve">
+    <value>De inhoud van de reactie mag niet leeg zijn.</value>
+  </data>
+  <data name="ParentCommentNotFound" xml:space="preserve">
+    <value>Bovenliggende reactie niet gevonden.</value>
+  </data>
+  <data name="ParentCommentMismatch" xml:space="preserve">
+    <value>De bovenliggende reactie hoort niet bij dit bericht.</value>
+  </data>
+  <data name="ReplyDepthExceeded" xml:space="preserve">
+    <value>Antwoorden mogen niet dieper dan {0} niveaus genest zijn.</value>
+  </data>
+  <data name="MaxDirectComments" xml:space="preserve">
+    <value>Dit bericht heeft het maximum van {0} directe reacties bereikt.</value>
+  </data>
+  <data name="AddCommentError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het toevoegen van de reactie.</value>
+  </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>Reactie niet gevonden.</value>
+  </data>
+  <data name="NotAuthorizedDeleteComment" xml:space="preserve">
+    <value>Je bent niet gemachtigd om deze reactie te verwijderen.</value>
+  </data>
+  <data name="DeleteCommentError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het verwijderen van de reactie.</value>
+  </data>
+  <data name="LikeError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het verwerken van je like.</value>
+  </data>
+  <data name="ReactionError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het verwerken van je reactie.</value>
+  </data>
+  <data name="NoReactionToRemove" xml:space="preserve">
+    <value>Geen reactie om te verwijderen.</value>
+  </data>
+  <data name="RemoveReactionError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het verwijderen van je reactie.</value>
+  </data>
+  <data name="NotAuthorizedAddImages" xml:space="preserve">
+    <value>Je bent niet gemachtigd om afbeeldingen aan dit bericht toe te voegen.</value>
+  </data>
+  <data name="AddImageError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het toevoegen van de afbeelding.</value>
+  </data>
+  <data name="ImageNotFound" xml:space="preserve">
+    <value>Afbeelding niet gevonden.</value>
+  </data>
+  <data name="NotAuthorizedRemoveImage" xml:space="preserve">
+    <value>Je bent niet gemachtigd om deze afbeelding te verwijderen.</value>
+  </data>
+  <data name="RemoveImageError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het verwijderen van de afbeelding.</value>
+  </data>
+  <data name="OnlyContentDeletePost" xml:space="preserve">
+    <value>Dit is de enige inhoud van het bericht. Verwijder in plaats daarvan het bericht.</value>
+  </data>
+  <data name="DeleteImageError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het verwijderen van de afbeelding.</value>
+  </data>
+  <data name="NoPermissionToPin" xml:space="preserve">
+    <value>Je hebt geen toestemming om dit bericht vast te zetten.</value>
+  </data>
+  <data name="PinError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het vastzetten van het bericht.</value>
+  </data>
+  <data name="UnpinError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het losmaken van het bericht.</value>
+  </data>
+  <data name="MuteError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het dempen van meldingen.</value>
+  </data>
+  <data name="UnmuteError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het opheffen van het dempen van meldingen.</value>
+  </data>
+  <data name="RetrieveImagesError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het ophalen van je afbeeldingen.</value>
+  </data>
+  <data name="RetrieveVideosError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het ophalen van je video's.</value>
+  </data>
+</root>

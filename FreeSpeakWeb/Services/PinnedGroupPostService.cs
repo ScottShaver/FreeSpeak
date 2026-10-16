@@ -1,6 +1,7 @@
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.DTOs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace FreeSpeakWeb.Services
 {
@@ -12,16 +13,20 @@ namespace FreeSpeakWeb.Services
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<PinnedGroupPostService> _logger;
+        private readonly IStringLocalizer<Resources.Services.PinnedGroupPostService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PinnedGroupPostService"/> class.
         /// </summary>
         /// <param name="contextFactory">Factory for creating database contexts.</param>
         /// <param name="logger">Logger for recording service operations.</param>
+        /// <param name="localizer">Optional localizer for user-facing result messages; the neutral (English) text is used when omitted.</param>
         public PinnedGroupPostService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
-            ILogger<PinnedGroupPostService> logger)
+            ILogger<PinnedGroupPostService> logger,
+            IStringLocalizer<Resources.Services.PinnedGroupPostService>? localizer = null)
         {
+            _localizer = ServiceLocalizer.Resolve(localizer);
             _contextFactory = contextFactory;
             _logger = logger;
         }
@@ -46,7 +51,7 @@ namespace FreeSpeakWeb.Services
 
                 if (post == null)
                 {
-                    return (false, "Post not found.");
+                    return (false, _localizer["PostNotFound"].Value);
                 }
 
                 // Verify the user is a member of the group
@@ -55,7 +60,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isMember)
                 {
-                    return (false, "You must be a member of the group to pin posts.");
+                    return (false, _localizer["MustBeMemberToPin"].Value);
                 }
 
                 // Check if already pinned
@@ -64,7 +69,7 @@ namespace FreeSpeakWeb.Services
 
                 if (existingPin != null)
                 {
-                    return (false, "Post is already pinned.");
+                    return (false, _localizer["PostAlreadyPinned"].Value);
                 }
 
                 var pinnedPost = new PinnedGroupPost
@@ -83,7 +88,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error pinning group post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while pinning the post.");
+                return (false, _localizer["PinPostError"].Value);
             }
         }
 
@@ -104,7 +109,7 @@ namespace FreeSpeakWeb.Services
 
                 if (pinnedPost == null)
                 {
-                    return (false, "Post is not pinned.");
+                    return (false, _localizer["PostNotPinned"].Value);
                 }
 
                 context.PinnedGroupPosts.Remove(pinnedPost);
@@ -116,7 +121,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error unpinning group post {PostId} for user {UserId}", postId, userId);
-                return (false, "An error occurred while unpinning the post.");
+                return (false, _localizer["UnpinPostError"].Value);
             }
         }
 
@@ -290,14 +295,17 @@ namespace FreeSpeakWeb.Services
                     return new List<GroupPostListDto>();
                 }
 
+                var unknownGroupName = _localizer["UnknownGroup"].Value;
+                var unknownAuthorName = _localizer["UnknownAuthor"].Value;
+
                 var posts = await context.GroupPosts
                     .Where(p => pinnedPostIds.Contains(p.Id))
                     .Select(p => new GroupPostListDto(
                         p.Id,
                         p.GroupId,
-                        p.Group != null ? p.Group.Name : "Unknown Group",
+                        p.Group != null ? p.Group.Name : unknownGroupName,
                         p.AuthorId,
-                        p.Author != null ? $"{p.Author.FirstName} {p.Author.LastName}" : "Unknown",
+                        p.Author != null ? $"{p.Author.FirstName} {p.Author.LastName}" : unknownAuthorName,
                         p.Author != null ? p.Author.FirstName ?? "" : "",
                         p.Author != null ? p.Author.LastName ?? "" : "",
                         p.Author != null ? p.Author.UserName ?? "" : "",

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+    <data name="PostNeedsContent" xml:space="preserve">
+    <value>Der Beitrag muss Text oder Bilder enthalten.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Der Beitrag konnte nicht erstellt werden.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Beim Erstellen des Beitrags ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>Beitrag nicht gefunden.</value>
+  </data>
+  <data name="NotAuthorizedEditPost" xml:space="preserve">
+    <value>Du bist nicht berechtigt, diesen Beitrag zu bearbeiten.</value>
+  </data>
+  <data name="UpdatePostError" xml:space="preserve">
+    <value>Beim Aktualisieren des Beitrags ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="NotAuthorizedDeletePost" xml:space="preserve">
+    <value>Du bist nicht berechtigt, diesen Beitrag zu löschen.</value>
+  </data>
+  <data name="DeletePostError" xml:space="preserve">
+    <value>Beim Löschen des Beitrags ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="NotAuthorizedApprovePosts" xml:space="preserve">
+    <value>Du bist nicht berechtigt, Beiträge in dieser Gruppe zu genehmigen.</value>
+  </data>
+  <data name="PostAlreadyApproved" xml:space="preserve">
+    <value>Dieser Beitrag wurde bereits von einem anderen Moderator genehmigt.</value>
+  </data>
+  <data name="PostAlreadyDeclined" xml:space="preserve">
+    <value>Dieser Beitrag wurde bereits von einem anderen Moderator abgelehnt.</value>
+  </data>
+  <data name="PostNotPendingApprove" xml:space="preserve">
+    <value>Dieser Beitrag ist nicht mehr ausstehend und kann nicht genehmigt werden.</value>
+  </data>
+  <data name="ApprovePostError" xml:space="preserve">
+    <value>Beim Genehmigen des Beitrags ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="NotAuthorizedDeclinePosts" xml:space="preserve">
+    <value>Du bist nicht berechtigt, Beiträge in dieser Gruppe abzulehnen.</value>
+  </data>
+  <data name="PostNotPendingDecline" xml:space="preserve">
+    <value>Dieser Beitrag ist nicht mehr ausstehend und kann nicht abgelehnt werden.</value>
+  </data>
+  <data name="DeclinePostError" xml:space="preserve">
+    <value>Beim Ablehnen des Beitrags ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="CommentEmpty" xml:space="preserve">
+    <value>Der Kommentarinhalt darf nicht leer sein.</value>
+  </data>
+  <data name="ParentCommentNotFound" xml:space="preserve">
+    <value>Übergeordneter Kommentar nicht gefunden.</value>
+  </data>
+  <data name="ParentCommentWrongPost" xml:space="preserve">
+    <value>Der übergeordnete Kommentar gehört nicht zu diesem Beitrag.</value>
+  </data>
+  <data name="ReplyDepthExceeded" xml:space="preserve">
+    <value>Antworten dürfen nicht tiefer als {0} Ebenen verschachtelt sein.</value>
+  </data>
+  <data name="MaxDirectComments" xml:space="preserve">
+    <value>Dieser Beitrag hat das Maximum von {0} direkten Kommentaren erreicht.</value>
+  </data>
+  <data name="AddCommentError" xml:space="preserve">
+    <value>Beim Hinzufügen des Kommentars ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>Kommentar nicht gefunden.</value>
+  </data>
+  <data name="NotAuthorizedDeleteComment" xml:space="preserve">
+    <value>Du bist nicht berechtigt, diesen Kommentar zu löschen.</value>
+  </data>
+  <data name="DeleteCommentError" xml:space="preserve">
+    <value>Beim Löschen des Kommentars ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="LikeNotFound" xml:space="preserve">
+    <value>Like nicht gefunden.</value>
+  </data>
+  <data name="LikePostError" xml:space="preserve">
+    <value>Beim Liken des Beitrags ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="UnlikePostError" xml:space="preserve">
+    <value>Beim Entfernen des Likes vom Beitrag ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="LikeCommentError" xml:space="preserve">
+    <value>Beim Liken des Kommentars ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="UnlikeCommentError" xml:space="preserve">
+    <value>Beim Entfernen des Likes vom Kommentar ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="MuteError" xml:space="preserve">
+    <value>Beim Stummschalten der Benachrichtigungen ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="UnmuteError" xml:space="preserve">
+    <value>Beim Aufheben der Stummschaltung der Benachrichtigungen ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="NotAuthorizedAddImages" xml:space="preserve">
+    <value>Du bist nicht berechtigt, Bilder zu diesem Beitrag hinzuzufügen.</value>
+  </data>
+  <data name="AddImageFailed" xml:space="preserve">
+    <value>Das Bild konnte nicht hinzugefügt werden.</value>
+  </data>
+  <data name="AddImageError" xml:space="preserve">
+    <value>Beim Hinzufügen des Bildes ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="ImageNotFound" xml:space="preserve">
+    <value>Bild nicht gefunden.</value>
+  </data>
+  <data name="NotAuthorizedRemoveImage" xml:space="preserve">
+    <value>Du bist nicht berechtigt, dieses Bild zu entfernen.</value>
+  </data>
+  <data name="RemoveImageError" xml:space="preserve">
+    <value>Beim Entfernen des Bildes ist ein Fehler aufgetreten.</value>
+  </data>
+</root>

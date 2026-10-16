@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="InvalidUserIdFormat" xml:space="preserve">
+    <value>Formato de ID de usuario no válido.</value>
+  </data>
+  <data name="FilenameIsRequired" xml:space="preserve">
+    <value>El nombre de archivo es obligatorio.</value>
+  </data>
+  <data name="InvalidFileSize" xml:space="preserve">
+    <value>Tamaño de archivo no válido.</value>
+  </data>
+  <data name="FileExceedsTheMaximum" xml:space="preserve">
+    <value>El archivo supera el tamaño máximo de {0} MB.</value>
+  </data>
+  <data name="NoPermissionToUpload" xml:space="preserve">
+    <value>No tienes permiso para subir archivos a este grupo.</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>Grupo no encontrado.</value>
+  </data>
+  <data name="FileUploadsNotEnabled" xml:space="preserve">
+    <value>La subida de archivos no está habilitada para este grupo.</value>
+  </data>
+  <data name="FileValidationFailed" xml:space="preserve">
+    <value>Error de validación del archivo: {0}</value>
+  </data>
+  <data name="FileRejected" xml:space="preserve">
+    <value>Archivo rechazado: {0}</value>
+  </data>
+  <data name="MalwareDetected" xml:space="preserve">
+    <value>Malware detectado: {0}</value>
+  </data>
+  <data name="VirusScanFailed" xml:space="preserve">
+    <value>Error en el análisis de virus</value>
+  </data>
+  <data name="UploadError" xml:space="preserve">
+    <value>Se produjo un error al subir el archivo.</value>
+  </data>
+  <data name="AccessError" xml:space="preserve">
+    <value>Se produjo un error al acceder al archivo.</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>Archivo no encontrado.</value>
+  </data>
+  <data name="NoPermissionToAccess" xml:space="preserve">
+    <value>No tienes permiso para acceder a este archivo.</value>
+  </data>
+  <data name="FileNotYetAvailable" xml:space="preserve">
+    <value>Este archivo aún no está disponible para su descarga.</value>
+  </data>
+  <data name="FileNotFoundOnDisk" xml:space="preserve">
+    <value>Archivo no encontrado en el disco.</value>
+  </data>
+  <data name="NoPermissionToApprove" xml:space="preserve">
+    <value>No tienes permiso para aprobar archivos.</value>
+  </data>
+  <data name="NoPermissionToDecline" xml:space="preserve">
+    <value>No tienes permiso para rechazar archivos.</value>
+  </data>
+  <data name="NoPermissionToDelete" xml:space="preserve">
+    <value>No tienes permiso para eliminar este archivo.</value>
+  </data>
+</root>

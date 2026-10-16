@@ -1,4 +1,5 @@
 using FreeSpeakWeb.Services.Abstractions;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
 namespace FreeSpeakWeb.Services;
@@ -10,6 +11,7 @@ namespace FreeSpeakWeb.Services;
 public class FileSignatureValidator : IFileSignatureValidator
 {
     private readonly ILogger<FileSignatureValidator> _logger;
+    private readonly IStringLocalizer<Resources.Services.FileSignatureValidator> _localizer;
 
     /// <summary>
     /// File signature definitions mapping magic bytes to MIME types.
@@ -217,9 +219,11 @@ public class FileSignatureValidator : IFileSignatureValidator
     /// Initializes a new instance of the <see cref="FileSignatureValidator"/> class.
     /// </summary>
     /// <param name="logger">The logger instance for logging validation events.</param>
-    public FileSignatureValidator(ILogger<FileSignatureValidator> logger)
+    /// <param name="localizer">Localizer for user-facing validation messages. Falls back to the neutral (English) text when omitted.</param>
+    public FileSignatureValidator(ILogger<FileSignatureValidator> logger, IStringLocalizer<Resources.Services.FileSignatureValidator>? localizer = null)
     {
         _logger = logger;
+        _localizer = ServiceLocalizer.Resolve(localizer);
     }
 
     /// <inheritdoc/>
@@ -265,13 +269,13 @@ public class FileSignatureValidator : IFileSignatureValidator
     {
         if (fileBytes.Length == 0)
         {
-            return (false, "File is empty.");
+            return (false, _localizer["FileEmpty"].Value);
         }
 
         var extension = Path.GetExtension(fileName);
         if (string.IsNullOrEmpty(extension))
         {
-            return (false, "File has no extension.");
+            return (false, _localizer["NoExtension"].Value);
         }
 
         // Check if extension is forbidden (executables/scripts)
@@ -279,7 +283,7 @@ public class FileSignatureValidator : IFileSignatureValidator
         {
             _logger.LogWarning("File upload rejected: Extension {Extension} is forbidden for file {FileName}", 
                 extension, fileName);
-            return (false, $"File extension '{extension}' is not allowed for security reasons.");
+            return (false, string.Format(_localizer["ExtensionForbidden"], extension));
         }
 
         // Check if extension is allowed based on context
@@ -291,14 +295,14 @@ public class FileSignatureValidator : IFileSignatureValidator
         {
             _logger.LogWarning("File upload rejected: Extension {Extension} is not allowed for file {FileName}", 
                 extension, fileName);
-            return (false, $"File extension '{extension}' is not allowed.");
+            return (false, string.Format(_localizer["ExtensionNotAllowed"], extension));
         }
 
         // Get expected MIME type for the extension
         var expectedMimeType = GetMimeTypeForExtension(extension);
         if (expectedMimeType == null)
         {
-            return (false, $"Unknown file extension '{extension}'.");
+            return (false, string.Format(_localizer["ExtensionUnknown"], extension));
         }
 
         // For text files (txt, csv) that don't have magic bytes, skip signature validation
@@ -323,7 +327,7 @@ public class FileSignatureValidator : IFileSignatureValidator
 
             _logger.LogWarning("File upload rejected: Unable to detect file type from magic bytes for file {FileName}", 
                 fileName);
-            return (false, "Unable to verify file type. The file may be corrupted or in an unsupported format.");
+            return (false, _localizer["UnableToVerifyType"].Value);
         }
 
         // Compare expected vs detected (allowing for related types)
@@ -332,7 +336,7 @@ public class FileSignatureValidator : IFileSignatureValidator
             _logger.LogWarning(
                 "File upload rejected: Extension {Extension} claims {ExpectedMime} but content is {DetectedMime} for file {FileName}",
                 extension, expectedMimeType, detectedMimeType, fileName);
-            return (false, $"File content does not match the declared file type. Expected {expectedMimeType} but detected {detectedMimeType}.");
+            return (false, string.Format(_localizer["ContentMismatch"], expectedMimeType, detectedMimeType));
         }
 
         _logger.LogDebug("File signature validated: {FileName} ({MimeType})", fileName, detectedMimeType);

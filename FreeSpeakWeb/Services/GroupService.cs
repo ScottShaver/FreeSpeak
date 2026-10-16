@@ -4,6 +4,7 @@ using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Repositories.Abstractions;
 using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace FreeSpeakWeb.Services
 {
@@ -21,6 +22,7 @@ namespace FreeSpeakWeb.Services
         private readonly GroupMemberService _groupMemberService;
         private readonly IRoleService _roleService;
         private readonly IGroupModerationLogService? _moderationLog;
+        private readonly IStringLocalizer<Resources.Services.GroupService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupService"/> class.
@@ -33,6 +35,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="groupMemberService">Service for group member operations.</param>
         /// <param name="roleService">Service for role operations.</param>
         /// <param name="moderationLog">Optional per-group moderation log; when omitted nothing is recorded there.</param>
+        /// <param name="localizer">Optional localizer for user-facing result messages; the neutral (English) text is used when omitted.</param>
         public GroupService(
             IGroupRepository groupRepository,
             IUserRepository userRepository,
@@ -41,8 +44,10 @@ namespace FreeSpeakWeb.Services
             IAuditLogRepository auditLogRepository,
             GroupMemberService groupMemberService,
             IRoleService roleService,
-            IGroupModerationLogService? moderationLog = null)
+            IGroupModerationLogService? moderationLog = null,
+            IStringLocalizer<Resources.Services.GroupService>? localizer = null)
         {
+            _localizer = ServiceLocalizer.Resolve(localizer);
             _moderationLog = moderationLog;
             _groupRepository = groupRepository;
             _userRepository = userRepository;
@@ -87,17 +92,17 @@ namespace FreeSpeakWeb.Services
         {
             if (string.IsNullOrWhiteSpace(creatorId))
             {
-                return (false, "Creator ID is required.", null);
+                return (false, _localizer["CreatorIdRequired"].Value, null);
             }
 
             if (string.IsNullOrWhiteSpace(name))
             {
-                return (false, "Group name is required.", null);
+                return (false, _localizer["GroupNameRequired"].Value, null);
             }
 
             if (string.IsNullOrWhiteSpace(description))
             {
-                return (false, "Group description is required.", null);
+                return (false, _localizer["GroupDescriptionRequired"].Value, null);
             }
 
             try
@@ -108,14 +113,14 @@ namespace FreeSpeakWeb.Services
                 var creatorExists = await context.Users.AnyAsync(u => u.Id == creatorId);
                 if (!creatorExists)
                 {
-                    return (false, "Creator user not found.", null);
+                    return (false, _localizer["CreatorNotFound"].Value, null);
                 }
 
                 // Check for duplicate group name
                 var nameExists = await context.Groups.AnyAsync(g => g.Name == name);
                 if (nameExists)
                 {
-                    return (false, "A group with this name already exists.", null);
+                    return (false, _localizer["GroupNameExists"].Value, null);
                 }
 
                 var group = new Group
@@ -175,7 +180,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating group for user {CreatorId}", creatorId);
-                return (false, "An error occurred while creating the group.", null);
+                return (false, _localizer["CreateGroupError"].Value, null);
             }
         }
 
@@ -461,7 +466,7 @@ namespace FreeSpeakWeb.Services
 
                 if (group == null)
                 {
-                    return (false, "Group not found.");
+                    return (false, _localizer["GroupNotFound"].Value);
                 }
 
                 // Verify user has permission to update group settings
@@ -472,7 +477,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!isCreator && !isGroupAdmin && !isSystemAdmin)
                 {
-                    return (false, "You do not have permission to update group settings.");
+                    return (false, _localizer["NoPermissionUpdateSettings"].Value);
                 }
 
                 // Track changes for audit log
@@ -488,7 +493,7 @@ namespace FreeSpeakWeb.Services
                         .AnyAsync(g => g.Name == name && g.Id != groupId);
                     if (nameExists)
                     {
-                        return (false, "A group with this name already exists.");
+                        return (false, _localizer["GroupNameExists"].Value);
                     }
                     if (group.Name != name)
                     {
@@ -703,7 +708,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating group {GroupId} by user {UserId}", groupId, userId);
-                return (false, "An error occurred while updating the group.");
+                return (false, _localizer["UpdateGroupError"].Value);
             }
         }
 
@@ -790,13 +795,13 @@ namespace FreeSpeakWeb.Services
 
                 if (group == null)
                 {
-                    return (false, "Group not found.");
+                    return (false, _localizer["GroupNotFound"].Value);
                 }
 
                 // Verify user is the creator
                 if (group.CreatorId != userId)
                 {
-                    return (false, "Only the group creator can delete the group.");
+                    return (false, _localizer["OnlyCreatorCanDelete"].Value);
                 }
 
                 // Capture details before deletion for audit log
@@ -822,7 +827,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting group {GroupId} by user {UserId}", groupId, userId);
-                return (false, "An error occurred while deleting the group.");
+                return (false, _localizer["DeleteGroupError"].Value);
             }
         }
 

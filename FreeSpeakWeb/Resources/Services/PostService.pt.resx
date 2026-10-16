@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PostRequiresContent" xml:space="preserve">
+    <value>A publicação deve conter texto ou imagens.</value>
+  </data>
+  <data name="NoFriendshipFound" xml:space="preserve">
+    <value>Nenhuma relação de amizade encontrada.</value>
+  </data>
+  <data name="FriendsFeedOnly" xml:space="preserve">
+    <value>Você só pode publicar no feed de amigos aceitos.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Falha ao criar a publicação.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Ocorreu um erro ao criar a publicação.</value>
+  </data>
+  <data name="UpdatePostError" xml:space="preserve">
+    <value>Ocorreu um erro ao atualizar a publicação.</value>
+  </data>
+  <data name="UpdateAudienceError" xml:space="preserve">
+    <value>Ocorreu um erro ao atualizar o público da publicação.</value>
+  </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>Publicação não encontrada.</value>
+  </data>
+  <data name="NotAuthorizedDeletePost" xml:space="preserve">
+    <value>Você não está autorizado a excluir esta publicação.</value>
+  </data>
+  <data name="DeletePostError" xml:space="preserve">
+    <value>Ocorreu um erro ao excluir a publicação.</value>
+  </data>
+  <data name="PostUnavailable" xml:space="preserve">
+    <value>Desculpe, esta publicação não está mais disponível.</value>
+  </data>
+  <data name="LoadPostError" xml:space="preserve">
+    <value>Ocorreu um erro ao carregar esta publicação.</value>
+  </data>
+  <data name="CommentEmpty" xml:space="preserve">
+    <value>O conteúdo do comentário não pode estar vazio.</value>
+  </data>
+  <data name="ParentCommentNotFound" xml:space="preserve">
+    <value>Comentário principal não encontrado.</value>
+  </data>
+  <data name="ParentCommentMismatch" xml:space="preserve">
+    <value>O comentário principal não pertence a esta publicação.</value>
+  </data>
+  <data name="ReplyDepthExceeded" xml:space="preserve">
+    <value>As respostas não podem ser aninhadas em mais de {0} níveis.</value>
+  </data>
+  <data name="MaxDirectComments" xml:space="preserve">
+    <value>Esta publicação atingiu o máximo de {0} comentários diretos.</value>
+  </data>
+  <data name="AddCommentError" xml:space="preserve">
+    <value>Ocorreu um erro ao adicionar o comentário.</value>
+  </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>Comentário não encontrado.</value>
+  </data>
+  <data name="NotAuthorizedDeleteComment" xml:space="preserve">
+    <value>Você não está autorizado a excluir este comentário.</value>
+  </data>
+  <data name="DeleteCommentError" xml:space="preserve">
+    <value>Ocorreu um erro ao excluir o comentário.</value>
+  </data>
+  <data name="LikeError" xml:space="preserve">
+    <value>Ocorreu um erro ao processar sua curtida.</value>
+  </data>
+  <data name="ReactionError" xml:space="preserve">
+    <value>Ocorreu um erro ao processar sua reação.</value>
+  </data>
+  <data name="NoReactionToRemove" xml:space="preserve">
+    <value>Nenhuma reação para remover.</value>
+  </data>
+  <data name="RemoveReactionError" xml:space="preserve">
+    <value>Ocorreu um erro ao remover sua reação.</value>
+  </data>
+  <data name="NotAuthorizedAddImages" xml:space="preserve">
+    <value>Você não está autorizado a adicionar imagens a esta publicação.</value>
+  </data>
+  <data name="AddImageError" xml:space="preserve">
+    <value>Ocorreu um erro ao adicionar a imagem.</value>
+  </data>
+  <data name="ImageNotFound" xml:space="preserve">
+    <value>Imagem não encontrada.</value>
+  </data>
+  <data name="NotAuthorizedRemoveImage" xml:space="preserve">
+    <value>Você não está autorizado a remover esta imagem.</value>
+  </data>
+  <data name="RemoveImageError" xml:space="preserve">
+    <value>Ocorreu um erro ao remover a imagem.</value>
+  </data>
+  <data name="OnlyContentDeletePost" xml:space="preserve">
+    <value>Este é o único conteúdo da publicação. Exclua a publicação em vez disso.</value>
+  </data>
+  <data name="DeleteImageError" xml:space="preserve">
+    <value>Ocorreu um erro ao excluir a imagem.</value>
+  </data>
+  <data name="NoPermissionToPin" xml:space="preserve">
+    <value>Você não tem permissão para fixar esta publicação.</value>
+  </data>
+  <data name="PinError" xml:space="preserve">
+    <value>Ocorreu um erro ao fixar a publicação.</value>
+  </data>
+  <data name="UnpinError" xml:space="preserve">
+    <value>Ocorreu um erro ao desafixar a publicação.</value>
+  </data>
+  <data name="MuteError" xml:space="preserve">
+    <value>Ocorreu um erro ao silenciar as notificações.</value>
+  </data>
+  <data name="UnmuteError" xml:space="preserve">
+    <value>Ocorreu um erro ao reativar as notificações.</value>
+  </data>
+  <data name="RetrieveImagesError" xml:space="preserve">
+    <value>Ocorreu um erro ao recuperar suas imagens.</value>
+  </data>
+  <data name="RetrieveVideosError" xml:space="preserve">
+    <value>Ocorreu um erro ao recuperar seus vídeos.</value>
+  </data>
+</root>

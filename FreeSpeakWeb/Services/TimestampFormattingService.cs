@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.Extensions.Localization;
 
 namespace FreeSpeakWeb.Services;
@@ -38,7 +39,7 @@ public class TimestampFormattingService
         if (timeSpan.TotalDays < 365)
             return string.Format(_localizer["MonthsAgo"], (int)(timeSpan.TotalDays / 30));
 
-        return timestamp.ToString("MMM d, yyyy");
+        return timestamp.ToString(_localizer["DateFormatWithYear"], CultureInfo.CurrentUICulture);
     }
 
     /// <summary>
@@ -61,6 +62,6 @@ public class TimestampFormattingService
         if (timeUntilExpiry.TotalDays < 30)
             return string.Format(_localizer["ExpiresInWeeks"], (int)(timeUntilExpiry.TotalDays / 7));
 
-        return string.Format(_localizer["ExpiresOn"], expiresAt.ToString("MMM d"));
+        return string.Format(_localizer["ExpiresOn"], expiresAt.ToString(_localizer["DateFormatShort"], CultureInfo.CurrentUICulture));
     }
 }

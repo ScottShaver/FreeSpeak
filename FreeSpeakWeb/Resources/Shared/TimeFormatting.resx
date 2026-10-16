@@ -94,4 +94,10 @@
   <data name="ExpiresOn" xml:space="preserve">
     <value>expires {0}</value>
   </data>
+  <data name="DateFormatWithYear" xml:space="preserve">
+    <value>MMM d, yyyy</value>
+  </data>
+  <data name="DateFormatShort" xml:space="preserve">
+    <value>MMM d</value>
+  </data>
 </root>

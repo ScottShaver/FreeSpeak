@@ -2,6 +2,7 @@ using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System.Text.Json;
 
 namespace FreeSpeakWeb.Services
@@ -18,6 +19,7 @@ namespace FreeSpeakWeb.Services
         private readonly ILogger<NotificationService> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly IAuditLogRepository _auditLogRepository;
+        private readonly IStringLocalizer<Resources.Services.NotificationService> _localizer;
 
         /// <summary>
         /// Maximum number of recipients allowed per bulk notification operation to prevent resource exhaustion.
@@ -32,18 +34,21 @@ namespace FreeSpeakWeb.Services
         /// <param name="logger">Logger for recording service operations.</param>
         /// <param name="scopeFactory">Factory for creating service scopes.</param>
         /// <param name="auditLogRepository">Repository for audit log operations.</param>
+        /// <param name="localizer">Localizer for user-facing result messages. Falls back to the neutral (English) text when omitted.</param>
         public NotificationService(
             INotificationRepository notificationRepository,
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<NotificationService> logger,
             IServiceScopeFactory scopeFactory,
-            IAuditLogRepository auditLogRepository)
+            IAuditLogRepository auditLogRepository,
+            IStringLocalizer<Resources.Services.NotificationService>? localizer = null)
         {
             _notificationRepository = notificationRepository;
             _contextFactory = contextFactory;
             _logger = logger;
             _scopeFactory = scopeFactory;
             _auditLogRepository = auditLogRepository;
+            _localizer = ServiceLocalizer.Resolve(localizer);
         }
 
         #region Create Notifications
@@ -68,13 +73,13 @@ namespace FreeSpeakWeb.Services
         {
             if (string.IsNullOrWhiteSpace(userId))
             {
-                return (false, "User ID is required.", null);
+                return (false, _localizer["UserIdRequired"].Value, null);
             }
 
             // Either message or templateKey must be provided
             if (string.IsNullOrWhiteSpace(message) && string.IsNullOrWhiteSpace(templateKey))
             {
-                return (false, "Either message or templateKey is required.", null);
+                return (false, _localizer["MessageOrTemplateRequired"].Value, null);
             }
 
             try
@@ -85,7 +90,7 @@ namespace FreeSpeakWeb.Services
                 var userExists = await context.Users.AnyAsync(u => u.Id == userId);
                 if (!userExists)
                 {
-                    return (false, "User not found.", null);
+                    return (false, _localizer["UserNotFound"].Value, null);
                 }
 
                 // If no expiration provided, calculate from user preferences
@@ -119,7 +124,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating notification for user {UserId}", userId);
-                return (false, "An error occurred while creating the notification.", null);
+                return (false, _localizer["CreateError"].Value, null);
             }
         }
 
@@ -142,7 +147,7 @@ namespace FreeSpeakWeb.Services
         {
             if (userIds == null || !userIds.Any())
             {
-                return (false, "At least one user ID is required.", 0);
+                return (false, _localizer["AtLeastOneUserId"].Value, 0);
             }
 
             // DOS PROTECTION: Limit number of recipients to prevent resource exhaustion
@@ -150,12 +155,12 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogWarning("Bulk notification attempt with {Count} recipients exceeds limit of {Limit}", 
                     userIds.Count, MaxBulkNotificationRecipients);
-                return (false, $"Maximum {MaxBulkNotificationRecipients} recipients allowed per bulk operation.", 0);
+                return (false, string.Format(_localizer["MaxRecipientsExceeded"], MaxBulkNotificationRecipients), 0);
             }
 
             if (string.IsNullOrWhiteSpace(message))
             {
-                return (false, "Message is required.", 0);
+                return (false, _localizer["MessageRequired"].Value, 0);
             }
 
             try
@@ -170,7 +175,7 @@ namespace FreeSpeakWeb.Services
 
                 if (!existingUserIds.Any())
                 {
-                    return (false, "No valid users found.", 0);
+                    return (false, _localizer["NoValidUsers"].Value, 0);
                 }
 
                 var serializedData = data != null ? JsonSerializer.Serialize(data) : null;
@@ -194,7 +199,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating bulk notifications");
-                return (false, "An error occurred while creating notifications.", 0);
+                return (false, _localizer["CreateManyError"].Value, 0);
             }
         }
 
@@ -318,7 +323,7 @@ namespace FreeSpeakWeb.Services
 
                 if (notification == null)
                 {
-                    return (false, "Notification not found.");
+                    return (false, _localizer["NotificationNotFound"].Value);
                 }
 
                 if (!notification.IsRead)
@@ -344,7 +349,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error marking notification {NotificationId} as read for user {UserId}", notificationId, userId);
-                return (false, "An error occurred while updating the notification.");
+                return (false, _localizer["UpdateError"].Value);
             }
         }
 
@@ -390,7 +395,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error marking all notifications as read for user {UserId}", userId);
-                return (false, "An error occurred while updating notifications.", 0);
+                return (false, _localizer["UpdateManyError"].Value, 0);
             }
         }
 
@@ -415,7 +420,7 @@ namespace FreeSpeakWeb.Services
 
                 if (notification == null)
                 {
-                    return (false, "Notification not found.");
+                    return (false, _localizer["NotificationNotFound"].Value);
                 }
 
                 // Capture details before deletion
@@ -440,7 +445,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting notification {NotificationId} for user {UserId}", notificationId, userId);
-                return (false, "An error occurred while deleting the notification.");
+                return (false, _localizer["DeleteError"].Value);
             }
         }
 
@@ -482,7 +487,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting read notifications for user {UserId}", userId);
-                return (false, "An error occurred while deleting notifications.", 0);
+                return (false, _localizer["DeleteManyError"].Value, 0);
             }
         }
 
@@ -514,7 +519,7 @@ namespace FreeSpeakWeb.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting expired notifications");
-                return (false, "An error occurred while deleting expired notifications.", 0);
+                return (false, _localizer["DeleteExpiredError"].Value, 0);
             }
         }
 
