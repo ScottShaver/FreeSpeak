@@ -124,7 +124,16 @@ For VS Code, add the same server under `"servers"` in `.vscode/mcp.json`.
 
 Standing rules to include in every charter:
 
-> Only use `https://localhost:7025`. Log in only with the persona given. Do not visit any other site. Do not attempt to change the database or files directly. Stop and report if the site is not the FreeSpeak test instance (the title/site name is "FreeSpeakDemo").
+> Only use `https://localhost:7025`. Log in only with the persona given. Do not visit any other site. Do not attempt to change the database or files directly. Stop and report if the site is not the FreeSpeak test instance (the title/site name is "FreeSpeakDemo"). Close every browser window and tab you opened (call the Playwright `browser_close` tool) when the test run ends, including when it ends early or fails. Do not leave browser processes running.
+
+### Browser cleanup rule
+
+Every agent that opens a browser through Playwright must shut it down before finishing, whether the run passed, failed or was abandoned:
+
+- Call `browser_close` (and close any extra tabs) at the end of every test run and before switching personas.
+- Do this before sending the final report, so leftover windows never outlive the session.
+- If a run is interrupted, close the browser first, then report.
+- Also stop the test app started with `Start-AgentTestApp.ps1` by its specific process ID once testing is done, unless the user asked to keep it running.
 
 ## 7. Example charters
 
