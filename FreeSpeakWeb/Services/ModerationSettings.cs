@@ -40,5 +40,15 @@ namespace FreeSpeakWeb.Services
         /// suspend for longer or permanently. Default 7.
         /// </summary>
         public int MaxModeratorSuspensionDays { get; set; } = DefaultMaxModeratorSuspensionDays;
+
+        /// <summary>
+        /// The default maximum number of rows in a moderation activity CSV export.
+        /// </summary>
+        public const int DefaultActivityExportMaxRows = 10000;
+
+        /// <summary>
+        /// Gets or sets the maximum number of rows in a moderation activity CSV export. Default 10000.
+        /// </summary>
+        public int ActivityExportMaxRows { get; set; } = DefaultActivityExportMaxRows;
     }
 }

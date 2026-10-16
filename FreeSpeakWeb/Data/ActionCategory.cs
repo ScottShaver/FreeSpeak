@@ -282,6 +282,12 @@ namespace FreeSpeakWeb.Data
         /// <summary>
         /// Action when a system moderator or administrator lifts a user's suspension before it ends.
         /// </summary>
-        SystemModeratorUnsuspendUser = 46
+        SystemModeratorUnsuspendUser = 46,
+
+        /// <summary>
+        /// Action when a system moderator or administrator exports the moderation activity log to CSV.
+        /// Records the row count and whether the export was truncated at the row cap.
+        /// </summary>
+        SystemModeratorActivityExport = 47
     }
 }

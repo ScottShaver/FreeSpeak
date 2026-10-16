@@ -22,6 +22,7 @@ namespace FreeSpeakWeb.Services
         private readonly UserPreferenceService _userPreferenceService;
         private readonly GroupMemberService _groupMemberService;
         private readonly IGroupModerationLogService? _moderationLog;
+        private readonly IRoleService? _roleService;
         private readonly string _uploadsBasePath;
 
         /// <summary>
@@ -42,6 +43,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="userPreferenceService">Service for user preference operations.</param>
         /// <param name="groupMemberService">Service for group member operations.</param>
         /// <param name="moderationLog">Optional per-group moderation log; when omitted nothing is recorded there.</param>
+        /// <param name="roleService">Optional role service; when provided, system moderators and administrators may manage files in any group.</param>
         public GroupFileService(
             IGroupFileRepository fileRepository,
             IGroupRepository groupRepository,
@@ -52,9 +54,11 @@ namespace FreeSpeakWeb.Services
             IVirusScanService virusScanService,
             UserPreferenceService userPreferenceService,
             GroupMemberService groupMemberService,
-            IGroupModerationLogService? moderationLog = null)
+            IGroupModerationLogService? moderationLog = null,
+            IRoleService? roleService = null)
         {
             _moderationLog = moderationLog;
+            _roleService = roleService;
             _fileRepository = fileRepository;
             _groupRepository = groupRepository;
             _contextFactory = contextFactory;
@@ -396,6 +400,16 @@ namespace FreeSpeakWeb.Services
                 return;
             }
 
+            // Flag the entry as system-level when the actor is only authorized through a system role
+            var isSystemAction = false;
+            if (_roleService != null
+                && !await _groupMemberService.IsAdminAsync(file.GroupId, actorUserId)
+                && !await _groupMemberService.IsModeratorAsync(file.GroupId, actorUserId))
+            {
+                var group = await _groupRepository.GetByIdAsync(file.GroupId);
+                isSystemAction = group?.CreatorId != actorUserId && await HasSystemModerationRoleAsync(actorUserId);
+            }
+
             await _moderationLog.LogAsync(new GroupModerationLogRequest
             {
                 GroupId = file.GroupId,
@@ -405,7 +419,8 @@ namespace FreeSpeakWeb.Services
                 TargetId = file.Id.ToString(),
                 TargetUserId = file.UploaderId,
                 Summary = file.OriginalFileName,
-                Reason = reason
+                Reason = reason,
+                IsSystemAction = isSystemAction
             });
         }
 
@@ -499,9 +514,32 @@ namespace FreeSpeakWeb.Services
                 return true;
             }
 
-            // TODO: Check system-level admin/moderator roles if needed
+            return await HasSystemModerationRoleAsync(userId);
+        }
 
-            return false;
+        /// <summary>
+        /// Determines whether the user holds a system-level moderation role (SystemModerator or SystemAdministrator),
+        /// which acts as a backstop for group file moderation.
+        /// </summary>
+        /// <param name="userId">The user to check.</param>
+        /// <returns>True when the user is a system moderator or system administrator.</returns>
+        private async Task<bool> HasSystemModerationRoleAsync(string userId)
+        {
+            if (_roleService == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                return await _roleService.IsUserInRoleAsync(userId, "SystemModerator")
+                    || await _roleService.IsUserInRoleAsync(userId, "SystemAdministrator");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking system moderation role for user {UserId}", userId);
+                return false;
+            }
         }
 
         /// <inheritdoc />

@@ -267,5 +267,50 @@ namespace FreeSpeakWeb.Repositories
                 return new List<AuditLog>();
             }
         }
+
+        /// <inheritdoc/>
+        public async Task<(List<AuditLog> Items, int TotalCount)> GetByCategoriesAsync(IReadOnlyCollection<string> actionCategories, string? userId, DateTime? fromUtc, DateTime? toUtc, int skip, int take)
+        {
+            using var step = _profiler.Step("AuditLogRepository.GetByCategoriesAsync");
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var categories = actionCategories.ToArray();
+            var query = context.AuditLogs.AsNoTracking().Where(a => categories.Contains(a.ActionCategory));
+
+            if (!string.IsNullOrWhiteSpace(userId))
+            {
+                query = query.Where(a => a.UserId == userId);
+            }
+
+            if (fromUtc.HasValue)
+            {
+                var from = fromUtc.Value;
+                query = query.Where(a => a.ActionStamp >= from);
+            }
+
+            if (toUtc.HasValue)
+            {
+                var to = toUtc.Value;
+                query = query.Where(a => a.ActionStamp < to);
+            }
+
+            var total = await query.CountAsync();
+            var items = await query
+                .OrderByDescending(a => a.ActionStamp).ThenByDescending(a => a.Id)
+                .Skip(Math.Max(skip, 0))
+                .Take(Math.Max(take, 0))
+                .ToListAsync();
+            return (items, total);
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<string>> GetDistinctUserIdsByCategoriesAsync(IReadOnlyCollection<string> actionCategories)
+        {
+            using var step = _profiler.Step("AuditLogRepository.GetDistinctUserIdsByCategoriesAsync");
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var categories = actionCategories.ToArray();
+            return await context.AuditLogs.AsNoTracking()
+                .Where(a => categories.Contains(a.ActionCategory))
+                .Select(a => a.UserId).Distinct().ToListAsync();
+        }
     }
 }

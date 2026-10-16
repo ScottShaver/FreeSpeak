@@ -71,5 +71,25 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         /// <param name="userId">Optional user ID filter for exact match. If null or empty, all users are included.</param>
         /// <returns>A list of up to 500 audit log entries matching the search criteria, ordered by most recent first.</returns>
         Task<List<AuditLog>> SearchAuditLogsAsync(string? actionCategory = null, DateTime? startDate = null, DateTime? endDate = null, string? userId = null);
+
+        /// <summary>
+        /// Gets audit entries in any of the given categories, newest first, with exact UTC time bounds and
+        /// database-side paging.
+        /// </summary>
+        /// <param name="actionCategories">The category names to include (matched against the stored enum name).</param>
+        /// <param name="userId">Restrict to one acting user, or null for all users.</param>
+        /// <param name="fromUtc">Inclusive lower bound of the entry time (UTC), or null.</param>
+        /// <param name="toUtc">Exclusive upper bound of the entry time (UTC), or null.</param>
+        /// <param name="skip">The number of entries to skip.</param>
+        /// <param name="take">The maximum number of entries to return.</param>
+        /// <returns>The entries and the total number that match the filter.</returns>
+        Task<(List<AuditLog> Items, int TotalCount)> GetByCategoriesAsync(IReadOnlyCollection<string> actionCategories, string? userId, DateTime? fromUtc, DateTime? toUtc, int skip, int take);
+
+        /// <summary>
+        /// Gets the distinct acting user ids that have entries in any of the given categories.
+        /// </summary>
+        /// <param name="actionCategories">The category names to include.</param>
+        /// <returns>The distinct user ids.</returns>
+        Task<List<string>> GetDistinctUserIdsByCategoriesAsync(IReadOnlyCollection<string> actionCategories);
     }
 }
