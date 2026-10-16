@@ -251,7 +251,7 @@ namespace FreeSpeakWeb.Services
                 case ActionCategory.SystemModeratorReviewReport:
                 {
                     var d = AuditLogDetailsSerializer.FromJson<SystemModeratorReviewReportDetails>(json);
-                    return d == null ? default : (null, null, d.Decision, d.GroupId, null);
+                    return d == null ? default : (null, null, d.Decision, d.GroupId, d.GroupName);
                 }
                 case ActionCategory.SystemModeratorWarnUser:
                 {

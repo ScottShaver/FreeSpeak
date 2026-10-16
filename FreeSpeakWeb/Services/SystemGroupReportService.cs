@@ -1,4 +1,4 @@
-using FreeSpeakWeb.Data;
+﻿using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Repositories.Abstractions;
@@ -196,7 +196,7 @@ namespace FreeSpeakWeb.Services
                     return FeedReportResult.Fail(FeedReportError.AlreadyReviewed);
                 }
 
-                await LogReviewAuditAsync(userId, updated.Id, updated.GroupId, updated.PostId, updated.CommentId, ReportStatus.UnderReview);
+                await LogReviewAuditAsync(userId, updated.Id, updated.GroupId, updated.PostId, updated.CommentId, ReportStatus.UnderReview, gate.Content?.GroupName);
                 return FeedReportResult.Ok(updated.Id);
             }
             catch (Exception ex)
@@ -283,14 +283,14 @@ namespace FreeSpeakWeb.Services
                 await LogModerationAsync(userId, report.GroupId, GroupModerationAction.ReportResolved, GroupModerationTargetType.Report,
                     report.Id.ToString(), content.AuthorId, content.Content, trimmedNotes);
 
-                await LogReviewAuditAsync(userId, report.Id, report.GroupId, report.PostId, report.CommentId, ReportStatus.ActionTaken);
+                await LogReviewAuditAsync(userId, report.Id, report.GroupId, report.PostId, report.CommentId, ReportStatus.ActionTaken, content.GroupName);
                 await NotifyAsync(report.ReporterId, ReviewedMessage, FeedContentReportService.ReviewedTemplateKey, new { ReportId = reportId });
 
                 var reporters = new HashSet<string>(StringComparer.Ordinal) { report.ReporterId };
                 var notifiedAuthors = new HashSet<string>(StringComparer.Ordinal) { content.AuthorId };
                 foreach (var other in closedOthers)
                 {
-                    await LogReviewAuditAsync(userId, other.Id, report.GroupId, other.PostId, other.CommentId, ReportStatus.Resolved);
+                    await LogReviewAuditAsync(userId, other.Id, report.GroupId, other.PostId, other.CommentId, ReportStatus.Resolved, content.GroupName);
                     await LogModerationAsync(userId, report.GroupId, GroupModerationAction.ReportResolved, GroupModerationTargetType.Report,
                         other.Id.ToString(), other.ContentAuthorId, null, trimmedNotes);
                     await NotifyAsync(other.ReporterId, ReviewedMessage, FeedContentReportService.ReviewedTemplateKey, new { ReportId = other.Id });
@@ -363,13 +363,13 @@ namespace FreeSpeakWeb.Services
                 var action = status == ReportStatus.Dismissed ? GroupModerationAction.ReportDismissed : GroupModerationAction.ReportResolved;
                 var authorId = gate.Content?.AuthorId;
 
-                await LogReviewAuditAsync(userId, updated.Id, updated.GroupId, updated.PostId, updated.CommentId, status);
+                await LogReviewAuditAsync(userId, updated.Id, updated.GroupId, updated.PostId, updated.CommentId, status, gate.Content?.GroupName);
                 await LogModerationAsync(userId, updated.GroupId, action, GroupModerationTargetType.Report, updated.Id.ToString(), authorId, gate.Content?.Content, trimmedNotes);
                 await NotifyAsync(updated.ReporterId, ReviewedMessage, FeedContentReportService.ReviewedTemplateKey, new { ReportId = updated.Id });
 
                 foreach (var other in closedOthers)
                 {
-                    await LogReviewAuditAsync(userId, other.Id, updated.GroupId, other.PostId, other.CommentId, status);
+                    await LogReviewAuditAsync(userId, other.Id, updated.GroupId, other.PostId, other.CommentId, status, gate.Content?.GroupName);
                     await LogModerationAsync(userId, updated.GroupId, action, GroupModerationTargetType.Report, other.Id.ToString(), authorId, gate.Content?.Content, trimmedNotes);
                     await NotifyAsync(other.ReporterId, ReviewedMessage, FeedContentReportService.ReviewedTemplateKey, new { ReportId = other.Id });
                 }
@@ -485,7 +485,8 @@ namespace FreeSpeakWeb.Services
         /// <param name="postId">The reported post, or null.</param>
         /// <param name="commentId">The reported comment, or null.</param>
         /// <param name="decision">The decision applied.</param>
-        private Task LogReviewAuditAsync(string userId, int reportId, int groupId, int? postId, int? commentId, ReportStatus decision)
+        /// <param name="groupName">The group name, recorded for the activity log, when known.</param>
+        private Task LogReviewAuditAsync(string userId, int reportId, int groupId, int? postId, int? commentId, ReportStatus decision, string? groupName = null)
             => LogAuditAsync(userId, ActionCategory.SystemModeratorReviewReport, new SystemModeratorReviewReportDetails
             {
                 OperationType = OperationTypeEnum.Update.ToString(),
