@@ -118,4 +118,25 @@
   <data name="ConfirmDeleteUpload" xml:space="preserve">
     <value>Delete this upload? It will also be removed from your post. This cannot be undone.</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>Just now</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>{0}m ago</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>{0}h ago</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>{0}d ago</value>
+  </data>
+  <data name="WeeksAgo" xml:space="preserve">
+    <value>{0}w ago</value>
+  </data>
+  <data name="MonthsAgo" xml:space="preserve">
+    <value>{0}mo ago</value>
+  </data>
+  <data name="YearsAgo" xml:space="preserve">
+    <value>{0}y ago</value>
+  </data>
 </root>

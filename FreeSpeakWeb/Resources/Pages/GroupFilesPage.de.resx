@@ -229,4 +229,52 @@
   <data name="DownloadFailed" xml:space="preserve">
     <value>Download fehlgeschlagen: {0}</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>Gruppe</value>
+  </data>
+  <data name="LoadFilesFailed" xml:space="preserve">
+    <value>Dateien konnten nicht geladen werden: {0}</value>
+  </data>
+  <data name="LoadPendingFilesFailed" xml:space="preserve">
+    <value>Ausstehende Dateien konnten nicht geladen werden: {0}</value>
+  </data>
+  <data name="UploadedPendingApproval" xml:space="preserve">
+    <value>Datei erfolgreich hochgeladen. Sie ist nach der Freigabe durch einen Administrator sichtbar.</value>
+  </data>
+  <data name="UploadedSuccessfully" xml:space="preserve">
+    <value>Datei erfolgreich hochgeladen!</value>
+  </data>
+  <data name="UploadFileFailed" xml:space="preserve">
+    <value>Datei konnte nicht hochgeladen werden.</value>
+  </data>
+  <data name="UploadFailedWithReason" xml:space="preserve">
+    <value>Hochladen fehlgeschlagen: {0}</value>
+  </data>
+  <data name="FileDeleted" xml:space="preserve">
+    <value>Datei erfolgreich gelöscht.</value>
+  </data>
+  <data name="DeleteFileFailed" xml:space="preserve">
+    <value>Datei konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="DeleteFailedWithReason" xml:space="preserve">
+    <value>Löschen fehlgeschlagen: {0}</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>Datei erfolgreich freigegeben.</value>
+  </data>
+  <data name="ApproveFileFailed" xml:space="preserve">
+    <value>Datei konnte nicht freigegeben werden.</value>
+  </data>
+  <data name="ApprovalFailedWithReason" xml:space="preserve">
+    <value>Freigabe fehlgeschlagen: {0}</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>Datei erfolgreich abgelehnt.</value>
+  </data>
+  <data name="DeclineFileFailed" xml:space="preserve">
+    <value>Datei konnte nicht abgelehnt werden.</value>
+  </data>
+  <data name="DeclineFailedWithReason" xml:space="preserve">
+    <value>Ablehnen fehlgeschlagen: {0}</value>
+  </data>
 </root>

@@ -163,4 +163,43 @@
   <data name="JumpToGroup" xml:space="preserve">
     <value>Aller au groupe</value>
   </data>
+  <data name="SubmitRequest" xml:space="preserve">
+    <value>Envoyer la demande</value>
+  </data>
+  <data name="JoinGroup" xml:space="preserve">
+    <value>Rejoindre le groupe</value>
+  </data>
+  <data name="JoinRequestFailed" xml:space="preserve">
+    <value>Échec de l'envoi de la demande d'adhésion.</value>
+  </data>
+  <data name="JoinGroupFailed" xml:space="preserve">
+    <value>Échec de l'adhésion au groupe.</value>
+  </data>
+  <data name="JoinGroupError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de l'adhésion au groupe. {0}</value>
+  </data>
+  <data name="CancelJoinRequestFailed" xml:space="preserve">
+    <value>Échec de l'annulation de la demande d'adhésion.</value>
+  </data>
+  <data name="CancelJoinRequestError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de l'annulation de la demande d'adhésion. {0}</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Échec de l'épinglage de la publication.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Échec du désépinglage de la publication.</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>Publication du groupe mise à jour avec succès.</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>Échec de la mise à jour de la publication du groupe.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Signalement envoyé avec succès. Merci de contribuer à la sécurité de notre communauté.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
 </root>

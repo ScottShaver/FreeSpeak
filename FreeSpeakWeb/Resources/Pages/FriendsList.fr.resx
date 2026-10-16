@@ -116,4 +116,49 @@
   <data name="RemoveFriendCancelButton" xml:space="preserve">
     <value>Annuler</value>
   </data>
+  <data name="LoadFriendsError" xml:space="preserve">
+    <value>Une erreur s'est produite lors du chargement de vos amis.</value>
+  </data>
+  <data name="LoadRequestsError" xml:space="preserve">
+    <value>Une erreur s'est produite lors du chargement des demandes d'amis.</value>
+  </data>
+  <data name="LoadSentRequestsError" xml:space="preserve">
+    <value>Une erreur s'est produite lors du chargement des demandes envoyées.</value>
+  </data>
+  <data name="LoadSuggestionsError" xml:space="preserve">
+    <value>Une erreur s'est produite lors du chargement des suggestions.</value>
+  </data>
+  <data name="SearchError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la recherche. Veuillez réessayer.</value>
+  </data>
+  <data name="FriendRequestSent" xml:space="preserve">
+    <value>Demande d'ami envoyée à {0}.</value>
+  </data>
+  <data name="FriendRequestCancelled" xml:space="preserve">
+    <value>Demande d'ami à {0} annulée.</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>{0} a été retiré de vos amis.</value>
+  </data>
+  <data name="NowFriends" xml:space="preserve">
+    <value>Vous êtes maintenant ami avec {0}.</value>
+  </data>
+  <data name="FriendRequestDeclined" xml:space="preserve">
+    <value>Demande d'ami de {0} refusée.</value>
+  </data>
+  <data name="SendRequestFailed" xml:space="preserve">
+    <value>Échec de l'envoi de la demande d'ami.</value>
+  </data>
+  <data name="CancelRequestFailed" xml:space="preserve">
+    <value>Échec de l'annulation de la demande d'ami.</value>
+  </data>
+  <data name="RemoveFriendFailed" xml:space="preserve">
+    <value>Échec de la suppression de l'ami.</value>
+  </data>
+  <data name="AcceptRequestFailed" xml:space="preserve">
+    <value>Échec de l'acceptation de la demande d'ami.</value>
+  </data>
+  <data name="DeclineRequestFailed" xml:space="preserve">
+    <value>Échec du refus de la demande d'ami.</value>
+  </data>
 </root>

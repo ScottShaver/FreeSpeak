@@ -506,7 +506,7 @@
 {
     <RulesAcceptanceModal 
         Group="@selectedGroupForJoin"
-        AgreeButtonText="@(selectedGroupForJoin.RequiresJoinApproval ? "Submit Request" : "Join Group")"
+        AgreeButtonText="@(selectedGroupForJoin.RequiresJoinApproval ? Localizer["SubmitRequest"].Value : Localizer["JoinGroup"].Value)"
         OnClose="CloseRulesModal"
         OnAgree="HandleRulesAgreed" />
 }
@@ -517,7 +517,7 @@
     <PostEditModal 
         @ref="groupPostEditModalRef"
         PostId="@editGroupPost.Id"
-        AuthorName="@(editGroupPost.Author != null ? (postAuthorNames.ContainsKey(editGroupPost.Id) ? postAuthorNames[editGroupPost.Id] : "Unknown") : "Unknown")"
+        AuthorName="@(editGroupPost.Author != null ? (postAuthorNames.ContainsKey(editGroupPost.Id) ? postAuthorNames[editGroupPost.Id] : Localizer["UnknownUser"].Value) : Localizer["UnknownUser"].Value)"
         AuthorImageUrl="@editGroupPost.Author?.ProfilePictureUrl"
         CreatedAt="@editGroupPost.CreatedAt"
         InitialContent="@editGroupPost.Content"
@@ -651,7 +651,7 @@
                         appUser.Id,
                         appUser.FirstName,
                         appUser.LastName,
-                        appUser.UserName ?? "Unknown"
+                        appUser.UserName ?? Localizer["UnknownUser"].Value
                     );
                 }
 
@@ -1456,7 +1456,7 @@
                 }
                 else
                 {
-                    AlertService.ShowError(errorMessage ?? "Failed to send join request.");
+                    AlertService.ShowError(errorMessage ?? Localizer["JoinRequestFailed"].Value);
                 }
             }
             else
@@ -1483,13 +1483,13 @@
                 }
                 else
                 {
-                    AlertService.ShowError(errorMessage ?? "Failed to join group.");
+                    AlertService.ShowError(errorMessage ?? Localizer["JoinGroupFailed"].Value);
                 }
             }
         }
         catch (Exception ex)
         {
-            AlertService.ShowError("An error occurred while joining the group. " + ex.GetType());
+            AlertService.ShowError(Localizer["JoinGroupError", ex.GetType()].Value);
         }
     }
 
@@ -1530,12 +1530,12 @@
             }
             else
             {
-                AlertService.ShowError(errorMessage ?? "Failed to cancel join request.");
+                AlertService.ShowError(errorMessage ?? Localizer["CancelJoinRequestFailed"].Value);
             }
         }
         catch (Exception ex)
         {
-            AlertService.ShowError("An error occurred while cancelling the join request. " + ex.GetType());
+            AlertService.ShowError(Localizer["CancelJoinRequestError", ex.GetType()].Value);
         }
     }
 
@@ -1593,7 +1593,7 @@
         }
         else
         {
-            AlertService.ShowError(errorMessage ?? "Failed to pin post.");
+            AlertService.ShowError(errorMessage ?? Localizer["PinPostFailed"].Value);
         }
     }
 
@@ -1628,7 +1628,7 @@
         }
         else
         {
-            AlertService.ShowError(errorMessage ?? "Failed to unpin post.");
+            AlertService.ShowError(errorMessage ?? Localizer["UnpinPostFailed"].Value);
         }
     }
 
@@ -1724,7 +1724,7 @@
         if (result.Success)
         {
             await CloseEditGroupPostModal();
-            AlertService.ShowSuccess("Group post updated successfully.");
+            AlertService.ShowSuccess(Localizer["GroupPostUpdated"].Value);
 
             // Reload the group feed to reflect the changes
             await LoadGroupFeed();
@@ -1732,7 +1732,7 @@
         }
         else
         {
-            AlertService.ShowError(result.ErrorMessage ?? "Failed to update group post.");
+            AlertService.ShowError(result.ErrorMessage ?? Localizer["GroupPostUpdateFailed"].Value);
         }
     }
 
@@ -1877,13 +1877,13 @@
     private async Task<string> FormatUserDisplayName(ApplicationUser? user)
     {
         if (user == null)
-            return "Unknown";
+            return Localizer["UnknownUser"].Value;
 
         return await UserPreferenceService.FormatUserDisplayNameAsync(
             user.Id,
             user.FirstName,
             user.LastName,
-            user.UserName ?? "Unknown"
+            user.UserName ?? Localizer["UnknownUser"].Value
         );
     }
 
@@ -2332,7 +2332,7 @@
     /// </summary>
     private Task HandleCommentReportSubmitted()
     {
-        AlertService.ShowSuccess("Report submitted successfully. Thank you for helping keep our community safe.");
+        AlertService.ShowSuccess(Localizer["ReportSubmitted"].Value);
         return Task.CompletedTask;
     }
 

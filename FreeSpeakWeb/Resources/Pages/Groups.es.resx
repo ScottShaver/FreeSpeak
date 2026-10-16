@@ -163,4 +163,43 @@
   <data name="JumpToGroup" xml:space="preserve">
     <value>Ir al grupo</value>
   </data>
+  <data name="SubmitRequest" xml:space="preserve">
+    <value>Enviar solicitud</value>
+  </data>
+  <data name="JoinGroup" xml:space="preserve">
+    <value>Unirse al grupo</value>
+  </data>
+  <data name="JoinRequestFailed" xml:space="preserve">
+    <value>No se pudo enviar la solicitud de unión.</value>
+  </data>
+  <data name="JoinGroupFailed" xml:space="preserve">
+    <value>No se pudo unir al grupo.</value>
+  </data>
+  <data name="JoinGroupError" xml:space="preserve">
+    <value>Se produjo un error al unirse al grupo. {0}</value>
+  </data>
+  <data name="CancelJoinRequestFailed" xml:space="preserve">
+    <value>No se pudo cancelar la solicitud de unión.</value>
+  </data>
+  <data name="CancelJoinRequestError" xml:space="preserve">
+    <value>Se produjo un error al cancelar la solicitud de unión. {0}</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>No se pudo fijar la publicación.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>No se pudo desfijar la publicación.</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>Publicación del grupo actualizada correctamente.</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>No se pudo actualizar la publicación del grupo.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Denuncia enviada correctamente. Gracias por ayudar a mantener segura nuestra comunidad.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Desconocido</value>
+  </data>
 </root>

@@ -376,7 +376,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error loading friends for user {UserId}", currentUserId);
-            errorMessage = "An error occurred while loading your friends.";
+            errorMessage = Localizer["LoadFriendsError"];
         }
     }
 
@@ -393,7 +393,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error loading pending requests for user {UserId}", currentUserId);
-            errorMessage = "An error occurred while loading friend requests.";
+            errorMessage = Localizer["LoadRequestsError"];
         }
     }
 
@@ -410,7 +410,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error loading sent requests for user {UserId}", currentUserId);
-            errorMessage = "An error occurred while loading sent requests.";
+            errorMessage = Localizer["LoadSentRequestsError"];
         }
     }
 
@@ -427,7 +427,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error loading people you may know for user {UserId}", currentUserId);
-            errorMessage = "An error occurred while loading suggestions.";
+            errorMessage = Localizer["LoadSuggestionsError"];
         }
     }
 
@@ -493,7 +493,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "[{ExceptionType}] Error occurred while searching for users. Search term: {SearchTerm}. Exception: {ExceptionMessage}", ex.GetType().Name, searchTerm, ex.Message);
-            errorMessage = "An error occurred while searching. Please try again.";
+                        errorMessage = Localizer["SearchError"];
         }
         finally
         {
@@ -534,7 +534,7 @@
                     catch (Exception ex)
                     {
                         Logger.LogError(ex, "[{ExceptionType}] Error occurred while searching for users. Search term: {SearchTerm}. Exception: {ExceptionMessage}", ex.GetType().Name, currentSearchTerm, ex.Message);
-                        errorMessage = "An error occurred while searching. Please try again.";
+                        errorMessage = Localizer["SearchError"];
                     }
                     finally
                     {
@@ -553,8 +553,8 @@
         var result = await FriendsService.SendFriendRequestAsync(currentUserId, user.Id);
         if (result.Success)
         {
-            statusMessage = $"Friend request sent to {GetDisplayName(user)}.";
-            AlertService.ShowSuccess($"Friend request sent to {GetDisplayName(user)}.");
+            statusMessage = Localizer["FriendRequestSent", GetDisplayName(user)];
+            AlertService.ShowSuccess(Localizer["FriendRequestSent", GetDisplayName(user)]);
             // Keep the result visible, shown as Pending with a Cancel option
             requestedUserIds.Add(user.Id);
             // Update sent requests count
@@ -563,8 +563,8 @@
         }
         else
         {
-            errorMessage = result.ErrorMessage ?? "Failed to send friend request.";
-            AlertService.ShowError(result.ErrorMessage ?? "Failed to send friend request.");
+            errorMessage = result.ErrorMessage ?? Localizer["SendRequestFailed"];
+            AlertService.ShowError(result.ErrorMessage ?? Localizer["SendRequestFailed"]);
         }
     }
 
@@ -588,7 +588,7 @@
         if (result.Success)
         {
             requestedUserIds.Remove(user.Id);
-            statusMessage = $"Cancelled friend request to {GetDisplayName(user)}.";
+            statusMessage = Localizer["FriendRequestCancelled", GetDisplayName(user)];
 
             try
             {
@@ -607,8 +607,8 @@
         }
         else
         {
-            errorMessage = result.ErrorMessage ?? "Failed to cancel friend request.";
-            AlertService.ShowError(result.ErrorMessage ?? "Failed to cancel friend request.");
+            errorMessage = result.ErrorMessage ?? Localizer["CancelRequestFailed"];
+            AlertService.ShowError(result.ErrorMessage ?? Localizer["CancelRequestFailed"]);
         }
     }
 
@@ -650,8 +650,8 @@
             var result = await FriendsService.RemoveFriendAsync(friendship.Id, currentUserId);
             if (result.Success)
             {
-                statusMessage = $"Removed {GetDisplayName(friend)} from your friends.";
-                AlertService.ShowSuccess($"Removed {GetDisplayName(friend)} from your friends.");
+                statusMessage = Localizer["FriendRemoved", GetDisplayName(friend)];
+                AlertService.ShowSuccess(Localizer["FriendRemoved", GetDisplayName(friend)]);
                 await LoadFriendsAsync();
                 // Update suggestions count as it may change
                 peopleYouMayKnowCount = await FriendsService.GetPeopleYouMayKnowCountAsync(currentUserId);
@@ -659,8 +659,8 @@
             }
             else
             {
-                errorMessage = result.ErrorMessage ?? "Failed to remove friend.";
-                AlertService.ShowError(result.ErrorMessage ?? "Failed to remove friend.");
+                errorMessage = result.ErrorMessage ?? Localizer["RemoveFriendFailed"];
+                AlertService.ShowError(result.ErrorMessage ?? Localizer["RemoveFriendFailed"]);
             }
         }
     }
@@ -672,8 +672,8 @@
         var result = await FriendsService.SendFriendRequestAsync(currentUserId, user.Id);
         if (result.Success)
         {
-            statusMessage = $"Friend request sent to {GetDisplayName(user)}.";
-            AlertService.ShowSuccess($"Friend request sent to {GetDisplayName(user)}.");
+            statusMessage = Localizer["FriendRequestSent", GetDisplayName(user)];
+            AlertService.ShowSuccess(Localizer["FriendRequestSent", GetDisplayName(user)]);
             // Remove from suggestions
             peopleYouMayKnow = peopleYouMayKnow.Where(p => p.User.Id != user.Id).ToList();
             peopleYouMayKnowCount = peopleYouMayKnow.Count;
@@ -683,8 +683,8 @@
         }
         else
         {
-            errorMessage = result.ErrorMessage ?? "Failed to send friend request.";
-            AlertService.ShowError(result.ErrorMessage ?? "Failed to send friend request.");
+            errorMessage = result.ErrorMessage ?? Localizer["SendRequestFailed"];
+            AlertService.ShowError(result.ErrorMessage ?? Localizer["SendRequestFailed"]);
         }
     }
 
@@ -706,7 +706,7 @@
             var result = await FriendsService.AcceptFriendRequestAsync(request.Friendship.Id, currentUserId);
             if (result.Success)
             {
-                statusMessage = $"You are now friends with {GetDisplayName(requester)}.";
+                statusMessage = Localizer["NowFriends", GetDisplayName(requester)];
 
                 // Log friend request acceptance to audit log
                 try
@@ -729,8 +729,8 @@
             }
             else
             {
-                errorMessage = result.ErrorMessage ?? "Failed to accept friend request.";
-                AlertService.ShowError(result.ErrorMessage ?? "Failed to accept friend request.");
+                errorMessage = result.ErrorMessage ?? Localizer["AcceptRequestFailed"];
+                AlertService.ShowError(result.ErrorMessage ?? Localizer["AcceptRequestFailed"]);
             }
         }
     }
@@ -745,7 +745,7 @@
             var result = await FriendsService.RejectFriendRequestAsync(request.Friendship.Id, currentUserId);
             if (result.Success)
             {
-                statusMessage = $"Declined friend request from {GetDisplayName(requester)}.";
+                statusMessage = Localizer["FriendRequestDeclined", GetDisplayName(requester)];
 
                 // Log friend request rejection to audit log
                 try
@@ -765,8 +765,8 @@
             }
             else
             {
-                errorMessage = result.ErrorMessage ?? "Failed to decline friend request.";
-                AlertService.ShowError(result.ErrorMessage ?? "Failed to decline friend request.");
+                errorMessage = result.ErrorMessage ?? Localizer["DeclineRequestFailed"];
+                AlertService.ShowError(result.ErrorMessage ?? Localizer["DeclineRequestFailed"]);
             }
         }
     }
@@ -781,7 +781,7 @@
             var result = await FriendsService.RemoveFriendAsync(request.Friendship.Id, currentUserId);
             if (result.Success)
             {
-                statusMessage = $"Cancelled friend request to {GetDisplayName(addressee)}.";
+                statusMessage = Localizer["FriendRequestCancelled", GetDisplayName(addressee)];
 
                 // Log friend request cancellation to audit log
                 try
@@ -801,8 +801,8 @@
             }
             else
             {
-                errorMessage = result.ErrorMessage ?? "Failed to cancel friend request.";
-                AlertService.ShowError(result.ErrorMessage ?? "Failed to cancel friend request.");
+                errorMessage = result.ErrorMessage ?? Localizer["CancelRequestFailed"];
+                AlertService.ShowError(result.ErrorMessage ?? Localizer["CancelRequestFailed"]);
             }
         }
     }

@@ -229,4 +229,52 @@
   <data name="DownloadFailed" xml:space="preserve">
     <value>Échec du téléchargement : {0}</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>Groupe</value>
+  </data>
+  <data name="LoadFilesFailed" xml:space="preserve">
+    <value>Échec du chargement des fichiers : {0}</value>
+  </data>
+  <data name="LoadPendingFilesFailed" xml:space="preserve">
+    <value>Échec du chargement des fichiers en attente : {0}</value>
+  </data>
+  <data name="UploadedPendingApproval" xml:space="preserve">
+    <value>Fichier téléversé avec succès. Il sera visible après approbation d'un administrateur.</value>
+  </data>
+  <data name="UploadedSuccessfully" xml:space="preserve">
+    <value>Fichier téléversé avec succès !</value>
+  </data>
+  <data name="UploadFileFailed" xml:space="preserve">
+    <value>Échec du téléversement du fichier.</value>
+  </data>
+  <data name="UploadFailedWithReason" xml:space="preserve">
+    <value>Échec du téléversement : {0}</value>
+  </data>
+  <data name="FileDeleted" xml:space="preserve">
+    <value>Fichier supprimé avec succès.</value>
+  </data>
+  <data name="DeleteFileFailed" xml:space="preserve">
+    <value>Échec de la suppression du fichier.</value>
+  </data>
+  <data name="DeleteFailedWithReason" xml:space="preserve">
+    <value>Échec de la suppression : {0}</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>Fichier approuvé avec succès.</value>
+  </data>
+  <data name="ApproveFileFailed" xml:space="preserve">
+    <value>Échec de l'approbation du fichier.</value>
+  </data>
+  <data name="ApprovalFailedWithReason" xml:space="preserve">
+    <value>Échec de l'approbation : {0}</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>Fichier refusé avec succès.</value>
+  </data>
+  <data name="DeclineFileFailed" xml:space="preserve">
+    <value>Échec du refus du fichier.</value>
+  </data>
+  <data name="DeclineFailedWithReason" xml:space="preserve">
+    <value>Échec du refus : {0}</value>
+  </data>
 </root>

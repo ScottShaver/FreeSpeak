@@ -78,4 +78,52 @@
   <data name="DownloadFailed" xml:space="preserve">
     <value>Pobieranie nie powiodło się: {0}</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>Grupa</value>
+  </data>
+  <data name="LoadFilesFailed" xml:space="preserve">
+    <value>Nie udało się załadować plików: {0}</value>
+  </data>
+  <data name="LoadPendingFilesFailed" xml:space="preserve">
+    <value>Nie udało się załadować oczekujących plików: {0}</value>
+  </data>
+  <data name="UploadedPendingApproval" xml:space="preserve">
+    <value>Plik został przesłany. Będzie widoczny po zatwierdzeniu przez administratora.</value>
+  </data>
+  <data name="UploadedSuccessfully" xml:space="preserve">
+    <value>Plik został przesłany!</value>
+  </data>
+  <data name="UploadFileFailed" xml:space="preserve">
+    <value>Nie udało się przesłać pliku.</value>
+  </data>
+  <data name="UploadFailedWithReason" xml:space="preserve">
+    <value>Przesyłanie nie powiodło się: {0}</value>
+  </data>
+  <data name="FileDeleted" xml:space="preserve">
+    <value>Plik został usunięty.</value>
+  </data>
+  <data name="DeleteFileFailed" xml:space="preserve">
+    <value>Nie udało się usunąć pliku.</value>
+  </data>
+  <data name="DeleteFailedWithReason" xml:space="preserve">
+    <value>Usuwanie nie powiodło się: {0}</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>Plik został zatwierdzony.</value>
+  </data>
+  <data name="ApproveFileFailed" xml:space="preserve">
+    <value>Nie udało się zatwierdzić pliku.</value>
+  </data>
+  <data name="ApprovalFailedWithReason" xml:space="preserve">
+    <value>Zatwierdzanie nie powiodło się: {0}</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>Plik został odrzucony.</value>
+  </data>
+  <data name="DeclineFileFailed" xml:space="preserve">
+    <value>Nie udało się odrzucić pliku.</value>
+  </data>
+  <data name="DeclineFailedWithReason" xml:space="preserve">
+    <value>Odrzucanie nie powiodło się: {0}</value>
+  </data>
 </root>

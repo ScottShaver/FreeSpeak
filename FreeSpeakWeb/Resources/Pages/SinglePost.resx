@@ -64,4 +64,22 @@
   <data name="GoToHome" xml:space="preserve">
     <value>Go to Home</value>
   </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="LoadingPost" xml:space="preserve">
+    <value>Loading post...</value>
+  </data>
+  <data name="PostTitle" xml:space="preserve">
+    <value>Post</value>
+  </data>
+  <data name="PostByAuthor" xml:space="preserve">
+    <value>Post by {0}</value>
+  </data>
+  <data name="PostNoLongerAvailable" xml:space="preserve">
+    <value>Sorry, this post is no longer available.</value>
+  </data>
+  <data name="LoadPostError" xml:space="preserve">
+    <value>An error occurred while loading this post.</value>
+  </data>
 </root>

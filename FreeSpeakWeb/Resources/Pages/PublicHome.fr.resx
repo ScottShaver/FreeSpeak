@@ -83,4 +83,16 @@
   <data name="NoPosts" xml:space="preserve">
     <value>Aucune publication publique à afficher pour le moment. Soyez le premier à partager quelque chose !</value>
   </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>Charger plus</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>Chargement de publications supplémentaires...</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Utilisateur inconnu</value>
+  </data>
 </root>

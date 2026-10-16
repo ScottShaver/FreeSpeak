@@ -572,5 +572,149 @@ namespace FreeSpeakWeb.Resources.Pages {
                 return ResourceManager.GetString("UploadingFile", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group.
+        /// </summary>
+        public static string DefaultGroupName {
+            get {
+                return ResourceManager.GetString("DefaultGroupName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to load files: {0}.
+        /// </summary>
+        public static string LoadFilesFailed {
+            get {
+                return ResourceManager.GetString("LoadFilesFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to load pending files: {0}.
+        /// </summary>
+        public static string LoadPendingFilesFailed {
+            get {
+                return ResourceManager.GetString("LoadPendingFilesFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to File uploaded successfully. It will be visible after admin approval..
+        /// </summary>
+        public static string UploadedPendingApproval {
+            get {
+                return ResourceManager.GetString("UploadedPendingApproval", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to File uploaded successfully!.
+        /// </summary>
+        public static string UploadedSuccessfully {
+            get {
+                return ResourceManager.GetString("UploadedSuccessfully", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to upload file..
+        /// </summary>
+        public static string UploadFileFailed {
+            get {
+                return ResourceManager.GetString("UploadFileFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Upload failed: {0}.
+        /// </summary>
+        public static string UploadFailedWithReason {
+            get {
+                return ResourceManager.GetString("UploadFailedWithReason", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to File deleted successfully..
+        /// </summary>
+        public static string FileDeleted {
+            get {
+                return ResourceManager.GetString("FileDeleted", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to delete file..
+        /// </summary>
+        public static string DeleteFileFailed {
+            get {
+                return ResourceManager.GetString("DeleteFileFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete failed: {0}.
+        /// </summary>
+        public static string DeleteFailedWithReason {
+            get {
+                return ResourceManager.GetString("DeleteFailedWithReason", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to File approved successfully..
+        /// </summary>
+        public static string FileApproved {
+            get {
+                return ResourceManager.GetString("FileApproved", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to approve file..
+        /// </summary>
+        public static string ApproveFileFailed {
+            get {
+                return ResourceManager.GetString("ApproveFileFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Approval failed: {0}.
+        /// </summary>
+        public static string ApprovalFailedWithReason {
+            get {
+                return ResourceManager.GetString("ApprovalFailedWithReason", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to File declined successfully..
+        /// </summary>
+        public static string FileDeclined {
+            get {
+                return ResourceManager.GetString("FileDeclined", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to decline file..
+        /// </summary>
+        public static string DeclineFileFailed {
+            get {
+                return ResourceManager.GetString("DeclineFileFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Decline failed: {0}.
+        /// </summary>
+        public static string DeclineFailedWithReason {
+            get {
+                return ResourceManager.GetString("DeclineFailedWithReason", resourceCulture);
+            }
+        }
     }
 }

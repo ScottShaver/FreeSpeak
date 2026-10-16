@@ -91,4 +91,19 @@
   <data name="LoadMore" xml:space="preserve">
     <value>Meer laden</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Onbekend</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Gebruiker</value>
+  </data>
+  <data name="DeleteNotificationFailed" xml:space="preserve">
+    <value>Melding verwijderen mislukt.</value>
+  </data>
+  <data name="MarkAllReadFailed" xml:space="preserve">
+    <value>Meldingen als gelezen markeren mislukt.</value>
+  </data>
+  <data name="ClearReadFailed" xml:space="preserve">
+    <value>Gelezen meldingen verwijderen mislukt.</value>
+  </data>
 </root>

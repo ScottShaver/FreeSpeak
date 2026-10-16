@@ -85,4 +85,40 @@
   <data name="EmptyPinnedPosts" xml:space="preserve">
     <value>Aún no has fijado ninguna publicación. ¡Fija publicaciones desde tu feed para verlas aquí!</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Desconocido</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Usuario desconocido</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Usuario</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>No se pudo fijar la publicación.</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>Se produjo un error al fijar la publicación.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>No se pudo desfijar la publicación.</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>Se produjo un error al desfijar la publicación.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>No se pudieron subir las imágenes.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>No se pudo crear la publicación.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Se produjo un error al crear tu publicación.</value>
+  </data>
+  <data name="UpdatePostFailed" xml:space="preserve">
+    <value>No se pudo actualizar la publicación</value>
+  </data>
+  <data name="UpdatePostError" xml:space="preserve">
+    <value>Se produjo un error al actualizar la publicación.</value>
+  </data>
 </root>

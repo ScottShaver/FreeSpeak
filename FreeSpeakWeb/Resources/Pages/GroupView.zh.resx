@@ -166,4 +166,40 @@
   <data name="NonMemberPrivateNotice" xml:space="preserve">
     <value>您正在查看此私密群组。加入后即可发帖和参与。</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>群组</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>正在加载更多帖子...</value>
+  </data>
+  <data name="NoMorePosts" xml:space="preserve">
+    <value>目前没有更多帖子</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>置顶帖子失败。</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>取消置顶帖子失败。</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>上传图片失败。</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>创建帖子失败。</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>创建帖子时出错。</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>群组帖子已成功更新。</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>更新群组帖子失败。</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>举报已成功提交。感谢您帮助维护社区安全。</value>
+  </data>
 </root>

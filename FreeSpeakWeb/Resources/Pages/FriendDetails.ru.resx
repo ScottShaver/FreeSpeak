@@ -91,4 +91,34 @@
   <data name="AboutMe" xml:space="preserve">
     <value>Обо мне</value>
   </data>
+  <data name="FriendFallback" xml:space="preserve">
+    <value>Друг</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Не удалось закрепить публикацию.</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>Произошла ошибка при закреплении публикации.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Не удалось открепить публикацию.</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>Произошла ошибка при откреплении публикации.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>Не удалось загрузить изображения.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Не удалось создать публикацию.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Произошла ошибка при создании публикации.</value>
+  </data>
+  <data name="LoadFriendDetailsError" xml:space="preserve">
+    <value>Произошла ошибка при загрузке данных о друге.</value>
+  </data>
+  <data name="LoadPostsError" xml:space="preserve">
+    <value>Произошла ошибка при загрузке публикаций.</value>
+  </data>
 </root>

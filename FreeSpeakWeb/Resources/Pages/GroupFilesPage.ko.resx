@@ -78,4 +78,52 @@
   <data name="DownloadFailed" xml:space="preserve">
     <value>다운로드 실패: {0}</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>그룹</value>
+  </data>
+  <data name="LoadFilesFailed" xml:space="preserve">
+    <value>파일을 불러오지 못했습니다: {0}</value>
+  </data>
+  <data name="LoadPendingFilesFailed" xml:space="preserve">
+    <value>대기 중인 파일을 불러오지 못했습니다: {0}</value>
+  </data>
+  <data name="UploadedPendingApproval" xml:space="preserve">
+    <value>파일이 업로드되었습니다. 관리자 승인 후에 표시됩니다.</value>
+  </data>
+  <data name="UploadedSuccessfully" xml:space="preserve">
+    <value>파일이 업로드되었습니다!</value>
+  </data>
+  <data name="UploadFileFailed" xml:space="preserve">
+    <value>파일을 업로드하지 못했습니다.</value>
+  </data>
+  <data name="UploadFailedWithReason" xml:space="preserve">
+    <value>업로드 실패: {0}</value>
+  </data>
+  <data name="FileDeleted" xml:space="preserve">
+    <value>파일이 삭제되었습니다.</value>
+  </data>
+  <data name="DeleteFileFailed" xml:space="preserve">
+    <value>파일을 삭제하지 못했습니다.</value>
+  </data>
+  <data name="DeleteFailedWithReason" xml:space="preserve">
+    <value>삭제 실패: {0}</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>파일이 승인되었습니다.</value>
+  </data>
+  <data name="ApproveFileFailed" xml:space="preserve">
+    <value>파일을 승인하지 못했습니다.</value>
+  </data>
+  <data name="ApprovalFailedWithReason" xml:space="preserve">
+    <value>승인 실패: {0}</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>파일이 거부되었습니다.</value>
+  </data>
+  <data name="DeclineFileFailed" xml:space="preserve">
+    <value>파일을 거부하지 못했습니다.</value>
+  </data>
+  <data name="DeclineFailedWithReason" xml:space="preserve">
+    <value>거부 실패: {0}</value>
+  </data>
 </root>

@@ -163,4 +163,43 @@
   <data name="JumpToGroup" xml:space="preserve">
     <value>Przejdź do grupy</value>
   </data>
+  <data name="SubmitRequest" xml:space="preserve">
+    <value>Wyślij prośbę</value>
+  </data>
+  <data name="JoinGroup" xml:space="preserve">
+    <value>Dołącz do grupy</value>
+  </data>
+  <data name="JoinRequestFailed" xml:space="preserve">
+    <value>Nie udało się wysłać prośby o dołączenie.</value>
+  </data>
+  <data name="JoinGroupFailed" xml:space="preserve">
+    <value>Nie udało się dołączyć do grupy.</value>
+  </data>
+  <data name="JoinGroupError" xml:space="preserve">
+    <value>Wystąpił błąd podczas dołączania do grupy. {0}</value>
+  </data>
+  <data name="CancelJoinRequestFailed" xml:space="preserve">
+    <value>Nie udało się anulować prośby o dołączenie.</value>
+  </data>
+  <data name="CancelJoinRequestError" xml:space="preserve">
+    <value>Wystąpił błąd podczas anulowania prośby o dołączenie. {0}</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Nie udało się przypiąć posta.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Nie udało się odpiąć posta.</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>Post grupowy został zaktualizowany.</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>Nie udało się zaktualizować posta grupowego.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Zgłoszenie zostało wysłane. Dziękujemy za pomoc w dbaniu o bezpieczeństwo naszej społeczności.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Nieznany</value>
+  </data>
 </root>

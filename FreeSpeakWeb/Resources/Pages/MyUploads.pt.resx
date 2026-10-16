@@ -118,4 +118,25 @@
   <data name="ConfirmDeleteUpload" xml:space="preserve">
     <value>Excluir este envio? Ele também será removido da sua publicação. Isso não pode ser desfeito.</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>Agora mesmo</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>há {0} min</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>há {0} h</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>há {0} d</value>
+  </data>
+  <data name="WeeksAgo" xml:space="preserve">
+    <value>há {0} sem</value>
+  </data>
+  <data name="MonthsAgo" xml:space="preserve">
+    <value>há {0} m</value>
+  </data>
+  <data name="YearsAgo" xml:space="preserve">
+    <value>há {0} a</value>
+  </data>
 </root>

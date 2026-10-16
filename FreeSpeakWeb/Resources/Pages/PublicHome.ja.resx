@@ -83,4 +83,16 @@
   <data name="NoPosts" xml:space="preserve">
     <value>まだ公開投稿がありません。最初に何かを共有しましょう！</value>
   </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>さらに読み込む</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>さらに投稿を読み込み中...</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>不明</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>不明なユーザー</value>
+  </data>
 </root>

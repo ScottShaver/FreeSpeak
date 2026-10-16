@@ -202,7 +202,7 @@
 
     // Regular post modal state
     private Post? selectedPost = null;
-    private string selectedPostAuthorName = "Unknown";
+    private string selectedPostAuthorName = string.Empty;
     private bool selectedPostIsPinned = false;
     private int? targetCommentId = null;
     private Dictionary<LikeType, int>? postReactionBreakdown = null;
@@ -210,7 +210,7 @@
 
     // Group post modal state
     private GroupPost? selectedGroupPost = null;
-    private string selectedGroupPostAuthorName = "Unknown";
+    private string selectedGroupPostAuthorName = string.Empty;
     private bool selectedGroupPostIsPinned = false;
     private int? targetGroupCommentId = null;
     private Dictionary<LikeType, int>? groupPostReactionBreakdown = null;
@@ -231,7 +231,7 @@
                 user.Id,
                 user.FirstName,
                 user.LastName,
-                user.UserName ?? "User"
+                user.UserName ?? Localizer["User"].Value
             );
 
             // Reset the notification badge timer
@@ -357,7 +357,7 @@
         }
         else
         {
-            AlertService.ShowError(errorMessage ?? "Failed to delete notification.");
+            AlertService.ShowError(errorMessage ?? Localizer["DeleteNotificationFailed"].Value);
         }
     }
 
@@ -413,7 +413,7 @@
                                 groupPost.Author.Id,
                                 groupPost.Author.FirstName,
                                 groupPost.Author.LastName,
-                                groupPost.Author.UserName ?? "Unknown"
+                                groupPost.Author.UserName ?? Localizer["Unknown"].Value
                             );
                         }
 
@@ -447,7 +447,7 @@
                                 post.Author.Id,
                                 post.Author.FirstName,
                                 post.Author.LastName,
-                                post.Author.UserName ?? "Unknown"
+                                post.Author.UserName ?? Localizer["Unknown"].Value
                             );
                         }
 
@@ -825,7 +825,7 @@
         }
         else
         {
-            AlertService.ShowError(errorMessage ?? "Failed to mark notifications as read.");
+            AlertService.ShowError(errorMessage ?? Localizer["MarkAllReadFailed"].Value);
         }
 
         isMarkingAllRead = false;
@@ -864,7 +864,7 @@
         }
         else
         {
-            AlertService.ShowError(errorMessage ?? "Failed to delete read notifications.");
+            AlertService.ShowError(errorMessage ?? Localizer["ClearReadFailed"].Value);
         }
 
         isDeletingRead = false;

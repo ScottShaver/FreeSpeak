@@ -472,24 +472,29 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Formats an upload timestamp as a localized relative time (e.g. "5m ago").
+    /// </summary>
+    /// <param name="uploadedAt">The UTC time the file was uploaded.</param>
+    /// <returns>The localized relative time string.</returns>
     private string GetRelativeTime(DateTime uploadedAt)
     {
         var timeSpan = DateTime.UtcNow - uploadedAt;
 
         if (timeSpan.TotalMinutes < 1)
-            return "Just now";
+            return Localizer["JustNow"].Value;
         if (timeSpan.TotalMinutes < 60)
-            return $"{(int)timeSpan.TotalMinutes}m ago";
+            return Localizer["MinutesAgo", (int)timeSpan.TotalMinutes].Value;
         if (timeSpan.TotalHours < 24)
-            return $"{(int)timeSpan.TotalHours}h ago";
+            return Localizer["HoursAgo", (int)timeSpan.TotalHours].Value;
         if (timeSpan.TotalDays < 7)
-            return $"{(int)timeSpan.TotalDays}d ago";
+            return Localizer["DaysAgo", (int)timeSpan.TotalDays].Value;
         if (timeSpan.TotalDays < 30)
-            return $"{(int)(timeSpan.TotalDays / 7)}w ago";
+            return Localizer["WeeksAgo", (int)(timeSpan.TotalDays / 7)].Value;
         if (timeSpan.TotalDays < 365)
-            return $"{(int)(timeSpan.TotalDays / 30)}mo ago";
+            return Localizer["MonthsAgo", (int)(timeSpan.TotalDays / 30)].Value;
         
-        return $"{(int)(timeSpan.TotalDays / 365)}y ago";
+        return Localizer["YearsAgo", (int)(timeSpan.TotalDays / 365)].Value;
     }
 
     public async ValueTask DisposeAsync()

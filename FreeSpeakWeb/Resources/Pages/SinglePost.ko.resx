@@ -7,4 +7,22 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="PostNotAvailable" xml:space="preserve"><value>게시물을 사용할 수 없습니다</value></data>
   <data name="GoToHome" xml:space="preserve"><value>홈으로 이동</value></data>
+  <data name="Loading" xml:space="preserve">
+    <value>로드 중...</value>
+  </data>
+  <data name="LoadingPost" xml:space="preserve">
+    <value>게시물을 불러오는 중...</value>
+  </data>
+  <data name="PostTitle" xml:space="preserve">
+    <value>게시물</value>
+  </data>
+  <data name="PostByAuthor" xml:space="preserve">
+    <value>{0}님의 게시물</value>
+  </data>
+  <data name="PostNoLongerAvailable" xml:space="preserve">
+    <value>죄송합니다. 이 게시물은 더 이상 사용할 수 없습니다.</value>
+  </data>
+  <data name="LoadPostError" xml:space="preserve">
+    <value>이 게시물을 불러오는 중 오류가 발생했습니다.</value>
+  </data>
 </root>

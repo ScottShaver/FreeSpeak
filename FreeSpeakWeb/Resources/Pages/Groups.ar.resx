@@ -163,4 +163,43 @@
   <data name="JumpToGroup" xml:space="preserve">
     <value>انتقل إلى المجموعة</value>
   </data>
+  <data name="SubmitRequest" xml:space="preserve">
+    <value>إرسال الطلب</value>
+  </data>
+  <data name="JoinGroup" xml:space="preserve">
+    <value>الانضمام إلى المجموعة</value>
+  </data>
+  <data name="JoinRequestFailed" xml:space="preserve">
+    <value>فشل إرسال طلب الانضمام.</value>
+  </data>
+  <data name="JoinGroupFailed" xml:space="preserve">
+    <value>فشل الانضمام إلى المجموعة.</value>
+  </data>
+  <data name="JoinGroupError" xml:space="preserve">
+    <value>حدث خطأ أثناء الانضمام إلى المجموعة. {0}</value>
+  </data>
+  <data name="CancelJoinRequestFailed" xml:space="preserve">
+    <value>فشل إلغاء طلب الانضمام.</value>
+  </data>
+  <data name="CancelJoinRequestError" xml:space="preserve">
+    <value>حدث خطأ أثناء إلغاء طلب الانضمام. {0}</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>فشل تثبيت المنشور.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>فشل إلغاء تثبيت المنشور.</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>تم تحديث منشور المجموعة بنجاح.</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>فشل تحديث منشور المجموعة.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>تم إرسال البلاغ بنجاح. شكرًا لمساعدتك في الحفاظ على أمان مجتمعنا.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>غير معروف</value>
+  </data>
 </root>

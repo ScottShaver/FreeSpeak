@@ -78,4 +78,52 @@
   <data name="DownloadFailed" xml:space="preserve">
     <value>Download non riuscito: {0}</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>Gruppo</value>
+  </data>
+  <data name="LoadFilesFailed" xml:space="preserve">
+    <value>Impossibile caricare i file: {0}</value>
+  </data>
+  <data name="LoadPendingFilesFailed" xml:space="preserve">
+    <value>Impossibile caricare i file in attesa: {0}</value>
+  </data>
+  <data name="UploadedPendingApproval" xml:space="preserve">
+    <value>File caricato con successo. Sarà visibile dopo l'approvazione di un amministratore.</value>
+  </data>
+  <data name="UploadedSuccessfully" xml:space="preserve">
+    <value>File caricato con successo!</value>
+  </data>
+  <data name="UploadFileFailed" xml:space="preserve">
+    <value>Impossibile caricare il file.</value>
+  </data>
+  <data name="UploadFailedWithReason" xml:space="preserve">
+    <value>Caricamento non riuscito: {0}</value>
+  </data>
+  <data name="FileDeleted" xml:space="preserve">
+    <value>File eliminato con successo.</value>
+  </data>
+  <data name="DeleteFileFailed" xml:space="preserve">
+    <value>Impossibile eliminare il file.</value>
+  </data>
+  <data name="DeleteFailedWithReason" xml:space="preserve">
+    <value>Eliminazione non riuscita: {0}</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>File approvato con successo.</value>
+  </data>
+  <data name="ApproveFileFailed" xml:space="preserve">
+    <value>Impossibile approvare il file.</value>
+  </data>
+  <data name="ApprovalFailedWithReason" xml:space="preserve">
+    <value>Approvazione non riuscita: {0}</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>File rifiutato con successo.</value>
+  </data>
+  <data name="DeclineFileFailed" xml:space="preserve">
+    <value>Impossibile rifiutare il file.</value>
+  </data>
+  <data name="DeclineFailedWithReason" xml:space="preserve">
+    <value>Rifiuto non riuscito: {0}</value>
+  </data>
 </root>

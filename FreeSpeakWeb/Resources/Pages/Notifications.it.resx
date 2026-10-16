@@ -91,4 +91,19 @@
   <data name="LoadMore" xml:space="preserve">
     <value>Carica altre</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Sconosciuto</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Utente</value>
+  </data>
+  <data name="DeleteNotificationFailed" xml:space="preserve">
+    <value>Impossibile eliminare la notifica.</value>
+  </data>
+  <data name="MarkAllReadFailed" xml:space="preserve">
+    <value>Impossibile contrassegnare le notifiche come lette.</value>
+  </data>
+  <data name="ClearReadFailed" xml:space="preserve">
+    <value>Impossibile eliminare le notifiche lette.</value>
+  </data>
 </root>

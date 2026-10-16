@@ -166,4 +166,40 @@
   <data name="NonMemberPrivateNotice" xml:space="preserve">
     <value>Sie sehen diese private Gruppe. Treten Sie bei, um zu posten und teilzunehmen.</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>Gruppe</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>Weitere Beiträge werden geladen...</value>
+  </data>
+  <data name="NoMorePosts" xml:space="preserve">
+    <value>Derzeit keine weiteren Beiträge</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Unbekannt</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Beitrag konnte nicht angeheftet werden.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Anheften des Beitrags konnte nicht aufgehoben werden.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>Bilder konnten nicht hochgeladen werden.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Beitrag konnte nicht erstellt werden.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Beim Erstellen deines Beitrags ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>Gruppenbeitrag erfolgreich aktualisiert.</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>Gruppenbeitrag konnte nicht aktualisiert werden.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Meldung erfolgreich gesendet. Danke, dass du hilfst, unsere Community sicher zu halten.</value>
+  </data>
 </root>

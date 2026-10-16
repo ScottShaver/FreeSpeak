@@ -78,4 +78,52 @@
   <data name="DownloadFailed" xml:space="preserve">
     <value>下载失败：{0}</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>群组</value>
+  </data>
+  <data name="LoadFilesFailed" xml:space="preserve">
+    <value>加载文件失败：{0}</value>
+  </data>
+  <data name="LoadPendingFilesFailed" xml:space="preserve">
+    <value>加载待审核文件失败：{0}</value>
+  </data>
+  <data name="UploadedPendingApproval" xml:space="preserve">
+    <value>文件上传成功。管理员批准后将可见。</value>
+  </data>
+  <data name="UploadedSuccessfully" xml:space="preserve">
+    <value>文件上传成功！</value>
+  </data>
+  <data name="UploadFileFailed" xml:space="preserve">
+    <value>上传文件失败。</value>
+  </data>
+  <data name="UploadFailedWithReason" xml:space="preserve">
+    <value>上传失败：{0}</value>
+  </data>
+  <data name="FileDeleted" xml:space="preserve">
+    <value>文件已成功删除。</value>
+  </data>
+  <data name="DeleteFileFailed" xml:space="preserve">
+    <value>删除文件失败。</value>
+  </data>
+  <data name="DeleteFailedWithReason" xml:space="preserve">
+    <value>删除失败：{0}</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>文件已成功批准。</value>
+  </data>
+  <data name="ApproveFileFailed" xml:space="preserve">
+    <value>批准文件失败。</value>
+  </data>
+  <data name="ApprovalFailedWithReason" xml:space="preserve">
+    <value>批准失败：{0}</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>文件已成功拒绝。</value>
+  </data>
+  <data name="DeclineFileFailed" xml:space="preserve">
+    <value>拒绝文件失败。</value>
+  </data>
+  <data name="DeclineFailedWithReason" xml:space="preserve">
+    <value>拒绝失败：{0}</value>
+  </data>
 </root>

@@ -93,4 +93,34 @@
   <data name="AboutMe" xml:space="preserve">
     <value>About Me</value>
   </data>
+  <data name="FriendFallback" xml:space="preserve">
+    <value>Friend</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Failed to pin post.</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>An error occurred while pinning the post.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Failed to unpin post.</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>An error occurred while unpinning the post.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>Failed to upload images.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Failed to create post.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>An error occurred while creating your post.</value>
+  </data>
+  <data name="LoadFriendDetailsError" xml:space="preserve">
+    <value>An error occurred while loading friend details.</value>
+  </data>
+  <data name="LoadPostsError" xml:space="preserve">
+    <value>An error occurred while loading posts.</value>
+  </data>
 </root>

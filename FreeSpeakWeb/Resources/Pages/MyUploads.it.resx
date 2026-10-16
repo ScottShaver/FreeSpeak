@@ -118,4 +118,25 @@
   <data name="ConfirmDeleteUpload" xml:space="preserve">
     <value>Eliminare questo caricamento? Verrà rimosso anche dal tuo post. L&apos;azione non può essere annullata.</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>Proprio ora</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>{0} min fa</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>{0} h fa</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>{0} g fa</value>
+  </data>
+  <data name="WeeksAgo" xml:space="preserve">
+    <value>{0} sett. fa</value>
+  </data>
+  <data name="MonthsAgo" xml:space="preserve">
+    <value>{0} mesi fa</value>
+  </data>
+  <data name="YearsAgo" xml:space="preserve">
+    <value>{0} anni fa</value>
+  </data>
 </root>

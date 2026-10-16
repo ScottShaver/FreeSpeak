@@ -7,4 +7,34 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="PostNotAvailable" xml:space="preserve"><value>Post niedostępny</value></data>
   <data name="GoToGroup" xml:space="preserve"><value>Przejdź do grupy</value></data>
+  <data name="LoadingPost" xml:space="preserve">
+    <value>Ładowanie posta...</value>
+  </data>
+  <data name="GroupPostTitle" xml:space="preserve">
+    <value>Post grupowy</value>
+  </data>
+  <data name="GroupDoesNotExist" xml:space="preserve">
+    <value>Ta grupa nie istnieje.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Nieznany</value>
+  </data>
+  <data name="UnknownGroup" xml:space="preserve">
+    <value>Nieznany</value>
+  </data>
+  <data name="PostByAuthorInGroup" xml:space="preserve">
+    <value>Post użytkownika {0} w grupie {1}</value>
+  </data>
+  <data name="PostUnavailableMessage" xml:space="preserve">
+    <value>Przepraszamy, ten post nie jest już dostępny lub nie należy do tej grupy.</value>
+  </data>
+  <data name="LoadPostError" xml:space="preserve">
+    <value>Wystąpił błąd podczas ładowania tego posta.</value>
+  </data>
+  <data name="DeletePostFailed" xml:space="preserve">
+    <value>Nie udało się usunąć posta. Spróbuj ponownie.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Zgłoszenie zostało wysłane. Dziękujemy za pomoc w dbaniu o bezpieczeństwo naszej społeczności.</value>
+  </data>
 </root>

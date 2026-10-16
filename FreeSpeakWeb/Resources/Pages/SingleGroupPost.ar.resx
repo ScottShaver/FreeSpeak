@@ -7,4 +7,34 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="PostNotAvailable" xml:space="preserve"><value>المنشور غير متاح</value></data>
   <data name="GoToGroup" xml:space="preserve"><value>الذهاب إلى المجموعة</value></data>
+  <data name="LoadingPost" xml:space="preserve">
+    <value>جارٍ تحميل المنشور...</value>
+  </data>
+  <data name="GroupPostTitle" xml:space="preserve">
+    <value>منشور المجموعة</value>
+  </data>
+  <data name="GroupDoesNotExist" xml:space="preserve">
+    <value>هذه المجموعة غير موجودة.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>غير معروف</value>
+  </data>
+  <data name="UnknownGroup" xml:space="preserve">
+    <value>غير معروف</value>
+  </data>
+  <data name="PostByAuthorInGroup" xml:space="preserve">
+    <value>منشور من {0} في {1}</value>
+  </data>
+  <data name="PostUnavailableMessage" xml:space="preserve">
+    <value>عذرًا، هذا المنشور لم يعد متاحًا أو لا ينتمي إلى هذه المجموعة.</value>
+  </data>
+  <data name="LoadPostError" xml:space="preserve">
+    <value>حدث خطأ أثناء تحميل هذا المنشور.</value>
+  </data>
+  <data name="DeletePostFailed" xml:space="preserve">
+    <value>فشل حذف المنشور. يرجى المحاولة مرة أخرى.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>تم إرسال البلاغ بنجاح. شكرًا لمساعدتك في الحفاظ على أمان مجتمعنا.</value>
+  </data>
 </root>

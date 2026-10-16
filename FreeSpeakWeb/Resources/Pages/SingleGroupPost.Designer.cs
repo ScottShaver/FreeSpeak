@@ -44,5 +44,95 @@ namespace FreeSpeakWeb.Resources.Pages {
 
         public static string PostNotAvailable { get { return ResourceManager.GetString("PostNotAvailable", resourceCulture); } }
         public static string GoToGroup { get { return ResourceManager.GetString("GoToGroup", resourceCulture); } }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Loading post....
+        /// </summary>
+        public static string LoadingPost {
+            get {
+                return ResourceManager.GetString("LoadingPost", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group Post.
+        /// </summary>
+        public static string GroupPostTitle {
+            get {
+                return ResourceManager.GetString("GroupPostTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This group does not exist..
+        /// </summary>
+        public static string GroupDoesNotExist {
+            get {
+                return ResourceManager.GetString("GroupDoesNotExist", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string UnknownUser {
+            get {
+                return ResourceManager.GetString("UnknownUser", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string UnknownGroup {
+            get {
+                return ResourceManager.GetString("UnknownGroup", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Post by {0} in {1}.
+        /// </summary>
+        public static string PostByAuthorInGroup {
+            get {
+                return ResourceManager.GetString("PostByAuthorInGroup", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Sorry, this post is no longer available or does not belong to this group..
+        /// </summary>
+        public static string PostUnavailableMessage {
+            get {
+                return ResourceManager.GetString("PostUnavailableMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading this post..
+        /// </summary>
+        public static string LoadPostError {
+            get {
+                return ResourceManager.GetString("LoadPostError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to delete the post. Please try again..
+        /// </summary>
+        public static string DeletePostFailed {
+            get {
+                return ResourceManager.GetString("DeletePostFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Report submitted successfully. Thank you for helping keep our community safe..
+        /// </summary>
+        public static string ReportSubmitted {
+            get {
+                return ResourceManager.GetString("ReportSubmitted", resourceCulture);
+            }
+        }
     }
 }

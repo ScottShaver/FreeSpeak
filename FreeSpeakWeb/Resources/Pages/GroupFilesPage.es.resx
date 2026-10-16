@@ -229,4 +229,52 @@
   <data name="DownloadFailed" xml:space="preserve">
     <value>Error en la descarga: {0}</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>Grupo</value>
+  </data>
+  <data name="LoadFilesFailed" xml:space="preserve">
+    <value>No se pudieron cargar los archivos: {0}</value>
+  </data>
+  <data name="LoadPendingFilesFailed" xml:space="preserve">
+    <value>No se pudieron cargar los archivos pendientes: {0}</value>
+  </data>
+  <data name="UploadedPendingApproval" xml:space="preserve">
+    <value>Archivo subido correctamente. Será visible después de la aprobación de un administrador.</value>
+  </data>
+  <data name="UploadedSuccessfully" xml:space="preserve">
+    <value>¡Archivo subido correctamente!</value>
+  </data>
+  <data name="UploadFileFailed" xml:space="preserve">
+    <value>No se pudo subir el archivo.</value>
+  </data>
+  <data name="UploadFailedWithReason" xml:space="preserve">
+    <value>Error al subir: {0}</value>
+  </data>
+  <data name="FileDeleted" xml:space="preserve">
+    <value>Archivo eliminado correctamente.</value>
+  </data>
+  <data name="DeleteFileFailed" xml:space="preserve">
+    <value>No se pudo eliminar el archivo.</value>
+  </data>
+  <data name="DeleteFailedWithReason" xml:space="preserve">
+    <value>Error al eliminar: {0}</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>Archivo aprobado correctamente.</value>
+  </data>
+  <data name="ApproveFileFailed" xml:space="preserve">
+    <value>No se pudo aprobar el archivo.</value>
+  </data>
+  <data name="ApprovalFailedWithReason" xml:space="preserve">
+    <value>Error al aprobar: {0}</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>Archivo rechazado correctamente.</value>
+  </data>
+  <data name="DeclineFileFailed" xml:space="preserve">
+    <value>No se pudo rechazar el archivo.</value>
+  </data>
+  <data name="DeclineFailedWithReason" xml:space="preserve">
+    <value>Error al rechazar: {0}</value>
+  </data>
 </root>

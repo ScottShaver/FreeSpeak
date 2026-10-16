@@ -164,4 +164,43 @@
   <data name="JumpToGroup" xml:space="preserve">
     <value>Jump To Group</value>
   </data>
+  <data name="SubmitRequest" xml:space="preserve">
+    <value>Submit Request</value>
+  </data>
+  <data name="JoinGroup" xml:space="preserve">
+    <value>Join Group</value>
+  </data>
+  <data name="JoinRequestFailed" xml:space="preserve">
+    <value>Failed to send join request.</value>
+  </data>
+  <data name="JoinGroupFailed" xml:space="preserve">
+    <value>Failed to join group.</value>
+  </data>
+  <data name="JoinGroupError" xml:space="preserve">
+    <value>An error occurred while joining the group. {0}</value>
+  </data>
+  <data name="CancelJoinRequestFailed" xml:space="preserve">
+    <value>Failed to cancel join request.</value>
+  </data>
+  <data name="CancelJoinRequestError" xml:space="preserve">
+    <value>An error occurred while cancelling the join request. {0}</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Failed to pin post.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Failed to unpin post.</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>Group post updated successfully.</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>Failed to update group post.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Report submitted successfully. Thank you for helping keep our community safe.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
 </root>

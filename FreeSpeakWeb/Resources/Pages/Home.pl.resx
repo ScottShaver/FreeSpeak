@@ -85,4 +85,40 @@
   <data name="EmptyPinnedPosts" xml:space="preserve">
     <value>Nie masz jeszcze przypiętych postów. Przypnij posty z kanału, aby zobaczyć je tutaj!</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Nieznany</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Nieznany użytkownik</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Użytkownik</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Nie udało się przypiąć posta.</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>Wystąpił błąd podczas przypinania posta.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Nie udało się odpiąć posta.</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>Wystąpił błąd podczas odpinania posta.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>Nie udało się przesłać obrazów.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Nie udało się utworzyć posta.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Wystąpił błąd podczas tworzenia posta.</value>
+  </data>
+  <data name="UpdatePostFailed" xml:space="preserve">
+    <value>Nie udało się zaktualizować posta</value>
+  </data>
+  <data name="UpdatePostError" xml:space="preserve">
+    <value>Wystąpił błąd podczas aktualizacji posta.</value>
+  </data>
 </root>

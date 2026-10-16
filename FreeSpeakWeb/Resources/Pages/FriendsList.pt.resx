@@ -116,4 +116,49 @@
   <data name="RemoveFriendCancelButton" xml:space="preserve">
     <value>Cancelar</value>
   </data>
+  <data name="LoadFriendsError" xml:space="preserve">
+    <value>Ocorreu um erro ao carregar seus amigos.</value>
+  </data>
+  <data name="LoadRequestsError" xml:space="preserve">
+    <value>Ocorreu um erro ao carregar os pedidos de amizade.</value>
+  </data>
+  <data name="LoadSentRequestsError" xml:space="preserve">
+    <value>Ocorreu um erro ao carregar os pedidos enviados.</value>
+  </data>
+  <data name="LoadSuggestionsError" xml:space="preserve">
+    <value>Ocorreu um erro ao carregar as sugestões.</value>
+  </data>
+  <data name="SearchError" xml:space="preserve">
+    <value>Ocorreu um erro durante a pesquisa. Tente novamente.</value>
+  </data>
+  <data name="FriendRequestSent" xml:space="preserve">
+    <value>Pedido de amizade enviado para {0}.</value>
+  </data>
+  <data name="FriendRequestCancelled" xml:space="preserve">
+    <value>Pedido de amizade para {0} cancelado.</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>{0} foi removido dos seus amigos.</value>
+  </data>
+  <data name="NowFriends" xml:space="preserve">
+    <value>Agora você é amigo de {0}.</value>
+  </data>
+  <data name="FriendRequestDeclined" xml:space="preserve">
+    <value>Pedido de amizade de {0} recusado.</value>
+  </data>
+  <data name="SendRequestFailed" xml:space="preserve">
+    <value>Falha ao enviar o pedido de amizade.</value>
+  </data>
+  <data name="CancelRequestFailed" xml:space="preserve">
+    <value>Falha ao cancelar o pedido de amizade.</value>
+  </data>
+  <data name="RemoveFriendFailed" xml:space="preserve">
+    <value>Falha ao remover o amigo.</value>
+  </data>
+  <data name="AcceptRequestFailed" xml:space="preserve">
+    <value>Falha ao aceitar o pedido de amizade.</value>
+  </data>
+  <data name="DeclineRequestFailed" xml:space="preserve">
+    <value>Falha ao recusar o pedido de amizade.</value>
+  </data>
 </root>

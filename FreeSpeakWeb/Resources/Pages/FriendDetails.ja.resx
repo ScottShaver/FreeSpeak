@@ -91,4 +91,34 @@
   <data name="AboutMe" xml:space="preserve">
     <value>自己紹介</value>
   </data>
+  <data name="FriendFallback" xml:space="preserve">
+    <value>友達</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>投稿をピン留めできませんでした。</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>投稿のピン留め中にエラーが発生しました。</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>投稿のピン留めを解除できませんでした。</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>投稿のピン留め解除中にエラーが発生しました。</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>画像をアップロードできませんでした。</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>投稿を作成できませんでした。</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>投稿の作成中にエラーが発生しました。</value>
+  </data>
+  <data name="LoadFriendDetailsError" xml:space="preserve">
+    <value>友達の詳細の読み込み中にエラーが発生しました。</value>
+  </data>
+  <data name="LoadPostsError" xml:space="preserve">
+    <value>投稿の読み込み中にエラーが発生しました。</value>
+  </data>
 </root>

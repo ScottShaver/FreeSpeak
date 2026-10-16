@@ -41,7 +41,7 @@
 @inject FreeSpeakWeb.Services.TimestampFormattingService TimestampFormatter
 @inject FreeSpeakWeb.Services.Abstractions.IRoleService RoleService
 
-<PageTitle>@(group?.Name ?? "Group") - @SiteSettings.Value.SiteName</PageTitle>
+<PageTitle>@(group?.Name ?? Localizer["DefaultGroupName"].Value) - @SiteSettings.Value.SiteName</PageTitle>
 
 <div class="group-view-container">
     @if (isLoadingGroup)
@@ -327,12 +327,12 @@
 
                 @if (isLoadingMorePosts)
                 {
-                    <LoadingSpinner Text="Loading more posts..." Size="sm" />
+                    <LoadingSpinner Text="@Localizer["LoadingMorePosts"]" Size="sm" />
                 }
 
                 @if (hasMorePosts == false && groupPosts.Any())
                 {
-                    <EmptyState Message="No more posts at this time" CssClass="no-more-posts" />
+                    <EmptyState Message="@Localizer["NoMorePosts"]" CssClass="no-more-posts" />
                 }
             }
             }
@@ -455,7 +455,7 @@
     <PostEditModal 
         @ref="groupPostEditModalRef"
         PostId="@editGroupPost.Id"
-        AuthorName="@(editGroupPost.Author != null ? (postAuthorNames.ContainsKey(editGroupPost.Id) ? postAuthorNames[editGroupPost.Id] : "Unknown") : "Unknown")"
+        AuthorName="@(editGroupPost.Author != null ? (postAuthorNames.ContainsKey(editGroupPost.Id) ? postAuthorNames[editGroupPost.Id] : Localizer["UnknownUser"].Value) : Localizer["UnknownUser"].Value)"
         AuthorImageUrl="@editGroupPost.Author?.ProfilePictureUrl"
         CreatedAt="@editGroupPost.CreatedAt"
         InitialContent="@editGroupPost.Content"
@@ -1029,7 +1029,7 @@
         }
         else
         {
-            AlertService.ShowError(errorMessage ?? "Failed to pin post.");
+            AlertService.ShowError(errorMessage ?? Localizer["PinPostFailed"].Value);
         }
     }
 
@@ -1058,7 +1058,7 @@
         }
         else
         {
-            AlertService.ShowError(errorMessage ?? "Failed to unpin post.");
+            AlertService.ShowError(errorMessage ?? Localizer["UnpinPostFailed"].Value);
         }
     }
 
@@ -1122,7 +1122,7 @@
                 if (!uploadResult.Success)
                 {
                     showUploadProgress = false;
-                    AlertService.ShowError(uploadResult.ErrorMessage ?? "Failed to upload images.");
+                    AlertService.ShowError(uploadResult.ErrorMessage ?? Localizer["UploadImagesFailed"].Value);
                     StateHasChanged();
                     return false;
                 }
@@ -1182,7 +1182,7 @@
             else
             {
                 showUploadProgress = false;
-                AlertService.ShowError(result.ErrorMessage ?? "Failed to create post.");
+                AlertService.ShowError(result.ErrorMessage ?? Localizer["CreatePostFailed"].Value);
                 StateHasChanged();
                 return false;
             }
@@ -1190,7 +1190,7 @@
         catch (Exception)
         {
             showUploadProgress = false;
-            AlertService.ShowError("An error occurred while creating your post.");
+            AlertService.ShowError(Localizer["CreatePostError"].Value);
             StateHasChanged();
             return false;
         }
@@ -1361,7 +1361,7 @@
         if (result.Success)
         {
             await CloseEditGroupPostModal();
-            AlertService.ShowSuccess("Group post updated successfully.");
+            AlertService.ShowSuccess(Localizer["GroupPostUpdated"].Value);
 
             // Reload the group posts to reflect the changes
             await LoadGroupPosts();
@@ -1369,7 +1369,7 @@
         }
         else
         {
-            AlertService.ShowError(result.ErrorMessage ?? "Failed to update group post.");
+            AlertService.ShowError(result.ErrorMessage ?? Localizer["GroupPostUpdateFailed"].Value);
         }
     }
 
@@ -1423,13 +1423,13 @@
     private async Task<string> FormatUserDisplayName(ApplicationUser? user)
     {
         if (user == null)
-            return "Unknown";
+            return Localizer["UnknownUser"].Value;
 
         return await UserPreferenceService.FormatUserDisplayNameAsync(
             user.Id,
             user.FirstName,
             user.LastName,
-            user.UserName ?? "Unknown"
+            user.UserName ?? Localizer["UnknownUser"].Value
         );
     }
 
@@ -1643,7 +1643,7 @@
     /// </summary>
     private Task HandleCommentReportSubmitted()
     {
-        AlertService.ShowSuccess("Report submitted successfully. Thank you for helping keep our community safe.");
+        AlertService.ShowSuccess(Localizer["ReportSubmitted"].Value);
         return Task.CompletedTask;
     }
 

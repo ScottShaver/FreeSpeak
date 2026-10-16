@@ -85,4 +85,40 @@
   <data name="EmptyPinnedPosts" xml:space="preserve">
     <value>まだ投稿を固定していません。フィードから投稿を固定してここに表示しましょう！</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>不明</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>不明なユーザー</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>ユーザー</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>投稿をピン留めできませんでした。</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>投稿のピン留め中にエラーが発生しました。</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>投稿のピン留めを解除できませんでした。</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>投稿のピン留め解除中にエラーが発生しました。</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>画像をアップロードできませんでした。</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>投稿を作成できませんでした。</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>投稿の作成中にエラーが発生しました。</value>
+  </data>
+  <data name="UpdatePostFailed" xml:space="preserve">
+    <value>投稿を更新できませんでした</value>
+  </data>
+  <data name="UpdatePostError" xml:space="preserve">
+    <value>投稿の更新中にエラーが発生しました。</value>
+  </data>
 </root>

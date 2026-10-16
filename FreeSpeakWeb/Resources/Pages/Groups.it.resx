@@ -163,4 +163,43 @@
   <data name="JumpToGroup" xml:space="preserve">
     <value>Vai al gruppo</value>
   </data>
+  <data name="SubmitRequest" xml:space="preserve">
+    <value>Invia richiesta</value>
+  </data>
+  <data name="JoinGroup" xml:space="preserve">
+    <value>Unisciti al gruppo</value>
+  </data>
+  <data name="JoinRequestFailed" xml:space="preserve">
+    <value>Impossibile inviare la richiesta di adesione.</value>
+  </data>
+  <data name="JoinGroupFailed" xml:space="preserve">
+    <value>Impossibile unirsi al gruppo.</value>
+  </data>
+  <data name="JoinGroupError" xml:space="preserve">
+    <value>Si è verificato un errore durante l'adesione al gruppo. {0}</value>
+  </data>
+  <data name="CancelJoinRequestFailed" xml:space="preserve">
+    <value>Impossibile annullare la richiesta di adesione.</value>
+  </data>
+  <data name="CancelJoinRequestError" xml:space="preserve">
+    <value>Si è verificato un errore durante l'annullamento della richiesta di adesione. {0}</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Impossibile fissare il post.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Impossibile rimuovere il post dai fissati.</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>Post del gruppo aggiornato con successo.</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>Impossibile aggiornare il post del gruppo.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Segnalazione inviata con successo. Grazie per aiutarci a mantenere sicura la nostra community.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Sconosciuto</value>
+  </data>
 </root>

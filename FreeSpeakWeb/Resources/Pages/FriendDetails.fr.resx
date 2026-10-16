@@ -91,4 +91,34 @@
   <data name="AboutMe" xml:space="preserve">
     <value>À propos de moi</value>
   </data>
+  <data name="FriendFallback" xml:space="preserve">
+    <value>Ami</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Échec de l'épinglage de la publication.</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de l'épinglage de la publication.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Échec du désépinglage de la publication.</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>Une erreur s'est produite lors du désépinglage de la publication.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>Échec du téléversement des images.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Échec de la création de la publication.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la création de votre publication.</value>
+  </data>
+  <data name="LoadFriendDetailsError" xml:space="preserve">
+    <value>Une erreur s'est produite lors du chargement des détails de l'ami.</value>
+  </data>
+  <data name="LoadPostsError" xml:space="preserve">
+    <value>Une erreur s'est produite lors du chargement des publications.</value>
+  </data>
 </root>

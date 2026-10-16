@@ -116,4 +116,49 @@
   <data name="RemoveFriendCancelButton" xml:space="preserve">
     <value>Anuluj</value>
   </data>
+  <data name="LoadFriendsError" xml:space="preserve">
+    <value>Wystąpił błąd podczas ładowania Twoich znajomych.</value>
+  </data>
+  <data name="LoadRequestsError" xml:space="preserve">
+    <value>Wystąpił błąd podczas ładowania zaproszeń do grona znajomych.</value>
+  </data>
+  <data name="LoadSentRequestsError" xml:space="preserve">
+    <value>Wystąpił błąd podczas ładowania wysłanych zaproszeń.</value>
+  </data>
+  <data name="LoadSuggestionsError" xml:space="preserve">
+    <value>Wystąpił błąd podczas ładowania sugestii.</value>
+  </data>
+  <data name="SearchError" xml:space="preserve">
+    <value>Wystąpił błąd podczas wyszukiwania. Spróbuj ponownie.</value>
+  </data>
+  <data name="FriendRequestSent" xml:space="preserve">
+    <value>Wysłano zaproszenie do grona znajomych do {0}.</value>
+  </data>
+  <data name="FriendRequestCancelled" xml:space="preserve">
+    <value>Anulowano zaproszenie do grona znajomych do {0}.</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>Usunięto {0} z Twoich znajomych.</value>
+  </data>
+  <data name="NowFriends" xml:space="preserve">
+    <value>Jesteś teraz znajomym użytkownika {0}.</value>
+  </data>
+  <data name="FriendRequestDeclined" xml:space="preserve">
+    <value>Odrzucono zaproszenie do grona znajomych od {0}.</value>
+  </data>
+  <data name="SendRequestFailed" xml:space="preserve">
+    <value>Nie udało się wysłać zaproszenia do grona znajomych.</value>
+  </data>
+  <data name="CancelRequestFailed" xml:space="preserve">
+    <value>Nie udało się anulować zaproszenia do grona znajomych.</value>
+  </data>
+  <data name="RemoveFriendFailed" xml:space="preserve">
+    <value>Nie udało się usunąć znajomego.</value>
+  </data>
+  <data name="AcceptRequestFailed" xml:space="preserve">
+    <value>Nie udało się zaakceptować zaproszenia do grona znajomych.</value>
+  </data>
+  <data name="DeclineRequestFailed" xml:space="preserve">
+    <value>Nie udało się odrzucić zaproszenia do grona znajomych.</value>
+  </data>
 </root>

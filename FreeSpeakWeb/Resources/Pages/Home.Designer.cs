@@ -140,5 +140,113 @@ namespace FreeSpeakWeb.Resources.Pages {
                 return ResourceManager.GetString("PinnedPosts", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string Unknown {
+            get {
+                return ResourceManager.GetString("Unknown", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown User.
+        /// </summary>
+        public static string UnknownUser {
+            get {
+                return ResourceManager.GetString("UnknownUser", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to User.
+        /// </summary>
+        public static string User {
+            get {
+                return ResourceManager.GetString("User", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to pin post..
+        /// </summary>
+        public static string PinPostFailed {
+            get {
+                return ResourceManager.GetString("PinPostFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while pinning the post..
+        /// </summary>
+        public static string PinPostError {
+            get {
+                return ResourceManager.GetString("PinPostError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to unpin post..
+        /// </summary>
+        public static string UnpinPostFailed {
+            get {
+                return ResourceManager.GetString("UnpinPostFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while unpinning the post..
+        /// </summary>
+        public static string UnpinPostError {
+            get {
+                return ResourceManager.GetString("UnpinPostError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to upload images..
+        /// </summary>
+        public static string UploadImagesFailed {
+            get {
+                return ResourceManager.GetString("UploadImagesFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to create post..
+        /// </summary>
+        public static string CreatePostFailed {
+            get {
+                return ResourceManager.GetString("CreatePostFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while creating your post..
+        /// </summary>
+        public static string CreatePostError {
+            get {
+                return ResourceManager.GetString("CreatePostError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to update post.
+        /// </summary>
+        public static string UpdatePostFailed {
+            get {
+                return ResourceManager.GetString("UpdatePostFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while updating the post..
+        /// </summary>
+        public static string UpdatePostError {
+            get {
+                return ResourceManager.GetString("UpdatePostError", resourceCulture);
+            }
+        }
     }
 }

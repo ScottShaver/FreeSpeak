@@ -116,4 +116,49 @@
   <data name="RemoveFriendCancelButton" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="LoadFriendsError" xml:space="preserve">
+    <value>An error occurred while loading your friends.</value>
+  </data>
+  <data name="LoadRequestsError" xml:space="preserve">
+    <value>An error occurred while loading friend requests.</value>
+  </data>
+  <data name="LoadSentRequestsError" xml:space="preserve">
+    <value>An error occurred while loading sent requests.</value>
+  </data>
+  <data name="LoadSuggestionsError" xml:space="preserve">
+    <value>An error occurred while loading suggestions.</value>
+  </data>
+  <data name="SearchError" xml:space="preserve">
+    <value>An error occurred while searching. Please try again.</value>
+  </data>
+  <data name="FriendRequestSent" xml:space="preserve">
+    <value>Friend request sent to {0}.</value>
+  </data>
+  <data name="FriendRequestCancelled" xml:space="preserve">
+    <value>Cancelled friend request to {0}.</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>Removed {0} from your friends.</value>
+  </data>
+  <data name="NowFriends" xml:space="preserve">
+    <value>You are now friends with {0}.</value>
+  </data>
+  <data name="FriendRequestDeclined" xml:space="preserve">
+    <value>Declined friend request from {0}.</value>
+  </data>
+  <data name="SendRequestFailed" xml:space="preserve">
+    <value>Failed to send friend request.</value>
+  </data>
+  <data name="CancelRequestFailed" xml:space="preserve">
+    <value>Failed to cancel friend request.</value>
+  </data>
+  <data name="RemoveFriendFailed" xml:space="preserve">
+    <value>Failed to remove friend.</value>
+  </data>
+  <data name="AcceptRequestFailed" xml:space="preserve">
+    <value>Failed to accept friend request.</value>
+  </data>
+  <data name="DeclineRequestFailed" xml:space="preserve">
+    <value>Failed to decline friend request.</value>
+  </data>
 </root>

@@ -91,4 +91,19 @@
   <data name="LoadMore" xml:space="preserve">
     <value>もっと読み込む</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>不明</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>ユーザー</value>
+  </data>
+  <data name="DeleteNotificationFailed" xml:space="preserve">
+    <value>通知を削除できませんでした。</value>
+  </data>
+  <data name="MarkAllReadFailed" xml:space="preserve">
+    <value>通知を既読にできませんでした。</value>
+  </data>
+  <data name="ClearReadFailed" xml:space="preserve">
+    <value>既読の通知を削除できませんでした。</value>
+  </data>
 </root>
