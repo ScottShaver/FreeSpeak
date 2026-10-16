@@ -364,6 +364,43 @@ namespace FreeSpeakWeb.Tests.Services
             _audit.Verify(a => a.LogActionAsync(Admin, ActionCategory.SystemModeratorRemovePostComment, It.Is<SystemModeratorRemovePostCommentDetails>(d => d.CommentId == 5)), Times.Once);
         }
 
+        /// <summary>Open reports on nested replies are resolved, audited and notified, and the reply authors get the neutral notice.</summary>
+        [Fact]
+        public async Task RemoveContentAsync_Comment_ResolvesReplyReportsAndNotifiesReplyAuthors()
+        {
+            const string ReplyAuthor = "reply-author";
+            const string ReplyReporter = "reply-reporter";
+            ReportExists(Report(postId: null, commentId: 5));
+            _repo.Setup(r => r.GetPendingReplyReportsAsync(5, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<FeedContentReport> { Report(id: 20, postId: null, commentId: 6, author: ReplyAuthor, reporter: ReplyReporter) });
+
+            var result = await _service.RemoveContentAsync(Moderator, 10, "bad thread");
+
+            result.Success.Should().BeTrue();
+            _repo.Verify(r => r.TryTransitionAsync(20, It.IsAny<IReadOnlyCollection<ReportStatus>>(), ReportStatus.Resolved, Moderator, Now, "bad thread", It.IsAny<CancellationToken>()), Times.Once);
+            _audit.Verify(a => a.LogActionAsync(Moderator, ActionCategory.SystemModeratorReviewReport,
+                It.Is<SystemModeratorReviewReportDetails>(d => d.ReportId == 20 && d.CommentId == 6 && d.Decision == nameof(ReportStatus.Resolved))), Times.Once);
+            _notifications.Verify(n => n.CreateNotificationAsync(ReplyReporter, It.IsAny<NotificationType>(), It.IsAny<string?>(), It.IsAny<object?>(), It.IsAny<DateTime?>(), FeedContentReportService.ReviewedTemplateKey), Times.Once);
+            _notifications.Verify(n => n.CreateNotificationAsync(ReplyAuthor, It.IsAny<NotificationType>(), It.IsAny<string?>(), It.IsAny<object?>(), It.IsAny<DateTime?>(), SystemModerationService.ContentRemovedTemplateKey), Times.Once);
+        }
+
+        /// <summary>A failed removal puts resolved reply reports back and sends nothing to reply reporters or authors.</summary>
+        [Fact]
+        public async Task RemoveContentAsync_Comment_RemovalFails_RevertsReplyReports()
+        {
+            ReportExists(Report(postId: null, commentId: 5));
+            _repo.Setup(r => r.GetPendingReplyReportsAsync(5, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<FeedContentReport> { Report(id: 20, postId: null, commentId: 6, author: "reply-author", reporter: "reply-reporter") });
+            _removal.Setup(r => r.RemoveCommentAsModeratorAsync(5, Moderator)).ReturnsAsync((false, "boom", 0));
+
+            var result = await _service.RemoveContentAsync(Moderator, 10, null);
+
+            result.Error.Should().Be(FeedReportError.RemovalFailed);
+            _repo.Verify(r => r.TryTransitionAsync(20, It.Is<IReadOnlyCollection<ReportStatus>>(a => a.Contains(ReportStatus.Resolved)), ReportStatus.NotReviewed, It.IsAny<string?>(), It.IsAny<DateTime?>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Once);
+            _notifications.Verify(n => n.CreateNotificationAsync("reply-reporter", It.IsAny<NotificationType>(), It.IsAny<string?>(), It.IsAny<object?>(), It.IsAny<DateTime?>(), It.IsAny<string?>()), Times.Never);
+            _notifications.Verify(n => n.CreateNotificationAsync("reply-author", It.IsAny<NotificationType>(), It.IsAny<string?>(), It.IsAny<object?>(), It.IsAny<DateTime?>(), It.IsAny<string?>()), Times.Never);
+        }
+
         /// <summary>If deletion fails the report is returned to its previous status and nothing is audited or sent.</summary>
         [Fact]
         public async Task RemoveContentAsync_RemovalFails_RevertsAndDoesNotNotify()

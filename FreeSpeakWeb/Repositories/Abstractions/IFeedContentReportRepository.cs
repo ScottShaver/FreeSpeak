@@ -136,6 +136,14 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         Task<int> CountReportsAgainstAuthorAsync(string authorId, int excludeReportId, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Gets the open (not reviewed or under review) reports filed against any nested reply of a comment, at any depth.
+        /// </summary>
+        /// <param name="commentId">The parent comment ID.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The open reports on the comment's replies, oldest first.</returns>
+        Task<List<FeedContentReport>> GetPendingReplyReportsAsync(int commentId, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Gets the IDs of the reporters of every pending report on the same content, including the given report.
         /// </summary>
         /// <param name="postId">The post ID, or null.</param>

@@ -230,11 +230,27 @@ namespace FreeSpeakWeb.Services
                 // Reports on the content are deleted with it, so collect every reporter before removal
                 var reporters = await _repository.GetPendingReportersAsync(report.PostId, report.CommentId, cancellationToken);
 
+                // Open reports on nested replies are deleted with the comment, so resolve them first
+                var replyReports = report.CommentId.HasValue
+                    ? await _repository.GetPendingReplyReportsAsync(report.CommentId.Value, cancellationToken) ?? new List<FeedContentReport>()
+                    : new List<FeedContentReport>();
+
                 // Claim the report first so two moderators cannot both remove the same content
-                var claimed = await _repository.TryTransitionAsync(reportId, PendingStatuses, ReportStatus.ActionTaken, userId, Now(), trimmedNotes, cancellationToken);
+                var now = Now();
+                var claimed = await _repository.TryTransitionAsync(reportId, PendingStatuses, ReportStatus.ActionTaken, userId, now, trimmedNotes, cancellationToken);
                 if (claimed == null)
                 {
                     return FeedReportResult.Fail(FeedReportError.AlreadyReviewed);
+                }
+
+                var resolvedReplyReports = new List<FeedContentReport>();
+                foreach (var replyReport in replyReports)
+                {
+                    var resolved = await _repository.TryTransitionAsync(replyReport.Id, PendingStatuses, ReportStatus.Resolved, userId, now, trimmedNotes, cancellationToken);
+                    if (resolved != null)
+                    {
+                        resolvedReplyReports.Add(replyReport);
+                    }
                 }
 
                 var removed = report.CommentId.HasValue
@@ -244,17 +260,41 @@ namespace FreeSpeakWeb.Services
                 if (!removed)
                 {
                     await _repository.TryTransitionAsync(reportId, new[] { ReportStatus.ActionTaken }, report.Status, report.ReviewerId, report.ReviewedAt, report.ReviewerNotes, cancellationToken);
+                    foreach (var replyReport in resolvedReplyReports)
+                    {
+                        await _repository.TryTransitionAsync(replyReport.Id, new[] { ReportStatus.Resolved }, replyReport.Status, replyReport.ReviewerId, replyReport.ReviewedAt, replyReport.ReviewerNotes, cancellationToken);
+                    }
+
                     return FeedReportResult.Fail(FeedReportError.RemovalFailed);
                 }
 
                 await LogRemovalAuditAsync(userId, report, content, trimmedNotes);
+
+                foreach (var replyReport in resolvedReplyReports)
+                {
+                    await LogReviewAuditAsync(userId, replyReport, ReportStatus.Resolved);
+                }
 
                 foreach (var (_, reporterId) in reporters.DistinctBy(r => r.ReporterId))
                 {
                     await NotifyAsync(reporterId, "Your report was reviewed.", FeedContentReportService.ReviewedTemplateKey, new { ReportId = reportId });
                 }
 
+                foreach (var replyReport in resolvedReplyReports)
+                {
+                    await NotifyAsync(replyReport.ReporterId, "Your report was reviewed.", FeedContentReportService.ReviewedTemplateKey, new { ReportId = replyReport.Id });
+                }
+
                 await NotifyAsync(content.AuthorId, "Your content was removed for violating the community guidelines.", ContentRemovedTemplateKey, new { });
+
+                var notifiedAuthors = new HashSet<string>(StringComparer.Ordinal) { content.AuthorId };
+                foreach (var replyAuthorId in resolvedReplyReports.Select(r => r.ContentAuthorId))
+                {
+                    if (!string.IsNullOrEmpty(replyAuthorId) && notifiedAuthors.Add(replyAuthorId))
+                    {
+                        await NotifyAsync(replyAuthorId, "Your content was removed for violating the community guidelines.", ContentRemovedTemplateKey, new { });
+                    }
+                }
 
                 _logger.LogInformation("Feed content for report {ReportId} removed by system moderator {UserId}", reportId, userId);
                 return FeedReportResult.Ok(reportId);

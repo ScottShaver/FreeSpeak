@@ -249,6 +249,34 @@ namespace FreeSpeakWeb.Repositories
         }
 
         /// <inheritdoc/>
+        public async Task<List<FeedContentReport>> GetPendingReplyReportsAsync(int commentId, CancellationToken cancellationToken = default)
+        {
+            await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
+
+            var descendantIds = new List<int>();
+            var frontier = new List<int> { commentId };
+            while (frontier.Count > 0)
+            {
+                var current = frontier;
+                frontier = await context.Comments.AsNoTracking()
+                    .Where(c => c.ParentCommentId != null && current.Contains(c.ParentCommentId.Value))
+                    .Select(c => c.Id)
+                    .ToListAsync(cancellationToken);
+                descendantIds.AddRange(frontier);
+            }
+
+            if (descendantIds.Count == 0)
+            {
+                return new List<FeedContentReport>();
+            }
+
+            return await context.FeedContentReports.AsNoTracking()
+                .Where(r => r.CommentId != null && descendantIds.Contains(r.CommentId.Value) && PendingStatuses.Contains(r.Status))
+                .OrderBy(r => r.CreatedAt).ThenBy(r => r.Id)
+                .ToListAsync(cancellationToken);
+        }
+
+        /// <inheritdoc/>
         public async Task<List<(int ReportId, string ReporterId)>> GetPendingReportersAsync(int? postId, int? commentId, CancellationToken cancellationToken = default)
         {
             await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
