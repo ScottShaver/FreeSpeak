@@ -28,6 +28,8 @@
 - Never hard-code user-facing strings in `.razor` or `.cs`. Use `IStringLocalizer<T>` with a `.resx` file under `FreeSpeakWeb/Resources/` mirroring the component path.
 - Every new key must be added to the neutral `.resx` and to ALL locale files: ar, de, es, fr, it, ja, ko, nl, pl, pt, ru, zh. Keep the `.Designer.cs` file in sync.
 - When you touch a `.resx`, check that every locale file has the same keys as the neutral file, and add any that are missing.
+- Any new or changed UI component (page, component, modal, toast, service message shown to users) must ship fully localized in the same change: neutral `.resx`, all 12 locale files and `.Designer.cs`, with real translations rather than copied English. Do not defer translations to a follow-up PR or leave English placeholders in locale files.
+- Use culture-aware formatting for dates, times and numbers; do not hard-code format strings or English fragments such as "ago" or "just now".
 - Follow `docs/LOCALIZATION.md`.
 
 ## Database and Migrations
