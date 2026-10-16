@@ -68,7 +68,16 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ConfirmPassword", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error: {0}.
+        /// </summary>
+        public static string ErrorWithDetails {
+            get {
+                return ResourceManager.GetString("ErrorWithDetails", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to New password.
         /// </summary>
@@ -77,7 +86,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("NewPassword", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Old password.
         /// </summary>
@@ -86,7 +95,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("OldPassword", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Change password.
         /// </summary>
@@ -95,7 +104,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("PageTitle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Your password has been changed.
         /// </summary>
@@ -104,7 +113,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("PasswordChanged", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Change password.
         /// </summary>
@@ -113,7 +122,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Title", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Update password.
         /// </summary>

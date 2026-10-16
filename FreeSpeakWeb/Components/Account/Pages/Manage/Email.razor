@@ -29,16 +29,14 @@
 @if (emailVerificationLink is not null)
 {
     <p>
-        This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-        Normally this would be emailed: <a href="@emailVerificationLink">Click here to confirm your current email</a>
+        @LocalizedMarkup.Compose(Localizer["NoEmailSenderNotice"].Value, LocalizedMarkup.Link("https://aka.ms/aspaccountconf", Localizer["TheseDocs"].Value), LocalizedMarkup.Link(emailVerificationLink, Localizer["ConfirmCurrentEmailLink"].Value))
     </p>
 }
 
 @if (emailChangeLink is not null)
 {
     <p>
-        This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-        Normally this would be emailed: <a href="@emailChangeLink">Click here to confirm your email change</a>
+        @LocalizedMarkup.Compose(Localizer["NoEmailSenderNotice"].Value, LocalizedMarkup.Link("https://aka.ms/aspaccountconf", Localizer["TheseDocs"].Value), LocalizedMarkup.Link(emailChangeLink, Localizer["ConfirmEmailChangeLink"].Value))
     </p>
 }
 
@@ -55,7 +53,7 @@
                 <div class="form-floating mb-3 input-group">
                     <input type="text" value="@email" id="email" class="form-control" disabled />
                     <div class="input-group-append">
-                        <span class="h-100 input-group-text text-success font-weight-bold">âœ“</span>
+                        <span class="h-100 input-group-text text-success font-weight-bold">&#10003;</span>
                     </div>
                     <label for="email" class="form-label">@Localizer["Email"]</label>
                 </div>
@@ -113,7 +111,7 @@
     {
         if (Input.NewEmail is null || Input.NewEmail == email)
         {
-            message = "Your email is unchanged.";
+            message = Localizer["EmailUnchanged"].Value;
             return;
         }
 
@@ -147,12 +145,12 @@
         {
             // Once you add a real email sender, you should remove this code that lets you confirm the email change
             emailChangeLink = callbackUrl;
-            message = "Click the link above to confirm your email change.";
+            message = Localizer["EmailChangeLinkAbove"].Value;
         }
         else
         {
             await EmailSender.SendConfirmationLinkAsync(user, Input.NewEmail, HtmlEncoder.Default.Encode(callbackUrl));
-            message = "Confirmation link to change email sent. Please check your email.";
+            message = Localizer["EmailChangeSent"].Value;
         }
     }
 
@@ -191,12 +189,12 @@
         {
             // Once you add a real email sender, you should remove this code that lets you confirm the account
             emailVerificationLink = callbackUrl;
-            message = "Click the link above to verify your email.";
+            message = Localizer["VerifyEmailLinkAbove"].Value;
         }
         else
         {
             await EmailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(callbackUrl));
-            message = "Verification email sent. Please check your email.";
+            message = Localizer["VerificationEmailSent"].Value;
         }
     }
 

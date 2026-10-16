@@ -68,7 +68,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("AudienceFriendsOnly", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Only Me (Private).
         /// </summary>
@@ -77,7 +77,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("AudienceMeOnly", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Public (Everyone can see).
         /// </summary>
@@ -86,7 +86,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("AudiencePublic", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Color Scheme.
         /// </summary>
@@ -95,7 +95,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("ColorScheme", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Choose your preferred color theme for the site..
         /// </summary>
@@ -104,7 +104,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("ColorSchemeHelpText", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Comment Reactions.
         /// </summary>
@@ -113,7 +113,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("CommentReactions", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Comment Replies.
         /// </summary>
@@ -122,7 +122,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("CommentReplies", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Country.
         /// </summary>
@@ -131,7 +131,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("Country", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Your country or region..
         /// </summary>
@@ -140,7 +140,232 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("CountryHelpText", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Argentina.
+        /// </summary>
+        public static string Country_AR {
+            get {
+                return ResourceManager.GetString("Country_AR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Australia.
+        /// </summary>
+        public static string Country_AU {
+            get {
+                return ResourceManager.GetString("Country_AU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Belgium.
+        /// </summary>
+        public static string Country_BE {
+            get {
+                return ResourceManager.GetString("Country_BE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Brazil.
+        /// </summary>
+        public static string Country_BR {
+            get {
+                return ResourceManager.GetString("Country_BR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Canada.
+        /// </summary>
+        public static string Country_CA {
+            get {
+                return ResourceManager.GetString("Country_CA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Switzerland.
+        /// </summary>
+        public static string Country_CH {
+            get {
+                return ResourceManager.GetString("Country_CH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to China.
+        /// </summary>
+        public static string Country_CN {
+            get {
+                return ResourceManager.GetString("Country_CN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Germany.
+        /// </summary>
+        public static string Country_DE {
+            get {
+                return ResourceManager.GetString("Country_DE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Denmark.
+        /// </summary>
+        public static string Country_DK {
+            get {
+                return ResourceManager.GetString("Country_DK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spain.
+        /// </summary>
+        public static string Country_ES {
+            get {
+                return ResourceManager.GetString("Country_ES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finland.
+        /// </summary>
+        public static string Country_FI {
+            get {
+                return ResourceManager.GetString("Country_FI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to France.
+        /// </summary>
+        public static string Country_FR {
+            get {
+                return ResourceManager.GetString("Country_FR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to United Kingdom.
+        /// </summary>
+        public static string Country_GB {
+            get {
+                return ResourceManager.GetString("Country_GB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to India.
+        /// </summary>
+        public static string Country_IN {
+            get {
+                return ResourceManager.GetString("Country_IN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Italy.
+        /// </summary>
+        public static string Country_IT {
+            get {
+                return ResourceManager.GetString("Country_IT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Japan.
+        /// </summary>
+        public static string Country_JP {
+            get {
+                return ResourceManager.GetString("Country_JP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to South Korea.
+        /// </summary>
+        public static string Country_KR {
+            get {
+                return ResourceManager.GetString("Country_KR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mexico.
+        /// </summary>
+        public static string Country_MX {
+            get {
+                return ResourceManager.GetString("Country_MX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Netherlands.
+        /// </summary>
+        public static string Country_NL {
+            get {
+                return ResourceManager.GetString("Country_NL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Norway.
+        /// </summary>
+        public static string Country_NO {
+            get {
+                return ResourceManager.GetString("Country_NO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Poland.
+        /// </summary>
+        public static string Country_PL {
+            get {
+                return ResourceManager.GetString("Country_PL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Russia.
+        /// </summary>
+        public static string Country_RU {
+            get {
+                return ResourceManager.GetString("Country_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sweden.
+        /// </summary>
+        public static string Country_SE {
+            get {
+                return ResourceManager.GetString("Country_SE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to United States of America.
+        /// </summary>
+        public static string Country_US {
+            get {
+                return ResourceManager.GetString("Country_US", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to South Africa.
+        /// </summary>
+        public static string Country_ZA {
+            get {
+                return ResourceManager.GetString("Country_ZA", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Default Post Visibility.
         /// </summary>
@@ -149,7 +374,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("DefaultPostVisibility", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Default visibility for new posts. You can change this when creating a post..
         /// </summary>
@@ -158,7 +383,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("DefaultPostVisibilityHelpText", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to An error occurred while loading your preferences..
         /// </summary>
@@ -167,7 +392,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("ErrorLoadingPreferences", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to An error occurred while saving your preferences. Please try again..
         /// </summary>
@@ -176,7 +401,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("ErrorSavingPreferences", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Enter a whole number of days between 1 and 365..
         /// </summary>
@@ -185,7 +410,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("ExpirationRangeError", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Friend Accepted.
         /// </summary>
@@ -194,7 +419,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("FriendAccepted", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Friend Requests.
         /// </summary>
@@ -203,7 +428,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("FriendRequests", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to English.
         /// </summary>
@@ -212,7 +437,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("LanguageGroupEnglish", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Français (French).
         /// </summary>
@@ -221,7 +446,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("LanguageGroupFrench", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Deutsch (German).
         /// </summary>
@@ -230,7 +455,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("LanguageGroupGerman", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Other Languages.
         /// </summary>
@@ -239,7 +464,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("LanguageGroupOther", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Español (Spanish).
         /// </summary>
@@ -248,7 +473,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("LanguageGroupSpanish", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Language &amp; Region.
         /// </summary>
@@ -257,7 +482,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("LanguageRegion", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Your preferred language and regional format for the user interface..
         /// </summary>
@@ -266,7 +491,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("LanguageRegionHelpText", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Loading....
         /// </summary>
@@ -275,7 +500,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("Loading", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Mentions.
         /// </summary>
@@ -284,7 +509,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("Mentions", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Name Display.
         /// </summary>
@@ -293,7 +518,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("NameDisplay", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to First Name Only (John).
         /// </summary>
@@ -302,7 +527,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("NameDisplayFirstName", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to First Name + Last Initial (John S.).
         /// </summary>
@@ -311,7 +536,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("NameDisplayFirstNameLastInitial", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Full Name (John Smith).
         /// </summary>
@@ -320,7 +545,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("NameDisplayFullName", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to How your name appears to other users across the site..
         /// </summary>
@@ -329,7 +554,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("NameDisplayHelpText", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Username (johnsmith).
         /// </summary>
@@ -338,7 +563,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("NameDisplayUsername", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Notification Auto-Expiration (in days).
         /// </summary>
@@ -347,7 +572,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("NotificationExpiration", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Notifications older than this will automatically expire and can be cleaned up. Set to 365 days to keep them for a year..
         /// </summary>
@@ -356,7 +581,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("NotificationExpirationHelpText", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Post Comments.
         /// </summary>
@@ -365,7 +590,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("PostComments", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Post Reactions.
         /// </summary>
@@ -374,7 +599,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("PostReactions", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Preferences.
         /// </summary>
@@ -383,7 +608,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("Preferences", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Your preferences have been reset to defaults successfully..
         /// </summary>
@@ -392,7 +617,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("PreferencesResetSuccess", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Preferences saved. Reloading page to apply language changes....
         /// </summary>
@@ -401,7 +626,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("PreferencesSavedReloading", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Your preferences have been saved successfully..
         /// </summary>
@@ -410,7 +635,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("PreferencesSavedSuccess", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Reset to Defaults.
         /// </summary>
@@ -419,7 +644,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("ResetToDefaults", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Save Preferences.
         /// </summary>
@@ -428,7 +653,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("SavePreferences", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to System Notifications.
         /// </summary>
@@ -437,7 +662,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("SystemNotifications", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Dark Mode.
         /// </summary>
@@ -446,7 +671,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("Theme_dark", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Default.
         /// </summary>
@@ -455,7 +680,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("Theme_default", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Forest Green.
         /// </summary>
@@ -464,7 +689,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("Theme_forest", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to High Contrast.
         /// </summary>
@@ -473,7 +698,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("Theme_high-contrast", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Light Mode.
         /// </summary>
@@ -482,7 +707,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("Theme_light", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Ocean Blue.
         /// </summary>
@@ -491,7 +716,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("Theme_ocean", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Purple Dream.
         /// </summary>
@@ -500,7 +725,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("Theme_purple", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Sunset Orange.
         /// </summary>
@@ -509,7 +734,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("Theme_sunset", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Timezone.
         /// </summary>
@@ -518,7 +743,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("Timezone", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Other Common Timezones.
         /// </summary>
@@ -527,7 +752,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("TimezoneGroupOther", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to United States.
         /// </summary>
@@ -536,13 +761,166 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
                 return ResourceManager.GetString("TimezoneGroupUS", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Your preferred timezone for displaying dates and times..
         /// </summary>
         public static string TimezoneHelpText {
             get {
                 return ResourceManager.GetString("TimezoneHelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alaska Time (AKT).
+        /// </summary>
+        public static string Tz_America_Anchorage {
+            get {
+                return ResourceManager.GetString("Tz_America_Anchorage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Central Time (CT).
+        /// </summary>
+        public static string Tz_America_Chicago {
+            get {
+                return ResourceManager.GetString("Tz_America_Chicago", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mountain Time (MT).
+        /// </summary>
+        public static string Tz_America_Denver {
+            get {
+                return ResourceManager.GetString("Tz_America_Denver", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pacific Time (PT).
+        /// </summary>
+        public static string Tz_America_Los_Angeles {
+            get {
+                return ResourceManager.GetString("Tz_America_Los_Angeles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mexico City (CST).
+        /// </summary>
+        public static string Tz_America_Mexico_City {
+            get {
+                return ResourceManager.GetString("Tz_America_Mexico_City", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Eastern Time (ET).
+        /// </summary>
+        public static string Tz_America_New_York {
+            get {
+                return ResourceManager.GetString("Tz_America_New_York", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Arizona (MST - No DST).
+        /// </summary>
+        public static string Tz_America_Phoenix {
+            get {
+                return ResourceManager.GetString("Tz_America_Phoenix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Toronto (ET).
+        /// </summary>
+        public static string Tz_America_Toronto {
+            get {
+                return ResourceManager.GetString("Tz_America_Toronto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dubai (GST).
+        /// </summary>
+        public static string Tz_Asia_Dubai {
+            get {
+                return ResourceManager.GetString("Tz_Asia_Dubai", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shanghai (CST).
+        /// </summary>
+        public static string Tz_Asia_Shanghai {
+            get {
+                return ResourceManager.GetString("Tz_Asia_Shanghai", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tokyo (JST).
+        /// </summary>
+        public static string Tz_Asia_Tokyo {
+            get {
+                return ResourceManager.GetString("Tz_Asia_Tokyo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sydney (AEDT/AEST).
+        /// </summary>
+        public static string Tz_Australia_Sydney {
+            get {
+                return ResourceManager.GetString("Tz_Australia_Sydney", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Berlin (CET/CEST).
+        /// </summary>
+        public static string Tz_Europe_Berlin {
+            get {
+                return ResourceManager.GetString("Tz_Europe_Berlin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to London (GMT/BST).
+        /// </summary>
+        public static string Tz_Europe_London {
+            get {
+                return ResourceManager.GetString("Tz_Europe_London", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paris (CET/CEST).
+        /// </summary>
+        public static string Tz_Europe_Paris {
+            get {
+                return ResourceManager.GetString("Tz_Europe_Paris", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hawaii Time (HST).
+        /// </summary>
+        public static string Tz_Pacific_Honolulu {
+            get {
+                return ResourceManager.GetString("Tz_Pacific_Honolulu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UTC (Coordinated Universal Time).
+        /// </summary>
+        public static string Tz_UTC {
+            get {
+                return ResourceManager.GetString("Tz_UTC", resourceCulture);
             }
         }
     }

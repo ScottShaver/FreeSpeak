@@ -296,4 +296,73 @@
   <data name="ErrorUpdateProfile" xml:space="preserve">
     <value>خطأ: فشل تحديث الملف الشخصي.</value>
   </data>
+  <data name="ErrorWithDetails" xml:space="preserve">
+    <value>خطأ: {0}</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>جارٍ التحميل...</value>
+  </data>
+  <data name="NoRecoveryCodesLeft" xml:space="preserve">
+    <value>لم يتبق لديك أي رموز استرداد.</value>
+  </data>
+  <data name="NoRecoveryCodesLeftBody" xml:space="preserve">
+    <value>يجب عليك {0} قبل أن تتمكن من تسجيل الدخول باستخدام رمز استرداد.</value>
+  </data>
+  <data name="GenerateNewRecoveryCodeSetLink" xml:space="preserve">
+    <value>إنشاء مجموعة جديدة من رموز الاسترداد</value>
+  </data>
+  <data name="OneRecoveryCodeLeft" xml:space="preserve">
+    <value>لديك رمز استرداد واحد متبقٍ.</value>
+  </data>
+  <data name="OneRecoveryCodeLeftBody" xml:space="preserve">
+    <value>يمكنك {0}.</value>
+  </data>
+  <data name="FewRecoveryCodesBody" xml:space="preserve">
+    <value>من الأفضل {0}.</value>
+  </data>
+  <data name="ForgetThisBrowser" xml:space="preserve">
+    <value>نسيان هذا المتصفح</value>
+  </data>
+  <data name="AuthenticatorApp" xml:space="preserve">
+    <value>تطبيق المصادقة</value>
+  </data>
+  <data name="AddAuthenticatorApp" xml:space="preserve">
+    <value>إضافة تطبيق المصادقة</value>
+  </data>
+  <data name="PrivacyPolicyNotAccepted" xml:space="preserve">
+    <value>لم يتم قبول سياسة الخصوصية وملفات تعريف الارتباط.</value>
+  </data>
+  <data name="PrivacyPolicyMustAccept" xml:space="preserve">
+    <value>يجب عليك قبول السياسة قبل أن تتمكن من تمكين المصادقة الثنائية.</value>
+  </data>
+  <data name="BrowserForgotten" xml:space="preserve">
+    <value>تم نسيان المتصفح الحالي. عند تسجيل الدخول مرة أخرى من هذا المتصفح، ستُطالب برمز المصادقة الثنائية.</value>
+  </data>
+  <data name="NoEmailSenderNotice" xml:space="preserve">
+    <value>لا يحتوي هذا التطبيق حاليًا على مرسل بريد إلكتروني حقيقي مسجّل، راجع {0} لمعرفة كيفية إعداد مرسل بريد إلكتروني حقيقي. في العادة كان سيتم إرسال هذا عبر البريد الإلكتروني: {1}</value>
+  </data>
+  <data name="TheseDocs" xml:space="preserve">
+    <value>هذه الوثائق</value>
+  </data>
+  <data name="ConfirmCurrentEmailLink" xml:space="preserve">
+    <value>انقر هنا لتأكيد بريدك الإلكتروني الحالي</value>
+  </data>
+  <data name="ConfirmEmailChangeLink" xml:space="preserve">
+    <value>انقر هنا لتأكيد تغيير بريدك الإلكتروني</value>
+  </data>
+  <data name="EmailUnchanged" xml:space="preserve">
+    <value>لم يتغير بريدك الإلكتروني.</value>
+  </data>
+  <data name="EmailChangeLinkAbove" xml:space="preserve">
+    <value>انقر على الرابط أعلاه لتأكيد تغيير بريدك الإلكتروني.</value>
+  </data>
+  <data name="EmailChangeSent" xml:space="preserve">
+    <value>تم إرسال رابط التأكيد لتغيير البريد الإلكتروني. يرجى التحقق من بريدك الإلكتروني.</value>
+  </data>
+  <data name="VerifyEmailLinkAbove" xml:space="preserve">
+    <value>انقر على الرابط أعلاه للتحقق من بريدك الإلكتروني.</value>
+  </data>
+  <data name="VerificationEmailSent" xml:space="preserve">
+    <value>تم إرسال رسالة التحقق. يرجى التحقق من بريدك الإلكتروني.</value>
+  </data>
 </root>

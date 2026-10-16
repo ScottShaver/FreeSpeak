@@ -220,4 +220,130 @@
   <data name="ExpirationRangeError" xml:space="preserve">
     <value>Saisissez un nombre entier de jours compris entre 1 et 365.</value>
   </data>
+  <data name="Tz_America_New_York" xml:space="preserve">
+    <value>Heure de l'Est (ET)</value>
+  </data>
+  <data name="Tz_America_Chicago" xml:space="preserve">
+    <value>Heure centrale (CT)</value>
+  </data>
+  <data name="Tz_America_Denver" xml:space="preserve">
+    <value>Heure des Rocheuses (MT)</value>
+  </data>
+  <data name="Tz_America_Phoenix" xml:space="preserve">
+    <value>Arizona (MST - sans heure d'été)</value>
+  </data>
+  <data name="Tz_America_Los_Angeles" xml:space="preserve">
+    <value>Heure du Pacifique (PT)</value>
+  </data>
+  <data name="Tz_America_Anchorage" xml:space="preserve">
+    <value>Heure de l'Alaska (AKT)</value>
+  </data>
+  <data name="Tz_Pacific_Honolulu" xml:space="preserve">
+    <value>Heure d'Hawaï (HST)</value>
+  </data>
+  <data name="Tz_UTC" xml:space="preserve">
+    <value>UTC (temps universel coordonné)</value>
+  </data>
+  <data name="Tz_Europe_London" xml:space="preserve">
+    <value>Londres (GMT/BST)</value>
+  </data>
+  <data name="Tz_Europe_Paris" xml:space="preserve">
+    <value>Paris (CET/CEST)</value>
+  </data>
+  <data name="Tz_Europe_Berlin" xml:space="preserve">
+    <value>Berlin (CET/CEST)</value>
+  </data>
+  <data name="Tz_Asia_Tokyo" xml:space="preserve">
+    <value>Tokyo (JST)</value>
+  </data>
+  <data name="Tz_Asia_Shanghai" xml:space="preserve">
+    <value>Shanghai (CST)</value>
+  </data>
+  <data name="Tz_Asia_Dubai" xml:space="preserve">
+    <value>Dubaï (GST)</value>
+  </data>
+  <data name="Tz_Australia_Sydney" xml:space="preserve">
+    <value>Sydney (AEDT/AEST)</value>
+  </data>
+  <data name="Tz_America_Toronto" xml:space="preserve">
+    <value>Toronto (ET)</value>
+  </data>
+  <data name="Tz_America_Mexico_City" xml:space="preserve">
+    <value>Mexico (CST)</value>
+  </data>
+  <data name="Country_US" xml:space="preserve">
+    <value>États-Unis d'Amérique</value>
+  </data>
+  <data name="Country_CA" xml:space="preserve">
+    <value>Canada</value>
+  </data>
+  <data name="Country_GB" xml:space="preserve">
+    <value>Royaume-Uni</value>
+  </data>
+  <data name="Country_AU" xml:space="preserve">
+    <value>Australie</value>
+  </data>
+  <data name="Country_DE" xml:space="preserve">
+    <value>Allemagne</value>
+  </data>
+  <data name="Country_FR" xml:space="preserve">
+    <value>France</value>
+  </data>
+  <data name="Country_IT" xml:space="preserve">
+    <value>Italie</value>
+  </data>
+  <data name="Country_ES" xml:space="preserve">
+    <value>Espagne</value>
+  </data>
+  <data name="Country_MX" xml:space="preserve">
+    <value>Mexique</value>
+  </data>
+  <data name="Country_BR" xml:space="preserve">
+    <value>Brésil</value>
+  </data>
+  <data name="Country_AR" xml:space="preserve">
+    <value>Argentine</value>
+  </data>
+  <data name="Country_JP" xml:space="preserve">
+    <value>Japon</value>
+  </data>
+  <data name="Country_CN" xml:space="preserve">
+    <value>Chine</value>
+  </data>
+  <data name="Country_IN" xml:space="preserve">
+    <value>Inde</value>
+  </data>
+  <data name="Country_KR" xml:space="preserve">
+    <value>Corée du Sud</value>
+  </data>
+  <data name="Country_NL" xml:space="preserve">
+    <value>Pays-Bas</value>
+  </data>
+  <data name="Country_BE" xml:space="preserve">
+    <value>Belgique</value>
+  </data>
+  <data name="Country_CH" xml:space="preserve">
+    <value>Suisse</value>
+  </data>
+  <data name="Country_SE" xml:space="preserve">
+    <value>Suède</value>
+  </data>
+  <data name="Country_NO" xml:space="preserve">
+    <value>Norvège</value>
+  </data>
+  <data name="Country_DK" xml:space="preserve">
+    <value>Danemark</value>
+  </data>
+  <data name="Country_FI" xml:space="preserve">
+    <value>Finlande</value>
+  </data>
+  <data name="Country_PL" xml:space="preserve">
+    <value>Pologne</value>
+  </data>
+  <data name="Country_RU" xml:space="preserve">
+    <value>Russie</value>
+  </data>
+  <data name="Country_ZA" xml:space="preserve">
+    <value>Afrique du Sud</value>
+  </data>
 </root>

@@ -220,4 +220,130 @@
   <data name="ExpirationRangeError" xml:space="preserve">
     <value>1에서 365 사이의 정수(일)를 입력하세요.</value>
   </data>
+  <data name="Tz_America_New_York" xml:space="preserve">
+    <value>동부 시간 (ET)</value>
+  </data>
+  <data name="Tz_America_Chicago" xml:space="preserve">
+    <value>중부 시간 (CT)</value>
+  </data>
+  <data name="Tz_America_Denver" xml:space="preserve">
+    <value>산악 시간 (MT)</value>
+  </data>
+  <data name="Tz_America_Phoenix" xml:space="preserve">
+    <value>애리조나 (MST - 서머타임 없음)</value>
+  </data>
+  <data name="Tz_America_Los_Angeles" xml:space="preserve">
+    <value>태평양 시간 (PT)</value>
+  </data>
+  <data name="Tz_America_Anchorage" xml:space="preserve">
+    <value>알래스카 시간 (AKT)</value>
+  </data>
+  <data name="Tz_Pacific_Honolulu" xml:space="preserve">
+    <value>하와이 시간 (HST)</value>
+  </data>
+  <data name="Tz_UTC" xml:space="preserve">
+    <value>UTC (협정 세계시)</value>
+  </data>
+  <data name="Tz_Europe_London" xml:space="preserve">
+    <value>런던 (GMT/BST)</value>
+  </data>
+  <data name="Tz_Europe_Paris" xml:space="preserve">
+    <value>파리 (CET/CEST)</value>
+  </data>
+  <data name="Tz_Europe_Berlin" xml:space="preserve">
+    <value>베를린 (CET/CEST)</value>
+  </data>
+  <data name="Tz_Asia_Tokyo" xml:space="preserve">
+    <value>도쿄 (JST)</value>
+  </data>
+  <data name="Tz_Asia_Shanghai" xml:space="preserve">
+    <value>상하이 (CST)</value>
+  </data>
+  <data name="Tz_Asia_Dubai" xml:space="preserve">
+    <value>두바이 (GST)</value>
+  </data>
+  <data name="Tz_Australia_Sydney" xml:space="preserve">
+    <value>시드니 (AEDT/AEST)</value>
+  </data>
+  <data name="Tz_America_Toronto" xml:space="preserve">
+    <value>토론토 (ET)</value>
+  </data>
+  <data name="Tz_America_Mexico_City" xml:space="preserve">
+    <value>멕시코시티 (CST)</value>
+  </data>
+  <data name="Country_US" xml:space="preserve">
+    <value>미국</value>
+  </data>
+  <data name="Country_CA" xml:space="preserve">
+    <value>캐나다</value>
+  </data>
+  <data name="Country_GB" xml:space="preserve">
+    <value>영국</value>
+  </data>
+  <data name="Country_AU" xml:space="preserve">
+    <value>호주</value>
+  </data>
+  <data name="Country_DE" xml:space="preserve">
+    <value>독일</value>
+  </data>
+  <data name="Country_FR" xml:space="preserve">
+    <value>프랑스</value>
+  </data>
+  <data name="Country_IT" xml:space="preserve">
+    <value>이탈리아</value>
+  </data>
+  <data name="Country_ES" xml:space="preserve">
+    <value>스페인</value>
+  </data>
+  <data name="Country_MX" xml:space="preserve">
+    <value>멕시코</value>
+  </data>
+  <data name="Country_BR" xml:space="preserve">
+    <value>브라질</value>
+  </data>
+  <data name="Country_AR" xml:space="preserve">
+    <value>아르헨티나</value>
+  </data>
+  <data name="Country_JP" xml:space="preserve">
+    <value>일본</value>
+  </data>
+  <data name="Country_CN" xml:space="preserve">
+    <value>중국</value>
+  </data>
+  <data name="Country_IN" xml:space="preserve">
+    <value>인도</value>
+  </data>
+  <data name="Country_KR" xml:space="preserve">
+    <value>대한민국</value>
+  </data>
+  <data name="Country_NL" xml:space="preserve">
+    <value>네덜란드</value>
+  </data>
+  <data name="Country_BE" xml:space="preserve">
+    <value>벨기에</value>
+  </data>
+  <data name="Country_CH" xml:space="preserve">
+    <value>스위스</value>
+  </data>
+  <data name="Country_SE" xml:space="preserve">
+    <value>스웨덴</value>
+  </data>
+  <data name="Country_NO" xml:space="preserve">
+    <value>노르웨이</value>
+  </data>
+  <data name="Country_DK" xml:space="preserve">
+    <value>덴마크</value>
+  </data>
+  <data name="Country_FI" xml:space="preserve">
+    <value>핀란드</value>
+  </data>
+  <data name="Country_PL" xml:space="preserve">
+    <value>폴란드</value>
+  </data>
+  <data name="Country_RU" xml:space="preserve">
+    <value>러시아</value>
+  </data>
+  <data name="Country_ZA" xml:space="preserve">
+    <value>남아프리카 공화국</value>
+  </data>
 </root>

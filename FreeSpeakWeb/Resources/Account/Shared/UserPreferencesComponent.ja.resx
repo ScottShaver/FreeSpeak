@@ -220,4 +220,130 @@
   <data name="ExpirationRangeError" xml:space="preserve">
     <value>1〜365 の整数で日数を入力してください。</value>
   </data>
+  <data name="Tz_America_New_York" xml:space="preserve">
+    <value>東部時間 (ET)</value>
+  </data>
+  <data name="Tz_America_Chicago" xml:space="preserve">
+    <value>中部時間 (CT)</value>
+  </data>
+  <data name="Tz_America_Denver" xml:space="preserve">
+    <value>山地時間 (MT)</value>
+  </data>
+  <data name="Tz_America_Phoenix" xml:space="preserve">
+    <value>アリゾナ (MST - 夏時間なし)</value>
+  </data>
+  <data name="Tz_America_Los_Angeles" xml:space="preserve">
+    <value>太平洋時間 (PT)</value>
+  </data>
+  <data name="Tz_America_Anchorage" xml:space="preserve">
+    <value>アラスカ時間 (AKT)</value>
+  </data>
+  <data name="Tz_Pacific_Honolulu" xml:space="preserve">
+    <value>ハワイ時間 (HST)</value>
+  </data>
+  <data name="Tz_UTC" xml:space="preserve">
+    <value>UTC (協定世界時)</value>
+  </data>
+  <data name="Tz_Europe_London" xml:space="preserve">
+    <value>ロンドン (GMT/BST)</value>
+  </data>
+  <data name="Tz_Europe_Paris" xml:space="preserve">
+    <value>パリ (CET/CEST)</value>
+  </data>
+  <data name="Tz_Europe_Berlin" xml:space="preserve">
+    <value>ベルリン (CET/CEST)</value>
+  </data>
+  <data name="Tz_Asia_Tokyo" xml:space="preserve">
+    <value>東京 (JST)</value>
+  </data>
+  <data name="Tz_Asia_Shanghai" xml:space="preserve">
+    <value>上海 (CST)</value>
+  </data>
+  <data name="Tz_Asia_Dubai" xml:space="preserve">
+    <value>ドバイ (GST)</value>
+  </data>
+  <data name="Tz_Australia_Sydney" xml:space="preserve">
+    <value>シドニー (AEDT/AEST)</value>
+  </data>
+  <data name="Tz_America_Toronto" xml:space="preserve">
+    <value>トロント (ET)</value>
+  </data>
+  <data name="Tz_America_Mexico_City" xml:space="preserve">
+    <value>メキシコシティ (CST)</value>
+  </data>
+  <data name="Country_US" xml:space="preserve">
+    <value>アメリカ合衆国</value>
+  </data>
+  <data name="Country_CA" xml:space="preserve">
+    <value>カナダ</value>
+  </data>
+  <data name="Country_GB" xml:space="preserve">
+    <value>イギリス</value>
+  </data>
+  <data name="Country_AU" xml:space="preserve">
+    <value>オーストラリア</value>
+  </data>
+  <data name="Country_DE" xml:space="preserve">
+    <value>ドイツ</value>
+  </data>
+  <data name="Country_FR" xml:space="preserve">
+    <value>フランス</value>
+  </data>
+  <data name="Country_IT" xml:space="preserve">
+    <value>イタリア</value>
+  </data>
+  <data name="Country_ES" xml:space="preserve">
+    <value>スペイン</value>
+  </data>
+  <data name="Country_MX" xml:space="preserve">
+    <value>メキシコ</value>
+  </data>
+  <data name="Country_BR" xml:space="preserve">
+    <value>ブラジル</value>
+  </data>
+  <data name="Country_AR" xml:space="preserve">
+    <value>アルゼンチン</value>
+  </data>
+  <data name="Country_JP" xml:space="preserve">
+    <value>日本</value>
+  </data>
+  <data name="Country_CN" xml:space="preserve">
+    <value>中国</value>
+  </data>
+  <data name="Country_IN" xml:space="preserve">
+    <value>インド</value>
+  </data>
+  <data name="Country_KR" xml:space="preserve">
+    <value>韓国</value>
+  </data>
+  <data name="Country_NL" xml:space="preserve">
+    <value>オランダ</value>
+  </data>
+  <data name="Country_BE" xml:space="preserve">
+    <value>ベルギー</value>
+  </data>
+  <data name="Country_CH" xml:space="preserve">
+    <value>スイス</value>
+  </data>
+  <data name="Country_SE" xml:space="preserve">
+    <value>スウェーデン</value>
+  </data>
+  <data name="Country_NO" xml:space="preserve">
+    <value>ノルウェー</value>
+  </data>
+  <data name="Country_DK" xml:space="preserve">
+    <value>デンマーク</value>
+  </data>
+  <data name="Country_FI" xml:space="preserve">
+    <value>フィンランド</value>
+  </data>
+  <data name="Country_PL" xml:space="preserve">
+    <value>ポーランド</value>
+  </data>
+  <data name="Country_RU" xml:space="preserve">
+    <value>ロシア</value>
+  </data>
+  <data name="Country_ZA" xml:space="preserve">
+    <value>南アフリカ</value>
+  </data>
 </root>

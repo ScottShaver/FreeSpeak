@@ -296,4 +296,73 @@
   <data name="ErrorUpdateProfile" xml:space="preserve">
     <value>Erro: falha ao atualizar o perfil.</value>
   </data>
+  <data name="ErrorWithDetails" xml:space="preserve">
+    <value>Erro: {0}</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Carregando...</value>
+  </data>
+  <data name="NoRecoveryCodesLeft" xml:space="preserve">
+    <value>Você não tem mais códigos de recuperação.</value>
+  </data>
+  <data name="NoRecoveryCodesLeftBody" xml:space="preserve">
+    <value>Você deve {0} antes de poder entrar com um código de recuperação.</value>
+  </data>
+  <data name="GenerateNewRecoveryCodeSetLink" xml:space="preserve">
+    <value>gerar um novo conjunto de códigos de recuperação</value>
+  </data>
+  <data name="OneRecoveryCodeLeft" xml:space="preserve">
+    <value>Você tem 1 código de recuperação restante.</value>
+  </data>
+  <data name="OneRecoveryCodeLeftBody" xml:space="preserve">
+    <value>Você pode {0}.</value>
+  </data>
+  <data name="FewRecoveryCodesBody" xml:space="preserve">
+    <value>Você deve {0}.</value>
+  </data>
+  <data name="ForgetThisBrowser" xml:space="preserve">
+    <value>Esquecer este navegador</value>
+  </data>
+  <data name="AuthenticatorApp" xml:space="preserve">
+    <value>Aplicativo autenticador</value>
+  </data>
+  <data name="AddAuthenticatorApp" xml:space="preserve">
+    <value>Adicionar aplicativo autenticador</value>
+  </data>
+  <data name="PrivacyPolicyNotAccepted" xml:space="preserve">
+    <value>A política de privacidade e cookies não foi aceita.</value>
+  </data>
+  <data name="PrivacyPolicyMustAccept" xml:space="preserve">
+    <value>Você deve aceitar a política antes de poder ativar a autenticação de dois fatores.</value>
+  </data>
+  <data name="BrowserForgotten" xml:space="preserve">
+    <value>O navegador atual foi esquecido. Quando você entrar novamente neste navegador, será solicitado o seu código 2FA.</value>
+  </data>
+  <data name="NoEmailSenderNotice" xml:space="preserve">
+    <value>Este aplicativo não tem atualmente um remetente de e-mail real registrado; consulte {0} para saber como configurar um. Normalmente isto seria enviado por e-mail: {1}</value>
+  </data>
+  <data name="TheseDocs" xml:space="preserve">
+    <value>esta documentação</value>
+  </data>
+  <data name="ConfirmCurrentEmailLink" xml:space="preserve">
+    <value>Clique aqui para confirmar seu e-mail atual</value>
+  </data>
+  <data name="ConfirmEmailChangeLink" xml:space="preserve">
+    <value>Clique aqui para confirmar a alteração do e-mail</value>
+  </data>
+  <data name="EmailUnchanged" xml:space="preserve">
+    <value>Seu e-mail não foi alterado.</value>
+  </data>
+  <data name="EmailChangeLinkAbove" xml:space="preserve">
+    <value>Clique no link acima para confirmar a alteração do e-mail.</value>
+  </data>
+  <data name="EmailChangeSent" xml:space="preserve">
+    <value>Link de confirmação para alterar o e-mail enviado. Verifique seu e-mail.</value>
+  </data>
+  <data name="VerifyEmailLinkAbove" xml:space="preserve">
+    <value>Clique no link acima para verificar seu e-mail.</value>
+  </data>
+  <data name="VerificationEmailSent" xml:space="preserve">
+    <value>E-mail de verificação enviado. Verifique seu e-mail.</value>
+  </data>
 </root>

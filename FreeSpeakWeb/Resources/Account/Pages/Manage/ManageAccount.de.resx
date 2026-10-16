@@ -297,4 +297,73 @@
   <data name="ErrorUpdateProfile" xml:space="preserve">
     <value>Fehler: Das Profil konnte nicht aktualisiert werden.</value>
   </data>
+  <data name="ErrorWithDetails" xml:space="preserve">
+    <value>Fehler: {0}</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Wird geladen...</value>
+  </data>
+  <data name="NoRecoveryCodesLeft" xml:space="preserve">
+    <value>Sie haben keine Wiederherstellungscodes mehr.</value>
+  </data>
+  <data name="NoRecoveryCodesLeftBody" xml:space="preserve">
+    <value>Sie müssen {0}, bevor Sie sich mit einem Wiederherstellungscode anmelden können.</value>
+  </data>
+  <data name="GenerateNewRecoveryCodeSetLink" xml:space="preserve">
+    <value>einen neuen Satz Wiederherstellungscodes generieren</value>
+  </data>
+  <data name="OneRecoveryCodeLeft" xml:space="preserve">
+    <value>Sie haben noch 1 Wiederherstellungscode.</value>
+  </data>
+  <data name="OneRecoveryCodeLeftBody" xml:space="preserve">
+    <value>Sie können {0}.</value>
+  </data>
+  <data name="FewRecoveryCodesBody" xml:space="preserve">
+    <value>Sie sollten {0}.</value>
+  </data>
+  <data name="ForgetThisBrowser" xml:space="preserve">
+    <value>Diesen Browser vergessen</value>
+  </data>
+  <data name="AuthenticatorApp" xml:space="preserve">
+    <value>Authenticator-App</value>
+  </data>
+  <data name="AddAuthenticatorApp" xml:space="preserve">
+    <value>Authenticator-App hinzufügen</value>
+  </data>
+  <data name="PrivacyPolicyNotAccepted" xml:space="preserve">
+    <value>Die Datenschutz- und Cookie-Richtlinie wurde nicht akzeptiert.</value>
+  </data>
+  <data name="PrivacyPolicyMustAccept" xml:space="preserve">
+    <value>Sie müssen die Richtlinie akzeptieren, bevor Sie die Zwei-Faktor-Authentifizierung aktivieren können.</value>
+  </data>
+  <data name="BrowserForgotten" xml:space="preserve">
+    <value>Der aktuelle Browser wurde vergessen. Wenn Sie sich erneut von diesem Browser aus anmelden, werden Sie nach Ihrem 2FA-Code gefragt.</value>
+  </data>
+  <data name="NoEmailSenderNotice" xml:space="preserve">
+    <value>Für diese App ist derzeit kein echter E-Mail-Versand registriert. Informationen zur Konfiguration finden Sie in {0}. Normalerweise würde dies per E-Mail gesendet: {1}</value>
+  </data>
+  <data name="TheseDocs" xml:space="preserve">
+    <value>dieser Dokumentation</value>
+  </data>
+  <data name="ConfirmCurrentEmailLink" xml:space="preserve">
+    <value>Hier klicken, um Ihre aktuelle E-Mail-Adresse zu bestätigen</value>
+  </data>
+  <data name="ConfirmEmailChangeLink" xml:space="preserve">
+    <value>Hier klicken, um die Änderung Ihrer E-Mail-Adresse zu bestätigen</value>
+  </data>
+  <data name="EmailUnchanged" xml:space="preserve">
+    <value>Ihre E-Mail-Adresse ist unverändert.</value>
+  </data>
+  <data name="EmailChangeLinkAbove" xml:space="preserve">
+    <value>Klicken Sie auf den obigen Link, um die Änderung Ihrer E-Mail-Adresse zu bestätigen.</value>
+  </data>
+  <data name="EmailChangeSent" xml:space="preserve">
+    <value>Bestätigungslink zur Änderung der E-Mail-Adresse gesendet. Bitte überprüfen Sie Ihre E-Mails.</value>
+  </data>
+  <data name="VerifyEmailLinkAbove" xml:space="preserve">
+    <value>Klicken Sie auf den obigen Link, um Ihre E-Mail-Adresse zu bestätigen.</value>
+  </data>
+  <data name="VerificationEmailSent" xml:space="preserve">
+    <value>Bestätigungs-E-Mail gesendet. Bitte überprüfen Sie Ihre E-Mails.</value>
+  </data>
 </root>

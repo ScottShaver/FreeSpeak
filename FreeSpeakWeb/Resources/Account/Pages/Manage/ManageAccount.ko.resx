@@ -296,4 +296,73 @@
   <data name="ErrorUpdateProfile" xml:space="preserve">
     <value>오류: 프로필을 업데이트하지 못했습니다.</value>
   </data>
+  <data name="ErrorWithDetails" xml:space="preserve">
+    <value>오류: {0}</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>로드 중...</value>
+  </data>
+  <data name="NoRecoveryCodesLeft" xml:space="preserve">
+    <value>남은 복구 코드가 없습니다.</value>
+  </data>
+  <data name="NoRecoveryCodesLeftBody" xml:space="preserve">
+    <value>복구 코드로 로그인하려면 먼저 {0}해야 합니다.</value>
+  </data>
+  <data name="GenerateNewRecoveryCodeSetLink" xml:space="preserve">
+    <value>새 복구 코드 세트를 생성</value>
+  </data>
+  <data name="OneRecoveryCodeLeft" xml:space="preserve">
+    <value>복구 코드가 1개 남았습니다.</value>
+  </data>
+  <data name="OneRecoveryCodeLeftBody" xml:space="preserve">
+    <value>{0}할 수 있습니다.</value>
+  </data>
+  <data name="FewRecoveryCodesBody" xml:space="preserve">
+    <value>{0}하는 것이 좋습니다.</value>
+  </data>
+  <data name="ForgetThisBrowser" xml:space="preserve">
+    <value>이 브라우저 잊기</value>
+  </data>
+  <data name="AuthenticatorApp" xml:space="preserve">
+    <value>인증 앱</value>
+  </data>
+  <data name="AddAuthenticatorApp" xml:space="preserve">
+    <value>인증 앱 추가</value>
+  </data>
+  <data name="PrivacyPolicyNotAccepted" xml:space="preserve">
+    <value>개인정보 및 쿠키 정책에 동의하지 않았습니다.</value>
+  </data>
+  <data name="PrivacyPolicyMustAccept" xml:space="preserve">
+    <value>2단계 인증을 사용하려면 먼저 정책에 동의해야 합니다.</value>
+  </data>
+  <data name="BrowserForgotten" xml:space="preserve">
+    <value>현재 브라우저를 잊었습니다. 이 브라우저에서 다시 로그인하면 2FA 코드를 입력하라는 메시지가 표시됩니다.</value>
+  </data>
+  <data name="NoEmailSenderNotice" xml:space="preserve">
+    <value>이 앱에는 현재 실제 이메일 발신자가 등록되어 있지 않습니다. 실제 이메일 발신자를 구성하는 방법은 {0}을(를) 참조하세요. 일반적으로 이 내용은 이메일로 전송됩니다: {1}</value>
+  </data>
+  <data name="TheseDocs" xml:space="preserve">
+    <value>이 문서</value>
+  </data>
+  <data name="ConfirmCurrentEmailLink" xml:space="preserve">
+    <value>여기를 클릭하여 현재 이메일을 확인하세요</value>
+  </data>
+  <data name="ConfirmEmailChangeLink" xml:space="preserve">
+    <value>여기를 클릭하여 이메일 변경을 확인하세요</value>
+  </data>
+  <data name="EmailUnchanged" xml:space="preserve">
+    <value>이메일이 변경되지 않았습니다.</value>
+  </data>
+  <data name="EmailChangeLinkAbove" xml:space="preserve">
+    <value>위의 링크를 클릭하여 이메일 변경을 확인하세요.</value>
+  </data>
+  <data name="EmailChangeSent" xml:space="preserve">
+    <value>이메일 변경 확인 링크를 보냈습니다. 이메일을 확인하세요.</value>
+  </data>
+  <data name="VerifyEmailLinkAbove" xml:space="preserve">
+    <value>위의 링크를 클릭하여 이메일을 확인하세요.</value>
+  </data>
+  <data name="VerificationEmailSent" xml:space="preserve">
+    <value>확인 이메일을 보냈습니다. 이메일을 확인하세요.</value>
+  </data>
 </root>
