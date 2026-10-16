@@ -59,5 +59,50 @@ namespace FreeSpeakWeb.Resources.SocialFeed {
                 resourceCulture = value;
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Be the first to comment!.
+        /// </summary>
+        public static string BeFirstToComment {
+            get {
+                return ResourceManager.GetString("BeFirstToComment", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        public static string Loading {
+            get {
+                return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Load more comments.
+        /// </summary>
+        public static string LoadMoreComments {
+            get {
+                return ResourceManager.GetString("LoadMoreComments", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Post Details.
+        /// </summary>
+        public static string PostDetails {
+            get {
+                return ResourceManager.GetString("PostDetails", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Write a comment....
+        /// </summary>
+        public static string WriteAComment {
+            get {
+                return ResourceManager.GetString("WriteAComment", resourceCulture);
+            }
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class UserPreferencesComponent {
@@ -61,15 +61,6 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Public (Everyone can see).
-        /// </summary>
-        public static string AudiencePublic {
-            get {
-                return ResourceManager.GetString("AudiencePublic", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to Friends Only.
         /// </summary>
         public static string AudienceFriendsOnly {
@@ -84,6 +75,15 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
         public static string AudienceMeOnly {
             get {
                 return ResourceManager.GetString("AudienceMeOnly", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Public (Everyone can see).
+        /// </summary>
+        public static string AudiencePublic {
+            get {
+                return ResourceManager.GetString("AudiencePublic", resourceCulture);
             }
         }
 
@@ -178,6 +178,15 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Enter a whole number of days between 1 and 365..
+        /// </summary>
+        public static string ExpirationRangeError {
+            get {
+                return ResourceManager.GetString("ExpirationRangeError", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Friend Accepted.
         /// </summary>
         public static string FriendAccepted {
@@ -196,15 +205,6 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Deutsch (German).
-        /// </summary>
-        public static string LanguageGroupGerman {
-            get {
-                return ResourceManager.GetString("LanguageGroupGerman", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to English.
         /// </summary>
         public static string LanguageGroupEnglish {
@@ -219,6 +219,15 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
         public static string LanguageGroupFrench {
             get {
                 return ResourceManager.GetString("LanguageGroupFrench", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Deutsch (German).
+        /// </summary>
+        public static string LanguageGroupGerman {
+            get {
+                return ResourceManager.GetString("LanguageGroupGerman", resourceCulture);
             }
         }
 
@@ -286,20 +295,20 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to First Name + Last Initial (John S.).
-        /// </summary>
-        public static string NameDisplayFirstNameLastInitial {
-            get {
-                return ResourceManager.GetString("NameDisplayFirstNameLastInitial", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to First Name Only (John).
         /// </summary>
         public static string NameDisplayFirstName {
             get {
                 return ResourceManager.GetString("NameDisplayFirstName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to First Name + Last Initial (John S.).
+        /// </summary>
+        public static string NameDisplayFirstNameLastInitial {
+            get {
+                return ResourceManager.GetString("NameDisplayFirstNameLastInitial", resourceCulture);
             }
         }
 
@@ -385,6 +394,15 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Preferences saved. Reloading page to apply language changes....
+        /// </summary>
+        public static string PreferencesSavedReloading {
+            get {
+                return ResourceManager.GetString("PreferencesSavedReloading", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Your preferences have been saved successfully..
         /// </summary>
         public static string PreferencesSavedSuccess {
@@ -417,6 +435,78 @@ namespace FreeSpeakWeb.Resources.Account.Shared {
         public static string SystemNotifications {
             get {
                 return ResourceManager.GetString("SystemNotifications", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Dark Mode.
+        /// </summary>
+        public static string Theme_dark {
+            get {
+                return ResourceManager.GetString("Theme_dark", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Default.
+        /// </summary>
+        public static string Theme_default {
+            get {
+                return ResourceManager.GetString("Theme_default", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Forest Green.
+        /// </summary>
+        public static string Theme_forest {
+            get {
+                return ResourceManager.GetString("Theme_forest", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to High Contrast.
+        /// </summary>
+        public static string Theme_high_contrast {
+            get {
+                return ResourceManager.GetString("Theme_high-contrast", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Light Mode.
+        /// </summary>
+        public static string Theme_light {
+            get {
+                return ResourceManager.GetString("Theme_light", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Ocean Blue.
+        /// </summary>
+        public static string Theme_ocean {
+            get {
+                return ResourceManager.GetString("Theme_ocean", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Purple Dream.
+        /// </summary>
+        public static string Theme_purple {
+            get {
+                return ResourceManager.GetString("Theme_purple", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Sunset Orange.
+        /// </summary>
+        public static string Theme_sunset {
+            get {
+                return ResourceManager.GetString("Theme_sunset", resourceCulture);
             }
         }
 

@@ -106,6 +106,33 @@ namespace FreeSpeakWeb.Resources.Shared {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to File {0} exceeds the {1}MB limit..
+        /// </summary>
+        public static string FileTooLargeError {
+            get {
+                return ResourceManager.GetString("FileTooLargeError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid image format for {0}. Please upload a valid image file..
+        /// </summary>
+        public static string InvalidImageFormatError {
+            get {
+                return ResourceManager.GetString("InvalidImageFormatError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Could not load {0}..
+        /// </summary>
+        public static string LoadFileError {
+            get {
+                return ResourceManager.GetString("LoadFileError", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Maximum of {0} images allowed..
         /// </summary>
         public static string MaxImagesError {

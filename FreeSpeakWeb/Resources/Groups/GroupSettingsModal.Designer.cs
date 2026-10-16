@@ -79,6 +79,24 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Enable File Uploads.
+        /// </summary>
+        public static string EnableFileUploads {
+            get {
+                return ResourceManager.GetString("EnableFileUploads", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Allow members to upload and share files with the group..
+        /// </summary>
+        public static string EnableFileUploadsHelp {
+            get {
+                return ResourceManager.GetString("EnableFileUploadsHelp", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Enable Points System.
         /// </summary>
         public static string EnablePointsSystem {
@@ -97,11 +115,29 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to File Sharing.
+        /// </summary>
+        public static string FileUploadSection {
+            get {
+                return ResourceManager.GetString("FileUploadSection", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Group Name.
         /// </summary>
         public static string GroupName {
             get {
                 return ResourceManager.GetString("GroupName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group Status.
+        /// </summary>
+        public static string GroupStatusSection {
+            get {
+                return ResourceManager.GetString("GroupStatusSection", resourceCulture);
             }
         }
 
@@ -120,96 +156,6 @@ namespace FreeSpeakWeb.Resources.Groups {
         public static string HiddenFromDiscoveryHelp {
             get {
                 return ResourceManager.GetString("HiddenFromDiscoveryHelp", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Loading....
-        /// </summary>
-        public static string Loading {
-            get {
-                return ResourceManager.GetString("Loading", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Public Group.
-        /// </summary>
-        public static string PublicGroup {
-            get {
-                return ResourceManager.GetString("PublicGroup", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Public groups are visible to all users..
-        /// </summary>
-        public static string PublicGroupHelp {
-            get {
-                return ResourceManager.GetString("PublicGroupHelp", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Require Join Approval.
-        /// </summary>
-        public static string RequireJoinApproval {
-            get {
-                return ResourceManager.GetString("RequireJoinApproval", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to New members must be approved before joining..
-        /// </summary>
-        public static string RequireJoinApprovalHelp {
-            get {
-                return ResourceManager.GetString("RequireJoinApprovalHelp", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Save Changes.
-        /// </summary>
-        public static string SaveChanges {
-            get {
-                return ResourceManager.GetString("SaveChanges", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Saving....
-        /// </summary>
-        public static string Saving {
-            get {
-                return ResourceManager.GetString("Saving", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Require Agreement to Group Rules.
-        /// </summary>
-        public static string RequireAcceptRules {
-            get {
-                return ResourceManager.GetString("RequireAcceptRules", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Users must agree to the group rules before joining or submitting a join request..
-        /// </summary>
-        public static string RequireAcceptRulesHelp {
-            get {
-                return ResourceManager.GetString("RequireAcceptRulesHelp", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Group Status.
-        /// </summary>
-        public static string GroupStatusSection {
-            get {
-                return ResourceManager.GetString("GroupStatusSection", resourceCulture);
             }
         }
 
@@ -246,6 +192,123 @@ namespace FreeSpeakWeb.Resources.Groups {
         public static string IsClosedHelp {
             get {
                 return ResourceManager.GetString("IsClosedHelp", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        public static string Loading {
+            get {
+                return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Public Group.
+        /// </summary>
+        public static string PublicGroup {
+            get {
+                return ResourceManager.GetString("PublicGroup", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Public groups are visible to all users..
+        /// </summary>
+        public static string PublicGroupHelp {
+            get {
+                return ResourceManager.GetString("PublicGroupHelp", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Require Agreement to Group Rules.
+        /// </summary>
+        public static string RequireAcceptRules {
+            get {
+                return ResourceManager.GetString("RequireAcceptRules", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Users must agree to the group rules before joining or submitting a join request..
+        /// </summary>
+        public static string RequireAcceptRulesHelp {
+            get {
+                return ResourceManager.GetString("RequireAcceptRulesHelp", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Require Join Approval.
+        /// </summary>
+        public static string RequireJoinApproval {
+            get {
+                return ResourceManager.GetString("RequireJoinApproval", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to New members must be approved before joining..
+        /// </summary>
+        public static string RequireJoinApprovalHelp {
+            get {
+                return ResourceManager.GetString("RequireJoinApprovalHelp", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Require File Approval.
+        /// </summary>
+        public static string RequiresFileApproval {
+            get {
+                return ResourceManager.GetString("RequiresFileApproval", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Uploaded files must be approved by a moderator before they are visible to other members..
+        /// </summary>
+        public static string RequiresFileApprovalHelp {
+            get {
+                return ResourceManager.GetString("RequiresFileApprovalHelp", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Require Post Approval.
+        /// </summary>
+        public static string RequiresPostApproval {
+            get {
+                return ResourceManager.GetString("RequiresPostApproval", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to New posts must be approved by a moderator before they are visible to other members..
+        /// </summary>
+        public static string RequiresPostApprovalHelp {
+            get {
+                return ResourceManager.GetString("RequiresPostApprovalHelp", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Save Changes.
+        /// </summary>
+        public static string SaveChanges {
+            get {
+                return ResourceManager.GetString("SaveChanges", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Saving....
+        /// </summary>
+        public static string Saving {
+            get {
+                return ResourceManager.GetString("Saving", resourceCulture);
             }
         }
 

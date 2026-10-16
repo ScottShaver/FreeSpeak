@@ -61,11 +61,335 @@ namespace FreeSpeakWeb.Resources.Pages {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Access Denied.
+        /// </summary>
+        public static string AccessDenied {
+            get {
+                return ResourceManager.GetString("AccessDenied", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to All Files.
+        /// </summary>
+        public static string AllFiles {
+            get {
+                return ResourceManager.GetString("AllFiles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Approved Files.
+        /// </summary>
+        public static string ApprovedFiles {
+            get {
+                return ResourceManager.GetString("ApprovedFiles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Back to Group.
+        /// </summary>
+        public static string BackToGroup {
+            get {
+                return ResourceManager.GetString("BackToGroup", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm Delete.
+        /// </summary>
+        public static string ConfirmDelete {
+            get {
+                return ResourceManager.GetString("ConfirmDelete", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this file? This action cannot be undone..
+        /// </summary>
+        public static string ConfirmDeleteMessage {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Decline.
+        /// </summary>
+        public static string Decline {
+            get {
+                return ResourceManager.GetString("Decline", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Declined.
+        /// </summary>
+        public static string Declined {
+            get {
+                return ResourceManager.GetString("Declined", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Decline File.
+        /// </summary>
+        public static string DeclineFile {
+            get {
+                return ResourceManager.GetString("DeclineFile", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Decline Reason.
+        /// </summary>
+        public static string DeclineReason {
+            get {
+                return ResourceManager.GetString("DeclineReason", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        public static string Description {
+            get {
+                return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Download.
+        /// </summary>
+        public static string Download {
+            get {
+                return ResourceManager.GetString("Download", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Files.
+        /// </summary>
+        public static string Files {
+            get {
+                return ResourceManager.GetString("Files", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Go to Groups.
+        /// </summary>
+        public static string GoToGroups {
+            get {
+                return ResourceManager.GetString("GoToGroups", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group Not Found.
+        /// </summary>
+        public static string GroupNotFound {
+            get {
+                return ResourceManager.GetString("GroupNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The group you're looking for doesn't exist or you don't have access to it..
+        /// </summary>
+        public static string GroupNotFoundMessage {
+            get {
+                return ResourceManager.GetString("GroupNotFoundMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Groups.
+        /// </summary>
+        public static string Groups {
+            get {
+                return ResourceManager.GetString("Groups", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Loading files....
+        /// </summary>
+        public static string LoadingFiles {
+            get {
+                return ResourceManager.GetString("LoadingFiles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Load More.
+        /// </summary>
+        public static string LoadMore {
+            get {
+                return ResourceManager.GetString("LoadMore", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum file size: 50 MB.
+        /// </summary>
+        public static string MaxFileSize50MB {
+            get {
+                return ResourceManager.GetString("MaxFileSize50MB", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You must be a member of this group to view files..
+        /// </summary>
+        public static string MustBeMemberToViewFiles {
+            get {
+                return ResourceManager.GetString("MustBeMemberToViewFiles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to My Files.
+        /// </summary>
+        public static string MyFiles {
+            get {
+                return ResourceManager.GetString("MyFiles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No files have been uploaded yet..
+        /// </summary>
+        public static string NoFilesYet {
+            get {
+                return ResourceManager.GetString("NoFilesYet", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to optional.
+        /// </summary>
+        public static string Optional {
+            get {
+                return ResourceManager.GetString("Optional", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Group Files.
         /// </summary>
         public static string PageTitle {
             get {
                 return ResourceManager.GetString("PageTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Pending.
+        /// </summary>
+        public static string Pending {
+            get {
+                return ResourceManager.GetString("Pending", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Pending Approval.
+        /// </summary>
+        public static string PendingApproval {
+            get {
+                return ResourceManager.GetString("PendingApproval", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Pending Files.
+        /// </summary>
+        public static string PendingFiles {
+            get {
+                return ResourceManager.GetString("PendingFiles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning.
+        /// </summary>
+        public static string Scanning {
+            get {
+                return ResourceManager.GetString("Scanning", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Search files....
+        /// </summary>
+        public static string SearchFiles {
+            get {
+                return ResourceManager.GetString("SearchFiles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Select File.
+        /// </summary>
+        public static string SelectFile {
+            get {
+                return ResourceManager.GetString("SelectFile", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Total Files.
+        /// </summary>
+        public static string TotalFiles {
+            get {
+                return ResourceManager.GetString("TotalFiles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Total Storage.
+        /// </summary>
+        public static string TotalStorage {
+            get {
+                return ResourceManager.GetString("TotalStorage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Upload.
+        /// </summary>
+        public static string Upload {
+            get {
+                return ResourceManager.GetString("Upload", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Upload File.
+        /// </summary>
+        public static string UploadFile {
+            get {
+                return ResourceManager.GetString("UploadFile", resourceCulture);
             }
         }
     }

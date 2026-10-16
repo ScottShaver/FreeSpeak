@@ -61,11 +61,218 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Action Guide:.
+        /// </summary>
+        public static string ActionExplanation {
+            get {
+                return ResourceManager.GetString("ActionExplanation", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Content violates rules, moderation action required.
+        /// </summary>
+        public static string ActionExplanation2 {
+            get {
+                return ResourceManager.GetString("ActionExplanation2", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Report marked as action taken..
+        /// </summary>
+        public static string ActionTaken {
+            get {
+                return ResourceManager.GetString("ActionTaken", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Approve.
+        /// </summary>
+        public static string Approve {
+            get {
+                return ResourceManager.GetString("Approve", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Approve this post and make it visible to all members.
+        /// </summary>
+        public static string ApprovePostTooltip {
+            get {
+                return ResourceManager.GetString("ApprovePostTooltip", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Approve this file and make it visible to all members.
+        /// </summary>
+        public static string ApproveTooltip {
+            get {
+                return ResourceManager.GetString("ApproveTooltip", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Attached Images.
+        /// </summary>
+        public static string AttachedImages {
+            get {
+                return ResourceManager.GetString("AttachedImages", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Author:.
+        /// </summary>
+        public static string Author {
+            get {
+                return ResourceManager.GetString("Author", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Back to List.
+        /// </summary>
+        public static string BackToList {
+            get {
+                return ResourceManager.GetString("BackToList", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot view comments directly. Use Moderate to review the report..
+        /// </summary>
+        public static string CannotViewComment {
+            get {
+                return ResourceManager.GetString("CannotViewComment", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         public static string Close {
             get {
                 return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Comment.
+        /// </summary>
+        public static string Comment {
+            get {
+                return ResourceManager.GetString("Comment", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Content has been deleted.
+        /// </summary>
+        public static string ContentDeleted {
+            get {
+                return ResourceManager.GetString("ContentDeleted", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}d ago.
+        /// </summary>
+        public static string DaysAgo {
+            get {
+                return ResourceManager.GetString("DaysAgo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Decline.
+        /// </summary>
+        public static string Decline {
+            get {
+                return ResourceManager.GetString("Decline", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Decline File.
+        /// </summary>
+        public static string DeclineFile {
+            get {
+                return ResourceManager.GetString("DeclineFile", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You are about to decline: {0}.
+        /// </summary>
+        public static string DeclineFileConfirmation {
+            get {
+                return ResourceManager.GetString("DeclineFileConfirmation", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Decline this post - the author can edit and resubmit.
+        /// </summary>
+        public static string DeclinePostTooltip {
+            get {
+                return ResourceManager.GetString("DeclinePostTooltip", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Reason (optional).
+        /// </summary>
+        public static string DeclineReason {
+            get {
+                return ResourceManager.GetString("DeclineReason", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Provide a reason for declining this file....
+        /// </summary>
+        public static string DeclineReasonPlaceholder {
+            get {
+                return ResourceManager.GetString("DeclineReasonPlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Decline this file - it will be removed.
+        /// </summary>
+        public static string DeclineTooltip {
+            get {
+                return ResourceManager.GetString("DeclineTooltip", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No violation found, report is not valid.
+        /// </summary>
+        public static string DismissExplanation {
+            get {
+                return ResourceManager.GetString("DismissExplanation", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Dismiss.
+        /// </summary>
+        public static string DismissReport {
+            get {
+                return ResourceManager.GetString("DismissReport", resourceCulture);
             }
         }
 
@@ -79,11 +286,146 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading pending files..
+        /// </summary>
+        public static string ErrorLoadingFiles {
+            get {
+                return ResourceManager.GetString("ErrorLoadingFiles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading pending posts..
+        /// </summary>
+        public static string ErrorLoadingPendingPosts {
+            get {
+                return ResourceManager.GetString("ErrorLoadingPendingPosts", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading the post..
+        /// </summary>
+        public static string ErrorLoadingPost {
+            get {
+                return ResourceManager.GetString("ErrorLoadingPost", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading reports..
+        /// </summary>
+        public static string ErrorLoadingReports {
+            get {
+                return ResourceManager.GetString("ErrorLoadingReports", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while processing the file..
+        /// </summary>
+        public static string ErrorProcessingFile {
+            get {
+                return ResourceManager.GetString("ErrorProcessingFile", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while processing the post..
+        /// </summary>
+        public static string ErrorProcessingPost {
+            get {
+                return ResourceManager.GetString("ErrorProcessingPost", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while processing the report..
+        /// </summary>
+        public static string ErrorProcessingReport {
+            get {
+                return ResourceManager.GetString("ErrorProcessingReport", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to File approved and now visible to group members..
+        /// </summary>
+        public static string FileApproved {
+            get {
+                return ResourceManager.GetString("FileApproved", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to File declined and removed..
+        /// </summary>
+        public static string FileDeclined {
+            get {
+                return ResourceManager.GetString("FileDeclined", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}h ago.
+        /// </summary>
+        public static string HoursAgo {
+            get {
+                return ResourceManager.GetString("HoursAgo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to image(s).
+        /// </summary>
+        public static string Images {
+            get {
+                return ResourceManager.GetString("Images", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to just now.
+        /// </summary>
+        public static string JustNow {
+            get {
+                return ResourceManager.GetString("JustNow", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Loading....
         /// </summary>
         public static string Loading {
             get {
                 return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}m ago.
+        /// </summary>
+        public static string MinutesAgo {
+            get {
+                return ResourceManager.GetString("MinutesAgo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Moderate.
+        /// </summary>
+        public static string Moderate {
+            get {
+                return ResourceManager.GetString("Moderate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Review and take moderation action on this report.
+        /// </summary>
+        public static string ModerateTooltip {
+            get {
+                return ResourceManager.GetString("ModerateTooltip", resourceCulture);
             }
         }
 
@@ -106,11 +448,56 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Moderation log features will be available in a future update..
+        ///   Looks up a localized string similar to Moderation log features will be available in a future update. You will be able to view a history of all moderation actions taken in this group..
         /// </summary>
         public static string ModerationLogPlaceholder {
             get {
                 return ResourceManager.GetString("ModerationLogPlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Moderator Notes (Optional).
+        /// </summary>
+        public static string ModeratorNotes {
+            get {
+                return ResourceManager.GetString("ModeratorNotes", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No pending files. All file uploads have been reviewed!.
+        /// </summary>
+        public static string NoPendingFiles {
+            get {
+                return ResourceManager.GetString("NoPendingFiles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No pending posts. All posts have been reviewed!.
+        /// </summary>
+        public static string NoPendingPosts {
+            get {
+                return ResourceManager.GetString("NoPendingPosts", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No pending reports. All reports have been reviewed!.
+        /// </summary>
+        public static string NoReports {
+            get {
+                return ResourceManager.GetString("NoReports", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Add notes about your decision or action taken....
+        /// </summary>
+        public static string NotesPlaceholder {
+            get {
+                return ResourceManager.GetString("NotesPlaceholder", resourceCulture);
             }
         }
 
@@ -133,11 +520,209 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Pending approval features will be available in a future update..
+        ///   Looks up a localized string similar to Pending approval features will be available in a future update. You will be able to approve or reject posts before they are published..
         /// </summary>
         public static string PendingApprovalPlaceholder {
             get {
                 return ResourceManager.GetString("PendingApprovalPlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Pending Files.
+        /// </summary>
+        public static string PendingFiles {
+            get {
+                return ResourceManager.GetString("PendingFiles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Review uploaded files awaiting approval before they become visible to group members..
+        /// </summary>
+        public static string PendingFilesDescription {
+            get {
+                return ResourceManager.GetString("PendingFilesDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to pending post(s).
+        /// </summary>
+        public static string PendingPostsCount {
+            get {
+                return ResourceManager.GetString("PendingPostsCount", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Post.
+        /// </summary>
+        public static string Post {
+            get {
+                return ResourceManager.GetString("Post", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Post approval is not enabled for this group. Posts are published immediately when created..
+        /// </summary>
+        public static string PostApprovalDisabled {
+            get {
+                return ResourceManager.GetString("PostApprovalDisabled", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Post approved and published successfully..
+        /// </summary>
+        public static string PostApproved {
+            get {
+                return ResourceManager.GetString("PostApproved", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Post declined successfully..
+        /// </summary>
+        public static string PostDeclined {
+            get {
+                return ResourceManager.GetString("PostDeclined", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Posted.
+        /// </summary>
+        public static string PostedAt {
+            get {
+                return ResourceManager.GetString("PostedAt", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The reported post could not be found..
+        /// </summary>
+        public static string PostNotFound {
+            get {
+                return ResourceManager.GetString("PostNotFound", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Adult content.
+        /// </summary>
+        public static string ReasonAdultContent {
+            get {
+                return ResourceManager.GetString("ReasonAdultContent", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Copyright violation.
+        /// </summary>
+        public static string ReasonCopyright {
+            get {
+                return ResourceManager.GetString("ReasonCopyright", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Harassment or bullying.
+        /// </summary>
+        public static string ReasonHarassment {
+            get {
+                return ResourceManager.GetString("ReasonHarassment", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Hate speech.
+        /// </summary>
+        public static string ReasonHateSpeech {
+            get {
+                return ResourceManager.GetString("ReasonHateSpeech", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Illegal activity.
+        /// </summary>
+        public static string ReasonIllegal {
+            get {
+                return ResourceManager.GetString("ReasonIllegal", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Misinformation.
+        /// </summary>
+        public static string ReasonMisinformation {
+            get {
+                return ResourceManager.GetString("ReasonMisinformation", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Off-topic content.
+        /// </summary>
+        public static string ReasonOffTopic {
+            get {
+                return ResourceManager.GetString("ReasonOffTopic", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Other.
+        /// </summary>
+        public static string ReasonOther {
+            get {
+                return ResourceManager.GetString("ReasonOther", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy violation.
+        /// </summary>
+        public static string ReasonPrivacy {
+            get {
+                return ResourceManager.GetString("ReasonPrivacy", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Self-harm content.
+        /// </summary>
+        public static string ReasonSelfHarm {
+            get {
+                return ResourceManager.GetString("ReasonSelfHarm", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Spam or unwanted content.
+        /// </summary>
+        public static string ReasonSpam {
+            get {
+                return ResourceManager.GetString("ReasonSpam", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Violates group rule.
+        /// </summary>
+        public static string ReasonViolatesGroupRule {
+            get {
+                return ResourceManager.GetString("ReasonViolatesGroupRule", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Violence or graphic content.
+        /// </summary>
+        public static string ReasonViolence {
+            get {
+                return ResourceManager.GetString("ReasonViolence", resourceCulture);
             }
         }
 
@@ -160,11 +745,47 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Recent posts review features will be available in a future update..
+        ///   Looks up a localized string similar to Recent posts review features will be available in a future update. You will be able to quickly review and moderate recent group activity..
         /// </summary>
         public static string RecentPostsPlaceholder {
             get {
                 return ResourceManager.GetString("RecentPostsPlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        public static string Refresh {
+            get {
+                return ResourceManager.GetString("Refresh", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Report dismissed successfully..
+        /// </summary>
+        public static string ReportDismissed {
+            get {
+                return ResourceManager.GetString("ReportDismissed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Reported by.
+        /// </summary>
+        public static string ReportedBy {
+            get {
+                return ResourceManager.GetString("ReportedBy", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Reported Comment.
+        /// </summary>
+        public static string ReportedComment {
+            get {
+                return ResourceManager.GetString("ReportedComment", resourceCulture);
             }
         }
 
@@ -187,11 +808,74 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Reported content features will be available in a future update..
+        ///   Looks up a localized string similar to Reported content features will be available in a future update. You will be able to review and take action on posts and comments reported by members..
         /// </summary>
         public static string ReportedContentPlaceholder {
             get {
                 return ResourceManager.GetString("ReportedContentPlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Reported Post.
+        /// </summary>
+        public static string ReportedPost {
+            get {
+                return ResourceManager.GetString("ReportedPost", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Reporter's Description:.
+        /// </summary>
+        public static string ReporterDescription {
+            get {
+                return ResourceManager.GetString("ReporterDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Report resolved successfully..
+        /// </summary>
+        public static string ReportResolved {
+            get {
+                return ResourceManager.GetString("ReportResolved", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Resolve.
+        /// </summary>
+        public static string Resolve {
+            get {
+                return ResourceManager.GetString("Resolve", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Issue resolved, content edited or removed by author.
+        /// </summary>
+        public static string ResolveExplanation {
+            get {
+                return ResourceManager.GetString("ResolveExplanation", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Showing {0} pending file(s).
+        /// </summary>
+        public static string ShowingPendingFiles {
+            get {
+                return ResourceManager.GetString("ShowingPendingFiles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Take Action.
+        /// </summary>
+        public static string TakeAction {
+            get {
+                return ResourceManager.GetString("TakeAction", resourceCulture);
             }
         }
 
@@ -201,6 +885,60 @@ namespace FreeSpeakWeb.Resources.Groups {
         public static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown User.
+        /// </summary>
+        public static string UnknownUser {
+            get {
+                return ResourceManager.GetString("UnknownUser", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Uploaded by.
+        /// </summary>
+        public static string UploadedBy {
+            get {
+                return ResourceManager.GetString("UploadedBy", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to View.
+        /// </summary>
+        public static string View {
+            get {
+                return ResourceManager.GetString("View", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to View the full post content.
+        /// </summary>
+        public static string ViewPostTooltip {
+            get {
+                return ResourceManager.GetString("ViewPostTooltip", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to View the full report details.
+        /// </summary>
+        public static string ViewReportTooltip {
+            get {
+                return ResourceManager.GetString("ViewReportTooltip", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Violated Rule:.
+        /// </summary>
+        public static string ViolatedRule {
+            get {
+                return ResourceManager.GetString("ViolatedRule", resourceCulture);
             }
         }
     }

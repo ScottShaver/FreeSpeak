@@ -19,7 +19,7 @@ namespace FreeSpeakWeb.Resources.Pages {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class FriendDetails {
@@ -61,6 +61,15 @@ namespace FreeSpeakWeb.Resources.Pages {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to About Me.
+        /// </summary>
+        public static string AboutMe {
+            get {
+                return ResourceManager.GetString("AboutMe", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Friend not found..
         /// </summary>
         public static string FriendNotFound {
@@ -75,15 +84,6 @@ namespace FreeSpeakWeb.Resources.Pages {
         public static string FriendPosts {
             get {
                 return ResourceManager.GetString("FriendPosts", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Load More Posts.
-        /// </summary>
-        public static string LoadMorePosts {
-            get {
-                return ResourceManager.GetString("LoadMorePosts", resourceCulture);
             }
         }
 
@@ -115,6 +115,24 @@ namespace FreeSpeakWeb.Resources.Pages {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Load More Posts.
+        /// </summary>
+        public static string LoadMorePosts {
+            get {
+                return ResourceManager.GetString("LoadMorePosts", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No more posts at this time.
+        /// </summary>
+        public static string NoMorePosts {
+            get {
+                return ResourceManager.GetString("NoMorePosts", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to This friend hasn't shared any posts yet..
         /// </summary>
         public static string NoPostsMessage {
@@ -129,15 +147,6 @@ namespace FreeSpeakWeb.Resources.Pages {
         public static string NoPostsYet {
             get {
                 return ResourceManager.GetString("NoPostsYet", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to No more posts at this time.
-        /// </summary>
-        public static string NoMorePosts {
-            get {
-                return ResourceManager.GetString("NoMorePosts", resourceCulture);
             }
         }
 

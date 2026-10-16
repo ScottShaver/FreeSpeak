@@ -70,6 +70,33 @@ namespace FreeSpeakWeb.Resources.Pages {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Delete this upload? It will also be removed from your post. This cannot be undone..
+        /// </summary>
+        public static string ConfirmDeleteUpload {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteUpload", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string DeleteUpload {
+            get {
+                return ResourceManager.GetString("DeleteUpload", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Could not delete the upload..
+        /// </summary>
+        public static string DeleteUploadFailed {
+            get {
+                return ResourceManager.GetString("DeleteUploadFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to You've reached the end of your pictures.
         /// </summary>
         public static string EndOfPictures {

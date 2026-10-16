@@ -61,6 +61,51 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Add Default Rules.
+        /// </summary>
+        public static string AddDefaultRules {
+            get {
+                return ResourceManager.GetString("AddDefaultRules", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Rule.
+        /// </summary>
+        public static string AddNewRule {
+            get {
+                return ResourceManager.GetString("AddNewRule", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Add Rule.
+        /// </summary>
+        public static string AddRule {
+            get {
+                return ResourceManager.GetString("AddRule", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Approve.
+        /// </summary>
+        public static string Approve {
+            get {
+                return ResourceManager.GetString("Approve", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Approve this join request.
+        /// </summary>
+        public static string ApproveRequest {
+            get {
+                return ResourceManager.GetString("ApproveRequest", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Banned.
         /// </summary>
         public static string BannedMembers {
@@ -79,11 +124,29 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Banned member management features will be available in a future update..
+        ///   Looks up a localized string similar to Banned member management features will be available in a future update. You will be able to view banned members and unban them if needed..
         /// </summary>
         public static string BannedMembersPlaceholder {
             get {
                 return ResourceManager.GetString("BannedMembersPlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot add default rules when rules already exist. Delete existing rules first..
+        /// </summary>
+        public static string CannotAddDefaultRulesExist {
+            get {
+                return ResourceManager.GetString("CannotAddDefaultRulesExist", resourceCulture);
             }
         }
 
@@ -97,11 +160,218 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Delete Rule?.
+        /// </summary>
+        public static string ConfirmDeleteRule {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteRule", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this rule? This action cannot be undone..
+        /// </summary>
+        public static string ConfirmDeleteRuleMessage {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteRuleMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Deny Join Request?.
+        /// </summary>
+        public static string ConfirmDenyRequest {
+            get {
+                return ResourceManager.GetString("ConfirmDenyRequest", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to deny this join request? The user will not be notified but can submit another request later..
+        /// </summary>
+        public static string ConfirmDenyRequestMessage {
+            get {
+                return ResourceManager.GetString("ConfirmDenyRequestMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Default rules have been added. You can now edit them to fit your group's needs..
+        /// </summary>
+        public static string DefaultRulesAdded {
+            get {
+                return ResourceManager.GetString("DefaultRulesAdded", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Rule.
+        /// </summary>
+        public static string DeleteRule {
+            get {
+                return ResourceManager.GetString("DeleteRule", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Deny.
+        /// </summary>
+        public static string Deny {
+            get {
+                return ResourceManager.GetString("Deny", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Deny this join request.
+        /// </summary>
+        public static string DenyRequest {
+            get {
+                return ResourceManager.GetString("DenyRequest", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        public static string Edit {
+            get {
+                return ResourceManager.GetString("Edit", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Rule.
+        /// </summary>
+        public static string EditRule {
+            get {
+                return ResourceManager.GetString("EditRule", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while adding default rules..
+        /// </summary>
+        public static string ErrorAddingDefaultRules {
+            get {
+                return ResourceManager.GetString("ErrorAddingDefaultRules", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while approving the request..
+        /// </summary>
+        public static string ErrorApprovingRequest {
+            get {
+                return ResourceManager.GetString("ErrorApprovingRequest", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while creating the rule..
+        /// </summary>
+        public static string ErrorCreatingRule {
+            get {
+                return ResourceManager.GetString("ErrorCreatingRule", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while deleting the rule..
+        /// </summary>
+        public static string ErrorDeletingRule {
+            get {
+                return ResourceManager.GetString("ErrorDeletingRule", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while denying the request..
+        /// </summary>
+        public static string ErrorDenyingRequest {
+            get {
+                return ResourceManager.GetString("ErrorDenyingRequest", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred while loading administration data..
         /// </summary>
         public static string ErrorLoadingData {
             get {
                 return ResourceManager.GetString("ErrorLoadingData", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading join requests..
+        /// </summary>
+        public static string ErrorLoadingRequests {
+            get {
+                return ResourceManager.GetString("ErrorLoadingRequests", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading rules..
+        /// </summary>
+        public static string ErrorLoadingRules {
+            get {
+                return ResourceManager.GetString("ErrorLoadingRules", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while reordering rules..
+        /// </summary>
+        public static string ErrorReorderingRules {
+            get {
+                return ResourceManager.GetString("ErrorReorderingRules", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while saving the rule..
+        /// </summary>
+        public static string ErrorSavingRule {
+            get {
+                return ResourceManager.GetString("ErrorSavingRule", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while updating the rule..
+        /// </summary>
+        public static string ErrorUpdatingRule {
+            get {
+                return ResourceManager.GetString("ErrorUpdatingRule", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group Rules.
+        /// </summary>
+        public static string GroupRules {
+            get {
+                return ResourceManager.GetString("GroupRules", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Define the rules that members must follow in this group..
+        /// </summary>
+        public static string GroupRulesDescription {
+            get {
+                return ResourceManager.GetString("GroupRulesDescription", resourceCulture);
             }
         }
 
@@ -124,7 +394,7 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Advanced settings features will be available in a future update..
+        ///   Looks up a localized string similar to Advanced settings features will be available in a future update. You will be able to configure group rules, visibility options, and more..
         /// </summary>
         public static string GroupSettingsPlaceholder {
             get {
@@ -151,7 +421,7 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Join request management features will be available in a future update..
+        ///   Looks up a localized string similar to Join request management features will be available in a future update. You will be able to approve or deny pending membership requests..
         /// </summary>
         public static string JoinRequestsPlaceholder {
             get {
@@ -187,11 +457,92 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Member management features will be available in a future update..
+        ///   Looks up a localized string similar to Member management features will be available in a future update. You will be able to view members, remove members, and manage their roles..
         /// </summary>
         public static string MemberManagementPlaceholder {
             get {
                 return ResourceManager.GetString("MemberManagementPlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Down.
+        /// </summary>
+        public static string MoveDown {
+            get {
+                return ResourceManager.GetString("MoveDown", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Up.
+        /// </summary>
+        public static string MoveUp {
+            get {
+                return ResourceManager.GetString("MoveUp", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No pending join requests at this time..
+        /// </summary>
+        public static string NoJoinRequests {
+            get {
+                return ResourceManager.GetString("NoJoinRequests", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No rules have been defined for this group yet..
+        /// </summary>
+        public static string NoRulesYet {
+            get {
+                return ResourceManager.GetString("NoRulesYet", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Click "Add Default Rules" to start with common rules, or "Add Rule" to create your own..
+        /// </summary>
+        public static string NoRulesYetHint {
+            get {
+                return ResourceManager.GetString("NoRulesYetHint", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        public static string Refresh {
+            get {
+                return ResourceManager.GetString("Refresh", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has been approved and added to the group..
+        /// </summary>
+        public static string RequestApproved {
+            get {
+                return ResourceManager.GetString("RequestApproved", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Join request from {0} has been denied..
+        /// </summary>
+        public static string RequestDenied {
+            get {
+                return ResourceManager.GetString("RequestDenied", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Requested on.
+        /// </summary>
+        public static string RequestedOn {
+            get {
+                return ResourceManager.GetString("RequestedOn", resourceCulture);
             }
         }
 
@@ -214,11 +565,110 @@ namespace FreeSpeakWeb.Resources.Groups {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Role management features will be available in a future update..
+        ///   Looks up a localized string similar to Role management features will be available in a future update. You will be able to promote members to administrators or moderators..
         /// </summary>
         public static string RoleManagementPlaceholder {
             get {
                 return ResourceManager.GetString("RoleManagementPlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Rule created successfully..
+        /// </summary>
+        public static string RuleCreated {
+            get {
+                return ResourceManager.GetString("RuleCreated", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Rule deleted successfully..
+        /// </summary>
+        public static string RuleDeleted {
+            get {
+                return ResourceManager.GetString("RuleDeleted", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Rule Description.
+        /// </summary>
+        public static string RuleDescription {
+            get {
+                return ResourceManager.GetString("RuleDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Explain the rule's purpose and what behavior is expected or prohibited.
+        /// </summary>
+        public static string RuleDescriptionPlaceholder {
+            get {
+                return ResourceManager.GetString("RuleDescriptionPlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Rule description is required..
+        /// </summary>
+        public static string RuleDescriptionRequired {
+            get {
+                return ResourceManager.GetString("RuleDescriptionRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Rule Title.
+        /// </summary>
+        public static string RuleTitle {
+            get {
+                return ResourceManager.GetString("RuleTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Enter a brief, clear title for this rule.
+        /// </summary>
+        public static string RuleTitlePlaceholder {
+            get {
+                return ResourceManager.GetString("RuleTitlePlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Rule title is required..
+        /// </summary>
+        public static string RuleTitleRequired {
+            get {
+                return ResourceManager.GetString("RuleTitleRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Rule updated successfully..
+        /// </summary>
+        public static string RuleUpdated {
+            get {
+                return ResourceManager.GetString("RuleUpdated", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Save Rule.
+        /// </summary>
+        public static string SaveRule {
+            get {
+                return ResourceManager.GetString("SaveRule", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Saving....
+        /// </summary>
+        public static string Saving {
+            get {
+                return ResourceManager.GetString("Saving", resourceCulture);
             }
         }
 
@@ -228,6 +678,24 @@ namespace FreeSpeakWeb.Resources.Groups {
         public static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0} pending request(s).
+        /// </summary>
+        public static string TotalPendingRequests {
+            get {
+                return ResourceManager.GetString("TotalPendingRequests", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown User.
+        /// </summary>
+        public static string UnknownUser {
+            get {
+                return ResourceManager.GetString("UnknownUser", resourceCulture);
             }
         }
     }
