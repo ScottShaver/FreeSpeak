@@ -433,7 +433,7 @@
             flex-shrink: 0;
             font-size: 18px;
             color: var(--text-secondary, #65676b);
-            margin-right: 0;
+            margin-inline-end: 0;
         }
 
         .groups-popup-item.active .bi {
