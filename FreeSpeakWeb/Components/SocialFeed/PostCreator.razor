@@ -91,7 +91,7 @@
                     @foreach (var image in selectedImages.Take(4))
                     {
                         <div class="preview-image-item">
-                            <img src="@image.DataUrl" alt="Selected image" />
+                            <img src="@image.DataUrl" alt="@Localizer["SelectedImageAlt"]" />
                             @if (selectedImages.Count > 4 && image == selectedImages[3])
                             {
                                 <div class="more-images-overlay">+@(selectedImages.Count - 4)</div>

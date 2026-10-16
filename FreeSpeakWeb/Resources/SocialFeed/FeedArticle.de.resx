@@ -142,4 +142,28 @@
   <data name="SeeLess" xml:space="preserve">
     <value>Weniger anzeigen</value>
   </data>
+  <data name="ChangePostToPublic" xml:space="preserve">
+    <value>Beitrag auf Öffentlich ändern?</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Unbekannt</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Meldung erfolgreich gesendet. Danke, dass du hilfst, unsere Community sicher zu halten.</value>
+  </data>
+  <data name="FailedToUpdateNotificationSettings" xml:space="preserve">
+    <value>Benachrichtigungseinstellungen konnten nicht aktualisiert werden.</value>
+  </data>
+  <data name="FailedToUpdatePostAudience" xml:space="preserve">
+    <value>Beitragszielgruppe konnte nicht aktualisiert werden.</value>
+  </data>
+  <data name="FailedToDeletePost" xml:space="preserve">
+    <value>Beitrag konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="DeletePostFullConfirmMessage" xml:space="preserve">
+    <value>Möchten Sie diesen Beitrag wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden und entfernt den Beitrag, alle Kommentare, Likes und Bilder dauerhaft.</value>
+  </data>
+  <data name="DeleteGroupPostFullConfirmMessage" xml:space="preserve">
+    <value>Möchten Sie diesen Gruppenbeitrag wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden und entfernt den Beitrag, alle Kommentare, Likes und Bilder dauerhaft.</value>
+  </data>
 </root>

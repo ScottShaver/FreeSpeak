@@ -86,7 +86,7 @@
                     <div class="modal-comment-editor">
                         @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
                         {
-                            <img src="@CurrentUserImageUrl" alt="You" class="comment-user-avatar" />
+                            <img src="@CurrentUserImageUrl" alt="@Localizer["YouAlt"]" class="comment-user-avatar" />
                         }
                         else
                         {
@@ -102,7 +102,7 @@
                 else
                 {
                     <div class="modal-comment-limit-message">
-                        <span>No more comments allowed</span>
+                        <span>@Localizer["NoMoreCommentsAllowed"]</span>
                     </div>
                 }
             </div>

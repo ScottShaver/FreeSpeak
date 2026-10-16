@@ -142,4 +142,28 @@
   <data name="SeeLess" xml:space="preserve">
     <value>表示を減らす</value>
   </data>
+  <data name="ChangePostToPublic" xml:space="preserve">
+    <value>投稿を公開にしますか？</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>不明</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>報告を送信しました。コミュニティの安全にご協力いただきありがとうございます。</value>
+  </data>
+  <data name="FailedToUpdateNotificationSettings" xml:space="preserve">
+    <value>通知設定を更新できませんでした。</value>
+  </data>
+  <data name="FailedToUpdatePostAudience" xml:space="preserve">
+    <value>投稿の公開範囲を更新できませんでした。</value>
+  </data>
+  <data name="FailedToDeletePost" xml:space="preserve">
+    <value>投稿を削除できませんでした。</value>
+  </data>
+  <data name="DeletePostFullConfirmMessage" xml:space="preserve">
+    <value>この投稿を削除してもよろしいですか？この操作は元に戻せず、投稿、すべてのコメント、いいね、画像が完全に削除されます。</value>
+  </data>
+  <data name="DeleteGroupPostFullConfirmMessage" xml:space="preserve">
+    <value>このグループ投稿を削除してもよろしいですか？この操作は元に戻せず、投稿、すべてのコメント、いいね、画像が完全に削除されます。</value>
+  </data>
 </root>

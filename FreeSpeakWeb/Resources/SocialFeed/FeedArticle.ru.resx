@@ -142,4 +142,28 @@
   <data name="SeeLess" xml:space="preserve">
     <value>Свернуть</value>
   </data>
+  <data name="ChangePostToPublic" xml:space="preserve">
+    <value>Сделать запись публичной?</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Жалоба успешно отправлена. Спасибо, что помогаете сохранять безопасность нашего сообщества.</value>
+  </data>
+  <data name="FailedToUpdateNotificationSettings" xml:space="preserve">
+    <value>Не удалось обновить настройки уведомлений.</value>
+  </data>
+  <data name="FailedToUpdatePostAudience" xml:space="preserve">
+    <value>Не удалось обновить аудиторию публикации.</value>
+  </data>
+  <data name="FailedToDeletePost" xml:space="preserve">
+    <value>Не удалось удалить публикацию.</value>
+  </data>
+  <data name="DeletePostFullConfirmMessage" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить эту публикацию? Это действие нельзя отменить, публикация, все комментарии, лайки и изображения будут удалены навсегда.</value>
+  </data>
+  <data name="DeleteGroupPostFullConfirmMessage" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить эту публикацию группы? Это действие нельзя отменить, публикация, все комментарии, лайки и изображения будут удалены навсегда.</value>
+  </data>
 </root>

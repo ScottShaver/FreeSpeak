@@ -158,5 +158,14 @@ namespace FreeSpeakWeb.Resources.SocialFeed {
                 return ResourceManager.GetString("UploadFailedError", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to What's on your mind?.
+        /// </summary>
+        public static string WhatsOnYourMind {
+            get {
+                return ResourceManager.GetString("WhatsOnYourMind", resourceCulture);
+            }
+        }
     }
 }

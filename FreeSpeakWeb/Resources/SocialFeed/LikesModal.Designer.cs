@@ -194,5 +194,14 @@ namespace FreeSpeakWeb.Resources.SocialFeed {
                 return ResourceManager.GetString("Wow", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string UnknownUser {
+            get {
+                return ResourceManager.GetString("UnknownUser", resourceCulture);
+            }
+        }
     }
 }

@@ -106,4 +106,7 @@
   <data name="FriendPlaceholder" xml:space="preserve">
     <value>给 {0} 写点什么...</value>
   </data>
+  <data name="SelectedImageAlt" xml:space="preserve">
+    <value>已选图片</value>
+  </data>
 </root>

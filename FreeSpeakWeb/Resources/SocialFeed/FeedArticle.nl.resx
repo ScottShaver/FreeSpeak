@@ -142,4 +142,28 @@
   <data name="SeeLess" xml:space="preserve">
     <value>Minder weergeven</value>
   </data>
+  <data name="ChangePostToPublic" xml:space="preserve">
+    <value>Bericht openbaar maken?</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Onbekend</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Melding succesvol verzonden. Bedankt dat je helpt onze community veilig te houden.</value>
+  </data>
+  <data name="FailedToUpdateNotificationSettings" xml:space="preserve">
+    <value>Meldingsinstellingen bijwerken mislukt.</value>
+  </data>
+  <data name="FailedToUpdatePostAudience" xml:space="preserve">
+    <value>Doelgroep van bericht bijwerken mislukt.</value>
+  </data>
+  <data name="FailedToDeletePost" xml:space="preserve">
+    <value>Bericht verwijderen mislukt.</value>
+  </data>
+  <data name="DeletePostFullConfirmMessage" xml:space="preserve">
+    <value>Weet je zeker dat je dit bericht wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt en verwijdert het bericht, alle reacties, likes en afbeeldingen permanent.</value>
+  </data>
+  <data name="DeleteGroupPostFullConfirmMessage" xml:space="preserve">
+    <value>Weet je zeker dat je dit groepsbericht wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt en verwijdert het bericht, alle reacties, likes en afbeeldingen permanent.</value>
+  </data>
 </root>

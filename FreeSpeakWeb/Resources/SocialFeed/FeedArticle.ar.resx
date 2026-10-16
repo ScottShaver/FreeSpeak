@@ -142,4 +142,28 @@
   <data name="SeeLess" xml:space="preserve">
     <value>عرض أقل</value>
   </data>
+  <data name="ChangePostToPublic" xml:space="preserve">
+    <value>تغيير المنشور إلى عام؟</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>غير معروف</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>تم إرسال البلاغ بنجاح. شكرًا لمساعدتك في الحفاظ على أمان مجتمعنا.</value>
+  </data>
+  <data name="FailedToUpdateNotificationSettings" xml:space="preserve">
+    <value>فشل تحديث إعدادات الإشعارات.</value>
+  </data>
+  <data name="FailedToUpdatePostAudience" xml:space="preserve">
+    <value>فشل تحديث جمهور المنشور.</value>
+  </data>
+  <data name="FailedToDeletePost" xml:space="preserve">
+    <value>فشل حذف المنشور.</value>
+  </data>
+  <data name="DeletePostFullConfirmMessage" xml:space="preserve">
+    <value>هل أنت متأكد أنك تريد حذف هذا المنشور؟ لا يمكن التراجع عن هذا الإجراء وسيؤدي إلى إزالة المنشور وجميع التعليقات والإعجابات والصور نهائيًا.</value>
+  </data>
+  <data name="DeleteGroupPostFullConfirmMessage" xml:space="preserve">
+    <value>هل أنت متأكد أنك تريد حذف منشور المجموعة هذا؟ لا يمكن التراجع عن هذا الإجراء وسيؤدي إلى إزالة المنشور وجميع التعليقات والإعجابات والصور نهائيًا.</value>
+  </data>
 </root>

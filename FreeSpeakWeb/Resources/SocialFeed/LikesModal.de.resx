@@ -103,4 +103,7 @@
   <data name="DaysAgo" xml:space="preserve">
     <value>vor {0}T</value>
   </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Unbekannt</value>
+  </data>
 </root>

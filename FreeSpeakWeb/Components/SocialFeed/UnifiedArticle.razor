@@ -136,10 +136,10 @@
 <!-- Delete Confirmation Modal -->
 <ConfirmationDialog 
     IsVisible="@showDeleteConfirmation"
-    Title="Delete Post"
+    Title="@Localizer["DeletePost"]"
     Message="@DeleteConfirmationMessage"
-    ConfirmText="Delete Post"
-    CancelText="Cancel"
+    ConfirmText="@Localizer["DeletePost"]"
+    CancelText="@Localizer["Cancel"]"
     Type="ConfirmationDialog.ConfirmationType.Danger"
     OnConfirm="@ConfirmDeletePost"
     OnCancel="@CancelDeletePost" />
@@ -150,7 +150,7 @@
     <div class="modal-backdrop" @onclick="CancelPublicConfirmation" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: flex; align-items: center; justify-content: center;">
         <div class="public-confirmation-modal" @onclick:stopPropagation="true" style="background: var(--surface-color); border: 2px solid var(--border-color); border-radius: 12px; max-width: 500px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--border-color);">
-                <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: var(--text-primary);">Change Post to Public?</h3>
+                <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: var(--text-primary);">@Localizer["ChangePostToPublic"]</h3>
                 <button type="button" @onclick="CancelPublicConfirmation" style="background: none; border: none; font-size: 32px; line-height: 1; color: var(--text-secondary); cursor: pointer; padding: 0; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: background-color 0.2s;">×</button>
             </div>
             <div style="padding: 24px; text-align: center;">

@@ -142,4 +142,28 @@
   <data name="SeeLess" xml:space="preserve">
     <value>Mostra meno</value>
   </data>
+  <data name="ChangePostToPublic" xml:space="preserve">
+    <value>Cambiare il post in Pubblico?</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Sconosciuto</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Segnalazione inviata con successo. Grazie per aiutarci a mantenere sicura la nostra community.</value>
+  </data>
+  <data name="FailedToUpdateNotificationSettings" xml:space="preserve">
+    <value>Impossibile aggiornare le impostazioni di notifica.</value>
+  </data>
+  <data name="FailedToUpdatePostAudience" xml:space="preserve">
+    <value>Impossibile aggiornare il pubblico del post.</value>
+  </data>
+  <data name="FailedToDeletePost" xml:space="preserve">
+    <value>Impossibile eliminare il post.</value>
+  </data>
+  <data name="DeletePostFullConfirmMessage" xml:space="preserve">
+    <value>Vuoi davvero eliminare questo post? Questa azione non può essere annullata e rimuoverà definitivamente il post, tutti i commenti, i Mi piace e le immagini.</value>
+  </data>
+  <data name="DeleteGroupPostFullConfirmMessage" xml:space="preserve">
+    <value>Vuoi davvero eliminare questo post del gruppo? Questa azione non può essere annullata e rimuoverà definitivamente il post, tutti i commenti, i Mi piace e le immagini.</value>
+  </data>
 </root>

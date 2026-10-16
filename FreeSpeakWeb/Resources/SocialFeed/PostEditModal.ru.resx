@@ -22,4 +22,7 @@
   <data name="RemoveImage" xml:space="preserve">
     <value>Удалить изображение</value>
   </data>
+  <data name="WhatsOnYourMind" xml:space="preserve">
+    <value>О чём вы думаете?</value>
+  </data>
 </root>
