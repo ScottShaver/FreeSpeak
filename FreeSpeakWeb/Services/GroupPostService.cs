@@ -2186,21 +2186,16 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Gets the last activity timestamp for a group (most recent post creation date).
+        /// Gets the last activity timestamp for a group (creation date of the most recent published post;
+        /// pending, declined and removed posts are ignored).
         /// </summary>
         /// <param name="groupId">The unique identifier of the group.</param>
-        /// <returns>The creation date of the most recent post, or null if no posts exist.</returns>
+        /// <returns>The creation date of the most recent published post, or null if none exist.</returns>
         public async Task<DateTime?> GetLastActivityAsync(int groupId)
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-                var lastPost = await context.GroupPosts
-                    .Where(p => p.GroupId == groupId)
-                    .OrderByDescending(p => p.CreatedAt)
-                    .FirstOrDefaultAsync();
-
-                return lastPost?.CreatedAt;
+                return await _postRepository.GetLastPostCreatedAtByGroupAsync(groupId);
             }
             catch (Exception ex)
             {
