@@ -493,6 +493,27 @@ namespace FreeSpeakWeb.Repositories
             }
         }
 
+        /// <inheritdoc />
+        public async Task<DateTime?> GetLastPostCreatedAtByGroupAsync(int groupId)
+        {
+            using var step = _profiler.Step($"GroupPostRepository.GetLastPostCreatedAtByGroupAsync({groupId})");
+            try
+            {
+                using var context = await _contextFactory.CreateDbContextAsync();
+                return await context.GroupPosts
+                    .AsNoTracking()
+                    .Where(p => p.GroupId == groupId && p.Status == PostStatus.Posted)
+                    .OrderByDescending(p => p.CreatedAt)
+                    .Select(p => (DateTime?)p.CreatedAt)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting last post time for group {GroupId}", groupId);
+                return null;
+            }
+        }
+
         /// <summary>
         /// Gets the total count of posts by a specific user in a specific group.
         /// </summary>

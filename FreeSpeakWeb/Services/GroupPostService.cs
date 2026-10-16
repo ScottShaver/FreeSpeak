@@ -1157,37 +1157,66 @@ namespace FreeSpeakWeb.Services
         /// <returns>A tuple containing success status and error message if failed.</returns>
         public async Task<(bool Success, string? ErrorMessage)> DeleteCommentAsync(int commentId, string userId, bool recordModeratorRemoval = true)
         {
+            var result = await DeleteCommentWithCountAsync(commentId, userId, recordModeratorRemoval);
+            return (result.Success, result.ErrorMessage);
+        }
+
+        /// <summary>
+        /// Deletes a comment and all nested replies, enforcing authorization server-side: the comment author, the post author,
+        /// or a group admin/moderator (including system admins/moderators) may delete. A removal by a non-author moderator is
+        /// recorded once in the audit log and the group Mod Log unless <paramref name="recordModeratorRemoval"/> is false.
+        /// </summary>
+        /// <param name="commentId">The unique identifier of the comment to delete.</param>
+        /// <param name="userId">The user ID of the person requesting deletion.</param>
+        /// <param name="recordModeratorRemoval">When false, the caller records the moderator removal itself.</param>
+        /// <returns>Success flag, error message if failed, and the number of comments deleted (including replies).</returns>
+        public async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteCommentWithCountAsync(int commentId, string userId, bool recordModeratorRemoval = true)
+        {
             try
             {
                 using var context = await _contextFactory.CreateDbContextAsync();
 
                 var comment = await context.GroupPostComments
                     .Include(c => c.Post)
-                    .Include(c => c.Replies)
                     .FirstOrDefaultAsync(c => c.Id == commentId);
 
                 if (comment == null)
                 {
-                    return (false, "Comment not found.");
+                    return (false, "Comment not found.", 0);
                 }
 
-                // Check if user is the author or a group admin/moderator
+                // Comment author and post author may delete; otherwise group admin/moderator (or system role) may remove
                 var isAuthor = comment.AuthorId == userId;
+                var isPostAuthor = comment.Post.AuthorId == userId;
+                // Evaluated for any non-author so a moderator who also wrote the post is still logged in the Mod Log
                 var isAdminOrModerator = !isAuthor
                     && await _accessValidator.IsGroupAdminOrModeratorAsync(comment.Post.GroupId, userId);
 
-                if (!isAuthor && !isAdminOrModerator)
+                if (!isAuthor && !isPostAuthor && !isAdminOrModerator)
                 {
-                    return (false, "You are not authorized to delete this comment.");
+                    return (false, "You are not authorized to delete this comment.", 0);
                 }
 
                 var post = comment.Post;
-                var commentCount = 1 + comment.Replies.Count;
 
-                context.GroupPostComments.Remove(comment);
+                // Collect the comment and all nested replies (children first)
+                var toDelete = new List<GroupPostComment>();
+                var frontier = new List<int> { commentId };
+                while (frontier.Count > 0)
+                {
+                    var children = await context.GroupPostComments
+                        .Where(c => c.ParentCommentId.HasValue && frontier.Contains(c.ParentCommentId.Value))
+                        .ToListAsync();
+                    toDelete.InsertRange(0, children);
+                    frontier = children.Select(c => c.Id).ToList();
+                }
+                toDelete.Add(comment);
+                var commentCount = toDelete.Count;
+
+                context.GroupPostComments.RemoveRange(toDelete);
 
                 // Update post comment count
-                post.CommentCount -= commentCount;
+                post.CommentCount = Math.Max(0, post.CommentCount - commentCount);
 
                 await context.SaveChangesAsync();
 
@@ -1207,12 +1236,12 @@ namespace FreeSpeakWeb.Services
                 }
 
                 _logger.LogInformation("Group post comment {CommentId} deleted by user {UserId}", commentId, userId);
-                return (true, null);
+                return (true, null, commentCount);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting group post comment {CommentId} for user {UserId}", commentId, userId);
-                return (false, "An error occurred while deleting the comment.");
+                return (false, "An error occurred while deleting the comment.", 0);
             }
         }
 
@@ -2186,21 +2215,16 @@ namespace FreeSpeakWeb.Services
         }
 
         /// <summary>
-        /// Gets the last activity timestamp for a group (most recent post creation date).
+        /// Gets the last activity timestamp for a group (creation date of the most recent published post;
+        /// pending, declined and removed posts are ignored).
         /// </summary>
         /// <param name="groupId">The unique identifier of the group.</param>
-        /// <returns>The creation date of the most recent post, or null if no posts exist.</returns>
+        /// <returns>The creation date of the most recent published post, or null if none exist.</returns>
         public async Task<DateTime?> GetLastActivityAsync(int groupId)
         {
             try
             {
-                using var context = await _contextFactory.CreateDbContextAsync();
-                var lastPost = await context.GroupPosts
-                    .Where(p => p.GroupId == groupId)
-                    .OrderByDescending(p => p.CreatedAt)
-                    .FirstOrDefaultAsync();
-
-                return lastPost?.CreatedAt;
+                return await _postRepository.GetLastPostCreatedAtByGroupAsync(groupId);
             }
             catch (Exception ex)
             {

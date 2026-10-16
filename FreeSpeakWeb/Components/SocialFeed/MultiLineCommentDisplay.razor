@@ -188,6 +188,7 @@
                             CurrentUserImageUrl="@CurrentUserImageUrl"
                             CurrentUserName="@CurrentUserName"
                             IsReadOnly="@IsReadOnly"
+                            CanModerate="@CanModerate"
                             CommentAuthorId="@reply.CommentAuthorId"
                             Depth="@(Depth + 1)"
                             OnReactionChanged="@OnReactionChanged"
@@ -285,6 +286,13 @@
     /// </summary>
     [Parameter]
     public bool IsReadOnly { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets whether the current user may remove other users' comments (group admin/moderator),
+    /// which adds a "Remove comment" item to the menu of comments the user does not own.
+    /// </summary>
+    [Parameter]
+    public bool CanModerate { get; set; } = false;
 
     [Parameter]
     public int Depth { get; set; } = 0;
@@ -432,6 +440,15 @@
         else
         {
             // Non-owner menu items
+            if (CanModerate)
+            {
+                commentMenuItems.Add(new PopupMenu.PopupMenuItem
+                {
+                    Text = Localizer["RemoveComment"],
+                    Icon = "bi bi-trash",
+                    OnClick = EventCallback.Factory.Create(this, HandleDeleteComment)
+                });
+            }
             commentMenuItems.Add(new PopupMenu.PopupMenuItem
             {
                 Text = Localizer["ReportComment"],

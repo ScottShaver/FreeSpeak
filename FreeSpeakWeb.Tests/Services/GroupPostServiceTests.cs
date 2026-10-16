@@ -192,6 +192,143 @@ namespace FreeSpeakWeb.Tests.Services
             moderationLog.Verify(m => m.LogAsync(It.IsAny<GroupModerationLogRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
+        [Theory]
+        [InlineData("member1", true, 0)]
+        [InlineData("postauthor1", true, 0)]
+        [InlineData("mod1", true, 1)]
+        [InlineData("admin1", true, 1)]
+        [InlineData("member2", false, 0)]
+        [InlineData("outsider1", false, 0)]
+        public async Task DeleteComment_AuthorizationMatrix(string userId, bool allowed, int expectedModLogEntries)
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupCommentAuthMatrix_" + userId);
+            var moderationLog = new Mock<IGroupModerationLogService>();
+            var service = CreateGroupPostService(repoFactory, moderationLog.Object);
+            var (postId, commentId) = await SeedMatrixAsync(repoFactory);
+
+            var (success, error, _) = await service.DeleteCommentWithCountAsync(commentId, userId);
+
+            success.Should().Be(allowed);
+            if (!allowed) error.Should().NotBeNullOrEmpty();
+            using var context = await repoFactory.ContextFactory.CreateDbContextAsync();
+            (await context.GroupPostComments.AnyAsync(c => c.Id == commentId)).Should().Be(!allowed);
+            moderationLog.Verify(m => m.LogAsync(It.Is<GroupModerationLogRequest>(r =>
+                r.Action == GroupModerationAction.CommentRemoved), It.IsAny<CancellationToken>()), Times.Exactly(expectedModLogEntries));
+        }
+
+        [Fact]
+        public async Task DeleteComment_ByModerator_RemovesRepliesAndUpdatesCommentCount()
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupCommentModNested");
+            var service = CreateGroupPostService(repoFactory, new Mock<IGroupModerationLogService>().Object);
+            var (postId, commentId) = await SeedMatrixAsync(repoFactory);
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                var reply = TestDataFactory.CreateTestGroupPostComment(postId, "member2", "reply");
+                reply.ParentCommentId = commentId;
+                context.GroupPostComments.Add(reply);
+                await context.SaveChangesAsync();
+                var nested = TestDataFactory.CreateTestGroupPostComment(postId, "member1", "nested");
+                nested.ParentCommentId = reply.Id;
+                context.GroupPostComments.Add(nested);
+                (await context.GroupPosts.FindAsync(postId))!.CommentCount = 3;
+                await context.SaveChangesAsync();
+            }
+
+            var (success, _, deleted) = await service.DeleteCommentWithCountAsync(commentId, "mod1");
+
+            success.Should().BeTrue();
+            deleted.Should().Be(3);
+            using var verify = await repoFactory.ContextFactory.CreateDbContextAsync();
+            (await verify.GroupPostComments.CountAsync(c => c.PostId == postId)).Should().Be(0);
+            (await verify.GroupPosts.FindAsync(postId))!.CommentCount.Should().Be(0);
+        }
+
+        [Fact]
+        public async Task DeleteComment_ByModeratorWithRecordingDisabled_WritesNoEntryButDeletes()
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupCommentModNoRecord");
+            var moderationLog = new Mock<IGroupModerationLogService>();
+            var service = CreateGroupPostService(repoFactory, moderationLog.Object);
+            var (_, commentId) = await SeedMatrixAsync(repoFactory);
+
+            var (success, _) = await service.DeleteCommentAsync(commentId, "mod1", recordModeratorRemoval: false);
+
+            success.Should().BeTrue();
+            moderationLog.Verify(m => m.LogAsync(It.IsAny<GroupModerationLogRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        /// <summary>
+        /// A moderator who also authored the post is logged when removing another user's comment, but not when removing their own.
+        /// </summary>
+        [Theory]
+        [InlineData("member1", 1)]
+        [InlineData("mod1", 0)]
+        public async Task DeleteComment_ByModeratorWhoIsPostAuthor_LogsOnlyOthersComments(string commentAuthorId, int expectedModLogEntries)
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupCommentModPostAuthor_" + commentAuthorId);
+            var moderationLog = new Mock<IGroupModerationLogService>();
+            var service = CreateGroupPostService(repoFactory, moderationLog.Object);
+            var (postId, commentId) = await SeedMatrixAsync(repoFactory);
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                (await context.GroupPosts.FindAsync(postId))!.AuthorId = "mod1";
+                (await context.GroupPostComments.FindAsync(commentId))!.AuthorId = commentAuthorId;
+                await context.SaveChangesAsync();
+            }
+
+            var (success, _) = await service.DeleteCommentAsync(commentId, "mod1");
+
+            success.Should().BeTrue();
+            moderationLog.Verify(m => m.LogAsync(It.Is<GroupModerationLogRequest>(r =>
+                r.Action == GroupModerationAction.CommentRemoved && r.ActorUserId == "mod1"), It.IsAny<CancellationToken>()),
+                Times.Exactly(expectedModLogEntries));
+        }
+
+        [Fact]
+        public async Task DeleteGroupPost_ByModeratorAsActor_WritesPostRemovedAsModerator()
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupPostModActor");
+            var moderationLog = new Mock<IGroupModerationLogService>();
+            var service = CreateGroupPostService(repoFactory, moderationLog.Object);
+            var (postId, _) = await SeedMatrixAsync(repoFactory);
+
+            var (success, _) = await service.DeleteGroupPostAsync(postId, "mod1");
+
+            success.Should().BeTrue();
+            moderationLog.Verify(m => m.LogAsync(It.Is<GroupModerationLogRequest>(r =>
+                r.Action == GroupModerationAction.PostRemoved && r.ActorUserId == "mod1" &&
+                r.TargetUserId == "postauthor1"), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        /// <summary>
+        /// Seeds a group with an admin, moderator, post author, comment author and a second regular member plus an
+        /// outsider; the post is by postauthor1 and carries one comment by member1.
+        /// </summary>
+        private static async Task<(int PostId, int CommentId)> SeedMatrixAsync(TestRepositoryFactory repoFactory)
+        {
+            using var context = await repoFactory.ContextFactory.CreateDbContextAsync();
+            context.Users.AddRange(new[] { "admin1", "mod1", "postauthor1", "member1", "member2", "outsider1" }
+                .Select(id => TestDataFactory.CreateTestUser(id: id)));
+            var group = TestDataFactory.CreateTestGroup("admin1");
+            context.Groups.Add(group);
+            await context.SaveChangesAsync();
+            context.GroupUsers.AddRange(
+                TestDataFactory.CreateTestGroupUser(group.Id, "admin1", isAdmin: true),
+                TestDataFactory.CreateTestGroupUser(group.Id, "mod1", isModerator: true),
+                TestDataFactory.CreateTestGroupUser(group.Id, "postauthor1"),
+                TestDataFactory.CreateTestGroupUser(group.Id, "member1"),
+                TestDataFactory.CreateTestGroupUser(group.Id, "member2"));
+            var post = TestDataFactory.CreateTestGroupPost(group.Id, "postauthor1", "Some content");
+            context.GroupPosts.Add(post);
+            await context.SaveChangesAsync();
+            var comment = TestDataFactory.CreateTestGroupPostComment(post.Id, "member1", "A comment");
+            context.GroupPostComments.Add(comment);
+            post.CommentCount = 1;
+            await context.SaveChangesAsync();
+            return (post.Id, comment.Id);
+        }
+
         /// <summary>
         /// Seeds an admin, a member, a group, and a member-authored post with one comment; returns their ids.
         /// </summary>

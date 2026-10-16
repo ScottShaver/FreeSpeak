@@ -38,6 +38,7 @@
 @inject FreeSpeakWeb.Repositories.Abstractions.IGroupCommentRepository GroupCommentRepository
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.GroupView> Localizer
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.UploadProgressModal> UploadLocalizer
+@inject FreeSpeakWeb.Services.TimestampFormattingService TimestampFormatter
 @inject FreeSpeakWeb.Services.Abstractions.IRoleService RoleService
 
 <PageTitle>@(group?.Name ?? "Group") - @SiteSettings.Value.SiteName</PageTitle>
@@ -1460,24 +1461,20 @@
         return HtmlSanitizationService.SanitizeAndFormatContent(content);
     }
 
+    /// <summary>
+    /// Formats a UTC timestamp as a localized relative time (e.g. "2h ago") using the shared formatter.
+    /// </summary>
+    /// <param name="dateTime">The UTC timestamp, or null when not yet loaded.</param>
+    /// <returns>The localized relative time, or an en dash when no timestamp is available.</returns>
     private string GetRelativeTime(DateTime? dateTime)
     {
         if (dateTime == null)
-            return "Never";
+            return "–";
 
-        var timeSpan = DateTime.UtcNow - dateTime.Value;
-
-        if (timeSpan.TotalMinutes < 1)
-            return "just now";
-        if (timeSpan.TotalMinutes < 60)
-            return $"{(int)timeSpan.TotalMinutes}m ago";
-        if (timeSpan.TotalHours < 24)
-            return $"{(int)timeSpan.TotalHours}h ago";
-        if (timeSpan.TotalDays < 30)
-            return $"{(int)timeSpan.TotalDays}d ago";
-
-        return dateTime.Value.ToString("MMM dd, yyyy");
+        var utc = DateTime.SpecifyKind(dateTime.Value, DateTimeKind.Utc);
+        return TimestampFormatter.FormatTimeAgo(utc);
     }
+
 
     /// <summary>
     /// Gets the Bootstrap badge CSS class for a member level.
@@ -1609,7 +1606,7 @@
     protected override async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteCommentAsync(
         int commentId, string userId)
     {
-        var result = await GroupCommentRepository.DeleteAsync(commentId, userId);
+        var result = await GroupPostService.DeleteCommentWithCountAsync(commentId, userId);
         return (result.Success, result.ErrorMessage, result.DeletedCount);
     }
 
