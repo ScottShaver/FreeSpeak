@@ -258,6 +258,33 @@ namespace FreeSpeakWeb.Tests.Services
             moderationLog.Verify(m => m.LogAsync(It.IsAny<GroupModerationLogRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
+        /// <summary>
+        /// A moderator who also authored the post is logged when removing another user's comment, but not when removing their own.
+        /// </summary>
+        [Theory]
+        [InlineData("member1", 1)]
+        [InlineData("mod1", 0)]
+        public async Task DeleteComment_ByModeratorWhoIsPostAuthor_LogsOnlyOthersComments(string commentAuthorId, int expectedModLogEntries)
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupCommentModPostAuthor_" + commentAuthorId);
+            var moderationLog = new Mock<IGroupModerationLogService>();
+            var service = CreateGroupPostService(repoFactory, moderationLog.Object);
+            var (postId, commentId) = await SeedMatrixAsync(repoFactory);
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                (await context.GroupPosts.FindAsync(postId))!.AuthorId = "mod1";
+                (await context.GroupPostComments.FindAsync(commentId))!.AuthorId = commentAuthorId;
+                await context.SaveChangesAsync();
+            }
+
+            var (success, _) = await service.DeleteCommentAsync(commentId, "mod1");
+
+            success.Should().BeTrue();
+            moderationLog.Verify(m => m.LogAsync(It.Is<GroupModerationLogRequest>(r =>
+                r.Action == GroupModerationAction.CommentRemoved && r.ActorUserId == "mod1"), It.IsAny<CancellationToken>()),
+                Times.Exactly(expectedModLogEntries));
+        }
+
         [Fact]
         public async Task DeleteGroupPost_ByModeratorAsActor_WritesPostRemovedAsModerator()
         {
