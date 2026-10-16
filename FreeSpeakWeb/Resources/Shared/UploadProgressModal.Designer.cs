@@ -61,29 +61,29 @@ namespace FreeSpeakWeb.Resources.Shared {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Cancel.
+        ///   Looks up a localized string similar to Adding Your Post.
         /// </summary>
-        public static string Cancel {
+        public static string AddingPostTitle {
             get {
-                return ResourceManager.GetString("Cancel", resourceCulture);
+                return ResourceManager.GetString("AddingPostTitle", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Close.
+        ///   Looks up a localized string similar to Creating your post....
         /// </summary>
-        public static string Close {
+        public static string CreatingPost {
             get {
-                return ResourceManager.GetString("Close", resourceCulture);
+                return ResourceManager.GetString("CreatingPost", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Complete!.
+        ///   Looks up a localized string similar to Creating Post.
         /// </summary>
-        public static string Complete {
+        public static string CreatingPostTitle {
             get {
-                return ResourceManager.GetString("Complete", resourceCulture);
+                return ResourceManager.GetString("CreatingPostTitle", resourceCulture);
             }
         }
 
@@ -106,29 +106,11 @@ namespace FreeSpeakWeb.Resources.Shared {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Upload failed.
+        ///   Looks up a localized string similar to Please wait....
         /// </summary>
-        public static string Failed {
+        public static string PleaseWait {
             get {
-                return ResourceManager.GetString("Failed", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Processing....
-        /// </summary>
-        public static string Processing {
-            get {
-                return ResourceManager.GetString("Processing", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Retry.
-        /// </summary>
-        public static string Retry {
-            get {
-                return ResourceManager.GetString("Retry", resourceCulture);
+                return ResourceManager.GetString("PleaseWait", resourceCulture);
             }
         }
 
@@ -142,20 +124,20 @@ namespace FreeSpeakWeb.Resources.Shared {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Upload Progress.
+        ///   Looks up a localized string similar to Uploading {0} images....
         /// </summary>
-        public static string Title {
+        public static string UploadingImages {
             get {
-                return ResourceManager.GetString("Title", resourceCulture);
+                return ResourceManager.GetString("UploadingImages", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Uploading....
+        ///   Looks up a localized string similar to Uploading 1 image....
         /// </summary>
-        public static string Uploading {
+        public static string UploadingOneImage {
             get {
-                return ResourceManager.GetString("Uploading", resourceCulture);
+                return ResourceManager.GetString("UploadingOneImage", resourceCulture);
             }
         }
     }

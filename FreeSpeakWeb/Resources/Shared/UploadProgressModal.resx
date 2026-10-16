@@ -68,28 +68,22 @@
     <value>Step {0} of {1}</value>
     <comment>{0} is current step, {1} is total steps</comment>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Upload Progress</value>
+  <data name="AddingPostTitle" xml:space="preserve">
+    <value>Adding Your Post</value>
   </data>
-  <data name="Uploading" xml:space="preserve">
-    <value>Uploading...</value>
+  <data name="CreatingPostTitle" xml:space="preserve">
+    <value>Creating Post</value>
   </data>
-  <data name="Processing" xml:space="preserve">
-    <value>Processing...</value>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Please wait...</value>
   </data>
-  <data name="Complete" xml:space="preserve">
-    <value>Complete!</value>
+  <data name="UploadingOneImage" xml:space="preserve">
+    <value>Uploading 1 image...</value>
   </data>
-  <data name="Failed" xml:space="preserve">
-    <value>Upload failed</value>
+  <data name="UploadingImages" xml:space="preserve">
+    <value>Uploading {0} images...</value>
   </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="Close" xml:space="preserve">
-    <value>Close</value>
-  </data>
-  <data name="Retry" xml:space="preserve">
-    <value>Retry</value>
+  <data name="CreatingPost" xml:space="preserve">
+    <value>Creating your post...</value>
   </data>
 </root>

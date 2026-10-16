@@ -58,30 +58,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Title" xml:space="preserve">
-    <value>Postęp przesyłania</value>
-  </data>
-  <data name="Uploading" xml:space="preserve">
-    <value>Przesyłanie...</value>
-  </data>
-  <data name="Processing" xml:space="preserve">
-    <value>Przetwarzanie...</value>
-  </data>
-  <data name="Complete" xml:space="preserve">
-    <value>Ukończono!</value>
-  </data>
-  <data name="Failed" xml:space="preserve">
-    <value>Przesyłanie nie powiodło się</value>
-  </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Anuluj</value>
-  </data>
-  <data name="Close" xml:space="preserve">
-    <value>Zamknij</value>
-  </data>
-  <data name="Retry" xml:space="preserve">
-    <value>Ponów</value>
-  </data>
   <data name="DefaultTitle" xml:space="preserve">
     <value>Przesyłanie...</value>
   </data>
@@ -91,5 +67,23 @@
   <data name="StepOfSteps" xml:space="preserve">
     <value>Krok {0} z {1}</value>
     <comment>{0} is current step, {1} is total steps</comment>
+  </data>
+  <data name="AddingPostTitle" xml:space="preserve">
+    <value>Dodawanie Twojego wpisu</value>
+  </data>
+  <data name="CreatingPostTitle" xml:space="preserve">
+    <value>Tworzenie wpisu</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Proszę czekać...</value>
+  </data>
+  <data name="UploadingOneImage" xml:space="preserve">
+    <value>Przesyłanie 1 obrazu...</value>
+  </data>
+  <data name="UploadingImages" xml:space="preserve">
+    <value>Przesyłanie obrazów: {0}...</value>
+  </data>
+  <data name="CreatingPost" xml:space="preserve">
+    <value>Tworzenie Twojego wpisu...</value>
   </data>
 </root>

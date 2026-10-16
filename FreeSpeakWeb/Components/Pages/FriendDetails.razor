@@ -34,6 +34,7 @@
 @inject IFeedCommentRepository FeedCommentRepository
 @inject ILogger<FriendDetails> Logger
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.FriendDetails> Localizer
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.UploadProgressModal> UploadLocalizer
 @inject FreeSpeakWeb.Services.Abstractions.IRoleService RoleService
 @inject GroupMemberService GroupMemberService
 @inject GroupPostService GroupPostService
@@ -278,7 +279,7 @@
 
     // Upload progress state
     private bool showUploadProgress = false;
-    private string uploadProgressTitle = "Creating Post";
+    private string uploadProgressTitle = string.Empty;
     private string uploadProgressMessage = "";
     private int uploadProgress = 0;
     private int uploadCurrentStep = 0;
@@ -521,6 +522,7 @@
             uploadCurrentStep = 0;
 
             showUploadProgress = true;
+            uploadProgressTitle = UploadLocalizer["CreatingPostTitle"].Value;
             uploadProgress = 0;
             StateHasChanged();
 
@@ -528,7 +530,9 @@
             if (hasImages && postData.Images != null)
             {
                 uploadCurrentStep = 1;
-                uploadProgressMessage = $"Uploading {postData.Images.Count} {(postData.Images.Count == 1 ? "image" : "images")}...";
+                uploadProgressMessage = postData.Images.Count == 1
+                    ? UploadLocalizer["UploadingOneImage"].Value
+                    : string.Format(UploadLocalizer["UploadingImages"].Value, postData.Images.Count);
                 StateHasChanged();
 
                 var imagesToUpload = postData.Images.Select(img => (
@@ -560,7 +564,7 @@
 
             // Step 2: Create the post on the friend's feed
             uploadCurrentStep = hasImages ? 2 : 1;
-            uploadProgressMessage = "Creating your post...";
+            uploadProgressMessage = UploadLocalizer["CreatingPost"].Value;
             uploadProgress = hasImages ? 50 : 0;
             StateHasChanged();
 

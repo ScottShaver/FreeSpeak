@@ -37,6 +37,7 @@
 @inject GroupContentReportService ReportService
 @inject FreeSpeakWeb.Repositories.Abstractions.IGroupCommentRepository GroupCommentRepository
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.GroupView> Localizer
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Shared.UploadProgressModal> UploadLocalizer
 @inject FreeSpeakWeb.Services.Abstractions.IRoleService RoleService
 
 <PageTitle>@(group?.Name ?? "Group") - @SiteSettings.Value.SiteName</PageTitle>
@@ -588,8 +589,8 @@
 
     // Upload progress tracking
     private bool showUploadProgress = false;
-    private string uploadProgressTitle = "Adding Your Post";
-    private string uploadProgressMessage = "Please wait...";
+    private string uploadProgressTitle = string.Empty;
+    private string uploadProgressMessage = string.Empty;
     private int uploadProgress = 0;
     private int uploadCurrentStep = 0;
     private int uploadTotalSteps = 0;
@@ -1087,6 +1088,8 @@
 
             // Show progress modal
             showUploadProgress = true;
+            uploadProgressTitle = UploadLocalizer["AddingPostTitle"].Value;
+            uploadProgressMessage = UploadLocalizer["PleaseWait"].Value;
             uploadProgress = 0;
             StateHasChanged();
 
@@ -1094,7 +1097,9 @@
             if (hasImages && postData.Images != null)
             {
                 uploadCurrentStep = 1;
-                uploadProgressMessage = $"Uploading {postData.Images.Count} {(postData.Images.Count == 1 ? "image" : "images")}...";
+                uploadProgressMessage = postData.Images.Count == 1
+                    ? UploadLocalizer["UploadingOneImage"].Value
+                    : string.Format(UploadLocalizer["UploadingImages"].Value, postData.Images.Count);
                 StateHasChanged();
 
                 // Convert selected images to upload format
@@ -1128,7 +1133,7 @@
 
             // Step 2: Create the group post
             uploadCurrentStep = hasImages ? 2 : 1;
-            uploadProgressMessage = "Creating your post...";
+            uploadProgressMessage = UploadLocalizer["CreatingPost"].Value;
             uploadProgress = hasImages ? 50 : 0;
             StateHasChanged();
 

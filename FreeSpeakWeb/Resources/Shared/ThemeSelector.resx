@@ -96,16 +96,4 @@
     <value>High Contrast</value>
     <comment>Theme display name</comment>
   </data>
-  <data name="LightMode" xml:space="preserve">
-    <value>Light Mode</value>
-  </data>
-  <data name="DarkMode" xml:space="preserve">
-    <value>Dark Mode</value>
-  </data>
-  <data name="SystemDefault" xml:space="preserve">
-    <value>System Default</value>
-  </data>
-  <data name="Theme" xml:space="preserve">
-    <value>Theme</value>
-  </data>
 </root>
