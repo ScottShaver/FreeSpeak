@@ -154,4 +154,10 @@
   <data name="CreateUser" xml:space="preserve">
     <value>사용자 생성</value>
   </data>
+  <data name="UserCreatedSuccessfully" xml:space="preserve">
+    <value>사용자 '{0}'을(를) 만들었습니다.</value>
+  </data>
+  <data name="ErrorCreatingUser" xml:space="preserve">
+    <value>사용자를 만드는 중 오류가 발생했습니다: {0}</value>
+  </data>
 </root>

@@ -2,6 +2,8 @@
 @using Microsoft.AspNetCore.Identity
 @using System.ComponentModel.DataAnnotations
 @inject UserManager<ApplicationUser> UserManager
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Admin.UserCreationModal> Localizer
 @inject ILogger<UserCreationModal> Logger
 
 <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
@@ -10,7 +12,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">
                     <i class="bi bi-person-plus me-2"></i>
-                    Create New User
+                    @Localizer["Title"]
                 </h5>
                 <button type="button" class="btn-close" @onclick="Close" disabled="@isCreating"></button>
             </div>
@@ -37,9 +39,9 @@
                         <div class="alert alert-info" role="alert">
                             <div class="d-flex align-items-center">
                                 <div class="spinner-border spinner-border-sm me-2" role="status">
-                                    <span class="visually-hidden">Creating user...</span>
+                                    <span class="visually-hidden">@Localizer["CreatingUser"]</span>
                                 </div>
-                                <span>Creating user account...</span>
+                                <span>@Localizer["CreatingUserAccount"]</span>
                             </div>
                         </div>
                     }
@@ -47,17 +49,17 @@
                     <div class="row g-3">
                         <!-- Account Information Section -->
                         <div class="col-12">
-                            <h6 class="border-bottom pb-2 mb-3">Account Information</h6>
+                            <h6 class="border-bottom pb-2 mb-3">@Localizer["AccountInformation"]</h6>
                         </div>
 
                         <div class="col-md-6">
                             <label for="username" class="form-label">
-                                Username <span class="text-danger">*</span>
+                                @Localizer["Username"] <span class="text-danger">*</span>
                             </label>
                             <InputText id="username" 
                                        class="form-control" 
                                        @bind-Value="userModel.UserName" 
-                                       placeholder="Enter username"
+                                       placeholder="@Localizer["EnterUsername"]"
                                        autocomplete="off"
                                        disabled="@isCreating" />
                             <ValidationMessage For="@(() => userModel.UserName)" />
@@ -65,41 +67,41 @@
 
                         <div class="col-md-6">
                             <label for="email" class="form-label">
-                                Email <span class="text-danger">*</span>
+                                @Localizer["Email"] <span class="text-danger">*</span>
                             </label>
                             <InputText id="email" 
                                        type="email"
                                        class="form-control" 
                                        @bind-Value="userModel.Email" 
-                                       placeholder="Enter email address"
+                                       placeholder="@Localizer["EnterEmailAddress"]"
                                        disabled="@isCreating" />
                             <ValidationMessage For="@(() => userModel.Email)" />
                         </div>
 
                         <div class="col-md-6">
                             <label for="password" class="form-label">
-                                Password <span class="text-danger">*</span>
+                                @Localizer["Password"] <span class="text-danger">*</span>
                             </label>
                             <InputText id="password" 
                                        type="password"
                                        class="form-control" 
                                        @bind-Value="userModel.Password" 
-                                       placeholder="Enter password"
+                                       placeholder="@Localizer["EnterPassword"]"
                                        autocomplete="new-password"
                                        disabled="@isCreating" />
                             <ValidationMessage For="@(() => userModel.Password)" />
-                            <div class="form-text">Must be at least 6 characters long.</div>
+                            <div class="form-text">@Localizer["PasswordRequirement"]</div>
                         </div>
 
                         <div class="col-md-6">
                             <label for="confirmPassword" class="form-label">
-                                Confirm Password <span class="text-danger">*</span>
+                                @Localizer["ConfirmPassword"] <span class="text-danger">*</span>
                             </label>
                             <InputText id="confirmPassword" 
                                        type="password"
                                        class="form-control" 
                                        @bind-Value="userModel.ConfirmPassword" 
-                                       placeholder="Confirm password"
+                                       placeholder="@Localizer["ConfirmPassword"]"
                                        autocomplete="new-password"
                                        disabled="@isCreating" />
                             <ValidationMessage For="@(() => userModel.ConfirmPassword)" />
@@ -107,48 +109,48 @@
 
                         <!-- Personal Information Section -->
                         <div class="col-12 mt-4">
-                            <h6 class="border-bottom pb-2 mb-3">Personal Information</h6>
+                            <h6 class="border-bottom pb-2 mb-3">@Localizer["PersonalInformation"]</h6>
                         </div>
 
                         <div class="col-md-4">
                             <label for="firstName" class="form-label">
-                                First Name <span class="text-danger">*</span>
+                                @Localizer["FirstName"] <span class="text-danger">*</span>
                             </label>
                             <InputText id="firstName" 
                                        class="form-control" 
                                        @bind-Value="userModel.FirstName" 
-                                       placeholder="Enter first name"
+                                       placeholder="@Localizer["EnterFirstName"]"
                                        disabled="@isCreating" />
                             <ValidationMessage For="@(() => userModel.FirstName)" />
                         </div>
 
                         <div class="col-md-4">
                             <label for="lastName" class="form-label">
-                                Last Name <span class="text-danger">*</span>
+                                @Localizer["LastName"] <span class="text-danger">*</span>
                             </label>
                             <InputText id="lastName" 
                                        class="form-control" 
                                        @bind-Value="userModel.LastName" 
-                                       placeholder="Enter last name"
+                                       placeholder="@Localizer["EnterLastName"]"
                                        disabled="@isCreating" />
                             <ValidationMessage For="@(() => userModel.LastName)" />
                         </div>
 
                         <div class="col-md-4">
                             <label for="nameSuffix" class="form-label">
-                                Name Suffix
+                                @Localizer["NameSuffix"]
                             </label>
                             <InputText id="nameSuffix" 
                                        class="form-control" 
                                        @bind-Value="userModel.NameSuffix" 
-                                       placeholder="Jr., Sr., III, etc."
+                                       placeholder="@Localizer["NameSuffixPlaceholder"]"
                                        disabled="@isCreating" />
                             <ValidationMessage For="@(() => userModel.NameSuffix)" />
                         </div>
 
                         <div class="col-md-6">
                             <label for="dateOfBirth" class="form-label">
-                                Date of Birth
+                                @Localizer["DateOfBirth"]
                             </label>
                             <InputDate id="dateOfBirth" 
                                        class="form-control" 
@@ -159,41 +161,41 @@
 
                         <div class="col-md-6">
                             <label for="occupation" class="form-label">
-                                Occupation
+                                @Localizer["Occupation"]
                             </label>
                             <InputText id="occupation" 
                                        class="form-control" 
                                        @bind-Value="userModel.Occupation" 
-                                       placeholder="Enter occupation"
+                                       placeholder="@Localizer["EnterOccupation"]"
                                        disabled="@isCreating" />
                             <ValidationMessage For="@(() => userModel.Occupation)" />
                         </div>
 
                         <!-- Location Information Section -->
                         <div class="col-12 mt-4">
-                            <h6 class="border-bottom pb-2 mb-3">Location Information</h6>
+                            <h6 class="border-bottom pb-2 mb-3">@Localizer["LocationInformation"]</h6>
                         </div>
 
                         <div class="col-md-6">
                             <label for="city" class="form-label">
-                                City
+                                @Localizer["City"]
                             </label>
                             <InputText id="city" 
                                        class="form-control" 
                                        @bind-Value="userModel.City" 
-                                       placeholder="Enter city"
+                                       placeholder="@Localizer["EnterCity"]"
                                        disabled="@isCreating" />
                             <ValidationMessage For="@(() => userModel.City)" />
                         </div>
 
                         <div class="col-md-6">
                             <label for="state" class="form-label">
-                                State
+                                @Localizer["State"]
                             </label>
                             <InputText id="state" 
                                        class="form-control" 
                                        @bind-Value="userModel.State" 
-                                       placeholder="Enter state"
+                                       placeholder="@Localizer["EnterState"]"
                                        disabled="@isCreating" />
                             <ValidationMessage For="@(() => userModel.State)" />
                         </div>
@@ -206,9 +208,9 @@
                                        @bind="userModel.EmailConfirmed"
                                        disabled="@isCreating" />
                                 <label class="form-check-label" for="emailConfirmed">
-                                    Mark email as confirmed
+                                    @Localizer["MarkEmailConfirmed"]
                                 </label>
-                                <div class="form-text">If checked, the user will not need to verify their email address.</div>
+                                <div class="form-text">@Localizer["EmailConfirmedHint"]</div>
                             </div>
                         </div>
                     </div>
@@ -219,7 +221,7 @@
                             <button type="button" 
                                     class="btn btn-primary" 
                                     @onclick="Close">
-                                Close
+                                @Localizer["Close"]
                             </button>
                         }
                         else
@@ -228,7 +230,7 @@
                                     class="btn btn-secondary" 
                                     @onclick="Close"
                                     disabled="@isCreating">
-                                Cancel
+                                @Localizer["Cancel"]
                             </button>
                             <button type="submit" 
                                     class="btn btn-primary"
@@ -237,7 +239,7 @@
                                 {
                                     <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                                 }
-                                Create User
+                                @Localizer["CreateUser"]
                             </button>
                         }
                     </div>
@@ -301,7 +303,7 @@
                 Logger.LogInformation("System administrator created new user account: {UserName} ({Email})", 
                     user.UserName, user.Email);
 
-                successMessage = $"User '{user.UserName}' created successfully!";
+                successMessage = string.Format(Localizer["UserCreatedSuccessfully"].Value, user.UserName);
                 userCreatedSuccessfully = true;
 
                 // Notify parent component
@@ -316,7 +318,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error creating user account");
-            errorMessage = $"An error occurred while creating the user: {ex.Message}";
+            errorMessage = string.Format(Localizer["ErrorCreatingUser"].Value, ex.Message);
         }
         finally
         {

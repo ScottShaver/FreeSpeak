@@ -347,5 +347,23 @@ namespace FreeSpeakWeb.Resources.Admin {
                 return ResourceManager.GetString("Username", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to User '{0}' created successfully!.
+        /// </summary>
+        public static string UserCreatedSuccessfully {
+            get {
+                return ResourceManager.GetString("UserCreatedSuccessfully", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while creating the user: {0}.
+        /// </summary>
+        public static string ErrorCreatingUser {
+            get {
+                return ResourceManager.GetString("ErrorCreatingUser", resourceCulture);
+            }
+        }
     }
 }
