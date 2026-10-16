@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Bloqueado</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Conta bloqueada</value>
+  </data>
+  <data name="PermanentTitle" xml:space="preserve">
+    <value>Conta desativada permanentemente</value>
+  </data>
+  <data name="PermanentDisabledMessage" xml:space="preserve">
+    <value>Sua conta foi desativada permanentemente por um administrador do sistema. Esta ação não pode ser desfeita nem contornada.</value>
+  </data>
+  <data name="ImportantLabel" xml:space="preserve">
+    <value>Importante:</value>
+  </data>
+  <data name="PermanentRecoveryNote" xml:space="preserve">
+    <value>A redefinição de senha e outras opções de recuperação de conta não desbloquearão uma conta desativada permanentemente.</value>
+  </data>
+  <data name="ContactAdminIfMistake" xml:space="preserve">
+    <value>Se você acredita que isso é um engano, entre em contato com o administrador do site.</value>
+  </data>
+  <data name="TemporaryTitle" xml:space="preserve">
+    <value>Bloqueio temporário da conta</value>
+  </data>
+  <data name="TemporaryMessage" xml:space="preserve">
+    <value>Sua conta foi bloqueada devido a várias tentativas de login malsucedidas.</value>
+  </data>
+  <data name="LockedUntilLabel" xml:space="preserve">
+    <value>Bloqueado até:</value>
+  </data>
+  <data name="TimeRemainingLabel" xml:space="preserve">
+    <value>Tempo restante:</value>
+  </data>
+  <data name="WhatYouCanDoLabel" xml:space="preserve">
+    <value>O que você pode fazer:</value>
+  </data>
+  <data name="OptionWait" xml:space="preserve">
+    <value>Aguarde o fim do período de bloqueio</value>
+  </data>
+  <data name="OptionForgotPassword" xml:space="preserve">
+    <value>Se você esqueceu sua senha, use a opção {0}</value>
+  </data>
+  <data name="ForgotPasswordLink" xml:space="preserve">
+    <value>Esqueci a senha</value>
+  </data>
+  <data name="OptionContactSupport" xml:space="preserve">
+    <value>Entre em contato com o suporte se precisar de ajuda imediata</value>
+  </data>
+  <data name="AutoUnlockNote" xml:space="preserve">
+    <value>Sua conta será desbloqueada automaticamente. Você pode atualizar esta página para tentar entrar novamente.</value>
+  </data>
+  <data name="LockoutExpired" xml:space="preserve">
+    <value>O bloqueio da sua conta expirou. Agora você pode {0}.</value>
+  </data>
+  <data name="TryLoginLink" xml:space="preserve">
+    <value>tentar entrar novamente</value>
+  </data>
+  <data name="ReturnHome" xml:space="preserve">
+    <value>Voltar para o início</value>
+  </data>
+  <data name="StatusCardTitle" xml:space="preserve">
+    <value>Status da conta</value>
+  </data>
+  <data name="DetailsCardTitle" xml:space="preserve">
+    <value>Detalhes do seu bloqueio</value>
+  </data>
+  <data name="SecurityCardTitle" xml:space="preserve">
+    <value>Informações de segurança</value>
+  </data>
+  <data name="PermanentLockedByAdmin" xml:space="preserve">
+    <value>Sua conta foi bloqueada permanentemente por um administrador do sistema.</value>
+  </data>
+  <data name="PermanentTypicalCause" xml:space="preserve">
+    <value>Isso geralmente ocorre devido a violações graves ou repetidas dos termos de serviço do site.</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+    <value>Status:</value>
+  </data>
+  <data name="PermanentlyDisabled" xml:space="preserve">
+    <value>Desativada permanentemente</value>
+  </data>
+  <data name="RecoveryOptionsLabel" xml:space="preserve">
+    <value>Opções de recuperação:</value>
+  </data>
+  <data name="NoRecoveryOptions" xml:space="preserve">
+    <value>Nenhuma – a redefinição de senha não desbloqueará esta conta</value>
+  </data>
+  <data name="ContactLabel" xml:space="preserve">
+    <value>Contato:</value>
+  </data>
+  <data name="SiteAdminOnly" xml:space="preserve">
+    <value>Somente o administrador do site</value>
+  </data>
+  <data name="OnlyAdminCanRemove" xml:space="preserve">
+    <value>Somente um administrador do sistema pode remover um bloqueio permanente de conta. Se você acredita que isso é um erro, entre em contato com o suporte.</value>
+  </data>
+  <data name="TemporarilyLockedMessage" xml:space="preserve">
+    <value>Sua conta está temporariamente bloqueada devido a várias tentativas de login malsucedidas.</value>
+  </data>
+  <data name="WhatToDoLabel" xml:space="preserve">
+    <value>O que fazer:</value>
+  </data>
+  <data name="WhatToDoText" xml:space="preserve">
+    <value>Aguarde o bloqueio expirar ou use {0} para desbloquear imediatamente</value>
+  </data>
+  <data name="PasswordResetLink" xml:space="preserve">
+    <value>redefinição de senha</value>
+  </data>
+  <data name="SecurityExplanation" xml:space="preserve">
+    <value>Para sua segurança, as contas são bloqueadas temporariamente após várias tentativas de login malsucedidas. Isso ajuda a proteger sua conta contra tentativas de acesso não autorizado.</value>
+  </data>
+  <data name="MaxAttemptsLabel" xml:space="preserve">
+    <value>Máximo de tentativas:</value>
+  </data>
+  <data name="MaxAttemptsValue" xml:space="preserve">
+    <value>{0} tentativas de login malsucedidas</value>
+  </data>
+  <data name="LockoutDurationLabel" xml:space="preserve">
+    <value>Duração do bloqueio:</value>
+  </data>
+  <data name="LockoutDurationValue" xml:space="preserve">
+    <value>{0} minutos</value>
+  </data>
+  <data name="ResetLabel" xml:space="preserve">
+    <value>Redefinição:</value>
+  </data>
+  <data name="ResetValue" xml:space="preserve">
+    <value>Um login bem-sucedido ou a redefinição de senha limpará as tentativas malsucedidas</value>
+  </data>
+  <data name="HoursSingular" xml:space="preserve">
+    <value>{0} hora</value>
+  </data>
+  <data name="HoursPlural" xml:space="preserve">
+    <value>{0} horas</value>
+  </data>
+  <data name="MinutesSingular" xml:space="preserve">
+    <value>{0} minuto</value>
+  </data>
+  <data name="MinutesPlural" xml:space="preserve">
+    <value>{0} minutos</value>
+  </data>
+  <data name="SecondsSingular" xml:space="preserve">
+    <value>{0} segundo</value>
+  </data>
+  <data name="SecondsPlural" xml:space="preserve">
+    <value>{0} segundos</value>
+  </data>
+</root>

@@ -91,4 +91,13 @@
   <data name="ExternalRegisterTitle" xml:space="preserve">
     <value>Use outro serviço para se registrar.</value>
   </data>
+  <data name="ErrorWithDetails" xml:space="preserve">
+    <value>Erro: {0}</value>
+  </data>
+  <data name="FirstNameTooLong" xml:space="preserve">
+    <value>O nome não pode exceder 75 caracteres.</value>
+  </data>
+  <data name="LastNameTooLong" xml:space="preserve">
+    <value>O sobrenome não pode exceder 75 caracteres.</value>
+  </data>
 </root>

@@ -1,6 +1,9 @@
-﻿@if (!string.IsNullOrEmpty(DisplayMessage))
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Account.Shared.StatusMessage> Localizer
+
+@if (!string.IsNullOrEmpty(DisplayMessage))
 {
-    var statusMessageClass = DisplayMessage.StartsWith("Error") ? "danger" : "success";
+    var statusMessageClass = IsError(DisplayMessage) ? "danger" : "success";
     <div class="alert alert-@statusMessageClass" role="alert">
         @DisplayMessage
     </div>
@@ -16,6 +19,16 @@
     private HttpContext HttpContext { get; set; } = default!;
 
     private string? DisplayMessage => Message ?? messageFromCookie;
+
+    /// <summary>
+    /// Determines whether a status message is an error. Messages start with the English word "Error"
+    /// or its localized equivalent (resource key <c>ErrorPrefix</c>).
+    /// </summary>
+    /// <param name="message">The message to inspect.</param>
+    /// <returns><c>true</c> when the message represents an error.</returns>
+    private bool IsError(string message) =>
+        message.StartsWith("Error", StringComparison.Ordinal) ||
+        message.StartsWith(Localizer["ErrorPrefix"].Value, StringComparison.Ordinal);
 
     protected override void OnInitialized()
     {

@@ -61,6 +61,24 @@ namespace FreeSpeakWeb.Resources.Account.Pages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error: Your email address has not been confirmed. Please check your email and confirm your account..
+        /// </summary>
+        public static string ErrorEmailNotConfirmed {
+            get {
+                return ResourceManager.GetString("ErrorEmailNotConfirmed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error: Invalid username or password. Please try again..
+        /// </summary>
+        public static string ErrorInvalidLogin {
+            get {
+                return ResourceManager.GetString("ErrorInvalidLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use another service to log in..
         /// </summary>
         public static string ExternalLoginTitle {

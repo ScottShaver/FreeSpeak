@@ -6,6 +6,7 @@
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.Extensions.Localization
 @using Microsoft.Extensions.Options
 @using FreeSpeakWeb.Data
 
@@ -17,18 +18,17 @@
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<ExternalLogin> Logger
 @inject IOptions<SiteSettings> SiteSettings
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Account.Pages.ExternalLogin> Localizer
 
-<PageTitle>@SiteSettings.Value.SiteName - Register</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
 
 <StatusMessage Message="@message" />
-<h1>Register</h1>
-<h2>Associate your @ProviderDisplayName account.</h2>
+<h1>@Localizer["Title"]</h1>
+<h2>@Localizer["AssociateAccount", ProviderDisplayName ?? string.Empty]</h2>
 <hr />
 
 <div  class="alert alert-info">
-    You've successfully authenticated with <strong>@ProviderDisplayName</strong>.
-    Please enter an email address for this site below and click the Register button to finish
-    logging in.
+    @LocalizedMarkup.Format(Localizer["AuthenticatedSuccess"].Value, LocalizedMarkup.Encode(ProviderDisplayName))
 </div>
 
 <div class="row">
@@ -37,11 +37,11 @@
             <FreeSpeakWeb.Components.Shared.LocalizedDataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="email" placeholder="Please enter your email." />
-                <label for="Input.Email" class="form-label">Email</label>
+                <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="email"                 placeholder="@Localizer["EmailPlaceholder"]" />
+                                <label for="Input.Email" class="form-label">@Localizer["Email"]</label>
                 <ValidationMessage For="() => Input.Email" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+                            <button type="submit" class="w-100 btn btn-lg btn-primary">@Localizer["RegisterButton"]</button>
         </EditForm>
     </div>
 </div>
@@ -75,14 +75,14 @@
 
         if (RemoteError is not null)
         {
-            RedirectManager.RedirectToWithStatus("Account/Login", $"Error from external provider: {RemoteError}", HttpContext);
+            RedirectManager.RedirectToWithStatus("Account/Login", Localizer["ErrorFromProvider", RemoteError], HttpContext);
             return;
         }
 
         var info = await SignInManager.GetExternalLoginInfoAsync();
         if (info is null)
         {
-            RedirectManager.RedirectToWithStatus("Account/Login", "Error loading external login information.", HttpContext);
+            RedirectManager.RedirectToWithStatus("Account/Login", Localizer["ErrorLoadingInfo"], HttpContext);
             return;
         }
 
@@ -106,7 +106,7 @@
     {
         if (externalLoginInfo is null)
         {
-            RedirectManager.RedirectToWithStatus("Account/Login", "Error loading external login information.", HttpContext);
+            RedirectManager.RedirectToWithStatus("Account/Login", Localizer["ErrorLoadingInfo"], HttpContext);
             return;
         }
 
@@ -143,7 +143,7 @@
     {
         if (externalLoginInfo is null)
         {
-            RedirectManager.RedirectToWithStatus("Account/Login", "Error loading external login information during confirmation.", HttpContext);
+            RedirectManager.RedirectToWithStatus("Account/Login", Localizer["ErrorLoadingInfoConfirmation"], HttpContext);
             return;
         }
 
@@ -184,7 +184,7 @@
         }
         else
         {
-            message = $"Error: {string.Join(",", result.Errors.Select(error => error.Description))}";
+            message = Localizer["ErrorWithDetails", string.Join(",", result.Errors.Select(error => error.Description))];
         }
     }
 

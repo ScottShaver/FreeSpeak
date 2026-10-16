@@ -91,4 +91,13 @@
   <data name="ExternalRegisterTitle" xml:space="preserve">
     <value>다른 서비스로 등록하세요.</value>
   </data>
+  <data name="ErrorWithDetails" xml:space="preserve">
+    <value>오류: {0}</value>
+  </data>
+  <data name="FirstNameTooLong" xml:space="preserve">
+    <value>이름은 75자를 초과할 수 없습니다.</value>
+  </data>
+  <data name="LastNameTooLong" xml:space="preserve">
+    <value>성은 75자를 초과할 수 없습니다.</value>
+  </data>
 </root>

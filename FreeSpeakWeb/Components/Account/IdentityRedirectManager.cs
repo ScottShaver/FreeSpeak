@@ -1,6 +1,7 @@
 using FreeSpeakWeb.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
 
 namespace FreeSpeakWeb.Components.Account
 {
@@ -10,7 +11,10 @@ namespace FreeSpeakWeb.Components.Account
     /// and support status message passing via cookies.
     /// </summary>
     /// <param name="navigationManager">The navigation manager for performing redirects.</param>
-    internal sealed class IdentityRedirectManager(NavigationManager navigationManager)
+    /// <param name="invalidUserLocalizer">The localizer used for the invalid user status message.</param>
+    internal sealed class IdentityRedirectManager(
+        NavigationManager navigationManager,
+        IStringLocalizer<FreeSpeakWeb.Resources.Account.Pages.InvalidUser> invalidUserLocalizer)
     {
         /// <summary>
         /// The cookie name used to pass status messages between redirects.
@@ -96,6 +100,6 @@ namespace FreeSpeakWeb.Components.Account
         /// <param name="userManager">The user manager for getting the user ID.</param>
         /// <param name="context">The HTTP context for setting the cookie and getting the user.</param>
         public void RedirectToInvalidUser(UserManager<ApplicationUser> userManager, HttpContext context)
-            => RedirectToWithStatus("Account/InvalidUser", $"Error: Unable to load user with ID '{userManager.GetUserId(context.User)}'.", context);
+            => RedirectToWithStatus("Account/InvalidUser", invalidUserLocalizer["ErrorUnableToLoadUser", userManager.GetUserId(context.User) ?? string.Empty].Value, context);
     }
 }

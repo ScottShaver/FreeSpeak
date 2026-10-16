@@ -125,6 +125,7 @@ namespace FreeSpeakWeb
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager()
+                .AddErrorDescriber<FreeSpeakWeb.Components.Account.LocalizedIdentityErrorDescriber>()
                 .AddDefaultTokenProviders();
 
             // The sender is always SMTP-based; the Enabled toggle (UseIdentityNoOpEmailSender) is read live per send.

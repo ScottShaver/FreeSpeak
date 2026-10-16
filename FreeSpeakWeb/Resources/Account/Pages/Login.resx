@@ -91,4 +91,10 @@
   <data name="ExternalLoginTitle" xml:space="preserve">
     <value>Use another service to log in.</value>
   </data>
+  <data name="ErrorEmailNotConfirmed" xml:space="preserve">
+    <value>Error: Your email address has not been confirmed. Please check your email and confirm your account.</value>
+  </data>
+  <data name="ErrorInvalidLogin" xml:space="preserve">
+    <value>Error: Invalid username or password. Please try again.</value>
+  </data>
 </root>

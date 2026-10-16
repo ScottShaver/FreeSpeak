@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>تم قفل الحساب</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>الحساب مقفل</value>
+  </data>
+  <data name="PermanentTitle" xml:space="preserve">
+    <value>تم تعطيل الحساب نهائيًا</value>
+  </data>
+  <data name="PermanentDisabledMessage" xml:space="preserve">
+    <value>تم تعطيل حسابك نهائيًا من قِبل مسؤول النظام. لا يمكن التراجع عن هذا الإجراء أو تجاوزه.</value>
+  </data>
+  <data name="ImportantLabel" xml:space="preserve">
+    <value>مهم:</value>
+  </data>
+  <data name="PermanentRecoveryNote" xml:space="preserve">
+    <value>لن يؤدي إعادة تعيين كلمة المرور وخيارات استرداد الحساب الأخرى إلى فتح حساب معطّل نهائيًا.</value>
+  </data>
+  <data name="ContactAdminIfMistake" xml:space="preserve">
+    <value>إذا كنت تعتقد أن هذا خطأ، يرجى الاتصال بمسؤول الموقع للحصول على المساعدة.</value>
+  </data>
+  <data name="TemporaryTitle" xml:space="preserve">
+    <value>قفل مؤقت للحساب</value>
+  </data>
+  <data name="TemporaryMessage" xml:space="preserve">
+    <value>تم قفل حسابك بسبب محاولات تسجيل دخول فاشلة متعددة.</value>
+  </data>
+  <data name="LockedUntilLabel" xml:space="preserve">
+    <value>مقفل حتى:</value>
+  </data>
+  <data name="TimeRemainingLabel" xml:space="preserve">
+    <value>الوقت المتبقي:</value>
+  </data>
+  <data name="WhatYouCanDoLabel" xml:space="preserve">
+    <value>ما يمكنك فعله:</value>
+  </data>
+  <data name="OptionWait" xml:space="preserve">
+    <value>انتظر حتى تنتهي فترة القفل</value>
+  </data>
+  <data name="OptionForgotPassword" xml:space="preserve">
+    <value>إذا نسيت كلمة المرور، فاستخدم خيار {0}</value>
+  </data>
+  <data name="ForgotPasswordLink" xml:space="preserve">
+    <value>نسيت كلمة المرور</value>
+  </data>
+  <data name="OptionContactSupport" xml:space="preserve">
+    <value>اتصل بالدعم إذا كنت بحاجة إلى مساعدة فورية</value>
+  </data>
+  <data name="AutoUnlockNote" xml:space="preserve">
+    <value>سيتم فتح حسابك تلقائيًا. يمكنك تحديث هذه الصفحة لمحاولة تسجيل الدخول مرة أخرى.</value>
+  </data>
+  <data name="LockoutExpired" xml:space="preserve">
+    <value>انتهت فترة قفل حسابك. يمكنك الآن {0}.</value>
+  </data>
+  <data name="TryLoginLink" xml:space="preserve">
+    <value>محاولة تسجيل الدخول مرة أخرى</value>
+  </data>
+  <data name="ReturnHome" xml:space="preserve">
+    <value>العودة إلى الصفحة الرئيسية</value>
+  </data>
+  <data name="StatusCardTitle" xml:space="preserve">
+    <value>حالة الحساب</value>
+  </data>
+  <data name="DetailsCardTitle" xml:space="preserve">
+    <value>تفاصيل القفل الخاصة بك</value>
+  </data>
+  <data name="SecurityCardTitle" xml:space="preserve">
+    <value>معلومات الأمان</value>
+  </data>
+  <data name="PermanentLockedByAdmin" xml:space="preserve">
+    <value>تم قفل حسابك نهائيًا من قِبل مسؤول النظام.</value>
+  </data>
+  <data name="PermanentTypicalCause" xml:space="preserve">
+    <value>يحدث هذا عادةً بسبب انتهاكات جسيمة أو متكررة لشروط خدمة الموقع.</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+    <value>الحالة:</value>
+  </data>
+  <data name="PermanentlyDisabled" xml:space="preserve">
+    <value>معطّل نهائيًا</value>
+  </data>
+  <data name="RecoveryOptionsLabel" xml:space="preserve">
+    <value>خيارات الاسترداد:</value>
+  </data>
+  <data name="NoRecoveryOptions" xml:space="preserve">
+    <value>لا شيء - لن تؤدي إعادة تعيين كلمة المرور إلى فتح هذا الحساب</value>
+  </data>
+  <data name="ContactLabel" xml:space="preserve">
+    <value>جهة الاتصال:</value>
+  </data>
+  <data name="SiteAdminOnly" xml:space="preserve">
+    <value>مسؤول الموقع فقط</value>
+  </data>
+  <data name="OnlyAdminCanRemove" xml:space="preserve">
+    <value>لا يمكن إلا لمسؤول النظام إزالة القفل الدائم للحساب. إذا كنت تعتقد أن هذا خطأ، يرجى الاتصال بالدعم.</value>
+  </data>
+  <data name="TemporarilyLockedMessage" xml:space="preserve">
+    <value>حسابك مقفل مؤقتًا بسبب محاولات تسجيل دخول فاشلة متعددة.</value>
+  </data>
+  <data name="WhatToDoLabel" xml:space="preserve">
+    <value>ما يجب فعله:</value>
+  </data>
+  <data name="WhatToDoText" xml:space="preserve">
+    <value>انتظر حتى ينتهي القفل، أو استخدم {0} لفتحه فورًا</value>
+  </data>
+  <data name="PasswordResetLink" xml:space="preserve">
+    <value>إعادة تعيين كلمة المرور</value>
+  </data>
+  <data name="SecurityExplanation" xml:space="preserve">
+    <value>لأمانك، تُقفل الحسابات مؤقتًا بعد محاولات تسجيل دخول فاشلة متعددة. يساعد ذلك في حماية حسابك من محاولات الوصول غير المصرح بها.</value>
+  </data>
+  <data name="MaxAttemptsLabel" xml:space="preserve">
+    <value>الحد الأقصى للمحاولات:</value>
+  </data>
+  <data name="MaxAttemptsValue" xml:space="preserve">
+    <value>{0} محاولات تسجيل دخول فاشلة</value>
+  </data>
+  <data name="LockoutDurationLabel" xml:space="preserve">
+    <value>مدة القفل:</value>
+  </data>
+  <data name="LockoutDurationValue" xml:space="preserve">
+    <value>{0} د</value>
+  </data>
+  <data name="ResetLabel" xml:space="preserve">
+    <value>إعادة التعيين:</value>
+  </data>
+  <data name="ResetValue" xml:space="preserve">
+    <value>سيؤدي تسجيل الدخول الناجح أو إعادة تعيين كلمة المرور إلى مسح المحاولات الفاشلة</value>
+  </data>
+  <data name="HoursSingular" xml:space="preserve">
+    <value>{0} س</value>
+  </data>
+  <data name="HoursPlural" xml:space="preserve">
+    <value>{0} س</value>
+  </data>
+  <data name="MinutesSingular" xml:space="preserve">
+    <value>{0} د</value>
+  </data>
+  <data name="MinutesPlural" xml:space="preserve">
+    <value>{0} د</value>
+  </data>
+  <data name="SecondsSingular" xml:space="preserve">
+    <value>{0} ث</value>
+  </data>
+  <data name="SecondsPlural" xml:space="preserve">
+    <value>{0} ث</value>
+  </data>
+</root>

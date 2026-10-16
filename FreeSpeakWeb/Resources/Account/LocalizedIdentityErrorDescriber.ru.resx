@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DefaultError" xml:space="preserve">
+    <value>Произошла неизвестная ошибка.</value>
+  </data>
+  <data name="ConcurrencyFailure" xml:space="preserve">
+    <value>Ошибка оптимистичного параллелизма: объект был изменён.</value>
+  </data>
+  <data name="PasswordMismatch" xml:space="preserve">
+    <value>Неверный пароль.</value>
+  </data>
+  <data name="InvalidToken" xml:space="preserve">
+    <value>Недействительный токен.</value>
+  </data>
+  <data name="RecoveryCodeRedemptionFailed" xml:space="preserve">
+    <value>Не удалось использовать код восстановления.</value>
+  </data>
+  <data name="LoginAlreadyAssociated" xml:space="preserve">
+    <value>Пользователь с таким логином уже существует.</value>
+  </data>
+  <data name="InvalidUserName" xml:space="preserve">
+    <value>Имя пользователя «{0}» недопустимо: оно может содержать только буквы или цифры.</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Адрес электронной почты «{0}» недопустим.</value>
+  </data>
+  <data name="DuplicateUserName" xml:space="preserve">
+    <value>Имя пользователя «{0}» уже занято.</value>
+  </data>
+  <data name="DuplicateEmail" xml:space="preserve">
+    <value>Адрес электронной почты «{0}» уже используется.</value>
+  </data>
+  <data name="InvalidRoleName" xml:space="preserve">
+    <value>Имя роли «{0}» недопустимо.</value>
+  </data>
+  <data name="DuplicateRoleName" xml:space="preserve">
+    <value>Имя роли «{0}» уже занято.</value>
+  </data>
+  <data name="UserAlreadyHasPassword" xml:space="preserve">
+    <value>У пользователя уже задан пароль.</value>
+  </data>
+  <data name="UserLockoutNotEnabled" xml:space="preserve">
+    <value>Для этого пользователя блокировка не включена.</value>
+  </data>
+  <data name="UserAlreadyInRole" xml:space="preserve">
+    <value>Пользователь уже имеет роль «{0}».</value>
+  </data>
+  <data name="UserNotInRole" xml:space="preserve">
+    <value>Пользователь не имеет роли «{0}».</value>
+  </data>
+  <data name="PasswordTooShort" xml:space="preserve">
+    <value>Пароль должен содержать не менее {0} символов.</value>
+  </data>
+  <data name="PasswordRequiresUniqueChars" xml:space="preserve">
+    <value>Пароль должен содержать не менее {0} различных символов.</value>
+  </data>
+  <data name="PasswordRequiresNonAlphanumeric" xml:space="preserve">
+    <value>Пароль должен содержать хотя бы один небуквенно-цифровой символ.</value>
+  </data>
+  <data name="PasswordRequiresDigit" xml:space="preserve">
+    <value>Пароль должен содержать хотя бы одну цифру ('0'-'9').</value>
+  </data>
+  <data name="PasswordRequiresLower" xml:space="preserve">
+    <value>Пароль должен содержать хотя бы одну строчную букву ('a'-'z').</value>
+  </data>
+  <data name="PasswordRequiresUpper" xml:space="preserve">
+    <value>Пароль должен содержать хотя бы одну заглавную букву ('A'-'Z').</value>
+  </data>
+</root>

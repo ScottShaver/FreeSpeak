@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Gesperrt</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Konto gesperrt</value>
+  </data>
+  <data name="PermanentTitle" xml:space="preserve">
+    <value>Konto dauerhaft deaktiviert</value>
+  </data>
+  <data name="PermanentDisabledMessage" xml:space="preserve">
+    <value>Ihr Konto wurde von einem Systemadministrator dauerhaft deaktiviert. Diese Maßnahme kann weder rückgängig gemacht noch umgangen werden.</value>
+  </data>
+  <data name="ImportantLabel" xml:space="preserve">
+    <value>Wichtig:</value>
+  </data>
+  <data name="PermanentRecoveryNote" xml:space="preserve">
+    <value>Das Zurücksetzen des Passworts und andere Optionen zur Kontowiederherstellung entsperren ein dauerhaft deaktiviertes Konto nicht.</value>
+  </data>
+  <data name="ContactAdminIfMistake" xml:space="preserve">
+    <value>Wenn Sie glauben, dass es sich um einen Irrtum handelt, wenden Sie sich bitte an den Websiteadministrator.</value>
+  </data>
+  <data name="TemporaryTitle" xml:space="preserve">
+    <value>Vorübergehende Kontosperrung</value>
+  </data>
+  <data name="TemporaryMessage" xml:space="preserve">
+    <value>Ihr Konto wurde aufgrund mehrerer fehlgeschlagener Anmeldeversuche gesperrt.</value>
+  </data>
+  <data name="LockedUntilLabel" xml:space="preserve">
+    <value>Gesperrt bis:</value>
+  </data>
+  <data name="TimeRemainingLabel" xml:space="preserve">
+    <value>Verbleibende Zeit:</value>
+  </data>
+  <data name="WhatYouCanDoLabel" xml:space="preserve">
+    <value>Was Sie tun können:</value>
+  </data>
+  <data name="OptionWait" xml:space="preserve">
+    <value>Warten Sie, bis die Sperrfrist abgelaufen ist</value>
+  </data>
+  <data name="OptionForgotPassword" xml:space="preserve">
+    <value>Wenn Sie Ihr Passwort vergessen haben, verwenden Sie die Option {0}</value>
+  </data>
+  <data name="ForgotPasswordLink" xml:space="preserve">
+    <value>Passwort vergessen</value>
+  </data>
+  <data name="OptionContactSupport" xml:space="preserve">
+    <value>Wenden Sie sich an den Support, wenn Sie sofortige Hilfe benötigen</value>
+  </data>
+  <data name="AutoUnlockNote" xml:space="preserve">
+    <value>Ihr Konto wird automatisch entsperrt. Sie können diese Seite aktualisieren, um sich erneut anzumelden.</value>
+  </data>
+  <data name="LockoutExpired" xml:space="preserve">
+    <value>Die Sperre Ihres Kontos ist abgelaufen.     Sie können sich jetzt {0}.</value>
+  </data>
+  <data name="TryLoginLink" xml:space="preserve">
+        <value>erneut anmelden</value>
+  </data>
+  <data name="ReturnHome" xml:space="preserve">
+    <value>Zurück zur Startseite</value>
+  </data>
+  <data name="StatusCardTitle" xml:space="preserve">
+    <value>Kontostatus</value>
+  </data>
+  <data name="DetailsCardTitle" xml:space="preserve">
+    <value>Details zu Ihrer Sperrung</value>
+  </data>
+  <data name="SecurityCardTitle" xml:space="preserve">
+    <value>Sicherheitsinformationen</value>
+  </data>
+  <data name="PermanentLockedByAdmin" xml:space="preserve">
+    <value>Ihr Konto wurde von einem Systemadministrator dauerhaft gesperrt.</value>
+  </data>
+  <data name="PermanentTypicalCause" xml:space="preserve">
+    <value>Dies geschieht in der Regel aufgrund schwerer oder wiederholter Verstöße gegen die Nutzungsbedingungen der Website.</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+    <value>Status:</value>
+  </data>
+  <data name="PermanentlyDisabled" xml:space="preserve">
+    <value>Dauerhaft deaktiviert</value>
+  </data>
+  <data name="RecoveryOptionsLabel" xml:space="preserve">
+    <value>Wiederherstellungsoptionen:</value>
+  </data>
+  <data name="NoRecoveryOptions" xml:space="preserve">
+    <value>Keine – das Zurücksetzen des Passworts entsperrt dieses Konto nicht</value>
+  </data>
+  <data name="ContactLabel" xml:space="preserve">
+    <value>Kontakt:</value>
+  </data>
+  <data name="SiteAdminOnly" xml:space="preserve">
+    <value>Nur Websiteadministrator</value>
+  </data>
+  <data name="OnlyAdminCanRemove" xml:space="preserve">
+    <value>Nur ein Systemadministrator kann eine dauerhafte Kontosperrung aufheben. Wenn Sie glauben, dass es sich um einen Fehler handelt, wenden Sie sich bitte an den Support.</value>
+  </data>
+  <data name="TemporarilyLockedMessage" xml:space="preserve">
+    <value>Ihr Konto ist aufgrund mehrerer fehlgeschlagener Anmeldeversuche vorübergehend gesperrt.</value>
+  </data>
+  <data name="WhatToDoLabel" xml:space="preserve">
+    <value>Was zu tun ist:</value>
+  </data>
+  <data name="WhatToDoText" xml:space="preserve">
+    <value>Warten Sie, bis die Sperre abläuft, oder verwenden Sie {0}, um sofort zu entsperren</value>
+  </data>
+  <data name="PasswordResetLink" xml:space="preserve">
+    <value>Passwort zurücksetzen</value>
+  </data>
+  <data name="SecurityExplanation" xml:space="preserve">
+    <value>Zu Ihrer Sicherheit werden Konten nach mehreren fehlgeschlagenen Anmeldeversuchen vorübergehend gesperrt. Dies schützt Ihr Konto vor unbefugten Zugriffsversuchen.</value>
+  </data>
+  <data name="MaxAttemptsLabel" xml:space="preserve">
+    <value>Maximale Versuche:</value>
+  </data>
+  <data name="MaxAttemptsValue" xml:space="preserve">
+    <value>{0} fehlgeschlagene Anmeldeversuche</value>
+  </data>
+  <data name="LockoutDurationLabel" xml:space="preserve">
+    <value>Sperrdauer:</value>
+  </data>
+  <data name="LockoutDurationValue" xml:space="preserve">
+    <value>{0} Minuten</value>
+  </data>
+  <data name="ResetLabel" xml:space="preserve">
+    <value>Zurücksetzen:</value>
+  </data>
+  <data name="ResetValue" xml:space="preserve">
+    <value>Eine erfolgreiche Anmeldung oder das Zurücksetzen des Passworts setzt die fehlgeschlagenen Versuche zurück</value>
+  </data>
+  <data name="HoursSingular" xml:space="preserve">
+    <value>{0} Stunde</value>
+  </data>
+  <data name="HoursPlural" xml:space="preserve">
+    <value>{0} Stunden</value>
+  </data>
+  <data name="MinutesSingular" xml:space="preserve">
+    <value>{0} Minute</value>
+  </data>
+  <data name="MinutesPlural" xml:space="preserve">
+    <value>{0} Minuten</value>
+  </data>
+  <data name="SecondsSingular" xml:space="preserve">
+    <value>{0} Sekunde</value>
+  </data>
+  <data name="SecondsPlural" xml:space="preserve">
+    <value>{0} Sekunden</value>
+  </data>
+</root>

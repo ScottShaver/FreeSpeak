@@ -91,4 +91,13 @@
   <data name="ExternalRegisterTitle" xml:space="preserve">
     <value>Зарегистрироваться через другой сервис.</value>
   </data>
+  <data name="ErrorWithDetails" xml:space="preserve">
+    <value>Ошибка: {0}</value>
+  </data>
+  <data name="FirstNameTooLong" xml:space="preserve">
+    <value>Имя не может превышать 75 символов.</value>
+  </data>
+  <data name="LastNameTooLong" xml:space="preserve">
+    <value>Фамилия не может превышать 75 символов.</value>
+  </data>
 </root>

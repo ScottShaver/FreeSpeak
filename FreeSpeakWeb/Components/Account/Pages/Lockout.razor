@@ -11,8 +11,9 @@
 @inject ILogger<Lockout> Logger
 @inject FreeSpeakWeb.Services.Abstractions.IUserModerationService ModerationService
 @inject Microsoft.Extensions.Localization.IStringLocalizer<FreeSpeakWeb.Resources.Moderation.UserModeration> SuspensionLocalizer
+@inject Microsoft.Extensions.Localization.IStringLocalizer<FreeSpeakWeb.Resources.Account.Pages.Lockout> Localizer
 
-<PageTitle>@SiteSettings.Value.SiteName - Locked out</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["PageTitle"]</PageTitle>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -44,22 +45,22 @@
                     <div class="text-center mb-4">
                         <i class="bi bi-lock-fill text-danger" style="font-size: 4rem;"></i>
                     </div>
-                    <h1 class="text-danger text-center mb-4">Account Locked</h1>
+                    <h1 class="text-danger text-center mb-4">@Localizer["Title"]</h1>
 
                     @if (isPermanentLockout)
                     {
                         <div class="alert alert-danger" role="alert">
                             <h5 class="alert-heading">
                                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                                Account Permanently Disabled
+                                @Localizer["PermanentTitle"]
                             </h5>
-                            <p>Your account has been permanently disabled by a system administrator. This action cannot be undone or bypassed.</p>
+                            <p>@Localizer["PermanentDisabledMessage"]</p>
                             <hr />
                             <p class="mb-2">
-                                <strong>Important:</strong> Password reset and other account recovery options will not unlock a permanently disabled account.
+                                <strong>@Localizer["ImportantLabel"]</strong> @Localizer["PermanentRecoveryNote"]
                             </p>
                             <p class="mb-0">
-                                If you believe this is a mistake, please contact the site administrator for assistance.
+                                @Localizer["ContactAdminIfMistake"]
                             </p>
                         </div>
                     }
@@ -68,41 +69,41 @@
                         <div class="alert alert-warning" role="alert">
                             <h5 class="alert-heading">
                                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                                Temporary Account Lockout
+                                @Localizer["TemporaryTitle"]
                             </h5>
-                            <p>Your account has been locked due to multiple failed login attempts.</p>
+                            <p>@Localizer["TemporaryMessage"]</p>
 
                             @if (remainingLockoutTime > TimeSpan.Zero)
                             {
                                 <hr />
                                 <div class="mb-2">
-                                    <strong>Locked until:</strong> @lockoutEnd.Value.ToLocalTime().ToString("MMM dd, yyyy h:mm:ss tt")
+                                    <strong>@Localizer["LockedUntilLabel"]</strong> @FormatLocalTime(lockoutEnd.Value)
                                 </div>
                                 <div class="mb-2">
-                                    <strong>Time remaining:</strong> 
+                                    <strong>@Localizer["TimeRemainingLabel"]</strong>&nbsp;
                                     @if (remainingLockoutTime.TotalHours >= 1)
                                     {
-                                        <span>@remainingLockoutTime.Hours hours @remainingLockoutTime.Minutes minutes</span>
+                                        <span>@FormatHours(remainingLockoutTime.Hours) @FormatMinutes(remainingLockoutTime.Minutes)</span>
                                     }
                                     else if (remainingLockoutTime.TotalMinutes >= 1)
                                     {
-                                        <span>@remainingLockoutTime.Minutes minutes @remainingLockoutTime.Seconds seconds</span>
+                                        <span>@FormatMinutes(remainingLockoutTime.Minutes) @FormatSeconds(remainingLockoutTime.Seconds)</span>
                                     }
                                     else
                                     {
-                                        <span>@remainingLockoutTime.Seconds seconds</span>
+                                        <span>@FormatSeconds(remainingLockoutTime.Seconds)</span>
                                     }
                                 </div>
                             }
 
                             <hr />
                             <p class="mb-0">
-                                <strong>What you can do:</strong>
+                                <strong>@Localizer["WhatYouCanDoLabel"]</strong>
                             </p>
                             <ul class="mb-0">
-                                <li>Wait for the lockout period to expire</li>
-                                <li>If you forgot your password, use the <a href="Account/ForgotPassword">Forgot Password</a> option</li>
-                                <li>Contact support if you need immediate assistance</li>
+                                <li>@Localizer["OptionWait"]</li>
+                                <li>@LocalizedMarkup.Format(Localizer["OptionForgotPassword"].Value, LocalizedMarkup.Link("Account/ForgotPassword", Localizer["ForgotPasswordLink"].Value))</li>
+                                <li>@Localizer["OptionContactSupport"]</li>
                             </ul>
                         </div>
 
@@ -110,7 +111,7 @@
                         {
                             <div class="text-center mt-3">
                                 <p class="text-muted">
-                                    Your account will be unlocked automatically. You may refresh this page to try logging in again.
+                                    @Localizer["AutoUnlockNote"]
                                 </p>
                             </div>
                         }
@@ -118,13 +119,13 @@
                     else
                     {
                         <div class="alert alert-info" role="alert">
-                            <p class="mb-0">Your account lockout has expired. You may now <a href="Account/Login">try logging in again</a>.</p>
+                            <p class="mb-0">@LocalizedMarkup.Format(Localizer["LockoutExpired"].Value, LocalizedMarkup.Link("Account/Login", Localizer["TryLoginLink"].Value))</p>
                         </div>
                     }
 
                     <div class="text-center mt-4">
                         <a href="/" class="btn btn-primary">
-                            <i class="bi bi-house me-2"></i>Return to Home
+                            <i class="bi bi-house me-2"></i>@Localizer["ReturnHome"]
                         </a>
                     </div>
                 </div>
@@ -136,69 +137,55 @@
                         <i class="bi bi-info-circle me-2"></i>
                         @if (isPermanentLockout)
                         {
-                            <text>Account Status</text>
+                            <text>@Localizer["StatusCardTitle"]</text>
                         }
                         else if (lockoutEnd.HasValue && lockoutEnd.Value > DateTimeOffset.UtcNow)
                         {
-                            <text>Your Lockout Details</text>
+                            <text>@Localizer["DetailsCardTitle"]</text>
                         }
                         else
                         {
-                            <text>Security Information</text>
+                            <text>@Localizer["SecurityCardTitle"]</text>
                         }
                     </h5>
 
                     @if (isPermanentLockout)
                     {
                         <p class="card-text text-danger">
-                            <strong>Your account has been permanently locked by a system administrator.</strong>
+                            <strong>@Localizer["PermanentLockedByAdmin"]</strong>
                         </p>
                         <p class="card-text">
-                            This typically occurs due to severe or repeated violations of the site's terms of service.
+                            @Localizer["PermanentTypicalCause"]
                         </p>
                         <ul class="mb-2">
-                            <li><strong>Status:</strong> Permanently disabled</li>
-                            <li><strong>Recovery options:</strong> None - password reset will not unlock this account</li>
-                            <li><strong>Contact:</strong> Site administrator only</li>
+                            <li><strong>@Localizer["StatusLabel"]</strong> @Localizer["PermanentlyDisabled"]</li>
+                            <li><strong>@Localizer["RecoveryOptionsLabel"]</strong> @Localizer["NoRecoveryOptions"]</li>
+                            <li><strong>@Localizer["ContactLabel"]</strong> @Localizer["SiteAdminOnly"]</li>
                         </ul>
                         <p class="card-text mb-0">
-                            Only a system administrator can remove a permanent account lockout. If you believe this is an error, please contact support.
+                            @Localizer["OnlyAdminCanRemove"]
                         </p>
                     }
                     else if (lockoutEnd.HasValue && lockoutEnd.Value > DateTimeOffset.UtcNow)
                     {
                         <p class="card-text">
-                            Your account is temporarily locked due to multiple failed login attempts.
+                            @Localizer["TemporarilyLockedMessage"]
                         </p>
                         <ul>
-                            <li><strong>Locked until:</strong> @lockoutEnd.Value.ToLocalTime().ToString("MMM dd, yyyy h:mm:ss tt")</li>
-                            <li><strong>Time remaining:</strong> 
-                                @if (remainingLockoutTime.Hours > 0)
-                                {
-                                    <text>@remainingLockoutTime.Hours hour@(remainingLockoutTime.Hours != 1 ? "s" : "") </text>
-                                }
-                                @if (remainingLockoutTime.Minutes > 0)
-                                {
-                                    <text>@remainingLockoutTime.Minutes minute@(remainingLockoutTime.Minutes != 1 ? "s" : "") </text>
-                                }
-                                @if (remainingLockoutTime.Hours == 0)
-                                {
-                                    <text>@remainingLockoutTime.Seconds second@(remainingLockoutTime.Seconds != 1 ? "s" : "")</text>
-                                }
-                            </li>
-                            <li><strong>What to do:</strong> Wait for the lockout to expire, or use <a href="Account/ForgotPassword">password reset</a> to unlock immediately</li>
+                            <li><strong>@Localizer["LockedUntilLabel"]</strong> @FormatLocalTime(lockoutEnd.Value)</li>
+                            <li><strong>@Localizer["TimeRemainingLabel"]</strong>&nbsp;@FormatRemainingDetail(remainingLockoutTime)</li>
+                            <li><strong>@Localizer["WhatToDoLabel"]</strong> @LocalizedMarkup.Format(Localizer["WhatToDoText"].Value, LocalizedMarkup.Link("Account/ForgotPassword", Localizer["PasswordResetLink"].Value))</li>
                         </ul>
                     }
                     else
                     {
                         <p class="card-text">
-                            For your security, accounts are temporarily locked after multiple failed login attempts.
-                            This helps protect your account from unauthorized access attempts.
+                            @Localizer["SecurityExplanation"]
                         </p>
                         <ul>
-                            <li><strong>Maximum attempts:</strong> 5 failed login attempts</li>
-                            <li><strong>Lockout duration:</strong> 5 minutes</li>
-                            <li><strong>Reset:</strong> Successful login or password reset will clear failed attempts</li>
+                            <li><strong>@Localizer["MaxAttemptsLabel"]</strong> @Localizer["MaxAttemptsValue", MaxFailedAccessAttempts]</li>
+                            <li><strong>@Localizer["LockoutDurationLabel"]</strong> @Localizer["MinutesPlural", DefaultLockoutMinutes]</li>
+                            <li><strong>@Localizer["ResetLabel"]</strong> @Localizer["ResetValue"]</li>
                         </ul>
                     }
                 </div>
@@ -220,6 +207,64 @@
     private DateTimeOffset? lockoutEnd;
     private TimeSpan remainingLockoutTime;
 
+    // Mirrors the lockout policy configured in Program.cs (MaxFailedAccessAttempts / DefaultLockoutTimeSpan).
+    private const int MaxFailedAccessAttempts = 5;
+    private const int DefaultLockoutMinutes = 5;
+
+    /// <summary>
+    /// Formats a lockout end time in the server-local time zone using the current culture's long date/time pattern.
+    /// </summary>
+    /// <param name="value">The lockout end time.</param>
+    /// <returns>The localized date and time text.</returns>
+    private static string FormatLocalTime(DateTimeOffset value) =>
+        value.ToLocalTime().ToString("G", System.Globalization.CultureInfo.CurrentCulture);
+
+    /// <summary>
+    /// Formats an hour count with the localized singular or plural resource.
+    /// </summary>
+    /// <param name="count">The number of hours.</param>
+    /// <returns>The localized text, for example "1 hour" or "2 hours".</returns>
+    private string FormatHours(int count) => Localizer[count == 1 ? "HoursSingular" : "HoursPlural", count].Value;
+
+    /// <summary>
+    /// Formats a minute count with the localized singular or plural resource.
+    /// </summary>
+    /// <param name="count">The number of minutes.</param>
+    /// <returns>The localized text, for example "1 minute" or "2 minutes".</returns>
+    private string FormatMinutes(int count) => Localizer[count == 1 ? "MinutesSingular" : "MinutesPlural", count].Value;
+
+    /// <summary>
+    /// Formats a second count with the localized singular or plural resource.
+    /// </summary>
+    /// <param name="count">The number of seconds.</param>
+    /// <returns>The localized text, for example "1 second" or "2 seconds".</returns>
+    private string FormatSeconds(int count) => Localizer[count == 1 ? "SecondsSingular" : "SecondsPlural", count].Value;
+
+    /// <summary>
+    /// Formats the remaining lockout time as space-separated hour, minute and second parts (seconds only when under an hour).
+    /// </summary>
+    /// <param name="remaining">The remaining lockout time.</param>
+    /// <returns>The localized text, for example "4 minutes 59 seconds".</returns>
+    private string FormatRemainingDetail(TimeSpan remaining)
+    {
+        var parts = new List<string>();
+        if (remaining.Hours > 0)
+        {
+            parts.Add(FormatHours(remaining.Hours));
+        }
+
+        if (remaining.Minutes > 0)
+        {
+            parts.Add(FormatMinutes(remaining.Minutes));
+        }
+
+        if (remaining.Hours == 0)
+        {
+            parts.Add(FormatSeconds(remaining.Seconds));
+        }
+
+        return string.Join(' ', parts);
+    }
     /// <summary>
     /// Initializes the lockout page and determines the lockout status and remaining time.
     /// </summary>
