@@ -199,8 +199,9 @@ namespace FreeSpeakWeb.Services
                 }
 
                 var now = Now();
+                var stale = await _repository.GetActiveSuspensionAsync(targetUserId, now, cancellationToken);
                 DateTime? endsAt = duration.HasValue ? now.Add(duration.Value) : null;
-                var suspension = await _repository.AddSuspensionAsync(new UserSuspension
+                var suspension = await _repository.TryAddSuspensionAsync(new UserSuspension
                 {
                     UserId = targetUserId,
                     SuspendedByUserId = actorId,
@@ -208,7 +209,11 @@ namespace FreeSpeakWeb.Services
                     RelatedReportId = relatedReportId,
                     CreatedAt = now,
                     EndsAt = endsAt
-                }, cancellationToken);
+                }, now, stale?.Id, cancellationToken);
+                if (suspension == null)
+                {
+                    return UserModerationResult.Fail(UserModerationError.AlreadySuspended);
+                }
 
                 var locked = endsAt.HasValue
                     ? await _lockoutService.SetLockoutEndAsync(targetUserId, new DateTimeOffset(DateTime.SpecifyKind(endsAt.Value, DateTimeKind.Utc)))

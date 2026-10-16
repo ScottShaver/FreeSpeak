@@ -58,9 +58,12 @@
                                 <option value="1">@Localizer["Duration1Day"]</option>
                                 <option value="3">@Localizer["Duration3Days"]</option>
                                 <option value="7">@Localizer["Duration7Days"]</option>
-                                <option value="14">@Localizer["Duration14Days"]</option>
-                                <option value="30">@Localizer["Duration30Days"]</option>
-                                <option value="0">@Localizer["DurationPermanent"]</option>
+                                @if (history.CanSuspendLong)
+                                {
+                                    <option value="14">@Localizer["Duration14Days"]</option>
+                                    <option value="30">@Localizer["Duration30Days"]</option>
+                                    <option value="0">@Localizer["DurationPermanent"]</option>
+                                }
                             </select>
                             @if (!history.CanSuspendLong)
                             {
@@ -84,7 +87,10 @@
             {
                 <div class="d-flex flex-wrap gap-2 mb-3">
                     <button type="button" class="btn btn-warning" @onclick="() => StartAction(PendingAction.Warn)" data-testid="user-warn">@Localizer["WarnButton"]</button>
-                    <button type="button" class="btn btn-danger" @onclick="() => StartAction(PendingAction.Suspend)" data-testid="user-suspend">@Localizer["SuspendButton"]</button>
+                    @if (!history.IsSuspended)
+                    {
+                        <button type="button" class="btn btn-danger" @onclick="() => StartAction(PendingAction.Suspend)" data-testid="user-suspend">@Localizer["SuspendButton"]</button>
+                    }
                 </div>
             }
 

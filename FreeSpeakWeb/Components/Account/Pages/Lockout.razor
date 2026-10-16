@@ -27,7 +27,7 @@
                         <h1 class="text-danger text-center mb-4" data-testid="suspension-title">@SuspensionLocalizer["LockoutSuspendedTitle"]</h1>
                         <div class="alert alert-danger" role="alert">
                             <p>@SuspensionLocalizer[suspension.IsPermanent ? "LockoutSuspendedPermanent" : "LockoutSuspendedTemporary"]</p>
-                            <p class="mb-2" data-testid="suspension-reason"><strong>@SuspensionLocalizer["LockoutReasonLabel"]:</strong> @suspension.Reason</p>
+                            @* The reason is intentionally not shown: this page is reachable without authentication. *@
                             @if (!suspension.IsPermanent)
                             {
                                 <p class="mb-2" data-testid="suspension-until"><strong>@SuspensionLocalizer["LockoutUntilLabel"]:</strong> @DateTime.SpecifyKind(suspension.EndsAt!.Value, DateTimeKind.Utc).ToLocalTime().ToString("g", System.Globalization.CultureInfo.CurrentCulture) (@suspension.EndsAt.Value.ToString("yyyy-MM-dd HH:mm", System.Globalization.CultureInfo.InvariantCulture) UTC)</p>

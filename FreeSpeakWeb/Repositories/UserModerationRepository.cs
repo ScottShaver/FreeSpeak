@@ -68,6 +68,29 @@ namespace FreeSpeakWeb.Repositories
         }
 
         /// <inheritdoc/>
+        public async Task<UserSuspension?> TryAddSuspensionAsync(UserSuspension suspension, DateTime nowUtc, int? ignoreSuspensionId, CancellationToken cancellationToken = default)
+        {
+            await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
+            await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
+
+            // Serializes concurrent suspensions of the same user until this transaction ends.
+            await context.Database.ExecuteSqlInterpolatedAsync($"SELECT pg_advisory_xact_lock(hashtextextended({suspension.UserId}, 0))", cancellationToken);
+
+            var conflict = await context.UserSuspensions.AnyAsync(s =>
+                s.UserId == suspension.UserId && s.LiftedAt == null && (s.EndsAt == null || s.EndsAt > nowUtc)
+                && (ignoreSuspensionId == null || s.Id != ignoreSuspensionId), cancellationToken);
+            if (conflict)
+            {
+                return null;
+            }
+
+            context.UserSuspensions.Add(suspension);
+            await context.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+            return suspension;
+        }
+
+        /// <inheritdoc/>
         public async Task DeleteSuspensionAsync(int suspensionId, CancellationToken cancellationToken = default)
         {
             await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);

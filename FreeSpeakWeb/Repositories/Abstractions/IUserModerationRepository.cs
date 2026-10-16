@@ -42,6 +42,16 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         Task<UserSuspension> AddSuspensionAsync(UserSuspension suspension, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Atomically adds a suspension unless the user already has an active one. Concurrent calls for the same user are serialized.
+        /// </summary>
+        /// <param name="suspension">The suspension to store.</param>
+        /// <param name="nowUtc">The current UTC time.</param>
+        /// <param name="ignoreSuspensionId">A stale active record to disregard (its lockout was removed elsewhere), or null.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The stored suspension, or null when the user already has an active suspension.</returns>
+        Task<UserSuspension?> TryAddSuspensionAsync(UserSuspension suspension, DateTime nowUtc, int? ignoreSuspensionId, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Deletes a suspension record, used to roll back a suspension whose sign-in block could not be applied.
         /// </summary>
         /// <param name="suspensionId">The suspension ID.</param>

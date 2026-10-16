@@ -100,6 +100,37 @@ namespace FreeSpeakWeb.IntegrationTests.Services
             stored.LiftNote.Should().Be("resolved");
         }
 
+        /// <summary>Simultaneous suspensions of the same user cannot both succeed.</summary>
+        [Fact]
+        public async Task TryAddSuspensionAsync_ConcurrentCalls_OnlyOneSucceeds()
+        {
+            var (target, moderator) = await SeedUsersAsync();
+            var repo = CreateRepository();
+            var now = DateTime.UtcNow;
+
+            var tasks = Enumerable.Range(0, 8).Select(_ => Task.Run(() => repo.TryAddSuspensionAsync(
+                new UserSuspension { UserId = target, SuspendedByUserId = moderator, Reason = "spam", CreatedAt = now, EndsAt = now.AddDays(1) },
+                now, null))).ToArray();
+            var results = await Task.WhenAll(tasks);
+
+            results.Count(r => r != null).Should().Be(1);
+            await using var verify = CreateDbContext();
+            verify.UserSuspensions.Count(s => s.UserId == target).Should().Be(1);
+        }
+
+        /// <summary>A stale active record can be ignored so the user can be suspended again.</summary>
+        [Fact]
+        public async Task TryAddSuspensionAsync_IgnoresStaleRecord()
+        {
+            var (target, moderator) = await SeedUsersAsync();
+            var repo = CreateRepository();
+            var now = DateTime.UtcNow;
+            var stale = await repo.AddSuspensionAsync(new UserSuspension { UserId = target, SuspendedByUserId = moderator, Reason = "old", CreatedAt = now, EndsAt = now.AddDays(1) });
+
+            (await repo.TryAddSuspensionAsync(new UserSuspension { UserId = target, SuspendedByUserId = moderator, Reason = "n", CreatedAt = now }, now, null)).Should().BeNull();
+            (await repo.TryAddSuspensionAsync(new UserSuspension { UserId = target, SuspendedByUserId = moderator, Reason = "n", CreatedAt = now }, now, stale.Id)).Should().NotBeNull();
+        }
+
         /// <summary>User search matches by user name and ignores very short terms' wildcards safely.</summary>
         [Fact]
         public async Task SearchUsersAsync_FindsByUserName()

@@ -70,8 +70,12 @@ namespace FreeSpeakWeb.Tests.Services
                 .ReturnsAsync((string id, CancellationToken _) => new ModerationUserSummary(id, id + "-name", id + " Display"));
             _repo.Setup(r => r.AddWarningAsync(It.IsAny<UserWarning>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((UserWarning w, CancellationToken _) => { w.Id = _nextId++; return w; });
-            _repo.Setup(r => r.AddSuspensionAsync(It.IsAny<UserSuspension>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((UserSuspension s, CancellationToken _) => { s.Id = _nextId++; _suspensions.Add(s); return s; });
+            _repo.Setup(r => r.TryAddSuspensionAsync(It.IsAny<UserSuspension>(), It.IsAny<DateTime>(), It.IsAny<int?>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((UserSuspension s, DateTime now, int? ignore, CancellationToken _) =>
+                {
+                    if (_suspensions.Any(x => x.UserId == s.UserId && x.LiftedAt == null && (x.EndsAt == null || x.EndsAt > now) && x.Id != ignore)) return null;
+                    s.Id = _nextId++; _suspensions.Add(s); return s;
+                });
             _repo.Setup(r => r.GetSuspensionAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((int id, CancellationToken _) => _suspensions.FirstOrDefault(s => s.Id == id));
             _repo.Setup(r => r.GetActiveSuspensionAsync(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<CancellationToken>()))
@@ -236,7 +240,7 @@ namespace FreeSpeakWeb.Tests.Services
             var result = await _service.SuspendUserAsync(Plain, Target, "x", TimeSpan.FromDays(1));
 
             result.Error.Should().Be(UserModerationError.NotAuthorized);
-            _repo.Verify(r => r.AddSuspensionAsync(It.IsAny<UserSuspension>(), It.IsAny<CancellationToken>()), Times.Never);
+            _repo.Verify(r => r.TryAddSuspensionAsync(It.IsAny<UserSuspension>(), It.IsAny<DateTime>(), It.IsAny<int?>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         /// <summary>A suspension locks the account until the server-computed end, audits and notifies with the end date.</summary>

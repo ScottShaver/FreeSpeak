@@ -35,7 +35,7 @@ namespace FreeSpeakWeb.Tests.Components
             public override DateTimeOffset GetUtcNow() => new(Now, TimeSpan.Zero);
         }
 
-        private static UserModerationHistory History(bool canModerate = true, bool suspended = false, bool canLift = false)
+        private static UserModerationHistory History(bool canModerate = true, bool suspended = false,         bool canLift = false, bool canSuspendLong = false)
         {
             var suspensions = suspended
                 ? new List<UserSuspensionItem> { new(4, "bad", null, Now.AddDays(-1), Now.AddDays(2), null, null, "m", "Mod", true, canLift) }
@@ -43,7 +43,7 @@ namespace FreeSpeakWeb.Tests.Components
             return new UserModerationHistory(
                 new ModerationUserSummary("u1", "target", "Target User"),
                 new List<UserWarningItem>(), suspensions, new List<UserReportItem>(),
-                suspended, canModerate, false, 7);
+                suspended, canModerate, canSuspendLong, 7);
         }
 
         private IRenderedComponent<UserModerationPanel> RenderPanel()
@@ -122,12 +122,12 @@ namespace FreeSpeakWeb.Tests.Components
             _service.Verify(s => s.SuspendUserAsync("m", "u1", "spam", TimeSpan.FromDays(3), 9, It.IsAny<CancellationToken>()), Times.Once);
         }
 
-        /// <summary>The permanent option sends a null duration.</summary>
+        /// <summary>The permanent option sends a null duration for administrators.</summary>
         [Fact]
         public void Panel_Suspend_Permanent_SendsNullDuration()
         {
-            _service.Setup(s => s.GetUserHistoryAsync("m", "u1", It.IsAny<CancellationToken>())).ReturnsAsync(History());
-            _service.Setup(s => s.SuspendUserAsync("m", "u1", "x", null, 9, It.IsAny<CancellationToken>())).ReturnsAsync(UserModerationResult.Fail(UserModerationError.PermanentNotAllowed));
+            _service.Setup(s => s.GetUserHistoryAsync("m", "u1", It.IsAny<CancellationToken>())).ReturnsAsync(History(canSuspendLong: true));
+            _service.Setup(s => s.SuspendUserAsync("m", "u1", "x", null, 9, It.IsAny<CancellationToken>())).ReturnsAsync(UserModerationResult.Ok(2));
             var cut = RenderPanel();
 
             cut.Find("[data-testid=user-suspend]").Click();
@@ -136,7 +136,34 @@ namespace FreeSpeakWeb.Tests.Components
             cut.Find("[data-testid=user-confirm]").Click();
 
             _service.Verify(s => s.SuspendUserAsync("m", "u1", "x", null, 9, It.IsAny<CancellationToken>()), Times.Once);
-            cut.Find("[data-testid=user-panel-message]").TextContent.Should().Contain("ErrPermanent");
+        }
+
+        /// <summary>Moderators are offered only durations up to the limit; administrators get all options.</summary>
+        [Theory]
+        [InlineData(false, new[] { "1", "3", "7" })]
+        [InlineData(true, new[] { "1", "3", "7", "14", "30", "0" })]
+        public void Panel_DurationOptions_DependOnRole(bool canSuspendLong, string[] expected)
+        {
+            _service.Setup(s => s.GetUserHistoryAsync("m", "u1", It.IsAny<CancellationToken>())).ReturnsAsync(History(canSuspendLong: canSuspendLong));
+            var cut = RenderPanel();
+
+            cut.Find("[data-testid=user-suspend]").Click();
+
+            cut.FindAll("[data-testid=user-duration] option").Select(o => o.GetAttribute("value")).Should().Equal(expected);
+        }
+
+        /// <summary>An already suspended user cannot be suspended again from the panel.</summary>
+        [Fact]
+        public void Panel_HidesSuspend_WhenAlreadySuspended()
+        {
+            _service.Setup(s => s.GetUserHistoryAsync("m", "u1", It.IsAny<CancellationToken>())).ReturnsAsync(History(suspended: true, canLift: true));
+            _service.Setup(s => s.GetActiveSuspensionAsync("u1", It.IsAny<CancellationToken>())).ReturnsAsync(new ActiveSuspensionInfo("bad", Now.AddDays(2)));
+
+            var cut = RenderPanel();
+
+            cut.FindAll("[data-testid=user-suspend]").Should().BeEmpty();
+            cut.FindAll("[data-testid=user-lift]").Should().HaveCount(1);
+            cut.FindAll("[data-testid=user-warn]").Should().HaveCount(1);
         }
 
         /// <summary>Cancel closes the form without calling the service.</summary>
