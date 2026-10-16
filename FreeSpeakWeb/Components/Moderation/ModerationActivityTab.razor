@@ -1,0 +1,273 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.DTOs
+@using FreeSpeakWeb.Services
+@using FreeSpeakWeb.Services.Abstractions
+@using Microsoft.Extensions.Localization
+@using Microsoft.JSInterop
+
+@inject ISystemModeratorActivityService ActivityService
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.FeedReports> Localizer
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.GroupReports> GroupLocalizer
+@inject IJSRuntime JSRuntime
+@inject ILogger<ModerationActivityTab> Logger
+
+<div data-testid="moderation-activity">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0">@GroupLocalizer["ActivityTitle"]</h5>
+        <button type="button" class="btn btn-sm btn-outline-primary" @onclick="ExportAsync" disabled="@(totalCount == 0)" data-testid="activity-export">
+            <i class="bi bi-download me-1"></i>@GroupLocalizer["ActivityExport"]
+        </button>
+    </div>
+    <p class="text-muted small">@GroupLocalizer["ActivityIntro"]</p>
+
+    <div class="row g-2 mb-3">
+        <div class="col-6 col-md-3">
+            <label class="form-label small" for="act-moderator">@GroupLocalizer["ActivityFilterModerator"]</label>
+            <select id="act-moderator" class="form-select form-select-sm" @onchange="OnModeratorChanged" data-testid="act-moderator">
+                <option value="" selected="@(moderatorId == null)">@GroupLocalizer["ActivityAllModerators"]</option>
+                @foreach (var m in moderators)
+                {
+                    <option value="@m.UserId" selected="@(moderatorId == m.UserId)">@m.DisplayName</option>
+                }
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label small" for="act-action">@GroupLocalizer["ActivityFilterAction"]</label>
+            <select id="act-action" class="form-select form-select-sm" @onchange="OnActionChanged" data-testid="act-action">
+                <option value="" selected="@(action == null)">@GroupLocalizer["ActivityAllActions"]</option>
+                @foreach (var a in SystemModeratorActivityService.ActivityCategories)
+                {
+                    <option value="@((int)a)" selected="@(action == a)">@ActionLabel(a)</option>
+                }
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label small" for="act-from">@GroupLocalizer["ActivityFilterFrom"]</label>
+            <input id="act-from" type="date" class="form-control form-control-sm" value="@fromDate?.ToString("yyyy-MM-dd")" @onchange="OnFromChanged" data-testid="act-from" />
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label small" for="act-to">@GroupLocalizer["ActivityFilterTo"]</label>
+            <input id="act-to" type="date" class="form-control form-control-sm" value="@toDate?.ToString("yyyy-MM-dd")" @onchange="OnToChanged" data-testid="act-to" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="ClearAsync" data-testid="act-clear">@GroupLocalizer["ActivityClear"]</button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert" data-testid="act-error">@errorMessage</div>
+    }
+
+    @if (loading)
+    {
+        <div class="text-muted"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>@Localizer["Loading"]</div>
+    }
+    else if (entries.Count == 0)
+    {
+        <div class="text-muted" data-testid="act-empty">@GroupLocalizer["ActivityEmpty"]</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-sm table-striped align-middle" data-testid="act-table">
+                <thead>
+                    <tr>
+                        <th>@GroupLocalizer["ActivityColWhen"]</th>
+                        <th>@GroupLocalizer["ActivityColModerator"]</th>
+                        <th>@GroupLocalizer["ActivityColAction"]</th>
+                        <th>@GroupLocalizer["ActivityColTarget"]</th>
+                        <th>@GroupLocalizer["ActivityColGroup"]</th>
+                        <th>@GroupLocalizer["ActivityColDetail"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var e in entries)
+                    {
+                        <tr data-testid="act-row">
+                            <td class="text-nowrap" data-testid="act-when">@e.TimestampUtc.ToString("yyyy-MM-dd HH:mm:ss") UTC</td>
+                            <td>@e.ModeratorName</td>
+                            <td>@ActionLabel(e.Action)</td>
+                            <td>@e.TargetUserName</td>
+                            <td>@e.GroupName</td>
+                            <td class="text-break">@e.Detail</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(page <= 1)" @onclick="PrevAsync" data-testid="act-prev">@GroupLocalizer["ActivityPrev"]</button>
+            <span class="small text-muted" data-testid="act-page">@string.Format(GroupLocalizer["ActivityPage"].Value, page, TotalPages)</span>
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(page >= TotalPages)" @onclick="NextAsync" data-testid="act-next">@GroupLocalizer["ActivityNext"]</button>
+        </div>
+    }
+</div>
+
+@code {
+    private const int PageSize = 25;
+
+    private IReadOnlyList<ModeratorActivityEntry> entries = Array.Empty<ModeratorActivityEntry>();
+    private IReadOnlyList<ModeratorOption> moderators = Array.Empty<ModeratorOption>();
+    private int totalCount;
+    private int page = 1;
+    private bool loading;
+    private string? errorMessage;
+    private string? moderatorId;
+    private ActionCategory? action;
+    private DateTime? fromDate;
+    private DateTime? toDate;
+
+    /// <summary>
+    /// Gets or sets the ID of the signed-in moderator.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string UserId { get; set; } = string.Empty;
+
+    private int TotalPages => Math.Max(1, (int)Math.Ceiling(totalCount / (double)PageSize));
+
+    private ModeratorActivityFilter BuildFilter() => new(moderatorId, action, fromDate, toDate);
+
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            moderators = await ActivityService.GetModeratorOptionsAsync(UserId);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load moderator options");
+        }
+
+        await LoadAsync();
+    }
+
+    /// <summary>
+    /// Gets the localized label of an activity action.
+    /// </summary>
+    /// <param name="category">The action category.</param>
+    /// <returns>The localized label.</returns>
+    private string ActionLabel(ActionCategory category) => GroupLocalizer[category switch
+    {
+        ActionCategory.SystemModeratorRemovePost => "ActionRemovePost",
+        ActionCategory.SystemModeratorRemovePostComment => "ActionRemovePostComment",
+        ActionCategory.SystemModeratorReviewReport => "ActionReviewReport",
+        ActionCategory.SystemModeratorWarnUser => "ActionWarnUser",
+        ActionCategory.SystemModeratorSuspendUser => "ActionSuspendUser",
+        _ => "ActionUnsuspendUser"
+    }].Value;
+
+    /// <summary>
+    /// Loads the current page of activity.
+    /// </summary>
+    private async Task LoadAsync()
+    {
+        loading = true;
+        errorMessage = null;
+        try
+        {
+            var result = await ActivityService.GetActivityAsync(UserId, BuildFilter(), page, PageSize);
+            entries = result.Items;
+            totalCount = result.TotalCount;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load moderator activity");
+            errorMessage = Localizer["LoadError"].Value;
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    private Task ReloadAsync()
+    {
+        page = 1;
+        return LoadAsync();
+    }
+
+    private Task OnModeratorChanged(ChangeEventArgs e)
+    {
+        moderatorId = string.IsNullOrEmpty(e.Value?.ToString()) ? null : e.Value!.ToString();
+        return ReloadAsync();
+    }
+
+    private Task OnActionChanged(ChangeEventArgs e)
+    {
+        action = int.TryParse(e.Value?.ToString(), out var v) ? (ActionCategory)v : null;
+        return ReloadAsync();
+    }
+
+    private Task OnFromChanged(ChangeEventArgs e)
+    {
+        fromDate = DateTime.TryParse(e.Value?.ToString(), out var d) ? d : null;
+        return ReloadAsync();
+    }
+
+    private Task OnToChanged(ChangeEventArgs e)
+    {
+        toDate = DateTime.TryParse(e.Value?.ToString(), out var d) ? d : null;
+        return ReloadAsync();
+    }
+
+    private Task ClearAsync()
+    {
+        moderatorId = null;
+        action = null;
+        fromDate = null;
+        toDate = null;
+        return ReloadAsync();
+    }
+
+    private Task PrevAsync()
+    {
+        page = Math.Max(1, page - 1);
+        return LoadAsync();
+    }
+
+    private Task NextAsync()
+    {
+        page = Math.Min(TotalPages, page + 1);
+        return LoadAsync();
+    }
+
+    /// <summary>
+    /// Opens the CSV export endpoint with the current filters. The server authorizes and audits the export.
+    /// </summary>
+    private async Task ExportAsync()
+    {
+        var query = new List<string>();
+        if (!string.IsNullOrEmpty(moderatorId))
+        {
+            query.Add($"moderator={Uri.EscapeDataString(moderatorId)}");
+        }
+
+        if (action.HasValue)
+        {
+            query.Add($"action={action.Value}");
+        }
+
+        if (fromDate.HasValue)
+        {
+            query.Add($"from={fromDate.Value:yyyy-MM-dd}");
+        }
+
+        if (toDate.HasValue)
+        {
+            query.Add($"to={toDate.Value:yyyy-MM-dd}");
+        }
+
+        var url = "/api/system-moderator/activity/export" + (query.Count > 0 ? "?" + string.Join("&", query) : string.Empty);
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("open", url, "_blank");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error opening moderator activity export");
+            errorMessage = GroupLocalizer["ActivityExportFailed"].Value;
+        }
+    }
+}

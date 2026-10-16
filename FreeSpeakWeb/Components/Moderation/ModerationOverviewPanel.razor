@@ -3,7 +3,9 @@
 @using Microsoft.Extensions.Localization
 
 @inject ISystemModerationService ModerationService
+@inject ISystemGroupReportService GroupReportService
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.FeedReports> Localizer
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.GroupReports> GroupLocalizer
 
 <div class="moderation-overview" data-testid="moderation-overview">
     @if (loading)
@@ -57,11 +59,54 @@
         <button type="button" class="btn btn-primary" @onclick="() => OnOpenQueue.InvokeAsync(false)">
             <i class="bi bi-flag me-1"></i>@Localizer["OverviewOpenQueue"]
         </button>
+
+        @if (groupOverview != null)
+        {
+            <hr />
+            <h5 data-testid="group-overview-heading">@GroupLocalizer["OverviewGroupHeading"]</h5>
+            @if (groupOverview.Stale > 0)
+            {
+                <div class="alert alert-warning d-flex justify-content-between align-items-center" role="alert" data-testid="group-stale-banner">
+                    <span><i class="bi bi-clock-history me-2"></i>@string.Format(GroupLocalizer["GroupStaleBanner"].Value, groupOverview.Stale, groupOverview.StaleDays)</span>
+                    <button type="button" class="btn btn-sm btn-warning" @onclick="() => OnOpenGroupQueue.InvokeAsync(true)" data-testid="group-stale-show">@Localizer["StaleShow"]</button>
+                </div>
+            }
+            <div class="row g-3 mb-3">
+                <div class="col-6 col-md-3">
+                    <div class="card h-100 text-center"><div class="card-body">
+                        <div class="display-6" data-testid="group-count-pending">@groupOverview.Pending</div>
+                        <div class="text-muted">@Localizer["OverviewPending"]</div>
+                    </div></div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card h-100 text-center"><div class="card-body">
+                        <div class="display-6" data-testid="group-count-under-review">@groupOverview.UnderReview</div>
+                        <div class="text-muted">@Localizer["OverviewUnderReview"]</div>
+                    </div></div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card h-100 text-center"><div class="card-body">
+                        <div class="display-6" data-testid="group-count-closed">@groupOverview.ClosedLast7Days</div>
+                        <div class="text-muted">@Localizer["OverviewClosed"]</div>
+                    </div></div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card h-100 text-center"><div class="card-body">
+                        <div class="display-6 @(groupOverview.Stale > 0 ? "text-warning" : string.Empty)" data-testid="group-count-stale">@groupOverview.Stale</div>
+                        <div class="text-muted">@Localizer["OverviewStale"]</div>
+                    </div></div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline-primary" @onclick="() => OnOpenGroupQueue.InvokeAsync(false)" data-testid="open-group-queue">
+                <i class="bi bi-people me-1"></i>@GroupLocalizer["OverviewOpenGroupQueue"]
+            </button>
+        }
     }
 </div>
 
 @code {
     private ModerationOverview? overview;
+    private ModerationOverview? groupOverview;
     private bool loading = true;
     private bool loadFailed;
 
@@ -77,6 +122,12 @@
     [Parameter]
     public EventCallback<bool> OnOpenQueue { get; set; }
 
+    /// <summary>
+    /// Gets or sets the callback invoked to open the group report queue; the argument is true when only stale reports should be shown.
+    /// </summary>
+    [Parameter]
+    public EventCallback<bool> OnOpenGroupQueue { get; set; }
+
     /// <inheritdoc/>
     protected override Task OnInitializedAsync() => LoadAsync();
 
@@ -91,6 +142,14 @@
         {
             overview = await ModerationService.GetOverviewAsync(UserId);
             loadFailed = overview == null;
+            try
+            {
+                groupOverview = await GroupReportService.GetOverviewAsync(UserId);
+            }
+            catch (Exception)
+            {
+                groupOverview = null;
+            }
         }
         catch (Exception)
         {

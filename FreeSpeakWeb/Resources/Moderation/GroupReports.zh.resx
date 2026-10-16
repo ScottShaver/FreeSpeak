@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabGroupReports" xml:space="preserve"><value>群组举报</value></data>
+  <data name="TabActivity" xml:space="preserve"><value>审核活动</value></data>
+  <data name="GroupQueueTitle" xml:space="preserve"><value>群组举报队列</value></data>
+  <data name="FilterGroup" xml:space="preserve"><value>群组</value></data>
+  <data name="GroupAll" xml:space="preserve"><value>所有群组</value></data>
+  <data name="GroupLabel" xml:space="preserve"><value>群组</value></data>
+  <data name="RuleLabel" xml:space="preserve"><value>违反的规则</value></data>
+  <data name="OverviewGroupHeading" xml:space="preserve"><value>群组举报</value></data>
+  <data name="OverviewOpenGroupQueue" xml:space="preserve"><value>打开群组举报队列</value></data>
+  <data name="GroupStaleBanner" xml:space="preserve"><value>有 {0} 条待处理的群组举报已等待超过 {1} 天。</value></data>
+  <data name="GroupDetailTitle" xml:space="preserve"><value>群组举报 #{0}</value></data>
+  <data name="ConfirmRemoveGroup" xml:space="preserve"><value>要永久删除此群组内容吗？作者和举报人将收到通知，删除操作将记录在该群组的审核日志中。</value></data>
+  <data name="ActivityTitle" xml:space="preserve"><value>审核活动</value></data>
+  <data name="ActivityIntro" xml:space="preserve"><value>系统审核员和管理员执行的操作。所有时间均为 UTC。</value></data>
+  <data name="ActivityFilterModerator" xml:space="preserve"><value>审核员</value></data>
+  <data name="ActivityAllModerators" xml:space="preserve"><value>所有审核员</value></data>
+  <data name="ActivityFilterAction" xml:space="preserve"><value>操作</value></data>
+  <data name="ActivityAllActions" xml:space="preserve"><value>所有操作</value></data>
+  <data name="ActivityFilterFrom" xml:space="preserve"><value>起始（UTC）</value></data>
+  <data name="ActivityFilterTo" xml:space="preserve"><value>截止（UTC）</value></data>
+  <data name="ActivityClear" xml:space="preserve"><value>清除筛选</value></data>
+  <data name="ActivityColWhen" xml:space="preserve"><value>时间（UTC）</value></data>
+  <data name="ActivityColModerator" xml:space="preserve"><value>审核员</value></data>
+  <data name="ActivityColAction" xml:space="preserve"><value>操作</value></data>
+  <data name="ActivityColTarget" xml:space="preserve"><value>目标用户</value></data>
+  <data name="ActivityColGroup" xml:space="preserve"><value>群组</value></data>
+  <data name="ActivityColDetail" xml:space="preserve"><value>详情</value></data>
+  <data name="ActivityEmpty" xml:space="preserve"><value>没有符合当前筛选条件的审核活动。</value></data>
+  <data name="ActivityExport" xml:space="preserve"><value>导出 CSV</value></data>
+  <data name="ActivityExportTruncated" xml:space="preserve"><value>导出已限制为 {0} 行。</value></data>
+  <data name="ActivityExportFailed" xml:space="preserve"><value>导出失败。</value></data>
+  <data name="ActivityPage" xml:space="preserve"><value>第 {0} 页，共 {1} 页</value></data>
+  <data name="ActivityPrev" xml:space="preserve"><value>上一页</value></data>
+  <data name="ActivityNext" xml:space="preserve"><value>下一页</value></data>
+  <data name="ActionRemovePost" xml:space="preserve"><value>已删除帖子</value></data>
+  <data name="ActionRemovePostComment" xml:space="preserve"><value>已删除评论</value></data>
+  <data name="ActionReviewReport" xml:space="preserve"><value>已处理举报</value></data>
+  <data name="ActionWarnUser" xml:space="preserve"><value>已警告用户</value></data>
+  <data name="ActionSuspendUser" xml:space="preserve"><value>已封禁用户</value></data>
+  <data name="ActionUnsuspendUser" xml:space="preserve"><value>已解除封禁</value></data>
+</root>

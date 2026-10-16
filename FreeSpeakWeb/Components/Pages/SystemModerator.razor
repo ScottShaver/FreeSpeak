@@ -13,6 +13,7 @@
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.SystemModerator> Localizer
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.FeedReports> FeedLocalizer
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.UserModeration> UserLocalizer
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.GroupReports> GroupLocalizer
 
 <PageTitle>@Localizer["PageTitle"]</PageTitle>
 
@@ -39,18 +40,32 @@
                         <button type="button" class="nav-link @(activeTab == "feed" ? "active" : string.Empty)" @onclick='() => OpenFeedQueue(false)' data-testid="tab-feed-reports">@FeedLocalizer["TabFeedReports"]</button>
                     </li>
                     <li class="nav-item">
+                        <button type="button" class="nav-link @(activeTab == "group" ? "active" : string.Empty)" @onclick='() => OpenGroupQueue(false)' data-testid="tab-group-reports">@GroupLocalizer["TabGroupReports"]</button>
+                    </li>
+                    <li class="nav-item">
                         <button type="button" class="nav-link @(activeTab == "users" ? "active" : string.Empty)" @onclick='() => activeTab = "users"' data-testid="tab-users">@UserLocalizer["TabUsers"]</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="nav-link @(activeTab == "activity" ? "active" : string.Empty)" @onclick='() => activeTab = "activity"' data-testid="tab-activity">@GroupLocalizer["TabActivity"]</button>
                     </li>
                 </ul>
                 <div class="pt-3">
                     @if (activeTab == "overview")
                     {
-                        <ModerationOverviewPanel UserId="@currentUserId" OnOpenQueue="OpenFeedQueue" />
+                        <ModerationOverviewPanel UserId="@currentUserId"                         OnOpenQueue="OpenFeedQueue" OnOpenGroupQueue="OpenGroupQueue" />
                     }
                     else if (activeTab == "users")
                     {
                         <UserModerationTab UserId="@currentUserId" />
                     }
+                                            else if (activeTab == "group")
+                                            {
+                                                <GroupReportQueue @key="groupQueueKey" UserId="@currentUserId" InitialStaleOnly="initialGroupStaleOnly" />
+                                            }
+                                            else if (activeTab == "activity")
+                                            {
+                                                <ModerationActivityTab UserId="@currentUserId" />
+                                            }
                     else
                     {
                         <FeedReportQueue @key="queueKey" UserId="@currentUserId" InitialStaleOnly="initialStaleOnly" />
@@ -80,6 +95,8 @@
     private string activeTab = "overview";
     private bool initialStaleOnly;
     private int queueKey;
+    private bool initialGroupStaleOnly;
+    private int groupQueueKey;
     private string? currentUserName;
     private string? currentUserEmail;
     private List<string> userRoles = new();
@@ -116,5 +133,16 @@
         initialStaleOnly = staleOnly;
         queueKey++;
         activeTab = "feed";
+    }
+
+    /// <summary>
+    /// Switches to the group reports tab, optionally restricted to stale reports.
+    /// </summary>
+    /// <param name="staleOnly">True to show only stale reports.</param>
+    private void OpenGroupQueue(bool staleOnly)
+    {
+        initialGroupStaleOnly = staleOnly;
+        groupQueueKey++;
+        activeTab = "group";
     }
 }

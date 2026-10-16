@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabGroupReports" xml:space="preserve"><value>بلاغات المجموعات</value></data>
+  <data name="TabActivity" xml:space="preserve"><value>نشاط الإشراف</value></data>
+  <data name="GroupQueueTitle" xml:space="preserve"><value>قائمة انتظار بلاغات المجموعات</value></data>
+  <data name="FilterGroup" xml:space="preserve"><value>المجموعة</value></data>
+  <data name="GroupAll" xml:space="preserve"><value>كل المجموعات</value></data>
+  <data name="GroupLabel" xml:space="preserve"><value>المجموعة</value></data>
+  <data name="RuleLabel" xml:space="preserve"><value>القاعدة المنتهكة</value></data>
+  <data name="OverviewGroupHeading" xml:space="preserve"><value>بلاغات المجموعات</value></data>
+  <data name="OverviewOpenGroupQueue" xml:space="preserve"><value>فتح قائمة انتظار بلاغات المجموعات</value></data>
+  <data name="GroupStaleBanner" xml:space="preserve"><value>{0} من بلاغات المجموعات المعلّقة تنتظر منذ أكثر من {1} أيام.</value></data>
+  <data name="GroupDetailTitle" xml:space="preserve"><value>بلاغ المجموعة رقم {0}</value></data>
+  <data name="ConfirmRemoveGroup" xml:space="preserve"><value>هل تريد إزالة محتوى المجموعة هذا نهائيًا؟ سيتم إشعار الكاتب ومقدّمي البلاغات، وسيُسجَّل الحذف في سجل إشراف المجموعة.</value></data>
+  <data name="ActivityTitle" xml:space="preserve"><value>نشاط الإشراف</value></data>
+  <data name="ActivityIntro" xml:space="preserve"><value>الإجراءات التي اتخذها مشرفو النظام والمسؤولون. جميع الأوقات بالتوقيت العالمي UTC.</value></data>
+  <data name="ActivityFilterModerator" xml:space="preserve"><value>المشرف</value></data>
+  <data name="ActivityAllModerators" xml:space="preserve"><value>كل المشرفين</value></data>
+  <data name="ActivityFilterAction" xml:space="preserve"><value>الإجراء</value></data>
+  <data name="ActivityAllActions" xml:space="preserve"><value>كل الإجراءات</value></data>
+  <data name="ActivityFilterFrom" xml:space="preserve"><value>من (UTC)</value></data>
+  <data name="ActivityFilterTo" xml:space="preserve"><value>إلى (UTC)</value></data>
+  <data name="ActivityClear" xml:space="preserve"><value>مسح عوامل التصفية</value></data>
+  <data name="ActivityColWhen" xml:space="preserve"><value>الوقت (UTC)</value></data>
+  <data name="ActivityColModerator" xml:space="preserve"><value>المشرف</value></data>
+  <data name="ActivityColAction" xml:space="preserve"><value>الإجراء</value></data>
+  <data name="ActivityColTarget" xml:space="preserve"><value>المستخدم المستهدف</value></data>
+  <data name="ActivityColGroup" xml:space="preserve"><value>المجموعة</value></data>
+  <data name="ActivityColDetail" xml:space="preserve"><value>التفاصيل</value></data>
+  <data name="ActivityEmpty" xml:space="preserve"><value>لا يوجد نشاط إشراف يطابق عوامل التصفية الحالية.</value></data>
+  <data name="ActivityExport" xml:space="preserve"><value>تصدير CSV</value></data>
+  <data name="ActivityExportTruncated" xml:space="preserve"><value>تم تقييد التصدير بـ {0} صفًا.</value></data>
+  <data name="ActivityExportFailed" xml:space="preserve"><value>فشل التصدير.</value></data>
+  <data name="ActivityPage" xml:space="preserve"><value>الصفحة {0} من {1}</value></data>
+  <data name="ActivityPrev" xml:space="preserve"><value>السابق</value></data>
+  <data name="ActivityNext" xml:space="preserve"><value>التالي</value></data>
+  <data name="ActionRemovePost" xml:space="preserve"><value>تمت إزالة منشور</value></data>
+  <data name="ActionRemovePostComment" xml:space="preserve"><value>تمت إزالة تعليق</value></data>
+  <data name="ActionReviewReport" xml:space="preserve"><value>تمت مراجعة بلاغ</value></data>
+  <data name="ActionWarnUser" xml:space="preserve"><value>تم تحذير مستخدم</value></data>
+  <data name="ActionSuspendUser" xml:space="preserve"><value>تم تعليق مستخدم</value></data>
+  <data name="ActionUnsuspendUser" xml:space="preserve"><value>تم رفع التعليق</value></data>
+</root>
