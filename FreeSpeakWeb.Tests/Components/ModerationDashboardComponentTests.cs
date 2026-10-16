@@ -20,6 +20,7 @@ namespace FreeSpeakWeb.Tests.Components
         private static readonly DateTime Now = new(2026, 6, 10, 12, 0, 0, DateTimeKind.Utc);
 
         private readonly Mock<ISystemModerationService> _service = new();
+        private readonly Mock<ISystemGroupReportService> _groupService = new();
 
         /// <summary>
         /// Registers the mocked service, a fixed clock and a passthrough localizer.
@@ -27,6 +28,7 @@ namespace FreeSpeakWeb.Tests.Components
         public ModerationDashboardComponentTests()
         {
             Services.AddSingleton(_service.Object);
+            Services.AddSingleton(_groupService.Object);
             Services.AddSingleton<TimeProvider>(new FixedClock(Now));
             Services.AddSingleton(typeof(IStringLocalizer<>), typeof(PassthroughLocalizer<>));
         }
