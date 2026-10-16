@@ -795,7 +795,7 @@ namespace FreeSpeakWeb.Tests.Services
             var group = TestDataFactory.CreateTestGroup("creator1");
             var user1GroupUser = TestDataFactory.CreateTestGroupUser(1, "user1");
             var user2GroupUser = TestDataFactory.CreateTestGroupUser(1, "user2");
-            var post = TestDataFactory.CreateTestGroupPost(1, "user1", "Test post");
+            var post = TestDataFactory.CreateTestGroupPost(1, "user2", "Test post");
             var comment = TestDataFactory.CreateTestGroupPostComment(1, "user2", "Test comment");
 
             using (var context = await dbFactory.CreateDbContextAsync())
@@ -863,10 +863,10 @@ namespace FreeSpeakWeb.Tests.Services
         #region Post Author Delete Comment Tests
 
         [Fact]
-        public async Task PostAuthorDelete_OtherUserCommentOnOwnPost_ShouldReturnUnauthorized()
+        public async Task PostAuthorDelete_OtherUserCommentOnOwnPost_ShouldSucceed()
         {
-            // Arrange - Post author CANNOT delete other users' comments on their post
-            // Only admins/moderators or comment authors can delete comments
+            // Arrange - Post author can delete other users' comments on their post (matches the repository rule
+            // the UI used before comment deletion was routed through the service)
             var dbFactory = CreateDbContextFactory("PermTest_AuthorDeleteComment");
             var service = CreateGroupPostService(dbFactory);
 
@@ -898,8 +898,8 @@ namespace FreeSpeakWeb.Tests.Services
             var (success, errorMessage) = await service.DeleteCommentAsync(comment.Id, "author1");
 
             // Assert
-            success.Should().BeFalse();
-            errorMessage.Should().Contain("not authorized");
+            success.Should().BeTrue();
+            errorMessage.Should().BeNull();
         }
 
         #endregion

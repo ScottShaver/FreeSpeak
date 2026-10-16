@@ -86,6 +86,9 @@
   <data name="DeleteMyComment" xml:space="preserve">
     <value>حذف تعليقي</value>
   </data>
+  <data name="RemoveComment" xml:space="preserve">
+    <value>إزالة التعليق</value>
+  </data>
   <data name="EditMyComment" xml:space="preserve">
     <value>تعديل تعليقي</value>
   </data>

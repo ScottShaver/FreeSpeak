@@ -2271,7 +2271,7 @@
     protected override async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteCommentAsync(
         int commentId, string userId)
     {
-        var result = await GroupCommentRepository.DeleteAsync(commentId, userId);
+        var result = await GroupPostService.DeleteCommentWithCountAsync(commentId, userId);
         return (result.Success, result.ErrorMessage, result.DeletedCount);
     }
 

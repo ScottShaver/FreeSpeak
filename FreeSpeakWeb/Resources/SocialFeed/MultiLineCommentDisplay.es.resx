@@ -85,6 +85,9 @@
   <data name="DeleteMyComment" xml:space="preserve">
     <value>Eliminar mi comentario</value>
   </data>
+  <data name="RemoveComment" xml:space="preserve">
+    <value>Eliminar comentario</value>
+  </data>
   <data name="EditMyComment" xml:space="preserve">
     <value>Editar mi comentario</value>
   </data>
