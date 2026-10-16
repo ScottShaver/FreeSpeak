@@ -44,8 +44,7 @@
 ## Testing and Definition of Done
 - Add tests for new services and components (xUnit, bUnit, Moq, FluentAssertions; AAA pattern). Put them beside similar tests in `FreeSpeakWeb.Tests`.
 - Before finishing, run `dotnet build` and `dotnet test` for the affected projects. Fix any failures you caused.
-- UI changes can be verified through the agent-test flow in `docs/AGENT_TESTING.md`. Only use the disposable `FreeSpeak_AgentTest` database. Never point an agent at a dev or production database.
-- Update the relevant `docs/` file when behavior changes. Update the Technology Credits page when adding NuGet packages.
+- UI changes can be verified through the agent-test flow in `docs/AGENT_TESTING.md`. Only use the disposable `FreeSpeak_AgentTest` database. Never point an agent at a dev or production database. Any agent that opens a browser (Playwright) must close all browser windows it opened (`browser_close`) before finishing, even if the test failed.- Update the relevant `docs/` file when behavior changes. Update the Technology Credits page when adding NuGet packages.
 
 ## Agent Workflow for New Features
 - Feature work is spec-driven. Specs live in `docs/specs/<feature>.md`. Implement one spec per branch and pull request.
