@@ -691,11 +691,12 @@ public partial class UnifiedArticle : ArticleComponentBase
     }
 
     /// <summary>
-    /// Deletes a group post.
+    /// Deletes a group post as the signed-in user, so removals by a group admin or moderator
+    /// are authorized and recorded as such instead of being attributed to the author.
     /// </summary>
     private async Task DeleteGroupPost()
     {
-        var result = await GroupPostService.DeleteGroupPostAsync(PostId, AuthorId);
+        var result = await GroupPostService.DeleteGroupPostAsync(PostId, CurrentUserId ?? AuthorId);
 
         if (result.Success)
         {

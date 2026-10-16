@@ -118,6 +118,103 @@ namespace FreeSpeakWeb.Tests.Services
             moderationLog.Verify(m => m.LogAsync(It.IsAny<GroupModerationLogRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
+        [Fact]
+        public async Task DeleteGroupPost_ByModerator_WritesPostRemovedEntry()
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupPostModRemove");
+            var moderationLog = new Mock<IGroupModerationLogService>();
+            var service = CreateGroupPostService(repoFactory, moderationLog.Object);
+            var (postId, _) = await SeedPostAndCommentAsync(repoFactory);
+
+            var (success, _) = await service.DeleteGroupPostAsync(postId, "admin1");
+
+            success.Should().BeTrue();
+            moderationLog.Verify(m => m.LogAsync(It.Is<GroupModerationLogRequest>(r =>
+                r.Action == GroupModerationAction.PostRemoved && r.ActorUserId == "admin1" &&
+                r.TargetUserId == "member1" && r.TargetId == postId.ToString()), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteGroupPost_ByAuthor_WritesNoModerationEntry()
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupPostAuthorRemove");
+            var moderationLog = new Mock<IGroupModerationLogService>();
+            var service = CreateGroupPostService(repoFactory, moderationLog.Object);
+            var (postId, _) = await SeedPostAndCommentAsync(repoFactory);
+
+            var (success, _) = await service.DeleteGroupPostAsync(postId, "member1");
+
+            success.Should().BeTrue();
+            moderationLog.Verify(m => m.LogAsync(It.IsAny<GroupModerationLogRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task DeleteGroupPost_ByModeratorWithRecordingDisabled_WritesNoEntry()
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupPostModRemoveNoRecord");
+            var moderationLog = new Mock<IGroupModerationLogService>();
+            var service = CreateGroupPostService(repoFactory, moderationLog.Object);
+            var (postId, _) = await SeedPostAndCommentAsync(repoFactory);
+
+            var (success, _) = await service.DeleteGroupPostAsync(postId, "admin1", recordModeratorRemoval: false);
+
+            success.Should().BeTrue();
+            moderationLog.Verify(m => m.LogAsync(It.IsAny<GroupModerationLogRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task DeleteComment_ByModerator_WritesCommentRemovedEntry()
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupCommentModRemove");
+            var moderationLog = new Mock<IGroupModerationLogService>();
+            var service = CreateGroupPostService(repoFactory, moderationLog.Object);
+            var (_, commentId) = await SeedPostAndCommentAsync(repoFactory);
+
+            var (success, _) = await service.DeleteCommentAsync(commentId, "admin1");
+
+            success.Should().BeTrue();
+            moderationLog.Verify(m => m.LogAsync(It.Is<GroupModerationLogRequest>(r =>
+                r.Action == GroupModerationAction.CommentRemoved && r.ActorUserId == "admin1" &&
+                r.TargetUserId == "member1" && r.TargetId == commentId.ToString()), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteComment_ByAuthor_WritesNoModerationEntry()
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupCommentAuthorRemove");
+            var moderationLog = new Mock<IGroupModerationLogService>();
+            var service = CreateGroupPostService(repoFactory, moderationLog.Object);
+            var (_, commentId) = await SeedPostAndCommentAsync(repoFactory);
+
+            var (success, _) = await service.DeleteCommentAsync(commentId, "member1");
+
+            success.Should().BeTrue();
+            moderationLog.Verify(m => m.LogAsync(It.IsAny<GroupModerationLogRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        /// <summary>
+        /// Seeds an admin, a member, a group, and a member-authored post with one comment; returns their ids.
+        /// </summary>
+        private static async Task<(int PostId, int CommentId)> SeedPostAndCommentAsync(TestRepositoryFactory repoFactory)
+        {
+            using var context = await repoFactory.ContextFactory.CreateDbContextAsync();
+            context.Users.AddRange(TestDataFactory.CreateTestUser(id: "admin1"), TestDataFactory.CreateTestUser(id: "member1"));
+            var group = TestDataFactory.CreateTestGroup("admin1");
+            context.Groups.Add(group);
+            await context.SaveChangesAsync();
+            context.GroupUsers.AddRange(
+                TestDataFactory.CreateTestGroupUser(group.Id, "admin1", isAdmin: true),
+                TestDataFactory.CreateTestGroupUser(group.Id, "member1"));
+            var post = TestDataFactory.CreateTestGroupPost(group.Id, "member1", "Some content");
+            context.GroupPosts.Add(post);
+            await context.SaveChangesAsync();
+            var comment = TestDataFactory.CreateTestGroupPostComment(post.Id, "member1", "A comment");
+            context.GroupPostComments.Add(comment);
+            post.CommentCount = 1;
+            await context.SaveChangesAsync();
+            return (post.Id, comment.Id);
+        }
+
         #region Post Operations Tests
 
         [Fact]

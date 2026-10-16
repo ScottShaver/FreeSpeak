@@ -21,10 +21,10 @@ namespace FreeSpeakWeb.Services
 
         /// <inheritdoc/>
         public Task<(bool Success, string? ErrorMessage)> RemovePostAsModeratorAsync(int postId, string moderatorId)
-            => _groupPostService.DeleteGroupPostAsync(postId, moderatorId);
+            => _groupPostService.DeleteGroupPostAsync(postId, moderatorId, recordModeratorRemoval: false);
 
         /// <inheritdoc/>
         public Task<(bool Success, string? ErrorMessage)> RemoveCommentAsModeratorAsync(int commentId, string moderatorId)
-            => _groupPostService.DeleteCommentAsync(commentId, moderatorId);
+            => _groupPostService.DeleteCommentAsync(commentId, moderatorId, recordModeratorRemoval: false);
     }
 }

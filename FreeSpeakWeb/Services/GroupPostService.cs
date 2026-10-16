@@ -336,8 +336,9 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         /// <param name="postId">The unique identifier of the post to delete.</param>
         /// <param name="userId">The user ID of the person requesting deletion (must be author or group admin/moderator).</param>
+        /// <param name="recordModeratorRemoval">When true (default) a removal by a non-author moderator is written to the audit log and the group Mod Log. Callers that record the removal themselves pass false.</param>
         /// <returns>A tuple containing success status and error message if failed.</returns>
-        public async Task<(bool Success, string? ErrorMessage)> DeleteGroupPostAsync(int postId, string userId)
+        public async Task<(bool Success, string? ErrorMessage)> DeleteGroupPostAsync(int postId, string userId, bool recordModeratorRemoval = true)
         {
             try
             {
@@ -513,6 +514,11 @@ namespace FreeSpeakWeb.Services
                     OperationType = OperationTypeEnum.Delete.ToString(),
                     HasMedia = post.Images.Any()
                 });
+
+                if (isAdminOrModerator && recordModeratorRemoval)
+                {
+                    await RecordModeratorRemovalAsync(post.GroupId, post.Group?.Name, userId, post.AuthorId, post.Content, postId, null, post.CreatedAt);
+                }
 
                 _logger.LogInformation("Group post {PostId} deleted by user {UserId}", postId, userId);
                 return (true, null);
@@ -1147,8 +1153,9 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         /// <param name="commentId">The unique identifier of the comment to delete.</param>
         /// <param name="userId">The user ID of the person requesting deletion (must be author or group admin/moderator).</param>
+        /// <param name="recordModeratorRemoval">When true (default) a removal by a non-author moderator is written to the audit log and the group Mod Log. Callers that record the removal themselves pass false.</param>
         /// <returns>A tuple containing success status and error message if failed.</returns>
-        public async Task<(bool Success, string? ErrorMessage)> DeleteCommentAsync(int commentId, string userId)
+        public async Task<(bool Success, string? ErrorMessage)> DeleteCommentAsync(int commentId, string userId, bool recordModeratorRemoval = true)
         {
             try
             {
@@ -1194,6 +1201,11 @@ namespace FreeSpeakWeb.Services
                     ParentCommentId = comment.ParentCommentId
                 });
 
+                if (isAdminOrModerator && recordModeratorRemoval)
+                {
+                    await RecordModeratorRemovalAsync(post.GroupId, null, userId, comment.AuthorId, comment.Content, post.Id, commentId, null);
+                }
+
                 _logger.LogInformation("Group post comment {CommentId} deleted by user {UserId}", commentId, userId);
                 return (true, null);
             }
@@ -1201,6 +1213,80 @@ namespace FreeSpeakWeb.Services
             {
                 _logger.LogError(ex, "Error deleting group post comment {CommentId} for user {UserId}", commentId, userId);
                 return (false, "An error occurred while deleting the comment.");
+            }
+        }
+
+        /// <summary>
+        /// Writes the global audit entry and the group Mod Log entry for a post or comment removed by a moderator
+        /// who is not the author. Failures are logged and never fail the removal itself.
+        /// </summary>
+        /// <param name="groupId">The group id.</param>
+        /// <param name="groupName">The group name, or null to look it up.</param>
+        /// <param name="moderatorId">The moderator who removed the content.</param>
+        /// <param name="authorId">The content author.</param>
+        /// <param name="content">The removed content (truncated for the summary).</param>
+        /// <param name="postId">The post id (the containing post for comments).</param>
+        /// <param name="commentId">The comment id when a comment was removed; otherwise null.</param>
+        /// <param name="postCreatedAt">The post creation date for post removals.</param>
+        private async Task RecordModeratorRemovalAsync(int groupId, string? groupName, string moderatorId, string authorId,
+            string? content, int postId, int? commentId, DateTime? postCreatedAt)
+        {
+            try
+            {
+                using var lookupContext = await _contextFactory.CreateDbContextAsync();
+                var authorUser = await lookupContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == authorId);
+                var author = authorUser != null ? $"{authorUser.FirstName} {authorUser.LastName}" : null;
+                groupName ??= await lookupContext.Groups.AsNoTracking().Where(g => g.Id == groupId).Select(g => g.Name).FirstOrDefaultAsync();
+                var summary = content != null && content.Length > 200 ? content[..200] : content;
+
+                if (commentId.HasValue)
+                {
+                    await _auditLogRepository.LogActionAsync(moderatorId, ActionCategory.GroupModeratorRemovePostComment,
+                        new GroupModeratorRemovePostCommentDetails
+                        {
+                            OperationType = nameof(OperationTypeEnum.Delete),
+                            GroupId = groupId,
+                            GroupName = groupName ?? string.Empty,
+                            PostId = postId,
+                            CommentId = commentId.Value,
+                            CommentAuthorId = authorId,
+                            CommentAuthorDisplayName = author,
+                            ContentSummary = summary
+                        });
+                }
+                else
+                {
+                    await _auditLogRepository.LogActionAsync(moderatorId, ActionCategory.GroupModeratorRemovePost,
+                        new GroupModeratorRemovePostDetails
+                        {
+                            OperationType = nameof(OperationTypeEnum.Delete),
+                            GroupId = groupId,
+                            GroupName = groupName ?? string.Empty,
+                            PostId = postId,
+                            PostAuthorId = authorId,
+                            PostAuthorDisplayName = author,
+                            ContentSummary = summary,
+                            PostCreatedAt = postCreatedAt
+                        });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error writing audit entry for moderator removal in group {GroupId}", groupId);
+            }
+
+            if (_moderationLog != null)
+            {
+                await _moderationLog.LogAsync(new GroupModerationLogRequest
+                {
+                    GroupId = groupId,
+                    ActorUserId = moderatorId,
+                    Action = commentId.HasValue ? GroupModerationAction.CommentRemoved : GroupModerationAction.PostRemoved,
+                    TargetType = commentId.HasValue ? GroupModerationTargetType.Comment : GroupModerationTargetType.Post,
+                    TargetId = (commentId ?? postId).ToString(),
+                    TargetUserId = authorId,
+                    Summary = content
+                });
             }
         }
 

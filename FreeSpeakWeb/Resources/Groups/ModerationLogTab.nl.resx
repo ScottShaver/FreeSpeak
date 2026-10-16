@@ -33,6 +33,13 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>Melding afgehandeld</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>Lid verbannen</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>Verbanning van lid opgeheven</value></data>
-  <data name="SystemAction" xml:space="preserve"><value>Systeem</value></data>
+    <data name="Action_MemberRemoved" xml:space="preserve"><value>Lid verwijderd</value></data>
+    <data name="Action_MemberRoleChanged" xml:space="preserve"><value>Rol van lid gewijzigd</value></data>
+    <data name="Action_JoinRequestApproved" xml:space="preserve"><value>Lidmaatschapsverzoek goedgekeurd</value></data>
+    <data name="Action_JoinRequestDenied" xml:space="preserve"><value>Lidmaatschapsverzoek afgewezen</value></data>
+    <data name="Action_GroupSettingsChanged" xml:space="preserve"><value>Groepsinstellingen gewijzigd</value></data>
+    <data name="Action_RuleAdded" xml:space="preserve"><value>Regel toegevoegd</value></data>
+    <data name="Action_RuleEdited" xml:space="preserve"><value>Regel bewerkt</value></data>
+    <data name="Action_RuleDeleted" xml:space="preserve"><value>Regel verwijderd</value></data>  <data name="SystemAction" xml:space="preserve"><value>Systeem</value></data>
   <data name="SystemActionHint" xml:space="preserve"><value>Uitgevoerd op systeemniveau door een systeemmoderator of beheerder</value></data>
 </root>

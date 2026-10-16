@@ -33,6 +33,13 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>Signalement traité</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>Membre banni</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>Membre débanni</value></data>
-  <data name="SystemAction" xml:space="preserve"><value>Système</value></data>
+    <data name="Action_MemberRemoved" xml:space="preserve"><value>Membre retiré</value></data>
+    <data name="Action_MemberRoleChanged" xml:space="preserve"><value>Rôle du membre modifié</value></data>
+    <data name="Action_JoinRequestApproved" xml:space="preserve"><value>Demande d'adhésion approuvée</value></data>
+    <data name="Action_JoinRequestDenied" xml:space="preserve"><value>Demande d'adhésion refusée</value></data>
+    <data name="Action_GroupSettingsChanged" xml:space="preserve"><value>Paramètres du groupe modifiés</value></data>
+    <data name="Action_RuleAdded" xml:space="preserve"><value>Règle ajoutée</value></data>
+    <data name="Action_RuleEdited" xml:space="preserve"><value>Règle modifiée</value></data>
+    <data name="Action_RuleDeleted" xml:space="preserve"><value>Règle supprimée</value></data>  <data name="SystemAction" xml:space="preserve"><value>Système</value></data>
   <data name="SystemActionHint" xml:space="preserve"><value>Effectuée au niveau du système par un modérateur ou un administrateur système</value></data>
 </root>

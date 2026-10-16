@@ -149,7 +149,11 @@
         GroupModerationAction.PostRemoved, GroupModerationAction.CommentRemoved,
         GroupModerationAction.FileApproved, GroupModerationAction.FileDeclined, GroupModerationAction.FileRemoved,
         GroupModerationAction.ReportDismissed, GroupModerationAction.ReportResolved,
-        GroupModerationAction.MemberBanned, GroupModerationAction.MemberUnbanned
+        GroupModerationAction.MemberBanned, GroupModerationAction.MemberUnbanned,
+        GroupModerationAction.MemberRemoved, GroupModerationAction.MemberRoleChanged,
+        GroupModerationAction.JoinRequestApproved, GroupModerationAction.JoinRequestDenied,
+        GroupModerationAction.GroupSettingsChanged,
+        GroupModerationAction.RuleAdded, GroupModerationAction.RuleEdited, GroupModerationAction.RuleDeleted
     };
 
     private readonly List<GroupModerationLogEntryDto> entries = new();

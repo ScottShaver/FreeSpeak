@@ -33,6 +33,13 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>举报已处理</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>成员已封禁</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>成员已解除封禁</value></data>
-  <data name="SystemAction" xml:space="preserve"><value>系统</value></data>
+    <data name="Action_MemberRemoved" xml:space="preserve"><value>成员已移除</value></data>
+    <data name="Action_MemberRoleChanged" xml:space="preserve"><value>成员角色已更改</value></data>
+    <data name="Action_JoinRequestApproved" xml:space="preserve"><value>加入请求已批准</value></data>
+    <data name="Action_JoinRequestDenied" xml:space="preserve"><value>加入请求已拒绝</value></data>
+    <data name="Action_GroupSettingsChanged" xml:space="preserve"><value>群组设置已更改</value></data>
+    <data name="Action_RuleAdded" xml:space="preserve"><value>规则已添加</value></data>
+    <data name="Action_RuleEdited" xml:space="preserve"><value>规则已编辑</value></data>
+    <data name="Action_RuleDeleted" xml:space="preserve"><value>规则已删除</value></data>  <data name="SystemAction" xml:space="preserve"><value>系统</value></data>
   <data name="SystemActionHint" xml:space="preserve"><value>由系统版主或管理员在系统级别执行</value></data>
 </root>
