@@ -122,6 +122,19 @@ public class AdminModalsLocalizationTests
     }
 
     /// <summary>
+    /// Button tags in each modal razor file are balanced, so footer buttons are never nested.
+    /// </summary>
+    /// <param name="modal">The modal component name.</param>
+    [Theory]
+    [MemberData(nameof(ModalData))]
+    public void Razor_HasBalancedButtonTags(string modal)
+    {
+        var razor = File.ReadAllText(Path.Combine(AppDir(), "Components", "Admin", $"{modal}.razor"));
+
+        Regex.Matches(razor, "<button[\\s>]").Count.Should().Be(Regex.Matches(razor, "</button>").Count);
+    }
+
+    /// <summary>
     /// Supplies every modal and locale combination.
     /// </summary>
     public static IEnumerable<object[]> ModalLocaleData() =>
