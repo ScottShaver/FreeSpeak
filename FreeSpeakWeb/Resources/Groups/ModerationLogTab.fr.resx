@@ -24,6 +24,8 @@
   <data name="ReasonLabel" xml:space="preserve"><value>Motif : {0}</value></data>
   <data name="Action_PostApproved" xml:space="preserve"><value>Publication approuvée</value></data>
   <data name="Action_PostDeclined" xml:space="preserve"><value>Publication refusée</value></data>
+  <data name="Action_PostRemoved" xml:space="preserve"><value>Publication supprimée</value></data>
+  <data name="Action_CommentRemoved" xml:space="preserve"><value>Commentaire supprimé</value></data>
   <data name="Action_FileApproved" xml:space="preserve"><value>Fichier approuvé</value></data>
   <data name="Action_FileDeclined" xml:space="preserve"><value>Fichier refusé</value></data>
   <data name="Action_FileRemoved" xml:space="preserve"><value>Fichier supprimé</value></data>

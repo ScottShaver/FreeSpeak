@@ -185,6 +185,17 @@ namespace FreeSpeakWeb.Tests.Services
             _notifications.Verify(n => n.CreateNotificationAsync(Reporter2, NotificationType.System, It.IsAny<string?>(), It.IsAny<object?>(), It.IsAny<DateTime?>(), FeedContentReportService.ReviewedTemplateKey), Times.Once);
         }
 
+        /// <summary>The review audit entry carries the group name so the activity log can show it.</summary>
+        [Fact]
+        public async Task DismissAsync_ReviewAudit_IncludesGroupName()
+        {
+            ReportExists(Report());
+
+            await _service.DismissAsync(Moderator, 10, null);
+
+            _audit.Verify(a => a.LogActionAsync(Moderator, ActionCategory.SystemModeratorReviewReport, It.Is<SystemModeratorReviewReportDetails>(d => !string.IsNullOrEmpty(d.GroupName))), Times.AtLeastOnce);
+        }
+
         /// <summary>Resolve logs a resolved action in the group log.</summary>
         [Fact]
         public async Task ResolveAsync_LogsResolvedInGroupLog()

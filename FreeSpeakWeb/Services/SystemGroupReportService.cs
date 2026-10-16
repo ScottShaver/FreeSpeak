@@ -494,6 +494,7 @@ namespace FreeSpeakWeb.Services
                 PostId = postId,
                 CommentId = commentId,
                 GroupId = groupId,
+                GroupName = groupName,
                 Decision = decision.ToString()
             });
 
