@@ -154,4 +154,64 @@
   <data name="Close" xml:space="preserve">
     <value>Sluiten</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Profiel</value>
+  </data>
+  <data name="DurationDays" xml:space="preserve">
+    <value>{0} d</value>
+  </data>
+  <data name="DurationHours" xml:space="preserve">
+    <value>{0} u</value>
+  </data>
+  <data name="DurationMinutes" xml:space="preserve">
+    <value>{0} min</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0} s</value>
+  </data>
+  <data name="DurationSeparator" xml:space="preserve">
+    <value>, </value>
+  </data>
+  <data name="NotAvailable" xml:space="preserve">
+    <value>n.v.t.</value>
+  </data>
+  <data name="Expired" xml:space="preserve">
+    <value>Verlopen</value>
+  </data>
+  <data name="SetLockoutUntilDate" xml:space="preserve">
+    <value>Blokkering tot datum instellen</value>
+  </data>
+  <data name="ErrorLoadStatus" xml:space="preserve">
+    <value>Blokkeringsstatus laden mislukt. Probeer het opnieuw.</value>
+  </data>
+  <data name="LockoutRemoved" xml:space="preserve">
+    <value>Blokkering succesvol opgeheven. Mislukte inlogpogingen zijn gereset.</value>
+  </data>
+  <data name="ErrorRemoveLockout" xml:space="preserve">
+    <value>Blokkering opheffen mislukt. Probeer het opnieuw.</value>
+  </data>
+  <data name="ErrorRemoveLockoutDetail" xml:space="preserve">
+    <value>Blokkering opheffen mislukt: {0}</value>
+  </data>
+  <data name="PermanentLockoutSet" xml:space="preserve">
+    <value>De gebruiker is permanent geblokkeerd.</value>
+  </data>
+  <data name="ErrorSetPermanent" xml:space="preserve">
+    <value>Permanente blokkering instellen mislukt. Probeer het opnieuw.</value>
+  </data>
+  <data name="ErrorSetPermanentDetail" xml:space="preserve">
+    <value>Permanente blokkering instellen mislukt: {0}</value>
+  </data>
+  <data name="LockedOutForDuration" xml:space="preserve">
+    <value>De gebruiker is geblokkeerd voor {0}.</value>
+  </data>
+  <data name="LockedOutUntilDate" xml:space="preserve">
+    <value>De gebruiker is geblokkeerd tot {0}.</value>
+  </data>
+  <data name="ErrorSetTemporary" xml:space="preserve">
+    <value>Tijdelijke blokkering instellen mislukt. Probeer het opnieuw.</value>
+  </data>
+  <data name="ErrorSetTemporaryDetail" xml:space="preserve">
+    <value>Tijdelijke blokkering instellen mislukt: {0}</value>
+  </data>
 </root>

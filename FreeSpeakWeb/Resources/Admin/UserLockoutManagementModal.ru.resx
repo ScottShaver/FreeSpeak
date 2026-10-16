@@ -154,4 +154,64 @@
   <data name="Close" xml:space="preserve">
     <value>Закрыть</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Профиль</value>
+  </data>
+  <data name="DurationDays" xml:space="preserve">
+    <value>{0} д</value>
+  </data>
+  <data name="DurationHours" xml:space="preserve">
+    <value>{0} ч</value>
+  </data>
+  <data name="DurationMinutes" xml:space="preserve">
+    <value>{0} мин</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0} с</value>
+  </data>
+  <data name="DurationSeparator" xml:space="preserve">
+    <value>, </value>
+  </data>
+  <data name="NotAvailable" xml:space="preserve">
+    <value>н/д</value>
+  </data>
+  <data name="Expired" xml:space="preserve">
+    <value>Истекло</value>
+  </data>
+  <data name="SetLockoutUntilDate" xml:space="preserve">
+    <value>Заблокировать до даты</value>
+  </data>
+  <data name="ErrorLoadStatus" xml:space="preserve">
+    <value>Не удалось загрузить состояние блокировки. Повторите попытку.</value>
+  </data>
+  <data name="LockoutRemoved" xml:space="preserve">
+    <value>Блокировка успешно снята. Неудачные попытки входа сброшены.</value>
+  </data>
+  <data name="ErrorRemoveLockout" xml:space="preserve">
+    <value>Не удалось снять блокировку. Повторите попытку.</value>
+  </data>
+  <data name="ErrorRemoveLockoutDetail" xml:space="preserve">
+    <value>Не удалось снять блокировку: {0}</value>
+  </data>
+  <data name="PermanentLockoutSet" xml:space="preserve">
+    <value>Пользователь заблокирован навсегда.</value>
+  </data>
+  <data name="ErrorSetPermanent" xml:space="preserve">
+    <value>Не удалось установить постоянную блокировку. Повторите попытку.</value>
+  </data>
+  <data name="ErrorSetPermanentDetail" xml:space="preserve">
+    <value>Не удалось установить постоянную блокировку: {0}</value>
+  </data>
+  <data name="LockedOutForDuration" xml:space="preserve">
+    <value>Пользователь заблокирован на {0}.</value>
+  </data>
+  <data name="LockedOutUntilDate" xml:space="preserve">
+    <value>Пользователь заблокирован до {0}.</value>
+  </data>
+  <data name="ErrorSetTemporary" xml:space="preserve">
+    <value>Не удалось установить временную блокировку. Повторите попытку.</value>
+  </data>
+  <data name="ErrorSetTemporaryDetail" xml:space="preserve">
+    <value>Не удалось установить временную блокировку: {0}</value>
+  </data>
 </root>

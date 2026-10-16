@@ -154,4 +154,64 @@
   <data name="Close" xml:space="preserve">
     <value>Fermer</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="DurationDays" xml:space="preserve">
+    <value>{0} j</value>
+  </data>
+  <data name="DurationHours" xml:space="preserve">
+    <value>{0} h</value>
+  </data>
+  <data name="DurationMinutes" xml:space="preserve">
+    <value>{0} min</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0} s</value>
+  </data>
+  <data name="DurationSeparator" xml:space="preserve">
+    <value>, </value>
+  </data>
+  <data name="NotAvailable" xml:space="preserve">
+    <value>N/D</value>
+  </data>
+  <data name="Expired" xml:space="preserve">
+    <value>Expiré</value>
+  </data>
+  <data name="SetLockoutUntilDate" xml:space="preserve">
+    <value>Verrouiller jusqu'à la date</value>
+  </data>
+  <data name="ErrorLoadStatus" xml:space="preserve">
+    <value>Échec du chargement de l'état de verrouillage. Veuillez réessayer.</value>
+  </data>
+  <data name="LockoutRemoved" xml:space="preserve">
+    <value>Verrouillage supprimé avec succès. Les tentatives de connexion échouées ont été réinitialisées.</value>
+  </data>
+  <data name="ErrorRemoveLockout" xml:space="preserve">
+    <value>Échec de la suppression du verrouillage. Veuillez réessayer.</value>
+  </data>
+  <data name="ErrorRemoveLockoutDetail" xml:space="preserve">
+    <value>Échec de la suppression du verrouillage : {0}</value>
+  </data>
+  <data name="PermanentLockoutSet" xml:space="preserve">
+    <value>L'utilisateur a été verrouillé définitivement.</value>
+  </data>
+  <data name="ErrorSetPermanent" xml:space="preserve">
+    <value>Échec du verrouillage définitif. Veuillez réessayer.</value>
+  </data>
+  <data name="ErrorSetPermanentDetail" xml:space="preserve">
+    <value>Échec du verrouillage définitif : {0}</value>
+  </data>
+  <data name="LockedOutForDuration" xml:space="preserve">
+    <value>L'utilisateur a été verrouillé pendant {0}.</value>
+  </data>
+  <data name="LockedOutUntilDate" xml:space="preserve">
+    <value>L'utilisateur a été verrouillé jusqu'au {0}.</value>
+  </data>
+  <data name="ErrorSetTemporary" xml:space="preserve">
+    <value>Échec du verrouillage temporaire. Veuillez réessayer.</value>
+  </data>
+  <data name="ErrorSetTemporaryDetail" xml:space="preserve">
+    <value>Échec du verrouillage temporaire : {0}</value>
+  </data>
 </root>

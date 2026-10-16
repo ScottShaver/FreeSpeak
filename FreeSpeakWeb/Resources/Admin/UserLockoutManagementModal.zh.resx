@@ -154,4 +154,64 @@
   <data name="Close" xml:space="preserve">
     <value>关闭</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>个人资料</value>
+  </data>
+  <data name="DurationDays" xml:space="preserve">
+    <value>{0} 天</value>
+  </data>
+  <data name="DurationHours" xml:space="preserve">
+    <value>{0} 小时</value>
+  </data>
+  <data name="DurationMinutes" xml:space="preserve">
+    <value>{0} 分钟</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0} 秒</value>
+  </data>
+  <data name="DurationSeparator" xml:space="preserve">
+    <value> </value>
+  </data>
+  <data name="NotAvailable" xml:space="preserve">
+    <value>不适用</value>
+  </data>
+  <data name="Expired" xml:space="preserve">
+    <value>已过期</value>
+  </data>
+  <data name="SetLockoutUntilDate" xml:space="preserve">
+    <value>设置锁定至指定日期</value>
+  </data>
+  <data name="ErrorLoadStatus" xml:space="preserve">
+    <value>加载锁定状态失败。请重试。</value>
+  </data>
+  <data name="LockoutRemoved" xml:space="preserve">
+    <value>已成功解除锁定。失败的登录尝试次数已重置。</value>
+  </data>
+  <data name="ErrorRemoveLockout" xml:space="preserve">
+    <value>解除锁定失败。请重试。</value>
+  </data>
+  <data name="ErrorRemoveLockoutDetail" xml:space="preserve">
+    <value>解除锁定失败：{0}</value>
+  </data>
+  <data name="PermanentLockoutSet" xml:space="preserve">
+    <value>该用户已被永久锁定。</value>
+  </data>
+  <data name="ErrorSetPermanent" xml:space="preserve">
+    <value>设置永久锁定失败。请重试。</value>
+  </data>
+  <data name="ErrorSetPermanentDetail" xml:space="preserve">
+    <value>设置永久锁定失败：{0}</value>
+  </data>
+  <data name="LockedOutForDuration" xml:space="preserve">
+    <value>该用户已被锁定 {0}。</value>
+  </data>
+  <data name="LockedOutUntilDate" xml:space="preserve">
+    <value>该用户已被锁定至 {0}。</value>
+  </data>
+  <data name="ErrorSetTemporary" xml:space="preserve">
+    <value>设置临时锁定失败。请重试。</value>
+  </data>
+  <data name="ErrorSetTemporaryDetail" xml:space="preserve">
+    <value>设置临时锁定失败：{0}</value>
+  </data>
 </root>

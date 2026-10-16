@@ -157,4 +157,74 @@
   <data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="DurationDays" xml:space="preserve">
+    <value>{0} d</value>
+    <comment>Abbreviated days, {0} is the number</comment>
+  </data>
+  <data name="DurationHours" xml:space="preserve">
+    <value>{0} h</value>
+    <comment>Abbreviated hours, {0} is the number</comment>
+  </data>
+  <data name="DurationMinutes" xml:space="preserve">
+    <value>{0} min</value>
+    <comment>Abbreviated minutes, {0} is the number</comment>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0} s</value>
+    <comment>Abbreviated seconds, {0} is the number</comment>
+  </data>
+  <data name="DurationSeparator" xml:space="preserve">
+    <value>, </value>
+    <comment>Separator between duration parts</comment>
+  </data>
+  <data name="NotAvailable" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+  <data name="Expired" xml:space="preserve">
+    <value>Expired</value>
+  </data>
+  <data name="SetLockoutUntilDate" xml:space="preserve">
+    <value>Set Lockout Until Date</value>
+  </data>
+  <data name="ErrorLoadStatus" xml:space="preserve">
+    <value>Failed to load lockout status. Please try again.</value>
+  </data>
+  <data name="LockoutRemoved" xml:space="preserve">
+    <value>Lockout removed successfully. Failed login attempts have been reset.</value>
+  </data>
+  <data name="ErrorRemoveLockout" xml:space="preserve">
+    <value>Failed to remove lockout. Please try again.</value>
+  </data>
+  <data name="ErrorRemoveLockoutDetail" xml:space="preserve">
+    <value>Failed to remove lockout: {0}</value>
+    <comment>{0} is the error detail</comment>
+  </data>
+  <data name="PermanentLockoutSet" xml:space="preserve">
+    <value>User has been permanently locked out.</value>
+  </data>
+  <data name="ErrorSetPermanent" xml:space="preserve">
+    <value>Failed to set permanent lockout. Please try again.</value>
+  </data>
+  <data name="ErrorSetPermanentDetail" xml:space="preserve">
+    <value>Failed to set permanent lockout: {0}</value>
+    <comment>{0} is the error detail</comment>
+  </data>
+  <data name="LockedOutForDuration" xml:space="preserve">
+    <value>User has been locked out for {0}.</value>
+    <comment>{0} is the duration, for example 2 h, 30 min</comment>
+  </data>
+  <data name="LockedOutUntilDate" xml:space="preserve">
+    <value>User has been locked out until {0}.</value>
+    <comment>{0} is the date and time</comment>
+  </data>
+  <data name="ErrorSetTemporary" xml:space="preserve">
+    <value>Failed to set temporary lockout. Please try again.</value>
+  </data>
+  <data name="ErrorSetTemporaryDetail" xml:space="preserve">
+    <value>Failed to set temporary lockout: {0}</value>
+    <comment>{0} is the error detail</comment>
+  </data>
 </root>

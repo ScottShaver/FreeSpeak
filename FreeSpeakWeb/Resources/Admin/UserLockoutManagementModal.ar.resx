@@ -154,4 +154,64 @@
   <data name="Close" xml:space="preserve">
     <value>إغلاق</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>الملف الشخصي</value>
+  </data>
+  <data name="DurationDays" xml:space="preserve">
+    <value>{0} يوم</value>
+  </data>
+  <data name="DurationHours" xml:space="preserve">
+    <value>{0} ساعة</value>
+  </data>
+  <data name="DurationMinutes" xml:space="preserve">
+    <value>{0} دقيقة</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0} ثانية</value>
+  </data>
+  <data name="DurationSeparator" xml:space="preserve">
+    <value>، </value>
+  </data>
+  <data name="NotAvailable" xml:space="preserve">
+    <value>غير متاح</value>
+  </data>
+  <data name="Expired" xml:space="preserve">
+    <value>منتهي</value>
+  </data>
+  <data name="SetLockoutUntilDate" xml:space="preserve">
+    <value>تعيين الحظر حتى التاريخ</value>
+  </data>
+  <data name="ErrorLoadStatus" xml:space="preserve">
+    <value>فشل تحميل حالة الحظر. يرجى المحاولة مرة أخرى.</value>
+  </data>
+  <data name="LockoutRemoved" xml:space="preserve">
+    <value>تمت إزالة الحظر بنجاح. تمت إعادة تعيين محاولات تسجيل الدخول الفاشلة.</value>
+  </data>
+  <data name="ErrorRemoveLockout" xml:space="preserve">
+    <value>فشلت إزالة الحظر. يرجى المحاولة مرة أخرى.</value>
+  </data>
+  <data name="ErrorRemoveLockoutDetail" xml:space="preserve">
+    <value>فشلت إزالة الحظر: {0}</value>
+  </data>
+  <data name="PermanentLockoutSet" xml:space="preserve">
+    <value>تم حظر المستخدم نهائيًا.</value>
+  </data>
+  <data name="ErrorSetPermanent" xml:space="preserve">
+    <value>فشل تعيين الحظر الدائم. يرجى المحاولة مرة أخرى.</value>
+  </data>
+  <data name="ErrorSetPermanentDetail" xml:space="preserve">
+    <value>فشل تعيين الحظر الدائم: {0}</value>
+  </data>
+  <data name="LockedOutForDuration" xml:space="preserve">
+    <value>تم حظر المستخدم لمدة {0}.</value>
+  </data>
+  <data name="LockedOutUntilDate" xml:space="preserve">
+    <value>تم حظر المستخدم حتى {0}.</value>
+  </data>
+  <data name="ErrorSetTemporary" xml:space="preserve">
+    <value>فشل تعيين الحظر المؤقت. يرجى المحاولة مرة أخرى.</value>
+  </data>
+  <data name="ErrorSetTemporaryDetail" xml:space="preserve">
+    <value>فشل تعيين الحظر المؤقت: {0}</value>
+  </data>
 </root>

@@ -154,4 +154,64 @@
   <data name="Close" xml:space="preserve">
     <value>閉じる</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>プロフィール</value>
+  </data>
+  <data name="DurationDays" xml:space="preserve">
+    <value>{0}日</value>
+  </data>
+  <data name="DurationHours" xml:space="preserve">
+    <value>{0}時間</value>
+  </data>
+  <data name="DurationMinutes" xml:space="preserve">
+    <value>{0}分</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0}秒</value>
+  </data>
+  <data name="DurationSeparator" xml:space="preserve">
+    <value> </value>
+  </data>
+  <data name="NotAvailable" xml:space="preserve">
+    <value>該当なし</value>
+  </data>
+  <data name="Expired" xml:space="preserve">
+    <value>期限切れ</value>
+  </data>
+  <data name="SetLockoutUntilDate" xml:space="preserve">
+    <value>指定日までロックアウトを設定</value>
+  </data>
+  <data name="ErrorLoadStatus" xml:space="preserve">
+    <value>ロックアウト状態の読み込みに失敗しました。もう一度お試しください。</value>
+  </data>
+  <data name="LockoutRemoved" xml:space="preserve">
+    <value>ロックアウトを解除しました。ログイン失敗回数がリセットされました。</value>
+  </data>
+  <data name="ErrorRemoveLockout" xml:space="preserve">
+    <value>ロックアウトの解除に失敗しました。もう一度お試しください。</value>
+  </data>
+  <data name="ErrorRemoveLockoutDetail" xml:space="preserve">
+    <value>ロックアウトの解除に失敗しました: {0}</value>
+  </data>
+  <data name="PermanentLockoutSet" xml:space="preserve">
+    <value>ユーザーを永久にロックアウトしました。</value>
+  </data>
+  <data name="ErrorSetPermanent" xml:space="preserve">
+    <value>永久ロックアウトの設定に失敗しました。もう一度お試しください。</value>
+  </data>
+  <data name="ErrorSetPermanentDetail" xml:space="preserve">
+    <value>永久ロックアウトの設定に失敗しました: {0}</value>
+  </data>
+  <data name="LockedOutForDuration" xml:space="preserve">
+    <value>ユーザーを {0} の間ロックアウトしました。</value>
+  </data>
+  <data name="LockedOutUntilDate" xml:space="preserve">
+    <value>ユーザーを {0} までロックアウトしました。</value>
+  </data>
+  <data name="ErrorSetTemporary" xml:space="preserve">
+    <value>一時ロックアウトの設定に失敗しました。もう一度お試しください。</value>
+  </data>
+  <data name="ErrorSetTemporaryDetail" xml:space="preserve">
+    <value>一時ロックアウトの設定に失敗しました: {0}</value>
+  </data>
 </root>
