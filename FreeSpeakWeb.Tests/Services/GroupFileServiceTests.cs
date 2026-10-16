@@ -115,7 +115,8 @@ namespace FreeSpeakWeb.Tests.Services
         private GroupFileService CreateGroupFileService(
             TestRepositoryFactory repoFactory,
             IFileSignatureValidator? fileSignatureValidator = null,
-            IVirusScanService? virusScanService = null)
+            IVirusScanService? virusScanService = null,
+            IRoleService? roleService = null)
         {
             var logger = CreateMockLogger<GroupFileService>();
             fileSignatureValidator ??= CreateMockFileSignatureValidator();
@@ -132,7 +133,8 @@ namespace FreeSpeakWeb.Tests.Services
                 fileSignatureValidator,
                 virusScanService,
                 userPreferenceService,
-                groupMemberService);
+                groupMemberService,
+                roleService: roleService);
         }
 
         #region Upload Tests
@@ -1194,6 +1196,49 @@ namespace FreeSpeakWeb.Tests.Services
 
             // Assert
             canManage.Should().BeFalse();
+        }
+
+        /// <summary>System moderators and administrators may manage files of a group they do not belong to; plain users may not.</summary>
+        [Theory]
+        [InlineData("SystemModerator", true)]
+        [InlineData("SystemAdministrator", true)]
+        [InlineData("Member", false)]
+        public async Task CanManageFilesAsync_SystemRoleOverride(string role, bool expected)
+        {
+            // Arrange
+            var repoFactory = CreateTestRepositoryFactory("GroupFileTest_SysOverride_" + role);
+            var roles = new Mock<IRoleService>();
+            roles.Setup(r => r.IsUserInRoleAsync("outsider", role)).ReturnsAsync(true);
+            var service = CreateGroupFileService(repoFactory, roleService: roles.Object);
+            var group = TestDataFactory.CreateTestGroup("creator1");
+
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+            }
+
+            // Act
+            var canManage = await service.CanManageFilesAsync(group.Id, "outsider");
+
+            // Assert
+            canManage.Should().Be(expected);
+        }
+
+        /// <summary>Without a role service nobody gains the system override.</summary>
+        [Fact]
+        public async Task CanManageFilesAsync_NoRoleService_NoOverride()
+        {
+            var repoFactory = CreateTestRepositoryFactory("GroupFileTest_SysOverrideNone");
+            var service = CreateGroupFileService(repoFactory);
+            var group = TestDataFactory.CreateTestGroup("creator1");
+            using (var context = await repoFactory.ContextFactory.CreateDbContextAsync())
+            {
+                context.Groups.Add(group);
+                await context.SaveChangesAsync();
+            }
+
+            (await service.CanManageFilesAsync(group.Id, "outsider")).Should().BeFalse();
         }
 
         [Fact]

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabGroupReports" xml:space="preserve"><value>Groepsmeldingen</value></data>
+  <data name="TabActivity" xml:space="preserve"><value>Moderatieactiviteit</value></data>
+  <data name="GroupQueueTitle" xml:space="preserve"><value>Wachtrij voor groepsmeldingen</value></data>
+  <data name="FilterGroup" xml:space="preserve"><value>Groep</value></data>
+  <data name="GroupAll" xml:space="preserve"><value>Alle groepen</value></data>
+  <data name="GroupLabel" xml:space="preserve"><value>Groep</value></data>
+  <data name="RuleLabel" xml:space="preserve"><value>Overtreden regel</value></data>
+  <data name="OverviewGroupHeading" xml:space="preserve"><value>Groepsmeldingen</value></data>
+  <data name="OverviewOpenGroupQueue" xml:space="preserve"><value>Wachtrij voor groepsmeldingen openen</value></data>
+  <data name="GroupStaleBanner" xml:space="preserve"><value>{0} openstaande groepsmelding(en) wachten al langer dan {1} dagen.</value></data>
+  <data name="GroupDetailTitle" xml:space="preserve"><value>Groepsmelding #{0}</value></data>
+  <data name="ConfirmRemoveGroup" xml:space="preserve"><value>Deze groepsinhoud definitief verwijderen? De auteur en de melders worden op de hoogte gebracht en de verwijdering wordt vastgelegd in het moderatielogboek van de groep.</value></data>
+  <data name="ActivityTitle" xml:space="preserve"><value>Moderatieactiviteit</value></data>
+  <data name="ActivityIntro" xml:space="preserve"><value>Acties van systeemmoderators en beheerders. Alle tijden zijn in UTC.</value></data>
+  <data name="ActivityFilterModerator" xml:space="preserve"><value>Moderator</value></data>
+  <data name="ActivityAllModerators" xml:space="preserve"><value>Alle moderators</value></data>
+  <data name="ActivityFilterAction" xml:space="preserve"><value>Actie</value></data>
+  <data name="ActivityAllActions" xml:space="preserve"><value>Alle acties</value></data>
+  <data name="ActivityFilterFrom" xml:space="preserve"><value>Van (UTC)</value></data>
+  <data name="ActivityFilterTo" xml:space="preserve"><value>Tot (UTC)</value></data>
+  <data name="ActivityClear" xml:space="preserve"><value>Filters wissen</value></data>
+  <data name="ActivityColWhen" xml:space="preserve"><value>Wanneer (UTC)</value></data>
+  <data name="ActivityColModerator" xml:space="preserve"><value>Moderator</value></data>
+  <data name="ActivityColAction" xml:space="preserve"><value>Actie</value></data>
+  <data name="ActivityColTarget" xml:space="preserve"><value>Betrokken gebruiker</value></data>
+  <data name="ActivityColGroup" xml:space="preserve"><value>Groep</value></data>
+  <data name="ActivityColDetail" xml:space="preserve"><value>Details</value></data>
+  <data name="ActivityEmpty" xml:space="preserve"><value>Geen moderatieactiviteit komt overeen met de huidige filters.</value></data>
+  <data name="ActivityExport" xml:space="preserve"><value>CSV exporteren</value></data>
+  <data name="ActivityExportTruncated" xml:space="preserve"><value>De export is beperkt tot {0} rijen.</value></data>
+  <data name="ActivityExportFailed" xml:space="preserve"><value>De export is mislukt.</value></data>
+  <data name="ActivityPage" xml:space="preserve"><value>Pagina {0} van {1}</value></data>
+  <data name="ActivityPrev" xml:space="preserve"><value>Vorige</value></data>
+  <data name="ActivityNext" xml:space="preserve"><value>Volgende</value></data>
+  <data name="ActionRemovePost" xml:space="preserve"><value>Bericht verwijderd</value></data>
+  <data name="ActionRemovePostComment" xml:space="preserve"><value>Reactie verwijderd</value></data>
+  <data name="ActionReviewReport" xml:space="preserve"><value>Melding beoordeeld</value></data>
+  <data name="ActionWarnUser" xml:space="preserve"><value>Gebruiker gewaarschuwd</value></data>
+  <data name="ActionSuspendUser" xml:space="preserve"><value>Gebruiker geschorst</value></data>
+  <data name="ActionUnsuspendUser" xml:space="preserve"><value>Schorsing opgeheven</value></data>
+  <data name="AuthorUnknown" xml:space="preserve"><value>Verwijderde of onbekende gebruiker</value></data>
+</root>

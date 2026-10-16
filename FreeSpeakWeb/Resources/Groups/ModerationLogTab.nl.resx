@@ -24,6 +24,8 @@
   <data name="ReasonLabel" xml:space="preserve"><value>Reden: {0}</value></data>
   <data name="Action_PostApproved" xml:space="preserve"><value>Bericht goedgekeurd</value></data>
   <data name="Action_PostDeclined" xml:space="preserve"><value>Bericht afgewezen</value></data>
+  <data name="Action_PostRemoved" xml:space="preserve"><value>Bericht verwijderd</value></data>
+  <data name="Action_CommentRemoved" xml:space="preserve"><value>Reactie verwijderd</value></data>
   <data name="Action_FileApproved" xml:space="preserve"><value>Bestand goedgekeurd</value></data>
   <data name="Action_FileDeclined" xml:space="preserve"><value>Bestand afgewezen</value></data>
   <data name="Action_FileRemoved" xml:space="preserve"><value>Bestand verwijderd</value></data>
@@ -31,4 +33,6 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>Melding afgehandeld</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>Lid verbannen</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>Verbanning van lid opgeheven</value></data>
+  <data name="SystemAction" xml:space="preserve"><value>Systeem</value></data>
+  <data name="SystemActionHint" xml:space="preserve"><value>Uitgevoerd op systeemniveau door een systeemmoderator of beheerder</value></data>
 </root>

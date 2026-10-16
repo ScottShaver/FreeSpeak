@@ -95,6 +95,8 @@ Feed reporting categories: `42` `UserReportContent` (a user reports a feed post 
 
 User moderation categories (written by `UserModerationService`, timestamps in UTC): `44` `SystemModeratorWarnUser`, `45` `SystemModeratorSuspendUser` (reason, duration or permanent, end time) and `46` `SystemModeratorUnsuspendUser` (suspension ID and lift note).
 
+Category `47` `SystemModeratorActivityExport` is written by `SystemModeratorActivityService.ExportCsvAsync` when a system moderator exports the Moderation Activity log (filters and row count; never row content). System moderator actions on group content (dismiss, resolve, remove) additionally write a group Mod Log entry with `IsSystemAction = true`, shown with a "System" badge and a `IsSystemAction` CSV column.
+
 ### System Moderator Actions (26-27)
 
 | Value | Name | Description |

@@ -41,6 +41,19 @@ public class ModerationLogTabLocalizationTests
     }
 
     /// <summary>
+    /// Removal actions offered as filters have localized labels in every locale.
+    /// </summary>
+    /// <param name="locale">The locale code.</param>
+    [Theory]
+    [MemberData(nameof(LocaleData))]
+    public void LocaleFile_HasRemovalActionLabels(string locale)
+    {
+        var keys = Keys(Path.Combine(ResourcesDir(), $"ModerationLogTab.{locale}.resx"));
+
+        keys.Should().Contain(new[] { "Action_PostRemoved", "Action_CommentRemoved" });
+    }
+
+    /// <summary>
     /// Supplies the locale codes.
     /// </summary>
     public static IEnumerable<object[]> LocaleData() => Locales.Select(l => new object[] { l });

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabGroupReports" xml:space="preserve"><value>グループの報告</value></data>
+  <data name="TabActivity" xml:space="preserve"><value>モデレーション活動</value></data>
+  <data name="GroupQueueTitle" xml:space="preserve"><value>グループ報告キュー</value></data>
+  <data name="FilterGroup" xml:space="preserve"><value>グループ</value></data>
+  <data name="GroupAll" xml:space="preserve"><value>すべてのグループ</value></data>
+  <data name="GroupLabel" xml:space="preserve"><value>グループ</value></data>
+  <data name="RuleLabel" xml:space="preserve"><value>違反したルール</value></data>
+  <data name="OverviewGroupHeading" xml:space="preserve"><value>グループの報告</value></data>
+  <data name="OverviewOpenGroupQueue" xml:space="preserve"><value>グループ報告キューを開く</value></data>
+  <data name="GroupStaleBanner" xml:space="preserve"><value>{0} 件の保留中のグループ報告が {1} 日以上待機しています。</value></data>
+  <data name="GroupDetailTitle" xml:space="preserve"><value>グループ報告 #{0}</value></data>
+  <data name="ConfirmRemoveGroup" xml:space="preserve"><value>このグループのコンテンツを完全に削除しますか？作成者と報告者に通知され、削除はグループのモデレーションログに記録されます。</value></data>
+  <data name="ActivityTitle" xml:space="preserve"><value>モデレーション活動</value></data>
+  <data name="ActivityIntro" xml:space="preserve"><value>システムモデレーターと管理者による操作です。時刻はすべて UTC です。</value></data>
+  <data name="ActivityFilterModerator" xml:space="preserve"><value>モデレーター</value></data>
+  <data name="ActivityAllModerators" xml:space="preserve"><value>すべてのモデレーター</value></data>
+  <data name="ActivityFilterAction" xml:space="preserve"><value>操作</value></data>
+  <data name="ActivityAllActions" xml:space="preserve"><value>すべての操作</value></data>
+  <data name="ActivityFilterFrom" xml:space="preserve"><value>開始 (UTC)</value></data>
+  <data name="ActivityFilterTo" xml:space="preserve"><value>終了 (UTC)</value></data>
+  <data name="ActivityClear" xml:space="preserve"><value>フィルターをクリア</value></data>
+  <data name="ActivityColWhen" xml:space="preserve"><value>日時 (UTC)</value></data>
+  <data name="ActivityColModerator" xml:space="preserve"><value>モデレーター</value></data>
+  <data name="ActivityColAction" xml:space="preserve"><value>操作</value></data>
+  <data name="ActivityColTarget" xml:space="preserve"><value>対象ユーザー</value></data>
+  <data name="ActivityColGroup" xml:space="preserve"><value>グループ</value></data>
+  <data name="ActivityColDetail" xml:space="preserve"><value>詳細</value></data>
+  <data name="ActivityEmpty" xml:space="preserve"><value>現在のフィルターに一致するモデレーション活動はありません。</value></data>
+  <data name="ActivityExport" xml:space="preserve"><value>CSV をエクスポート</value></data>
+  <data name="ActivityExportTruncated" xml:space="preserve"><value>エクスポートは {0} 行に制限されました。</value></data>
+  <data name="ActivityExportFailed" xml:space="preserve"><value>エクスポートに失敗しました。</value></data>
+  <data name="ActivityPage" xml:space="preserve"><value>{0} / {1} ページ</value></data>
+  <data name="ActivityPrev" xml:space="preserve"><value>前へ</value></data>
+  <data name="ActivityNext" xml:space="preserve"><value>次へ</value></data>
+  <data name="ActionRemovePost" xml:space="preserve"><value>投稿を削除</value></data>
+  <data name="ActionRemovePostComment" xml:space="preserve"><value>コメントを削除</value></data>
+  <data name="ActionReviewReport" xml:space="preserve"><value>報告を審査</value></data>
+  <data name="ActionWarnUser" xml:space="preserve"><value>ユーザーに警告</value></data>
+  <data name="ActionSuspendUser" xml:space="preserve"><value>ユーザーを停止</value></data>
+  <data name="ActionUnsuspendUser" xml:space="preserve"><value>停止を解除</value></data>
+  <data name="AuthorUnknown" xml:space="preserve"><value>削除済みまたは不明なユーザー</value></data>
+</root>

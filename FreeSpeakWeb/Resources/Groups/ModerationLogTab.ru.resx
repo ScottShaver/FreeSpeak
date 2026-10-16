@@ -24,6 +24,8 @@
   <data name="ReasonLabel" xml:space="preserve"><value>Причина: {0}</value></data>
   <data name="Action_PostApproved" xml:space="preserve"><value>Публикация одобрена</value></data>
   <data name="Action_PostDeclined" xml:space="preserve"><value>Публикация отклонена</value></data>
+  <data name="Action_PostRemoved" xml:space="preserve"><value>Публикация удалена</value></data>
+  <data name="Action_CommentRemoved" xml:space="preserve"><value>Комментарий удалён</value></data>
   <data name="Action_FileApproved" xml:space="preserve"><value>Файл одобрен</value></data>
   <data name="Action_FileDeclined" xml:space="preserve"><value>Файл отклонён</value></data>
   <data name="Action_FileRemoved" xml:space="preserve"><value>Файл удалён</value></data>
@@ -31,4 +33,6 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>Жалоба рассмотрена</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>Участник заблокирован</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>Участник разблокирован</value></data>
+  <data name="SystemAction" xml:space="preserve"><value>Система</value></data>
+  <data name="SystemActionHint" xml:space="preserve"><value>Выполнено на системном уровне системным модератором или администратором</value></data>
 </root>

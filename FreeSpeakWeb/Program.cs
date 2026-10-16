@@ -306,6 +306,10 @@ namespace FreeSpeakWeb
             builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.IFeedContentReportService, FeedContentReportService>();
             builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.IFeedContentRemoval>(sp => sp.GetRequiredService<PostService>());
             builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.ISystemModerationService, SystemModerationService>();
+            builder.Services.AddScoped<FreeSpeakWeb.Repositories.Abstractions.IGroupReportModerationRepository, FreeSpeakWeb.Repositories.GroupReportModerationRepository>();
+            builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.IGroupContentRemoval, GroupContentRemoval>();
+            builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.ISystemGroupReportService, SystemGroupReportService>();
+            builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.ISystemModeratorActivityService, SystemModeratorActivityService>();
             builder.Services.AddScoped<FreeSpeakWeb.Repositories.Abstractions.IUserModerationRepository, FreeSpeakWeb.Repositories.UserModerationRepository>();
             builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.IUserModerationService, UserModerationService>();
             builder.Services.AddScoped<IGroupFileService, GroupFileService>();

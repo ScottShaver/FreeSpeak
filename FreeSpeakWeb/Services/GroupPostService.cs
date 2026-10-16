@@ -355,10 +355,8 @@ namespace FreeSpeakWeb.Services
 
                 // Check if user is the author or a group admin/moderator
                 var isAuthor = post.AuthorId == userId;
-                var isAdminOrModerator = await context.GroupUsers
-                    .AnyAsync(gu => gu.GroupId == post.GroupId && 
-                                   gu.UserId == userId && 
-                                   (gu.IsAdmin || gu.IsModerator));
+                var isAdminOrModerator = !isAuthor
+                    && await _accessValidator.IsGroupAdminOrModeratorAsync(post.GroupId, userId);
 
                 if (!isAuthor && !isAdminOrModerator)
                 {
@@ -1168,10 +1166,8 @@ namespace FreeSpeakWeb.Services
 
                 // Check if user is the author or a group admin/moderator
                 var isAuthor = comment.AuthorId == userId;
-                var isAdminOrModerator = await context.GroupUsers
-                    .AnyAsync(gu => gu.GroupId == comment.Post.GroupId && 
-                                   gu.UserId == userId && 
-                                   (gu.IsAdmin || gu.IsModerator));
+                var isAdminOrModerator = !isAuthor
+                    && await _accessValidator.IsGroupAdminOrModeratorAsync(comment.Post.GroupId, userId);
 
                 if (!isAuthor && !isAdminOrModerator)
                 {

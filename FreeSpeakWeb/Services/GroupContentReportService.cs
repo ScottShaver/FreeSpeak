@@ -453,6 +453,12 @@ namespace FreeSpeakWeb.Services
                     return (false, "You are not authorized to review reports in this group.");
                 }
 
+                // A report that was already closed (for example by a system moderator) must not be processed twice
+                if (report.Status is not (ReportStatus.NotReviewed or ReportStatus.UnderReview))
+                {
+                    return (false, "This report has already been reviewed.");
+                }
+
                 report.Status = newStatus;
                 report.ReviewerId = reviewerId;
                 report.ReviewedAt = DateTime.UtcNow;

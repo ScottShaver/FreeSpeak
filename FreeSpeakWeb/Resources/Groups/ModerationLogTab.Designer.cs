@@ -149,5 +149,13 @@ namespace FreeSpeakWeb.Resources.Groups {
         public static string Action_MemberUnbanned {
             get { return ResourceManager.GetString("Action_MemberUnbanned", resourceCulture); }
         }
+
+        public static string SystemAction {
+            get { return ResourceManager.GetString("SystemAction", resourceCulture); }
+        }
+
+        public static string SystemActionHint {
+            get { return ResourceManager.GetString("SystemActionHint", resourceCulture); }
+        }
     }
 }

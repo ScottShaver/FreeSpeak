@@ -22,6 +22,16 @@ namespace FreeSpeakWeb.Data.AuditLogDetails
         public int? CommentId { get; set; }
 
         /// <summary>
+        /// Gets or sets the group the report belongs to when it is a group content report; null for feed reports.
+        /// </summary>
+        public int? GroupId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the group at the time of review, for group content reports.
+        /// </summary>
+        public string? GroupName { get; set; }
+
+        /// <summary>
         /// Gets or sets the status the report was moved to (Dismissed, Resolved or ActionTaken).
         /// </summary>
         public string Decision { get; set; } = string.Empty;

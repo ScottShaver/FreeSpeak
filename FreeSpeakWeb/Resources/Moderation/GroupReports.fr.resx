@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabGroupReports" xml:space="preserve"><value>Signalements de groupes</value></data>
+  <data name="TabActivity" xml:space="preserve"><value>Activité de modération</value></data>
+  <data name="GroupQueueTitle" xml:space="preserve"><value>File des signalements de groupes</value></data>
+  <data name="FilterGroup" xml:space="preserve"><value>Groupe</value></data>
+  <data name="GroupAll" xml:space="preserve"><value>Tous les groupes</value></data>
+  <data name="GroupLabel" xml:space="preserve"><value>Groupe</value></data>
+  <data name="RuleLabel" xml:space="preserve"><value>Règle enfreinte</value></data>
+  <data name="OverviewGroupHeading" xml:space="preserve"><value>Signalements de groupes</value></data>
+  <data name="OverviewOpenGroupQueue" xml:space="preserve"><value>Ouvrir la file des signalements de groupes</value></data>
+  <data name="GroupStaleBanner" xml:space="preserve"><value>{0} signalement(s) de groupes en attente depuis plus de {1} jours.</value></data>
+  <data name="GroupDetailTitle" xml:space="preserve"><value>Signalement de groupe n° {0}</value></data>
+  <data name="ConfirmRemoveGroup" xml:space="preserve"><value>Supprimer définitivement ce contenu du groupe ? L'auteur et les personnes à l'origine des signalements seront avertis, et la suppression sera consignée dans le journal de modération du groupe.</value></data>
+  <data name="ActivityTitle" xml:space="preserve"><value>Activité de modération</value></data>
+  <data name="ActivityIntro" xml:space="preserve"><value>Actions des modérateurs système et des administrateurs. Toutes les heures sont en UTC.</value></data>
+  <data name="ActivityFilterModerator" xml:space="preserve"><value>Modérateur</value></data>
+  <data name="ActivityAllModerators" xml:space="preserve"><value>Tous les modérateurs</value></data>
+  <data name="ActivityFilterAction" xml:space="preserve"><value>Action</value></data>
+  <data name="ActivityAllActions" xml:space="preserve"><value>Toutes les actions</value></data>
+  <data name="ActivityFilterFrom" xml:space="preserve"><value>Du (UTC)</value></data>
+  <data name="ActivityFilterTo" xml:space="preserve"><value>Au (UTC)</value></data>
+  <data name="ActivityClear" xml:space="preserve"><value>Effacer les filtres</value></data>
+  <data name="ActivityColWhen" xml:space="preserve"><value>Quand (UTC)</value></data>
+  <data name="ActivityColModerator" xml:space="preserve"><value>Modérateur</value></data>
+  <data name="ActivityColAction" xml:space="preserve"><value>Action</value></data>
+  <data name="ActivityColTarget" xml:space="preserve"><value>Utilisateur concerné</value></data>
+  <data name="ActivityColGroup" xml:space="preserve"><value>Groupe</value></data>
+  <data name="ActivityColDetail" xml:space="preserve"><value>Détail</value></data>
+  <data name="ActivityEmpty" xml:space="preserve"><value>Aucune activité de modération ne correspond aux filtres actuels.</value></data>
+  <data name="ActivityExport" xml:space="preserve"><value>Exporter en CSV</value></data>
+  <data name="ActivityExportTruncated" xml:space="preserve"><value>L'exportation a été limitée à {0} lignes.</value></data>
+  <data name="ActivityExportFailed" xml:space="preserve"><value>L'exportation a échoué.</value></data>
+  <data name="ActivityPage" xml:space="preserve"><value>Page {0} sur {1}</value></data>
+  <data name="ActivityPrev" xml:space="preserve"><value>Précédent</value></data>
+  <data name="ActivityNext" xml:space="preserve"><value>Suivant</value></data>
+  <data name="ActionRemovePost" xml:space="preserve"><value>Publication supprimée</value></data>
+  <data name="ActionRemovePostComment" xml:space="preserve"><value>Commentaire supprimé</value></data>
+  <data name="ActionReviewReport" xml:space="preserve"><value>Signalement examiné</value></data>
+  <data name="ActionWarnUser" xml:space="preserve"><value>Utilisateur averti</value></data>
+  <data name="ActionSuspendUser" xml:space="preserve"><value>Utilisateur suspendu</value></data>
+  <data name="ActionUnsuspendUser" xml:space="preserve"><value>Suspension levée</value></data>
+  <data name="AuthorUnknown" xml:space="preserve"><value>Utilisateur supprimé ou inconnu</value></data>
+</root>

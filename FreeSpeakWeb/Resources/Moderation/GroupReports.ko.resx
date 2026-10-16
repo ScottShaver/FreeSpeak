@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabGroupReports" xml:space="preserve"><value>그룹 신고</value></data>
+  <data name="TabActivity" xml:space="preserve"><value>검토 활동</value></data>
+  <data name="GroupQueueTitle" xml:space="preserve"><value>그룹 신고 대기열</value></data>
+  <data name="FilterGroup" xml:space="preserve"><value>그룹</value></data>
+  <data name="GroupAll" xml:space="preserve"><value>모든 그룹</value></data>
+  <data name="GroupLabel" xml:space="preserve"><value>그룹</value></data>
+  <data name="RuleLabel" xml:space="preserve"><value>위반한 규칙</value></data>
+  <data name="OverviewGroupHeading" xml:space="preserve"><value>그룹 신고</value></data>
+  <data name="OverviewOpenGroupQueue" xml:space="preserve"><value>그룹 신고 대기열 열기</value></data>
+  <data name="GroupStaleBanner" xml:space="preserve"><value>대기 중인 그룹 신고 {0}건이 {1}일 넘게 처리되지 않았습니다.</value></data>
+  <data name="GroupDetailTitle" xml:space="preserve"><value>그룹 신고 #{0}</value></data>
+  <data name="ConfirmRemoveGroup" xml:space="preserve"><value>이 그룹 콘텐츠를 영구적으로 삭제하시겠습니까? 작성자와 신고자에게 알림이 전송되며, 삭제는 그룹의 검토 로그에 기록됩니다.</value></data>
+  <data name="ActivityTitle" xml:space="preserve"><value>검토 활동</value></data>
+  <data name="ActivityIntro" xml:space="preserve"><value>시스템 검토자와 관리자가 수행한 작업입니다. 모든 시간은 UTC입니다.</value></data>
+  <data name="ActivityFilterModerator" xml:space="preserve"><value>검토자</value></data>
+  <data name="ActivityAllModerators" xml:space="preserve"><value>모든 검토자</value></data>
+  <data name="ActivityFilterAction" xml:space="preserve"><value>작업</value></data>
+  <data name="ActivityAllActions" xml:space="preserve"><value>모든 작업</value></data>
+  <data name="ActivityFilterFrom" xml:space="preserve"><value>시작 (UTC)</value></data>
+  <data name="ActivityFilterTo" xml:space="preserve"><value>종료 (UTC)</value></data>
+  <data name="ActivityClear" xml:space="preserve"><value>필터 지우기</value></data>
+  <data name="ActivityColWhen" xml:space="preserve"><value>시간 (UTC)</value></data>
+  <data name="ActivityColModerator" xml:space="preserve"><value>검토자</value></data>
+  <data name="ActivityColAction" xml:space="preserve"><value>작업</value></data>
+  <data name="ActivityColTarget" xml:space="preserve"><value>대상 사용자</value></data>
+  <data name="ActivityColGroup" xml:space="preserve"><value>그룹</value></data>
+  <data name="ActivityColDetail" xml:space="preserve"><value>세부 정보</value></data>
+  <data name="ActivityEmpty" xml:space="preserve"><value>현재 필터와 일치하는 검토 활동이 없습니다.</value></data>
+  <data name="ActivityExport" xml:space="preserve"><value>CSV 내보내기</value></data>
+  <data name="ActivityExportTruncated" xml:space="preserve"><value>내보내기가 {0}행으로 제한되었습니다.</value></data>
+  <data name="ActivityExportFailed" xml:space="preserve"><value>내보내기에 실패했습니다.</value></data>
+  <data name="ActivityPage" xml:space="preserve"><value>{1}페이지 중 {0}페이지</value></data>
+  <data name="ActivityPrev" xml:space="preserve"><value>이전</value></data>
+  <data name="ActivityNext" xml:space="preserve"><value>다음</value></data>
+  <data name="ActionRemovePost" xml:space="preserve"><value>게시물 삭제</value></data>
+  <data name="ActionRemovePostComment" xml:space="preserve"><value>댓글 삭제</value></data>
+  <data name="ActionReviewReport" xml:space="preserve"><value>신고 검토</value></data>
+  <data name="ActionWarnUser" xml:space="preserve"><value>사용자 경고</value></data>
+  <data name="ActionSuspendUser" xml:space="preserve"><value>사용자 정지</value></data>
+  <data name="ActionUnsuspendUser" xml:space="preserve"><value>정지 해제</value></data>
+  <data name="AuthorUnknown" xml:space="preserve"><value>삭제되었거나 알 수 없는 사용자</value></data>
+</root>

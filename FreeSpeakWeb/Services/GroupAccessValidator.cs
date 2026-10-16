@@ -149,6 +149,12 @@ namespace FreeSpeakWeb.Services
                     return true;
                 }
 
+                // System moderators act as a backstop for group moderation
+                if (await _roleService.IsUserInRoleAsync(userId, "SystemModerator"))
+                {
+                    return true;
+                }
+
                 using var context = await _contextFactory.CreateDbContextAsync();
 
                 return await context.GroupUsers

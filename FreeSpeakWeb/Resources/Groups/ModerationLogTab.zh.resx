@@ -24,6 +24,8 @@
   <data name="ReasonLabel" xml:space="preserve"><value>原因：{0}</value></data>
   <data name="Action_PostApproved" xml:space="preserve"><value>帖子已批准</value></data>
   <data name="Action_PostDeclined" xml:space="preserve"><value>帖子已拒绝</value></data>
+  <data name="Action_PostRemoved" xml:space="preserve"><value>帖子已移除</value></data>
+  <data name="Action_CommentRemoved" xml:space="preserve"><value>评论已移除</value></data>
   <data name="Action_FileApproved" xml:space="preserve"><value>文件已批准</value></data>
   <data name="Action_FileDeclined" xml:space="preserve"><value>文件已拒绝</value></data>
   <data name="Action_FileRemoved" xml:space="preserve"><value>文件已移除</value></data>
@@ -31,4 +33,6 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>举报已处理</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>成员已封禁</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>成员已解除封禁</value></data>
+  <data name="SystemAction" xml:space="preserve"><value>系统</value></data>
+  <data name="SystemActionHint" xml:space="preserve"><value>由系统版主或管理员在系统级别执行</value></data>
 </root>

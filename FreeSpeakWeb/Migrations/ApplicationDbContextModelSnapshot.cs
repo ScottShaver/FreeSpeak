@@ -697,6 +697,9 @@ namespace FreeSpeakWeb.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsSystemAction")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Reason")
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");

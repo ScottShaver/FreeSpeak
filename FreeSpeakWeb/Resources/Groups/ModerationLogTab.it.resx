@@ -24,6 +24,8 @@
   <data name="ReasonLabel" xml:space="preserve"><value>Motivo: {0}</value></data>
   <data name="Action_PostApproved" xml:space="preserve"><value>Post approvato</value></data>
   <data name="Action_PostDeclined" xml:space="preserve"><value>Post rifiutato</value></data>
+  <data name="Action_PostRemoved" xml:space="preserve"><value>Post rimosso</value></data>
+  <data name="Action_CommentRemoved" xml:space="preserve"><value>Commento rimosso</value></data>
   <data name="Action_FileApproved" xml:space="preserve"><value>File approvato</value></data>
   <data name="Action_FileDeclined" xml:space="preserve"><value>File rifiutato</value></data>
   <data name="Action_FileRemoved" xml:space="preserve"><value>File rimosso</value></data>
@@ -31,4 +33,6 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>Segnalazione risolta</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>Membro bannato</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>Membro riammesso</value></data>
+  <data name="SystemAction" xml:space="preserve"><value>Sistema</value></data>
+  <data name="SystemActionHint" xml:space="preserve"><value>Eseguita a livello di sistema da un moderatore o amministratore di sistema</value></data>
 </root>

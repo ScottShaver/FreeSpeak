@@ -24,6 +24,8 @@
   <data name="ReasonLabel" xml:space="preserve"><value>理由: {0}</value></data>
   <data name="Action_PostApproved" xml:space="preserve"><value>投稿を承認</value></data>
   <data name="Action_PostDeclined" xml:space="preserve"><value>投稿を却下</value></data>
+  <data name="Action_PostRemoved" xml:space="preserve"><value>投稿を削除</value></data>
+  <data name="Action_CommentRemoved" xml:space="preserve"><value>コメントを削除</value></data>
   <data name="Action_FileApproved" xml:space="preserve"><value>ファイルを承認</value></data>
   <data name="Action_FileDeclined" xml:space="preserve"><value>ファイルを却下</value></data>
   <data name="Action_FileRemoved" xml:space="preserve"><value>ファイルを削除</value></data>
@@ -31,4 +33,6 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>報告を解決</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>メンバーをBAN</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>メンバーのBANを解除</value></data>
+  <data name="SystemAction" xml:space="preserve"><value>システム</value></data>
+  <data name="SystemActionHint" xml:space="preserve"><value>システムモデレーターまたは管理者がシステムレベルで実行しました</value></data>
 </root>

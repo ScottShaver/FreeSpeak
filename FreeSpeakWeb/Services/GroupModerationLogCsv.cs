@@ -13,7 +13,7 @@ namespace FreeSpeakWeb.Services
         /// </summary>
         public static readonly string[] Columns =
         {
-            "Timestamp (UTC)", "Actor", "Action", "Target Type", "Target", "Target User", "Summary", "Reason"
+            "Timestamp (UTC)", "Actor", "Action", "Target Type", "Target", "Target User", "Summary", "Reason", "System Action"
         };
 
         /// <summary>
@@ -37,7 +37,8 @@ namespace FreeSpeakWeb.Services
                     e.TargetId ?? string.Empty,
                     e.TargetUserDisplayName ?? string.Empty,
                     e.Summary ?? string.Empty,
-                    e.Reason ?? string.Empty
+                    e.Reason ?? string.Empty,
+                    e.IsSystemAction ? "Yes" : "No"
                 };
                 sb.Append(string.Join(",", cells.Select(Escape))).Append("\r\n");
             }
