@@ -1031,5 +1031,41 @@ namespace FreeSpeakWeb.Resources.Pages {
                 return ResourceManager.GetString("E_SmtpFailed", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Moderation.
+        /// </summary>
+        public static string G_Moderation {
+            get {
+                return ResourceManager.GetString("G_Moderation", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Settings for the system moderator dashboard..
+        /// </summary>
+        public static string GD_Moderation {
+            get {
+                return ResourceManager.GetString("GD_Moderation", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Stale report threshold (days).
+        /// </summary>
+        public static string L_StaleReportDays {
+            get {
+                return ResourceManager.GetString("L_StaleReportDays", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Pending reports older than this many days are flagged as stale on the moderator .
+        /// </summary>
+        public static string H_StaleReportDays {
+            get {
+                return ResourceManager.GetString("H_StaleReportDays", resourceCulture);
+            }
+        }
     }
 }

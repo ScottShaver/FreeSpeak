@@ -382,4 +382,16 @@
   <data name="E_SmtpFailed" xml:space="preserve">
     <value>无法发送测试邮件。</value>
   </data>
+  <data name="G_Moderation" xml:space="preserve">
+    <value>审核</value>
+  </data>
+  <data name="GD_Moderation" xml:space="preserve">
+    <value>系统审核员仪表板的设置。</value>
+  </data>
+  <data name="L_StaleReportDays" xml:space="preserve">
+    <value>逾期举报阈值（天）</value>
+  </data>
+  <data name="H_StaleReportDays" xml:space="preserve">
+    <value>待处理超过此天数的举报将在审核员仪表板中标记为逾期。</value>
+  </data>
 </root>

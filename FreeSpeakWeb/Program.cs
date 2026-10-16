@@ -301,6 +301,7 @@ namespace FreeSpeakWeb
             builder.Services.AddScoped<GroupPointsService>();
             builder.Services.AddScoped<GroupContentReportService>();
             builder.Services.Configure<FeedReportSettings>(builder.Configuration.GetSection(FeedReportSettings.SectionName));
+            builder.Services.Configure<ModerationSettings>(builder.Configuration.GetSection(ModerationSettings.SectionName));
             builder.Services.AddScoped<FreeSpeakWeb.Repositories.Abstractions.IFeedContentReportRepository, FreeSpeakWeb.Repositories.FeedContentReportRepository>();
             builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.IFeedContentReportService, FeedContentReportService>();
             builder.Services.AddScoped<IGroupFileService, GroupFileService>();

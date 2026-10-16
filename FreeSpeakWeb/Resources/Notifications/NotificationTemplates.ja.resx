@@ -112,4 +112,7 @@
   <data name="FeedReportReviewed" xml:space="preserve">
     <value>あなたの報告は確認されました。</value>
   </data>
+  <data name="FeedContentRemoved" xml:space="preserve">
+    <value>コミュニティガイドラインに違反したため、あなたのコンテンツは削除されました。</value>
+  </data>
 </root>

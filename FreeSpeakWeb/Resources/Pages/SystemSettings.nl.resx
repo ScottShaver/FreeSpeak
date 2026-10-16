@@ -382,4 +382,16 @@
   <data name="E_SmtpFailed" xml:space="preserve">
     <value>De testmail kon niet worden verzonden.</value>
   </data>
+  <data name="G_Moderation" xml:space="preserve">
+    <value>Moderatie</value>
+  </data>
+  <data name="GD_Moderation" xml:space="preserve">
+    <value>Instellingen voor het dashboard van systeemmoderators.</value>
+  </data>
+  <data name="L_StaleReportDays" xml:space="preserve">
+    <value>Drempel voor verouderde meldingen (dagen)</value>
+  </data>
+  <data name="H_StaleReportDays" xml:space="preserve">
+    <value>Openstaande meldingen die ouder zijn dan dit aantal dagen worden in het moderatordashboard als verouderd gemarkeerd.</value>
+  </data>
 </root>

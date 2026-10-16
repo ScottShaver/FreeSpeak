@@ -382,4 +382,16 @@
   <data name="E_SmtpFailed" xml:space="preserve">
     <value>No se pudo enviar el correo de prueba.</value>
   </data>
+  <data name="G_Moderation" xml:space="preserve">
+    <value>Moderación</value>
+  </data>
+  <data name="GD_Moderation" xml:space="preserve">
+    <value>Ajustes del panel de moderadores del sistema.</value>
+  </data>
+  <data name="L_StaleReportDays" xml:space="preserve">
+    <value>Umbral de reportes antiguos (días)</value>
+  </data>
+  <data name="H_StaleReportDays" xml:space="preserve">
+    <value>Los reportes pendientes con más de estos días se marcan como antiguos en el panel de moderación.</value>
+  </data>
 </root>

@@ -112,4 +112,7 @@
   <data name="FeedReportReviewed" xml:space="preserve">
     <value>Deine Meldung wurde geprüft.</value>
   </data>
+  <data name="FeedContentRemoved" xml:space="preserve">
+    <value>Dein Inhalt wurde entfernt, weil er gegen die Community-Richtlinien verstößt.</value>
+  </data>
 </root>

@@ -112,4 +112,7 @@
   <data name="FeedReportReviewed" xml:space="preserve">
     <value>您的举报已被审核。</value>
   </data>
+  <data name="FeedContentRemoved" xml:space="preserve">
+    <value>您的内容因违反社区准则已被删除。</value>
+  </data>
 </root>

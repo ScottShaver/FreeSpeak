@@ -250,11 +250,27 @@ Controls reporting of feed posts and comments (`FeedContentReports`).
 |-----|---------|-------------|
 | `MaxReportsPerUserPerHour` | 5 | Reports one user may submit in a rolling hour; further reports are rejected until older ones age out. |
 
+### Moderation
+
+Controls the system moderator dashboard (`/system-moderator`). Also editable at runtime in System Settings (Moderation group, applies live).
+
+```json
+{
+  "Moderation": {
+    "StaleReportDays": 3
+  }
+}
+```
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `StaleReportDays` | 3 | A pending report older than this many days is flagged as stale (banner, Overview card and one-click filter). Allowed range 1 to 365. |
+
 ## Database-Backed System Settings
 
-System administrators can override selected settings at runtime from **System Admin → System Settings** (`/system-admin/settings`). Overrides are stored in the `SystemSettings` table and layered over `appsettings*.json`, environment variables and command-line arguments (database rows win). Groups: Site, Smtp, VirusScan, RateLimiting, Profiling, Caching and Logging.
+System administrators can override selected settings at runtime from **System Admin → System Settings** (`/system-admin/settings`). Overrides are stored in the `SystemSettings` table and layered over `appsettings*.json`, environment variables and command-line arguments (database rows win). Groups: Site, Smtp, VirusScan, RateLimiting, Profiling, Caching, Moderation and Logging.
 
-- Site, Smtp, VirusScan and Logging changes apply without a restart (consumers read `IOptionsMonitor`; `IOptions<SiteSettings>` is a live adapter). RateLimiting, Profiling and Caching take effect after a restart and show a banner.
+- Site, Smtp, VirusScan, Moderation and Logging changes apply without a restart (consumers read `IOptionsMonitor`; `IOptions<SiteSettings>` is a live adapter). RateLimiting, Profiling and Caching take effect after a restart and show a banner.
 - Secrets (`Smtp:Password`, `Caching:RedisConnectionString`) are encrypted with ASP.NET Core Data Protection, never displayed and never written to the audit log.
 - "Reset to default" removes the group's rows so the file/environment values apply again.
 - Other instances pick up changes within about 60 seconds (polling).

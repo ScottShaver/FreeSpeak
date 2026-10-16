@@ -112,4 +112,7 @@
   <data name="FeedReportReviewed" xml:space="preserve">
     <value>تمت مراجعة بلاغك.</value>
   </data>
+  <data name="FeedContentRemoved" xml:space="preserve">
+    <value>تمت إزالة المحتوى الخاص بك لمخالفته إرشادات المجتمع.</value>
+  </data>
 </root>

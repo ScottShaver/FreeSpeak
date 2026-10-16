@@ -382,4 +382,16 @@
   <data name="E_SmtpFailed" xml:space="preserve">
     <value>テストメールを送信できませんでした。</value>
   </data>
+  <data name="G_Moderation" xml:space="preserve">
+    <value>モデレーション</value>
+  </data>
+  <data name="GD_Moderation" xml:space="preserve">
+    <value>システムモデレーターダッシュボードの設定です。</value>
+  </data>
+  <data name="L_StaleReportDays" xml:space="preserve">
+    <value>未対応の通報とみなす日数</value>
+  </data>
+  <data name="H_StaleReportDays" xml:space="preserve">
+    <value>この日数を超えて保留中の通報は、モデレーターダッシュボードで未対応として表示されます。</value>
+  </data>
 </root>

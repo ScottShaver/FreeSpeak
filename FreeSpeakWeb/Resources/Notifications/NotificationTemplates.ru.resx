@@ -112,4 +112,7 @@
   <data name="FeedReportReviewed" xml:space="preserve">
     <value>Ваша жалоба была рассмотрена.</value>
   </data>
+  <data name="FeedContentRemoved" xml:space="preserve">
+    <value>Ваш контент удалён за нарушение правил сообщества.</value>
+  </data>
 </root>

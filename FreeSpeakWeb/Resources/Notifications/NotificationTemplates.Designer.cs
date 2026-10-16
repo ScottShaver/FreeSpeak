@@ -221,5 +221,14 @@ namespace FreeSpeakWeb.Resources.Notifications {
                 return ResourceManager.GetString("FeedReportReviewed", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Your content was removed for violating the community guidelines..
+        /// </summary>
+        public static string FeedContentRemoved {
+            get {
+                return ResourceManager.GetString("FeedContentRemoved", resourceCulture);
+            }
+        }
     }
 }

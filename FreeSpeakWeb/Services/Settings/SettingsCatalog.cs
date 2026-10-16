@@ -30,6 +30,9 @@ namespace FreeSpeakWeb.Services.Settings
         /// <summary>The identifier of the RateLimiting group.</summary>
         public const string RateLimitingGroupId = "ratelimiting";
 
+        /// <summary>The identifier of the Moderation group.</summary>
+        public const string ModerationGroupId = "moderation";
+
         /// <summary>
         /// Gets all editable groups in display order.
         /// </summary>
@@ -113,6 +116,10 @@ namespace FreeSpeakWeb.Services.Settings
                 {
                     Bool("Caching:UseRedis", "L_UseRedis", "false"),
                     new SettingFieldDefinition("Caching:RedisConnectionString", SettingFieldType.Secret, "L_RedisConnectionString", HelpKey: "H_Secret")
+                }),
+                new SettingGroupDefinition(ModerationGroupId, "G_Moderation", "GD_Moderation", false, new[]
+                {
+                    Int(ModerationSettings.StaleReportDaysKey, "L_StaleReportDays", ModerationSettings.DefaultStaleReportDays.ToString(), 1, 365, help: "H_StaleReportDays")
                 }),
                 new SettingGroupDefinition("logging", "G_Logging", "GD_Logging", false, logging)
             };

@@ -382,4 +382,16 @@
   <data name="E_SmtpFailed" xml:space="preserve">
     <value>Nie udało się wysłać testowej wiadomości e-mail.</value>
   </data>
+  <data name="G_Moderation" xml:space="preserve">
+    <value>Moderacja</value>
+  </data>
+  <data name="GD_Moderation" xml:space="preserve">
+    <value>Ustawienia panelu moderatorów systemu.</value>
+  </data>
+  <data name="L_StaleReportDays" xml:space="preserve">
+    <value>Próg zaległych zgłoszeń (dni)</value>
+  </data>
+  <data name="H_StaleReportDays" xml:space="preserve">
+    <value>Oczekujące zgłoszenia starsze niż ta liczba dni są oznaczane w panelu moderatora jako zaległe.</value>
+  </data>
 </root>
