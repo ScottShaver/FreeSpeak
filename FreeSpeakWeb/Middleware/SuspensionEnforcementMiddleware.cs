@@ -80,7 +80,7 @@ namespace FreeSpeakWeb.Middleware
         /// </summary>
         /// <param name="path">The request path.</param>
         /// <returns>True when the path is not checked.</returns>
-        internal static bool IsExempt(PathString path)
+        public static bool IsExempt(PathString path)
         {
             var value = path.Value ?? string.Empty;
             return value.StartsWith("/Account/Lockout", StringComparison.OrdinalIgnoreCase)
