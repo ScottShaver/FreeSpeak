@@ -142,7 +142,7 @@ else
     private readonly List<FeedReportQueueItem> items = new();
     private ModerationOverview? overview;
     private int totalCount;
-    private int page;
+    private int page = 1;
     private bool loading;
     private bool loadFailed;
     private int? selectedReportId;
@@ -189,7 +189,7 @@ else
     /// </summary>
     private async Task ReloadAsync()
     {
-        page = 0;
+        page = 1;
         items.Clear();
         try
         {

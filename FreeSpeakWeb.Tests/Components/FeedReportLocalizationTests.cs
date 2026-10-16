@@ -59,6 +59,6 @@ public class FeedReportLocalizationTests
     /// Supplies resource sets and locales.
     /// </summary>
     public static IEnumerable<object[]> Data() =>
-        new[] { "SocialFeed/ReportFeedContentModal", "SocialFeed/PostEditModal", "Notifications/NotificationTemplates" }
+        new[] { "SocialFeed/ReportFeedContentModal", "SocialFeed/PostEditModal", "Notifications/NotificationTemplates", "Moderation/FeedReports", "Pages/SystemModerator", "Pages/SystemSettings" }
             .SelectMany(r => Locales.Select(l => new object[] { r, l }));
 }
