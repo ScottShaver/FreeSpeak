@@ -196,6 +196,15 @@ namespace FreeSpeakWeb.Resources.SocialFeed {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Remove Comment.
+        /// </summary>
+        public static string RemoveComment {
+            get {
+                return ResourceManager.GetString("RemoveComment", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Reply.
         /// </summary>
         public static string Reply {
