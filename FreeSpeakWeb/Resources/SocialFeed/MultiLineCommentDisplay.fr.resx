@@ -124,4 +124,22 @@
   <data name="DeleteCommentCancelButton" xml:space="preserve">
     <value>Annuler</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>À l'instant</value>
+  </data>
+  <data name="MinutesShort" xml:space="preserve">
+    <value>{0} min</value>
+  </data>
+  <data name="HoursShort" xml:space="preserve">
+    <value>{0} h</value>
+  </data>
+  <data name="DaysShort" xml:space="preserve">
+    <value>{0} j</value>
+  </data>
+  <data name="CommentImageAlt" xml:space="preserve">
+    <value>Image du commentaire</value>
+  </data>
+  <data name="YouAlt" xml:space="preserve">
+    <value>Vous</value>
+  </data>
 </root>

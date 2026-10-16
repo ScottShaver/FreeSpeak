@@ -58,7 +58,7 @@
                                     <div class="user-details">
                                         <h6 class="mb-0">@GetUserDisplayName(request.User)</h6>
                                         <small class="text-muted">
-                                            <i class="bi bi-clock me-1"></i>@Localizer["RequestedOn"] @request.RequestedAt.ToLocalTime().ToString("MMM dd, yyyy 'at' h:mm tt")
+                                            <i class="bi bi-clock me-1"></i>@Localizer["RequestedOn"] @request.RequestedAt.ToLocalTime().ToString("g")
                                         </small>
                                         @if (!string.IsNullOrEmpty(request.User?.UserName))
                                         {

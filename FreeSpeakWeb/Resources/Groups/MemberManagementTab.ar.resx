@@ -151,4 +151,34 @@
   <data name="BanMemberConfirmTitle" xml:space="preserve"><value>حظر العضو؟</value></data>
   <data name="BanMemberConfirmMessage" xml:space="preserve"><value>هل أنت متأكد أنك تريد حظر {0} من هذه المجموعة؟ ستتم إزالته ولن يتمكن من العرض أو النشر فيها.</value></data>
   <data name="MemberBannedSuccess" xml:space="preserve"><value>تم حظر {0} من المجموعة.</value></data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>غير معروف</value>
+  </data>
+  <data name="OnlyCreatorOrSystemAdminCanSetAdmin" xml:space="preserve">
+    <value>يمكن لمنشئ المجموعة أو مسؤولي النظام فقط تعيين أدوار المسؤول</value>
+  </data>
+  <data name="OnlyAdminOrSystemAdminCanSetModerator" xml:space="preserve">
+    <value>يمكن للمسؤولين أو مسؤولي النظام فقط تعيين أدوار المشرف</value>
+  </data>
+  <data name="OnlyCreatorCanBanAdmins" xml:space="preserve">
+    <value>يمكن لمنشئ المجموعة فقط حظر المسؤولين</value>
+  </data>
+  <data name="OnlyCreatorCanRemoveAdmins" xml:space="preserve">
+    <value>يمكن لمنشئ المجموعة فقط إزالة المسؤولين</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>جارٍ التحميل...</value>
+  </data>
+  <data name="LoadMoreMembers" xml:space="preserve">
+    <value>تحميل المزيد من الأعضاء</value>
+  </data>
+  <data name="ShowingMembersSingular" xml:space="preserve">
+    <value>عرض {0} عضو</value>
+  </data>
+  <data name="ShowingMembersPlural" xml:space="preserve">
+    <value>عرض {0} أعضاء</value>
+  </data>
+  <data name="MoreAvailable" xml:space="preserve">
+    <value>المزيد متاح</value>
+  </data>
 </root>

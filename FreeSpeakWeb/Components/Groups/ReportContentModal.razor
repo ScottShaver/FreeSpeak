@@ -22,7 +22,7 @@
                         @Localizer["ReportPost"]
                     }
                 </h5>
-                <button type="button" class="btn-close" @onclick="OnClose" aria-label="Close" disabled="@isSubmitting"></button>
+                <button type="button" class="btn-close" @onclick="OnClose" aria-label="@Localizer["Close"]" disabled="@isSubmitting"></button>
             </div>
             <div class="modal-body">
                 @if (!string.IsNullOrEmpty(errorMessage))

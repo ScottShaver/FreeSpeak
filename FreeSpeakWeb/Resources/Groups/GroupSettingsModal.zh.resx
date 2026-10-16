@@ -145,4 +145,19 @@
   <data name="RequiresFileApprovalHelp" xml:space="preserve">
     <value>上传的文件必须经版主审批后才能对其他成员可见。</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="GroupNameRequired" xml:space="preserve">
+    <value>群组名称为必填项。</value>
+  </data>
+  <data name="GroupDescriptionRequired" xml:space="preserve">
+    <value>群组描述为必填项。</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>设置已成功保存!</value>
+  </data>
+  <data name="ErrorSavingSettings" xml:space="preserve">
+    <value>保存设置时发生意外错误。</value>
+  </data>
 </root>

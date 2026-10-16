@@ -257,5 +257,59 @@ namespace FreeSpeakWeb.Resources.SocialFeed {
                 return ResourceManager.GetString("Wow", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Just now.
+        /// </summary>
+        public static string JustNow {
+            get {
+                return ResourceManager.GetString("JustNow", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}m.
+        /// </summary>
+        public static string MinutesShort {
+            get {
+                return ResourceManager.GetString("MinutesShort", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}h.
+        /// </summary>
+        public static string HoursShort {
+            get {
+                return ResourceManager.GetString("HoursShort", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}d.
+        /// </summary>
+        public static string DaysShort {
+            get {
+                return ResourceManager.GetString("DaysShort", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Comment image.
+        /// </summary>
+        public static string CommentImageAlt {
+            get {
+                return ResourceManager.GetString("CommentImageAlt", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You.
+        /// </summary>
+        public static string YouAlt {
+            get {
+                return ResourceManager.GetString("YouAlt", resourceCulture);
+            }
+        }
     }
 }

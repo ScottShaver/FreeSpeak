@@ -56,7 +56,7 @@
                 {
                     var isExpanded = expandedMemberId == banned.UserId;
                     var isUnbanning = unbanningMemberId == banned.UserId;
-                    var memberDisplayName = memberNames.ContainsKey(banned.UserId) ? memberNames[banned.UserId] : "Unknown";
+                    var memberDisplayName = memberNames.ContainsKey(banned.UserId) ? memberNames[banned.UserId] : Localizer["UnknownUser"].Value;
 
                     <div class="banned-item @(isExpanded ? "expanded" : "")" @key="banned.UserId">
                         <div class="banned-header" @onclick="() => ToggleMember(banned.UserId)">
@@ -72,7 +72,7 @@
                                         <span class="badge bg-danger ms-2">@Localizer["Banned"]</span>
                                     </div>
                                     <div class="banned-stats text-muted small">
-                                        @Localizer["BannedOn"] @banned.BannedAt.ToLocalTime().ToString("MMM dd, yyyy 'at' h:mm tt")
+                                        @Localizer["BannedOn"] @banned.BannedAt.ToLocalTime().ToString("g")
                                     </div>
                                 </div>
                             </div>
@@ -299,7 +299,7 @@
                 userDetails[member.UserId] = (
                     member.User!.FirstName,
                     member.User.LastName,
-                    member.User.UserName ?? "Unknown"
+                    member.User.UserName ?? Localizer["UnknownUser"].Value
                 );
             }
 
@@ -369,7 +369,7 @@
     /// <param name="userId">The user ID of the banned member.</param>
     /// <returns>The member's display name.</returns>
     private string GetMemberDisplayName(string userId) =>
-        memberNames.TryGetValue(userId, out var name) ? name : "Unknown";
+        memberNames.TryGetValue(userId, out var name) ? name : Localizer["UnknownUser"].Value;
 
     /// <summary>
     /// Opens the unban confirmation dialog for a banned member.

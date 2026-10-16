@@ -140,5 +140,23 @@ namespace FreeSpeakWeb.Resources.Groups {
                 return ResourceManager.GetString("Title", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group information is missing..
+        /// </summary>
+        public static string GroupInformationMissing {
+            get {
+                return ResourceManager.GetString("GroupInformationMissing", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading the group rules..
+        /// </summary>
+        public static string ErrorLoadingRules {
+            get {
+                return ResourceManager.GetString("ErrorLoadingRules", resourceCulture);
+            }
+        }
     }
 }

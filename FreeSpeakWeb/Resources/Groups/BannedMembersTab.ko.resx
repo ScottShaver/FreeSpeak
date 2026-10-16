@@ -30,4 +30,7 @@
   <data name="ErrorUnbanningMember" xml:space="preserve">
     <value>회원 차단을 해제하는 중 오류가 발생했습니다.</value>
   </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>알 수 없음</value>
+  </data>
 </root>

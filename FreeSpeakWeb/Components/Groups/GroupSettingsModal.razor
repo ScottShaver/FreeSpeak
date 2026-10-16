@@ -14,7 +14,7 @@
                 <h5 class="modal-title">
                     <i class="bi bi-gear me-2"></i>@Localizer["Title"]
                 </h5>
-                <button type="button" class="btn-close" @onclick="OnClose" aria-label="Close"></button>
+                <button type="button" class="btn-close" @onclick="OnClose" aria-label="@Localizer["Close"]"></button>
             </div>
             <div class="modal-body">
                 @if (isLoading)
@@ -292,13 +292,13 @@
 
         if (string.IsNullOrWhiteSpace(groupName))
         {
-            errorMessage = "Group name is required.";
+            errorMessage = Localizer["GroupNameRequired"];
             return;
         }
 
         if (string.IsNullOrWhiteSpace(groupDescription))
         {
-            errorMessage = "Group description is required.";
+            errorMessage = Localizer["GroupDescriptionRequired"];
             return;
         }
 
@@ -326,7 +326,7 @@
 
             if (success)
             {
-                successMessage = "Settings saved successfully!";
+                successMessage = Localizer["SettingsSaved"];
                 Logger.LogInformation("Group {GroupId} settings updated by user {UserId}", Group.Id, CurrentUserId);
 
                 // Update the Group object with new values
@@ -360,7 +360,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error saving group settings for group {GroupId}", Group.Id);
-            errorMessage = "An unexpected error occurred while saving settings.";
+            errorMessage = Localizer["ErrorSavingSettings"];
         }
         finally
         {

@@ -125,4 +125,22 @@
   <data name="DeleteCommentCancelButton" xml:space="preserve">
     <value>취소</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>방금</value>
+  </data>
+  <data name="MinutesShort" xml:space="preserve">
+    <value>{0}분</value>
+  </data>
+  <data name="HoursShort" xml:space="preserve">
+    <value>{0}시간</value>
+  </data>
+  <data name="DaysShort" xml:space="preserve">
+    <value>{0}일</value>
+  </data>
+  <data name="CommentImageAlt" xml:space="preserve">
+    <value>댓글 이미지</value>
+  </data>
+  <data name="YouAlt" xml:space="preserve">
+    <value>나</value>
+  </data>
 </root>

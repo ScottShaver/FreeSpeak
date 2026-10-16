@@ -30,4 +30,7 @@
   <data name="ErrorUnbanningMember" xml:space="preserve">
     <value>Er is een fout opgetreden bij het deblokkeren van het lid.</value>
   </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Onbekend</value>
+  </data>
 </root>

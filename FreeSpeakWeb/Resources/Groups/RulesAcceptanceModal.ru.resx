@@ -85,4 +85,10 @@
   <data name="AgreeAndJoin" xml:space="preserve">
     <value>Согласиться и Вступить</value>
   </data>
+  <data name="GroupInformationMissing" xml:space="preserve">
+    <value>Информация о группе отсутствует.</value>
+  </data>
+  <data name="ErrorLoadingRules" xml:space="preserve">
+    <value>Произошла ошибка при загрузке правил группы.</value>
+  </data>
 </root>

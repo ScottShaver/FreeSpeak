@@ -151,4 +151,34 @@
   <data name="BanMemberConfirmTitle" xml:space="preserve"><value>メンバーをBANしますか？</value></data>
   <data name="BanMemberConfirmMessage" xml:space="preserve"><value>{0} をこのグループからBANしてもよろしいですか？削除され、閲覧や投稿ができなくなります。</value></data>
   <data name="MemberBannedSuccess" xml:space="preserve"><value>{0} をグループからBANしました。</value></data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>不明</value>
+  </data>
+  <data name="OnlyCreatorOrSystemAdminCanSetAdmin" xml:space="preserve">
+    <value>管理者ロールを割り当てられるのは、グループの作成者またはシステム管理者のみです</value>
+  </data>
+  <data name="OnlyAdminOrSystemAdminCanSetModerator" xml:space="preserve">
+    <value>モデレーターロールを割り当てられるのは、管理者またはシステム管理者のみです</value>
+  </data>
+  <data name="OnlyCreatorCanBanAdmins" xml:space="preserve">
+    <value>管理者をブロックできるのはグループの作成者のみです</value>
+  </data>
+  <data name="OnlyCreatorCanRemoveAdmins" xml:space="preserve">
+    <value>管理者を削除できるのはグループの作成者のみです</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>読み込み中...</value>
+  </data>
+  <data name="LoadMoreMembers" xml:space="preserve">
+    <value>さらにメンバーを読み込む</value>
+  </data>
+  <data name="ShowingMembersSingular" xml:space="preserve">
+    <value>{0} 人のメンバーを表示中</value>
+  </data>
+  <data name="ShowingMembersPlural" xml:space="preserve">
+    <value>{0} 人のメンバーを表示中</value>
+  </data>
+  <data name="MoreAvailable" xml:space="preserve">
+    <value>さらに表示できます</value>
+  </data>
 </root>

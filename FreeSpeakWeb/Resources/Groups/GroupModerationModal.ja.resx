@@ -352,4 +352,7 @@
   <data name="Cancel" xml:space="preserve">
     <value>キャンセル</value>
   </data>
+  <data name="PostImage" xml:space="preserve">
+    <value>投稿の画像</value>
+  </data>
 </root>

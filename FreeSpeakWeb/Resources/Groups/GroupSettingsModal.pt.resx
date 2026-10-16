@@ -145,4 +145,19 @@
   <data name="RequiresFileApprovalHelp" xml:space="preserve">
     <value>Os arquivos carregados devem ser aprovados por um moderador antes de serem visíveis para outros membros.</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Fechar</value>
+  </data>
+  <data name="GroupNameRequired" xml:space="preserve">
+    <value>O nome do grupo é obrigatório.</value>
+  </data>
+  <data name="GroupDescriptionRequired" xml:space="preserve">
+    <value>A descrição do grupo é obrigatória.</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Configurações salvas com sucesso!</value>
+  </data>
+  <data name="ErrorSavingSettings" xml:space="preserve">
+    <value>Ocorreu um erro inesperado ao salvar as configurações.</value>
+  </data>
 </root>

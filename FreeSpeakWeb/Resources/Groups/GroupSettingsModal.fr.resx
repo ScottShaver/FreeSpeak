@@ -145,4 +145,19 @@
   <data name="RequiresFileApprovalHelp" xml:space="preserve">
     <value>Les fichiers téléchargés doivent être approuvés par un modérateur avant d'être visibles par les autres membres.</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="GroupNameRequired" xml:space="preserve">
+    <value>Le nom du groupe est obligatoire.</value>
+  </data>
+  <data name="GroupDescriptionRequired" xml:space="preserve">
+    <value>La description du groupe est obligatoire.</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Paramètres enregistrés avec succès !</value>
+  </data>
+  <data name="ErrorSavingSettings" xml:space="preserve">
+    <value>Une erreur inattendue s'est produite lors de l'enregistrement des paramètres.</value>
+  </data>
 </root>

@@ -145,4 +145,19 @@
   <data name="RequiresFileApprovalHelp" xml:space="preserve">
     <value>アップロードされたファイルは、他のメンバーに表示される前にモデレーターの承認が必要です。</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="GroupNameRequired" xml:space="preserve">
+    <value>グループ名は必須です。</value>
+  </data>
+  <data name="GroupDescriptionRequired" xml:space="preserve">
+    <value>グループの説明は必須です。</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>設定を保存しました。</value>
+  </data>
+  <data name="ErrorSavingSettings" xml:space="preserve">
+    <value>設定の保存中に予期しないエラーが発生しました。</value>
+  </data>
 </root>

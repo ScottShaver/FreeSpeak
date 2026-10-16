@@ -125,4 +125,22 @@
   <data name="DeleteCommentCancelButton" xml:space="preserve">
     <value>إلغاء</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>الآن</value>
+  </data>
+  <data name="MinutesShort" xml:space="preserve">
+    <value>{0} د</value>
+  </data>
+  <data name="HoursShort" xml:space="preserve">
+    <value>{0} س</value>
+  </data>
+  <data name="DaysShort" xml:space="preserve">
+    <value>{0} ي</value>
+  </data>
+  <data name="CommentImageAlt" xml:space="preserve">
+    <value>صورة التعليق</value>
+  </data>
+  <data name="YouAlt" xml:space="preserve">
+    <value>أنت</value>
+  </data>
 </root>

@@ -30,4 +30,7 @@
   <data name="ErrorUnbanningMember" xml:space="preserve">
     <value>Ocorreu um erro ao desbanir o membro.</value>
   </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Desconhecido</value>
+  </data>
 </root>

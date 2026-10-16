@@ -151,4 +151,34 @@
   <data name="BanMemberConfirmTitle" xml:space="preserve"><value>Mitglied sperren?</value></data>
   <data name="BanMemberConfirmMessage" xml:space="preserve"><value>Möchten Sie {0} wirklich aus dieser Gruppe sperren? Das Mitglied wird entfernt und kann die Gruppe nicht mehr ansehen oder darin posten.</value></data>
   <data name="MemberBannedSuccess" xml:space="preserve"><value>{0} wurde aus der Gruppe gesperrt.</value></data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Unbekannt</value>
+  </data>
+  <data name="OnlyCreatorOrSystemAdminCanSetAdmin" xml:space="preserve">
+    <value>Nur der Gruppenersteller oder Systemadministratoren können Administratorrollen zuweisen</value>
+  </data>
+  <data name="OnlyAdminOrSystemAdminCanSetModerator" xml:space="preserve">
+    <value>Nur Administratoren oder Systemadministratoren können Moderatorrollen zuweisen</value>
+  </data>
+  <data name="OnlyCreatorCanBanAdmins" xml:space="preserve">
+    <value>Nur der Gruppenersteller kann Administratoren sperren</value>
+  </data>
+  <data name="OnlyCreatorCanRemoveAdmins" xml:space="preserve">
+    <value>Nur der Gruppenersteller kann Administratoren entfernen</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Wird geladen...</value>
+  </data>
+  <data name="LoadMoreMembers" xml:space="preserve">
+    <value>Weitere Mitglieder laden</value>
+  </data>
+  <data name="ShowingMembersSingular" xml:space="preserve">
+    <value>{0} Mitglied wird angezeigt</value>
+  </data>
+  <data name="ShowingMembersPlural" xml:space="preserve">
+    <value>{0} Mitglieder werden angezeigt</value>
+  </data>
+  <data name="MoreAvailable" xml:space="preserve">
+    <value>Weitere verfügbar</value>
+  </data>
 </root>

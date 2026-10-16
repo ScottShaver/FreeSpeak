@@ -1,4 +1,7 @@
 @using FreeSpeakWeb.Services
+@using Microsoft.Extensions.Localization
+
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Groups.MemberLevelBadge> Localizer
 
 @* Display member level badge with icon and level name *@
 @if (Level != MemberLevel.Member || ShowForAllLevels)
@@ -11,7 +14,7 @@
         }
         @if (ShowPoints && Points.HasValue)
         {
-            <span class="ms-1">(@Points pts)</span>
+            <span class="ms-1">(@string.Format(Localizer["PointsShort"].Value, Points))</span>
         }
     </span>
 }
@@ -64,7 +67,22 @@
     {
         iconClass = GroupPointsService.GetMemberLevelIcon(Level);
         colorClass = GroupPointsService.GetMemberLevelColor(Level);
-        levelName = GroupPointsService.GetMemberLevelName(Level);
+        levelName = GetLevelName();
+    }
+
+    /// <summary>
+    /// Gets the localized display name of the current member level.
+    /// </summary>
+    /// <returns>The localized level name.</returns>
+    private string GetLevelName()
+    {
+        return Level switch
+        {
+            MemberLevel.AllStarContributor => Localizer["AllStarContributor"].Value,
+            MemberLevel.TopContributor => Localizer["TopContributor"].Value,
+            MemberLevel.RisingContributor => Localizer["RisingContributor"].Value,
+            _ => Localizer["Member"].Value
+        };
     }
 
     /// <summary>
@@ -75,11 +93,10 @@
     {
         return Level switch
         {
-            MemberLevel.AllStarContributor => $"All-star Contributor - Achieved at {GroupPointsService.AllStarContributorThreshold}+ points",
-            MemberLevel.TopContributor => $"Top Contributor - Achieved at {GroupPointsService.TopContributorThreshold}+ points",
-            MemberLevel.RisingContributor => $"Rising Contributor - Achieved at {GroupPointsService.RisingContributorThreshold}+ points",
-            MemberLevel.Member => "Member",
-            _ => "Member"
+            MemberLevel.AllStarContributor => string.Format(Localizer["AllStarContributorTooltip"].Value, GroupPointsService.AllStarContributorThreshold),
+            MemberLevel.TopContributor => string.Format(Localizer["TopContributorTooltip"].Value, GroupPointsService.TopContributorThreshold),
+            MemberLevel.RisingContributor => string.Format(Localizer["RisingContributorTooltip"].Value, GroupPointsService.RisingContributorThreshold),
+            _ => Localizer["Member"].Value
         };
     }
 

@@ -125,4 +125,22 @@
   <data name="DeleteCommentCancelButton" xml:space="preserve">
     <value>Abbrechen</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>Gerade eben</value>
+  </data>
+  <data name="MinutesShort" xml:space="preserve">
+    <value>{0} Min.</value>
+  </data>
+  <data name="HoursShort" xml:space="preserve">
+    <value>{0} Std.</value>
+  </data>
+  <data name="DaysShort" xml:space="preserve">
+    <value>{0} T.</value>
+  </data>
+  <data name="CommentImageAlt" xml:space="preserve">
+    <value>Kommentarbild</value>
+  </data>
+  <data name="YouAlt" xml:space="preserve">
+    <value>Du</value>
+  </data>
 </root>
