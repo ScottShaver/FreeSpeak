@@ -123,4 +123,10 @@
   <data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="ShowRawDetails" xml:space="preserve">
+    <value>Show raw details</value>
+  </data>
+  <data name="ErrorSearching" xml:space="preserve">
+    <value>An error occurred while searching audit logs. Please try again.</value>
+  </data>
 </root>

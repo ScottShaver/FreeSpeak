@@ -121,4 +121,10 @@
   <data name="Close" xml:space="preserve">
     <value>إغلاق</value>
   </data>
+  <data name="ShowRawDetails" xml:space="preserve">
+    <value>إظهار التفاصيل الخام</value>
+  </data>
+  <data name="ErrorSearching" xml:space="preserve">
+    <value>حدث خطأ أثناء البحث في سجلات التدقيق. يرجى المحاولة مرة أخرى.</value>
+  </data>
 </root>

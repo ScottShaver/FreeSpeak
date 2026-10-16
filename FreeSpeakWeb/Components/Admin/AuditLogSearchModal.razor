@@ -3,9 +3,11 @@
 @using FreeSpeakWeb.Repositories.Abstractions
 @using System.Text.Json
 @using Microsoft.JSInterop
+@using Microsoft.Extensions.Localization
 @inject IAuditLogRepository AuditLogRepository
 @inject ILogger<AuditLogSearchModal> Logger
 @inject IJSRuntime JSRuntime
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Admin.AuditLogSearchModal> Localizer
 
 <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -13,7 +15,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">
                     <i class="bi bi-search me-2"></i>
-                    Search Audit Logs
+                    @Localizer["Title"]
                 </h5>
                 <button type="button" class="btn-close" @onclick="Close"></button>
             </div>
@@ -22,19 +24,19 @@
                 <div class="search-form-section mb-4 p-3 bg-light rounded">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <label for="userId" class="form-label">User ID (Exact Match)</label>
+                            <label for="userId" class="form-label">@Localizer["UserIdLabel"]</label>
                             <input type="text" 
                                    id="userId" 
                                    class="form-control" 
-                                   placeholder="Enter user GUID..."
+                                   placeholder="@Localizer["UserIdPlaceholder"]"
                                    @bind="searchUserId" />
                         </div>
                         <div class="col-md-3">
-                            <label for="actionCategory" class="form-label">Action Category</label>
+                            <label for="actionCategory" class="form-label">@Localizer["ActionCategory"]</label>
                             <select id="actionCategory" 
                                     class="form-select" 
                                     @bind="selectedActionCategory">
-                                <option value="">All Categories</option>
+                                <option value="">@Localizer["AllCategories"]</option>
                                 @foreach (var category in Enum.GetValues<ActionCategory>())
                                 {
                                     <option value="@category.ToString()">@category.ToString()</option>
@@ -42,14 +44,14 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label for="startDate" class="form-label">Start Date</label>
+                            <label for="startDate" class="form-label">@Localizer["StartDate"]</label>
                             <input type="date" 
                                    id="startDate" 
                                    class="form-control" 
                                    @bind="startDate" />
                         </div>
                         <div class="col-md-2">
-                            <label for="endDate" class="form-label">End Date</label>
+                            <label for="endDate" class="form-label">@Localizer["EndDate"]</label>
                             <input type="date" 
                                    id="endDate" 
                                    class="form-control" 
@@ -64,7 +66,7 @@
                                 {
                                     <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                                 }
-                                <i class="bi bi-search me-1"></i>Search
+                                <i class="bi bi-search me-1"></i>@Localizer["Search"]
                             </button>
                         </div>
                     </div>
@@ -72,10 +74,10 @@
                     {
                         <div class="mt-2">
                             <small class="text-muted">
-                                Found @auditLogs.Count result(s)
+                                @string.Format(Localizer["FoundResults"].Value, auditLogs.Count)
                                 @if (auditLogs.Count >= 500)
                                 {
-                                    <span class="text-warning fw-bold">(Limited to 500 maximum)</span>
+                                    <span class="text-warning fw-bold">@Localizer["LimitedToMaximum"]</span>
                                 }
                             </small>
                         </div>
@@ -87,9 +89,9 @@
                 {
                     <div class="text-center py-4">
                         <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Searching audit logs...</span>
+                            <span class="visually-hidden">@Localizer["SearchingAuditLogs"]</span>
                         </div>
-                        <p class="text-muted mt-2">Searching audit logs...</p>
+                        <p class="text-muted mt-2">@Localizer["SearchingAuditLogs"]</p>
                     </div>
                 }
                 else if (!string.IsNullOrEmpty(errorMessage))
@@ -102,7 +104,7 @@
                 {
                     <div class="alert alert-info" role="alert">
                         <i class="bi bi-info-circle me-2"></i>
-                        No audit log entries found matching your search criteria.
+                        @Localizer["NoEntriesFound"]
                     </div>
                 }
                 else if (hasSearched && auditLogs.Count > 0)
@@ -112,10 +114,10 @@
                             <table class="table table-hover table-sm resizable-table">
                                 <thead>
                                     <tr>
-                                        <th class="resizable-col">Date/Time</th>
-                                        <th class="resizable-col">User ID</th>
-                                        <th class="resizable-col">Category</th>
-                                        <th>Details</th>
+                                        <th class="resizable-col">@Localizer["DateTime"]</th>
+                                        <th class="resizable-col">@Localizer["UserId"]</th>
+                                        <th class="resizable-col">@Localizer["Category"]</th>
+                                        <th>@Localizer["Details"]</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -123,7 +125,7 @@
                                     {
                                         <tr>
                                             <td class="text-nowrap small">
-                                                @log.ActionStamp.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
+                                                @log.ActionStamp.ToLocalTime().ToString("G", System.Globalization.CultureInfo.CurrentCulture)
                                             </td>
                                             <td class="text-truncate small" style="max-width: 200px;" title="@log.UserId">
                                                 @log.UserId
@@ -138,7 +140,7 @@
                                                     <span class="small text-break flex-grow-1">@AuditLogDetailsSummarizer.Summarize(log.ActionDetails)</span>
                                                     <button type="button" 
                                                             class="btn btn-sm btn-link p-0 text-start" 
-                                                            title="Show raw details"
+                                                            title="@Localizer["ShowRawDetails"]"
                                                             @onclick="() => ToggleDetails(log.Id)">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                                             <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
@@ -164,7 +166,7 @@
                 {
                     <div class="text-center py-5 text-muted">
                         <i class="bi bi-search fs-1"></i>
-                        <p class="mt-3">Use the search filters above to find audit log entries.</p>
+                        <p class="mt-3">@Localizer["SearchPrompt"]</p>
                     </div>
                 }
             </div>
@@ -176,18 +178,18 @@
                                 class="btn btn-sm btn-outline-secondary" 
                                 @onclick="LoadPreviousPage"
                                 disabled="@(currentPage <= 1)">
-                            <i class="bi bi-chevron-left me-1"></i>Previous
+                            <i class="bi bi-chevron-left me-1"></i>@Localizer["Previous"]
                         </button>
-                        <span class="text-muted small mx-3">Page @currentPage of @totalPages</span>
+                        <span class="text-muted small mx-3">@string.Format(Localizer["PageOfPages"].Value, currentPage, totalPages)</span>
                         <button type="button" 
                                 class="btn btn-sm btn-outline-secondary" 
                                 @onclick="LoadNextPage"
                                 disabled="@(currentPage >= totalPages)">
-                            Next<i class="bi bi-chevron-right ms-1"></i>
+                            @Localizer["Next"]<i class="bi bi-chevron-right ms-1"></i>
                         </button>
                     </div>
                 }
-                <button type="button" class="btn btn-secondary" @onclick="Close">Close</button>
+                <button type="button" class="btn btn-secondary" @onclick="Close">@Localizer["Close"]</button>
             </div>
         </div>
     </div>
@@ -257,7 +259,7 @@
         {
             Logger.LogError(ex, "[{ExceptionType}] Error searching audit logs. Exception: {ExceptionMessage}",
                 ex.GetType().Name, ex.Message);
-            errorMessage = "An error occurred while searching audit logs. Please try again.";
+            errorMessage = Localizer["ErrorSearching"];
             hasSearched = true;
         }
         finally

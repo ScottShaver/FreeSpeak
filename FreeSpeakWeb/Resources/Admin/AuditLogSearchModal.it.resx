@@ -121,4 +121,10 @@
   <data name="Close" xml:space="preserve">
     <value>Chiudi</value>
   </data>
+  <data name="ShowRawDetails" xml:space="preserve">
+    <value>Mostra dettagli grezzi</value>
+  </data>
+  <data name="ErrorSearching" xml:space="preserve">
+    <value>Si è verificato un errore durante la ricerca nei log di controllo. Riprova.</value>
+  </data>
 </root>

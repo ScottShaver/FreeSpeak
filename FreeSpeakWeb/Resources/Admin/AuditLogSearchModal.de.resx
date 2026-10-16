@@ -121,4 +121,10 @@
   <data name="Close" xml:space="preserve">
     <value>Schließen</value>
   </data>
+  <data name="ShowRawDetails" xml:space="preserve">
+    <value>Rohdetails anzeigen</value>
+  </data>
+  <data name="ErrorSearching" xml:space="preserve">
+    <value>Beim Durchsuchen der Audit-Protokolle ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.</value>
+  </data>
 </root>

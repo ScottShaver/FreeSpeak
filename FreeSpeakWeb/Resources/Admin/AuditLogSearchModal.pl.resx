@@ -121,4 +121,10 @@
   <data name="Close" xml:space="preserve">
     <value>Zamknij</value>
   </data>
+  <data name="ShowRawDetails" xml:space="preserve">
+    <value>Pokaż surowe szczegóły</value>
+  </data>
+  <data name="ErrorSearching" xml:space="preserve">
+    <value>Wystąpił błąd podczas wyszukiwania dzienników audytu. Spróbuj ponownie.</value>
+  </data>
 </root>

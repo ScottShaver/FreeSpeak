@@ -121,4 +121,10 @@
   <data name="Close" xml:space="preserve">
     <value>关闭</value>
   </data>
+  <data name="ShowRawDetails" xml:space="preserve">
+    <value>显示原始详细信息</value>
+  </data>
+  <data name="ErrorSearching" xml:space="preserve">
+    <value>搜索审核日志时出错。请重试。</value>
+  </data>
 </root>
