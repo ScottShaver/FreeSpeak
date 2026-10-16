@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddCommentFailed" xml:space="preserve">
+    <value>Impossible d'ajouter le commentaire.</value>
+  </data>
+  <data name="AddCommentError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de l'ajout de votre commentaire.</value>
+  </data>
+  <data name="AddReplyFailed" xml:space="preserve">
+    <value>Impossible d'ajouter la réponse.</value>
+  </data>
+  <data name="AddReplyError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de l'ajout de votre réponse.</value>
+  </data>
+  <data name="AddReactionFailed" xml:space="preserve">
+    <value>Impossible d'ajouter la réaction.</value>
+  </data>
+  <data name="AddReactionError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de l'ajout de votre réaction.</value>
+  </data>
+  <data name="RemoveReactionFailed" xml:space="preserve">
+    <value>Impossible de supprimer la réaction.</value>
+  </data>
+  <data name="RemoveReactionError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la suppression de votre réaction.</value>
+  </data>
+  <data name="DeleteCommentFailed" xml:space="preserve">
+    <value>Impossible de supprimer le commentaire.</value>
+  </data>
+  <data name="DeleteCommentError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la suppression du commentaire.</value>
+  </data>
+  <data name="UpdateCommentFailed" xml:space="preserve">
+    <value>Impossible de mettre à jour le commentaire.</value>
+  </data>
+  <data name="UpdateCommentError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la mise à jour du commentaire.</value>
+  </data>
+  <data name="SubmitReportError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de l'envoi du signalement.</value>
+  </data>
+</root>
