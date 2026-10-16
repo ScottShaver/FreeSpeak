@@ -214,6 +214,9 @@
   <data name="ConfirmResolve" xml:space="preserve">
     <value>Marquer ce signalement comme résolu sans supprimer le contenu ? Les autres signalements ouverts sur le même contenu seront aussi clôturés.</value>
   </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>Marquer ce signalement comme en cours d'examen et le prendre en charge ?</value>
+  </data>
   <data name="ConfirmRemove" xml:space="preserve">
     <value>Supprimer définitivement ce contenu ? L'auteur et les auteurs des signalements seront notifiés.</value>
   </data>

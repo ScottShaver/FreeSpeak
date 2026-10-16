@@ -3,6 +3,7 @@ using FreeSpeakWeb.Configuration;
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services;
 using FreeSpeakWeb.Services.Abstractions;
 using FreeSpeakWeb.Services.Settings;
 using Microsoft.AspNetCore.DataProtection;
@@ -66,6 +67,29 @@ namespace FreeSpeakWeb.Tests.Services.Settings
         {
             Run("ratelimiting", ("RateLimiting:Login:MaxRequests", "2")).Should().Contain(e => e.Key == "RateLimiting:Login:MaxRequests");
             Run("ratelimiting", ("RateLimiting:Login:MaxRequests", "3")).Should().BeEmpty();
+        }
+
+        /// <summary>Verifies the stale report threshold must be a whole number from 1 to 365.</summary>
+        [Theory]
+        [InlineData("0", false)]
+        [InlineData("-1", false)]
+        [InlineData("366", false)]
+        [InlineData("abc", false)]
+        [InlineData("1", true)]
+        [InlineData("3", true)]
+        [InlineData("365", true)]
+        public void StaleReportDays_Range_IsValidated(string value, bool valid)
+        {
+            var errors = Run("moderation", (ModerationSettings.StaleReportDaysKey, value));
+
+            if (valid)
+            {
+                errors.Should().BeEmpty();
+            }
+            else
+            {
+                errors.Should().Contain(e => e.Key == ModerationSettings.StaleReportDaysKey);
+            }
         }
 
         /// <summary>Verifies the global limit cannot be zero.</summary>

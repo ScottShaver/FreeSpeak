@@ -214,6 +214,9 @@
   <data name="ConfirmResolve" xml:space="preserve">
     <value>콘텐츠를 삭제하지 않고 이 신고를 해결됨으로 표시하시겠습니까? 같은 콘텐츠에 대한 다른 열린 신고도 함께 종료됩니다.</value>
   </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>이 신고를 검토 중으로 표시하고 담당하시겠습니까?</value>
+  </data>
   <data name="ConfirmRemove" xml:space="preserve">
     <value>이 콘텐츠를 영구적으로 삭제하시겠습니까? 작성자와 신고자에게 알림이 전송됩니다.</value>
   </data>

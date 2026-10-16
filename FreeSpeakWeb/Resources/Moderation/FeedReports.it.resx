@@ -214,6 +214,9 @@
   <data name="ConfirmResolve" xml:space="preserve">
     <value>Segnare questa segnalazione come risolta senza rimuovere il contenuto? Verranno chiuse anche le altre segnalazioni aperte sullo stesso contenuto.</value>
   </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>Segnare questa segnalazione come in revisione e prenderla in carico?</value>
+  </data>
   <data name="ConfirmRemove" xml:space="preserve">
     <value>Rimuovere definitivamente questo contenuto? L'autore e i segnalanti riceveranno una notifica.</value>
   </data>

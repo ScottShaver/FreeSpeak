@@ -388,5 +388,74 @@ namespace FreeSpeakWeb.Tests.Services
 
             (await _service.RemoveContentAsync(Moderator, 10, null)).Error.Should().Be(FeedReportError.ContentNotFound);
         }
+
+        /// <summary>The removal audit categories keep the numeric values required by the spec (26 and 27).</summary>
+        [Fact]
+        public void AuditCategories_KeepSpecValues()
+        {
+            ((int)ActionCategory.SystemModeratorRemovePost).Should().Be(26);
+            ((int)ActionCategory.SystemModeratorRemovePostComment).Should().Be(27);
+        }
+
+        /// <summary>A second moderator losing the race on remove neither deletes content nor notifies anyone.</summary>
+        [Fact]
+        public async Task RemoveContentAsync_LostRace_DoesNotRemoveOrNotify()
+        {
+            ReportExists(Report());
+            _repo.Setup(r => r.TryTransitionAsync(10, It.IsAny<IReadOnlyCollection<ReportStatus>>(), ReportStatus.ActionTaken, It.IsAny<string?>(), It.IsAny<DateTime?>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((FeedContentReport?)null);
+
+            var result = await _service.RemoveContentAsync(Admin, 10, null);
+
+            result.Error.Should().Be(FeedReportError.AlreadyReviewed);
+            _removal.Verify(r => r.RemovePostAsModeratorAsync(It.IsAny<int>(), It.IsAny<string>()), Times.Never);
+            _notifications.Verify(n => n.CreateNotificationAsync(It.IsAny<string>(), It.IsAny<NotificationType>(), It.IsAny<string?>(), It.IsAny<object?>(), It.IsAny<DateTime?>(), It.IsAny<string?>()), Times.Never);
+        }
+
+        /// <summary>Marking under review loses gracefully when another moderator already acted.</summary>
+        [Fact]
+        public async Task MarkUnderReviewAsync_LostRace_ReturnsAlreadyReviewed()
+        {
+            ReportExists(Report());
+            _repo.Setup(r => r.TryTransitionAsync(10, It.IsAny<IReadOnlyCollection<ReportStatus>>(), ReportStatus.UnderReview, It.IsAny<string?>(), It.IsAny<DateTime?>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((FeedContentReport?)null);
+
+            (await _service.MarkUnderReviewAsync(Moderator, 10)).Error.Should().Be(FeedReportError.AlreadyReviewed);
+        }
+
+        /// <summary>The author's removal notification must not reveal reporters, reasons or moderator notes.</summary>
+        [Fact]
+        public async Task RemoveContentAsync_AuthorNotification_IsNeutral()
+        {
+            ReportExists(Report());
+            string? message = null;
+            object? data = null;
+            _notifications
+                .Setup(n => n.CreateNotificationAsync(Author, It.IsAny<NotificationType>(), It.IsAny<string?>(), It.IsAny<object?>(), It.IsAny<DateTime?>(), SystemModerationService.ContentRemovedTemplateKey))
+                .Callback((string _, NotificationType _, string? m, object? d, DateTime? _, string? _) => { message = m; data = d; })
+                .ReturnsAsync((true, null, null));
+
+            await _service.RemoveContentAsync(Moderator, 10, "secret moderator note");
+
+            message.Should().NotBeNull();
+            var text = message + System.Text.Json.JsonSerializer.Serialize(data);
+            text.Should().NotContainEquivalentOf(Reporter).And.NotContainEquivalentOf("secret moderator note").And.NotContainEquivalentOf(nameof(ReportReason.Spam));
+        }
+
+        /// <summary>Authorization matrix: group admins and group moderators hold no system role and are refused.</summary>
+        [Theory]
+        [InlineData("groupadmin")]
+        [InlineData("groupmoderator")]
+        public async Task Dashboard_GroupRolesOnly_AreRefusedEverywhere(string userId)
+        {
+            ReportExists(Report());
+            _roles.Setup(r => r.IsUserInRoleAsync(userId, "GroupAdministrator")).ReturnsAsync(true);
+
+            (await _service.GetOverviewAsync(userId)).Should().BeNull();
+            (await _service.GetFeedReportDetailAsync(userId, 10)).Should().BeNull();
+            (await _service.DismissAsync(userId, 10, null)).Success.Should().BeFalse();
+            (await _service.RemoveContentAsync(userId, 10, null)).Success.Should().BeFalse();
+            _removal.Verify(r => r.RemovePostAsModeratorAsync(It.IsAny<int>(), It.IsAny<string>()), Times.Never);
+        }
     }
 }

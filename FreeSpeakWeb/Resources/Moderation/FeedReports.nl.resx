@@ -214,6 +214,9 @@
   <data name="ConfirmResolve" xml:space="preserve">
     <value>Deze melding als opgelost markeren zonder de inhoud te verwijderen? Andere openstaande meldingen over dezelfde inhoud worden ook gesloten.</value>
   </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>Deze melding als in behandeling markeren en overnemen?</value>
+  </data>
   <data name="ConfirmRemove" xml:space="preserve">
     <value>Deze inhoud definitief verwijderen? De auteur en de melders worden op de hoogte gesteld.</value>
   </data>

@@ -214,6 +214,9 @@
   <data name="ConfirmResolve" xml:space="preserve">
     <value>¿Marcar este reporte como resuelto sin eliminar el contenido? También se cerrarán los demás reportes abiertos sobre el mismo contenido.</value>
   </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>¿Marcar este reporte como en revisión y asumirlo?</value>
+  </data>
   <data name="ConfirmRemove" xml:space="preserve">
     <value>¿Eliminar este contenido de forma permanente? Se notificará al autor y a quienes reportaron.</value>
   </data>

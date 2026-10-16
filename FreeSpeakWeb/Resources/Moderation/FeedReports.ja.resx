@@ -214,6 +214,9 @@
   <data name="ConfirmResolve" xml:space="preserve">
     <value>コンテンツを削除せずにこの通報を解決済みにしますか？同じコンテンツへの他の未処理の通報もすべて終了します。</value>
   </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>この通報を確認中にして担当しますか？</value>
+  </data>
   <data name="ConfirmRemove" xml:space="preserve">
     <value>このコンテンツを完全に削除しますか？投稿者と通報者に通知されます。</value>
   </data>

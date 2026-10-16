@@ -110,7 +110,7 @@
                         <div class="d-flex flex-wrap gap-2">
                             @if (detail.Status == ReportStatus.NotReviewed)
                             {
-                                <button type="button" class="btn btn-outline-info" disabled="@busy" @onclick="MarkUnderReviewAsync" data-testid="action-under-review">@Localizer["ActionUnderReview"]</button>
+                                <button type="button" class="btn btn-outline-info" disabled="@busy" @onclick="() => pending = PendingAction.UnderReview" data-testid="action-under-review">@Localizer["ActionUnderReview"]</button>
                             }
                             <button type="button" class="btn btn-outline-secondary" disabled="@busy" @onclick="() => pending = PendingAction.Dismiss" data-testid="action-dismiss">@Localizer["ActionDismiss"]</button>
                             <button type="button" class="btn btn-outline-success" disabled="@busy" @onclick="() => pending = PendingAction.Resolve" data-testid="action-resolve">@Localizer["ActionResolve"]</button>
@@ -124,7 +124,7 @@
 </div>
 
 @code {
-    private enum PendingAction { None, Dismiss, Resolve, Remove }
+    private enum PendingAction { None, UnderReview, Dismiss, Resolve, Remove }
 
     private FeedReportDetail? detail;
     private bool loading = true;
@@ -161,6 +161,7 @@
 
     private string ConfirmKey => pending switch
     {
+        PendingAction.UnderReview => "ConfirmUnderReview",
         PendingAction.Dismiss => "ConfirmDismiss",
         PendingAction.Resolve => "ConfirmResolve",
         _ => "ConfirmRemove"
@@ -199,24 +200,7 @@
     }
 
     /// <summary>
-    /// Marks the report as under review.
-    /// </summary>
-    private async Task MarkUnderReviewAsync()
-    {
-        busy = true;
-        try
-        {
-            var result = await ModerationService.MarkUnderReviewAsync(UserId, ReportId);
-            await HandleResultAsync(result, "DoneUnderReview", closed: false);
-        }
-        finally
-        {
-            busy = false;
-        }
-    }
-
-    /// <summary>
-    /// Runs the confirmed dismiss, resolve or remove action.
+    /// Runs the confirmed mark-under-review, dismiss, resolve or remove action.
     /// </summary>
     private async Task ConfirmAsync()
     {
@@ -224,6 +208,13 @@
         busy = true;
         try
         {
+            if (action == PendingAction.UnderReview)
+            {
+                var underReview = await ModerationService.MarkUnderReviewAsync(UserId, ReportId);
+                await HandleResultAsync(underReview, "DoneUnderReview", closed: false);
+                return;
+            }
+
             var result = action switch
             {
                 PendingAction.Dismiss => await ModerationService.DismissAsync(UserId, ReportId, notes),

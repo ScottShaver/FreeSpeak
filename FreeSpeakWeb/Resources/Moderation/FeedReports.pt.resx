@@ -214,6 +214,9 @@
   <data name="ConfirmResolve" xml:space="preserve">
     <value>Marcar esta denúncia como resolvida sem remover o conteúdo? As outras denúncias abertas sobre o mesmo conteúdo também serão encerradas.</value>
   </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>Marcar esta denúncia como em análise e assumi-la?</value>
+  </data>
   <data name="ConfirmRemove" xml:space="preserve">
     <value>Remover este conteúdo permanentemente? O autor e os denunciantes serão notificados.</value>
   </data>

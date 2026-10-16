@@ -687,6 +687,15 @@ namespace FreeSpeakWeb.Resources.Moderation {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Mark this report as under review and claim it?.
+        /// </summary>
+        public static string ConfirmUnderReview {
+            get {
+                return ResourceManager.GetString("ConfirmUnderReview", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Permanently remove this content? The author and the reporters will be notified..
         /// </summary>
         public static string ConfirmRemove {

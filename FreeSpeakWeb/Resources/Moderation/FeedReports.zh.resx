@@ -214,6 +214,9 @@
   <data name="ConfirmResolve" xml:space="preserve">
     <value>在不删除内容的情况下将此举报标记为已解决？同一内容的其他未关闭举报也将被关闭。</value>
   </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>将此举报标记为审核中并由您负责处理？</value>
+  </data>
   <data name="ConfirmRemove" xml:space="preserve">
     <value>永久删除此内容？作者和举报人都将收到通知。</value>
   </data>

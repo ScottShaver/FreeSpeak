@@ -214,6 +214,9 @@
   <data name="ConfirmResolve" xml:space="preserve">
     <value>هل تريد وضع علامة تم الحل على هذا التقرير دون إزالة المحتوى؟ سيتم أيضاً إغلاق أي تقارير مفتوحة أخرى على المحتوى نفسه.</value>
   </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>هل تريد وضع علامة قيد المراجعة على هذا التقرير وتولّيه؟</value>
+  </data>
   <data name="ConfirmRemove" xml:space="preserve">
     <value>هل تريد إزالة هذا المحتوى نهائياً؟ سيتم إشعار المؤلف والمُبلِّغين.</value>
   </data>

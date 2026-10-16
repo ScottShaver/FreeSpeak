@@ -214,6 +214,9 @@
   <data name="ConfirmResolve" xml:space="preserve">
     <value>Отметить жалобу как решённую без удаления контента? Остальные открытые жалобы на тот же контент тоже будут закрыты.</value>
   </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>Отметить жалобу как «на рассмотрении» и взять её в работу?</value>
+  </data>
   <data name="ConfirmRemove" xml:space="preserve">
     <value>Удалить этот контент навсегда? Автор и авторы жалоб получат уведомление.</value>
   </data>

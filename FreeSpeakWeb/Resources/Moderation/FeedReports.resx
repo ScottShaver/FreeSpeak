@@ -214,6 +214,9 @@
   <data name="ConfirmResolve" xml:space="preserve">
     <value>Mark this report as resolved without removing the content? Any other open reports on the same content are closed too.</value>
   </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>Mark this report as under review and claim it?</value>
+  </data>
   <data name="ConfirmRemove" xml:space="preserve">
     <value>Permanently remove this content? The author and the reporters will be notified.</value>
   </data>

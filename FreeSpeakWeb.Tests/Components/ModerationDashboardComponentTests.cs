@@ -248,6 +248,23 @@ namespace FreeSpeakWeb.Tests.Components
             cut.FindAll("[data-testid='action-remove']").Should().HaveCount(1);
         }
 
+        /// <summary>Mark under review requires confirmation before calling the service.</summary>
+        [Fact]
+        public void Detail_MarkUnderReview_RequiresConfirmationThenCallsService()
+        {
+            _service.Setup(s => s.MarkUnderReviewAsync("m", 7, It.IsAny<CancellationToken>())).ReturnsAsync(FeedReportResult.Ok(7));
+            var cut = RenderDetail(Detail());
+
+            cut.Find("[data-testid='action-under-review']").Click();
+            _service.Verify(s => s.MarkUnderReviewAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
+            cut.Find("[data-testid='detail-confirm']").TextContent.Should().Contain("ConfirmUnderReview");
+
+            cut.Find("[data-testid='detail-confirm-yes']").Click();
+
+            _service.Verify(s => s.MarkUnderReviewAsync("m", 7, It.IsAny<CancellationToken>()), Times.Once);
+            cut.Find("[data-testid='detail-message']").TextContent.Should().Be("DoneUnderReview");
+        }
+
         /// <summary>Dismiss requires confirmation and then calls the service with the notes.</summary>
         [Fact]
         public void Detail_Dismiss_RequiresConfirmationThenCallsService()

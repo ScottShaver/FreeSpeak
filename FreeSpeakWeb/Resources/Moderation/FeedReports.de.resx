@@ -214,6 +214,9 @@
   <data name="ConfirmResolve" xml:space="preserve">
     <value>Diese Meldung als gelöst markieren, ohne den Inhalt zu entfernen? Weitere offene Meldungen zum selben Inhalt werden ebenfalls geschlossen.</value>
   </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>Diese Meldung als in Prüfung markieren und übernehmen?</value>
+  </data>
   <data name="ConfirmRemove" xml:space="preserve">
     <value>Diesen Inhalt dauerhaft entfernen? Die Autorin bzw. der Autor und die Meldenden werden benachrichtigt.</value>
   </data>

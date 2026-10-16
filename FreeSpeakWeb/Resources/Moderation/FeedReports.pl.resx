@@ -214,6 +214,9 @@
   <data name="ConfirmResolve" xml:space="preserve">
     <value>Oznaczyć to zgłoszenie jako rozwiązane bez usuwania treści? Pozostałe otwarte zgłoszenia tej samej treści zostaną również zamknięte.</value>
   </data>
+  <data name="ConfirmUnderReview" xml:space="preserve">
+    <value>Oznaczyć to zgłoszenie jako w trakcie rozpatrywania i przejąć je?</value>
+  </data>
   <data name="ConfirmRemove" xml:space="preserve">
     <value>Trwale usunąć tę treść? Autor i zgłaszający zostaną powiadomieni.</value>
   </data>
