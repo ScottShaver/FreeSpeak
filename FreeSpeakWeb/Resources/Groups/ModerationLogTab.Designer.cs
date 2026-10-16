@@ -122,6 +122,14 @@ namespace FreeSpeakWeb.Resources.Groups {
             get { return ResourceManager.GetString("Action_PostDeclined", resourceCulture); }
         }
 
+        public static string Action_PostRemoved {
+            get { return ResourceManager.GetString("Action_PostRemoved", resourceCulture); }
+        }
+
+        public static string Action_CommentRemoved {
+            get { return ResourceManager.GetString("Action_CommentRemoved", resourceCulture); }
+        }
+
         public static string Action_FileApproved {
             get { return ResourceManager.GetString("Action_FileApproved", resourceCulture); }
         }
