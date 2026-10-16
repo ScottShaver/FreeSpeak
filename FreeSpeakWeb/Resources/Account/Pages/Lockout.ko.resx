@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>잠김</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>계정 잠김</value>
+  </data>
+  <data name="PermanentTitle" xml:space="preserve">
+    <value>계정 영구 비활성화됨</value>
+  </data>
+  <data name="PermanentDisabledMessage" xml:space="preserve">
+    <value>계정이 시스템 관리자에 의해 영구적으로 비활성화되었습니다. 이 조치는 취소하거나 우회할 수 없습니다.</value>
+  </data>
+  <data name="ImportantLabel" xml:space="preserve">
+    <value>중요:</value>
+  </data>
+  <data name="PermanentRecoveryNote" xml:space="preserve">
+    <value>비밀번호 재설정 및 기타 계정 복구 옵션으로는 영구적으로 비활성화된 계정을 잠금 해제할 수 없습니다.</value>
+  </data>
+  <data name="ContactAdminIfMistake" xml:space="preserve">
+    <value>이것이 오류라고 생각되면 사이트 관리자에게 문의하세요.</value>
+  </data>
+  <data name="TemporaryTitle" xml:space="preserve">
+    <value>계정 임시 잠금</value>
+  </data>
+  <data name="TemporaryMessage" xml:space="preserve">
+    <value>로그인 시도가 여러 번 실패하여 계정이 잠겼습니다.</value>
+  </data>
+  <data name="LockedUntilLabel" xml:space="preserve">
+    <value>잠금 해제 시각:</value>
+  </data>
+  <data name="TimeRemainingLabel" xml:space="preserve">
+    <value>남은 시간:</value>
+  </data>
+  <data name="WhatYouCanDoLabel" xml:space="preserve">
+    <value>할 수 있는 일:</value>
+  </data>
+  <data name="OptionWait" xml:space="preserve">
+    <value>잠금 기간이 끝날 때까지 기다리세요</value>
+  </data>
+  <data name="OptionForgotPassword" xml:space="preserve">
+    <value>비밀번호를 잊어버린 경우 {0} 옵션을 사용하세요</value>
+  </data>
+  <data name="ForgotPasswordLink" xml:space="preserve">
+    <value>비밀번호 찾기</value>
+  </data>
+  <data name="OptionContactSupport" xml:space="preserve">
+    <value>즉시 도움이 필요하면 지원팀에 문의하세요</value>
+  </data>
+  <data name="AutoUnlockNote" xml:space="preserve">
+    <value>계정은 자동으로 잠금 해제됩니다. 이 페이지를 새로 고쳐 다시 로그인해 보세요.</value>
+  </data>
+  <data name="LockoutExpired" xml:space="preserve">
+    <value>계정 잠금이 만료되었습니다. 이제 {0} 수 있습니다.</value>
+  </data>
+  <data name="TryLoginLink" xml:space="preserve">
+    <value>다시 로그인할</value>
+  </data>
+  <data name="ReturnHome" xml:space="preserve">
+    <value>홈으로 돌아가기</value>
+  </data>
+  <data name="StatusCardTitle" xml:space="preserve">
+    <value>계정 상태</value>
+  </data>
+  <data name="DetailsCardTitle" xml:space="preserve">
+    <value>잠금 세부 정보</value>
+  </data>
+  <data name="SecurityCardTitle" xml:space="preserve">
+    <value>보안 정보</value>
+  </data>
+  <data name="PermanentLockedByAdmin" xml:space="preserve">
+    <value>계정이 시스템 관리자에 의해 영구적으로 잠겼습니다.</value>
+  </data>
+  <data name="PermanentTypicalCause" xml:space="preserve">
+    <value>이는 일반적으로 사이트 서비스 약관을 심각하게 또는 반복적으로 위반한 경우에 발생합니다.</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+    <value>상태:</value>
+  </data>
+  <data name="PermanentlyDisabled" xml:space="preserve">
+    <value>영구 비활성화됨</value>
+  </data>
+  <data name="RecoveryOptionsLabel" xml:space="preserve">
+    <value>복구 옵션:</value>
+  </data>
+  <data name="NoRecoveryOptions" xml:space="preserve">
+    <value>없음 - 비밀번호를 재설정해도 이 계정은 잠금 해제되지 않습니다</value>
+  </data>
+  <data name="ContactLabel" xml:space="preserve">
+    <value>문의처:</value>
+  </data>
+  <data name="SiteAdminOnly" xml:space="preserve">
+    <value>사이트 관리자만</value>
+  </data>
+  <data name="OnlyAdminCanRemove" xml:space="preserve">
+    <value>영구 계정 잠금은 시스템 관리자만 해제할 수 있습니다. 오류라고 생각되면 지원팀에 문의하세요.</value>
+  </data>
+  <data name="TemporarilyLockedMessage" xml:space="preserve">
+    <value>로그인 시도가 여러 번 실패하여 계정이 일시적으로 잠겼습니다.</value>
+  </data>
+  <data name="WhatToDoLabel" xml:space="preserve">
+    <value>해야 할 일:</value>
+  </data>
+  <data name="WhatToDoText" xml:space="preserve">
+    <value>잠금이 만료될 때까지 기다리거나 {0}을(를) 사용하여 즉시 잠금을 해제하세요</value>
+  </data>
+  <data name="PasswordResetLink" xml:space="preserve">
+    <value>비밀번호 재설정</value>
+  </data>
+  <data name="SecurityExplanation" xml:space="preserve">
+    <value>보안을 위해 로그인 시도가 여러 번 실패하면 계정이 일시적으로 잠깁니다. 이는 무단 접근 시도로부터 계정을 보호하는 데 도움이 됩니다.</value>
+  </data>
+  <data name="MaxAttemptsLabel" xml:space="preserve">
+    <value>최대 시도 횟수:</value>
+  </data>
+  <data name="MaxAttemptsValue" xml:space="preserve">
+    <value>로그인 {0}회 실패</value>
+  </data>
+  <data name="LockoutDurationLabel" xml:space="preserve">
+    <value>잠금 시간:</value>
+  </data>
+  <data name="LockoutDurationValue" xml:space="preserve">
+    <value>{0}분</value>
+  </data>
+  <data name="ResetLabel" xml:space="preserve">
+    <value>초기화:</value>
+  </data>
+  <data name="ResetValue" xml:space="preserve">
+    <value>로그인에 성공하거나 비밀번호를 재설정하면 실패한 시도 횟수가 초기화됩니다</value>
+  </data>
+  <data name="HoursSingular" xml:space="preserve">
+    <value>{0}시간</value>
+  </data>
+  <data name="HoursPlural" xml:space="preserve">
+    <value>{0}시간</value>
+  </data>
+  <data name="MinutesSingular" xml:space="preserve">
+    <value>{0}분</value>
+  </data>
+  <data name="MinutesPlural" xml:space="preserve">
+    <value>{0}분</value>
+  </data>
+  <data name="SecondsSingular" xml:space="preserve">
+    <value>{0}초</value>
+  </data>
+  <data name="SecondsPlural" xml:space="preserve">
+    <value>{0}초</value>
+  </data>
+</root>

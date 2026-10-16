@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Verrouillé</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Compte verrouillé</value>
+  </data>
+  <data name="PermanentTitle" xml:space="preserve">
+    <value>Compte définitivement désactivé</value>
+  </data>
+  <data name="PermanentDisabledMessage" xml:space="preserve">
+    <value>Votre compte a été définitivement désactivé par un administrateur système. Cette action ne peut être ni annulée ni contournée.</value>
+  </data>
+  <data name="ImportantLabel" xml:space="preserve">
+    <value>Important :</value>
+  </data>
+  <data name="PermanentRecoveryNote" xml:space="preserve">
+    <value>La réinitialisation du mot de passe et les autres options de récupération de compte ne débloqueront pas un compte définitivement désactivé.</value>
+  </data>
+  <data name="ContactAdminIfMistake" xml:space="preserve">
+    <value>Si vous pensez qu'il s'agit d'une erreur, veuillez contacter l'administrateur du site.</value>
+  </data>
+  <data name="TemporaryTitle" xml:space="preserve">
+    <value>Verrouillage temporaire du compte</value>
+  </data>
+  <data name="TemporaryMessage" xml:space="preserve">
+    <value>Votre compte a été verrouillé en raison de plusieurs tentatives de connexion échouées.</value>
+  </data>
+  <data name="LockedUntilLabel" xml:space="preserve">
+    <value>Verrouillé jusqu'à :</value>
+  </data>
+  <data name="TimeRemainingLabel" xml:space="preserve">
+    <value>Temps restant :</value>
+  </data>
+  <data name="WhatYouCanDoLabel" xml:space="preserve">
+    <value>Ce que vous pouvez faire :</value>
+  </data>
+  <data name="OptionWait" xml:space="preserve">
+    <value>Attendez la fin de la période de verrouillage</value>
+  </data>
+  <data name="OptionForgotPassword" xml:space="preserve">
+    <value>Si vous avez oublié votre mot de passe, utilisez l'option {0}</value>
+  </data>
+  <data name="ForgotPasswordLink" xml:space="preserve">
+    <value>Mot de passe oublié</value>
+  </data>
+  <data name="OptionContactSupport" xml:space="preserve">
+    <value>Contactez l'assistance si vous avez besoin d'une aide immédiate</value>
+  </data>
+  <data name="AutoUnlockNote" xml:space="preserve">
+    <value>Votre compte sera déverrouillé automatiquement. Vous pouvez actualiser cette page pour réessayer de vous connecter.</value>
+  </data>
+  <data name="LockoutExpired" xml:space="preserve">
+    <value>Le verrouillage de votre compte a expiré. Vous pouvez maintenant {0}.</value>
+  </data>
+  <data name="TryLoginLink" xml:space="preserve">
+    <value>réessayer de vous connecter</value>
+  </data>
+  <data name="ReturnHome" xml:space="preserve">
+    <value>Retour à l'accueil</value>
+  </data>
+  <data name="StatusCardTitle" xml:space="preserve">
+    <value>État du compte</value>
+  </data>
+  <data name="DetailsCardTitle" xml:space="preserve">
+    <value>Détails de votre verrouillage</value>
+  </data>
+  <data name="SecurityCardTitle" xml:space="preserve">
+    <value>Informations de sécurité</value>
+  </data>
+  <data name="PermanentLockedByAdmin" xml:space="preserve">
+    <value>Votre compte a été définitivement verrouillé par un administrateur système.</value>
+  </data>
+  <data name="PermanentTypicalCause" xml:space="preserve">
+    <value>Cela se produit généralement à la suite de violations graves ou répétées des conditions d'utilisation du site.</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+    <value>Statut :</value>
+  </data>
+  <data name="PermanentlyDisabled" xml:space="preserve">
+    <value>Définitivement désactivé</value>
+  </data>
+  <data name="RecoveryOptionsLabel" xml:space="preserve">
+    <value>Options de récupération :</value>
+  </data>
+  <data name="NoRecoveryOptions" xml:space="preserve">
+    <value>Aucune – la réinitialisation du mot de passe ne débloquera pas ce compte</value>
+  </data>
+  <data name="ContactLabel" xml:space="preserve">
+    <value>Contact :</value>
+  </data>
+  <data name="SiteAdminOnly" xml:space="preserve">
+    <value>Administrateur du site uniquement</value>
+  </data>
+  <data name="OnlyAdminCanRemove" xml:space="preserve">
+    <value>Seul un administrateur système peut lever un verrouillage permanent de compte. Si vous pensez qu'il s'agit d'une erreur, veuillez contacter l'assistance.</value>
+  </data>
+  <data name="TemporarilyLockedMessage" xml:space="preserve">
+    <value>Votre compte est temporairement verrouillé en raison de plusieurs tentatives de connexion échouées.</value>
+  </data>
+  <data name="WhatToDoLabel" xml:space="preserve">
+    <value>Que faire :</value>
+  </data>
+  <data name="WhatToDoText" xml:space="preserve">
+    <value>Attendez l'expiration du verrouillage ou utilisez {0} pour déverrouiller immédiatement</value>
+  </data>
+  <data name="PasswordResetLink" xml:space="preserve">
+    <value>réinitialisation du mot de passe</value>
+  </data>
+  <data name="SecurityExplanation" xml:space="preserve">
+    <value>Pour votre sécurité, les comptes sont temporairement verrouillés après plusieurs tentatives de connexion échouées. Cela protège votre compte contre les tentatives d'accès non autorisées.</value>
+  </data>
+  <data name="MaxAttemptsLabel" xml:space="preserve">
+    <value>Nombre maximal de tentatives :</value>
+  </data>
+  <data name="MaxAttemptsValue" xml:space="preserve">
+    <value>{0} tentatives de connexion échouées</value>
+  </data>
+  <data name="LockoutDurationLabel" xml:space="preserve">
+    <value>Durée du verrouillage :</value>
+  </data>
+  <data name="LockoutDurationValue" xml:space="preserve">
+    <value>{0} minutes</value>
+  </data>
+  <data name="ResetLabel" xml:space="preserve">
+    <value>Réinitialisation :</value>
+  </data>
+  <data name="ResetValue" xml:space="preserve">
+    <value>Une connexion réussie ou une réinitialisation du mot de passe effacera les tentatives échouées</value>
+  </data>
+  <data name="HoursSingular" xml:space="preserve">
+    <value>{0} heure</value>
+  </data>
+  <data name="HoursPlural" xml:space="preserve">
+    <value>{0} heures</value>
+  </data>
+  <data name="MinutesSingular" xml:space="preserve">
+    <value>{0} minute</value>
+  </data>
+  <data name="MinutesPlural" xml:space="preserve">
+    <value>{0} minutes</value>
+  </data>
+  <data name="SecondsSingular" xml:space="preserve">
+    <value>{0} seconde</value>
+  </data>
+  <data name="SecondsPlural" xml:space="preserve">
+    <value>{0} secondes</value>
+  </data>
+</root>

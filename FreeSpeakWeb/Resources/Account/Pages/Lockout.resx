@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Locked out</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Account Locked</value>
+  </data>
+  <data name="PermanentTitle" xml:space="preserve">
+    <value>Account Permanently Disabled</value>
+  </data>
+  <data name="PermanentDisabledMessage" xml:space="preserve">
+    <value>Your account has been permanently disabled by a system administrator. This action cannot be undone or bypassed.</value>
+  </data>
+  <data name="ImportantLabel" xml:space="preserve">
+    <value>Important:</value>
+  </data>
+  <data name="PermanentRecoveryNote" xml:space="preserve">
+    <value>Password reset and other account recovery options will not unlock a permanently disabled account.</value>
+  </data>
+  <data name="ContactAdminIfMistake" xml:space="preserve">
+    <value>If you believe this is a mistake, please contact the site administrator for assistance.</value>
+  </data>
+  <data name="TemporaryTitle" xml:space="preserve">
+    <value>Temporary Account Lockout</value>
+  </data>
+  <data name="TemporaryMessage" xml:space="preserve">
+    <value>Your account has been locked due to multiple failed login attempts.</value>
+  </data>
+  <data name="LockedUntilLabel" xml:space="preserve">
+    <value>Locked until:</value>
+  </data>
+  <data name="TimeRemainingLabel" xml:space="preserve">
+    <value>Time remaining:</value>
+  </data>
+  <data name="WhatYouCanDoLabel" xml:space="preserve">
+    <value>What you can do:</value>
+  </data>
+  <data name="OptionWait" xml:space="preserve">
+    <value>Wait for the lockout period to expire</value>
+  </data>
+  <data name="OptionForgotPassword" xml:space="preserve">
+    <value>If you forgot your password, use the {0} option</value>
+  </data>
+  <data name="ForgotPasswordLink" xml:space="preserve">
+    <value>Forgot Password</value>
+  </data>
+  <data name="OptionContactSupport" xml:space="preserve">
+    <value>Contact support if you need immediate assistance</value>
+  </data>
+  <data name="AutoUnlockNote" xml:space="preserve">
+    <value>Your account will be unlocked automatically. You may refresh this page to try logging in again.</value>
+  </data>
+  <data name="LockoutExpired" xml:space="preserve">
+    <value>Your account lockout has expired. You may now {0}.</value>
+  </data>
+  <data name="TryLoginLink" xml:space="preserve">
+    <value>try logging in again</value>
+  </data>
+  <data name="ReturnHome" xml:space="preserve">
+    <value>Return to Home</value>
+  </data>
+  <data name="StatusCardTitle" xml:space="preserve">
+    <value>Account Status</value>
+  </data>
+  <data name="DetailsCardTitle" xml:space="preserve">
+    <value>Your Lockout Details</value>
+  </data>
+  <data name="SecurityCardTitle" xml:space="preserve">
+    <value>Security Information</value>
+  </data>
+  <data name="PermanentLockedByAdmin" xml:space="preserve">
+    <value>Your account has been permanently locked by a system administrator.</value>
+  </data>
+  <data name="PermanentTypicalCause" xml:space="preserve">
+    <value>This typically occurs due to severe or repeated violations of the site's terms of service.</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+    <value>Status:</value>
+  </data>
+  <data name="PermanentlyDisabled" xml:space="preserve">
+    <value>Permanently disabled</value>
+  </data>
+  <data name="RecoveryOptionsLabel" xml:space="preserve">
+    <value>Recovery options:</value>
+  </data>
+  <data name="NoRecoveryOptions" xml:space="preserve">
+    <value>None - password reset will not unlock this account</value>
+  </data>
+  <data name="ContactLabel" xml:space="preserve">
+    <value>Contact:</value>
+  </data>
+  <data name="SiteAdminOnly" xml:space="preserve">
+    <value>Site administrator only</value>
+  </data>
+  <data name="OnlyAdminCanRemove" xml:space="preserve">
+    <value>Only a system administrator can remove a permanent account lockout. If you believe this is an error, please contact support.</value>
+  </data>
+  <data name="TemporarilyLockedMessage" xml:space="preserve">
+    <value>Your account is temporarily locked due to multiple failed login attempts.</value>
+  </data>
+  <data name="WhatToDoLabel" xml:space="preserve">
+    <value>What to do:</value>
+  </data>
+  <data name="WhatToDoText" xml:space="preserve">
+    <value>Wait for the lockout to expire, or use {0} to unlock immediately</value>
+  </data>
+  <data name="PasswordResetLink" xml:space="preserve">
+    <value>password reset</value>
+  </data>
+  <data name="SecurityExplanation" xml:space="preserve">
+    <value>For your security, accounts are temporarily locked after multiple failed login attempts. This helps protect your account from unauthorized access attempts.</value>
+  </data>
+  <data name="MaxAttemptsLabel" xml:space="preserve">
+    <value>Maximum attempts:</value>
+  </data>
+  <data name="MaxAttemptsValue" xml:space="preserve">
+    <value>{0} failed login attempts</value>
+  </data>
+  <data name="LockoutDurationLabel" xml:space="preserve">
+    <value>Lockout duration:</value>
+  </data>
+  <data name="LockoutDurationValue" xml:space="preserve">
+    <value>{0} minutes</value>
+  </data>
+  <data name="ResetLabel" xml:space="preserve">
+    <value>Reset:</value>
+  </data>
+  <data name="ResetValue" xml:space="preserve">
+    <value>Successful login or password reset will clear failed attempts</value>
+  </data>
+  <data name="HoursSingular" xml:space="preserve">
+    <value>{0} hour</value>
+  </data>
+  <data name="HoursPlural" xml:space="preserve">
+    <value>{0} hours</value>
+  </data>
+  <data name="MinutesSingular" xml:space="preserve">
+    <value>{0} minute</value>
+  </data>
+  <data name="MinutesPlural" xml:space="preserve">
+    <value>{0} minutes</value>
+  </data>
+  <data name="SecondsSingular" xml:space="preserve">
+    <value>{0} second</value>
+  </data>
+  <data name="SecondsPlural" xml:space="preserve">
+    <value>{0} seconds</value>
+  </data>
+</root>

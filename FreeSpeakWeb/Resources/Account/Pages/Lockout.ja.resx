@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>ロックアウト</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>アカウントがロックされています</value>
+  </data>
+  <data name="PermanentTitle" xml:space="preserve">
+    <value>アカウントが完全に無効化されています</value>
+  </data>
+  <data name="PermanentDisabledMessage" xml:space="preserve">
+    <value>お客様のアカウントはシステム管理者によって完全に無効化されました。この操作を取り消したり回避したりすることはできません。</value>
+  </data>
+  <data name="ImportantLabel" xml:space="preserve">
+    <value>重要:</value>
+  </data>
+  <data name="PermanentRecoveryNote" xml:space="preserve">
+    <value>パスワードのリセットやその他のアカウント回復オプションでは、完全に無効化されたアカウントのロックを解除できません。</value>
+  </data>
+  <data name="ContactAdminIfMistake" xml:space="preserve">
+    <value>これが誤りだと思われる場合は、サイト管理者にお問い合わせください。</value>
+  </data>
+  <data name="TemporaryTitle" xml:space="preserve">
+    <value>アカウントの一時的なロックアウト</value>
+  </data>
+  <data name="TemporaryMessage" xml:space="preserve">
+    <value>ログインの失敗が複数回あったため、アカウントがロックされました。</value>
+  </data>
+  <data name="LockedUntilLabel" xml:space="preserve">
+    <value>ロック解除日時:</value>
+  </data>
+  <data name="TimeRemainingLabel" xml:space="preserve">
+    <value>残り時間:</value>
+  </data>
+  <data name="WhatYouCanDoLabel" xml:space="preserve">
+    <value>対処方法:</value>
+  </data>
+  <data name="OptionWait" xml:space="preserve">
+    <value>ロックアウト期間が終了するまで待つ</value>
+  </data>
+  <data name="OptionForgotPassword" xml:space="preserve">
+    <value>パスワードを忘れた場合は、{0}オプションを使用してください</value>
+  </data>
+  <data name="ForgotPasswordLink" xml:space="preserve">
+    <value>パスワードをお忘れの場合</value>
+  </data>
+  <data name="OptionContactSupport" xml:space="preserve">
+    <value>すぐにサポートが必要な場合はサポートにお問い合わせください</value>
+  </data>
+  <data name="AutoUnlockNote" xml:space="preserve">
+    <value>アカウントは自動的にロック解除されます。このページを更新して、もう一度ログインをお試しください。</value>
+  </data>
+  <data name="LockoutExpired" xml:space="preserve">
+    <value>アカウントのロックアウトは終了しました。{0}ことができます。</value>
+  </data>
+  <data name="TryLoginLink" xml:space="preserve">
+    <value>再度ログインを試す</value>
+  </data>
+  <data name="ReturnHome" xml:space="preserve">
+    <value>ホームに戻る</value>
+  </data>
+  <data name="StatusCardTitle" xml:space="preserve">
+    <value>アカウントの状態</value>
+  </data>
+  <data name="DetailsCardTitle" xml:space="preserve">
+    <value>ロックアウトの詳細</value>
+  </data>
+  <data name="SecurityCardTitle" xml:space="preserve">
+    <value>セキュリティ情報</value>
+  </data>
+  <data name="PermanentLockedByAdmin" xml:space="preserve">
+    <value>お客様のアカウントはシステム管理者によって完全にロックされました。</value>
+  </data>
+  <data name="PermanentTypicalCause" xml:space="preserve">
+    <value>これは通常、サイトの利用規約への重大な違反または繰り返しの違反によって発生します。</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+    <value>状態:</value>
+  </data>
+  <data name="PermanentlyDisabled" xml:space="preserve">
+    <value>完全に無効</value>
+  </data>
+  <data name="RecoveryOptionsLabel" xml:space="preserve">
+    <value>回復オプション:</value>
+  </data>
+  <data name="NoRecoveryOptions" xml:space="preserve">
+    <value>なし - パスワードをリセットしてもこのアカウントのロックは解除されません</value>
+  </data>
+  <data name="ContactLabel" xml:space="preserve">
+    <value>連絡先:</value>
+  </data>
+  <data name="SiteAdminOnly" xml:space="preserve">
+    <value>サイト管理者のみ</value>
+  </data>
+  <data name="OnlyAdminCanRemove" xml:space="preserve">
+    <value>アカウントの永久ロックアウトを解除できるのはシステム管理者のみです。誤りだと思われる場合は、サポートにお問い合わせください。</value>
+  </data>
+  <data name="TemporarilyLockedMessage" xml:space="preserve">
+    <value>ログインの失敗が複数回あったため、アカウントは一時的にロックされています。</value>
+  </data>
+  <data name="WhatToDoLabel" xml:space="preserve">
+    <value>対処方法:</value>
+  </data>
+  <data name="WhatToDoText" xml:space="preserve">
+    <value>ロックアウトが終了するまで待つか、{0}を使用してすぐにロック解除してください</value>
+  </data>
+  <data name="PasswordResetLink" xml:space="preserve">
+    <value>パスワードのリセット</value>
+  </data>
+  <data name="SecurityExplanation" xml:space="preserve">
+    <value>セキュリティのため、ログインに複数回失敗するとアカウントは一時的にロックされます。これにより、不正アクセスの試行からアカウントが保護されます。</value>
+  </data>
+  <data name="MaxAttemptsLabel" xml:space="preserve">
+    <value>最大試行回数:</value>
+  </data>
+  <data name="MaxAttemptsValue" xml:space="preserve">
+    <value>ログインの失敗 {0} 回</value>
+  </data>
+  <data name="LockoutDurationLabel" xml:space="preserve">
+    <value>ロックアウト時間:</value>
+  </data>
+  <data name="LockoutDurationValue" xml:space="preserve">
+    <value>{0} 分</value>
+  </data>
+  <data name="ResetLabel" xml:space="preserve">
+    <value>リセット:</value>
+  </data>
+  <data name="ResetValue" xml:space="preserve">
+    <value>ログインに成功するかパスワードをリセットすると、失敗した試行回数がクリアされます</value>
+  </data>
+  <data name="HoursSingular" xml:space="preserve">
+    <value>{0} 時間</value>
+  </data>
+  <data name="HoursPlural" xml:space="preserve">
+    <value>{0} 時間</value>
+  </data>
+  <data name="MinutesSingular" xml:space="preserve">
+    <value>{0} 分</value>
+  </data>
+  <data name="MinutesPlural" xml:space="preserve">
+    <value>{0} 分</value>
+  </data>
+  <data name="SecondsSingular" xml:space="preserve">
+    <value>{0} 秒</value>
+  </data>
+  <data name="SecondsPlural" xml:space="preserve">
+    <value>{0} 秒</value>
+  </data>
+</root>

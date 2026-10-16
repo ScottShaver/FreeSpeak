@@ -91,4 +91,10 @@
   <data name="ExternalLoginTitle" xml:space="preserve">
     <value>別のサービスでログインしてください。</value>
   </data>
+  <data name="ErrorEmailNotConfirmed" xml:space="preserve">
+    <value>エラー: メールアドレスが確認されていません。メールを確認してアカウントを確認してください。</value>
+  </data>
+  <data name="ErrorInvalidLogin" xml:space="preserve">
+    <value>エラー: ユーザー名またはパスワードが無効です。もう一度お試しください。</value>
+  </data>
 </root>

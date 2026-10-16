@@ -149,12 +149,12 @@
         else if (result.IsNotAllowed)
         {
             Logger.LogWarning("User {UserName} login not allowed (email not confirmed).", Input.UserName);
-            errorMessage = "Error: Your email address has not been confirmed. Please check your email and confirm your account.";
+            errorMessage = Localizer["ErrorEmailNotConfirmed"];
         }
         else
         {
             Logger.LogWarning("Invalid login attempt for user {UserName}.", Input.UserName);
-            errorMessage = "Error: Invalid username or password. Please try again.";
+            errorMessage = Localizer["ErrorInvalidLogin"];
         }
     }
 

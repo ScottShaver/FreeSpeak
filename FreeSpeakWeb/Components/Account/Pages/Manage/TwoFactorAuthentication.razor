@@ -1,4 +1,4 @@
-﻿@page "/Account/Manage/TwoFactorAuthentication"
+@page "/Account/Manage/TwoFactorAuthentication"
 
 @using Microsoft.AspNetCore.Http.Features
 @using Microsoft.AspNetCore.Identity
@@ -24,21 +24,21 @@
         {
             <div class="alert alert-danger">
                 <strong>@Localizer["NoRecoveryCodesLeft"]</strong>
-                <p>@LocalizedMarkup.Compose(Localizer["NoRecoveryCodesLeftBody"].Value, LocalizedMarkup.Link("Account/Manage/GenerateRecoveryCodes", Localizer["GenerateNewRecoveryCodeSetLink"].Value))</p>
+                <p>@LocalizedMarkup.Format(Localizer["NoRecoveryCodesLeftBody"].Value, LocalizedMarkup.Link("Account/Manage/GenerateRecoveryCodes", Localizer["GenerateNewRecoveryCodeSetLink"].Value))</p>
             </div>
         }
         else if (recoveryCodesLeft == 1)
         {
             <div class="alert alert-danger">
                 <strong>@Localizer["OneRecoveryCodeLeft"]</strong>
-                <p>@LocalizedMarkup.Compose(Localizer["OneRecoveryCodeLeftBody"].Value, LocalizedMarkup.Link("Account/Manage/GenerateRecoveryCodes", Localizer["GenerateNewRecoveryCodeSetLink"].Value))</p>
+                <p>@LocalizedMarkup.Format(Localizer["OneRecoveryCodeLeftBody"].Value, LocalizedMarkup.Link("Account/Manage/GenerateRecoveryCodes", Localizer["GenerateNewRecoveryCodeSetLink"].Value))</p>
             </div>
         }
         else if (recoveryCodesLeft <= 3)
         {
             <div class="alert alert-warning">
                 <strong>@string.Format(Localizer["RecoveryCodesLeft"], recoveryCodesLeft)</strong>
-                <p>@LocalizedMarkup.Compose(Localizer["FewRecoveryCodesBody"].Value, LocalizedMarkup.Link("Account/Manage/GenerateRecoveryCodes", Localizer["GenerateNewRecoveryCodeSetLink"].Value))</p>
+                <p>@LocalizedMarkup.Format(Localizer["FewRecoveryCodesBody"].Value, LocalizedMarkup.Link("Account/Manage/GenerateRecoveryCodes", Localizer["GenerateNewRecoveryCodeSetLink"].Value))</p>
             </div>
         }
 

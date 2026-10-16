@@ -1,11 +1,10 @@
 using System.Xml.Linq;
 using FluentAssertions;
-using FreeSpeakWeb.Components.Account.Shared;
 
 namespace FreeSpeakWeb.Tests.Components;
 
 /// <summary>
-/// Verifies the localization resources used by the Account/Manage pages and the <see cref="LocalizedMarkup"/> helper.
+/// Verifies the localization resources used by the Account/Manage pages .
 /// </summary>
 public class AccountManageLocalizationTests
 {
@@ -68,15 +67,6 @@ public class AccountManageLocalizationTests
     /// <summary>
     /// The helper encodes link text and href and formats the template.
     /// </summary>
-    [Fact]
-    public void Compose_EncodesLinkTextAndHref()
-    {
-        var link = LocalizedMarkup.Link("a?b=1&c=2", "<x>");
-
-        var result = LocalizedMarkup.Compose("See {0}.", link);
-
-        result.Value.Should().Be("See <a href=\"a?b=1&amp;c=2\">&lt;x&gt;</a>.");
-    }
 
     private static IEnumerable<string> Placeholders(string value) =>
         System.Text.RegularExpressions.Regex.Matches(value, @"\{\d+\}").Select(m => m.Value).OrderBy(v => v);

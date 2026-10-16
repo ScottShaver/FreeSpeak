@@ -1,4 +1,4 @@
-﻿@page "/Account/Manage/Email"
+@page "/Account/Manage/Email"
 
 @using System.ComponentModel.DataAnnotations
 @using System.Text
@@ -29,14 +29,14 @@
 @if (emailVerificationLink is not null)
 {
     <p>
-        @LocalizedMarkup.Compose(Localizer["NoEmailSenderNotice"].Value, LocalizedMarkup.Link("https://aka.ms/aspaccountconf", Localizer["TheseDocs"].Value), LocalizedMarkup.Link(emailVerificationLink, Localizer["ConfirmCurrentEmailLink"].Value))
+        @LocalizedMarkup.Format(Localizer["NoEmailSenderNotice"].Value, LocalizedMarkup.Link("https://aka.ms/aspaccountconf", Localizer["TheseDocs"].Value), LocalizedMarkup.Link(emailVerificationLink, Localizer["ConfirmCurrentEmailLink"].Value))
     </p>
 }
 
 @if (emailChangeLink is not null)
 {
     <p>
-        @LocalizedMarkup.Compose(Localizer["NoEmailSenderNotice"].Value, LocalizedMarkup.Link("https://aka.ms/aspaccountconf", Localizer["TheseDocs"].Value), LocalizedMarkup.Link(emailChangeLink, Localizer["ConfirmEmailChangeLink"].Value))
+        @LocalizedMarkup.Format(Localizer["NoEmailSenderNotice"].Value, LocalizedMarkup.Link("https://aka.ms/aspaccountconf", Localizer["TheseDocs"].Value), LocalizedMarkup.Link(emailChangeLink, Localizer["ConfirmEmailChangeLink"].Value))
     </p>
 }
 

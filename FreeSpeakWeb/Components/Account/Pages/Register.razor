@@ -90,7 +90,7 @@
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
-    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+    private string? Message => identityErrors is null ? null : Localizer["ErrorWithDetails", string.Join(", ", identityErrors.Select(error => error.Description))].Value;
 
     protected override void OnInitialized()
     {
@@ -109,12 +109,12 @@
         // Additional server-side validation
         if (Input.FirstName.Length > 75)
         {
-            identityErrors = new[] { new IdentityError { Description = "First Name cannot exceed 75 characters." } };
+            identityErrors = new[] { new IdentityError { Description = Localizer["FirstNameTooLong"].Value } };
             return;
         }
         if (Input.LastName.Length > 75)
         {
-            identityErrors = new[] { new IdentityError { Description = "Last Name cannot exceed 75 characters." } };
+            identityErrors = new[] { new IdentityError { Description = Localizer["LastNameTooLong"].Value } };
             return;
         }
 

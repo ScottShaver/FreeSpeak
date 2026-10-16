@@ -91,4 +91,10 @@
   <data name="ExternalLoginTitle" xml:space="preserve">
     <value>Użyj innej usługi, aby się zalogować.</value>
   </data>
+  <data name="ErrorEmailNotConfirmed" xml:space="preserve">
+    <value>Błąd: Twój adres e-mail nie został potwierdzony. Sprawdź pocztę i potwierdź swoje konto.</value>
+  </data>
+  <data name="ErrorInvalidLogin" xml:space="preserve">
+    <value>Błąd: Nieprawidłowa nazwa użytkownika lub hasło. Spróbuj ponownie.</value>
+  </data>
 </root>

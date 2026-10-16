@@ -91,4 +91,10 @@
   <data name="ExternalLoginTitle" xml:space="preserve">
     <value>Войти через другой сервис.</value>
   </data>
+  <data name="ErrorEmailNotConfirmed" xml:space="preserve">
+    <value>Ошибка: Ваш адрес электронной почты не подтверждён. Проверьте почту и подтвердите свою учётную запись.</value>
+  </data>
+  <data name="ErrorInvalidLogin" xml:space="preserve">
+    <value>Ошибка: Неверное имя пользователя или пароль. Повторите попытку.</value>
+  </data>
 </root>

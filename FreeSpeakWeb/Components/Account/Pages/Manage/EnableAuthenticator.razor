@@ -1,4 +1,4 @@
-﻿@page "/Account/Manage/EnableAuthenticator"
+@page "/Account/Manage/EnableAuthenticator"
 
 @using System.ComponentModel.DataAnnotations
 @using System.Globalization
@@ -33,7 +33,7 @@ else
         <ol class="list">
             <li>
                 <p>
-                    @LocalizedMarkup.Compose(Localizer["Step1"].Value,
+                    @LocalizedMarkup.Format(Localizer["Step1"].Value,
                         LocalizedMarkup.Link("https://go.microsoft.com/fwlink/?Linkid=825072", "Android"),
                         LocalizedMarkup.Link("https://go.microsoft.com/fwlink/?Linkid=825073", "iOS"),
                         LocalizedMarkup.Link("https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en", "Android"),
@@ -41,7 +41,7 @@ else
                 </p>
             </li>
             <li>
-                <p>@LocalizedMarkup.Compose(Localizer["Step2"].Value, LocalizedMarkup.Code(sharedKey))</p>
+                <p>@LocalizedMarkup.Format(Localizer["Step2"].Value, ("<kbd>" + LocalizedMarkup.Encode(sharedKey) + "</kbd>"))</p>
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" height="300" width="300" stroke="none"
                          version="1.1" viewBox="0 0 50 50">

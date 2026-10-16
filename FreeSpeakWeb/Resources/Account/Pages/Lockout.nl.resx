@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>Geblokkeerd</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Account geblokkeerd</value>
+  </data>
+  <data name="PermanentTitle" xml:space="preserve">
+    <value>Account permanent uitgeschakeld</value>
+  </data>
+  <data name="PermanentDisabledMessage" xml:space="preserve">
+    <value>Je account is permanent uitgeschakeld door een systeembeheerder. Dit kan niet ongedaan worden gemaakt of omzeild.</value>
+  </data>
+  <data name="ImportantLabel" xml:space="preserve">
+    <value>Belangrijk:</value>
+  </data>
+  <data name="PermanentRecoveryNote" xml:space="preserve">
+    <value>Het opnieuw instellen van het wachtwoord en andere herstelopties ontgrendelen een permanent uitgeschakeld account niet.</value>
+  </data>
+  <data name="ContactAdminIfMistake" xml:space="preserve">
+    <value>Denk je dat dit een vergissing is? Neem dan contact op met de sitebeheerder.</value>
+  </data>
+  <data name="TemporaryTitle" xml:space="preserve">
+    <value>Tijdelijke accountblokkade</value>
+  </data>
+  <data name="TemporaryMessage" xml:space="preserve">
+    <value>Je account is geblokkeerd vanwege meerdere mislukte inlogpogingen.</value>
+  </data>
+  <data name="LockedUntilLabel" xml:space="preserve">
+    <value>Geblokkeerd tot:</value>
+  </data>
+  <data name="TimeRemainingLabel" xml:space="preserve">
+    <value>Resterende tijd:</value>
+  </data>
+  <data name="WhatYouCanDoLabel" xml:space="preserve">
+    <value>Wat je kunt doen:</value>
+  </data>
+  <data name="OptionWait" xml:space="preserve">
+    <value>Wacht tot de blokkadeperiode is verlopen</value>
+  </data>
+  <data name="OptionForgotPassword" xml:space="preserve">
+    <value>Als je je wachtwoord bent vergeten, gebruik dan de optie {0}</value>
+  </data>
+  <data name="ForgotPasswordLink" xml:space="preserve">
+    <value>Wachtwoord vergeten</value>
+  </data>
+  <data name="OptionContactSupport" xml:space="preserve">
+    <value>Neem contact op met de ondersteuning als je direct hulp nodig hebt</value>
+  </data>
+  <data name="AutoUnlockNote" xml:space="preserve">
+    <value>Je account wordt automatisch ontgrendeld. Je kunt deze pagina vernieuwen om opnieuw in te loggen.</value>
+  </data>
+  <data name="LockoutExpired" xml:space="preserve">
+    <value>De blokkade van je account is verlopen. Je kunt nu {0}.</value>
+  </data>
+  <data name="TryLoginLink" xml:space="preserve">
+    <value>opnieuw proberen in te loggen</value>
+  </data>
+  <data name="ReturnHome" xml:space="preserve">
+    <value>Terug naar home</value>
+  </data>
+  <data name="StatusCardTitle" xml:space="preserve">
+    <value>Accountstatus</value>
+  </data>
+  <data name="DetailsCardTitle" xml:space="preserve">
+    <value>Details van je blokkade</value>
+  </data>
+  <data name="SecurityCardTitle" xml:space="preserve">
+    <value>Beveiligingsinformatie</value>
+  </data>
+  <data name="PermanentLockedByAdmin" xml:space="preserve">
+    <value>Je account is permanent geblokkeerd door een systeembeheerder.</value>
+  </data>
+  <data name="PermanentTypicalCause" xml:space="preserve">
+    <value>Dit gebeurt meestal door ernstige of herhaalde schendingen van de gebruiksvoorwaarden van de site.</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+    <value>Status:</value>
+  </data>
+  <data name="PermanentlyDisabled" xml:space="preserve">
+    <value>Permanent uitgeschakeld</value>
+  </data>
+  <data name="RecoveryOptionsLabel" xml:space="preserve">
+    <value>Herstelopties:</value>
+  </data>
+  <data name="NoRecoveryOptions" xml:space="preserve">
+    <value>Geen – het opnieuw instellen van het wachtwoord ontgrendelt dit account niet</value>
+  </data>
+  <data name="ContactLabel" xml:space="preserve">
+    <value>Contact:</value>
+  </data>
+  <data name="SiteAdminOnly" xml:space="preserve">
+    <value>Alleen de sitebeheerder</value>
+  </data>
+  <data name="OnlyAdminCanRemove" xml:space="preserve">
+    <value>Alleen een systeembeheerder kan een permanente accountblokkade opheffen. Denk je dat dit een fout is? Neem dan contact op met de ondersteuning.</value>
+  </data>
+  <data name="TemporarilyLockedMessage" xml:space="preserve">
+    <value>Je account is tijdelijk geblokkeerd vanwege meerdere mislukte inlogpogingen.</value>
+  </data>
+  <data name="WhatToDoLabel" xml:space="preserve">
+    <value>Wat te doen:</value>
+  </data>
+  <data name="WhatToDoText" xml:space="preserve">
+    <value>Wacht tot de blokkade verloopt, of gebruik {0} om direct te ontgrendelen</value>
+  </data>
+  <data name="PasswordResetLink" xml:space="preserve">
+    <value>wachtwoord opnieuw instellen</value>
+  </data>
+  <data name="SecurityExplanation" xml:space="preserve">
+    <value>Voor je veiligheid worden accounts tijdelijk geblokkeerd na meerdere mislukte inlogpogingen. Zo wordt je account beschermd tegen onbevoegde toegangspogingen.</value>
+  </data>
+  <data name="MaxAttemptsLabel" xml:space="preserve">
+    <value>Maximaal aantal pogingen:</value>
+  </data>
+  <data name="MaxAttemptsValue" xml:space="preserve">
+    <value>{0} mislukte inlogpogingen</value>
+  </data>
+  <data name="LockoutDurationLabel" xml:space="preserve">
+    <value>Duur van de blokkade:</value>
+  </data>
+  <data name="LockoutDurationValue" xml:space="preserve">
+    <value>{0} minuten</value>
+  </data>
+  <data name="ResetLabel" xml:space="preserve">
+    <value>Reset:</value>
+  </data>
+  <data name="ResetValue" xml:space="preserve">
+    <value>Een geslaagde aanmelding of het opnieuw instellen van het wachtwoord wist de mislukte pogingen</value>
+  </data>
+  <data name="HoursSingular" xml:space="preserve">
+    <value>{0} uur</value>
+  </data>
+  <data name="HoursPlural" xml:space="preserve">
+    <value>{0} uur</value>
+  </data>
+  <data name="MinutesSingular" xml:space="preserve">
+    <value>{0} minuut</value>
+  </data>
+  <data name="MinutesPlural" xml:space="preserve">
+    <value>{0} minuten</value>
+  </data>
+  <data name="SecondsSingular" xml:space="preserve">
+    <value>{0} seconde</value>
+  </data>
+  <data name="SecondsPlural" xml:space="preserve">
+    <value>{0} seconden</value>
+  </data>
+</root>
