@@ -220,7 +220,7 @@ Use format strings with placeholders:
 
 Services and repositories that return user-visible text (for example `(false, "error")` tuples) localize it themselves:
 
-- Add a trailing optional constructor parameter `IStringLocalizer<ThisService>? localizer = null` and store it with `ServiceLocalizer.Resolve(localizer)`. DI supplies the real localizer; when it is omitted (tests), `ServiceLocalizer` falls back to the neutral English resources.
+- Add a trailing optional constructor parameter `IStringLocalizer<Resources.Services.ThisService>? localizer = null` (the generated resource class is the marker type, like in components) and store it with `ServiceLocalizer.Resolve(localizer)`. DI supplies the real localizer; when it is omitted (tests), `ServiceLocalizer` falls back to the neutral English resources.
 - Resources mirror the class path: `Resources/Services/GroupFileService.resx` (+ 12 locale files and `.Designer.cs`), `Resources/Repositories/GroupFileRepository.resx`, and so on.
 - Interpolated text uses `{0}` placeholders with `string.Format(_localizer["Key"].Value, arg)`; placeholders must match in every locale.
 - Do NOT translate values that are stored (audit log details, Mod Log entries, notification fallback text that has a template key); they stay in English.

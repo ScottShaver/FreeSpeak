@@ -14,7 +14,7 @@ namespace FreeSpeakWeb.Services
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupAccessValidator> _logger;
         private readonly IRoleService _roleService;
-        private readonly IStringLocalizer<GroupAccessValidator> _localizer;
+        private readonly IStringLocalizer<Resources.Services.GroupAccessValidator> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupAccessValidator"/> class.
@@ -28,7 +28,7 @@ namespace FreeSpeakWeb.Services
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupAccessValidator> logger,
             IRoleService roleService,
-            IStringLocalizer<GroupAccessValidator>? localizer = null)
+            IStringLocalizer<Resources.Services.GroupAccessValidator>? localizer = null)
         {
             _contextFactory = contextFactory;
             _logger = logger;

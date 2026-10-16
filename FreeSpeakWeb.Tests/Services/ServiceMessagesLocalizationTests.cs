@@ -77,7 +77,7 @@ public class ServiceMessagesLocalizationTests
         try
         {
             CultureInfo.CurrentUICulture = new CultureInfo("en");
-            var localizer = ServiceLocalizer.Resolve<ClamAvVirusScanService>(null);
+            var localizer = ServiceLocalizer.Resolve<FreeSpeakWeb.Resources.Services.ClamAvVirusScanService>(null);
 
             localizer["UnknownVirusName"].Value.Should().Be("Unknown");
         }
@@ -97,7 +97,7 @@ public class ServiceMessagesLocalizationTests
         try
         {
             CultureInfo.CurrentUICulture = new CultureInfo("de");
-            var localizer = ServiceLocalizer.Resolve<GroupFileService>(null);
+            var localizer = ServiceLocalizer.Resolve<FreeSpeakWeb.Resources.Services.GroupFileService>(null);
 
             localizer["FileNotFound"].Value.Should().NotBe("File not found.");
             localizer["FileNotFound"].ResourceNotFound.Should().BeFalse();

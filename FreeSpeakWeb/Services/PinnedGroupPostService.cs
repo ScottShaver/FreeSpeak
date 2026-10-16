@@ -13,7 +13,7 @@ namespace FreeSpeakWeb.Services
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<PinnedGroupPostService> _logger;
-        private readonly IStringLocalizer<PinnedGroupPostService> _localizer;
+        private readonly IStringLocalizer<Resources.Services.PinnedGroupPostService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PinnedGroupPostService"/> class.
@@ -24,7 +24,7 @@ namespace FreeSpeakWeb.Services
         public PinnedGroupPostService(
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<PinnedGroupPostService> logger,
-            IStringLocalizer<PinnedGroupPostService>? localizer = null)
+            IStringLocalizer<Resources.Services.PinnedGroupPostService>? localizer = null)
         {
             _localizer = ServiceLocalizer.Resolve(localizer);
             _contextFactory = contextFactory;

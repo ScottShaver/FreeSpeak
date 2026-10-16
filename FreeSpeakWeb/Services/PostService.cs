@@ -34,7 +34,7 @@ namespace FreeSpeakWeb.Services
         private readonly PostNotificationHelper _notificationHelper;
         private readonly IAuditLogRepository _auditLogRepository;
         private readonly IFriendshipRepository _friendshipRepository;
-        private readonly IStringLocalizer<PostService> _localizer;
+        private readonly IStringLocalizer<Resources.Services.PostService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PostService"/> class.
@@ -73,7 +73,7 @@ namespace FreeSpeakWeb.Services
             PostNotificationHelper notificationHelper,
             IAuditLogRepository auditLogRepository,
             IFriendshipRepository friendshipRepository,
-            IStringLocalizer<PostService>? localizer = null)
+            IStringLocalizer<Resources.Services.PostService>? localizer = null)
         {
             _contextFactory = contextFactory;
             _postRepository = postRepository;

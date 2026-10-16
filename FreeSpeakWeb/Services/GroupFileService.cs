@@ -25,7 +25,7 @@ namespace FreeSpeakWeb.Services
         private readonly IGroupModerationLogService? _moderationLog;
         private readonly IRoleService? _roleService;
         private readonly string _uploadsBasePath;
-        private readonly IStringLocalizer<GroupFileService> _localizer;
+        private readonly IStringLocalizer<Resources.Services.GroupFileService> _localizer;
 
         /// <summary>
         /// Maximum allowed size for a single file upload (50MB).
@@ -59,7 +59,7 @@ namespace FreeSpeakWeb.Services
             GroupMemberService groupMemberService,
             IGroupModerationLogService? moderationLog = null,
             IRoleService? roleService = null,
-                IStringLocalizer<GroupFileService>? localizer = null)
+                IStringLocalizer<Resources.Services.GroupFileService>? localizer = null)
             {
                 _localizer = ServiceLocalizer.Resolve(localizer);
                 _moderationLog = moderationLog;

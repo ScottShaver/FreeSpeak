@@ -16,7 +16,7 @@ namespace FreeSpeakWeb.Services
         private readonly ILogger<GroupContentReportService> _logger;
         private readonly GroupAccessValidator _accessValidator;
         private readonly IGroupModerationLogService? _moderationLog;
-        private readonly IStringLocalizer<GroupContentReportService> _localizer;
+        private readonly IStringLocalizer<Resources.Services.GroupContentReportService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupContentReportService"/> class.
@@ -31,7 +31,7 @@ namespace FreeSpeakWeb.Services
             ILogger<GroupContentReportService> logger,
             GroupAccessValidator accessValidator,
             IGroupModerationLogService? moderationLog = null,
-            IStringLocalizer<GroupContentReportService>? localizer = null)
+            IStringLocalizer<Resources.Services.GroupContentReportService>? localizer = null)
         {
             _localizer = ServiceLocalizer.Resolve(localizer);
             _contextFactory = contextFactory;

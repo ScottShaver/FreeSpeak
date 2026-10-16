@@ -75,7 +75,7 @@ namespace FreeSpeakWeb.Services.Settings
         private readonly EmailTestRateLimiter _rateLimiter;
         private readonly TimeProvider _timeProvider;
         private readonly ILogger<EmailTestService> _logger;
-        private readonly IStringLocalizer<EmailTestService> _localizer;
+        private readonly IStringLocalizer<Resources.Services.Settings.EmailTestService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmailTestService"/> class.
@@ -98,7 +98,7 @@ namespace FreeSpeakWeb.Services.Settings
             EmailTestRateLimiter rateLimiter,
             TimeProvider timeProvider,
             ILogger<EmailTestService> logger,
-            IStringLocalizer<EmailTestService>? localizer = null)
+            IStringLocalizer<Resources.Services.Settings.EmailTestService>? localizer = null)
         {
             _localizer = ServiceLocalizer.Resolve(localizer);
             _smtpSettings = smtpSettings;

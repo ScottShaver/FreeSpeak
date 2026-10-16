@@ -14,7 +14,7 @@ namespace FreeSpeakWeb.Services
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupRuleService> _logger;
         private readonly IGroupModerationLogService? _moderationLog;
-        private readonly IStringLocalizer<GroupRuleService> _localizer;
+        private readonly IStringLocalizer<Resources.Services.GroupRuleService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupRuleService"/> class.
@@ -27,7 +27,7 @@ namespace FreeSpeakWeb.Services
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupRuleService> logger,
             IGroupModerationLogService? moderationLog = null,
-            IStringLocalizer<GroupRuleService>? localizer = null)
+            IStringLocalizer<Resources.Services.GroupRuleService>? localizer = null)
         {
             _contextFactory = contextFactory;
             _logger = logger;

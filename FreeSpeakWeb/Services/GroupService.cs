@@ -22,7 +22,7 @@ namespace FreeSpeakWeb.Services
         private readonly GroupMemberService _groupMemberService;
         private readonly IRoleService _roleService;
         private readonly IGroupModerationLogService? _moderationLog;
-        private readonly IStringLocalizer<GroupService> _localizer;
+        private readonly IStringLocalizer<Resources.Services.GroupService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupService"/> class.
@@ -45,7 +45,7 @@ namespace FreeSpeakWeb.Services
             GroupMemberService groupMemberService,
             IRoleService roleService,
             IGroupModerationLogService? moderationLog = null,
-            IStringLocalizer<GroupService>? localizer = null)
+            IStringLocalizer<Resources.Services.GroupService>? localizer = null)
         {
             _localizer = ServiceLocalizer.Resolve(localizer);
             _moderationLog = moderationLog;

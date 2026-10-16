@@ -15,7 +15,7 @@ public class ClamAvVirusScanService : IVirusScanService
 {
     private readonly ILogger<ClamAvVirusScanService> _logger;
     private readonly IOptionsMonitor<VirusScanSettings> _settingsMonitor;
-    private readonly IStringLocalizer<ClamAvVirusScanService> _localizer;
+    private readonly IStringLocalizer<Resources.Services.ClamAvVirusScanService> _localizer;
     private readonly object _clientLock = new();
     private VirusScanSettings? _clientSettings;
     private ClamClient? _client;
@@ -29,7 +29,7 @@ public class ClamAvVirusScanService : IVirusScanService
     public ClamAvVirusScanService(
         ILogger<ClamAvVirusScanService> logger,
         IOptionsMonitor<VirusScanSettings> settings,
-        IStringLocalizer<ClamAvVirusScanService>? localizer = null)
+        IStringLocalizer<Resources.Services.ClamAvVirusScanService>? localizer = null)
     {
         _logger = logger;
         _settingsMonitor = settings;

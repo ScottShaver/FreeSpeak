@@ -13,7 +13,7 @@ public class ProfilePictureService
 {
     private readonly IWebHostEnvironment _environment;
     private readonly ILogger<ProfilePictureService> _logger;
-    private readonly IStringLocalizer<ProfilePictureService> _localizer;
+    private readonly IStringLocalizer<Resources.Services.ProfilePictureService> _localizer;
 
     /// <summary>
     /// Target size in pixels for profile picture dimensions (square).
@@ -31,7 +31,7 @@ public class ProfilePictureService
     /// <param name="environment">The web host environment for accessing content paths.</param>
     /// <param name="logger">The logger for diagnostic output.</param>
     /// <param name="localizer">Localizer for user-facing result messages. Falls back to the neutral (English) text when omitted.</param>
-    public ProfilePictureService(IWebHostEnvironment environment, ILogger<ProfilePictureService> logger, IStringLocalizer<ProfilePictureService>? localizer = null)
+    public ProfilePictureService(IWebHostEnvironment environment, ILogger<ProfilePictureService> logger, IStringLocalizer<Resources.Services.ProfilePictureService>? localizer = null)
     {
         _environment = environment;
         _logger = logger;

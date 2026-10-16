@@ -19,7 +19,7 @@ namespace FreeSpeakWeb.Services
         private readonly IAuditLogRepository _auditLogRepository;
         private readonly IRoleService _roleService;
         private readonly IGroupModerationLogService? _moderationLog;
-        private readonly IStringLocalizer<GroupBannedMemberService> _localizer;
+        private readonly IStringLocalizer<Resources.Services.GroupBannedMemberService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupBannedMemberService"/> class.
@@ -36,7 +36,7 @@ namespace FreeSpeakWeb.Services
             IAuditLogRepository auditLogRepository,
             IRoleService roleService,
             IGroupModerationLogService? moderationLog = null,
-            IStringLocalizer<GroupBannedMemberService>? localizer = null)
+            IStringLocalizer<Resources.Services.GroupBannedMemberService>? localizer = null)
         {
             _contextFactory = contextFactory;
             _logger = logger;

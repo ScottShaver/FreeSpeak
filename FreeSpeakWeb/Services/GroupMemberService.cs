@@ -18,7 +18,7 @@ namespace FreeSpeakWeb.Services
         private readonly NotificationService _notificationService;
         private readonly IRoleService _roleService;
         private readonly IGroupModerationLogService? _moderationLog;
-        private readonly IStringLocalizer<GroupMemberService> _localizer;
+        private readonly IStringLocalizer<Resources.Services.GroupMemberService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupMemberService"/> class.
@@ -41,7 +41,7 @@ namespace FreeSpeakWeb.Services
             NotificationService notificationService,
             IRoleService roleService,
             IGroupModerationLogService? moderationLog = null,
-            IStringLocalizer<GroupMemberService>? localizer = null)
+            IStringLocalizer<Resources.Services.GroupMemberService>? localizer = null)
         {
             _contextFactory = contextFactory;
             _memberRepository = memberRepository;

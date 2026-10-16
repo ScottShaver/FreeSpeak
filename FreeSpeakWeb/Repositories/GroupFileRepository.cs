@@ -16,7 +16,7 @@ namespace FreeSpeakWeb.Repositories
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly ILogger<GroupFileRepository> _logger;
         private readonly ProfilerHelper _profiler;
-        private readonly IStringLocalizer<GroupFileRepository> _localizer;
+        private readonly IStringLocalizer<Resources.Repositories.GroupFileRepository> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupFileRepository"/> class.
@@ -29,7 +29,7 @@ namespace FreeSpeakWeb.Repositories
             IDbContextFactory<ApplicationDbContext> contextFactory,
             ILogger<GroupFileRepository> logger,
             ProfilerHelper profiler,
-            IStringLocalizer<GroupFileRepository>? localizer = null)
+            IStringLocalizer<Resources.Repositories.GroupFileRepository>? localizer = null)
         {
             _contextFactory = contextFactory;
             _logger = logger;

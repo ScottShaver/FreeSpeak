@@ -11,7 +11,7 @@ namespace FreeSpeakWeb.Services;
 public class FileSignatureValidator : IFileSignatureValidator
 {
     private readonly ILogger<FileSignatureValidator> _logger;
-    private readonly IStringLocalizer<FileSignatureValidator> _localizer;
+    private readonly IStringLocalizer<Resources.Services.FileSignatureValidator> _localizer;
 
     /// <summary>
     /// File signature definitions mapping magic bytes to MIME types.
@@ -220,7 +220,7 @@ public class FileSignatureValidator : IFileSignatureValidator
     /// </summary>
     /// <param name="logger">The logger instance for logging validation events.</param>
     /// <param name="localizer">Localizer for user-facing validation messages. Falls back to the neutral (English) text when omitted.</param>
-    public FileSignatureValidator(ILogger<FileSignatureValidator> logger, IStringLocalizer<FileSignatureValidator>? localizer = null)
+    public FileSignatureValidator(ILogger<FileSignatureValidator> logger, IStringLocalizer<Resources.Services.FileSignatureValidator>? localizer = null)
     {
         _logger = logger;
         _localizer = ServiceLocalizer.Resolve(localizer);

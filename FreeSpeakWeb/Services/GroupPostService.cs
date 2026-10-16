@@ -30,7 +30,7 @@ namespace FreeSpeakWeb.Services
         private readonly IAuditLogRepository _auditLogRepository;
         private readonly GroupPointsService _groupPointsService;
         private readonly IGroupModerationLogService? _moderationLog;
-        private readonly IStringLocalizer<GroupPostService> _localizer;
+        private readonly IStringLocalizer<Resources.Services.GroupPostService> _localizer;
         private readonly Microsoft.Extensions.Options.IOptions<SiteSettings>? _siteSettingsOptions;
         private int _maxCommentDepth => (_siteSettingsOptions?.Value ?? new SiteSettings()).MaxFeedPostCommentDepth;
         private int _maxDirectComments => (_siteSettingsOptions?.Value ?? new SiteSettings()).MaxFeedPostDirectCommentCount;
@@ -114,7 +114,7 @@ namespace FreeSpeakWeb.Services
             GroupPointsService groupPointsService,
             Microsoft.Extensions.Options.IOptions<SiteSettings>? siteSettings,
             IGroupModerationLogService? moderationLog = null,
-            IStringLocalizer<GroupPostService>? localizer = null)
+            IStringLocalizer<Resources.Services.GroupPostService>? localizer = null)
         {
             _localizer = ServiceLocalizer.Resolve(localizer);
             _siteSettingsOptions = siteSettings;

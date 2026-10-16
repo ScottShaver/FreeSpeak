@@ -19,7 +19,7 @@ namespace FreeSpeakWeb.Services
         private readonly ILogger<NotificationService> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly IAuditLogRepository _auditLogRepository;
-        private readonly IStringLocalizer<NotificationService> _localizer;
+        private readonly IStringLocalizer<Resources.Services.NotificationService> _localizer;
 
         /// <summary>
         /// Maximum number of recipients allowed per bulk notification operation to prevent resource exhaustion.
@@ -41,7 +41,7 @@ namespace FreeSpeakWeb.Services
             ILogger<NotificationService> logger,
             IServiceScopeFactory scopeFactory,
             IAuditLogRepository auditLogRepository,
-            IStringLocalizer<NotificationService>? localizer = null)
+            IStringLocalizer<Resources.Services.NotificationService>? localizer = null)
         {
             _notificationRepository = notificationRepository;
             _contextFactory = contextFactory;

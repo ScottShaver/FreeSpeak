@@ -19,7 +19,7 @@ namespace FreeSpeakWeb.Services
         private readonly UserPreferenceService _userPreferenceService;
         private readonly FriendshipCacheService _friendshipCache;
         private readonly IAuditLogRepository _auditLogRepository;
-        private readonly IStringLocalizer<FriendsService> _localizer;
+        private readonly IStringLocalizer<Resources.Services.FriendsService> _localizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FriendsService"/> class.
@@ -40,7 +40,7 @@ namespace FreeSpeakWeb.Services
             UserPreferenceService userPreferenceService,
             FriendshipCacheService friendshipCache,
             IAuditLogRepository auditLogRepository,
-            IStringLocalizer<FriendsService>? localizer = null)
+            IStringLocalizer<Resources.Services.FriendsService>? localizer = null)
         {
             _friendshipRepository = friendshipRepository;
             _userRepository = userRepository;
