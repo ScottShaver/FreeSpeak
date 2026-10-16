@@ -17,6 +17,7 @@ namespace FreeSpeakWeb.DTOs
     /// <param name="Summary">Short content excerpt or file name.</param>
     /// <param name="Reason">Moderator-entered reason.</param>
     /// <param name="CreatedAtUtc">Server-set UTC timestamp.</param>
+    /// <param name="IsSystemAction">True when the action was taken at system level by a system moderator or administrator.</param>
     public sealed record GroupModerationLogEntryDto(
         long Id,
         int GroupId,
@@ -29,7 +30,8 @@ namespace FreeSpeakWeb.DTOs
         string? TargetUserDisplayName,
         string? Summary,
         string? Reason,
-        DateTime CreatedAtUtc);
+        DateTime CreatedAtUtc,
+        bool IsSystemAction = false);
 
     /// <summary>
     /// Optional filters applied when reading or exporting a group's moderation log.
@@ -88,5 +90,8 @@ namespace FreeSpeakWeb.DTOs
 
         /// <summary>Gets or sets the moderator-entered reason.</summary>
         public string? Reason { get; set; }
+
+        /// <summary>Gets or sets whether the action is a system-level action by a system moderator or administrator.</summary>
+        public bool IsSystemAction { get; set; }
     }
 }

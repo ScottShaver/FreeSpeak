@@ -132,5 +132,8 @@ namespace FreeSpeakWeb.Data
 
         /// <summary>Gets or sets the UTC time the action succeeded. Always set by the server.</summary>
         public DateTime CreatedAt { get; set; }
+
+        /// <summary>Gets or sets whether the action was taken at system level by a system moderator or administrator acting as a backstop for the group.</summary>
+        public bool IsSystemAction { get; set; }
     }
 }

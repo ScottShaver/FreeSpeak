@@ -31,4 +31,6 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>تمت معالجة البلاغ</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>تم حظر العضو</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>تم إلغاء حظر العضو</value></data>
+  <data name="SystemAction" xml:space="preserve"><value>النظام</value></data>
+  <data name="SystemActionHint" xml:space="preserve"><value>تم اتخاذ الإجراء على مستوى النظام بواسطة مشرف النظام أو مسؤوله</value></data>
 </root>

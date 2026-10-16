@@ -31,4 +31,6 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>報告を解決</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>メンバーをBAN</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>メンバーのBANを解除</value></data>
+  <data name="SystemAction" xml:space="preserve"><value>システム</value></data>
+  <data name="SystemActionHint" xml:space="preserve"><value>システムモデレーターまたは管理者がシステムレベルで実行しました</value></data>
 </root>

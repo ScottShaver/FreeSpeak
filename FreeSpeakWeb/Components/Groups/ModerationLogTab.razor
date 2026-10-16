@@ -84,7 +84,13 @@
                             <TimestampDisplay Timestamp="@entry.CreatedAtUtc" Mode="relative" />
                         </span>
                     </div>
-                    <div class="small">@string.Format(Localizer["ByActor"].Value, entry.ActorDisplayName)</div>
+                    <div class="small">
+                        @string.Format(Localizer["ByActor"].Value, entry.ActorDisplayName)
+                        @if (entry.IsSystemAction)
+                        {
+                            <span class="badge bg-dark ms-2" data-testid="modlog-system-badge" title="@Localizer["SystemActionHint"]">@Localizer["SystemAction"]</span>
+                        }
+                    </div>
                     @if (!string.IsNullOrEmpty(entry.TargetUserDisplayName))
                     {
                         <div class="small">@string.Format(Localizer["TargetUser"].Value, entry.TargetUserDisplayName)</div>

@@ -31,4 +31,6 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>신고 처리됨</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>멤버 차단됨</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>멤버 차단 해제됨</value></data>
+  <data name="SystemAction" xml:space="preserve"><value>시스템</value></data>
+  <data name="SystemActionHint" xml:space="preserve"><value>시스템 중재자 또는 관리자가 시스템 수준에서 수행함</value></data>
 </root>

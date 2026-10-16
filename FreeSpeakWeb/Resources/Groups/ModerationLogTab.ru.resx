@@ -31,4 +31,6 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>Жалоба рассмотрена</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>Участник заблокирован</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>Участник разблокирован</value></data>
+  <data name="SystemAction" xml:space="preserve"><value>Система</value></data>
+  <data name="SystemActionHint" xml:space="preserve"><value>Выполнено на системном уровне системным модератором или администратором</value></data>
 </root>

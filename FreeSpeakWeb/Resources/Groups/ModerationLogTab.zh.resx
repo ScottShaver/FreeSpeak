@@ -31,4 +31,6 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>举报已处理</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>成员已封禁</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>成员已解除封禁</value></data>
+  <data name="SystemAction" xml:space="preserve"><value>系统</value></data>
+  <data name="SystemActionHint" xml:space="preserve"><value>由系统版主或管理员在系统级别执行</value></data>
 </root>

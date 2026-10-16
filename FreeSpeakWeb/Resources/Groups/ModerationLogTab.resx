@@ -31,4 +31,6 @@
   <data name="Action_ReportResolved" xml:space="preserve"><value>Report resolved</value></data>
   <data name="Action_MemberBanned" xml:space="preserve"><value>Member banned</value></data>
   <data name="Action_MemberUnbanned" xml:space="preserve"><value>Member unbanned</value></data>
+  <data name="SystemAction" xml:space="preserve"><value>System</value></data>
+  <data name="SystemActionHint" xml:space="preserve"><value>Taken at system level by a system moderator or administrator</value></data>
 </root>

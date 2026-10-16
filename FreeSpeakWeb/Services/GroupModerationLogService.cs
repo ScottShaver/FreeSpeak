@@ -77,7 +77,8 @@ namespace FreeSpeakWeb.Services
                     TargetUserDisplayName = Truncate(targetName, GroupModerationLogEntry.MaxDisplayNameLength),
                     Summary = Truncate(ToPlainText(request.Summary), GroupModerationLogEntry.MaxSummaryLength),
                     Reason = Truncate(request.Reason?.Trim(), GroupModerationLogEntry.MaxReasonLength),
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    IsSystemAction = request.IsSystemAction
                 };
 
                 await _repository.AddAsync(entry, cancellationToken);
@@ -176,7 +177,7 @@ namespace FreeSpeakWeb.Services
         private static GroupModerationLogEntryDto ToDto(GroupModerationLogEntry e) => new(
             e.Id, e.GroupId, e.ActorUserId, e.ActorDisplayName, e.Action, e.TargetType, e.TargetId,
             e.TargetUserId, e.TargetUserDisplayName, e.Summary, e.Reason,
-            DateTime.SpecifyKind(e.CreatedAt, DateTimeKind.Utc));
+            DateTime.SpecifyKind(e.CreatedAt, DateTimeKind.Utc), e.IsSystemAction);
 
         /// <summary>
         /// Strips HTML tags and collapses whitespace.
