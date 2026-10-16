@@ -203,5 +203,14 @@ namespace FreeSpeakWeb.Resources.SocialFeed {
                 return ResourceManager.GetString("PublicPostWarning", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Selected image.
+        /// </summary>
+        public static string SelectedImageAlt {
+            get {
+                return ResourceManager.GetString("SelectedImageAlt", resourceCulture);
+            }
+        }
     }
 }

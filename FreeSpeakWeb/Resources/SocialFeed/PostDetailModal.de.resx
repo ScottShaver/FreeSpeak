@@ -73,4 +73,16 @@
   <data name="WriteAComment" xml:space="preserve">
     <value>Schreibe einen Kommentar...</value>
   </data>
+  <data name="LoadingComments" xml:space="preserve">
+    <value>Kommentare werden geladen...</value>
+  </data>
+  <data name="LoadingMoreComments" xml:space="preserve">
+    <value>Weitere Kommentare werden geladen...</value>
+  </data>
+  <data name="YouAlt" xml:space="preserve">
+    <value>Du</value>
+  </data>
+  <data name="NoMoreCommentsAllowed" xml:space="preserve">
+    <value>Keine weiteren Kommentare erlaubt</value>
+  </data>
 </root>

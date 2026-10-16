@@ -103,4 +103,7 @@
   <data name="DaysAgo" xml:space="preserve">
     <value>il y a {0}j</value>
   </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
 </root>

@@ -106,4 +106,7 @@
   <data name="FriendPlaceholder" xml:space="preserve">
     <value>اكتب شيئًا لـ {0}...</value>
   </data>
+  <data name="SelectedImageAlt" xml:space="preserve">
+    <value>الصورة المحددة</value>
+  </data>
 </root>

@@ -311,5 +311,77 @@ namespace FreeSpeakWeb.Resources.SocialFeed {
                 return ResourceManager.GetString("WriteComment", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Change Post to Public?.
+        /// </summary>
+        public static string ChangePostToPublic {
+            get {
+                return ResourceManager.GetString("ChangePostToPublic", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string UnknownUser {
+            get {
+                return ResourceManager.GetString("UnknownUser", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Report submitted successfully. Thank you for helping keep our community safe..
+        /// </summary>
+        public static string ReportSubmitted {
+            get {
+                return ResourceManager.GetString("ReportSubmitted", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to update notification settings..
+        /// </summary>
+        public static string FailedToUpdateNotificationSettings {
+            get {
+                return ResourceManager.GetString("FailedToUpdateNotificationSettings", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to update post audience..
+        /// </summary>
+        public static string FailedToUpdatePostAudience {
+            get {
+                return ResourceManager.GetString("FailedToUpdatePostAudience", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to delete post..
+        /// </summary>
+        public static string FailedToDeletePost {
+            get {
+                return ResourceManager.GetString("FailedToDeletePost", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this post? This action cannot be undone and will permanently remove the post, all comments, likes, and images..
+        /// </summary>
+        public static string DeletePostFullConfirmMessage {
+            get {
+                return ResourceManager.GetString("DeletePostFullConfirmMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this group post? This action cannot be undone and will permanently remove the post, all comments, likes, and images..
+        /// </summary>
+        public static string DeleteGroupPostFullConfirmMessage {
+            get {
+                return ResourceManager.GetString("DeleteGroupPostFullConfirmMessage", resourceCulture);
+            }
+        }
     }
 }

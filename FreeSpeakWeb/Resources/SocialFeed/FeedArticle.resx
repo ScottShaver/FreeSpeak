@@ -142,4 +142,28 @@
   <data name="MakePublic" xml:space="preserve">
     <value>Yes, Make Public</value>
   </data>
+  <data name="ChangePostToPublic" xml:space="preserve">
+    <value>Change Post to Public?</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Report submitted successfully. Thank you for helping keep our community safe.</value>
+  </data>
+  <data name="FailedToUpdateNotificationSettings" xml:space="preserve">
+    <value>Failed to update notification settings.</value>
+  </data>
+  <data name="FailedToUpdatePostAudience" xml:space="preserve">
+    <value>Failed to update post audience.</value>
+  </data>
+  <data name="FailedToDeletePost" xml:space="preserve">
+    <value>Failed to delete post.</value>
+  </data>
+  <data name="DeletePostFullConfirmMessage" xml:space="preserve">
+    <value>Are you sure you want to delete this post? This action cannot be undone and will permanently remove the post, all comments, likes, and images.</value>
+  </data>
+  <data name="DeleteGroupPostFullConfirmMessage" xml:space="preserve">
+    <value>Are you sure you want to delete this group post? This action cannot be undone and will permanently remove the post, all comments, likes, and images.</value>
+  </data>
 </root>

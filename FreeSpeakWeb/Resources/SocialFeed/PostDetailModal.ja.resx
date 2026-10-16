@@ -73,4 +73,16 @@
   <data name="WriteAComment" xml:space="preserve">
     <value>コメントを入力...</value>
   </data>
+  <data name="LoadingComments" xml:space="preserve">
+    <value>コメントを読み込み中...</value>
+  </data>
+  <data name="LoadingMoreComments" xml:space="preserve">
+    <value>コメントをさらに読み込み中...</value>
+  </data>
+  <data name="YouAlt" xml:space="preserve">
+    <value>あなた</value>
+  </data>
+  <data name="NoMoreCommentsAllowed" xml:space="preserve">
+    <value>これ以上コメントできません</value>
+  </data>
 </root>

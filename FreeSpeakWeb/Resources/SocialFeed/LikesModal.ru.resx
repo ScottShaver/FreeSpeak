@@ -103,4 +103,7 @@
   <data name="DaysAgo" xml:space="preserve">
     <value>{0}д назад</value>
   </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
 </root>

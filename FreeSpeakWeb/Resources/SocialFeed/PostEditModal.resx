@@ -91,4 +91,7 @@
   <data name="RemoveImage" xml:space="preserve">
     <value>Remove image</value>
   </data>
+  <data name="WhatsOnYourMind" xml:space="preserve">
+    <value>What's on your mind?</value>
+  </data>
 </root>

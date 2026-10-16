@@ -104,5 +104,41 @@ namespace FreeSpeakWeb.Resources.SocialFeed {
                 return ResourceManager.GetString("WriteAComment", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Loading comments....
+        /// </summary>
+        public static string LoadingComments {
+            get {
+                return ResourceManager.GetString("LoadingComments", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Loading more comments....
+        /// </summary>
+        public static string LoadingMoreComments {
+            get {
+                return ResourceManager.GetString("LoadingMoreComments", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You.
+        /// </summary>
+        public static string YouAlt {
+            get {
+                return ResourceManager.GetString("YouAlt", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No more comments allowed.
+        /// </summary>
+        public static string NoMoreCommentsAllowed {
+            get {
+                return ResourceManager.GetString("NoMoreCommentsAllowed", resourceCulture);
+            }
+        }
     }
 }

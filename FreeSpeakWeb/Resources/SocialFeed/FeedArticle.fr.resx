@@ -142,4 +142,28 @@
   <data name="SeeLess" xml:space="preserve">
     <value>Voir moins</value>
   </data>
+  <data name="ChangePostToPublic" xml:space="preserve">
+    <value>Rendre la publication publique ?</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Signalement envoyé avec succès. Merci de contribuer à la sécurité de notre communauté.</value>
+  </data>
+  <data name="FailedToUpdateNotificationSettings" xml:space="preserve">
+    <value>Échec de la mise à jour des paramètres de notification.</value>
+  </data>
+  <data name="FailedToUpdatePostAudience" xml:space="preserve">
+    <value>Échec de la mise à jour de l'audience de la publication.</value>
+  </data>
+  <data name="FailedToDeletePost" xml:space="preserve">
+    <value>Échec de la suppression de la publication.</value>
+  </data>
+  <data name="DeletePostFullConfirmMessage" xml:space="preserve">
+    <value>Voulez-vous vraiment supprimer cette publication ? Cette action est irréversible et supprimera définitivement la publication, tous les commentaires, les mentions J'aime et les images.</value>
+  </data>
+  <data name="DeleteGroupPostFullConfirmMessage" xml:space="preserve">
+    <value>Voulez-vous vraiment supprimer cette publication du groupe ? Cette action est irréversible et supprimera définitivement la publication, tous les commentaires, les mentions J'aime et les images.</value>
+  </data>
 </root>

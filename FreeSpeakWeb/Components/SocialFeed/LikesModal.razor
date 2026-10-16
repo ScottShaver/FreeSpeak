@@ -2,6 +2,7 @@
 @using FreeSpeakWeb.Services
 @using FreeSpeakWeb.Components.Shared
 @using Microsoft.Extensions.Localization
+@using System.Globalization
 @inject UserPreferenceService UserPreferenceService
 @inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.LikesModal> Localizer
 
@@ -83,7 +84,7 @@
                     like.User.Id,
                     like.User.FirstName,
                     like.User.LastName,
-                    like.User.UserName ?? "Unknown"
+                    like.User.UserName ?? Localizer["UnknownUser"].Value
                 );
                 displayNameCache[like.User.Id] = displayName;
             }
@@ -92,7 +93,7 @@
 
     private string GetCachedDisplayName(string userId)
     {
-        return displayNameCache.TryGetValue(userId, out var name) ? name : "Unknown";
+        return displayNameCache.TryGetValue(userId, out var name) ? name : Localizer["UnknownUser"].Value;
     }
 
     private async Task Close()
@@ -166,6 +167,6 @@
         if (timeSpan.TotalDays < 7)
             return string.Format(Localizer["DaysAgo"], (int)timeSpan.TotalDays);
 
-        return timestamp.ToString("MMM d, yyyy");
+        return timestamp.ToLocalTime().ToString("d", CultureInfo.CurrentCulture);
     }
 }

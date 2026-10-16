@@ -142,4 +142,28 @@
   <data name="SeeLess" xml:space="preserve">
     <value>收起</value>
   </data>
+  <data name="ChangePostToPublic" xml:space="preserve">
+    <value>将帖子改为公开？</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>举报已成功提交。感谢您帮助维护社区安全。</value>
+  </data>
+  <data name="FailedToUpdateNotificationSettings" xml:space="preserve">
+    <value>更新通知设置失败。</value>
+  </data>
+  <data name="FailedToUpdatePostAudience" xml:space="preserve">
+    <value>更新帖子受众失败。</value>
+  </data>
+  <data name="FailedToDeletePost" xml:space="preserve">
+    <value>删除帖子失败。</value>
+  </data>
+  <data name="DeletePostFullConfirmMessage" xml:space="preserve">
+    <value>确定要删除此帖子吗？此操作无法撤销，并将永久删除该帖子及其所有评论、点赞和图片。</value>
+  </data>
+  <data name="DeleteGroupPostFullConfirmMessage" xml:space="preserve">
+    <value>确定要删除此群组帖子吗？此操作无法撤销，并将永久删除该帖子及其所有评论、点赞和图片。</value>
+  </data>
 </root>

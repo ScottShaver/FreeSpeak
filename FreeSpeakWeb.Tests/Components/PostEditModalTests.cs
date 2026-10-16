@@ -58,6 +58,7 @@ public class PostEditModalTests : TestContext
         Services.AddSingleton(mockEmojiPickerLocalizer.Object);
         Services.AddSingleton(typeof(IStringLocalizer<>), typeof(PassthroughLocalizer<>));
         Services.AddSingleton<PopupPortalService>();
+        Services.AddSingleton<TimestampFormattingService>();
     }
 
     [Fact]

@@ -145,8 +145,8 @@ public partial class UnifiedArticle : ArticleComponentBase
     /// </summary>
     private string DeleteConfirmationMessage => ArticlePostType switch
     {
-        PostType.GroupPost => "Are you sure you want to delete this group post? This action cannot be undone and will permanently remove the post, all comments, likes, and images.",
-        _ => "Are you sure you want to delete this post? This action cannot be undone and will permanently remove the post, all comments, likes, and images."
+        PostType.GroupPost => Localizer["DeleteGroupPostFullConfirmMessage"],
+        _ => Localizer["DeletePostFullConfirmMessage"]
     };
 
     #endregion
@@ -480,7 +480,7 @@ public partial class UnifiedArticle : ArticleComponentBase
     {
         if (ArticlePostType == PostType.GroupPost)
         {
-            AlertService.ShowSuccess("Report submitted successfully. Thank you for helping keep our community safe.");
+            AlertService.ShowSuccess(Localizer["ReportSubmitted"]);
         }
 
         return Task.CompletedTask;
@@ -622,7 +622,7 @@ public partial class UnifiedArticle : ArticleComponentBase
         }
         else
         {
-            AlertService.ShowError(result.ErrorMessage ?? "Failed to update post audience.");
+            AlertService.ShowError(result.ErrorMessage ?? Localizer["FailedToUpdatePostAudience"]);
         }
     }
 
@@ -686,7 +686,7 @@ public partial class UnifiedArticle : ArticleComponentBase
         }
         else
         {
-            AlertService.ShowError(result.ErrorMessage ?? "Failed to delete post.");
+            AlertService.ShowError(result.ErrorMessage ?? Localizer["FailedToDeletePost"]);
         }
     }
 
@@ -721,7 +721,7 @@ public partial class UnifiedArticle : ArticleComponentBase
         }
         else
         {
-            AlertService.ShowError(result.ErrorMessage ?? "Failed to delete post.");
+            AlertService.ShowError(result.ErrorMessage ?? Localizer["FailedToDeletePost"]);
         }
     }
 
@@ -768,7 +768,7 @@ public partial class UnifiedArticle : ArticleComponentBase
         }
         catch (Exception)
         {
-            AlertService.ShowError("Failed to copy link to clipboard.");
+            AlertService.ShowError(Localizer["FailedToCopyLink"]);
         }
     }
 
@@ -842,7 +842,7 @@ public partial class UnifiedArticle : ArticleComponentBase
         }
         catch (Exception)
         {
-            AlertService.ShowError("Failed to update notification settings.");
+            AlertService.ShowError(Localizer["FailedToUpdateNotificationSettings"]);
         }
     }
 
@@ -1102,14 +1102,14 @@ public partial class UnifiedArticle : ArticleComponentBase
             replyModels.Add(replyModel);
         }
 
-        var userName = "Unknown";
+        var userName = Localizer["UnknownUser"].Value;
         if (comment.Author != null)
         {
             userName = await UserPreferenceService.FormatUserDisplayNameAsync(
                 comment.Author.Id,
                 comment.Author.FirstName,
                 comment.Author.LastName,
-                comment.Author.UserName ?? "Unknown"
+                comment.Author.UserName ?? Localizer["UnknownUser"].Value
             );
         }
 
