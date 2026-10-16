@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddCommentFailed" xml:space="preserve">
+    <value>Nie udało się dodać komentarza.</value>
+  </data>
+  <data name="AddCommentError" xml:space="preserve">
+    <value>Wystąpił błąd podczas dodawania komentarza.</value>
+  </data>
+  <data name="AddReplyFailed" xml:space="preserve">
+    <value>Nie udało się dodać odpowiedzi.</value>
+  </data>
+  <data name="AddReplyError" xml:space="preserve">
+    <value>Wystąpił błąd podczas dodawania odpowiedzi.</value>
+  </data>
+  <data name="AddReactionFailed" xml:space="preserve">
+    <value>Nie udało się dodać reakcji.</value>
+  </data>
+  <data name="AddReactionError" xml:space="preserve">
+    <value>Wystąpił błąd podczas dodawania reakcji.</value>
+  </data>
+  <data name="RemoveReactionFailed" xml:space="preserve">
+    <value>Nie udało się usunąć reakcji.</value>
+  </data>
+  <data name="RemoveReactionError" xml:space="preserve">
+    <value>Wystąpił błąd podczas usuwania reakcji.</value>
+  </data>
+  <data name="DeleteCommentFailed" xml:space="preserve">
+    <value>Nie udało się usunąć komentarza.</value>
+  </data>
+  <data name="DeleteCommentError" xml:space="preserve">
+    <value>Wystąpił błąd podczas usuwania komentarza.</value>
+  </data>
+  <data name="UpdateCommentFailed" xml:space="preserve">
+    <value>Nie udało się zaktualizować komentarza.</value>
+  </data>
+  <data name="UpdateCommentError" xml:space="preserve">
+    <value>Wystąpił błąd podczas aktualizowania komentarza.</value>
+  </data>
+  <data name="SubmitReportError" xml:space="preserve">
+    <value>Wystąpił błąd podczas wysyłania zgłoszenia.</value>
+  </data>
+</root>

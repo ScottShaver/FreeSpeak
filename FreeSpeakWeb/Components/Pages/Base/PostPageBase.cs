@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using FreeSpeakWeb.Data;
 using FreeSpeakWeb.Data.AuditLogDetails;
@@ -21,6 +22,12 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
     [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
     [Inject] protected AlertService AlertService { get; set; } = default!;
     [Inject] protected IAuditLogRepository AuditLogRepository { get; set; } = default!;
+
+    /// <summary>
+    /// Localizer for the shared toast messages raised by this base class.
+    /// Named distinctly so it does not collide with the <c>Localizer</c> injected by derived pages.
+    /// </summary>
+    [Inject] protected IStringLocalizer<FreeSpeakWeb.Resources.Pages.Base.PostPageBase> BaseLocalizer { get; set; } = default!;
 
     // Dictionaries for managing post state
     protected Dictionary<int, int> postRefreshTriggers = new();
@@ -257,12 +264,12 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
             }
             else
             {
-                AlertService.ShowError(result.ErrorMessage ?? "Failed to add comment.");
+                AlertService.ShowError(result.ErrorMessage ?? BaseLocalizer["AddCommentFailed"]);
             }
         }
         catch (Exception)
         {
-            AlertService.ShowError("An error occurred while adding your comment.");
+            AlertService.ShowError(BaseLocalizer["AddCommentError"]);
         }
     }
 
@@ -289,7 +296,7 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
 
             if (!result.Success)
             {
-                AlertService.ShowError(result.ErrorMessage ?? "Failed to add reply.");
+                AlertService.ShowError(result.ErrorMessage ?? BaseLocalizer["AddReplyFailed"]);
                 return;
             }
 
@@ -313,7 +320,7 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
         }
         catch (Exception)
         {
-            AlertService.ShowError("An error occurred while adding your reply.");
+            AlertService.ShowError(BaseLocalizer["AddReplyError"]);
         }
     }
 
@@ -352,12 +359,12 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
             }
             else
             {
-                AlertService.ShowError("Failed to add reaction.");
+                AlertService.ShowError(BaseLocalizer["AddReactionFailed"]);
             }
         }
         catch (Exception)
         {
-            AlertService.ShowError("An error occurred while adding your reaction.");
+            AlertService.ShowError(BaseLocalizer["AddReactionError"]);
         }
     }
 
@@ -386,12 +393,12 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
             }
             else
             {
-                AlertService.ShowError("Failed to remove reaction.");
+                AlertService.ShowError(BaseLocalizer["RemoveReactionFailed"]);
             }
         }
         catch (Exception)
         {
-            AlertService.ShowError("An error occurred while removing your reaction.");
+            AlertService.ShowError(BaseLocalizer["RemoveReactionError"]);
         }
     }
 
@@ -420,12 +427,12 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
             }
             else
             {
-                AlertService.ShowError("Failed to add reaction.");
+                AlertService.ShowError(BaseLocalizer["AddReactionFailed"]);
             }
         }
         catch (Exception)
         {
-            AlertService.ShowError("An error occurred while adding your reaction.");
+            AlertService.ShowError(BaseLocalizer["AddReactionError"]);
         }
     }
 
@@ -454,12 +461,12 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
             }
             else
             {
-                AlertService.ShowError("Failed to remove reaction.");
+                AlertService.ShowError(BaseLocalizer["RemoveReactionFailed"]);
             }
         }
         catch (Exception)
         {
-            AlertService.ShowError("An error occurred while removing your reaction.");
+            AlertService.ShowError(BaseLocalizer["RemoveReactionError"]);
         }
     }
 
@@ -495,12 +502,12 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
             }
             else
             {
-                AlertService.ShowError(result.ErrorMessage ?? "Failed to delete comment.");
+                AlertService.ShowError(result.ErrorMessage ?? BaseLocalizer["DeleteCommentFailed"]);
             }
         }
         catch (Exception)
         {
-            AlertService.ShowError("An error occurred while deleting the comment.");
+            AlertService.ShowError(BaseLocalizer["DeleteCommentError"]);
         }
     }
 
@@ -556,12 +563,12 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
             }
             else
             {
-                AlertService.ShowError(result.ErrorMessage ?? "Failed to update comment.");
+                AlertService.ShowError(result.ErrorMessage ?? BaseLocalizer["UpdateCommentFailed"]);
             }
         }
         catch (Exception)
         {
-            AlertService.ShowError("An error occurred while updating the comment.");
+            AlertService.ShowError(BaseLocalizer["UpdateCommentError"]);
         }
     }
 
@@ -603,12 +610,12 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
             }
             else
             {
-                AlertService.ShowError(result.ErrorMessage ?? "Failed to update comment.");
+                AlertService.ShowError(result.ErrorMessage ?? BaseLocalizer["UpdateCommentFailed"]);
             }
         }
         catch (Exception)
         {
-            AlertService.ShowError("An error occurred while updating the comment.");
+            AlertService.ShowError(BaseLocalizer["UpdateCommentError"]);
         }
     }
 
@@ -631,7 +638,7 @@ public abstract class PostPageBase<TPost, TComment> : ComponentBase
         }
         catch (Exception)
         {
-            AlertService.ShowError("An error occurred while submitting the report.");
+            AlertService.ShowError(BaseLocalizer["SubmitReportError"]);
         }
     }
 

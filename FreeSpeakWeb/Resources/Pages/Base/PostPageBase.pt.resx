@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddCommentFailed" xml:space="preserve">
+    <value>Não foi possível adicionar o comentário.</value>
+  </data>
+  <data name="AddCommentError" xml:space="preserve">
+    <value>Ocorreu um erro ao adicionar o seu comentário.</value>
+  </data>
+  <data name="AddReplyFailed" xml:space="preserve">
+    <value>Não foi possível adicionar a resposta.</value>
+  </data>
+  <data name="AddReplyError" xml:space="preserve">
+    <value>Ocorreu um erro ao adicionar a sua resposta.</value>
+  </data>
+  <data name="AddReactionFailed" xml:space="preserve">
+    <value>Não foi possível adicionar a reação.</value>
+  </data>
+  <data name="AddReactionError" xml:space="preserve">
+    <value>Ocorreu um erro ao adicionar a sua reação.</value>
+  </data>
+  <data name="RemoveReactionFailed" xml:space="preserve">
+    <value>Não foi possível remover a reação.</value>
+  </data>
+  <data name="RemoveReactionError" xml:space="preserve">
+    <value>Ocorreu um erro ao remover a sua reação.</value>
+  </data>
+  <data name="DeleteCommentFailed" xml:space="preserve">
+    <value>Não foi possível excluir o comentário.</value>
+  </data>
+  <data name="DeleteCommentError" xml:space="preserve">
+    <value>Ocorreu um erro ao excluir o comentário.</value>
+  </data>
+  <data name="UpdateCommentFailed" xml:space="preserve">
+    <value>Não foi possível atualizar o comentário.</value>
+  </data>
+  <data name="UpdateCommentError" xml:space="preserve">
+    <value>Ocorreu um erro ao atualizar o comentário.</value>
+  </data>
+  <data name="SubmitReportError" xml:space="preserve">
+    <value>Ocorreu um erro ao enviar a denúncia.</value>
+  </data>
+</root>

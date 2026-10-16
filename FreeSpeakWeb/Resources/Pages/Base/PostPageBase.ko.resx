@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddCommentFailed" xml:space="preserve">
+    <value>댓글을 추가하지 못했습니다.</value>
+  </data>
+  <data name="AddCommentError" xml:space="preserve">
+    <value>댓글을 추가하는 중 오류가 발생했습니다.</value>
+  </data>
+  <data name="AddReplyFailed" xml:space="preserve">
+    <value>답글을 추가하지 못했습니다.</value>
+  </data>
+  <data name="AddReplyError" xml:space="preserve">
+    <value>답글을 추가하는 중 오류가 발생했습니다.</value>
+  </data>
+  <data name="AddReactionFailed" xml:space="preserve">
+    <value>반응을 추가하지 못했습니다.</value>
+  </data>
+  <data name="AddReactionError" xml:space="preserve">
+    <value>반응을 추가하는 중 오류가 발생했습니다.</value>
+  </data>
+  <data name="RemoveReactionFailed" xml:space="preserve">
+    <value>반응을 제거하지 못했습니다.</value>
+  </data>
+  <data name="RemoveReactionError" xml:space="preserve">
+    <value>반응을 제거하는 중 오류가 발생했습니다.</value>
+  </data>
+  <data name="DeleteCommentFailed" xml:space="preserve">
+    <value>댓글을 삭제하지 못했습니다.</value>
+  </data>
+  <data name="DeleteCommentError" xml:space="preserve">
+    <value>댓글을 삭제하는 중 오류가 발생했습니다.</value>
+  </data>
+  <data name="UpdateCommentFailed" xml:space="preserve">
+    <value>댓글을 수정하지 못했습니다.</value>
+  </data>
+  <data name="UpdateCommentError" xml:space="preserve">
+    <value>댓글을 수정하는 중 오류가 발생했습니다.</value>
+  </data>
+  <data name="SubmitReportError" xml:space="preserve">
+    <value>신고를 제출하는 중 오류가 발생했습니다.</value>
+  </data>
+</root>
