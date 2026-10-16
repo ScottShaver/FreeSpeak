@@ -310,6 +310,14 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         Task<int> GetCountByGroupAsync(int groupId);
 
         /// <summary>
+        /// Gets the creation time of the most recent published post in a group.
+        /// Pending, declined and removed posts are ignored.
+        /// </summary>
+        /// <param name="groupId">The ID of the group.</param>
+        /// <returns>The UTC creation time of the latest published post, or null if the group has none.</returns>
+        Task<DateTime?> GetLastPostCreatedAtByGroupAsync(int groupId);
+
+        /// <summary>
         /// Gets the total count of posts by a specific user in a specific group.
         /// </summary>
         /// <param name="groupId">The ID of the group.</param>
