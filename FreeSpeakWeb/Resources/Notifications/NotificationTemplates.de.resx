@@ -109,4 +109,7 @@
   <data name="ReactionAngry" xml:space="preserve">
     <value>Wütend</value>
   </data>
+  <data name="FeedReportReviewed" xml:space="preserve">
+    <value>Deine Meldung wurde geprüft.</value>
+  </data>
 </root>

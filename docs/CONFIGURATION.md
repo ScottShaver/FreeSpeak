@@ -234,6 +234,22 @@ Controls retention, purge and export of the per-group moderation log (`GroupMode
 | `ExportMaxRows` | 10000 | Maximum rows in one CSV export (newest first); the export is flagged as truncated beyond this. |
 | `CleanupBatchSize` | 1000 | Rows removed per purge batch. |
 
+### Feed Reporting
+
+Controls reporting of feed posts and comments (`FeedContentReports`).
+
+```json
+{
+  "FeedReporting": {
+    "MaxReportsPerUserPerHour": 5
+  }
+}
+```
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `MaxReportsPerUserPerHour` | 5 | Reports one user may submit in a rolling hour; further reports are rejected until older ones age out. |
+
 ## Database-Backed System Settings
 
 System administrators can override selected settings at runtime from **System Admin → System Settings** (`/system-admin/settings`). Overrides are stored in the `SystemSettings` table and layered over `appsettings*.json`, environment variables and command-line arguments (database rows win). Groups: Site, Smtp, VirusScan, RateLimiting, Profiling, Caching and Logging.

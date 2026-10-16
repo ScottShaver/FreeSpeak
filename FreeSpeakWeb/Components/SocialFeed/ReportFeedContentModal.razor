@@ -1,0 +1,232 @@
+@using FreeSpeakWeb.Data
+@using FreeSpeakWeb.DTOs
+@using FreeSpeakWeb.Services.Abstractions
+@using Microsoft.Extensions.Localization
+
+@inject IFeedContentReportService ReportService
+@inject ILogger<ReportFeedContentModal> Logger
+@inject IStringLocalizer<FreeSpeakWeb.Resources.SocialFeed.ReportFeedContentModal> Localizer
+
+<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0, 0, 0, 0.5);" data-testid="report-feed-modal">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-flag text-warning me-2"></i>
+                    @(IsCommentReport ? Localizer["ReportComment"] : Localizer["ReportPost"])
+                </h5>
+                <button type="button" class="btn-close" @onclick="OnClose" aria-label="@Localizer["Close"]" disabled="@isSubmitting"></button>
+            </div>
+            <div class="modal-body">
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" data-testid="report-feed-error">
+                        <i class="bi bi-exclamation-triangle me-2"></i>@errorMessage
+                        <button type="button" class="btn-close" @onclick="@(() => errorMessage = null)"></button>
+                    </div>
+                }
+
+                @if (showSuccess)
+                {
+                    <div class="alert alert-success" data-testid="report-feed-success">
+                        <i class="bi bi-check-circle me-2"></i>@Localizer["ReportSubmitted"]
+                    </div>
+                }
+                else if (alreadyReported)
+                {
+                    <div class="alert alert-info" data-testid="report-feed-already">
+                        <i class="bi bi-info-circle me-2"></i>@Localizer["AlreadyReported"]
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-4">@Localizer["ReportDescription"]</p>
+
+                    @if (selectedReason == null)
+                    {
+                        <h6 class="mb-3">@Localizer["SelectReason"]</h6>
+                        <div class="list-group">
+                            @foreach (var reason in GetReportReasons())
+                            {
+                                <button type="button" class="list-group-item list-group-item-action" @onclick="@(() => selectedReason = reason.Value)">
+                                    <i class="@reason.Icon me-2"></i><span>@reason.Label</span>
+                                </button>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        var current = GetReportReasons().First(r => r.Value == selectedReason.Value);
+                        <div class="mb-3 p-3 bg-light rounded">
+                            <i class="@current.Icon text-primary me-2"></i>
+                            <strong>@Localizer["ReportingFor"]</strong>
+                            <span class="ms-1">@current.Label</span>
+                        </div>
+
+                        <h6 class="mb-3">@Localizer["AdditionalDetails"]</h6>
+                        <p class="text-muted small">@Localizer["AdditionalDetailsDescription"]</p>
+                        <textarea class="form-control" rows="4" maxlength="2000" @bind="additionalDescription" @bind:event="oninput"
+                                  placeholder="@Localizer["DescriptionPlaceholder"]"></textarea>
+                        <div class="form-text text-end">@((additionalDescription?.Length ?? 0))/2000</div>
+                    }
+                }
+            </div>
+            <div class="modal-footer">
+                @if (showSuccess || alreadyReported)
+                {
+                    <button type="button" class="btn btn-secondary" @onclick="OnClose">@Localizer["Close"]</button>
+                }
+                else
+                {
+                    @if (selectedReason != null)
+                    {
+                        <button type="button" class="btn btn-outline-secondary" @onclick="@(() => selectedReason = null)" disabled="@isSubmitting">
+                            <i class="bi bi-arrow-left me-1"></i>@Localizer["Back"]
+                        </button>
+                    }
+                    <button type="button" class="btn btn-secondary" @onclick="OnClose" disabled="@isSubmitting">@Localizer["Cancel"]</button>
+                    @if (selectedReason != null)
+                    {
+                        <button type="button" class="btn btn-danger" @onclick="SubmitReport" disabled="@isSubmitting" data-testid="report-feed-submit">
+                            @if (isSubmitting)
+                            {
+                                <span class="spinner-border spinner-border-sm me-1"></span>
+                            }
+                            <i class="bi bi-flag me-1"></i>@Localizer["SubmitReport"]
+                        </button>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// The ID of the post being reported. Null when reporting a comment.
+    /// </summary>
+    [Parameter]
+    public int? PostId { get; set; }
+
+    /// <summary>
+    /// The ID of the comment being reported. Null when reporting a post.
+    /// </summary>
+    [Parameter]
+    public int? CommentId { get; set; }
+
+    /// <summary>
+    /// The ID of the user submitting the report.
+    /// </summary>
+    [Parameter]
+    public string ReporterId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Callback invoked when the modal is closed.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    /// <summary>
+    /// Callback invoked when the report was submitted successfully.
+    /// </summary>
+    [Parameter]
+    public EventCallback OnReportSubmitted { get; set; }
+
+    private bool IsCommentReport => CommentId.HasValue;
+
+    private ReportReason? selectedReason;
+    private string? additionalDescription;
+    private string? errorMessage;
+    private bool isSubmitting;
+    private bool showSuccess;
+    private bool alreadyReported;
+
+    /// <summary>
+    /// Checks whether the user already reported this content so the form can be replaced by a notice.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        alreadyReported = IsCommentReport
+            ? await ReportService.HasUserReportedCommentAsync(ReporterId, CommentId!.Value)
+            : await ReportService.HasUserReportedPostAsync(ReporterId, PostId!.Value);
+    }
+
+    /// <summary>
+    /// Gets the selectable report reasons, which exclude group-specific reasons.
+    /// </summary>
+    /// <returns>The reasons with localized labels and icons.</returns>
+    private List<(ReportReason Value, string Label, string Icon)> GetReportReasons() => new()
+    {
+        (ReportReason.Spam, Localizer["ReasonSpam"], "bi bi-envelope-exclamation"),
+        (ReportReason.HarassmentOrBullying, Localizer["ReasonHarassment"], "bi bi-person-x"),
+        (ReportReason.HateSpeech, Localizer["ReasonHateSpeech"], "bi bi-chat-square-x"),
+        (ReportReason.Misinformation, Localizer["ReasonMisinformation"], "bi bi-exclamation-diamond"),
+        (ReportReason.AdultContent, Localizer["ReasonAdultContent"], "bi bi-eye-slash"),
+        (ReportReason.ViolenceOrGraphicContent, Localizer["ReasonViolence"], "bi bi-shield-exclamation"),
+        (ReportReason.IntellectualPropertyViolation, Localizer["ReasonCopyright"], "bi bi-c-circle"),
+        (ReportReason.PrivacyViolation, Localizer["ReasonPrivacy"], "bi bi-person-lock"),
+        (ReportReason.SelfHarmOrSuicide, Localizer["ReasonSelfHarm"], "bi bi-heart-pulse"),
+        (ReportReason.IllegalActivity, Localizer["ReasonIllegal"], "bi bi-slash-circle"),
+        (ReportReason.Other, Localizer["ReasonOther"], "bi bi-three-dots")
+    };
+
+    /// <summary>
+    /// Submits the report and maps the outcome to a localized message.
+    /// </summary>
+    private async Task SubmitReport()
+    {
+        if (selectedReason == null)
+        {
+            errorMessage = Localizer["SelectReasonError"];
+            return;
+        }
+
+        isSubmitting = true;
+        errorMessage = null;
+
+        try
+        {
+            var result = IsCommentReport
+                ? await ReportService.ReportCommentAsync(CommentId!.Value, ReporterId, selectedReason.Value, additionalDescription)
+                : await ReportService.ReportPostAsync(PostId!.Value, ReporterId, selectedReason.Value, additionalDescription);
+
+            if (result.Success)
+            {
+                showSuccess = true;
+                await OnReportSubmitted.InvokeAsync();
+            }
+            else if (result.Error == FeedReportError.DuplicateReport)
+            {
+                alreadyReported = true;
+            }
+            else
+            {
+                errorMessage = GetErrorMessage(result.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error submitting feed report");
+            errorMessage = Localizer["ErrorSubmitting"];
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    /// <summary>
+    /// Maps a failure reason to a localized message.
+    /// </summary>
+    /// <param name="error">The failure reason.</param>
+    /// <returns>The localized message.</returns>
+    private string GetErrorMessage(FeedReportError error) => error switch
+    {
+        FeedReportError.OwnContent => Localizer["ErrorOwnContent"],
+        FeedReportError.RateLimited => Localizer["ErrorRateLimited"],
+        FeedReportError.ContentNotFound => Localizer["ErrorContentNotFound"],
+        FeedReportError.NotAuthenticated => Localizer["ErrorNotAuthenticated"],
+        FeedReportError.DescriptionTooLong => Localizer["ErrorDescriptionTooLong"],
+        _ => Localizer["ErrorSubmitting"]
+    };
+}

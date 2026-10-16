@@ -91,6 +91,8 @@ The `ActionCategory` enum defines all types of auditable actions in the system:
 
 Additional group categories added with the moderation log: `40` `GroupAdminUnbanUser` (unban) and `41` `GroupModerationLogExport` (a moderator exports the group's moderation log as CSV). The moderation log itself is stored in the dedicated `GroupModerationLogEntries` table, separate from audit logs.
 
+Feed reporting categories: `42` `UserReportContent` (a user reports a feed post or comment; stores report ID, target, content author and reason, never the free-text description) and `43` `SystemModeratorReviewReport` (a system moderator or administrator dismisses, resolves or marks action taken on a report).
+
 ### System Moderator Actions (26-27)
 
 | Value | Name | Description |

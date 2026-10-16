@@ -178,13 +178,24 @@
     </div>
 }
 
-@* Report Post Modal (GroupPost only) *@
-@if (ArticlePostType == PostType.GroupPost && showReportModal)
+@* Report Post Modal *@
+@if (showReportModal)
 {
-    <FreeSpeakWeb.Components.Groups.ReportContentModal
-        GroupId="@GroupId"
-        PostId="@PostId"
-        ReporterId="@CurrentUserId"
-        OnClose="CloseReportModal"
-        OnReportSubmitted="HandleReportSubmitted" />
+    @if (ArticlePostType == PostType.GroupPost)
+    {
+        <FreeSpeakWeb.Components.Groups.ReportContentModal
+            GroupId="@GroupId"
+            PostId="@PostId"
+            ReporterId="@CurrentUserId"
+            OnClose="CloseReportModal"
+            OnReportSubmitted="HandleReportSubmitted" />
+    }
+    else
+    {
+        <FreeSpeakWeb.Components.SocialFeed.ReportFeedContentModal
+            PostId="@PostId"
+            ReporterId="@CurrentUserId"
+            OnClose="CloseReportModal"
+            OnReportSubmitted="HandleReportSubmitted" />
+    }
 }

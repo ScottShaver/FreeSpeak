@@ -62,6 +62,8 @@ await _auditLogRepository.LogActionAsync(
 | Ban user | `GroupAdminBanUser` | `GroupAdminBanUserDetails` |
 | Unban user | `GroupAdminUnbanUser` | `GroupAdminUnbanUserDetails` |
 | Export mod log | `GroupModerationLogExport` | `GroupModerationLogExportDetails` |
+| Report feed post/comment | `UserReportContent` | `UserReportContentDetails` |
+| Review feed report | `SystemModeratorReviewReport` | `SystemModeratorReviewReportDetails` |
 | Close group | `GroupAdminCloseGroup` | `GroupAdminCloseGroupDetails` |
 | Approve join | `GroupAdminApproveJoinRequest` | `GroupAdminApproveJoinRequestDetails` |
 | Change role | `GroupAdminChangeMemberRole` | `GroupAdminChangeMemberRoleDetails` |

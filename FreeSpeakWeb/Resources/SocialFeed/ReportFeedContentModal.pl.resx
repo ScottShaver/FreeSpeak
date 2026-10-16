@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="ReportPost" xml:space="preserve"><value>Zgłoś post</value></data>
+  <data name="ReportComment" xml:space="preserve"><value>Zgłoś komentarz</value></data>
+  <data name="ReportDescription" xml:space="preserve"><value>Pomóż nam zrozumieć, co jest nie tak z tą treścią. Twoje zgłoszenie rozpatrzą moderatorzy serwisu.</value></data>
+  <data name="SelectReason" xml:space="preserve"><value>Dlaczego zgłaszasz tę treść?</value></data>
+  <data name="AdditionalDetails" xml:space="preserve"><value>Dodatkowe szczegóły (opcjonalnie)</value></data>
+  <data name="AdditionalDetailsDescription" xml:space="preserve"><value>Podaj dodatkowy kontekst, który może pomóc moderatorom w rozpatrzeniu zgłoszenia.</value></data>
+  <data name="DescriptionPlaceholder" xml:space="preserve"><value>Wpisz dodatkowe szczegóły dotyczące powodu zgłoszenia...</value></data>
+  <data name="ReasonSpam" xml:space="preserve"><value>Spam lub niechciana treść</value></data>
+  <data name="ReasonHarassment" xml:space="preserve"><value>Nękanie lub prześladowanie</value></data>
+  <data name="ReasonHateSpeech" xml:space="preserve"><value>Mowa nienawiści</value></data>
+  <data name="ReasonMisinformation" xml:space="preserve"><value>Dezinformacja lub fałszywe informacje</value></data>
+  <data name="ReasonAdultContent" xml:space="preserve"><value>Nagość lub treści seksualne</value></data>
+  <data name="ReasonViolence" xml:space="preserve"><value>Przemoc lub drastyczne treści</value></data>
+  <data name="ReasonCopyright" xml:space="preserve"><value>Naruszenie praw autorskich lub własności intelektualnej</value></data>
+  <data name="ReasonPrivacy" xml:space="preserve"><value>Naruszenie prywatności</value></data>
+  <data name="ReasonSelfHarm" xml:space="preserve"><value>Samookaleczenie lub samobójstwo</value></data>
+  <data name="ReasonIllegal" xml:space="preserve"><value>Nielegalna działalność</value></data>
+  <data name="ReasonOther" xml:space="preserve"><value>Inne</value></data>
+  <data name="Back" xml:space="preserve"><value>Wstecz</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Anuluj</value></data>
+  <data name="ReportingFor" xml:space="preserve"><value>Powód zgłoszenia:</value></data>
+  <data name="SubmitReport" xml:space="preserve"><value>Wyślij zgłoszenie</value></data>
+  <data name="Close" xml:space="preserve"><value>Zamknij</value></data>
+  <data name="ReportSubmitted" xml:space="preserve"><value>Dziękujemy za zgłoszenie. Nasi moderatorzy sprawdzą tę treść i podejmą odpowiednie działania.</value></data>
+  <data name="AlreadyReported" xml:space="preserve"><value>Ta treść została już przez Ciebie zgłoszona.</value></data>
+  <data name="SelectReasonError" xml:space="preserve"><value>Wybierz powód zgłoszenia.</value></data>
+  <data name="ErrorSubmitting" xml:space="preserve"><value>Podczas wysyłania zgłoszenia wystąpił błąd. Spróbuj ponownie.</value></data>
+  <data name="ErrorOwnContent" xml:space="preserve"><value>Nie możesz zgłosić własnej treści.</value></data>
+  <data name="ErrorRateLimited" xml:space="preserve"><value>Wysłano ostatnio zbyt wiele zgłoszeń. Spróbuj ponownie później.</value></data>
+  <data name="ErrorContentNotFound" xml:space="preserve"><value>Ta treść nie jest już dostępna.</value></data>
+  <data name="ErrorNotAuthenticated" xml:space="preserve"><value>Aby zgłosić treść, musisz być zalogowany.</value></data>
+  <data name="ErrorDescriptionTooLong" xml:space="preserve"><value>Dodatkowe szczegóły są zbyt długie (maksymalnie 2000 znaków).</value></data>
+</root>

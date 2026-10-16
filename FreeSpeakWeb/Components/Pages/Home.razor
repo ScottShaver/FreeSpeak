@@ -337,6 +337,14 @@
                 MaxImages="10" />
         }
 
+@if (ReportingFeedCommentId.HasValue && CurrentUserId != null)
+{
+    <FreeSpeakWeb.Components.SocialFeed.ReportFeedContentModal
+        CommentId="@ReportingFeedCommentId"
+        ReporterId="@CurrentUserId"
+        OnClose="CloseFeedCommentReport" />
+}
+
 @code {
     private List<Post> posts = new();
     private List<Post> pinnedPostsList = new();
@@ -1354,14 +1362,11 @@
         return (result.Success, result.ErrorMessage);
     }
 
-    protected override async Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
+    protected override Task<(bool Success, string? ErrorMessage)> ReportCommentAsync(
         int commentId, string userId)
     {
-        // TODO: Implement feed comment reporting similar to group comment reporting
-        // Need to create: FeedContentReport entity, FeedContentReportService, and integrate with ReportFeedContentModal
-        // For now, return success with a placeholder - the UI should show "Coming Soon" message
-        await Task.CompletedTask;
-        return (true, null);
+        OpenFeedCommentReport(commentId);
+        return Task.FromResult<(bool Success, string? ErrorMessage)>((true, null));
     }
 
     protected override void DecrementPostCommentCount(int postId, int decrementBy = 1)

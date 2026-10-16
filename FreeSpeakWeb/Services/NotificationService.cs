@@ -58,7 +58,7 @@ namespace FreeSpeakWeb.Services
         /// <param name="expiresAt">Optional expiration date; if not provided, calculated from user preferences.</param>
         /// <param name="templateKey">Optional template key for localized message rendering.</param>
         /// <returns>A tuple containing success status, error message if failed, and the created notification if successful.</returns>
-        public async Task<(bool Success, string? ErrorMessage, UserNotification? Notification)> CreateNotificationAsync(
+        public virtual async Task<(bool Success, string? ErrorMessage, UserNotification? Notification)> CreateNotificationAsync(
             string userId,
             NotificationType type,
             string? message = null,

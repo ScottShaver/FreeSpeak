@@ -212,5 +212,14 @@ namespace FreeSpeakWeb.Resources.Notifications {
                 return ResourceManager.GetString("ReactionWow", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Your report was reviewed..
+        /// </summary>
+        public static string FeedReportReviewed {
+            get {
+                return ResourceManager.GetString("FeedReportReviewed", resourceCulture);
+            }
+        }
     }
 }

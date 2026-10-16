@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="ReportPost" xml:space="preserve"><value>Beitrag melden</value></data>
+  <data name="ReportComment" xml:space="preserve"><value>Kommentar melden</value></data>
+  <data name="ReportDescription" xml:space="preserve"><value>Hilf uns zu verstehen, was an diesem Inhalt nicht stimmt. Deine Meldung wird von den Moderatoren der Website geprüft.</value></data>
+  <data name="SelectReason" xml:space="preserve"><value>Warum meldest du diesen Inhalt?</value></data>
+  <data name="AdditionalDetails" xml:space="preserve"><value>Weitere Details (optional)</value></data>
+  <data name="AdditionalDetailsDescription" xml:space="preserve"><value>Gib zusätzlichen Kontext an, der den Moderatoren bei der Prüfung helfen könnte.</value></data>
+  <data name="DescriptionPlaceholder" xml:space="preserve"><value>Gib weitere Details dazu ein, warum du diesen Inhalt meldest...</value></data>
+  <data name="ReasonSpam" xml:space="preserve"><value>Spam oder unerwünschter Inhalt</value></data>
+  <data name="ReasonHarassment" xml:space="preserve"><value>Belästigung oder Mobbing</value></data>
+  <data name="ReasonHateSpeech" xml:space="preserve"><value>Hassrede</value></data>
+  <data name="ReasonMisinformation" xml:space="preserve"><value>Falschinformation</value></data>
+  <data name="ReasonAdultContent" xml:space="preserve"><value>Nacktheit oder sexuelle Inhalte</value></data>
+  <data name="ReasonViolence" xml:space="preserve"><value>Gewalt oder drastische Inhalte</value></data>
+  <data name="ReasonCopyright" xml:space="preserve"><value>Urheberrechts- oder Schutzrechtsverletzung</value></data>
+  <data name="ReasonPrivacy" xml:space="preserve"><value>Verletzung der Privatsphäre</value></data>
+  <data name="ReasonSelfHarm" xml:space="preserve"><value>Selbstverletzung oder Suizid</value></data>
+  <data name="ReasonIllegal" xml:space="preserve"><value>Illegale Aktivität</value></data>
+  <data name="ReasonOther" xml:space="preserve"><value>Sonstiges</value></data>
+  <data name="Back" xml:space="preserve"><value>Zurück</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="ReportingFor" xml:space="preserve"><value>Meldegrund:</value></data>
+  <data name="SubmitReport" xml:space="preserve"><value>Meldung senden</value></data>
+  <data name="Close" xml:space="preserve"><value>Schließen</value></data>
+  <data name="ReportSubmitted" xml:space="preserve"><value>Danke für deine Meldung. Unsere Moderatoren prüfen diesen Inhalt und ergreifen geeignete Maßnahmen.</value></data>
+  <data name="AlreadyReported" xml:space="preserve"><value>Du hast diesen Inhalt bereits gemeldet.</value></data>
+  <data name="SelectReasonError" xml:space="preserve"><value>Bitte wähle einen Grund für deine Meldung aus.</value></data>
+  <data name="ErrorSubmitting" xml:space="preserve"><value>Beim Senden deiner Meldung ist ein Fehler aufgetreten. Bitte versuche es erneut.</value></data>
+  <data name="ErrorOwnContent" xml:space="preserve"><value>Du kannst deine eigenen Inhalte nicht melden.</value></data>
+  <data name="ErrorRateLimited" xml:space="preserve"><value>Du hast in letzter Zeit zu viele Meldungen gesendet. Bitte versuche es später erneut.</value></data>
+  <data name="ErrorContentNotFound" xml:space="preserve"><value>Dieser Inhalt ist nicht mehr verfügbar.</value></data>
+  <data name="ErrorNotAuthenticated" xml:space="preserve"><value>Du musst angemeldet sein, um Inhalte zu melden.</value></data>
+  <data name="ErrorDescriptionTooLong" xml:space="preserve"><value>Die weiteren Details sind zu lang (maximal 2000 Zeichen).</value></data>
+</root>

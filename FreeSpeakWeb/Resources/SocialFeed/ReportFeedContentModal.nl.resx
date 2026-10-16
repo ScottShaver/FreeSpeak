@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="ReportPost" xml:space="preserve"><value>Post melden</value></data>
+  <data name="ReportComment" xml:space="preserve"><value>Reactie melden</value></data>
+  <data name="ReportDescription" xml:space="preserve"><value>Help ons begrijpen wat er mis is met deze inhoud. Je melding wordt beoordeeld door de moderators van de site.</value></data>
+  <data name="SelectReason" xml:space="preserve"><value>Waarom meld je deze inhoud?</value></data>
+  <data name="AdditionalDetails" xml:space="preserve"><value>Aanvullende details (optioneel)</value></data>
+  <data name="AdditionalDetailsDescription" xml:space="preserve"><value>Geef extra context die moderators kan helpen deze melding te beoordelen.</value></data>
+  <data name="DescriptionPlaceholder" xml:space="preserve"><value>Voer aanvullende details in over waarom je deze inhoud meldt...</value></data>
+  <data name="ReasonSpam" xml:space="preserve"><value>Spam of ongewenste inhoud</value></data>
+  <data name="ReasonHarassment" xml:space="preserve"><value>Intimidatie of pesten</value></data>
+  <data name="ReasonHateSpeech" xml:space="preserve"><value>Haatzaaiende taal</value></data>
+  <data name="ReasonMisinformation" xml:space="preserve"><value>Desinformatie of onjuiste informatie</value></data>
+  <data name="ReasonAdultContent" xml:space="preserve"><value>Naaktheid of seksuele inhoud</value></data>
+  <data name="ReasonViolence" xml:space="preserve"><value>Geweld of schokkende inhoud</value></data>
+  <data name="ReasonCopyright" xml:space="preserve"><value>Inbreuk op auteursrecht of intellectueel eigendom</value></data>
+  <data name="ReasonPrivacy" xml:space="preserve"><value>Schending van de privacy</value></data>
+  <data name="ReasonSelfHarm" xml:space="preserve"><value>Zelfbeschadiging of zelfmoord</value></data>
+  <data name="ReasonIllegal" xml:space="preserve"><value>Illegale activiteit</value></data>
+  <data name="ReasonOther" xml:space="preserve"><value>Anders</value></data>
+  <data name="Back" xml:space="preserve"><value>Terug</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Annuleren</value></data>
+  <data name="ReportingFor" xml:space="preserve"><value>Reden van melding:</value></data>
+  <data name="SubmitReport" xml:space="preserve"><value>Melding verzenden</value></data>
+  <data name="Close" xml:space="preserve"><value>Sluiten</value></data>
+  <data name="ReportSubmitted" xml:space="preserve"><value>Bedankt voor je melding. Onze moderators beoordelen deze inhoud en nemen passende maatregelen.</value></data>
+  <data name="AlreadyReported" xml:space="preserve"><value>Je hebt deze inhoud al gemeld.</value></data>
+  <data name="SelectReasonError" xml:space="preserve"><value>Selecteer een reden voor je melding.</value></data>
+  <data name="ErrorSubmitting" xml:space="preserve"><value>Er is een fout opgetreden bij het verzenden van je melding. Probeer het opnieuw.</value></data>
+  <data name="ErrorOwnContent" xml:space="preserve"><value>Je kunt je eigen inhoud niet melden.</value></data>
+  <data name="ErrorRateLimited" xml:space="preserve"><value>Je hebt recent te veel meldingen verzonden. Probeer het later opnieuw.</value></data>
+  <data name="ErrorContentNotFound" xml:space="preserve"><value>Deze inhoud is niet meer beschikbaar.</value></data>
+  <data name="ErrorNotAuthenticated" xml:space="preserve"><value>Je moet ingelogd zijn om inhoud te melden.</value></data>
+  <data name="ErrorDescriptionTooLong" xml:space="preserve"><value>De aanvullende details zijn te lang (maximaal 2000 tekens).</value></data>
+</root>

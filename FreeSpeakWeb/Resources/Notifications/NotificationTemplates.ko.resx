@@ -109,4 +109,7 @@
   <data name="ReactionAngry" xml:space="preserve">
     <value>화나요</value>
   </data>
+  <data name="FeedReportReviewed" xml:space="preserve">
+    <value>회원님의 신고가 검토되었습니다.</value>
+  </data>
 </root>

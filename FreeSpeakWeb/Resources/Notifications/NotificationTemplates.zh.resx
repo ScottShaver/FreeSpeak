@@ -109,4 +109,7 @@
   <data name="ReactionAngry" xml:space="preserve">
     <value>怒</value>
   </data>
+  <data name="FeedReportReviewed" xml:space="preserve">
+    <value>您的举报已被审核。</value>
+  </data>
 </root>

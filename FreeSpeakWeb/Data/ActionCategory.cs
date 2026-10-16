@@ -253,6 +253,18 @@ namespace FreeSpeakWeb.Data
         /// <summary>
         /// Action when a group moderator or administrator exports a group's moderation log as CSV.
         /// </summary>
-        GroupModerationLogExport = 41
+        GroupModerationLogExport = 41,
+
+        /// <summary>
+        /// Action when a user reports a feed post or feed comment.
+        /// Records the reported content, reason and the report ID; never the reporter's free-text description.
+        /// </summary>
+        UserReportContent = 42,
+
+        /// <summary>
+        /// Action when a system moderator or administrator records a decision (dismiss, resolve, action taken)
+        /// on a feed content report.
+        /// </summary>
+        SystemModeratorReviewReport = 43
     }
 }
