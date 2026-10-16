@@ -193,4 +193,65 @@
   <data name="Of" xml:space="preserve">
     <value>von</value>
   </data>
+  <data name="ProfileAlt" xml:space="preserve"><value>Profil</value></data>
+  <data name="ShowingFirst100Results" xml:space="preserve"><value>Die ersten 100 Ergebnisse werden angezeigt. Bitte verfeinern Sie Ihre Suche für genauere Ergebnisse.</value></data>
+  <data name="NoUsersFoundMatching" xml:space="preserve"><value>Keine Benutzer gefunden, die „{0}“ entsprechen.</value></data>
+  <data name="StartTypingToFindUsers" xml:space="preserve"><value>Geben Sie einen Suchbegriff in das Suchfeld ein, um Benutzer zu finden.</value></data>
+  <data name="SearchError" xml:space="preserve"><value>Bei der Suche ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.</value></data>
+  <data name="AdditionalFeatures" xml:space="preserve"><value>Zusätzliche Funktionen</value></data>
+  <data name="CreateUser" xml:space="preserve"><value>Benutzer erstellen</value></data>
+  <data name="CreateUserDescription" xml:space="preserve"><value>Neue Benutzer manuell zum System hinzufügen.</value></data>
+  <data name="CreateNewUser" xml:space="preserve"><value>Neuen Benutzer erstellen</value></data>
+  <data name="ExportUsers" xml:space="preserve"><value>Benutzer exportieren</value></data>
+  <data name="ExportUsersDescription" xml:space="preserve"><value>Benutzerdaten zur Analyse oder Sicherung exportieren.</value></data>
+  <data name="ComingSoon" xml:space="preserve"><value>Demnächst verfügbar</value></data>
+  <data name="SystemConfigurationDescription" xml:space="preserve"><value>Systemweite Einstellungen und Präferenzen konfigurieren.</value></data>
+  <data name="SiteSettings" xml:space="preserve"><value>Website-Einstellungen</value></data>
+  <data name="SiteSettingsDescription" xml:space="preserve"><value>Websitenamen, Branding und Erscheinungsbild konfigurieren.</value></data>
+  <data name="EmailConfiguration" xml:space="preserve"><value>E-Mail-Konfiguration</value></data>
+  <data name="EmailConfigurationDescription" xml:space="preserve"><value>E-Mail-Server und Benachrichtigungsvorlagen einrichten.</value></data>
+  <data name="SecuritySettings" xml:space="preserve"><value>Sicherheitseinstellungen</value></data>
+  <data name="SecuritySettingsDescription" xml:space="preserve"><value>Authentifizierung und Sicherheitsrichtlinien konfigurieren.</value></data>
+  <data name="ContentPolicies" xml:space="preserve"><value>Inhaltsrichtlinien</value></data>
+  <data name="ContentPoliciesDescription" xml:space="preserve"><value>Community-Richtlinien und Nutzungsbedingungen verwalten.</value></data>
+  <data name="StorageSettings" xml:space="preserve"><value>Speichereinstellungen</value></data>
+  <data name="StorageSettingsDescription" xml:space="preserve"><value>Upload-Limits und Speicheroptionen konfigurieren.</value></data>
+  <data name="Performance" xml:space="preserve"><value>Leistung</value></data>
+  <data name="PerformanceDescription" xml:space="preserve"><value>Caching- und Leistungseinstellungen konfigurieren.</value></data>
+  <data name="ContentModerationDescription" xml:space="preserve"><value>Inhalte auf der gesamten Plattform überwachen und moderieren.</value></data>
+  <data name="FlaggedContent" xml:space="preserve"><value>Gemeldete Inhalte</value></data>
+  <data name="FlaggedContentDescription" xml:space="preserve"><value>Von Benutzern gemeldete Beiträge und Kommentare prüfen.</value></data>
+  <data name="ReportedUsers" xml:space="preserve"><value>Gemeldete Benutzer</value></data>
+  <data name="ReportedUsersDescription" xml:space="preserve"><value>Benutzermeldungen und Beschwerden ansehen und bearbeiten.</value></data>
+  <data name="ContentRemoval" xml:space="preserve"><value>Inhalte entfernen</value></data>
+  <data name="ContentRemovalDescription" xml:space="preserve"><value>Unangemessene Inhalte websiteweit entfernen.</value></data>
+  <data name="ContentSearch" xml:space="preserve"><value>Inhaltssuche</value></data>
+  <data name="ContentSearchDescription" xml:space="preserve"><value>Auf der gesamten Plattform nach bestimmten Inhalten suchen.</value></data>
+  <data name="ModerationLog" xml:space="preserve"><value>Moderationsprotokoll</value></data>
+  <data name="ModerationLogDescription" xml:space="preserve"><value>Verlauf der durchgeführten Moderationsmaßnahmen ansehen.</value></data>
+  <data name="ContentFilters" xml:space="preserve"><value>Inhaltsfilter</value></data>
+  <data name="ContentFiltersDescription" xml:space="preserve"><value>Automatische Regeln zur Inhaltsfilterung verwalten.</value></data>
+  <data name="AnalyticsDescription" xml:space="preserve"><value>Statistiken und Kennzahlen ansehen und Berichte erstellen.</value></data>
+  <data name="Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="DashboardDescription" xml:space="preserve"><value>Wichtige Kennzahlen und den Systemzustand auf einen Blick.</value></data>
+  <data name="UserStatistics" xml:space="preserve"><value>Benutzerstatistiken</value></data>
+  <data name="UserStatisticsDescription" xml:space="preserve"><value>Benutzerwachstum, Aktivität und Engagement analysieren.</value></data>
+  <data name="ContentAnalytics" xml:space="preserve"><value>Inhaltsanalyse</value></data>
+  <data name="ContentAnalyticsDescription" xml:space="preserve"><value>Beiträge, Kommentare und Inhaltstrends verfolgen.</value></data>
+  <data name="AuditLogSearch" xml:space="preserve"><value>Audit-Protokoll-Suche</value></data>
+  <data name="AuditLogSearchDescription" xml:space="preserve"><value>System-Audit-Protokolle mit Filtern durchsuchen und analysieren.</value></data>
+  <data name="SearchLogs" xml:space="preserve"><value>Protokolle durchsuchen</value></data>
+  <data name="DatabaseDescription" xml:space="preserve"><value>Datenbankzustand, Sicherungen und Wartungsaufgaben verwalten.</value></data>
+  <data name="BackupDatabase" xml:space="preserve"><value>Datenbank sichern</value></data>
+  <data name="BackupDatabaseDescription" xml:space="preserve"><value>Eine vollständige Sicherung der Datenbank erstellen.</value></data>
+  <data name="RestoreDatabase" xml:space="preserve"><value>Datenbank wiederherstellen</value></data>
+  <data name="RestoreDatabaseDescription" xml:space="preserve"><value>Aus einem früheren Sicherungspunkt wiederherstellen.</value></data>
+  <data name="RunMigrations" xml:space="preserve"><value>Migrationen ausführen</value></data>
+  <data name="RunMigrationsDescription" xml:space="preserve"><value>Ausstehende Datenbankschema-Migrationen anwenden.</value></data>
+  <data name="CleanupTasks" xml:space="preserve"><value>Bereinigungsaufgaben</value></data>
+  <data name="CleanupTasksDescription" xml:space="preserve"><value>Alte Benachrichtigungen und temporäre Daten entfernen.</value></data>
+  <data name="DatabaseStatistics" xml:space="preserve"><value>Datenbankstatistiken</value></data>
+  <data name="DatabaseStatisticsDescription" xml:space="preserve"><value>Datenbankgröße, Tabellenstatistiken und Zustand anzeigen.</value></data>
+  <data name="OptimizeTables" xml:space="preserve"><value>Tabellen optimieren</value></data>
+  <data name="OptimizeTablesDescription" xml:space="preserve"><value>Datenbanktabellen für bessere Leistung optimieren.</value></data>
 </root>

@@ -258,6 +258,189 @@ namespace FreeSpeakWeb.Resources.Pages {
             }
         }
 
+        /// <summary>Looks up the localized string for ProfileAlt.</summary>
+        public static string ProfileAlt { get { return ResourceManager.GetString("ProfileAlt", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ShowingFirst100Results.</summary>
+        public static string ShowingFirst100Results { get { return ResourceManager.GetString("ShowingFirst100Results", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for NoUsersFoundMatching.</summary>
+        public static string NoUsersFoundMatching { get { return ResourceManager.GetString("NoUsersFoundMatching", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for StartTypingToFindUsers.</summary>
+        public static string StartTypingToFindUsers { get { return ResourceManager.GetString("StartTypingToFindUsers", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for SearchError.</summary>
+        public static string SearchError { get { return ResourceManager.GetString("SearchError", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for AdditionalFeatures.</summary>
+        public static string AdditionalFeatures { get { return ResourceManager.GetString("AdditionalFeatures", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for CreateUser.</summary>
+        public static string CreateUser { get { return ResourceManager.GetString("CreateUser", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for CreateUserDescription.</summary>
+        public static string CreateUserDescription { get { return ResourceManager.GetString("CreateUserDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for CreateNewUser.</summary>
+        public static string CreateNewUser { get { return ResourceManager.GetString("CreateNewUser", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ExportUsers.</summary>
+        public static string ExportUsers { get { return ResourceManager.GetString("ExportUsers", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ExportUsersDescription.</summary>
+        public static string ExportUsersDescription { get { return ResourceManager.GetString("ExportUsersDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ComingSoon.</summary>
+        public static string ComingSoon { get { return ResourceManager.GetString("ComingSoon", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for SystemConfigurationDescription.</summary>
+        public static string SystemConfigurationDescription { get { return ResourceManager.GetString("SystemConfigurationDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for SiteSettings.</summary>
+        public static string SiteSettings { get { return ResourceManager.GetString("SiteSettings", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for SiteSettingsDescription.</summary>
+        public static string SiteSettingsDescription { get { return ResourceManager.GetString("SiteSettingsDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for EmailConfiguration.</summary>
+        public static string EmailConfiguration { get { return ResourceManager.GetString("EmailConfiguration", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for EmailConfigurationDescription.</summary>
+        public static string EmailConfigurationDescription { get { return ResourceManager.GetString("EmailConfigurationDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for SecuritySettings.</summary>
+        public static string SecuritySettings { get { return ResourceManager.GetString("SecuritySettings", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for SecuritySettingsDescription.</summary>
+        public static string SecuritySettingsDescription { get { return ResourceManager.GetString("SecuritySettingsDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ContentPolicies.</summary>
+        public static string ContentPolicies { get { return ResourceManager.GetString("ContentPolicies", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ContentPoliciesDescription.</summary>
+        public static string ContentPoliciesDescription { get { return ResourceManager.GetString("ContentPoliciesDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for StorageSettings.</summary>
+        public static string StorageSettings { get { return ResourceManager.GetString("StorageSettings", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for StorageSettingsDescription.</summary>
+        public static string StorageSettingsDescription { get { return ResourceManager.GetString("StorageSettingsDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for Performance.</summary>
+        public static string Performance { get { return ResourceManager.GetString("Performance", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for PerformanceDescription.</summary>
+        public static string PerformanceDescription { get { return ResourceManager.GetString("PerformanceDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ContentModerationDescription.</summary>
+        public static string ContentModerationDescription { get { return ResourceManager.GetString("ContentModerationDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for FlaggedContent.</summary>
+        public static string FlaggedContent { get { return ResourceManager.GetString("FlaggedContent", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for FlaggedContentDescription.</summary>
+        public static string FlaggedContentDescription { get { return ResourceManager.GetString("FlaggedContentDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ReportedUsers.</summary>
+        public static string ReportedUsers { get { return ResourceManager.GetString("ReportedUsers", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ReportedUsersDescription.</summary>
+        public static string ReportedUsersDescription { get { return ResourceManager.GetString("ReportedUsersDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ContentRemoval.</summary>
+        public static string ContentRemoval { get { return ResourceManager.GetString("ContentRemoval", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ContentRemovalDescription.</summary>
+        public static string ContentRemovalDescription { get { return ResourceManager.GetString("ContentRemovalDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ContentSearch.</summary>
+        public static string ContentSearch { get { return ResourceManager.GetString("ContentSearch", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ContentSearchDescription.</summary>
+        public static string ContentSearchDescription { get { return ResourceManager.GetString("ContentSearchDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ModerationLog.</summary>
+        public static string ModerationLog { get { return ResourceManager.GetString("ModerationLog", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ModerationLogDescription.</summary>
+        public static string ModerationLogDescription { get { return ResourceManager.GetString("ModerationLogDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ContentFilters.</summary>
+        public static string ContentFilters { get { return ResourceManager.GetString("ContentFilters", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ContentFiltersDescription.</summary>
+        public static string ContentFiltersDescription { get { return ResourceManager.GetString("ContentFiltersDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for AnalyticsDescription.</summary>
+        public static string AnalyticsDescription { get { return ResourceManager.GetString("AnalyticsDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for Dashboard.</summary>
+        public static string Dashboard { get { return ResourceManager.GetString("Dashboard", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for DashboardDescription.</summary>
+        public static string DashboardDescription { get { return ResourceManager.GetString("DashboardDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for UserStatistics.</summary>
+        public static string UserStatistics { get { return ResourceManager.GetString("UserStatistics", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for UserStatisticsDescription.</summary>
+        public static string UserStatisticsDescription { get { return ResourceManager.GetString("UserStatisticsDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ContentAnalytics.</summary>
+        public static string ContentAnalytics { get { return ResourceManager.GetString("ContentAnalytics", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for ContentAnalyticsDescription.</summary>
+        public static string ContentAnalyticsDescription { get { return ResourceManager.GetString("ContentAnalyticsDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for AuditLogSearch.</summary>
+        public static string AuditLogSearch { get { return ResourceManager.GetString("AuditLogSearch", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for AuditLogSearchDescription.</summary>
+        public static string AuditLogSearchDescription { get { return ResourceManager.GetString("AuditLogSearchDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for SearchLogs.</summary>
+        public static string SearchLogs { get { return ResourceManager.GetString("SearchLogs", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for DatabaseDescription.</summary>
+        public static string DatabaseDescription { get { return ResourceManager.GetString("DatabaseDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for BackupDatabase.</summary>
+        public static string BackupDatabase { get { return ResourceManager.GetString("BackupDatabase", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for BackupDatabaseDescription.</summary>
+        public static string BackupDatabaseDescription { get { return ResourceManager.GetString("BackupDatabaseDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for RestoreDatabase.</summary>
+        public static string RestoreDatabase { get { return ResourceManager.GetString("RestoreDatabase", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for RestoreDatabaseDescription.</summary>
+        public static string RestoreDatabaseDescription { get { return ResourceManager.GetString("RestoreDatabaseDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for RunMigrations.</summary>
+        public static string RunMigrations { get { return ResourceManager.GetString("RunMigrations", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for RunMigrationsDescription.</summary>
+        public static string RunMigrationsDescription { get { return ResourceManager.GetString("RunMigrationsDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for CleanupTasks.</summary>
+        public static string CleanupTasks { get { return ResourceManager.GetString("CleanupTasks", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for CleanupTasksDescription.</summary>
+        public static string CleanupTasksDescription { get { return ResourceManager.GetString("CleanupTasksDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for DatabaseStatistics.</summary>
+        public static string DatabaseStatistics { get { return ResourceManager.GetString("DatabaseStatistics", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for DatabaseStatisticsDescription.</summary>
+        public static string DatabaseStatisticsDescription { get { return ResourceManager.GetString("DatabaseStatisticsDescription", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for OptimizeTables.</summary>
+        public static string OptimizeTables { get { return ResourceManager.GetString("OptimizeTables", resourceCulture); } }
+
+        /// <summary>Looks up the localized string for OptimizeTablesDescription.</summary>
+        public static string OptimizeTablesDescription { get { return ResourceManager.GetString("OptimizeTablesDescription", resourceCulture); } }
+
         /// <summary>
         ///   Looks up a localized string similar to Page.
         /// </summary>

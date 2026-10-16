@@ -193,4 +193,65 @@
   <data name="Of" xml:space="preserve">
     <value>من</value>
   </data>
+  <data name="ProfileAlt" xml:space="preserve"><value>الملف الشخصي</value></data>
+  <data name="ShowingFirst100Results" xml:space="preserve"><value>يتم عرض أول 100 نتيجة. يرجى تضييق نطاق البحث للحصول على نتائج أكثر تحديدًا.</value></data>
+  <data name="NoUsersFoundMatching" xml:space="preserve"><value>لم يتم العثور على مستخدمين مطابقين لـ "{0}".</value></data>
+  <data name="StartTypingToFindUsers" xml:space="preserve"><value>ابدأ الكتابة في مربع البحث للعثور على المستخدمين.</value></data>
+  <data name="SearchError" xml:space="preserve"><value>حدث خطأ أثناء البحث. يرجى المحاولة مرة أخرى.</value></data>
+  <data name="AdditionalFeatures" xml:space="preserve"><value>ميزات إضافية</value></data>
+  <data name="CreateUser" xml:space="preserve"><value>إنشاء مستخدم</value></data>
+  <data name="CreateUserDescription" xml:space="preserve"><value>أضف مستخدمين جددًا إلى النظام يدويًا.</value></data>
+  <data name="CreateNewUser" xml:space="preserve"><value>إنشاء مستخدم جديد</value></data>
+  <data name="ExportUsers" xml:space="preserve"><value>تصدير المستخدمين</value></data>
+  <data name="ExportUsersDescription" xml:space="preserve"><value>صدّر بيانات المستخدمين للتحليل أو النسخ الاحتياطي.</value></data>
+  <data name="ComingSoon" xml:space="preserve"><value>قريبًا</value></data>
+  <data name="SystemConfigurationDescription" xml:space="preserve"><value>قم بتكوين إعدادات وتفضيلات النظام بأكمله.</value></data>
+  <data name="SiteSettings" xml:space="preserve"><value>إعدادات الموقع</value></data>
+  <data name="SiteSettingsDescription" xml:space="preserve"><value>قم بتكوين اسم الموقع وهويته ومظهره.</value></data>
+  <data name="EmailConfiguration" xml:space="preserve"><value>إعدادات البريد الإلكتروني</value></data>
+  <data name="EmailConfigurationDescription" xml:space="preserve"><value>قم بإعداد خوادم البريد الإلكتروني وقوالب الإشعارات.</value></data>
+  <data name="SecuritySettings" xml:space="preserve"><value>إعدادات الأمان</value></data>
+  <data name="SecuritySettingsDescription" xml:space="preserve"><value>قم بتكوين المصادقة وسياسات الأمان.</value></data>
+  <data name="ContentPolicies" xml:space="preserve"><value>سياسات المحتوى</value></data>
+  <data name="ContentPoliciesDescription" xml:space="preserve"><value>أدِر إرشادات المجتمع وشروط الخدمة.</value></data>
+  <data name="StorageSettings" xml:space="preserve"><value>إعدادات التخزين</value></data>
+  <data name="StorageSettingsDescription" xml:space="preserve"><value>قم بتكوين حدود رفع الملفات وخيارات التخزين.</value></data>
+  <data name="Performance" xml:space="preserve"><value>الأداء</value></data>
+  <data name="PerformanceDescription" xml:space="preserve"><value>قم بتكوين التخزين المؤقت وإعدادات الأداء.</value></data>
+  <data name="ContentModerationDescription" xml:space="preserve"><value>راقب المحتوى وأشرف عليه في المنصة بأكملها.</value></data>
+  <data name="FlaggedContent" xml:space="preserve"><value>المحتوى المُبلَّغ عنه</value></data>
+  <data name="FlaggedContentDescription" xml:space="preserve"><value>راجع المنشورات والتعليقات التي أبلغ عنها المستخدمون.</value></data>
+  <data name="ReportedUsers" xml:space="preserve"><value>المستخدمون المُبلَّغ عنهم</value></data>
+  <data name="ReportedUsersDescription" xml:space="preserve"><value>اعرض بلاغات المستخدمين وشكاواهم واتخذ الإجراء المناسب.</value></data>
+  <data name="ContentRemoval" xml:space="preserve"><value>إزالة المحتوى</value></data>
+  <data name="ContentRemovalDescription" xml:space="preserve"><value>أزل المحتوى غير اللائق من الموقع بأكمله.</value></data>
+  <data name="ContentSearch" xml:space="preserve"><value>البحث في المحتوى</value></data>
+  <data name="ContentSearchDescription" xml:space="preserve"><value>ابحث عن محتوى محدد في المنصة بأكملها.</value></data>
+  <data name="ModerationLog" xml:space="preserve"><value>سجل الإشراف</value></data>
+  <data name="ModerationLogDescription" xml:space="preserve"><value>اعرض سجل إجراءات الإشراف التي تم اتخاذها.</value></data>
+  <data name="ContentFilters" xml:space="preserve"><value>مرشحات المحتوى</value></data>
+  <data name="ContentFiltersDescription" xml:space="preserve"><value>أدِر قواعد ترشيح المحتوى التلقائية.</value></data>
+  <data name="AnalyticsDescription" xml:space="preserve"><value>اعرض الإحصاءات والمقاييس وأنشئ التقارير.</value></data>
+  <data name="Dashboard" xml:space="preserve"><value>لوحة المعلومات</value></data>
+  <data name="DashboardDescription" xml:space="preserve"><value>اعرض المقاييس الرئيسية وحالة النظام بنظرة سريعة.</value></data>
+  <data name="UserStatistics" xml:space="preserve"><value>إحصاءات المستخدمين</value></data>
+  <data name="UserStatisticsDescription" xml:space="preserve"><value>حلل نمو المستخدمين ونشاطهم وتفاعلهم.</value></data>
+  <data name="ContentAnalytics" xml:space="preserve"><value>تحليلات المحتوى</value></data>
+  <data name="ContentAnalyticsDescription" xml:space="preserve"><value>تتبع المنشورات والتعليقات واتجاهات المحتوى.</value></data>
+  <data name="AuditLogSearch" xml:space="preserve"><value>البحث في سجل التدقيق</value></data>
+  <data name="AuditLogSearchDescription" xml:space="preserve"><value>ابحث في سجلات تدقيق النظام وحللها باستخدام المرشحات.</value></data>
+  <data name="SearchLogs" xml:space="preserve"><value>البحث في السجلات</value></data>
+  <data name="DatabaseDescription" xml:space="preserve"><value>أدِر سلامة قاعدة البيانات والنسخ الاحتياطية ومهام الصيانة.</value></data>
+  <data name="BackupDatabase" xml:space="preserve"><value>نسخ احتياطي لقاعدة البيانات</value></data>
+  <data name="BackupDatabaseDescription" xml:space="preserve"><value>أنشئ نسخة احتياطية كاملة من قاعدة البيانات.</value></data>
+  <data name="RestoreDatabase" xml:space="preserve"><value>استعادة قاعدة البيانات</value></data>
+  <data name="RestoreDatabaseDescription" xml:space="preserve"><value>استعد من نقطة نسخ احتياطي سابقة.</value></data>
+  <data name="RunMigrations" xml:space="preserve"><value>تشغيل عمليات الترحيل</value></data>
+  <data name="RunMigrationsDescription" xml:space="preserve"><value>طبّق عمليات ترحيل مخطط قاعدة البيانات المعلقة.</value></data>
+  <data name="CleanupTasks" xml:space="preserve"><value>مهام التنظيف</value></data>
+  <data name="CleanupTasksDescription" xml:space="preserve"><value>أزل الإشعارات القديمة والبيانات المؤقتة.</value></data>
+  <data name="DatabaseStatistics" xml:space="preserve"><value>إحصاءات قاعدة البيانات</value></data>
+  <data name="DatabaseStatisticsDescription" xml:space="preserve"><value>اعرض حجم قاعدة البيانات وإحصاءات الجداول والحالة.</value></data>
+  <data name="OptimizeTables" xml:space="preserve"><value>تحسين الجداول</value></data>
+  <data name="OptimizeTablesDescription" xml:space="preserve"><value>حسّن جداول قاعدة البيانات لأداء أفضل.</value></data>
 </root>
