@@ -158,5 +158,59 @@ namespace FreeSpeakWeb.Resources.Admin {
                 return ResourceManager.GetString("TitleFormat", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Show raw details.
+        /// </summary>
+        public static string ShowRawDetails {
+            get {
+                return ResourceManager.GetString("ShowRawDetails", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Previous.
+        /// </summary>
+        public static string Previous {
+            get {
+                return ResourceManager.GetString("Previous", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        public static string Next {
+            get {
+                return ResourceManager.GetString("Next", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Page {0} of {1}.
+        /// </summary>
+        public static string PageOfPages {
+            get {
+                return ResourceManager.GetString("PageOfPages", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        public static string ProfilePictureAlt {
+            get {
+                return ResourceManager.GetString("ProfilePictureAlt", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading audit logs. Please try again..
+        /// </summary>
+        public static string ErrorLoading {
+            get {
+                return ResourceManager.GetString("ErrorLoading", resourceCulture);
+            }
+        }
     }
 }

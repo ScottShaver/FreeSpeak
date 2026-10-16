@@ -91,4 +91,22 @@
   <data name="Close" xml:space="preserve">
     <value>إغلاق</value>
   </data>
+  <data name="ShowRawDetails" xml:space="preserve">
+    <value>إظهار التفاصيل الخام</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>السابق</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>التالي</value>
+  </data>
+  <data name="PageOfPages" xml:space="preserve">
+    <value>الصفحة {0} من {1}</value>
+  </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>الملف الشخصي</value>
+  </data>
+  <data name="ErrorLoading" xml:space="preserve">
+    <value>حدث خطأ أثناء تحميل سجلات التدقيق. يرجى المحاولة مرة أخرى.</value>
+  </data>
 </root>
