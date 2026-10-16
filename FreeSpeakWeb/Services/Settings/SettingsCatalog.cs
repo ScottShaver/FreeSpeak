@@ -119,8 +119,8 @@ namespace FreeSpeakWeb.Services.Settings
                 }),
                 new SettingGroupDefinition(ModerationGroupId, "G_Moderation", "GD_Moderation", false, new[]
                 {
-                    Int(ModerationSettings.StaleReportDaysKey, "L_StaleReportDays", ModerationSettings.DefaultStaleReportDays.ToString(), 1, 365, help: "H_StaleReportDays")
-                }),
+                    Int(ModerationSettings.StaleReportDaysKey, "L_StaleReportDays", ModerationSettings.DefaultStaleReportDays.ToString(), 1, 365,                     help: "H_StaleReportDays"),
+                                        Int(ModerationSettings.MaxModeratorSuspensionDaysKey, "L_MaxModeratorSuspensionDays", ModerationSettings.DefaultMaxModeratorSuspensionDays.ToString(), 1, 365, help: "H_MaxModeratorSuspensionDays")                }),
                 new SettingGroupDefinition("logging", "G_Logging", "GD_Logging", false, logging)
             };
         }

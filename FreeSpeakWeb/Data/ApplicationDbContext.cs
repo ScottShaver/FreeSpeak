@@ -136,6 +136,16 @@ namespace FreeSpeakWeb.Data
         public DbSet<FeedContentReport> FeedContentReports { get; set; }
 
         /// <summary>
+        /// Gets or sets the warnings issued to users by system moderators.
+        /// </summary>
+        public DbSet<UserWarning> UserWarnings { get; set; }
+
+        /// <summary>
+        /// Gets or sets the suspensions issued to users by system moderators and administrators.
+        /// </summary>
+        public DbSet<UserSuspension> UserSuspensions { get; set; }
+
+        /// <summary>
         /// Gets or sets the DbSet for files uploaded to groups for sharing with members.
         /// </summary>
         public DbSet<GroupFile> GroupFiles { get; set; }
@@ -845,6 +855,58 @@ namespace FreeSpeakWeb.Data
                     .IsUnique()
                     .HasFilter("\"CommentId\" IS NOT NULL")
                     .HasDatabaseName("UX_FeedContentReports_ReporterId_CommentId");
+            });
+
+            // Configure UserWarning entity
+            modelBuilder.Entity<UserWarning>(entity =>
+            {
+                entity.HasKey(w => w.Id);
+
+                entity.HasOne(w => w.User)
+                    .WithMany()
+                    .HasForeignKey(w => w.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(w => w.IssuedBy)
+                    .WithMany()
+                    .HasForeignKey(w => w.IssuedByUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(w => w.UserId).IsRequired().HasMaxLength(450);
+                entity.Property(w => w.IssuedByUserId).IsRequired().HasMaxLength(450);
+                entity.Property(w => w.Reason).IsRequired().HasMaxLength(2000);
+
+                entity.HasIndex(w => new { w.UserId, w.CreatedAt })
+                    .IsDescending(false, true)
+                    .HasDatabaseName("IX_UserWarnings_UserId_CreatedAt");
+                entity.HasIndex(w => w.IssuedByUserId);
+            });
+
+            // Configure UserSuspension entity
+            modelBuilder.Entity<UserSuspension>(entity =>
+            {
+                entity.HasKey(s => s.Id);
+
+                entity.HasOne(s => s.User)
+                    .WithMany()
+                    .HasForeignKey(s => s.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(s => s.SuspendedBy)
+                    .WithMany()
+                    .HasForeignKey(s => s.SuspendedByUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(s => s.UserId).IsRequired().HasMaxLength(450);
+                entity.Property(s => s.SuspendedByUserId).IsRequired().HasMaxLength(450);
+                entity.Property(s => s.LiftedByUserId).HasMaxLength(450);
+                entity.Property(s => s.Reason).IsRequired().HasMaxLength(2000);
+                entity.Property(s => s.LiftNote).HasMaxLength(2000);
+
+                entity.HasIndex(s => new { s.UserId, s.CreatedAt })
+                    .IsDescending(false, true)
+                    .HasDatabaseName("IX_UserSuspensions_UserId_CreatedAt");
+                entity.HasIndex(s => s.SuspendedByUserId);
             });
 
             // Configure GroupFile entity

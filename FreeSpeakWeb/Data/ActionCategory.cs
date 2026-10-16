@@ -265,6 +265,23 @@ namespace FreeSpeakWeb.Data
         /// Action when a system moderator or administrator records a decision (dismiss, resolve, action taken)
         /// on a feed content report.
         /// </summary>
-        SystemModeratorReviewReport = 43
+        SystemModeratorReviewReport = 43,
+
+        /// <summary>
+        /// Action when a system moderator or administrator issues a warning to a user.
+        /// Records the target user, the reason and the related report ID, if any.
+        /// </summary>
+        SystemModeratorWarnUser = 44,
+
+        /// <summary>
+        /// Action when a system moderator or administrator suspends a user.
+        /// Records the target user, reason, duration and the UTC end time (none for a permanent suspension).
+        /// </summary>
+        SystemModeratorSuspendUser = 45,
+
+        /// <summary>
+        /// Action when a system moderator or administrator lifts a user's suspension before it ends.
+        /// </summary>
+        SystemModeratorUnsuspendUser = 46
     }
 }
