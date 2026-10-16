@@ -80,7 +80,7 @@
                                     <strong>@Localizer["LockedUntilLabel"]</strong> @FormatLocalTime(lockoutEnd.Value)
                                 </div>
                                 <div class="mb-2">
-                                    <strong>@Localizer["TimeRemainingLabel"]</strong> 
+                                    <strong>@Localizer["TimeRemainingLabel"]</strong>&nbsp;
                                     @if (remainingLockoutTime.TotalHours >= 1)
                                     {
                                         <span>@FormatHours(remainingLockoutTime.Hours) @FormatMinutes(remainingLockoutTime.Minutes)</span>
@@ -173,20 +173,7 @@
                         </p>
                         <ul>
                             <li><strong>@Localizer["LockedUntilLabel"]</strong> @FormatLocalTime(lockoutEnd.Value)</li>
-                            <li><strong>@Localizer["TimeRemainingLabel"]</strong> 
-                                @if (remainingLockoutTime.Hours > 0)
-                                {
-                                    <text>@FormatHours(remainingLockoutTime.Hours) </text>
-                                }
-                                @if (remainingLockoutTime.Minutes > 0)
-                                {
-                                    <text>@FormatMinutes(remainingLockoutTime.Minutes) </text>
-                                }
-                                @if (remainingLockoutTime.Hours == 0)
-                                {
-                                    <text>@FormatSeconds(remainingLockoutTime.Seconds)</text>
-                                }
-                            </li>
+                            <li><strong>@Localizer["TimeRemainingLabel"]</strong>&nbsp;@FormatRemainingDetail(remainingLockoutTime)</li>
                             <li><strong>@Localizer["WhatToDoLabel"]</strong> @LocalizedMarkup.Format(Localizer["WhatToDoText"].Value, LocalizedMarkup.Link("Account/ForgotPassword", Localizer["PasswordResetLink"].Value))</li>
                         </ul>
                     }
@@ -253,6 +240,31 @@
     /// <returns>The localized text, for example "1 second" or "2 seconds".</returns>
     private string FormatSeconds(int count) => Localizer[count == 1 ? "SecondsSingular" : "SecondsPlural", count].Value;
 
+    /// <summary>
+    /// Formats the remaining lockout time as space-separated hour, minute and second parts (seconds only when under an hour).
+    /// </summary>
+    /// <param name="remaining">The remaining lockout time.</param>
+    /// <returns>The localized text, for example "4 minutes 59 seconds".</returns>
+    private string FormatRemainingDetail(TimeSpan remaining)
+    {
+        var parts = new List<string>();
+        if (remaining.Hours > 0)
+        {
+            parts.Add(FormatHours(remaining.Hours));
+        }
+
+        if (remaining.Minutes > 0)
+        {
+            parts.Add(FormatMinutes(remaining.Minutes));
+        }
+
+        if (remaining.Hours == 0)
+        {
+            parts.Add(FormatSeconds(remaining.Seconds));
+        }
+
+        return string.Join(' ', parts);
+    }
     /// <summary>
     /// Initializes the lockout page and determines the lockout status and remaining time.
     /// </summary>
