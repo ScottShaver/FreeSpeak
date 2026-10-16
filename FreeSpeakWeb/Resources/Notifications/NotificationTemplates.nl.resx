@@ -115,4 +115,16 @@
   <data name="FeedContentRemoved" xml:space="preserve">
     <value>Je inhoud is verwijderd omdat deze de communityrichtlijnen schendt.</value>
   </data>
+  <data name="UserWarned" xml:space="preserve">
+    <value>Je hebt een waarschuwing ontvangen van het moderatieteam: {0}</value>
+  </data>
+  <data name="UserSuspended" xml:space="preserve">
+    <value>Je account is geschorst tot {1}. Reden: {0}</value>
+  </data>
+  <data name="UserSuspendedPermanent" xml:space="preserve">
+    <value>Je account is permanent geschorst. Reden: {0}</value>
+  </data>
+  <data name="UserSuspensionLifted" xml:space="preserve">
+    <value>De schorsing van je account is opgeheven.</value>
+  </data>
 </root>

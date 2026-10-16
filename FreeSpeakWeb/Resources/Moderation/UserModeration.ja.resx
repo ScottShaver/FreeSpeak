@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabUsers" xml:space="preserve">
+    <value>ユーザー</value>
+  </data>
+  <data name="SearchLabel" xml:space="preserve">
+    <value>ユーザーを検索</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>ユーザー名または名前（2文字以上）</value>
+  </data>
+  <data name="SearchButton" xml:space="preserve">
+    <value>検索</value>
+  </data>
+  <data name="SelectUser" xml:space="preserve">
+    <value>選択</value>
+  </data>
+  <data name="NoResults" xml:space="preserve">
+    <value>ユーザーが見つかりません。</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>読み込み中…</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>ユーザーを読み込めませんでした。</value>
+  </data>
+  <data name="PanelTitle" xml:space="preserve">
+    <value>モデレーション: {0}</value>
+  </data>
+  <data name="StatusSuspendedUntil" xml:space="preserve">
+    <value>{0} UTC まで停止中</value>
+  </data>
+  <data name="StatusSuspendedPermanent" xml:space="preserve">
+    <value>無期限に停止中</value>
+  </data>
+  <data name="StatusInGoodStanding" xml:space="preserve">
+    <value>停止されていません</value>
+  </data>
+  <data name="WarningsHeading" xml:space="preserve">
+    <value>警告</value>
+  </data>
+  <data name="NoWarnings" xml:space="preserve">
+    <value>警告はありません。</value>
+  </data>
+  <data name="SuspensionsHeading" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="NoSuspensions" xml:space="preserve">
+    <value>停止はありません。</value>
+  </data>
+  <data name="ReportsHeading" xml:space="preserve">
+    <value>このユーザーのコンテンツに対する報告</value>
+  </data>
+  <data name="NoReports" xml:space="preserve">
+    <value>報告はありません。</value>
+  </data>
+  <data name="RelatedReport" xml:space="preserve">
+    <value>報告 #{0}</value>
+  </data>
+  <data name="IssuedBy" xml:space="preserve">
+    <value>{0} による</value>
+  </data>
+  <data name="Acknowledged" xml:space="preserve">
+    <value>確認済み</value>
+  </data>
+  <data name="NotAcknowledged" xml:space="preserve">
+    <value>未確認</value>
+  </data>
+  <data name="SuspensionActive" xml:space="preserve">
+    <value>有効</value>
+  </data>
+  <data name="SuspensionEnded" xml:space="preserve">
+    <value>終了</value>
+  </data>
+  <data name="SuspensionLifted" xml:space="preserve">
+    <value>{0} UTC に解除</value>
+  </data>
+  <data name="SuspensionLiftedState" xml:space="preserve">
+    <value>解除済み</value>
+  </data>
+  <data name="SuspensionPermanent" xml:space="preserve">
+    <value>無期限</value>
+  </data>
+  <data name="SuspensionRange" xml:space="preserve">
+    <value>{0} UTC – {1} UTC</value>
+  </data>
+  <data name="WarnButton" xml:space="preserve">
+    <value>ユーザーに警告</value>
+  </data>
+  <data name="SuspendButton" xml:space="preserve">
+    <value>ユーザーを停止</value>
+  </data>
+  <data name="LiftButton" xml:space="preserve">
+    <value>停止を解除</value>
+  </data>
+  <data name="ModerateAuthor" xml:space="preserve">
+    <value>投稿者に警告または停止</value>
+  </data>
+  <data name="ReasonLabel" xml:space="preserve">
+    <value>理由（ユーザーに表示されます）</value>
+  </data>
+  <data name="DurationLabel" xml:space="preserve">
+    <value>期間</value>
+  </data>
+  <data name="Duration1Day" xml:space="preserve">
+    <value>1日</value>
+  </data>
+  <data name="Duration3Days" xml:space="preserve">
+    <value>3日</value>
+  </data>
+  <data name="Duration7Days" xml:space="preserve">
+    <value>7日</value>
+  </data>
+  <data name="Duration14Days" xml:space="preserve">
+    <value>14日</value>
+  </data>
+  <data name="Duration30Days" xml:space="preserve">
+    <value>30日</value>
+  </data>
+  <data name="DurationPermanent" xml:space="preserve">
+    <value>無期限</value>
+  </data>
+  <data name="ModeratorLimitHint" xml:space="preserve">
+    <value>システムモデレーターは最大 {0} 日まで停止できます。それより長い期間または無期限の停止には管理者が必要です。</value>
+  </data>
+  <data name="LiftNoteLabel" xml:space="preserve">
+    <value>メモ（任意）</value>
+  </data>
+  <data name="ConfirmWarn" xml:space="preserve">
+    <value>この警告をユーザーに送信しますか？</value>
+  </data>
+  <data name="ConfirmSuspend" xml:space="preserve">
+    <value>このユーザーを停止しますか？ サインアウトされ、停止が終了するまでサインインできません。</value>
+  </data>
+  <data name="ConfirmLift" xml:space="preserve">
+    <value>この停止を今すぐ解除しますか？</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>確認</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="DoneWarned" xml:space="preserve">
+    <value>警告を送信しました。</value>
+  </data>
+  <data name="DoneSuspended" xml:space="preserve">
+    <value>ユーザーを停止しました。</value>
+  </data>
+  <data name="DoneLifted" xml:space="preserve">
+    <value>停止を解除しました。</value>
+  </data>
+  <data name="CannotModerate" xml:space="preserve">
+    <value>このユーザーに警告または停止を行うことはできません。</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>この操作を行う権限がありません。</value>
+  </data>
+  <data name="ErrUserNotFound" xml:space="preserve">
+    <value>ユーザーが見つかりませんでした。</value>
+  </data>
+  <data name="ErrSelf" xml:space="preserve">
+    <value>自分自身に警告または停止を行うことはできません。</value>
+  </data>
+  <data name="ErrStaff" xml:space="preserve">
+    <value>このユーザーの役割のため、警告または停止を行うことはできません。</value>
+  </data>
+  <data name="ErrReasonRequired" xml:space="preserve">
+    <value>理由を入力してください。</value>
+  </data>
+  <data name="ErrReasonTooLong" xml:space="preserve">
+    <value>テキストが長すぎます。</value>
+  </data>
+  <data name="ErrInvalidDuration" xml:space="preserve">
+    <value>有効な期間を選択してください。</value>
+  </data>
+  <data name="ErrDurationLimit" xml:space="preserve">
+    <value>システムモデレーターはこれほど長い期間の停止はできません。管理者に依頼してください。</value>
+  </data>
+  <data name="ErrPermanent" xml:space="preserve">
+    <value>ユーザーを無期限に停止できるのは管理者のみです。</value>
+  </data>
+  <data name="ErrAlreadySuspended" xml:space="preserve">
+    <value>このユーザーはすでに停止されています。先に停止を解除してください。</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>停止が見つかりませんでした。</value>
+  </data>
+  <data name="ErrNotActive" xml:space="preserve">
+    <value>この停止はすでに有効ではありません。</value>
+  </data>
+  <data name="ErrCannotLift" xml:space="preserve">
+    <value>この停止を解除できるのは、停止を行ったモデレーターまたは管理者のみです。</value>
+  </data>
+  <data name="ErrFailed" xml:space="preserve">
+    <value>操作に失敗しました。もう一度お試しください。</value>
+  </data>
+  <data name="LockoutSuspendedTitle" xml:space="preserve">
+    <value>アカウントは停止されています</value>
+  </data>
+  <data name="LockoutSuspendedTemporary" xml:space="preserve">
+    <value>あなたのアカウントはモデレーションチームにより停止されました。停止期間が終了すると再びサインインできます。</value>
+  </data>
+  <data name="LockoutSuspendedPermanent" xml:space="preserve">
+    <value>あなたのアカウントはモデレーションチームにより無期限に停止されました。</value>
+  </data>
+  <data name="LockoutReasonLabel" xml:space="preserve">
+    <value>理由</value>
+  </data>
+  <data name="LockoutUntilLabel" xml:space="preserve">
+    <value>停止期限</value>
+  </data>
+  <data name="LockoutContact" xml:space="preserve">
+    <value>ご質問がある場合は、サイト管理者にお問い合わせください。</value>
+  </data>
+</root>

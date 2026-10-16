@@ -115,4 +115,16 @@
   <data name="FeedContentRemoved" xml:space="preserve">
     <value>커뮤니티 가이드라인을 위반하여 회원님의 콘텐츠가 삭제되었습니다.</value>
   </data>
+  <data name="UserWarned" xml:space="preserve">
+    <value>운영팀으로부터 경고를 받았습니다: {0}</value>
+  </data>
+  <data name="UserSuspended" xml:space="preserve">
+    <value>회원님의 계정이 {1}까지 정지되었습니다. 사유: {0}</value>
+  </data>
+  <data name="UserSuspendedPermanent" xml:space="preserve">
+    <value>회원님의 계정이 영구 정지되었습니다. 사유: {0}</value>
+  </data>
+  <data name="UserSuspensionLifted" xml:space="preserve">
+    <value>회원님의 계정 정지가 해제되었습니다.</value>
+  </data>
 </root>

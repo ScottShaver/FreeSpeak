@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabUsers" xml:space="preserve">
+    <value>사용자</value>
+  </data>
+  <data name="SearchLabel" xml:space="preserve">
+    <value>사용자 찾기</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>사용자 이름 또는 이름(2자 이상)</value>
+  </data>
+  <data name="SearchButton" xml:space="preserve">
+    <value>검색</value>
+  </data>
+  <data name="SelectUser" xml:space="preserve">
+    <value>선택</value>
+  </data>
+  <data name="NoResults" xml:space="preserve">
+    <value>사용자를 찾을 수 없습니다.</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>로드 중…</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>사용자를 불러오지 못했습니다.</value>
+  </data>
+  <data name="PanelTitle" xml:space="preserve">
+    <value>중재: {0}</value>
+  </data>
+  <data name="StatusSuspendedUntil" xml:space="preserve">
+    <value>{0} UTC까지 정지됨</value>
+  </data>
+  <data name="StatusSuspendedPermanent" xml:space="preserve">
+    <value>영구 정지됨</value>
+  </data>
+  <data name="StatusInGoodStanding" xml:space="preserve">
+    <value>정지되지 않음</value>
+  </data>
+  <data name="WarningsHeading" xml:space="preserve">
+    <value>경고</value>
+  </data>
+  <data name="NoWarnings" xml:space="preserve">
+    <value>경고가 없습니다.</value>
+  </data>
+  <data name="SuspensionsHeading" xml:space="preserve">
+    <value>정지</value>
+  </data>
+  <data name="NoSuspensions" xml:space="preserve">
+    <value>정지 내역이 없습니다.</value>
+  </data>
+  <data name="ReportsHeading" xml:space="preserve">
+    <value>이 사용자의 콘텐츠에 대한 신고</value>
+  </data>
+  <data name="NoReports" xml:space="preserve">
+    <value>신고가 없습니다.</value>
+  </data>
+  <data name="RelatedReport" xml:space="preserve">
+    <value>신고 #{0}</value>
+  </data>
+  <data name="IssuedBy" xml:space="preserve">
+    <value>{0} 처리</value>
+  </data>
+  <data name="Acknowledged" xml:space="preserve">
+    <value>확인됨</value>
+  </data>
+  <data name="NotAcknowledged" xml:space="preserve">
+    <value>확인되지 않음</value>
+  </data>
+  <data name="SuspensionActive" xml:space="preserve">
+    <value>활성</value>
+  </data>
+  <data name="SuspensionEnded" xml:space="preserve">
+    <value>종료됨</value>
+  </data>
+  <data name="SuspensionLifted" xml:space="preserve">
+    <value>{0} UTC에 해제됨</value>
+  </data>
+  <data name="SuspensionLiftedState" xml:space="preserve">
+    <value>해제됨</value>
+  </data>
+  <data name="SuspensionPermanent" xml:space="preserve">
+    <value>영구</value>
+  </data>
+  <data name="SuspensionRange" xml:space="preserve">
+    <value>{0} UTC – {1} UTC</value>
+  </data>
+  <data name="WarnButton" xml:space="preserve">
+    <value>사용자 경고</value>
+  </data>
+  <data name="SuspendButton" xml:space="preserve">
+    <value>사용자 정지</value>
+  </data>
+  <data name="LiftButton" xml:space="preserve">
+    <value>정지 해제</value>
+  </data>
+  <data name="ModerateAuthor" xml:space="preserve">
+    <value>작성자 경고 또는 정지</value>
+  </data>
+  <data name="ReasonLabel" xml:space="preserve">
+    <value>사유(사용자에게 표시됨)</value>
+  </data>
+  <data name="DurationLabel" xml:space="preserve">
+    <value>기간</value>
+  </data>
+  <data name="Duration1Day" xml:space="preserve">
+    <value>1일</value>
+  </data>
+  <data name="Duration3Days" xml:space="preserve">
+    <value>3일</value>
+  </data>
+  <data name="Duration7Days" xml:space="preserve">
+    <value>7일</value>
+  </data>
+  <data name="Duration14Days" xml:space="preserve">
+    <value>14일</value>
+  </data>
+  <data name="Duration30Days" xml:space="preserve">
+    <value>30일</value>
+  </data>
+  <data name="DurationPermanent" xml:space="preserve">
+    <value>영구</value>
+  </data>
+  <data name="ModeratorLimitHint" xml:space="preserve">
+    <value>시스템 중재자는 최대 {0}일까지 정지할 수 있습니다. 더 긴 기간이나 영구 정지는 관리자가 필요합니다.</value>
+  </data>
+  <data name="LiftNoteLabel" xml:space="preserve">
+    <value>메모(선택 사항)</value>
+  </data>
+  <data name="ConfirmWarn" xml:space="preserve">
+    <value>이 경고를 사용자에게 보낼까요?</value>
+  </data>
+  <data name="ConfirmSuspend" xml:space="preserve">
+    <value>이 사용자를 정지할까요? 로그아웃되며 정지가 끝날 때까지 로그인할 수 없습니다.</value>
+  </data>
+  <data name="ConfirmLift" xml:space="preserve">
+    <value>이 정지를 지금 해제할까요?</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>확인</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="DoneWarned" xml:space="preserve">
+    <value>경고를 보냈습니다.</value>
+  </data>
+  <data name="DoneSuspended" xml:space="preserve">
+    <value>사용자를 정지했습니다.</value>
+  </data>
+  <data name="DoneLifted" xml:space="preserve">
+    <value>정지를 해제했습니다.</value>
+  </data>
+  <data name="CannotModerate" xml:space="preserve">
+    <value>이 사용자를 경고하거나 정지할 수 없습니다.</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>이 작업을 수행할 권한이 없습니다.</value>
+  </data>
+  <data name="ErrUserNotFound" xml:space="preserve">
+    <value>사용자를 찾을 수 없습니다.</value>
+  </data>
+  <data name="ErrSelf" xml:space="preserve">
+    <value>자기 자신을 경고하거나 정지할 수 없습니다.</value>
+  </data>
+  <data name="ErrStaff" xml:space="preserve">
+    <value>이 사용자의 역할 때문에 경고하거나 정지할 수 없습니다.</value>
+  </data>
+  <data name="ErrReasonRequired" xml:space="preserve">
+    <value>사유를 입력하세요.</value>
+  </data>
+  <data name="ErrReasonTooLong" xml:space="preserve">
+    <value>텍스트가 너무 깁니다.</value>
+  </data>
+  <data name="ErrInvalidDuration" xml:space="preserve">
+    <value>올바른 기간을 선택하세요.</value>
+  </data>
+  <data name="ErrDurationLimit" xml:space="preserve">
+    <value>시스템 중재자는 이렇게 긴 기간 동안 정지할 수 없습니다. 관리자에게 문의하세요.</value>
+  </data>
+  <data name="ErrPermanent" xml:space="preserve">
+    <value>사용자를 영구 정지할 수 있는 것은 관리자뿐입니다.</value>
+  </data>
+  <data name="ErrAlreadySuspended" xml:space="preserve">
+    <value>이 사용자는 이미 정지되었습니다. 먼저 정지를 해제하세요.</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>정지 내역을 찾을 수 없습니다.</value>
+  </data>
+  <data name="ErrNotActive" xml:space="preserve">
+    <value>이 정지는 더 이상 활성 상태가 아닙니다.</value>
+  </data>
+  <data name="ErrCannotLift" xml:space="preserve">
+    <value>이 정지를 내린 중재자 또는 관리자만 해제할 수 있습니다.</value>
+  </data>
+  <data name="ErrFailed" xml:space="preserve">
+    <value>작업에 실패했습니다. 다시 시도하세요.</value>
+  </data>
+  <data name="LockoutSuspendedTitle" xml:space="preserve">
+    <value>계정 정지됨</value>
+  </data>
+  <data name="LockoutSuspendedTemporary" xml:space="preserve">
+    <value>중재 팀이 회원님의 계정을 정지했습니다. 정지가 끝나면 다시 로그인할 수 있습니다.</value>
+  </data>
+  <data name="LockoutSuspendedPermanent" xml:space="preserve">
+    <value>중재 팀이 회원님의 계정을 영구 정지했습니다.</value>
+  </data>
+  <data name="LockoutReasonLabel" xml:space="preserve">
+    <value>사유</value>
+  </data>
+  <data name="LockoutUntilLabel" xml:space="preserve">
+    <value>정지 기한</value>
+  </data>
+  <data name="LockoutContact" xml:space="preserve">
+    <value>궁금한 점이 있으면 사이트 관리자에게 문의하세요.</value>
+  </data>
+</root>

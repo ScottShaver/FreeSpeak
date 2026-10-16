@@ -64,6 +64,9 @@ await _auditLogRepository.LogActionAsync(
 | Export mod log | `GroupModerationLogExport` | `GroupModerationLogExportDetails` |
 | Report feed post/comment | `UserReportContent` | `UserReportContentDetails` |
 | Review feed report | `SystemModeratorReviewReport` | `SystemModeratorReviewReportDetails` |
+| Warn user (system) | `SystemModeratorWarnUser` | `SystemModeratorWarnUserDetails` |
+| Suspend user (system) | `SystemModeratorSuspendUser` | `SystemModeratorSuspendUserDetails` |
+| Lift suspension (system) | `SystemModeratorUnsuspendUser` | `SystemModeratorUnsuspendUserDetails` |
 | Close group | `GroupAdminCloseGroup` | `GroupAdminCloseGroupDetails` |
 | Approve join | `GroupAdminApproveJoinRequest` | `GroupAdminApproveJoinRequestDetails` |
 | Change role | `GroupAdminChangeMemberRole` | `GroupAdminChangeMemberRoleDetails` |

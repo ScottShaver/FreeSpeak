@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabUsers" xml:space="preserve">
+    <value>Benutzer</value>
+  </data>
+  <data name="SearchLabel" xml:space="preserve">
+    <value>Benutzer suchen</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>Benutzername oder Name (mindestens 2 Zeichen)</value>
+  </data>
+  <data name="SearchButton" xml:space="preserve">
+    <value>Suchen</value>
+  </data>
+  <data name="SelectUser" xml:space="preserve">
+    <value>Auswählen</value>
+  </data>
+  <data name="NoResults" xml:space="preserve">
+    <value>Keine Benutzer gefunden.</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Wird geladen…</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>Der Benutzer konnte nicht geladen werden.</value>
+  </data>
+  <data name="PanelTitle" xml:space="preserve">
+    <value>Moderation: {0}</value>
+  </data>
+  <data name="StatusSuspendedUntil" xml:space="preserve">
+    <value>Gesperrt bis {0} UTC</value>
+  </data>
+  <data name="StatusSuspendedPermanent" xml:space="preserve">
+    <value>Dauerhaft gesperrt</value>
+  </data>
+  <data name="StatusInGoodStanding" xml:space="preserve">
+    <value>Nicht gesperrt</value>
+  </data>
+  <data name="WarningsHeading" xml:space="preserve">
+    <value>Verwarnungen</value>
+  </data>
+  <data name="NoWarnings" xml:space="preserve">
+    <value>Keine Verwarnungen.</value>
+  </data>
+  <data name="SuspensionsHeading" xml:space="preserve">
+    <value>Sperren</value>
+  </data>
+  <data name="NoSuspensions" xml:space="preserve">
+    <value>Keine Sperren.</value>
+  </data>
+  <data name="ReportsHeading" xml:space="preserve">
+    <value>Meldungen zu den Inhalten dieses Benutzers</value>
+  </data>
+  <data name="NoReports" xml:space="preserve">
+    <value>Keine Meldungen.</value>
+  </data>
+  <data name="RelatedReport" xml:space="preserve">
+    <value>Meldung #{0}</value>
+  </data>
+  <data name="IssuedBy" xml:space="preserve">
+    <value>von {0}</value>
+  </data>
+  <data name="Acknowledged" xml:space="preserve">
+    <value>Bestätigt</value>
+  </data>
+  <data name="NotAcknowledged" xml:space="preserve">
+    <value>Nicht bestätigt</value>
+  </data>
+  <data name="SuspensionActive" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="SuspensionEnded" xml:space="preserve">
+    <value>Beendet</value>
+  </data>
+  <data name="SuspensionLifted" xml:space="preserve">
+    <value>Aufgehoben am {0} UTC</value>
+  </data>
+  <data name="SuspensionLiftedState" xml:space="preserve">
+    <value>Aufgehoben</value>
+  </data>
+  <data name="SuspensionPermanent" xml:space="preserve">
+    <value>Dauerhaft</value>
+  </data>
+  <data name="SuspensionRange" xml:space="preserve">
+    <value>{0} UTC – {1} UTC</value>
+  </data>
+  <data name="WarnButton" xml:space="preserve">
+    <value>Benutzer verwarnen</value>
+  </data>
+  <data name="SuspendButton" xml:space="preserve">
+    <value>Benutzer sperren</value>
+  </data>
+  <data name="LiftButton" xml:space="preserve">
+    <value>Sperre aufheben</value>
+  </data>
+  <data name="ModerateAuthor" xml:space="preserve">
+    <value>Autor verwarnen oder sperren</value>
+  </data>
+  <data name="ReasonLabel" xml:space="preserve">
+    <value>Grund (wird dem Benutzer angezeigt)</value>
+  </data>
+  <data name="DurationLabel" xml:space="preserve">
+    <value>Dauer</value>
+  </data>
+  <data name="Duration1Day" xml:space="preserve">
+    <value>1 Tag</value>
+  </data>
+  <data name="Duration3Days" xml:space="preserve">
+    <value>3 Tage</value>
+  </data>
+  <data name="Duration7Days" xml:space="preserve">
+    <value>7 Tage</value>
+  </data>
+  <data name="Duration14Days" xml:space="preserve">
+    <value>14 Tage</value>
+  </data>
+  <data name="Duration30Days" xml:space="preserve">
+    <value>30 Tage</value>
+  </data>
+  <data name="DurationPermanent" xml:space="preserve">
+    <value>Dauerhaft</value>
+  </data>
+  <data name="ModeratorLimitHint" xml:space="preserve">
+    <value>Systemmoderatoren können bis zu {0} Tage sperren. Längere oder dauerhafte Sperren erfordern einen Administrator.</value>
+  </data>
+  <data name="LiftNoteLabel" xml:space="preserve">
+    <value>Notiz (optional)</value>
+  </data>
+  <data name="ConfirmWarn" xml:space="preserve">
+    <value>Diese Verwarnung an den Benutzer senden?</value>
+  </data>
+  <data name="ConfirmSuspend" xml:space="preserve">
+    <value>Diesen Benutzer sperren? Er wird abgemeldet und kann sich erst nach Ende der Sperre wieder anmelden.</value>
+  </data>
+  <data name="ConfirmLift" xml:space="preserve">
+    <value>Diese Sperre jetzt aufheben?</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Bestätigen</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="DoneWarned" xml:space="preserve">
+    <value>Die Verwarnung wurde gesendet.</value>
+  </data>
+  <data name="DoneSuspended" xml:space="preserve">
+    <value>Der Benutzer wurde gesperrt.</value>
+  </data>
+  <data name="DoneLifted" xml:space="preserve">
+    <value>Die Sperre wurde aufgehoben.</value>
+  </data>
+  <data name="CannotModerate" xml:space="preserve">
+    <value>Sie können diesen Benutzer nicht verwarnen oder sperren.</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>Dazu sind Sie nicht berechtigt.</value>
+  </data>
+  <data name="ErrUserNotFound" xml:space="preserve">
+    <value>Der Benutzer wurde nicht gefunden.</value>
+  </data>
+  <data name="ErrSelf" xml:space="preserve">
+    <value>Sie können sich nicht selbst verwarnen oder sperren.</value>
+  </data>
+  <data name="ErrStaff" xml:space="preserve">
+    <value>Sie können diesen Benutzer aufgrund seiner Rolle nicht verwarnen oder sperren.</value>
+  </data>
+  <data name="ErrReasonRequired" xml:space="preserve">
+    <value>Geben Sie einen Grund ein.</value>
+  </data>
+  <data name="ErrReasonTooLong" xml:space="preserve">
+    <value>Der Text ist zu lang.</value>
+  </data>
+  <data name="ErrInvalidDuration" xml:space="preserve">
+    <value>Wählen Sie eine gültige Dauer.</value>
+  </data>
+  <data name="ErrDurationLimit" xml:space="preserve">
+    <value>Systemmoderatoren können nicht so lange sperren. Wenden Sie sich an einen Administrator.</value>
+  </data>
+  <data name="ErrPermanent" xml:space="preserve">
+    <value>Nur Administratoren können einen Benutzer dauerhaft sperren.</value>
+  </data>
+  <data name="ErrAlreadySuspended" xml:space="preserve">
+    <value>Dieser Benutzer ist bereits gesperrt. Heben Sie zuerst die Sperre auf.</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>Die Sperre wurde nicht gefunden.</value>
+  </data>
+  <data name="ErrNotActive" xml:space="preserve">
+    <value>Diese Sperre ist nicht mehr aktiv.</value>
+  </data>
+  <data name="ErrCannotLift" xml:space="preserve">
+    <value>Nur der Moderator, der diese Sperre verhängt hat, oder ein Administrator kann sie aufheben.</value>
+  </data>
+  <data name="ErrFailed" xml:space="preserve">
+    <value>Die Aktion ist fehlgeschlagen. Bitte versuchen Sie es erneut.</value>
+  </data>
+  <data name="LockoutSuspendedTitle" xml:space="preserve">
+    <value>Konto gesperrt</value>
+  </data>
+  <data name="LockoutSuspendedTemporary" xml:space="preserve">
+    <value>Ihr Konto wurde vom Moderationsteam gesperrt. Sie können sich nach Ende der Sperre wieder anmelden.</value>
+  </data>
+  <data name="LockoutSuspendedPermanent" xml:space="preserve">
+    <value>Ihr Konto wurde vom Moderationsteam dauerhaft gesperrt.</value>
+  </data>
+  <data name="LockoutReasonLabel" xml:space="preserve">
+    <value>Grund</value>
+  </data>
+  <data name="LockoutUntilLabel" xml:space="preserve">
+    <value>Gesperrt bis</value>
+  </data>
+  <data name="LockoutContact" xml:space="preserve">
+    <value>Bei Fragen wenden Sie sich bitte an den Website-Administrator.</value>
+  </data>
+</root>

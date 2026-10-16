@@ -306,6 +306,8 @@ namespace FreeSpeakWeb
             builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.IFeedContentReportService, FeedContentReportService>();
             builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.IFeedContentRemoval>(sp => sp.GetRequiredService<PostService>());
             builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.ISystemModerationService, SystemModerationService>();
+            builder.Services.AddScoped<FreeSpeakWeb.Repositories.Abstractions.IUserModerationRepository, FreeSpeakWeb.Repositories.UserModerationRepository>();
+            builder.Services.AddScoped<FreeSpeakWeb.Services.Abstractions.IUserModerationService, UserModerationService>();
             builder.Services.AddScoped<IGroupFileService, GroupFileService>();
             builder.Services.AddScoped<IGroupModerationLogRepository, GroupModerationLogRepository>();
             builder.Services.AddScoped<IGroupModerationLogService, GroupModerationLogService>();
@@ -562,6 +564,8 @@ namespace FreeSpeakWeb
             // Apply request localization middleware
             app.UseRequestLocalization(localizationOptions);
 
+            // Cut off signed-in users who are suspended
+            app.UseMiddleware<FreeSpeakWeb.Middleware.SuspensionEnforcementMiddleware>();
             app.UseAntiforgery();
 
             app.MapStaticAssets();

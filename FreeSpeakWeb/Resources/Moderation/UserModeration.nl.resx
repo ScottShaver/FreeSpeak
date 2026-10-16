@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabUsers" xml:space="preserve">
+    <value>Gebruikers</value>
+  </data>
+  <data name="SearchLabel" xml:space="preserve">
+    <value>Zoek een gebruiker</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>Gebruikersnaam of naam (minimaal 2 tekens)</value>
+  </data>
+  <data name="SearchButton" xml:space="preserve">
+    <value>Zoeken</value>
+  </data>
+  <data name="SelectUser" xml:space="preserve">
+    <value>Selecteren</value>
+  </data>
+  <data name="NoResults" xml:space="preserve">
+    <value>Geen gebruikers gevonden.</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Laden…</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>De gebruiker kon niet worden geladen.</value>
+  </data>
+  <data name="PanelTitle" xml:space="preserve">
+    <value>Moderatie: {0}</value>
+  </data>
+  <data name="StatusSuspendedUntil" xml:space="preserve">
+    <value>Geschorst tot {0} UTC</value>
+  </data>
+  <data name="StatusSuspendedPermanent" xml:space="preserve">
+    <value>Permanent geschorst</value>
+  </data>
+  <data name="StatusInGoodStanding" xml:space="preserve">
+    <value>Niet geschorst</value>
+  </data>
+  <data name="WarningsHeading" xml:space="preserve">
+    <value>Waarschuwingen</value>
+  </data>
+  <data name="NoWarnings" xml:space="preserve">
+    <value>Geen waarschuwingen.</value>
+  </data>
+  <data name="SuspensionsHeading" xml:space="preserve">
+    <value>Schorsingen</value>
+  </data>
+  <data name="NoSuspensions" xml:space="preserve">
+    <value>Geen schorsingen.</value>
+  </data>
+  <data name="ReportsHeading" xml:space="preserve">
+    <value>Meldingen over de inhoud van deze gebruiker</value>
+  </data>
+  <data name="NoReports" xml:space="preserve">
+    <value>Geen meldingen.</value>
+  </data>
+  <data name="RelatedReport" xml:space="preserve">
+    <value>Melding #{0}</value>
+  </data>
+  <data name="IssuedBy" xml:space="preserve">
+    <value>door {0}</value>
+  </data>
+  <data name="Acknowledged" xml:space="preserve">
+    <value>Bevestigd</value>
+  </data>
+  <data name="NotAcknowledged" xml:space="preserve">
+    <value>Niet bevestigd</value>
+  </data>
+  <data name="SuspensionActive" xml:space="preserve">
+    <value>Actief</value>
+  </data>
+  <data name="SuspensionEnded" xml:space="preserve">
+    <value>Beëindigd</value>
+  </data>
+  <data name="SuspensionLifted" xml:space="preserve">
+    <value>Opgeheven op {0} UTC</value>
+  </data>
+  <data name="SuspensionLiftedState" xml:space="preserve">
+    <value>Opgeheven</value>
+  </data>
+  <data name="SuspensionPermanent" xml:space="preserve">
+    <value>Permanent</value>
+  </data>
+  <data name="SuspensionRange" xml:space="preserve">
+    <value>{0} UTC – {1} UTC</value>
+  </data>
+  <data name="WarnButton" xml:space="preserve">
+    <value>Gebruiker waarschuwen</value>
+  </data>
+  <data name="SuspendButton" xml:space="preserve">
+    <value>Gebruiker schorsen</value>
+  </data>
+  <data name="LiftButton" xml:space="preserve">
+    <value>Schorsing opheffen</value>
+  </data>
+  <data name="ModerateAuthor" xml:space="preserve">
+    <value>De auteur waarschuwen of schorsen</value>
+  </data>
+  <data name="ReasonLabel" xml:space="preserve">
+    <value>Reden (zichtbaar voor de gebruiker)</value>
+  </data>
+  <data name="DurationLabel" xml:space="preserve">
+    <value>Duur</value>
+  </data>
+  <data name="Duration1Day" xml:space="preserve">
+    <value>1 dag</value>
+  </data>
+  <data name="Duration3Days" xml:space="preserve">
+    <value>3 dagen</value>
+  </data>
+  <data name="Duration7Days" xml:space="preserve">
+    <value>7 dagen</value>
+  </data>
+  <data name="Duration14Days" xml:space="preserve">
+    <value>14 dagen</value>
+  </data>
+  <data name="Duration30Days" xml:space="preserve">
+    <value>30 dagen</value>
+  </data>
+  <data name="DurationPermanent" xml:space="preserve">
+    <value>Permanent</value>
+  </data>
+  <data name="ModeratorLimitHint" xml:space="preserve">
+    <value>Systeemmoderators kunnen maximaal {0} dagen schorsen. Langere of permanente schorsingen vereisen een beheerder.</value>
+  </data>
+  <data name="LiftNoteLabel" xml:space="preserve">
+    <value>Notitie (optioneel)</value>
+  </data>
+  <data name="ConfirmWarn" xml:space="preserve">
+    <value>Deze waarschuwing naar de gebruiker sturen?</value>
+  </data>
+  <data name="ConfirmSuspend" xml:space="preserve">
+    <value>Deze gebruiker schorsen? De gebruiker wordt afgemeld en kan pas weer inloggen als de schorsing voorbij is.</value>
+  </data>
+  <data name="ConfirmLift" xml:space="preserve">
+    <value>Deze schorsing nu opheffen?</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Bevestigen</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuleren</value>
+  </data>
+  <data name="DoneWarned" xml:space="preserve">
+    <value>De waarschuwing is verzonden.</value>
+  </data>
+  <data name="DoneSuspended" xml:space="preserve">
+    <value>De gebruiker is geschorst.</value>
+  </data>
+  <data name="DoneLifted" xml:space="preserve">
+    <value>De schorsing is opgeheven.</value>
+  </data>
+  <data name="CannotModerate" xml:space="preserve">
+    <value>Je kunt deze gebruiker niet waarschuwen of schorsen.</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>Je hebt hier geen toestemming voor.</value>
+  </data>
+  <data name="ErrUserNotFound" xml:space="preserve">
+    <value>De gebruiker is niet gevonden.</value>
+  </data>
+  <data name="ErrSelf" xml:space="preserve">
+    <value>Je kunt jezelf niet waarschuwen of schorsen.</value>
+  </data>
+  <data name="ErrStaff" xml:space="preserve">
+    <value>Je kunt deze gebruiker vanwege diens rol niet waarschuwen of schorsen.</value>
+  </data>
+  <data name="ErrReasonRequired" xml:space="preserve">
+    <value>Geef een reden op.</value>
+  </data>
+  <data name="ErrReasonTooLong" xml:space="preserve">
+    <value>De tekst is te lang.</value>
+  </data>
+  <data name="ErrInvalidDuration" xml:space="preserve">
+    <value>Kies een geldige duur.</value>
+  </data>
+  <data name="ErrDurationLimit" xml:space="preserve">
+    <value>Systeemmoderators kunnen niet zo lang schorsen. Vraag het aan een beheerder.</value>
+  </data>
+  <data name="ErrPermanent" xml:space="preserve">
+    <value>Alleen beheerders kunnen een gebruiker permanent schorsen.</value>
+  </data>
+  <data name="ErrAlreadySuspended" xml:space="preserve">
+    <value>Deze gebruiker is al geschorst. Hef eerst de schorsing op.</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>De schorsing is niet gevonden.</value>
+  </data>
+  <data name="ErrNotActive" xml:space="preserve">
+    <value>Deze schorsing is niet meer actief.</value>
+  </data>
+  <data name="ErrCannotLift" xml:space="preserve">
+    <value>Alleen de moderator die deze schorsing heeft opgelegd of een beheerder kan deze opheffen.</value>
+  </data>
+  <data name="ErrFailed" xml:space="preserve">
+    <value>De actie is mislukt. Probeer het opnieuw.</value>
+  </data>
+  <data name="LockoutSuspendedTitle" xml:space="preserve">
+    <value>Account geschorst</value>
+  </data>
+  <data name="LockoutSuspendedTemporary" xml:space="preserve">
+    <value>Je account is geschorst door het moderatieteam. Je kunt weer inloggen nadat de schorsing is afgelopen.</value>
+  </data>
+  <data name="LockoutSuspendedPermanent" xml:space="preserve">
+    <value>Je account is permanent geschorst door het moderatieteam.</value>
+  </data>
+  <data name="LockoutReasonLabel" xml:space="preserve">
+    <value>Reden</value>
+  </data>
+  <data name="LockoutUntilLabel" xml:space="preserve">
+    <value>Geschorst tot</value>
+  </data>
+  <data name="LockoutContact" xml:space="preserve">
+    <value>Heb je vragen? Neem dan contact op met de sitebeheerder.</value>
+  </data>
+</root>

@@ -115,4 +115,16 @@
   <data name="FeedContentRemoved" xml:space="preserve">
     <value>您的内容因违反社区准则已被删除。</value>
   </data>
+  <data name="UserWarned" xml:space="preserve">
+    <value>您收到了审核团队的警告：{0}</value>
+  </data>
+  <data name="UserSuspended" xml:space="preserve">
+    <value>您的账号已被暂停至 {1}。原因：{0}</value>
+  </data>
+  <data name="UserSuspendedPermanent" xml:space="preserve">
+    <value>您的账号已被永久封禁。原因：{0}</value>
+  </data>
+  <data name="UserSuspensionLifted" xml:space="preserve">
+    <value>您的账号暂停已被解除。</value>
+  </data>
 </root>

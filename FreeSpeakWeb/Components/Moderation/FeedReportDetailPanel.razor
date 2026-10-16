@@ -5,6 +5,7 @@
 
 @inject ISystemModerationService ModerationService
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.FeedReports> Localizer
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Moderation.UserModeration> UserLocalizer
 @inject TimeProvider Clock
 
 <div data-testid="feed-report-detail">
@@ -86,6 +87,16 @@
                     <p class="text-muted" data-testid="detail-author-history">@string.Format(Localizer["AuthorHistory"].Value, detail.AuthorOtherReportCount)</p>
                 }
 
+                <button type="button" class="btn btn-outline-warning mb-3" @onclick="() => showUserPanel = !showUserPanel" data-testid="action-moderate-author">
+                    <i class="bi bi-person-exclamation me-1"></i>@UserLocalizer["ModerateAuthor"]
+                </button>
+                @if (showUserPanel)
+                {
+                    <div class="mb-3">
+                        <UserModerationPanel ActorId="@UserId" TargetUserId="@detail.AuthorId" RelatedReportId="detail.Id" />
+                    </div>
+                }
+
                 @if (!detail.CanAct)
                 {
                     <div class="alert alert-secondary" data-testid="detail-cannot-act">@Localizer[detail.Status is ReportStatus.NotReviewed or ReportStatus.UnderReview ? "CannotAct" : "ReviewedAlready"]</div>
@@ -134,6 +145,7 @@
     private bool messageIsError;
     private PendingAction pending = PendingAction.None;
     private int loadedReportId;
+    private bool showUserPanel;
 
     /// <summary>
     /// Gets or sets the ID of the signed-in moderator.
@@ -174,6 +186,7 @@
         {
             loadedReportId = ReportId;
             message = null;
+            showUserPanel = false;
             pending = PendingAction.None;
             await LoadAsync();
         }

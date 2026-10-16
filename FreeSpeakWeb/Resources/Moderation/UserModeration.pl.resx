@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="TabUsers" xml:space="preserve">
+    <value>Użytkownicy</value>
+  </data>
+  <data name="SearchLabel" xml:space="preserve">
+    <value>Znajdź użytkownika</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>Nazwa użytkownika lub imię (co najmniej 2 znaki)</value>
+  </data>
+  <data name="SearchButton" xml:space="preserve">
+    <value>Szukaj</value>
+  </data>
+  <data name="SelectUser" xml:space="preserve">
+    <value>Wybierz</value>
+  </data>
+  <data name="NoResults" xml:space="preserve">
+    <value>Nie znaleziono użytkowników.</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Ładowanie…</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>Nie udało się wczytać użytkownika.</value>
+  </data>
+  <data name="PanelTitle" xml:space="preserve">
+    <value>Moderacja: {0}</value>
+  </data>
+  <data name="StatusSuspendedUntil" xml:space="preserve">
+    <value>Zawieszony do {0} UTC</value>
+  </data>
+  <data name="StatusSuspendedPermanent" xml:space="preserve">
+    <value>Zawieszony na stałe</value>
+  </data>
+  <data name="StatusInGoodStanding" xml:space="preserve">
+    <value>Niezawieszony</value>
+  </data>
+  <data name="WarningsHeading" xml:space="preserve">
+    <value>Ostrzeżenia</value>
+  </data>
+  <data name="NoWarnings" xml:space="preserve">
+    <value>Brak ostrzeżeń.</value>
+  </data>
+  <data name="SuspensionsHeading" xml:space="preserve">
+    <value>Zawieszenia</value>
+  </data>
+  <data name="NoSuspensions" xml:space="preserve">
+    <value>Brak zawieszeń.</value>
+  </data>
+  <data name="ReportsHeading" xml:space="preserve">
+    <value>Zgłoszenia dotyczące treści tego użytkownika</value>
+  </data>
+  <data name="NoReports" xml:space="preserve">
+    <value>Brak zgłoszeń.</value>
+  </data>
+  <data name="RelatedReport" xml:space="preserve">
+    <value>Zgłoszenie nr {0}</value>
+  </data>
+  <data name="IssuedBy" xml:space="preserve">
+    <value>przez {0}</value>
+  </data>
+  <data name="Acknowledged" xml:space="preserve">
+    <value>Potwierdzone</value>
+  </data>
+  <data name="NotAcknowledged" xml:space="preserve">
+    <value>Niepotwierdzone</value>
+  </data>
+  <data name="SuspensionActive" xml:space="preserve">
+    <value>Aktywne</value>
+  </data>
+  <data name="SuspensionEnded" xml:space="preserve">
+    <value>Zakończone</value>
+  </data>
+  <data name="SuspensionLifted" xml:space="preserve">
+    <value>Zniesione {0} UTC</value>
+  </data>
+  <data name="SuspensionLiftedState" xml:space="preserve">
+    <value>Zniesione</value>
+  </data>
+  <data name="SuspensionPermanent" xml:space="preserve">
+    <value>Stałe</value>
+  </data>
+  <data name="SuspensionRange" xml:space="preserve">
+    <value>{0} UTC – {1} UTC</value>
+  </data>
+  <data name="WarnButton" xml:space="preserve">
+    <value>Ostrzeż użytkownika</value>
+  </data>
+  <data name="SuspendButton" xml:space="preserve">
+    <value>Zawieś użytkownika</value>
+  </data>
+  <data name="LiftButton" xml:space="preserve">
+    <value>Zniesienie zawieszenia</value>
+  </data>
+  <data name="ModerateAuthor" xml:space="preserve">
+    <value>Ostrzeż lub zawieś autora</value>
+  </data>
+  <data name="ReasonLabel" xml:space="preserve">
+    <value>Powód (widoczny dla użytkownika)</value>
+  </data>
+  <data name="DurationLabel" xml:space="preserve">
+    <value>Czas trwania</value>
+  </data>
+  <data name="Duration1Day" xml:space="preserve">
+    <value>1 dzień</value>
+  </data>
+  <data name="Duration3Days" xml:space="preserve">
+    <value>3 dni</value>
+  </data>
+  <data name="Duration7Days" xml:space="preserve">
+    <value>7 dni</value>
+  </data>
+  <data name="Duration14Days" xml:space="preserve">
+    <value>14 dni</value>
+  </data>
+  <data name="Duration30Days" xml:space="preserve">
+    <value>30 dni</value>
+  </data>
+  <data name="DurationPermanent" xml:space="preserve">
+    <value>Stałe</value>
+  </data>
+  <data name="ModeratorLimitHint" xml:space="preserve">
+    <value>Moderatorzy systemowi mogą zawiesić konto na maksymalnie {0} dni. Dłuższe lub stałe zawieszenia wymagają administratora.</value>
+  </data>
+  <data name="LiftNoteLabel" xml:space="preserve">
+    <value>Notatka (opcjonalnie)</value>
+  </data>
+  <data name="ConfirmWarn" xml:space="preserve">
+    <value>Wysłać to ostrzeżenie użytkownikowi?</value>
+  </data>
+  <data name="ConfirmSuspend" xml:space="preserve">
+    <value>Zawiesić tego użytkownika? Zostanie wylogowany i nie będzie mógł się zalogować do końca zawieszenia.</value>
+  </data>
+  <data name="ConfirmLift" xml:space="preserve">
+    <value>Znieść to zawieszenie teraz?</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Potwierdź</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="DoneWarned" xml:space="preserve">
+    <value>Ostrzeżenie zostało wysłane.</value>
+  </data>
+  <data name="DoneSuspended" xml:space="preserve">
+    <value>Użytkownik został zawieszony.</value>
+  </data>
+  <data name="DoneLifted" xml:space="preserve">
+    <value>Zawieszenie zostało zniesione.</value>
+  </data>
+  <data name="CannotModerate" xml:space="preserve">
+    <value>Nie możesz ostrzec ani zawiesić tego użytkownika.</value>
+  </data>
+  <data name="ErrNotAuthorized" xml:space="preserve">
+    <value>Nie masz uprawnień do wykonania tej czynności.</value>
+  </data>
+  <data name="ErrUserNotFound" xml:space="preserve">
+    <value>Nie znaleziono użytkownika.</value>
+  </data>
+  <data name="ErrSelf" xml:space="preserve">
+    <value>Nie możesz ostrzec ani zawiesić samego siebie.</value>
+  </data>
+  <data name="ErrStaff" xml:space="preserve">
+    <value>Nie możesz ostrzec ani zawiesić tego użytkownika ze względu na jego rolę.</value>
+  </data>
+  <data name="ErrReasonRequired" xml:space="preserve">
+    <value>Podaj powód.</value>
+  </data>
+  <data name="ErrReasonTooLong" xml:space="preserve">
+    <value>Tekst jest zbyt długi.</value>
+  </data>
+  <data name="ErrInvalidDuration" xml:space="preserve">
+    <value>Wybierz prawidłowy czas trwania.</value>
+  </data>
+  <data name="ErrDurationLimit" xml:space="preserve">
+    <value>Moderatorzy systemowi nie mogą zawiesić na tak długo. Zwróć się do administratora.</value>
+  </data>
+  <data name="ErrPermanent" xml:space="preserve">
+    <value>Tylko administratorzy mogą zawiesić użytkownika na stałe.</value>
+  </data>
+  <data name="ErrAlreadySuspended" xml:space="preserve">
+    <value>Ten użytkownik jest już zawieszony. Najpierw zniesz zawieszenie.</value>
+  </data>
+  <data name="ErrNotFound" xml:space="preserve">
+    <value>Nie znaleziono zawieszenia.</value>
+  </data>
+  <data name="ErrNotActive" xml:space="preserve">
+    <value>To zawieszenie nie jest już aktywne.</value>
+  </data>
+  <data name="ErrCannotLift" xml:space="preserve">
+    <value>Tylko moderator, który nałożył to zawieszenie, lub administrator może je znieść.</value>
+  </data>
+  <data name="ErrFailed" xml:space="preserve">
+    <value>Operacja nie powiodła się. Spróbuj ponownie.</value>
+  </data>
+  <data name="LockoutSuspendedTitle" xml:space="preserve">
+    <value>Konto zawieszone</value>
+  </data>
+  <data name="LockoutSuspendedTemporary" xml:space="preserve">
+    <value>Twoje konto zostało zawieszone przez zespół moderacji. Po zakończeniu zawieszenia będziesz mógł się ponownie zalogować.</value>
+  </data>
+  <data name="LockoutSuspendedPermanent" xml:space="preserve">
+    <value>Twoje konto zostało zawieszone na stałe przez zespół moderacji.</value>
+  </data>
+  <data name="LockoutReasonLabel" xml:space="preserve">
+    <value>Powód</value>
+  </data>
+  <data name="LockoutUntilLabel" xml:space="preserve">
+    <value>Zawieszony do</value>
+  </data>
+  <data name="LockoutContact" xml:space="preserve">
+    <value>W razie pytań skontaktuj się z administratorem witryny.</value>
+  </data>
+</root>

@@ -94,6 +94,9 @@ public class NotificationTemplateService
             "GroupPostReaction" => ExtractParameters(notification, "ReactorName", "ReactionType"),
             "CommentReaction" => ExtractParameters(notification, "ReactorName", "ReactionType"),
             "GroupCommentReaction" => ExtractParameters(notification, "ReactorName", "ReactionType"),
+            "UserWarned" => ExtractParameters(notification, "Reason"),
+            "UserSuspended" => ExtractParameters(notification, "Reason", "Until"),
+            "UserSuspendedPermanent" => ExtractParameters(notification, "Reason"),
             _ => Array.Empty<object>()
         };
     }
@@ -124,6 +127,12 @@ public class NotificationTemplateService
                     if (fieldName == "ReactionType")
                     {
                         value = TranslateReactionType(value);
+                    }
+
+                    // Moderator-entered reasons are free text and the rendered message is shown as sanitized HTML
+                    if (fieldName == "Reason")
+                    {
+                        value = System.Net.WebUtility.HtmlEncode(value);
                     }
 
                     result.Add(value);

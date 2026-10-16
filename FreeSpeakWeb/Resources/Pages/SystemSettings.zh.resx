@@ -394,4 +394,10 @@
   <data name="H_StaleReportDays" xml:space="preserve">
     <value>待处理超过此天数的举报将在审核员仪表板中标记为逾期。</value>
   </data>
+  <data name="L_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>系统审核员的最长暂停时长（天）</value>
+  </data>
+  <data name="H_MaxModeratorSuspensionDays" xml:space="preserve">
+    <value>系统审核员最多可将用户暂停此天数。更长或永久的暂停需要系统管理员操作。</value>
+  </data>
 </root>

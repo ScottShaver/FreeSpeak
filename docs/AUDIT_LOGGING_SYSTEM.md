@@ -93,6 +93,8 @@ Additional group categories added with the moderation log: `40` `GroupAdminUnban
 
 Feed reporting categories: `42` `UserReportContent` (a user reports a feed post or comment; stores report ID, target, content author and reason, never the free-text description) and `43` `SystemModeratorReviewReport` (a system moderator or administrator dismisses, resolves or marks action taken on a report).
 
+User moderation categories (written by `UserModerationService`, timestamps in UTC): `44` `SystemModeratorWarnUser`, `45` `SystemModeratorSuspendUser` (reason, duration or permanent, end time) and `46` `SystemModeratorUnsuspendUser` (suspension ID and lift note).
+
 ### System Moderator Actions (26-27)
 
 | Value | Name | Description |

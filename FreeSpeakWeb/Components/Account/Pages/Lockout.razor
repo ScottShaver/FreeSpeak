@@ -9,12 +9,36 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IOptions<SiteSettings> SiteSettings
 @inject ILogger<Lockout> Logger
+@inject FreeSpeakWeb.Services.Abstractions.IUserModerationService ModerationService
+@inject Microsoft.Extensions.Localization.IStringLocalizer<FreeSpeakWeb.Resources.Moderation.UserModeration> SuspensionLocalizer
 
 <PageTitle>@SiteSettings.Value.SiteName - Locked out</PageTitle>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
+            @if (suspension != null)
+            {
+                <div class="card shadow" data-testid="suspension-card">
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-slash-circle-fill text-danger" style="font-size: 4rem;"></i>
+                        </div>
+                        <h1 class="text-danger text-center mb-4" data-testid="suspension-title">@SuspensionLocalizer["LockoutSuspendedTitle"]</h1>
+                        <div class="alert alert-danger" role="alert">
+                            <p>@SuspensionLocalizer[suspension.IsPermanent ? "LockoutSuspendedPermanent" : "LockoutSuspendedTemporary"]</p>
+                            @* The reason is intentionally not shown: this page is reachable without authentication. *@
+                            @if (!suspension.IsPermanent)
+                            {
+                                <p class="mb-2" data-testid="suspension-until"><strong>@SuspensionLocalizer["LockoutUntilLabel"]:</strong> @DateTime.SpecifyKind(suspension.EndsAt!.Value, DateTimeKind.Utc).ToLocalTime().ToString("g", System.Globalization.CultureInfo.CurrentCulture) (@suspension.EndsAt.Value.ToString("yyyy-MM-dd HH:mm", System.Globalization.CultureInfo.InvariantCulture) UTC)</p>
+                            }
+                            <p class="mb-0">@SuspensionLocalizer["LockoutContact"]</p>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
             <div class="card shadow">
                 <div class="card-body">
                     <div class="text-center mb-4">
@@ -179,6 +203,7 @@
                     }
                 </div>
             </div>
+            }
         </div>
     </div>
 </div>
@@ -191,6 +216,7 @@
     public string? Username { get; set; }
 
     private bool isPermanentLockout;
+    private FreeSpeakWeb.DTOs.ActiveSuspensionInfo? suspension;
     private DateTimeOffset? lockoutEnd;
     private TimeSpan remainingLockoutTime;
 
@@ -223,6 +249,11 @@
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             user = await UserManager.GetUserAsync(authState.User);
+        }
+
+        if (user is not null)
+        {
+            suspension = await ModerationService.GetActiveSuspensionAsync(user.Id);
         }
 
         if (user is not null && user.LockoutEnd.HasValue)

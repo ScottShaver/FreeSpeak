@@ -230,5 +230,41 @@ namespace FreeSpeakWeb.Resources.Notifications {
                 return ResourceManager.GetString("FeedContentRemoved", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You received a warning from the moderation team: {0}.
+        /// </summary>
+        public static string UserWarned {
+            get {
+                return ResourceManager.GetString("UserWarned", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Your account was suspended until {1}. Reason: {0}.
+        /// </summary>
+        public static string UserSuspended {
+            get {
+                return ResourceManager.GetString("UserSuspended", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Your account was suspended permanently. Reason: {0}.
+        /// </summary>
+        public static string UserSuspendedPermanent {
+            get {
+                return ResourceManager.GetString("UserSuspendedPermanent", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Your account suspension was lifted..
+        /// </summary>
+        public static string UserSuspensionLifted {
+            get {
+                return ResourceManager.GetString("UserSuspensionLifted", resourceCulture);
+            }
+        }
     }
 }

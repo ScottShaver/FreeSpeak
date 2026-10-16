@@ -115,4 +115,16 @@
   <data name="FeedContentRemoved" xml:space="preserve">
     <value>コミュニティガイドラインに違反したため、あなたのコンテンツは削除されました。</value>
   </data>
+  <data name="UserWarned" xml:space="preserve">
+    <value>モデレーションチームから警告を受けました：{0}</value>
+  </data>
+  <data name="UserSuspended" xml:space="preserve">
+    <value>あなたのアカウントは{1}まで停止されました。理由：{0}</value>
+  </data>
+  <data name="UserSuspendedPermanent" xml:space="preserve">
+    <value>あなたのアカウントは永久に停止されました。理由：{0}</value>
+  </data>
+  <data name="UserSuspensionLifted" xml:space="preserve">
+    <value>あなたのアカウントの停止が解除されました。</value>
+  </data>
 </root>
