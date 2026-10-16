@@ -4,6 +4,7 @@ using FreeSpeakWeb.Components.SocialFeed;
 using FreeSpeakWeb.DTOs;
 using FreeSpeakWeb.Mapping;
 using FreeSpeakWeb.Repositories.Abstractions;
+using FreeSpeakWeb.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -13,7 +14,7 @@ namespace FreeSpeakWeb.Services
     /// Service providing business logic for managing feed posts, comments, likes, reactions, and related operations.
     /// Handles post CRUD operations, comment management, reaction tracking, post pinning, and notification muting.
     /// </summary>
-    public class PostService
+    public class PostService : IFeedContentRemoval
     {
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
         private readonly IFeedPostRepository<Post, PostImage> _postRepository;
@@ -283,7 +284,22 @@ namespace FreeSpeakWeb.Services
         /// <param name="postId">The unique identifier of the post to delete.</param>
         /// <param name="userId">The user ID of the person requesting deletion (must be the author).</param>
         /// <returns>A tuple containing success status and error message if failed.</returns>
-        public async Task<(bool Success, string? ErrorMessage)> DeletePostAsync(int postId, string userId)
+        public Task<(bool Success, string? ErrorMessage)> DeletePostAsync(int postId, string userId)
+            => DeletePostCoreAsync(postId, userId, false);
+
+        /// <inheritdoc/>
+        public Task<(bool Success, string? ErrorMessage)> RemovePostAsModeratorAsync(int postId, string moderatorId)
+            => DeletePostCoreAsync(postId, moderatorId, true);
+
+        /// <summary>
+        /// Deletes a post and its related data. Author deletions require ownership and write a user audit entry;
+        /// moderator removals skip both because the caller authorizes and audits them.
+        /// </summary>
+        /// <param name="postId">The post to delete.</param>
+        /// <param name="userId">The acting user's ID.</param>
+        /// <param name="asModerator">True when a system moderator is removing the post.</param>
+        /// <returns>A tuple containing success status and error message if failed.</returns>
+        private async Task<(bool Success, string? ErrorMessage)> DeletePostCoreAsync(int postId, string userId, bool asModerator)
         {
             try
             {
@@ -302,7 +318,7 @@ namespace FreeSpeakWeb.Services
                     return (false, "Post not found.");
                 }
 
-                if (post.AuthorId != userId)
+                if (!asModerator && post.AuthorId != userId)
                 {
                     return (false, "You are not authorized to delete this post.");
                 }
@@ -448,14 +464,17 @@ namespace FreeSpeakWeb.Services
 
                 await context.SaveChangesAsync();
 
-                // Log post deletion to audit log
-                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserPost, new UserPostDetails
+                // Moderator removals are audited by the moderation service
+                if (!asModerator)
                 {
-                    PostId = postId,
-                    Visibility = post.AudienceType.ToString(),
-                    OperationType = OperationTypeEnum.Delete.ToString(),
-                    HasMedia = post.Images.Any()
-                });
+                    await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserPost, new UserPostDetails
+                    {
+                        PostId = postId,
+                        Visibility = post.AudienceType.ToString(),
+                        OperationType = OperationTypeEnum.Delete.ToString(),
+                        HasMedia = post.Images.Any()
+                    });
+                }
 
                 _logger.LogInformation("Post {PostId} and all related data deleted by user {UserId}", postId, userId);
                 return (true, null);
@@ -914,7 +933,22 @@ namespace FreeSpeakWeb.Services
         /// <param name="commentId">The unique identifier of the comment to delete.</param>
         /// <param name="userId">The user ID of the person requesting deletion (must be the author).</param>
         /// <returns>A tuple containing success status, error message if failed, and the count of deleted comments.</returns>
-        public async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteCommentAsync(int commentId, string userId)
+        public Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteCommentAsync(int commentId, string userId)
+            => DeleteCommentCoreAsync(commentId, userId, false);
+
+        /// <inheritdoc/>
+        public Task<(bool Success, string? ErrorMessage, int DeletedCount)> RemoveCommentAsModeratorAsync(int commentId, string moderatorId)
+            => DeleteCommentCoreAsync(commentId, moderatorId, true);
+
+        /// <summary>
+        /// Deletes a comment and its replies. Author deletions require ownership and write a user audit entry;
+        /// moderator removals skip both because the caller authorizes and audits them.
+        /// </summary>
+        /// <param name="commentId">The comment to delete.</param>
+        /// <param name="userId">The acting user's ID.</param>
+        /// <param name="asModerator">True when a system moderator is removing the comment.</param>
+        /// <returns>A tuple containing success status, error message if failed, and the count of deleted comments.</returns>
+        private async Task<(bool Success, string? ErrorMessage, int DeletedCount)> DeleteCommentCoreAsync(int commentId, string userId, bool asModerator)
         {
             try
             {
@@ -929,7 +963,7 @@ namespace FreeSpeakWeb.Services
                     return (false, "Comment not found.", 0);
                 }
 
-                if (comment.AuthorId != userId)
+                if (!asModerator && comment.AuthorId != userId)
                 {
                     return (false, "You are not authorized to delete this comment.", 0);
                 }
@@ -948,14 +982,17 @@ namespace FreeSpeakWeb.Services
 
                 await context.SaveChangesAsync();
 
-                // Log comment deletion to audit log
-                await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserComment, new UserCommentDetails
+                // Moderator removals are audited by the moderation service
+                if (!asModerator)
                 {
-                    CommentId = commentId,
-                    PostId = post.Id,
-                    OperationType = OperationTypeEnum.Delete.ToString(),
-                    ParentCommentId = comment.ParentCommentId
-                });
+                    await _auditLogRepository.LogActionAsync(userId, ActionCategory.UserComment, new UserCommentDetails
+                    {
+                        CommentId = commentId,
+                        PostId = post.Id,
+                        OperationType = OperationTypeEnum.Delete.ToString(),
+                        ParentCommentId = comment.ParentCommentId
+                    });
+                }
 
                 _logger.LogInformation("Comment {CommentId} and {ReplyCount} nested replies deleted by user {UserId}", 
                     commentId, totalCommentCount - 1, userId);
