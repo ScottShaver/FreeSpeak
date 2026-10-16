@@ -68,7 +68,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("AboutMe", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Account.
         /// </summary>
@@ -77,7 +77,16 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Account", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add authenticator app.
+        /// </summary>
+        public static string AddAuthenticatorApp {
+            get {
+                return ResourceManager.GetString("AddAuthenticatorApp", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to All.
         /// </summary>
@@ -86,7 +95,25 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("AllReactions", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Authenticator app.
+        /// </summary>
+        public static string AuthenticatorApp {
+            get {
+                return ResourceManager.GetString("AuthenticatorApp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The current browser has been forgotten. When you login again from this browser you will be prompted for your 2fa code..
+        /// </summary>
+        public static string BrowserForgotten {
+            get {
+                return ResourceManager.GetString("BrowserForgotten", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
@@ -95,7 +122,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Cancel", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Change email.
         /// </summary>
@@ -104,7 +131,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ChangeEmail", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Change password.
         /// </summary>
@@ -113,7 +140,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ChangePassword", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Change your account settings.
         /// </summary>
@@ -122,7 +149,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ChangeYourAccountSettings", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to City.
         /// </summary>
@@ -131,7 +158,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("City", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
@@ -140,7 +167,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Close", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Confirm.
         /// </summary>
@@ -149,7 +176,25 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Confirm", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click here to confirm your current email.
+        /// </summary>
+        public static string ConfirmCurrentEmailLink {
+            get {
+                return ResourceManager.GetString("ConfirmCurrentEmailLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click here to confirm your email change.
+        /// </summary>
+        public static string ConfirmEmailChangeLink {
+            get {
+                return ResourceManager.GetString("ConfirmEmailChangeLink", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Confirm new password.
         /// </summary>
@@ -158,7 +203,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ConfirmNewPassword", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Current password.
         /// </summary>
@@ -167,7 +212,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("CurrentPassword", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Date of Birth.
         /// </summary>
@@ -176,7 +221,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("DateOfBirth", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Delete account.
         /// </summary>
@@ -185,7 +230,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("DeleteAccount", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Deleting this data will permanently remove your account, and this cannot be recovered..
         /// </summary>
@@ -194,7 +239,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("DeleteAccountWarning", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Delete your data.
         /// </summary>
@@ -203,7 +248,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("DeleteYourData", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Disable 2FA.
         /// </summary>
@@ -212,7 +257,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Disable2FA", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Disable Account.
         /// </summary>
@@ -221,7 +266,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("DisableAccount", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Disabling your account will permanently lock you out, and this cannot be recovered..
         /// </summary>
@@ -230,16 +275,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("DisableAccountWarning", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Disabled.
-        /// </summary>
-        public static string Disabled {
-            get {
-                return ResourceManager.GetString("Disabled", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Disable my account.
         /// </summary>
@@ -248,7 +284,16 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("DisableMyAccount", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disabled.
+        /// </summary>
+        public static string Disabled {
+            get {
+                return ResourceManager.GetString("Disabled", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Download.
         /// </summary>
@@ -257,7 +302,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Download", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Download your data.
         /// </summary>
@@ -266,7 +311,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("DownloadYourData", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Email.
         /// </summary>
@@ -275,7 +320,34 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Email", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click the link above to confirm your email change..
+        /// </summary>
+        public static string EmailChangeLinkAbove {
+            get {
+                return ResourceManager.GetString("EmailChangeLinkAbove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmation link to change email sent. Please check your email..
+        /// </summary>
+        public static string EmailChangeSent {
+            get {
+                return ResourceManager.GetString("EmailChangeSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your email is unchanged..
+        /// </summary>
+        public static string EmailUnchanged {
+            get {
+                return ResourceManager.GetString("EmailUnchanged", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Enabled.
         /// </summary>
@@ -284,7 +356,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Enabled", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Error: {0} cannot exceed {1} characters..
         /// </summary>
@@ -293,7 +365,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ErrorFieldTooLong", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Error: Date of Birth must be a date in the past, no earlier than 1900..
         /// </summary>
@@ -302,7 +374,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ErrorInvalidDateOfBirth", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Error: Failed to set phone number..
         /// </summary>
@@ -311,7 +383,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ErrorSetPhone", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Error: Failed to update profile..
         /// </summary>
@@ -320,7 +392,16 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ErrorUpdateProfile", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error: {0}.
+        /// </summary>
+        public static string ErrorWithDetails {
+            get {
+                return ResourceManager.GetString("ErrorWithDetails", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to External logins.
         /// </summary>
@@ -329,7 +410,16 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ExternalLogins", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You should {0}..
+        /// </summary>
+        public static string FewRecoveryCodesBody {
+            get {
+                return ResourceManager.GetString("FewRecoveryCodesBody", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
@@ -338,7 +428,25 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("FirstName", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forget this browser.
+        /// </summary>
+        public static string ForgetThisBrowser {
+            get {
+                return ResourceManager.GetString("ForgetThisBrowser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to generate a new set of recovery codes.
+        /// </summary>
+        public static string GenerateNewRecoveryCodeSetLink {
+            get {
+                return ResourceManager.GetString("GenerateNewRecoveryCodeSetLink", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Generate new recovery codes.
         /// </summary>
@@ -347,7 +455,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("GenerateNewRecoveryCodes", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Error: Incorrect password..
         /// </summary>
@@ -356,7 +464,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("IncorrectPassword", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Last Name.
         /// </summary>
@@ -365,7 +473,16 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("LastName", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        public static string Loading {
+            get {
+                return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Manage email.
         /// </summary>
@@ -374,7 +491,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ManageEmail", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Manage your account.
         /// </summary>
@@ -383,7 +500,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ManageYourAccount", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Name Suffix.
         /// </summary>
@@ -392,7 +509,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("NameSuffix", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to New email.
         /// </summary>
@@ -401,7 +518,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("NewEmail", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to New password.
         /// </summary>
@@ -410,7 +527,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("NewPassword", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to No.
         /// </summary>
@@ -419,7 +536,16 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("No", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This app does not currently have a real email sender registered, see {0} for how to configure a real email sender. Norma.
+        /// </summary>
+        public static string NoEmailSenderNotice {
+            get {
+                return ResourceManager.GetString("NoEmailSenderNotice", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to No reactions yet.
         /// </summary>
@@ -428,7 +554,25 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("NoReactionsYet", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have no recovery codes left..
+        /// </summary>
+        public static string NoRecoveryCodesLeft {
+            get {
+                return ResourceManager.GetString("NoRecoveryCodesLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must {0} before you can log in with a recovery code..
+        /// </summary>
+        public static string NoRecoveryCodesLeftBody {
+            get {
+                return ResourceManager.GetString("NoRecoveryCodesLeftBody", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Occupation.
         /// </summary>
@@ -437,7 +581,25 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Occupation", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have 1 recovery code left..
+        /// </summary>
+        public static string OneRecoveryCodeLeft {
+            get {
+                return ResourceManager.GetString("OneRecoveryCodeLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can {0}..
+        /// </summary>
+        public static string OneRecoveryCodeLeftBody {
+            get {
+                return ResourceManager.GetString("OneRecoveryCodeLeftBody", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
@@ -446,7 +608,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Password", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Your password has been set..
         /// </summary>
@@ -455,7 +617,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("PasswordSet", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to People who reacted.
         /// </summary>
@@ -464,7 +626,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("PeopleWhoReacted", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Personal data.
         /// </summary>
@@ -473,7 +635,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("PersonalData", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Phone number.
         /// </summary>
@@ -482,7 +644,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("PhoneNumber", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Please confirm your email..
         /// </summary>
@@ -491,7 +653,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("PleaseConfirmYourEmail", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Post.
         /// </summary>
@@ -500,7 +662,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Post", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Preferences.
         /// </summary>
@@ -509,7 +671,25 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Preferences", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must accept the policy before you can enable two factor authentication..
+        /// </summary>
+        public static string PrivacyPolicyMustAccept {
+            get {
+                return ResourceManager.GetString("PrivacyPolicyMustAccept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy and cookie policy have not been accepted..
+        /// </summary>
+        public static string PrivacyPolicyNotAccepted {
+            get {
+                return ResourceManager.GetString("PrivacyPolicyNotAccepted", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Profile.
         /// </summary>
@@ -518,7 +698,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Profile", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Profile Picture.
         /// </summary>
@@ -527,7 +707,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ProfilePicture", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Upload an image (max 5MB). Image will be resized to 168x168 pixels..
         /// </summary>
@@ -536,7 +716,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ProfilePictureHelpText", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to The file is too large. Maximum size is 5MB..
         /// </summary>
@@ -545,7 +725,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ProfilePictureTooLarge", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Your profile picture has been updated.
         /// </summary>
@@ -554,7 +734,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ProfilePictureUpdated", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Your profile has been updated.
         /// </summary>
@@ -563,7 +743,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ProfileUpdated", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Recovery codes.
         /// </summary>
@@ -572,7 +752,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("RecoveryCodes", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to {0} recovery codes left.
         /// </summary>
@@ -581,7 +761,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("RecoveryCodesLeft", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Reset authenticator key.
         /// </summary>
@@ -590,7 +770,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ResetAuthenticatorKey", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Reset recovery codes.
         /// </summary>
@@ -599,7 +779,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("ResetRecoveryCodes", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
@@ -608,7 +788,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Save", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Security Settings.
         /// </summary>
@@ -617,7 +797,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("SecuritySettings", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Send verification email.
         /// </summary>
@@ -626,7 +806,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("SendVerificationEmail", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Set password.
         /// </summary>
@@ -635,16 +815,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("SetPassword", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Setup authenticator app.
-        /// </summary>
-        public static string SetupAuthenticatorApp {
-            get {
-                return ResourceManager.GetString("SetupAuthenticatorApp", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Set your password.
         /// </summary>
@@ -653,7 +824,16 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("SetYourPassword", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setup authenticator app.
+        /// </summary>
+        public static string SetupAuthenticatorApp {
+            get {
+                return ResourceManager.GetString("SetupAuthenticatorApp", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to State.
         /// </summary>
@@ -662,7 +842,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("State", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Submit.
         /// </summary>
@@ -671,7 +851,16 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Submit", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to these docs.
+        /// </summary>
+        public static string TheseDocs {
+            get {
+                return ResourceManager.GetString("TheseDocs", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Two-factor authentication.
         /// </summary>
@@ -680,7 +869,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("TwoFactorAuthentication", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Update password.
         /// </summary>
@@ -689,7 +878,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("UpdatePassword", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Upload new profile picture.
         /// </summary>
@@ -698,7 +887,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("UploadNewProfilePicture", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Username.
         /// </summary>
@@ -707,7 +896,25 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Username", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verification email sent. Please check your email..
+        /// </summary>
+        public static string VerificationEmailSent {
+            get {
+                return ResourceManager.GetString("VerificationEmailSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click the link above to verify your email..
+        /// </summary>
+        public static string VerifyEmailLinkAbove {
+            get {
+                return ResourceManager.GetString("VerifyEmailLinkAbove", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Write a comment....
         /// </summary>
@@ -716,7 +923,7 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("WriteAComment", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Yes.
         /// </summary>
@@ -725,16 +932,16 @@ namespace FreeSpeakWeb.Resources.Account.Pages.Manage {
                 return ResourceManager.GetString("Yes", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to You do not have a local username/password for this site. Add a local account so you can log in without an external login..
+        ///   Looks up a localized string similar to You do not have a local username/password for this site. Add a local account so you can log in without an external login.
         /// </summary>
         public static string YouDoNotHaveLocalPassword {
             get {
                 return ResourceManager.GetString("YouDoNotHaveLocalPassword", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Your email is confirmed..
         /// </summary>

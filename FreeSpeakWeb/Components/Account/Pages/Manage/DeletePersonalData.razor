@@ -79,7 +79,7 @@
 
         if (requirePassword && !await UserManager.CheckPasswordAsync(user, Input.Password))
         {
-            message = "Error: Incorrect password.";
+            message = Localizer["IncorrectPassword"].Value;
             return;
         }
 

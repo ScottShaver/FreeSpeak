@@ -296,4 +296,73 @@
   <data name="ErrorUpdateProfile" xml:space="preserve">
     <value>Fout: het profiel kon niet worden bijgewerkt.</value>
   </data>
+  <data name="ErrorWithDetails" xml:space="preserve">
+    <value>Fout: {0}</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Laden...</value>
+  </data>
+  <data name="NoRecoveryCodesLeft" xml:space="preserve">
+    <value>U heeft geen herstelcodes meer.</value>
+  </data>
+  <data name="NoRecoveryCodesLeftBody" xml:space="preserve">
+    <value>U moet {0} voordat u kunt inloggen met een herstelcode.</value>
+  </data>
+  <data name="GenerateNewRecoveryCodeSetLink" xml:space="preserve">
+    <value>een nieuwe set herstelcodes genereren</value>
+  </data>
+  <data name="OneRecoveryCodeLeft" xml:space="preserve">
+    <value>U heeft nog 1 herstelcode.</value>
+  </data>
+  <data name="OneRecoveryCodeLeftBody" xml:space="preserve">
+    <value>U kunt {0}.</value>
+  </data>
+  <data name="FewRecoveryCodesBody" xml:space="preserve">
+    <value>U zou {0} moeten.</value>
+  </data>
+  <data name="ForgetThisBrowser" xml:space="preserve">
+    <value>Deze browser vergeten</value>
+  </data>
+  <data name="AuthenticatorApp" xml:space="preserve">
+    <value>Authenticator-app</value>
+  </data>
+  <data name="AddAuthenticatorApp" xml:space="preserve">
+    <value>Authenticator-app toevoegen</value>
+  </data>
+  <data name="PrivacyPolicyNotAccepted" xml:space="preserve">
+    <value>Het privacy- en cookiebeleid is niet geaccepteerd.</value>
+  </data>
+  <data name="PrivacyPolicyMustAccept" xml:space="preserve">
+    <value>U moet het beleid accepteren voordat u tweefactorauthenticatie kunt inschakelen.</value>
+  </data>
+  <data name="BrowserForgotten" xml:space="preserve">
+    <value>De huidige browser is vergeten. Wanneer u opnieuw inlogt vanuit deze browser, wordt u om uw 2FA-code gevraagd.</value>
+  </data>
+  <data name="NoEmailSenderNotice" xml:space="preserve">
+    <value>Voor deze app is momenteel geen echte e-mailverzender geregistreerd; zie {0} voor het configureren van een echte e-mailverzender. Normaal gesproken zou dit per e-mail worden verzonden: {1}</value>
+  </data>
+  <data name="TheseDocs" xml:space="preserve">
+    <value>deze documentatie</value>
+  </data>
+  <data name="ConfirmCurrentEmailLink" xml:space="preserve">
+    <value>Klik hier om uw huidige e-mailadres te bevestigen</value>
+  </data>
+  <data name="ConfirmEmailChangeLink" xml:space="preserve">
+    <value>Klik hier om de wijziging van uw e-mailadres te bevestigen</value>
+  </data>
+  <data name="EmailUnchanged" xml:space="preserve">
+    <value>Uw e-mailadres is ongewijzigd.</value>
+  </data>
+  <data name="EmailChangeLinkAbove" xml:space="preserve">
+    <value>Klik op de bovenstaande link om de wijziging van uw e-mailadres te bevestigen.</value>
+  </data>
+  <data name="EmailChangeSent" xml:space="preserve">
+    <value>Bevestigingslink voor het wijzigen van het e-mailadres verzonden. Controleer uw e-mail.</value>
+  </data>
+  <data name="VerifyEmailLinkAbove" xml:space="preserve">
+    <value>Klik op de bovenstaande link om uw e-mailadres te verifiëren.</value>
+  </data>
+  <data name="VerificationEmailSent" xml:space="preserve">
+    <value>Verificatie-e-mail verzonden. Controleer uw e-mail.</value>
+  </data>
 </root>

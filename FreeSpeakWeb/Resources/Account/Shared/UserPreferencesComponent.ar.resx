@@ -220,4 +220,130 @@
   <data name="ExpirationRangeError" xml:space="preserve">
     <value>أدخل عددًا صحيحًا من الأيام بين 1 و365.</value>
   </data>
+  <data name="Tz_America_New_York" xml:space="preserve">
+    <value>التوقيت الشرقي (ET)</value>
+  </data>
+  <data name="Tz_America_Chicago" xml:space="preserve">
+    <value>التوقيت المركزي (CT)</value>
+  </data>
+  <data name="Tz_America_Denver" xml:space="preserve">
+    <value>توقيت الجبال (MT)</value>
+  </data>
+  <data name="Tz_America_Phoenix" xml:space="preserve">
+    <value>أريزونا (MST - بدون التوقيت الصيفي)</value>
+  </data>
+  <data name="Tz_America_Los_Angeles" xml:space="preserve">
+    <value>التوقيت الباسيفيكي (PT)</value>
+  </data>
+  <data name="Tz_America_Anchorage" xml:space="preserve">
+    <value>توقيت ألاسكا (AKT)</value>
+  </data>
+  <data name="Tz_Pacific_Honolulu" xml:space="preserve">
+    <value>توقيت هاواي (HST)</value>
+  </data>
+  <data name="Tz_UTC" xml:space="preserve">
+    <value>UTC (التوقيت العالمي المنسق)</value>
+  </data>
+  <data name="Tz_Europe_London" xml:space="preserve">
+    <value>لندن (GMT/BST)</value>
+  </data>
+  <data name="Tz_Europe_Paris" xml:space="preserve">
+    <value>باريس (CET/CEST)</value>
+  </data>
+  <data name="Tz_Europe_Berlin" xml:space="preserve">
+    <value>برلين (CET/CEST)</value>
+  </data>
+  <data name="Tz_Asia_Tokyo" xml:space="preserve">
+    <value>طوكيو (JST)</value>
+  </data>
+  <data name="Tz_Asia_Shanghai" xml:space="preserve">
+    <value>شنغهاي (CST)</value>
+  </data>
+  <data name="Tz_Asia_Dubai" xml:space="preserve">
+    <value>دبي (GST)</value>
+  </data>
+  <data name="Tz_Australia_Sydney" xml:space="preserve">
+    <value>سيدني (AEDT/AEST)</value>
+  </data>
+  <data name="Tz_America_Toronto" xml:space="preserve">
+    <value>تورونتو (ET)</value>
+  </data>
+  <data name="Tz_America_Mexico_City" xml:space="preserve">
+    <value>مكسيكو سيتي (CST)</value>
+  </data>
+  <data name="Country_US" xml:space="preserve">
+    <value>الولايات المتحدة الأمريكية</value>
+  </data>
+  <data name="Country_CA" xml:space="preserve">
+    <value>كندا</value>
+  </data>
+  <data name="Country_GB" xml:space="preserve">
+    <value>المملكة المتحدة</value>
+  </data>
+  <data name="Country_AU" xml:space="preserve">
+    <value>أستراليا</value>
+  </data>
+  <data name="Country_DE" xml:space="preserve">
+    <value>ألمانيا</value>
+  </data>
+  <data name="Country_FR" xml:space="preserve">
+    <value>فرنسا</value>
+  </data>
+  <data name="Country_IT" xml:space="preserve">
+    <value>إيطاليا</value>
+  </data>
+  <data name="Country_ES" xml:space="preserve">
+    <value>إسبانيا</value>
+  </data>
+  <data name="Country_MX" xml:space="preserve">
+    <value>المكسيك</value>
+  </data>
+  <data name="Country_BR" xml:space="preserve">
+    <value>البرازيل</value>
+  </data>
+  <data name="Country_AR" xml:space="preserve">
+    <value>الأرجنتين</value>
+  </data>
+  <data name="Country_JP" xml:space="preserve">
+    <value>اليابان</value>
+  </data>
+  <data name="Country_CN" xml:space="preserve">
+    <value>الصين</value>
+  </data>
+  <data name="Country_IN" xml:space="preserve">
+    <value>الهند</value>
+  </data>
+  <data name="Country_KR" xml:space="preserve">
+    <value>كوريا الجنوبية</value>
+  </data>
+  <data name="Country_NL" xml:space="preserve">
+    <value>هولندا</value>
+  </data>
+  <data name="Country_BE" xml:space="preserve">
+    <value>بلجيكا</value>
+  </data>
+  <data name="Country_CH" xml:space="preserve">
+    <value>سويسرا</value>
+  </data>
+  <data name="Country_SE" xml:space="preserve">
+    <value>السويد</value>
+  </data>
+  <data name="Country_NO" xml:space="preserve">
+    <value>النرويج</value>
+  </data>
+  <data name="Country_DK" xml:space="preserve">
+    <value>الدنمارك</value>
+  </data>
+  <data name="Country_FI" xml:space="preserve">
+    <value>فنلندا</value>
+  </data>
+  <data name="Country_PL" xml:space="preserve">
+    <value>بولندا</value>
+  </data>
+  <data name="Country_RU" xml:space="preserve">
+    <value>روسيا</value>
+  </data>
+  <data name="Country_ZA" xml:space="preserve">
+    <value>جنوب أفريقيا</value>
+  </data>
 </root>

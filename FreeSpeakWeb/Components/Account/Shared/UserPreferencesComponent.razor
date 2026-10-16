@@ -1,4 +1,4 @@
-@rendermode InteractiveServer
+﻿@rendermode InteractiveServer
 
 @using FreeSpeakWeb.Data
 @using FreeSpeakWeb.Data.AuditLogDetails
@@ -70,25 +70,16 @@
                     <label class="form-label fw-bold">@Localizer["Timezone"]</label>
                     <select class="form-select" @bind="timezone">
                         <optgroup label="@Localizer["TimezoneGroupUS"]">
-                            <option value="America/New_York">Eastern Time (ET)</option>
-                            <option value="America/Chicago">Central Time (CT)</option>
-                            <option value="America/Denver">Mountain Time (MT)</option>
-                            <option value="America/Phoenix">Arizona (MST - No DST)</option>
-                            <option value="America/Los_Angeles">Pacific Time (PT)</option>
-                            <option value="America/Anchorage">Alaska Time (AKT)</option>
-                            <option value="Pacific/Honolulu">Hawaii Time (HST)</option>
+                            @foreach (var tz in UsTimezones)
+                            {
+                                <option value="@tz">@TimezoneName(tz)</option>
+                            }
                         </optgroup>
                         <optgroup label="@Localizer["TimezoneGroupOther"]">
-                            <option value="UTC">UTC (Coordinated Universal Time)</option>
-                            <option value="Europe/London">London (GMT/BST)</option>
-                            <option value="Europe/Paris">Paris (CET/CEST)</option>
-                            <option value="Europe/Berlin">Berlin (CET/CEST)</option>
-                            <option value="Asia/Tokyo">Tokyo (JST)</option>
-                            <option value="Asia/Shanghai">Shanghai (CST)</option>
-                            <option value="Asia/Dubai">Dubai (GST)</option>
-                            <option value="Australia/Sydney">Sydney (AEDT/AEST)</option>
-                            <option value="America/Toronto">Toronto (ET)</option>
-                            <option value="America/Mexico_City">Mexico City (CST)</option>
+                            @foreach (var tz in OtherTimezones)
+                            {
+                                <option value="@tz">@TimezoneName(tz)</option>
+                            }
                         </optgroup>
                     </select>
                     <div class="form-text">@Localizer["TimezoneHelpText"]</div>
@@ -98,31 +89,10 @@
                 <div class="mb-4">
                     <label class="form-label fw-bold">@Localizer["Country"]</label>
                     <select class="form-select" @bind="country">
-                        <option value="US">United States of America</option>
-                        <option value="CA">Canada</option>
-                        <option value="GB">United Kingdom</option>
-                        <option value="AU">Australia</option>
-                        <option value="DE">Germany</option>
-                        <option value="FR">France</option>
-                        <option value="IT">Italy</option>
-                        <option value="ES">Spain</option>
-                        <option value="MX">Mexico</option>
-                        <option value="BR">Brazil</option>
-                        <option value="AR">Argentina</option>
-                        <option value="JP">Japan</option>
-                        <option value="CN">China</option>
-                        <option value="IN">India</option>
-                        <option value="KR">South Korea</option>
-                        <option value="NL">Netherlands</option>
-                        <option value="BE">Belgium</option>
-                        <option value="CH">Switzerland</option>
-                        <option value="SE">Sweden</option>
-                        <option value="NO">Norway</option>
-                        <option value="DK">Denmark</option>
-                        <option value="FI">Finland</option>
-                        <option value="PL">Poland</option>
-                        <option value="RU">Russia</option>
-                        <option value="ZA">South Africa</option>
+                        @foreach (var iso in CountryCodes)
+                        {
+                            <option value="@iso">@CountryName(iso)</option>
+                        }
                     </select>
                     <div class="form-text">@Localizer["CountryHelpText"]</div>
                 </div>
@@ -306,6 +276,45 @@
     }
 
     // Preference values
+    private static readonly string[] UsTimezones =
+    [
+        "America/New_York", "America/Chicago", "America/Denver", "America/Phoenix",
+        "America/Los_Angeles", "America/Anchorage", "Pacific/Honolulu"
+    ];
+
+    private static readonly string[] OtherTimezones =
+    [
+        "UTC", "Europe/London", "Europe/Paris", "Europe/Berlin", "Asia/Tokyo", "Asia/Shanghai",
+        "Asia/Dubai", "Australia/Sydney", "America/Toronto", "America/Mexico_City"
+    ];
+
+    private static readonly string[] CountryCodes =
+    [
+        "US", "CA", "GB", "AU", "DE", "FR", "IT", "ES", "MX", "BR", "AR", "JP", "CN", "IN", "KR",
+        "NL", "BE", "CH", "SE", "NO", "DK", "FI", "PL", "RU", "ZA"
+    ];
+
+    /// <summary>
+    /// Gets the localized country name for an ISO 3166-1 alpha-2 code. The code itself is the stored value.
+    /// </summary>
+    /// <param name="code">The ISO country code.</param>
+    /// <returns>The localized country name, or the code when no translation exists.</returns>
+    private string CountryName(string code)
+    {
+        var localized = Localizer["Country_" + code];
+        return localized.ResourceNotFound ? code : localized.Value;
+    }
+
+    /// <summary>
+    /// Gets the localized display label for an IANA time zone identifier. The identifier itself is the stored value and is never translated.
+    /// </summary>
+    /// <param name="id">The IANA time zone identifier.</param>
+    /// <returns>The localized label, or the identifier when no translation exists.</returns>
+    private string TimezoneName(string id)
+    {
+        var localized = Localizer["Tz_" + id.Replace('/', '_')];
+        return localized.ResourceNotFound ? id : localized.Value;
+    }
     private string colorScheme = "default";
     private NameDisplayType nameDisplay = NameDisplayType.FullName;
     private AudienceType defaultAudienceType = AudienceType.Public;

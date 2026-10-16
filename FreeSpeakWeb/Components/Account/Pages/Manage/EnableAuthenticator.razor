@@ -1,4 +1,4 @@
-﻿@page "/Account/Manage/EnableAuthenticator"
+@page "/Account/Manage/EnableAuthenticator"
 
 @using System.ComponentModel.DataAnnotations
 @using System.Globalization
@@ -15,8 +15,10 @@
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<EnableAuthenticator> Logger
 @inject IOptions<SiteSettings> SiteSettings
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Account.Pages.Manage.EnableAuthenticator> Localizer
 
-<PageTitle>Configure authenticator app</PageTitle>
+<PageTitle>@SiteSettings.Value.SiteName - @Localizer["Title"]</PageTitle>
 
 @if (recoveryCodes is not null)
 {
@@ -25,22 +27,21 @@
 else
 {
     <StatusMessage Message="@message" />
-    <h3>Configure authenticator app</h3>
+    <h3>@Localizer["Title"]</h3>
     <div>
-        <p>To use an authenticator app go through the following steps:</p>
+        <p>@Localizer["Intro"]</p>
         <ol class="list">
             <li>
                 <p>
-                    Download a two-factor authenticator app like Microsoft Authenticator for
-                    <a href="https://go.microsoft.com/fwlink/?Linkid=825072">Android</a> and
-                    <a href="https://go.microsoft.com/fwlink/?Linkid=825073">iOS</a> or
-                    Google Authenticator for
-                    <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">Android</a> and
-                    <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>.
+                    @LocalizedMarkup.Format(Localizer["Step1"].Value,
+                        LocalizedMarkup.Link("https://go.microsoft.com/fwlink/?Linkid=825072", "Android"),
+                        LocalizedMarkup.Link("https://go.microsoft.com/fwlink/?Linkid=825073", "iOS"),
+                        LocalizedMarkup.Link("https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en", "Android"),
+                        LocalizedMarkup.Link("https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8", "iOS"))
                 </p>
             </li>
             <li>
-                <p>Scan the QR Code or enter this key <kbd>@sharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
+                <p>@LocalizedMarkup.Format(Localizer["Step2"].Value, ("<kbd>" + LocalizedMarkup.Encode(sharedKey) + "</kbd>"))</p>
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" height="300" width="300" stroke="none"
                          version="1.1" viewBox="0 0 50 50">
@@ -51,8 +52,7 @@ else
             </li>
             <li>
                 <p>
-                    Once you have scanned the QR code or input the key above, your two factor authentication app will provide you
-                    with a unique code. Enter the code in the confirmation box below.
+                    @Localizer["Step3"]
                 </p>
                 <div class="row">
                     <div class="col-xl-6">
@@ -60,10 +60,10 @@ else
                             <FreeSpeakWeb.Components.Shared.LocalizedDataAnnotationsValidator />
                             <div class="form-floating mb-3">
                                 <InputText @bind-Value="Input.Code" id="Input.Code" class="form-control" autocomplete="off" />
-                                <label for="Input.Code" class="control-label form-label">Verification Code</label>
+                                <label for="Input.Code" class="control-label form-label">@Localizer["VerificationCode"]</label>
                                 <ValidationMessage For="() => Input.Code" class="text-danger" />
                             </div>
-                            <button type="submit" class="w-100 btn btn-lg btn-primary">Verify</button>
+                            <button type="submit" class="w-100 btn btn-lg btn-primary">@Localizer["Verify"]</button>
                             <ValidationSummary class="text-danger" role="alert" />
                         </EditForm>
                     </div>
@@ -118,7 +118,7 @@ else
 
         if (!is2faTokenValid)
         {
-            message = "Error: Verification code is invalid.";
+            message = Localizer["ErrorInvalidCode"].Value;
             return;
         }
 
@@ -126,7 +126,7 @@ else
         var userId = await UserManager.GetUserIdAsync(user);
         Logger.LogInformation("User with ID '{UserId}' has enabled 2FA with an authenticator app.", userId);
 
-        message = "Your authenticator app has been verified.";
+        message = Localizer["AppVerified"].Value;
 
         if (await UserManager.CountRecoveryCodesAsync(user) == 0)
         {

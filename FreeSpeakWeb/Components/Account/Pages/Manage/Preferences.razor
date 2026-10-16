@@ -1,4 +1,4 @@
-@page "/Account/Manage/Preferences"
+﻿@page "/Account/Manage/Preferences"
 
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Localization
@@ -22,7 +22,7 @@
 }
 else
 {
-    <p>Loading...</p>
+    <p>@Localizer["Loading"]</p>
 }
 
 @code {

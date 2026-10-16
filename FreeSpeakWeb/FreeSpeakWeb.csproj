@@ -40,6 +40,41 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ChangePassword.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Account\Shared\StatusMessage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StatusMessage.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Account\Pages\Manage\EnableAuthenticator.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EnableAuthenticator.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Account\Pages\Manage\ExternalLogins.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExternalLogins.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Account\Pages\Manage\ResetAuthenticator.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ResetAuthenticator.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Account\Shared\ShowRecoveryCodes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ShowRecoveryCodes.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Account\Pages\Manage\GenerateRecoveryCodes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GenerateRecoveryCodes.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Account\Pages\Manage\Disable2fa.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Disable2fa.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\Account\Pages\Register.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -151,6 +186,34 @@
     <EmbeddedResource Update="Resources\Account\Pages\Manage\ChangePassword.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ChangePassword.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Account\Shared\StatusMessage.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>StatusMessage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Account\Pages\Manage\EnableAuthenticator.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EnableAuthenticator.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Account\Pages\Manage\ExternalLogins.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExternalLogins.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Account\Pages\Manage\ResetAuthenticator.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ResetAuthenticator.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Account\Shared\ShowRecoveryCodes.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ShowRecoveryCodes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Account\Pages\Manage\GenerateRecoveryCodes.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GenerateRecoveryCodes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Account\Pages\Manage\Disable2fa.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Disable2fa.Designer.cs</LastGenOutput>
     </EmbeddedResource>
 
     <!-- Shared Component Resources -->

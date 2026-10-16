@@ -296,4 +296,73 @@
   <data name="ErrorUpdateProfile" xml:space="preserve">
     <value>エラー: プロフィールを更新できませんでした。</value>
   </data>
+  <data name="ErrorWithDetails" xml:space="preserve">
+    <value>エラー: {0}</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>読み込み中...</value>
+  </data>
+  <data name="NoRecoveryCodesLeft" xml:space="preserve">
+    <value>回復コードが残っていません。</value>
+  </data>
+  <data name="NoRecoveryCodesLeftBody" xml:space="preserve">
+    <value>回復コードでログインする前に、{0}必要があります。</value>
+  </data>
+  <data name="GenerateNewRecoveryCodeSetLink" xml:space="preserve">
+    <value>新しい回復コードのセットを生成する</value>
+  </data>
+  <data name="OneRecoveryCodeLeft" xml:space="preserve">
+    <value>回復コードが1つ残っています。</value>
+  </data>
+  <data name="OneRecoveryCodeLeftBody" xml:space="preserve">
+    <value>{0}ことができます。</value>
+  </data>
+  <data name="FewRecoveryCodesBody" xml:space="preserve">
+    <value>{0}ことをお勧めします。</value>
+  </data>
+  <data name="ForgetThisBrowser" xml:space="preserve">
+    <value>このブラウザーを記憶しない</value>
+  </data>
+  <data name="AuthenticatorApp" xml:space="preserve">
+    <value>認証アプリ</value>
+  </data>
+  <data name="AddAuthenticatorApp" xml:space="preserve">
+    <value>認証アプリを追加</value>
+  </data>
+  <data name="PrivacyPolicyNotAccepted" xml:space="preserve">
+    <value>プライバシーとCookieのポリシーに同意していません。</value>
+  </data>
+  <data name="PrivacyPolicyMustAccept" xml:space="preserve">
+    <value>2要素認証を有効にするには、ポリシーに同意する必要があります。</value>
+  </data>
+  <data name="BrowserForgotten" xml:space="preserve">
+    <value>現在のブラウザーの記憶を解除しました。このブラウザーから再度ログインするときは、2FA コードの入力が求められます。</value>
+  </data>
+  <data name="NoEmailSenderNotice" xml:space="preserve">
+    <value>このアプリには現在、実際のメール送信機能が登録されていません。設定方法については{0}を参照してください。通常は次の内容がメールで送信されます: {1}</value>
+  </data>
+  <data name="TheseDocs" xml:space="preserve">
+    <value>こちらのドキュメント</value>
+  </data>
+  <data name="ConfirmCurrentEmailLink" xml:space="preserve">
+    <value>ここをクリックして現在のメールアドレスを確認</value>
+  </data>
+  <data name="ConfirmEmailChangeLink" xml:space="preserve">
+    <value>ここをクリックしてメールアドレスの変更を確認</value>
+  </data>
+  <data name="EmailUnchanged" xml:space="preserve">
+    <value>メールアドレスは変更されていません。</value>
+  </data>
+  <data name="EmailChangeLinkAbove" xml:space="preserve">
+    <value>上のリンクをクリックしてメールアドレスの変更を確認してください。</value>
+  </data>
+  <data name="EmailChangeSent" xml:space="preserve">
+    <value>メールアドレス変更の確認リンクを送信しました。メールをご確認ください。</value>
+  </data>
+  <data name="VerifyEmailLinkAbove" xml:space="preserve">
+    <value>上のリンクをクリックしてメールアドレスを確認してください。</value>
+  </data>
+  <data name="VerificationEmailSent" xml:space="preserve">
+    <value>確認メールを送信しました。メールをご確認ください。</value>
+  </data>
 </root>
