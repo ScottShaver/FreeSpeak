@@ -58,6 +58,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="LightMode" xml:space="preserve">
+    <value>Светлый режим</value>
+  </data>
+  <data name="DarkMode" xml:space="preserve">
+    <value>Темный режим</value>
+  </data>
+  <data name="SystemDefault" xml:space="preserve">
+    <value>По умолчанию системы</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Тема</value>
+  </data>
   <data name="ChangeTheme" xml:space="preserve">
     <value>Изменить Тему</value>
   </data>

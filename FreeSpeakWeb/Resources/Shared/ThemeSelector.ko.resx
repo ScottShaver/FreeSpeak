@@ -58,6 +58,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="LightMode" xml:space="preserve">
+    <value>라이트 모드</value>
+  </data>
+  <data name="DarkMode" xml:space="preserve">
+    <value>다크 모드</value>
+  </data>
+  <data name="SystemDefault" xml:space="preserve">
+    <value>시스템 기본값</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>테마</value>
+  </data>
   <data name="ChangeTheme" xml:space="preserve">
     <value>테마 변경</value>
   </data>
