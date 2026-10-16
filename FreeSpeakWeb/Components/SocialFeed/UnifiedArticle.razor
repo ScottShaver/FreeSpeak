@@ -84,6 +84,7 @@
         CurrentUserImageUrl="@CurrentUserImageUrl"
         CurrentUserName="@CurrentUserName"
         IsReadOnly="@IsReadOnly"
+        CanModerate="@(ArticlePostType == PostType.GroupPost && CanDeletePost)"
         OnViewMoreCommentsClick="@OnCommentClick"
         OnCommentReactionChanged="@OnCommentReactionChangedLocally"
         OnRemoveCommentReaction="@OnRemoveCommentReactionLocally"
