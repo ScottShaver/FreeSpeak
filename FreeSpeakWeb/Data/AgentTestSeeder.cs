@@ -371,6 +371,26 @@ namespace FreeSpeakWeb.Data
                 new FeedContentReport { PostId = spamPost.Id, ContentAuthorId = stranger.Id, ReporterId = member.Id, Reason = ReportReason.Spam, Description = "Agent test: fresh report (2 hours old).", CreatedAt = now.AddHours(-2) },
                 new FeedContentReport { CommentId = strangerComment.Id, ContentAuthorId = stranger.Id, ReporterId = friend.Id, Reason = ReportReason.HateSpeech, Description = "Agent test: fresh comment report (1 hour old).", CreatedAt = now.AddHours(-1) });
             await dbContext.SaveChangesAsync();
+
+            // 8. Group content reports across groups 1-3 for the system moderator Group Reports tab.
+            var gOpenPost = new GroupPost { GroupId = openGroup.Id, AuthorId = member.Id, Content = "Agent test: reported open-group post (stale).", CreatedAt = baseTime.AddMinutes(80), Status = PostStatus.Posted };
+            var gPrivatePost = new GroupPost { GroupId = privateGroup.Id, AuthorId = friend.Id, Content = "Agent test: reported private-group post (fresh).", CreatedAt = baseTime.AddMinutes(81), Status = PostStatus.Posted };
+            var gAdminPost = new GroupPost { GroupId = adminGroup.Id, AuthorId = owner.Id, Content = "Agent test: reported admin-group post (stale).", CreatedAt = baseTime.AddMinutes(82), Status = PostStatus.Posted };
+            var gOpenCommentPost = new GroupPost { GroupId = openGroup.Id, AuthorId = owner.Id, Content = "Agent test: open-group post with a reported comment.", CreatedAt = baseTime.AddMinutes(83), Status = PostStatus.Posted };
+            dbContext.GroupPosts.AddRange(gOpenPost, gPrivatePost, gAdminPost, gOpenCommentPost);
+            await dbContext.SaveChangesAsync();
+
+            var gComment = new GroupPostComment { PostId = gOpenCommentPost.Id, AuthorId = member.Id, Content = "Agent test: reported group comment.", CreatedAt = baseTime.AddMinutes(84) };
+            dbContext.GroupPostComments.Add(gComment);
+            gOpenCommentPost.CommentCount = 1;
+            await dbContext.SaveChangesAsync();
+
+            dbContext.GroupContentReports.AddRange(
+                new GroupContentReport { GroupId = openGroup.Id, PostId = gOpenPost.Id, ReporterId = owner.Id, Reason = ReportReason.Spam, Description = "Agent test: group report, stale (6 days old).", CreatedAt = now.AddDays(-6) },
+                new GroupContentReport { GroupId = adminGroup.Id, PostId = gAdminPost.Id, ReporterId = moderator.Id, Reason = ReportReason.HarassmentOrBullying, Description = "Agent test: group report in group 3, stale (4 days old).", CreatedAt = now.AddDays(-4) },
+                new GroupContentReport { GroupId = privateGroup.Id, PostId = gPrivatePost.Id, ReporterId = owner.Id, Reason = ReportReason.Misinformation, Description = "Agent test: group report in private group, fresh (3 hours old).", CreatedAt = now.AddHours(-3) },
+                new GroupContentReport { GroupId = openGroup.Id, CommentId = gComment.Id, ReporterId = owner.Id, Reason = ReportReason.HateSpeech, Description = "Agent test: group comment report, fresh (1 hour old).", CreatedAt = now.AddHours(-1) });
+            await dbContext.SaveChangesAsync();
         }
     }
 }
