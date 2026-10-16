@@ -175,10 +175,10 @@ namespace FreeSpeakWeb.Repositories
                 return false;
             }
 
-            await context.UserWarnings
+            var updated = await context.UserWarnings
                 .Where(w => w.Id == warningId && w.UserId == userId && w.AcknowledgedAt == null)
                 .ExecuteUpdateAsync(w => w.SetProperty(x => x.AcknowledgedAt, acknowledgedAtUtc), cancellationToken);
-            return true;
+            return updated > 0;
         }
     }
 }

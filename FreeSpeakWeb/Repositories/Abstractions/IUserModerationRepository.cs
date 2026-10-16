@@ -122,7 +122,7 @@ namespace FreeSpeakWeb.Repositories.Abstractions
         /// <param name="userId">The warned user's ID; the warning must belong to this user.</param>
         /// <param name="acknowledgedAtUtc">The server-set UTC time.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>True when the warning exists for the user (including when it was already acknowledged).</returns>
+        /// <returns>True when the warning existed for the user and was newly acknowledged; false when it does not exist or was already acknowledged.</returns>
         Task<bool> AcknowledgeWarningAsync(int warningId, string userId, DateTime acknowledgedAtUtc, CancellationToken cancellationToken = default);
     }
 }
