@@ -85,4 +85,40 @@
   <data name="EmptyPinnedPosts" xml:space="preserve">
     <value>Du hast noch keine Beiträge angeheftet. Hefte Beiträge aus deinem Feed an, um sie hier zu sehen!</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unbekannt</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Unbekannter Benutzer</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Benutzer</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Beitrag konnte nicht angeheftet werden.</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>Beim Anheften des Beitrags ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Beitrag konnte nicht losgelöst werden.</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>Beim Lösen des Beitrags ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>Bilder konnten nicht hochgeladen werden.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Beitrag konnte nicht erstellt werden.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Beim Erstellen Ihres Beitrags ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="UpdatePostFailed" xml:space="preserve">
+    <value>Beitrag konnte nicht aktualisiert werden</value>
+  </data>
+  <data name="UpdatePostError" xml:space="preserve">
+    <value>Beim Aktualisieren des Beitrags ist ein Fehler aufgetreten.</value>
+  </data>
 </root>

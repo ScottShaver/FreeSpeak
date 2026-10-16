@@ -116,4 +116,49 @@
   <data name="RemoveFriendCancelButton" xml:space="preserve">
     <value>Abbrechen</value>
   </data>
+  <data name="LoadFriendsError" xml:space="preserve">
+    <value>Beim Laden deiner Freunde ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="LoadRequestsError" xml:space="preserve">
+    <value>Beim Laden der Freundschaftsanfragen ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="LoadSentRequestsError" xml:space="preserve">
+    <value>Beim Laden der gesendeten Anfragen ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="LoadSuggestionsError" xml:space="preserve">
+    <value>Beim Laden der Vorschläge ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="SearchError" xml:space="preserve">
+    <value>Bei der Suche ist ein Fehler aufgetreten. Bitte versuche es erneut.</value>
+  </data>
+  <data name="FriendRequestSent" xml:space="preserve">
+    <value>Freundschaftsanfrage an {0} gesendet.</value>
+  </data>
+  <data name="FriendRequestCancelled" xml:space="preserve">
+    <value>Freundschaftsanfrage an {0} zurückgezogen.</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>{0} wurde aus deinen Freunden entfernt.</value>
+  </data>
+  <data name="NowFriends" xml:space="preserve">
+    <value>Du bist jetzt mit {0} befreundet.</value>
+  </data>
+  <data name="FriendRequestDeclined" xml:space="preserve">
+    <value>Freundschaftsanfrage von {0} abgelehnt.</value>
+  </data>
+  <data name="SendRequestFailed" xml:space="preserve">
+    <value>Die Freundschaftsanfrage konnte nicht gesendet werden.</value>
+  </data>
+  <data name="CancelRequestFailed" xml:space="preserve">
+    <value>Die Freundschaftsanfrage konnte nicht zurückgezogen werden.</value>
+  </data>
+  <data name="RemoveFriendFailed" xml:space="preserve">
+    <value>Der Freund konnte nicht entfernt werden.</value>
+  </data>
+  <data name="AcceptRequestFailed" xml:space="preserve">
+    <value>Die Freundschaftsanfrage konnte nicht angenommen werden.</value>
+  </data>
+  <data name="DeclineRequestFailed" xml:space="preserve">
+    <value>Die Freundschaftsanfrage konnte nicht abgelehnt werden.</value>
+  </data>
 </root>

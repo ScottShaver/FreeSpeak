@@ -116,4 +116,49 @@
   <data name="RemoveFriendCancelButton" xml:space="preserve">
     <value>إلغاء</value>
   </data>
+  <data name="LoadFriendsError" xml:space="preserve">
+    <value>حدث خطأ أثناء تحميل أصدقائك.</value>
+  </data>
+  <data name="LoadRequestsError" xml:space="preserve">
+    <value>حدث خطأ أثناء تحميل طلبات الصداقة.</value>
+  </data>
+  <data name="LoadSentRequestsError" xml:space="preserve">
+    <value>حدث خطأ أثناء تحميل الطلبات المرسلة.</value>
+  </data>
+  <data name="LoadSuggestionsError" xml:space="preserve">
+    <value>حدث خطأ أثناء تحميل الاقتراحات.</value>
+  </data>
+  <data name="SearchError" xml:space="preserve">
+    <value>حدث خطأ أثناء البحث. يرجى المحاولة مرة أخرى.</value>
+  </data>
+  <data name="FriendRequestSent" xml:space="preserve">
+    <value>تم إرسال طلب صداقة إلى {0}.</value>
+  </data>
+  <data name="FriendRequestCancelled" xml:space="preserve">
+    <value>تم إلغاء طلب الصداقة المرسل إلى {0}.</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>تمت إزالة {0} من أصدقائك.</value>
+  </data>
+  <data name="NowFriends" xml:space="preserve">
+    <value>أصبحت الآن صديقًا لـ {0}.</value>
+  </data>
+  <data name="FriendRequestDeclined" xml:space="preserve">
+    <value>تم رفض طلب الصداقة من {0}.</value>
+  </data>
+  <data name="SendRequestFailed" xml:space="preserve">
+    <value>فشل إرسال طلب الصداقة.</value>
+  </data>
+  <data name="CancelRequestFailed" xml:space="preserve">
+    <value>فشل إلغاء طلب الصداقة.</value>
+  </data>
+  <data name="RemoveFriendFailed" xml:space="preserve">
+    <value>فشلت إزالة الصديق.</value>
+  </data>
+  <data name="AcceptRequestFailed" xml:space="preserve">
+    <value>فشل قبول طلب الصداقة.</value>
+  </data>
+  <data name="DeclineRequestFailed" xml:space="preserve">
+    <value>فشل رفض طلب الصداقة.</value>
+  </data>
 </root>

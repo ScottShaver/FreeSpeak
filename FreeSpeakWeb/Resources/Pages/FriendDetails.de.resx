@@ -91,4 +91,34 @@
   <data name="AboutMe" xml:space="preserve">
     <value>Über mich</value>
   </data>
+  <data name="FriendFallback" xml:space="preserve">
+    <value>Freund</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Der Beitrag konnte nicht angeheftet werden.</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>Beim Anheften des Beitrags ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Das Anheften des Beitrags konnte nicht aufgehoben werden.</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>Beim Aufheben der Anheftung des Beitrags ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>Die Bilder konnten nicht hochgeladen werden.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Der Beitrag konnte nicht erstellt werden.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Beim Erstellen deines Beitrags ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="LoadFriendDetailsError" xml:space="preserve">
+    <value>Beim Laden der Freundesdetails ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="LoadPostsError" xml:space="preserve">
+    <value>Beim Laden der Beiträge ist ein Fehler aufgetreten.</value>
+  </data>
 </root>

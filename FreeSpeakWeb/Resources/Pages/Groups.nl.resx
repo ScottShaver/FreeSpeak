@@ -163,4 +163,43 @@
   <data name="JumpToGroup" xml:space="preserve">
     <value>Ga naar groep</value>
   </data>
+  <data name="SubmitRequest" xml:space="preserve">
+    <value>Verzoek indienen</value>
+  </data>
+  <data name="JoinGroup" xml:space="preserve">
+    <value>Lid worden van groep</value>
+  </data>
+  <data name="JoinRequestFailed" xml:space="preserve">
+    <value>Het verzoek om lid te worden kon niet worden verzonden.</value>
+  </data>
+  <data name="JoinGroupFailed" xml:space="preserve">
+    <value>Lid worden van de groep is mislukt.</value>
+  </data>
+  <data name="JoinGroupError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het lid worden van de groep. {0}</value>
+  </data>
+  <data name="CancelJoinRequestFailed" xml:space="preserve">
+    <value>Het verzoek om lid te worden kon niet worden geannuleerd.</value>
+  </data>
+  <data name="CancelJoinRequestError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het annuleren van het verzoek om lid te worden. {0}</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Het bericht kon niet worden vastgezet.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Het losmaken van het bericht is mislukt.</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>Groepsbericht succesvol bijgewerkt.</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>Het groepsbericht kon niet worden bijgewerkt.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Melding succesvol verzonden. Bedankt voor het helpen om onze community veilig te houden.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Onbekend</value>
+  </data>
 </root>

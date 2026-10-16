@@ -83,4 +83,16 @@
   <data name="NoPosts" xml:space="preserve">
     <value>لا توجد منشورات عامة للعرض بعد. كن أول من يشارك شيئًا!</value>
   </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>تحميل المزيد</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>جارٍ تحميل المزيد من المنشورات...</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>غير معروف</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>مستخدم غير معروف</value>
+  </data>
 </root>

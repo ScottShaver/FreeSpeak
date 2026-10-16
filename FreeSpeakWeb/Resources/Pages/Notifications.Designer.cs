@@ -158,5 +158,50 @@ namespace FreeSpeakWeb.Resources.Pages {
                 return ResourceManager.GetString("Unread", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string Unknown {
+            get {
+                return ResourceManager.GetString("Unknown", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to User.
+        /// </summary>
+        public static string User {
+            get {
+                return ResourceManager.GetString("User", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to delete notification..
+        /// </summary>
+        public static string DeleteNotificationFailed {
+            get {
+                return ResourceManager.GetString("DeleteNotificationFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to mark notifications as read..
+        /// </summary>
+        public static string MarkAllReadFailed {
+            get {
+                return ResourceManager.GetString("MarkAllReadFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to delete read notifications..
+        /// </summary>
+        public static string ClearReadFailed {
+            get {
+                return ResourceManager.GetString("ClearReadFailed", resourceCulture);
+            }
+        }
     }
 }

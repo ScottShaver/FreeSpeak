@@ -166,4 +166,40 @@
   <data name="NonMemberPrivateNotice" xml:space="preserve">
     <value>このプライベートグループを表示しています。投稿や参加をするには参加してください。</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>グループ</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>さらに投稿を読み込み中...</value>
+  </data>
+  <data name="NoMorePosts" xml:space="preserve">
+    <value>現在、これ以上の投稿はありません</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>不明</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>投稿のピン留めに失敗しました。</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>投稿のピン留め解除に失敗しました。</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>画像のアップロードに失敗しました。</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>投稿の作成に失敗しました。</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>投稿の作成中にエラーが発生しました。</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>グループ投稿を更新しました。</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>グループ投稿の更新に失敗しました。</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>報告を送信しました。コミュニティの安全にご協力いただきありがとうございます。</value>
+  </data>
 </root>

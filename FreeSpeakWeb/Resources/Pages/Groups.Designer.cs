@@ -374,5 +374,122 @@ namespace FreeSpeakWeb.Resources.Pages {
                 return ResourceManager.GetString("UnknownGroup", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Submit Request.
+        /// </summary>
+        public static string SubmitRequest {
+            get {
+                return ResourceManager.GetString("SubmitRequest", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Join Group.
+        /// </summary>
+        public static string JoinGroup {
+            get {
+                return ResourceManager.GetString("JoinGroup", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to send join request..
+        /// </summary>
+        public static string JoinRequestFailed {
+            get {
+                return ResourceManager.GetString("JoinRequestFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to join group..
+        /// </summary>
+        public static string JoinGroupFailed {
+            get {
+                return ResourceManager.GetString("JoinGroupFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while joining the group. {0}.
+        /// </summary>
+        public static string JoinGroupError {
+            get {
+                return ResourceManager.GetString("JoinGroupError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to cancel join request..
+        /// </summary>
+        public static string CancelJoinRequestFailed {
+            get {
+                return ResourceManager.GetString("CancelJoinRequestFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while cancelling the join request. {0}.
+        /// </summary>
+        public static string CancelJoinRequestError {
+            get {
+                return ResourceManager.GetString("CancelJoinRequestError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to pin post..
+        /// </summary>
+        public static string PinPostFailed {
+            get {
+                return ResourceManager.GetString("PinPostFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to unpin post..
+        /// </summary>
+        public static string UnpinPostFailed {
+            get {
+                return ResourceManager.GetString("UnpinPostFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group post updated successfully..
+        /// </summary>
+        public static string GroupPostUpdated {
+            get {
+                return ResourceManager.GetString("GroupPostUpdated", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to update group post..
+        /// </summary>
+        public static string GroupPostUpdateFailed {
+            get {
+                return ResourceManager.GetString("GroupPostUpdateFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Report submitted successfully. Thank you for helping keep our community safe..
+        /// </summary>
+        public static string ReportSubmitted {
+            get {
+                return ResourceManager.GetString("ReportSubmitted", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string UnknownUser {
+            get {
+                return ResourceManager.GetString("UnknownUser", resourceCulture);
+            }
+        }
     }
 }

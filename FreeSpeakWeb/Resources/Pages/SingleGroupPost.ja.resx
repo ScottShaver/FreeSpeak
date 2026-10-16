@@ -7,4 +7,34 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="PostNotAvailable" xml:space="preserve"><value>投稿は利用できません</value></data>
   <data name="GoToGroup" xml:space="preserve"><value>グループに移動</value></data>
+  <data name="LoadingPost" xml:space="preserve">
+    <value>投稿を読み込み中...</value>
+  </data>
+  <data name="GroupPostTitle" xml:space="preserve">
+    <value>グループ投稿</value>
+  </data>
+  <data name="GroupDoesNotExist" xml:space="preserve">
+    <value>このグループは存在しません。</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>不明</value>
+  </data>
+  <data name="UnknownGroup" xml:space="preserve">
+    <value>不明</value>
+  </data>
+  <data name="PostByAuthorInGroup" xml:space="preserve">
+    <value>{1} の {0} による投稿</value>
+  </data>
+  <data name="PostUnavailableMessage" xml:space="preserve">
+    <value>申し訳ありません。この投稿は利用できなくなったか、このグループに属していません。</value>
+  </data>
+  <data name="LoadPostError" xml:space="preserve">
+    <value>この投稿の読み込み中にエラーが発生しました。</value>
+  </data>
+  <data name="DeletePostFailed" xml:space="preserve">
+    <value>投稿の削除に失敗しました。もう一度お試しください。</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>報告を送信しました。コミュニティの安全にご協力いただきありがとうございます。</value>
+  </data>
 </root>

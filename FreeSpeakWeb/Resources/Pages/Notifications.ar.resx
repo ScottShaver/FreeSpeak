@@ -91,4 +91,19 @@
   <data name="LoadMore" xml:space="preserve">
     <value>تحميل المزيد</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>غير معروف</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>مستخدم</value>
+  </data>
+  <data name="DeleteNotificationFailed" xml:space="preserve">
+    <value>فشل حذف الإشعار.</value>
+  </data>
+  <data name="MarkAllReadFailed" xml:space="preserve">
+    <value>فشل تعيين الإشعارات كمقروءة.</value>
+  </data>
+  <data name="ClearReadFailed" xml:space="preserve">
+    <value>فشل حذف الإشعارات المقروءة.</value>
+  </data>
 </root>

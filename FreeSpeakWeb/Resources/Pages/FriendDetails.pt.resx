@@ -91,4 +91,34 @@
   <data name="AboutMe" xml:space="preserve">
     <value>Sobre mim</value>
   </data>
+  <data name="FriendFallback" xml:space="preserve">
+    <value>Amigo</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Falha ao fixar a publicação.</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>Ocorreu um erro ao fixar a publicação.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Falha ao desafixar a publicação.</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>Ocorreu um erro ao desafixar a publicação.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>Falha ao enviar as imagens.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Falha ao criar a publicação.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Ocorreu um erro ao criar sua publicação.</value>
+  </data>
+  <data name="LoadFriendDetailsError" xml:space="preserve">
+    <value>Ocorreu um erro ao carregar os detalhes do amigo.</value>
+  </data>
+  <data name="LoadPostsError" xml:space="preserve">
+    <value>Ocorreu um erro ao carregar as publicações.</value>
+  </data>
 </root>

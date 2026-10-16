@@ -91,4 +91,34 @@
   <data name="AboutMe" xml:space="preserve">
     <value>Su di me</value>
   </data>
+  <data name="FriendFallback" xml:space="preserve">
+    <value>Amico</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Impossibile fissare il post.</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>Si è verificato un errore durante la fissazione del post.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Impossibile rimuovere il post dai fissati.</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>Si è verificato un errore durante la rimozione del post dai fissati.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>Impossibile caricare le immagini.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Impossibile creare il post.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Si è verificato un errore durante la creazione del tuo post.</value>
+  </data>
+  <data name="LoadFriendDetailsError" xml:space="preserve">
+    <value>Si è verificato un errore durante il caricamento dei dettagli dell'amico.</value>
+  </data>
+  <data name="LoadPostsError" xml:space="preserve">
+    <value>Si è verificato un errore durante il caricamento dei post.</value>
+  </data>
 </root>

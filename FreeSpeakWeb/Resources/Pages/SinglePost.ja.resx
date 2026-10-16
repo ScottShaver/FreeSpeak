@@ -7,4 +7,22 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="PostNotAvailable" xml:space="preserve"><value>投稿は利用できません</value></data>
   <data name="GoToHome" xml:space="preserve"><value>ホームに移動</value></data>
+  <data name="Loading" xml:space="preserve">
+    <value>読み込み中...</value>
+  </data>
+  <data name="LoadingPost" xml:space="preserve">
+    <value>投稿を読み込み中...</value>
+  </data>
+  <data name="PostTitle" xml:space="preserve">
+    <value>投稿</value>
+  </data>
+  <data name="PostByAuthor" xml:space="preserve">
+    <value>{0}の投稿</value>
+  </data>
+  <data name="PostNoLongerAvailable" xml:space="preserve">
+    <value>申し訳ありませんが、この投稿は利用できなくなりました。</value>
+  </data>
+  <data name="LoadPostError" xml:space="preserve">
+    <value>この投稿の読み込み中にエラーが発生しました。</value>
+  </data>
 </root>

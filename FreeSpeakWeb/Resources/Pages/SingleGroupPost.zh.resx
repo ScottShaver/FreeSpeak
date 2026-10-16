@@ -7,4 +7,34 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="PostNotAvailable" xml:space="preserve"><value>帖子不可用</value></data>
   <data name="GoToGroup" xml:space="preserve"><value>前往群组</value></data>
+  <data name="LoadingPost" xml:space="preserve">
+    <value>正在加载帖子...</value>
+  </data>
+  <data name="GroupPostTitle" xml:space="preserve">
+    <value>群组帖子</value>
+  </data>
+  <data name="GroupDoesNotExist" xml:space="preserve">
+    <value>该群组不存在。</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="UnknownGroup" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="PostByAuthorInGroup" xml:space="preserve">
+    <value>{0} 在 {1} 中的帖子</value>
+  </data>
+  <data name="PostUnavailableMessage" xml:space="preserve">
+    <value>抱歉，此帖子已不可用或不属于该群组。</value>
+  </data>
+  <data name="LoadPostError" xml:space="preserve">
+    <value>加载此帖子时出错。</value>
+  </data>
+  <data name="DeletePostFailed" xml:space="preserve">
+    <value>删除帖子失败。请重试。</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>举报已成功提交。感谢您帮助维护社区安全。</value>
+  </data>
 </root>

@@ -78,4 +78,52 @@
   <data name="DownloadFailed" xml:space="preserve">
     <value>Downloaden mislukt: {0}</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>Groep</value>
+  </data>
+  <data name="LoadFilesFailed" xml:space="preserve">
+    <value>Bestanden laden mislukt: {0}</value>
+  </data>
+  <data name="LoadPendingFilesFailed" xml:space="preserve">
+    <value>Wachtende bestanden laden mislukt: {0}</value>
+  </data>
+  <data name="UploadedPendingApproval" xml:space="preserve">
+    <value>Bestand succesvol geüpload. Het is zichtbaar na goedkeuring door een beheerder.</value>
+  </data>
+  <data name="UploadedSuccessfully" xml:space="preserve">
+    <value>Bestand succesvol geüpload!</value>
+  </data>
+  <data name="UploadFileFailed" xml:space="preserve">
+    <value>Het bestand kon niet worden geüpload.</value>
+  </data>
+  <data name="UploadFailedWithReason" xml:space="preserve">
+    <value>Uploaden mislukt: {0}</value>
+  </data>
+  <data name="FileDeleted" xml:space="preserve">
+    <value>Bestand succesvol verwijderd.</value>
+  </data>
+  <data name="DeleteFileFailed" xml:space="preserve">
+    <value>Het bestand kon niet worden verwijderd.</value>
+  </data>
+  <data name="DeleteFailedWithReason" xml:space="preserve">
+    <value>Verwijderen mislukt: {0}</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>Bestand succesvol goedgekeurd.</value>
+  </data>
+  <data name="ApproveFileFailed" xml:space="preserve">
+    <value>Het bestand kon niet worden goedgekeurd.</value>
+  </data>
+  <data name="ApprovalFailedWithReason" xml:space="preserve">
+    <value>Goedkeuren mislukt: {0}</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>Bestand succesvol afgewezen.</value>
+  </data>
+  <data name="DeclineFileFailed" xml:space="preserve">
+    <value>Het bestand kon niet worden afgewezen.</value>
+  </data>
+  <data name="DeclineFailedWithReason" xml:space="preserve">
+    <value>Afwijzen mislukt: {0}</value>
+  </data>
 </root>

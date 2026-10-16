@@ -91,4 +91,19 @@
   <data name="LoadMore" xml:space="preserve">
     <value>加载更多</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>用户</value>
+  </data>
+  <data name="DeleteNotificationFailed" xml:space="preserve">
+    <value>删除通知失败。</value>
+  </data>
+  <data name="MarkAllReadFailed" xml:space="preserve">
+    <value>将通知标记为已读失败。</value>
+  </data>
+  <data name="ClearReadFailed" xml:space="preserve">
+    <value>删除已读通知失败。</value>
+  </data>
 </root>

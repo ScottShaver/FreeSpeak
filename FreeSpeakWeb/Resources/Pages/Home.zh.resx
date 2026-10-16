@@ -85,4 +85,40 @@
   <data name="EmptyPinnedPosts" xml:space="preserve">
     <value>你还没有置顶任何帖子。从动态中置顶帖子，即可在此处查看！</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>未知用户</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>用户</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>置顶帖子失败。</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>置顶帖子时出错。</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>取消置顶帖子失败。</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>取消置顶帖子时出错。</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>上传图片失败。</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>创建帖子失败。</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>创建帖子时出错。</value>
+  </data>
+  <data name="UpdatePostFailed" xml:space="preserve">
+    <value>更新帖子失败</value>
+  </data>
+  <data name="UpdatePostError" xml:space="preserve">
+    <value>更新帖子时出错。</value>
+  </data>
 </root>

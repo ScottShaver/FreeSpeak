@@ -118,4 +118,25 @@
   <data name="ConfirmDeleteUpload" xml:space="preserve">
     <value>Supprimer ce fichier ? Il sera également retiré de votre publication. Cette action est irréversible.</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>À l'instant</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>il y a {0} min</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>il y a {0} h</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>il y a {0} j</value>
+  </data>
+  <data name="WeeksAgo" xml:space="preserve">
+    <value>il y a {0} sem.</value>
+  </data>
+  <data name="MonthsAgo" xml:space="preserve">
+    <value>il y a {0} mois</value>
+  </data>
+  <data name="YearsAgo" xml:space="preserve">
+    <value>il y a {0} an(s)</value>
+  </data>
 </root>

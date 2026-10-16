@@ -91,4 +91,34 @@
   <data name="AboutMe" xml:space="preserve">
     <value>O mnie</value>
   </data>
+  <data name="FriendFallback" xml:space="preserve">
+    <value>Znajomy</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Nie udało się przypiąć wpisu.</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>Wystąpił błąd podczas przypinania wpisu.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Nie udało się odpiąć wpisu.</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>Wystąpił błąd podczas odpinania wpisu.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>Nie udało się przesłać obrazów.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Nie udało się utworzyć wpisu.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Wystąpił błąd podczas tworzenia wpisu.</value>
+  </data>
+  <data name="LoadFriendDetailsError" xml:space="preserve">
+    <value>Wystąpił błąd podczas ładowania szczegółów znajomego.</value>
+  </data>
+  <data name="LoadPostsError" xml:space="preserve">
+    <value>Wystąpił błąd podczas ładowania wpisów.</value>
+  </data>
 </root>

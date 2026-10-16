@@ -85,4 +85,40 @@
   <data name="EmptyPinnedPosts" xml:space="preserve">
     <value>Non hai ancora fissato nessun post. Fissa i post dal tuo feed per vederli qui!</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Sconosciuto</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Utente sconosciuto</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Utente</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Impossibile fissare il post.</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>Si è verificato un errore durante il fissaggio del post.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Impossibile rimuovere il post dai fissati.</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>Si è verificato un errore durante la rimozione del post dai fissati.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>Impossibile caricare le immagini.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Impossibile creare il post.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Si è verificato un errore durante la creazione del post.</value>
+  </data>
+  <data name="UpdatePostFailed" xml:space="preserve">
+    <value>Impossibile aggiornare il post</value>
+  </data>
+  <data name="UpdatePostError" xml:space="preserve">
+    <value>Si è verificato un errore durante l'aggiornamento del post.</value>
+  </data>
 </root>

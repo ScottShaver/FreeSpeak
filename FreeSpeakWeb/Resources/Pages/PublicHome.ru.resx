@@ -83,4 +83,16 @@
   <data name="NoPosts" xml:space="preserve">
     <value>Пока нет публичных записей. Будьте первым, кто поделится чем-то!</value>
   </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>Загрузить ещё</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>Загрузка дополнительных публикаций...</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Неизвестный пользователь</value>
+  </data>
 </root>

@@ -116,4 +116,49 @@
   <data name="RemoveFriendCancelButton" xml:space="preserve">
     <value>キャンセル</value>
   </data>
+  <data name="LoadFriendsError" xml:space="preserve">
+    <value>友達の読み込み中にエラーが発生しました。</value>
+  </data>
+  <data name="LoadRequestsError" xml:space="preserve">
+    <value>友達リクエストの読み込み中にエラーが発生しました。</value>
+  </data>
+  <data name="LoadSentRequestsError" xml:space="preserve">
+    <value>送信済みリクエストの読み込み中にエラーが発生しました。</value>
+  </data>
+  <data name="LoadSuggestionsError" xml:space="preserve">
+    <value>おすすめの読み込み中にエラーが発生しました。</value>
+  </data>
+  <data name="SearchError" xml:space="preserve">
+    <value>検索中にエラーが発生しました。もう一度お試しください。</value>
+  </data>
+  <data name="FriendRequestSent" xml:space="preserve">
+    <value>{0}さんに友達リクエストを送信しました。</value>
+  </data>
+  <data name="FriendRequestCancelled" xml:space="preserve">
+    <value>{0}さんへの友達リクエストを取り消しました。</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>{0}さんを友達から削除しました。</value>
+  </data>
+  <data name="NowFriends" xml:space="preserve">
+    <value>{0}さんと友達になりました。</value>
+  </data>
+  <data name="FriendRequestDeclined" xml:space="preserve">
+    <value>{0}さんからの友達リクエストを拒否しました。</value>
+  </data>
+  <data name="SendRequestFailed" xml:space="preserve">
+    <value>友達リクエストを送信できませんでした。</value>
+  </data>
+  <data name="CancelRequestFailed" xml:space="preserve">
+    <value>友達リクエストを取り消せませんでした。</value>
+  </data>
+  <data name="RemoveFriendFailed" xml:space="preserve">
+    <value>友達を削除できませんでした。</value>
+  </data>
+  <data name="AcceptRequestFailed" xml:space="preserve">
+    <value>友達リクエストを承認できませんでした。</value>
+  </data>
+  <data name="DeclineRequestFailed" xml:space="preserve">
+    <value>友達リクエストを拒否できませんでした。</value>
+  </data>
 </root>

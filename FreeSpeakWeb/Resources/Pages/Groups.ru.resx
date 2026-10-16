@@ -163,4 +163,43 @@
   <data name="JumpToGroup" xml:space="preserve">
     <value>Перейти к группе</value>
   </data>
+  <data name="SubmitRequest" xml:space="preserve">
+    <value>Отправить запрос</value>
+  </data>
+  <data name="JoinGroup" xml:space="preserve">
+    <value>Вступить в группу</value>
+  </data>
+  <data name="JoinRequestFailed" xml:space="preserve">
+    <value>Не удалось отправить запрос на вступление.</value>
+  </data>
+  <data name="JoinGroupFailed" xml:space="preserve">
+    <value>Не удалось вступить в группу.</value>
+  </data>
+  <data name="JoinGroupError" xml:space="preserve">
+    <value>Произошла ошибка при вступлении в группу. {0}</value>
+  </data>
+  <data name="CancelJoinRequestFailed" xml:space="preserve">
+    <value>Не удалось отменить запрос на вступление.</value>
+  </data>
+  <data name="CancelJoinRequestError" xml:space="preserve">
+    <value>Произошла ошибка при отмене запроса на вступление. {0}</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Не удалось закрепить публикацию.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Не удалось открепить публикацию.</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>Публикация группы успешно обновлена.</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>Не удалось обновить публикацию группы.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Жалоба успешно отправлена. Спасибо, что помогаете сохранять безопасность нашего сообщества.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
 </root>

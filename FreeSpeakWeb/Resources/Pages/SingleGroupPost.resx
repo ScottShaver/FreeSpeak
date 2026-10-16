@@ -64,4 +64,34 @@
   <data name="GoToGroup" xml:space="preserve">
     <value>Go to Group</value>
   </data>
+  <data name="LoadingPost" xml:space="preserve">
+    <value>Loading post...</value>
+  </data>
+  <data name="GroupPostTitle" xml:space="preserve">
+    <value>Group Post</value>
+  </data>
+  <data name="GroupDoesNotExist" xml:space="preserve">
+    <value>This group does not exist.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="UnknownGroup" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="PostByAuthorInGroup" xml:space="preserve">
+    <value>Post by {0} in {1}</value>
+  </data>
+  <data name="PostUnavailableMessage" xml:space="preserve">
+    <value>Sorry, this post is no longer available or does not belong to this group.</value>
+  </data>
+  <data name="LoadPostError" xml:space="preserve">
+    <value>An error occurred while loading this post.</value>
+  </data>
+  <data name="DeletePostFailed" xml:space="preserve">
+    <value>Failed to delete the post. Please try again.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Report submitted successfully. Thank you for helping keep our community safe.</value>
+  </data>
 </root>

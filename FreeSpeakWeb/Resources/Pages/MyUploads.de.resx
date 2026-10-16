@@ -118,4 +118,25 @@
   <data name="ConfirmDeleteUpload" xml:space="preserve">
     <value>Diesen Upload löschen? Er wird auch aus Ihrem Beitrag entfernt. Dies kann nicht rückgängig gemacht werden.</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>Gerade eben</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>vor {0} Min.</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>vor {0} Std.</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>vor {0} Tg.</value>
+  </data>
+  <data name="WeeksAgo" xml:space="preserve">
+    <value>vor {0} Wo.</value>
+  </data>
+  <data name="MonthsAgo" xml:space="preserve">
+    <value>vor {0} Mon.</value>
+  </data>
+  <data name="YearsAgo" xml:space="preserve">
+    <value>vor {0} J.</value>
+  </data>
 </root>

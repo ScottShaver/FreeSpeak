@@ -118,4 +118,25 @@
   <data name="ConfirmDeleteUpload" xml:space="preserve">
     <value>هل تريد حذف هذا الملف؟ سيتم إزالته أيضًا من منشورك. لا يمكن التراجع عن ذلك.</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>الآن</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>منذ {0} د</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>منذ {0} س</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>منذ {0} ي</value>
+  </data>
+  <data name="WeeksAgo" xml:space="preserve">
+    <value>منذ {0} أ</value>
+  </data>
+  <data name="MonthsAgo" xml:space="preserve">
+    <value>منذ {0} ش</value>
+  </data>
+  <data name="YearsAgo" xml:space="preserve">
+    <value>منذ {0} س</value>
+  </data>
 </root>

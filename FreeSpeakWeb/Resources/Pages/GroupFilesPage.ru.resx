@@ -78,4 +78,52 @@
   <data name="DownloadFailed" xml:space="preserve">
     <value>Не удалось скачать: {0}</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>Группа</value>
+  </data>
+  <data name="LoadFilesFailed" xml:space="preserve">
+    <value>Не удалось загрузить файлы: {0}</value>
+  </data>
+  <data name="LoadPendingFilesFailed" xml:space="preserve">
+    <value>Не удалось загрузить ожидающие файлы: {0}</value>
+  </data>
+  <data name="UploadedPendingApproval" xml:space="preserve">
+    <value>Файл успешно загружен. Он станет виден после одобрения администратором.</value>
+  </data>
+  <data name="UploadedSuccessfully" xml:space="preserve">
+    <value>Файл успешно загружен!</value>
+  </data>
+  <data name="UploadFileFailed" xml:space="preserve">
+    <value>Не удалось загрузить файл.</value>
+  </data>
+  <data name="UploadFailedWithReason" xml:space="preserve">
+    <value>Ошибка загрузки: {0}</value>
+  </data>
+  <data name="FileDeleted" xml:space="preserve">
+    <value>Файл успешно удалён.</value>
+  </data>
+  <data name="DeleteFileFailed" xml:space="preserve">
+    <value>Не удалось удалить файл.</value>
+  </data>
+  <data name="DeleteFailedWithReason" xml:space="preserve">
+    <value>Ошибка удаления: {0}</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>Файл успешно одобрен.</value>
+  </data>
+  <data name="ApproveFileFailed" xml:space="preserve">
+    <value>Не удалось одобрить файл.</value>
+  </data>
+  <data name="ApprovalFailedWithReason" xml:space="preserve">
+    <value>Ошибка одобрения: {0}</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>Файл успешно отклонён.</value>
+  </data>
+  <data name="DeclineFileFailed" xml:space="preserve">
+    <value>Не удалось отклонить файл.</value>
+  </data>
+  <data name="DeclineFailedWithReason" xml:space="preserve">
+    <value>Ошибка отклонения: {0}</value>
+  </data>
 </root>

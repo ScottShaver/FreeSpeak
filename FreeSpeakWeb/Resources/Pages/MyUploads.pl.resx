@@ -118,4 +118,25 @@
   <data name="ConfirmDeleteUpload" xml:space="preserve">
     <value>Usunąć ten plik? Zostanie również usunięty z Twojego posta. Tej operacji nie można cofnąć.</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>Przed chwilą</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>{0} min temu</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>{0} godz. temu</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>{0} dn. temu</value>
+  </data>
+  <data name="WeeksAgo" xml:space="preserve">
+    <value>{0} tyg. temu</value>
+  </data>
+  <data name="MonthsAgo" xml:space="preserve">
+    <value>{0} mies. temu</value>
+  </data>
+  <data name="YearsAgo" xml:space="preserve">
+    <value>{0} l. temu</value>
+  </data>
 </root>

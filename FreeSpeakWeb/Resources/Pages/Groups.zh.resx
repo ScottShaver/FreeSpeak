@@ -163,4 +163,43 @@
   <data name="JumpToGroup" xml:space="preserve">
     <value>跳转到群组</value>
   </data>
+  <data name="SubmitRequest" xml:space="preserve">
+    <value>提交请求</value>
+  </data>
+  <data name="JoinGroup" xml:space="preserve">
+    <value>加入群组</value>
+  </data>
+  <data name="JoinRequestFailed" xml:space="preserve">
+    <value>发送加入请求失败。</value>
+  </data>
+  <data name="JoinGroupFailed" xml:space="preserve">
+    <value>加入群组失败。</value>
+  </data>
+  <data name="JoinGroupError" xml:space="preserve">
+    <value>加入群组时出错。{0}</value>
+  </data>
+  <data name="CancelJoinRequestFailed" xml:space="preserve">
+    <value>取消加入请求失败。</value>
+  </data>
+  <data name="CancelJoinRequestError" xml:space="preserve">
+    <value>取消加入请求时出错。{0}</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>置顶帖子失败。</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>取消置顶帖子失败。</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>群组帖子已成功更新。</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>更新群组帖子失败。</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>举报已成功提交。感谢您帮助维护社区安全。</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>未知</value>
+  </data>
 </root>

@@ -118,4 +118,25 @@
   <data name="ConfirmDeleteUpload" xml:space="preserve">
     <value>¿Eliminar esta carga? También se quitará de tu publicación. Esta acción no se puede deshacer.</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>Justo ahora</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>hace {0} min</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>hace {0} h</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>hace {0} d</value>
+  </data>
+  <data name="WeeksAgo" xml:space="preserve">
+    <value>hace {0} sem</value>
+  </data>
+  <data name="MonthsAgo" xml:space="preserve">
+    <value>hace {0} m</value>
+  </data>
+  <data name="YearsAgo" xml:space="preserve">
+    <value>hace {0} a</value>
+  </data>
 </root>

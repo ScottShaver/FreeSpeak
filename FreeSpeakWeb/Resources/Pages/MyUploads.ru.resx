@@ -118,4 +118,25 @@
   <data name="ConfirmDeleteUpload" xml:space="preserve">
     <value>Удалить эту загрузку? Она также будет удалена из вашей публикации. Это действие нельзя отменить.</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>Только что</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>{0} мин. назад</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>{0} ч. назад</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>{0} дн. назад</value>
+  </data>
+  <data name="WeeksAgo" xml:space="preserve">
+    <value>{0} нед. назад</value>
+  </data>
+  <data name="MonthsAgo" xml:space="preserve">
+    <value>{0} мес. назад</value>
+  </data>
+  <data name="YearsAgo" xml:space="preserve">
+    <value>{0} г. назад</value>
+  </data>
 </root>

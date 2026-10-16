@@ -116,4 +116,49 @@
   <data name="RemoveFriendCancelButton" xml:space="preserve">
     <value>Cancelar</value>
   </data>
+  <data name="LoadFriendsError" xml:space="preserve">
+    <value>Se produjo un error al cargar tus amigos.</value>
+  </data>
+  <data name="LoadRequestsError" xml:space="preserve">
+    <value>Se produjo un error al cargar las solicitudes de amistad.</value>
+  </data>
+  <data name="LoadSentRequestsError" xml:space="preserve">
+    <value>Se produjo un error al cargar las solicitudes enviadas.</value>
+  </data>
+  <data name="LoadSuggestionsError" xml:space="preserve">
+    <value>Se produjo un error al cargar las sugerencias.</value>
+  </data>
+  <data name="SearchError" xml:space="preserve">
+    <value>Se produjo un error durante la búsqueda. Inténtalo de nuevo.</value>
+  </data>
+  <data name="FriendRequestSent" xml:space="preserve">
+    <value>Solicitud de amistad enviada a {0}.</value>
+  </data>
+  <data name="FriendRequestCancelled" xml:space="preserve">
+    <value>Se canceló la solicitud de amistad a {0}.</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>Se eliminó a {0} de tus amigos.</value>
+  </data>
+  <data name="NowFriends" xml:space="preserve">
+    <value>Ahora eres amigo de {0}.</value>
+  </data>
+  <data name="FriendRequestDeclined" xml:space="preserve">
+    <value>Se rechazó la solicitud de amistad de {0}.</value>
+  </data>
+  <data name="SendRequestFailed" xml:space="preserve">
+    <value>No se pudo enviar la solicitud de amistad.</value>
+  </data>
+  <data name="CancelRequestFailed" xml:space="preserve">
+    <value>No se pudo cancelar la solicitud de amistad.</value>
+  </data>
+  <data name="RemoveFriendFailed" xml:space="preserve">
+    <value>No se pudo eliminar al amigo.</value>
+  </data>
+  <data name="AcceptRequestFailed" xml:space="preserve">
+    <value>No se pudo aceptar la solicitud de amistad.</value>
+  </data>
+  <data name="DeclineRequestFailed" xml:space="preserve">
+    <value>No se pudo rechazar la solicitud de amistad.</value>
+  </data>
 </root>

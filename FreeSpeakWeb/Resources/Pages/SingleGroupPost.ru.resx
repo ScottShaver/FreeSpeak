@@ -7,4 +7,34 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="PostNotAvailable" xml:space="preserve"><value>Запись недоступна</value></data>
   <data name="GoToGroup" xml:space="preserve"><value>Перейти в группу</value></data>
+  <data name="LoadingPost" xml:space="preserve">
+    <value>Загрузка публикации...</value>
+  </data>
+  <data name="GroupPostTitle" xml:space="preserve">
+    <value>Публикация группы</value>
+  </data>
+  <data name="GroupDoesNotExist" xml:space="preserve">
+    <value>Эта группа не существует.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="UnknownGroup" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="PostByAuthorInGroup" xml:space="preserve">
+    <value>Публикация {0} в группе {1}</value>
+  </data>
+  <data name="PostUnavailableMessage" xml:space="preserve">
+    <value>К сожалению, эта публикация больше недоступна или не относится к этой группе.</value>
+  </data>
+  <data name="LoadPostError" xml:space="preserve">
+    <value>Произошла ошибка при загрузке этой публикации.</value>
+  </data>
+  <data name="DeletePostFailed" xml:space="preserve">
+    <value>Не удалось удалить публикацию. Повторите попытку.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Жалоба успешно отправлена. Спасибо, что помогаете сохранять безопасность нашего сообщества.</value>
+  </data>
 </root>

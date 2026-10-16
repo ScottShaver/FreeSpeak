@@ -23,7 +23,7 @@
 @inject IStringLocalizer<FreeSpeakWeb.Resources.Pages.SingleGroupPost> Localizer
 @attribute [AllowAnonymous]
 
-<PageTitle>@pageTitle</PageTitle>
+<PageTitle>@(string.IsNullOrEmpty(pageTitle) ? Localizer["GroupPostTitle"].Value : pageTitle)</PageTitle>
 
 <div class="single-group-post-container">
     @if (isLoading)
@@ -32,7 +32,7 @@
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <p>Loading post...</p>
+            <p>@Localizer["LoadingPost"]</p>
         </div>
     }
     else if (!string.IsNullOrEmpty(errorMessage))
@@ -120,7 +120,7 @@
     private string? currentUserName;
     private bool isLoading = true;
     private string? errorMessage;
-    private string pageTitle = "Group Post";
+    private string pageTitle = string.Empty;
     private string groupName = string.Empty;
     private string authorName = string.Empty;
     private Dictionary<LikeType, int> reactionBreakdown = new();
@@ -166,7 +166,7 @@
             var group = await GroupService.GetGroupByIdAsync(GroupId);
             if (group == null)
             {
-                errorMessage = "This group does not exist.";
+                errorMessage = Localizer["GroupDoesNotExist"].Value;
                 isLoading = false;
                 return;
             }
@@ -194,12 +194,12 @@
                         post.Author.Id,
                         post.Author.FirstName,
                         post.Author.LastName,
-                        post.Author.UserName ?? "Unknown"
+                        post.Author.UserName ?? Localizer["UnknownUser"].Value
                     );
                 }
                 else
                 {
-                    authorName = "Unknown";
+                    authorName = Localizer["UnknownUser"].Value;
                 }
 
                 // Load reaction data
@@ -215,16 +215,16 @@
                     await ComputeDeletePermissionAsync();
                 }
 
-                pageTitle = $"Post by {authorName} in {groupName}";
+                pageTitle = Localizer["PostByAuthorInGroup", authorName, groupName].Value;
             }
             else
             {
-                errorMessage = "Sorry, this post is no longer available or does not belong to this group.";
+                errorMessage = Localizer["PostUnavailableMessage"].Value;
             }
         }
         catch (Exception)
         {
-            errorMessage = "An error occurred while loading this post.";
+            errorMessage = Localizer["LoadPostError"].Value;
         }
         finally
         {
@@ -351,14 +351,14 @@
             }
             else
             {
-                errorMessage = result.ErrorMessage ?? "Failed to delete the post. Please try again.";
+                errorMessage = result.ErrorMessage ?? Localizer["DeletePostFailed"].Value;
                 StateHasChanged();
             }
         }
         catch (Exception)
         {
             // Handle error silently or show error message
-            errorMessage = "Failed to delete the post. Please try again.";
+            errorMessage = Localizer["DeletePostFailed"].Value;
             StateHasChanged();
         }
     }
@@ -604,7 +604,7 @@
     /// </summary>
     private Task HandleGroupCommentReported()
     {
-        AlertService.ShowSuccess("Report submitted successfully. Thank you for helping keep our community safe.");
+        AlertService.ShowSuccess(Localizer["ReportSubmitted"].Value);
         return Task.CompletedTask;
     }
 

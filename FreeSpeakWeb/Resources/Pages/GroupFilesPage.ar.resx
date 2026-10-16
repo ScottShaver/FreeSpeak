@@ -229,4 +229,52 @@
   <data name="DownloadFailed" xml:space="preserve">
     <value>فشل التنزيل: {0}</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>المجموعة</value>
+  </data>
+  <data name="LoadFilesFailed" xml:space="preserve">
+    <value>فشل تحميل الملفات: {0}</value>
+  </data>
+  <data name="LoadPendingFilesFailed" xml:space="preserve">
+    <value>فشل تحميل الملفات المعلقة: {0}</value>
+  </data>
+  <data name="UploadedPendingApproval" xml:space="preserve">
+    <value>تم رفع الملف بنجاح. سيكون مرئيًا بعد موافقة المسؤول.</value>
+  </data>
+  <data name="UploadedSuccessfully" xml:space="preserve">
+    <value>تم رفع الملف بنجاح!</value>
+  </data>
+  <data name="UploadFileFailed" xml:space="preserve">
+    <value>فشل رفع الملف.</value>
+  </data>
+  <data name="UploadFailedWithReason" xml:space="preserve">
+    <value>فشل الرفع: {0}</value>
+  </data>
+  <data name="FileDeleted" xml:space="preserve">
+    <value>تم حذف الملف بنجاح.</value>
+  </data>
+  <data name="DeleteFileFailed" xml:space="preserve">
+    <value>فشل حذف الملف.</value>
+  </data>
+  <data name="DeleteFailedWithReason" xml:space="preserve">
+    <value>فشل الحذف: {0}</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>تمت الموافقة على الملف بنجاح.</value>
+  </data>
+  <data name="ApproveFileFailed" xml:space="preserve">
+    <value>فشلت الموافقة على الملف.</value>
+  </data>
+  <data name="ApprovalFailedWithReason" xml:space="preserve">
+    <value>فشلت الموافقة: {0}</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>تم رفض الملف بنجاح.</value>
+  </data>
+  <data name="DeclineFileFailed" xml:space="preserve">
+    <value>فشل رفض الملف.</value>
+  </data>
+  <data name="DeclineFailedWithReason" xml:space="preserve">
+    <value>فشل الرفض: {0}</value>
+  </data>
 </root>

@@ -78,4 +78,52 @@
   <data name="DownloadFailed" xml:space="preserve">
     <value>Falha no download: {0}</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>Grupo</value>
+  </data>
+  <data name="LoadFilesFailed" xml:space="preserve">
+    <value>Falha ao carregar os arquivos: {0}</value>
+  </data>
+  <data name="LoadPendingFilesFailed" xml:space="preserve">
+    <value>Falha ao carregar os arquivos pendentes: {0}</value>
+  </data>
+  <data name="UploadedPendingApproval" xml:space="preserve">
+    <value>Arquivo enviado com sucesso. Ficará visível após a aprovação de um administrador.</value>
+  </data>
+  <data name="UploadedSuccessfully" xml:space="preserve">
+    <value>Arquivo enviado com sucesso!</value>
+  </data>
+  <data name="UploadFileFailed" xml:space="preserve">
+    <value>Falha ao enviar o arquivo.</value>
+  </data>
+  <data name="UploadFailedWithReason" xml:space="preserve">
+    <value>Falha no envio: {0}</value>
+  </data>
+  <data name="FileDeleted" xml:space="preserve">
+    <value>Arquivo excluído com sucesso.</value>
+  </data>
+  <data name="DeleteFileFailed" xml:space="preserve">
+    <value>Falha ao excluir o arquivo.</value>
+  </data>
+  <data name="DeleteFailedWithReason" xml:space="preserve">
+    <value>Falha na exclusão: {0}</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>Arquivo aprovado com sucesso.</value>
+  </data>
+  <data name="ApproveFileFailed" xml:space="preserve">
+    <value>Falha ao aprovar o arquivo.</value>
+  </data>
+  <data name="ApprovalFailedWithReason" xml:space="preserve">
+    <value>Falha na aprovação: {0}</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>Arquivo recusado com sucesso.</value>
+  </data>
+  <data name="DeclineFileFailed" xml:space="preserve">
+    <value>Falha ao recusar o arquivo.</value>
+  </data>
+  <data name="DeclineFailedWithReason" xml:space="preserve">
+    <value>Falha na recusa: {0}</value>
+  </data>
 </root>

@@ -163,4 +163,43 @@
   <data name="JumpToGroup" xml:space="preserve">
     <value>그룹으로 이동</value>
   </data>
+  <data name="SubmitRequest" xml:space="preserve">
+    <value>요청 제출</value>
+  </data>
+  <data name="JoinGroup" xml:space="preserve">
+    <value>그룹 가입</value>
+  </data>
+  <data name="JoinRequestFailed" xml:space="preserve">
+    <value>가입 요청을 보내지 못했습니다.</value>
+  </data>
+  <data name="JoinGroupFailed" xml:space="preserve">
+    <value>그룹에 가입하지 못했습니다.</value>
+  </data>
+  <data name="JoinGroupError" xml:space="preserve">
+    <value>그룹에 가입하는 동안 오류가 발생했습니다. {0}</value>
+  </data>
+  <data name="CancelJoinRequestFailed" xml:space="preserve">
+    <value>가입 요청을 취소하지 못했습니다.</value>
+  </data>
+  <data name="CancelJoinRequestError" xml:space="preserve">
+    <value>가입 요청을 취소하는 동안 오류가 발생했습니다. {0}</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>게시물을 고정하지 못했습니다.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>게시물 고정을 해제하지 못했습니다.</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>그룹 게시물이 업데이트되었습니다.</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>그룹 게시물을 업데이트하지 못했습니다.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>신고가 접수되었습니다. 커뮤니티를 안전하게 지키는 데 도움을 주셔서 감사합니다.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>알 수 없음</value>
+  </data>
 </root>

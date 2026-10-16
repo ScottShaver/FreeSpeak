@@ -44,5 +44,59 @@ namespace FreeSpeakWeb.Resources.Pages {
 
         public static string PostNotAvailable { get { return ResourceManager.GetString("PostNotAvailable", resourceCulture); } }
         public static string GoToHome { get { return ResourceManager.GetString("GoToHome", resourceCulture); } }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        public static string Loading {
+            get {
+                return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Loading post....
+        /// </summary>
+        public static string LoadingPost {
+            get {
+                return ResourceManager.GetString("LoadingPost", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Post.
+        /// </summary>
+        public static string PostTitle {
+            get {
+                return ResourceManager.GetString("PostTitle", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Post by {0}.
+        /// </summary>
+        public static string PostByAuthor {
+            get {
+                return ResourceManager.GetString("PostByAuthor", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Sorry, this post is no longer available..
+        /// </summary>
+        public static string PostNoLongerAvailable {
+            get {
+                return ResourceManager.GetString("PostNoLongerAvailable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading this post..
+        /// </summary>
+        public static string LoadPostError {
+            get {
+                return ResourceManager.GetString("LoadPostError", resourceCulture);
+            }
+        }
     }
 }

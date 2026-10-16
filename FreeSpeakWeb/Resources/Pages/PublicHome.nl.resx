@@ -83,4 +83,16 @@
   <data name="NoPosts" xml:space="preserve">
     <value>Nog geen openbare berichten om weer te geven. Wees de eerste om iets te delen!</value>
   </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>Meer laden</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>Meer berichten laden...</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Onbekend</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Onbekende gebruiker</value>
+  </data>
 </root>

@@ -118,4 +118,25 @@
   <data name="ConfirmDeleteUpload" xml:space="preserve">
     <value>이 업로드를 삭제하시겠습니까? 게시물에서도 제거되며 되돌릴 수 없습니다.</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>방금</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>{0}분 전</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>{0}시간 전</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>{0}일 전</value>
+  </data>
+  <data name="WeeksAgo" xml:space="preserve">
+    <value>{0}주 전</value>
+  </data>
+  <data name="MonthsAgo" xml:space="preserve">
+    <value>{0}개월 전</value>
+  </data>
+  <data name="YearsAgo" xml:space="preserve">
+    <value>{0}년 전</value>
+  </data>
 </root>

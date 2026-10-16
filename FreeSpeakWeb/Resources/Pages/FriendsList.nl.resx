@@ -116,4 +116,49 @@
   <data name="RemoveFriendCancelButton" xml:space="preserve">
     <value>Annuleren</value>
   </data>
+  <data name="LoadFriendsError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het laden van je vrienden.</value>
+  </data>
+  <data name="LoadRequestsError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het laden van vriendschapsverzoeken.</value>
+  </data>
+  <data name="LoadSentRequestsError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het laden van verzonden verzoeken.</value>
+  </data>
+  <data name="LoadSuggestionsError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het laden van suggesties.</value>
+  </data>
+  <data name="SearchError" xml:space="preserve">
+    <value>Er is een fout opgetreden tijdens het zoeken. Probeer het opnieuw.</value>
+  </data>
+  <data name="FriendRequestSent" xml:space="preserve">
+    <value>Vriendschapsverzoek verzonden naar {0}.</value>
+  </data>
+  <data name="FriendRequestCancelled" xml:space="preserve">
+    <value>Vriendschapsverzoek aan {0} geannuleerd.</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>{0} is verwijderd uit je vrienden.</value>
+  </data>
+  <data name="NowFriends" xml:space="preserve">
+    <value>Je bent nu bevriend met {0}.</value>
+  </data>
+  <data name="FriendRequestDeclined" xml:space="preserve">
+    <value>Vriendschapsverzoek van {0} afgewezen.</value>
+  </data>
+  <data name="SendRequestFailed" xml:space="preserve">
+    <value>Het vriendschapsverzoek kon niet worden verzonden.</value>
+  </data>
+  <data name="CancelRequestFailed" xml:space="preserve">
+    <value>Het vriendschapsverzoek kon niet worden geannuleerd.</value>
+  </data>
+  <data name="RemoveFriendFailed" xml:space="preserve">
+    <value>De vriend kon niet worden verwijderd.</value>
+  </data>
+  <data name="AcceptRequestFailed" xml:space="preserve">
+    <value>Het vriendschapsverzoek kon niet worden geaccepteerd.</value>
+  </data>
+  <data name="DeclineRequestFailed" xml:space="preserve">
+    <value>Het vriendschapsverzoek kon niet worden afgewezen.</value>
+  </data>
 </root>

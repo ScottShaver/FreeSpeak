@@ -91,4 +91,34 @@
   <data name="AboutMe" xml:space="preserve">
     <value>Over mij</value>
   </data>
+  <data name="FriendFallback" xml:space="preserve">
+    <value>Vriend</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Het bericht kon niet worden vastgezet.</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het vastzetten van het bericht.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Het bericht kon niet worden losgemaakt.</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het losmaken van het bericht.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>De afbeeldingen konden niet worden geüpload.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Het bericht kon niet worden gemaakt.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het maken van je bericht.</value>
+  </data>
+  <data name="LoadFriendDetailsError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het laden van de vriendgegevens.</value>
+  </data>
+  <data name="LoadPostsError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het laden van berichten.</value>
+  </data>
 </root>

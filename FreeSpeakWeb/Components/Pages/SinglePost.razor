@@ -19,16 +19,16 @@
 @inject FreeSpeakWeb.Services.Abstractions.IRoleService RoleService
 @attribute [AllowAnonymous]
 
-<PageTitle>@pageTitle</PageTitle>
+<PageTitle>@(pageTitle ?? Localizer["PostTitle"].Value)</PageTitle>
 
 <div class="single-post-container">
     @if (isLoading)
     {
         <div class="loading-container">
             <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+                <span class="visually-hidden">@Localizer["Loading"]</span>
             </div>
-            <p>Loading post...</p>
+            <p>@Localizer["LoadingPost"]</p>
         </div>
     }
     else if (!string.IsNullOrEmpty(errorMessage))
@@ -108,7 +108,7 @@
     private string? currentUserName;
     private bool isLoading = true;
     private string? errorMessage;
-    private string pageTitle = "Post";
+    private string? pageTitle;
     private bool canDeletePost = false;
 
     protected override async Task OnInitializedAsync()
@@ -141,19 +141,19 @@
             if (result.Success && result.Data != null)
             {
                 post = result.Data;
-                pageTitle = $"Post by {post.AuthorName}";
+                pageTitle = Localizer["PostByAuthor", post.AuthorName].Value;
 
                 // Compute delete permission
                 await ComputeDeletePermissionAsync();
             }
             else
             {
-                errorMessage = result.ErrorMessage ?? "Sorry, this post is no longer available.";
+                errorMessage = result.ErrorMessage ?? Localizer["PostNoLongerAvailable"].Value;
             }
         }
         catch (Exception)
         {
-            errorMessage = "An error occurred while loading this post.";
+            errorMessage = Localizer["LoadPostError"].Value;
         }
         finally
         {

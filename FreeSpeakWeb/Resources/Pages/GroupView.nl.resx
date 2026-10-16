@@ -166,4 +166,40 @@
   <data name="NonMemberPrivateNotice" xml:space="preserve">
     <value>U bekijkt deze privégroep. Word lid om te posten en deel te nemen.</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>Groep</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>Meer berichten laden...</value>
+  </data>
+  <data name="NoMorePosts" xml:space="preserve">
+    <value>Op dit moment geen berichten meer</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Onbekend</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Het bericht kon niet worden vastgezet.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Het losmaken van het bericht is mislukt.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>De afbeeldingen konden niet worden geüpload.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Het bericht kon niet worden gemaakt.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het maken van je bericht.</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>Groepsbericht succesvol bijgewerkt.</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>Het groepsbericht kon niet worden bijgewerkt.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Melding succesvol verzonden. Bedankt voor het helpen om onze community veilig te houden.</value>
+  </data>
 </root>

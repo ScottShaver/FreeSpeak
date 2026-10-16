@@ -163,4 +163,43 @@
   <data name="JumpToGroup" xml:space="preserve">
     <value>グループに移動</value>
   </data>
+  <data name="SubmitRequest" xml:space="preserve">
+    <value>リクエストを送信</value>
+  </data>
+  <data name="JoinGroup" xml:space="preserve">
+    <value>グループに参加</value>
+  </data>
+  <data name="JoinRequestFailed" xml:space="preserve">
+    <value>参加リクエストの送信に失敗しました。</value>
+  </data>
+  <data name="JoinGroupFailed" xml:space="preserve">
+    <value>グループへの参加に失敗しました。</value>
+  </data>
+  <data name="JoinGroupError" xml:space="preserve">
+    <value>グループへの参加中にエラーが発生しました。{0}</value>
+  </data>
+  <data name="CancelJoinRequestFailed" xml:space="preserve">
+    <value>参加リクエストのキャンセルに失敗しました。</value>
+  </data>
+  <data name="CancelJoinRequestError" xml:space="preserve">
+    <value>参加リクエストのキャンセル中にエラーが発生しました。{0}</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>投稿のピン留めに失敗しました。</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>投稿のピン留め解除に失敗しました。</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>グループ投稿を更新しました。</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>グループ投稿の更新に失敗しました。</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>報告を送信しました。コミュニティの安全にご協力いただきありがとうございます。</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>不明</value>
+  </data>
 </root>

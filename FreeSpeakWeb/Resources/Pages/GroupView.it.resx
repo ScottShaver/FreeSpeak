@@ -166,4 +166,40 @@
   <data name="NonMemberPrivateNotice" xml:space="preserve">
     <value>Stai visualizzando questo gruppo privato. Unisciti per pubblicare e partecipare.</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>Gruppo</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>Caricamento di altri post...</value>
+  </data>
+  <data name="NoMorePosts" xml:space="preserve">
+    <value>Non ci sono altri post al momento</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Sconosciuto</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Impossibile fissare il post.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Impossibile rimuovere il post dai fissati.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>Impossibile caricare le immagini.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Impossibile creare il post.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Si è verificato un errore durante la creazione del post.</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>Post del gruppo aggiornato con successo.</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>Impossibile aggiornare il post del gruppo.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Segnalazione inviata con successo. Grazie per aiutarci a mantenere sicura la nostra community.</value>
+  </data>
 </root>

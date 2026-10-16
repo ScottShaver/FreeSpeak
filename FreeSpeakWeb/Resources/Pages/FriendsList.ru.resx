@@ -116,4 +116,49 @@
   <data name="RemoveFriendCancelButton" xml:space="preserve">
     <value>Отмена</value>
   </data>
+  <data name="LoadFriendsError" xml:space="preserve">
+    <value>Произошла ошибка при загрузке ваших друзей.</value>
+  </data>
+  <data name="LoadRequestsError" xml:space="preserve">
+    <value>Произошла ошибка при загрузке запросов в друзья.</value>
+  </data>
+  <data name="LoadSentRequestsError" xml:space="preserve">
+    <value>Произошла ошибка при загрузке отправленных запросов.</value>
+  </data>
+  <data name="LoadSuggestionsError" xml:space="preserve">
+    <value>Произошла ошибка при загрузке предложений.</value>
+  </data>
+  <data name="SearchError" xml:space="preserve">
+    <value>Произошла ошибка при поиске. Повторите попытку.</value>
+  </data>
+  <data name="FriendRequestSent" xml:space="preserve">
+    <value>Запрос в друзья отправлен пользователю {0}.</value>
+  </data>
+  <data name="FriendRequestCancelled" xml:space="preserve">
+    <value>Запрос в друзья пользователю {0} отменён.</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>Пользователь {0} удалён из ваших друзей.</value>
+  </data>
+  <data name="NowFriends" xml:space="preserve">
+    <value>Теперь вы друзья с {0}.</value>
+  </data>
+  <data name="FriendRequestDeclined" xml:space="preserve">
+    <value>Запрос в друзья от {0} отклонён.</value>
+  </data>
+  <data name="SendRequestFailed" xml:space="preserve">
+    <value>Не удалось отправить запрос в друзья.</value>
+  </data>
+  <data name="CancelRequestFailed" xml:space="preserve">
+    <value>Не удалось отменить запрос в друзья.</value>
+  </data>
+  <data name="RemoveFriendFailed" xml:space="preserve">
+    <value>Не удалось удалить друга.</value>
+  </data>
+  <data name="AcceptRequestFailed" xml:space="preserve">
+    <value>Не удалось принять запрос в друзья.</value>
+  </data>
+  <data name="DeclineRequestFailed" xml:space="preserve">
+    <value>Не удалось отклонить запрос в друзья.</value>
+  </data>
 </root>

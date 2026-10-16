@@ -54,7 +54,7 @@
                 var postReactions = postReactionData.ContainsKey(post.Id) ? postReactionData[post.Id] : new Dictionary<LikeType, int>();
                 var comments = postComments.ContainsKey(post.Id) ? postComments[post.Id] : new List<CommentDisplayModel>();
                 var directCommentCount = postDirectCommentCounts.ContainsKey(post.Id) ? postDirectCommentCounts[post.Id] : 0;
-                var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : "Unknown";
+                var authorName = postAuthorNames.ContainsKey(post.Id) ? postAuthorNames[post.Id] : Localizer["Unknown"].Value;
 
                 <UnifiedArticle 
                     @key="post.Id"                    ArticlePostType="PostType.UserPost"
@@ -88,14 +88,14 @@
             @if (hasMore && !isLoadingMore)
             {
                 <div class="load-more-section">
-                    <button class="btn btn-outline-primary" @onclick="LoadMorePosts">Load More</button>
+                    <button class="btn btn-outline-primary" @onclick="LoadMorePosts">@Localizer["LoadMore"]</button>
                 </div>
             }
 
             @if (isLoadingMore)
             {
                 <div class="loading-more">
-                    <p>Loading more posts...</p>
+                    <p>@Localizer["LoadingMorePosts"]</p>
                 </div>
             }
         }
@@ -104,7 +104,7 @@
 
 @if (showPostDetail && selectedPost != null)
 {
-    var selectedPostAuthorName = postAuthorNames.ContainsKey(selectedPost.Id) ? postAuthorNames[selectedPost.Id] : "Unknown";
+    var selectedPostAuthorName = postAuthorNames.ContainsKey(selectedPost.Id) ? postAuthorNames[selectedPost.Id] : Localizer["Unknown"].Value;
     var selectedPostReactions = postReactionData.ContainsKey(selectedPost.Id) ? postReactionData[selectedPost.Id] : new Dictionary<LikeType, int>();
 
     <PostDetailModal 
@@ -212,14 +212,14 @@
                             post.AuthorId,
                             post.Author.FirstName,
                             post.Author.LastName,
-                            post.Author.UserName ?? "Unknown"
+                            post.Author.UserName ?? Localizer["Unknown"].Value
                         );
                         postAuthorNames[post.Id] = displayName;
                     }
                     else
                     {
                         // Handle cases where author might be null (e.g., deleted user)
-                        postAuthorNames[post.Id] = "Unknown User";
+                        postAuthorNames[post.Id] = Localizer["UnknownUser"].Value;
                     }
                 }
             }

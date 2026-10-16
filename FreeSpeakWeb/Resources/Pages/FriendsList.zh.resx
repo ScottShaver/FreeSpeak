@@ -116,4 +116,49 @@
   <data name="RemoveFriendCancelButton" xml:space="preserve">
     <value>取消</value>
   </data>
+  <data name="LoadFriendsError" xml:space="preserve">
+    <value>加载好友时出错。</value>
+  </data>
+  <data name="LoadRequestsError" xml:space="preserve">
+    <value>加载好友请求时出错。</value>
+  </data>
+  <data name="LoadSentRequestsError" xml:space="preserve">
+    <value>加载已发送的请求时出错。</value>
+  </data>
+  <data name="LoadSuggestionsError" xml:space="preserve">
+    <value>加载推荐时出错。</value>
+  </data>
+  <data name="SearchError" xml:space="preserve">
+    <value>搜索时出错。请重试。</value>
+  </data>
+  <data name="FriendRequestSent" xml:space="preserve">
+    <value>已向 {0} 发送好友请求。</value>
+  </data>
+  <data name="FriendRequestCancelled" xml:space="preserve">
+    <value>已取消向 {0} 发送的好友请求。</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>已将 {0} 从你的好友中移除。</value>
+  </data>
+  <data name="NowFriends" xml:space="preserve">
+    <value>你现在与 {0} 成为好友了。</value>
+  </data>
+  <data name="FriendRequestDeclined" xml:space="preserve">
+    <value>已拒绝 {0} 的好友请求。</value>
+  </data>
+  <data name="SendRequestFailed" xml:space="preserve">
+    <value>发送好友请求失败。</value>
+  </data>
+  <data name="CancelRequestFailed" xml:space="preserve">
+    <value>取消好友请求失败。</value>
+  </data>
+  <data name="RemoveFriendFailed" xml:space="preserve">
+    <value>移除好友失败。</value>
+  </data>
+  <data name="AcceptRequestFailed" xml:space="preserve">
+    <value>接受好友请求失败。</value>
+  </data>
+  <data name="DeclineRequestFailed" xml:space="preserve">
+    <value>拒绝好友请求失败。</value>
+  </data>
 </root>

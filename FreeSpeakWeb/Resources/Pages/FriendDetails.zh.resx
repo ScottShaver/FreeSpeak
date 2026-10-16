@@ -91,4 +91,34 @@
   <data name="AboutMe" xml:space="preserve">
     <value>关于我</value>
   </data>
+  <data name="FriendFallback" xml:space="preserve">
+    <value>好友</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>置顶帖子失败。</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>置顶帖子时出错。</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>取消置顶帖子失败。</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>取消置顶帖子时出错。</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>上传图片失败。</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>创建帖子失败。</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>创建帖子时出错。</value>
+  </data>
+  <data name="LoadFriendDetailsError" xml:space="preserve">
+    <value>加载好友详情时出错。</value>
+  </data>
+  <data name="LoadPostsError" xml:space="preserve">
+    <value>加载帖子时出错。</value>
+  </data>
 </root>

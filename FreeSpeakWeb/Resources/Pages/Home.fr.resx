@@ -85,4 +85,40 @@
   <data name="EmptyPinnedPosts" xml:space="preserve">
     <value>Vous n'avez pas encore épinglé de publications. Épinglez des publications depuis votre fil pour les voir ici !</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Utilisateur inconnu</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Utilisateur</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Échec de l'épinglage de la publication.</value>
+  </data>
+  <data name="PinPostError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de l'épinglage de la publication.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Échec du retrait de l'épinglage de la publication.</value>
+  </data>
+  <data name="UnpinPostError" xml:space="preserve">
+    <value>Une erreur s'est produite lors du retrait de l'épinglage de la publication.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>Échec du téléversement des images.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Échec de la création de la publication.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la création de votre publication.</value>
+  </data>
+  <data name="UpdatePostFailed" xml:space="preserve">
+    <value>Échec de la mise à jour de la publication</value>
+  </data>
+  <data name="UpdatePostError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la mise à jour de la publication.</value>
+  </data>
 </root>

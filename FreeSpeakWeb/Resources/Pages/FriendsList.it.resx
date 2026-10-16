@@ -116,4 +116,49 @@
   <data name="RemoveFriendCancelButton" xml:space="preserve">
     <value>Annulla</value>
   </data>
+  <data name="LoadFriendsError" xml:space="preserve">
+    <value>Si è verificato un errore durante il caricamento dei tuoi amici.</value>
+  </data>
+  <data name="LoadRequestsError" xml:space="preserve">
+    <value>Si è verificato un errore durante il caricamento delle richieste di amicizia.</value>
+  </data>
+  <data name="LoadSentRequestsError" xml:space="preserve">
+    <value>Si è verificato un errore durante il caricamento delle richieste inviate.</value>
+  </data>
+  <data name="LoadSuggestionsError" xml:space="preserve">
+    <value>Si è verificato un errore durante il caricamento dei suggerimenti.</value>
+  </data>
+  <data name="SearchError" xml:space="preserve">
+    <value>Si è verificato un errore durante la ricerca. Riprova.</value>
+  </data>
+  <data name="FriendRequestSent" xml:space="preserve">
+    <value>Richiesta di amicizia inviata a {0}.</value>
+  </data>
+  <data name="FriendRequestCancelled" xml:space="preserve">
+    <value>Richiesta di amicizia a {0} annullata.</value>
+  </data>
+  <data name="FriendRemoved" xml:space="preserve">
+    <value>{0} è stato rimosso dai tuoi amici.</value>
+  </data>
+  <data name="NowFriends" xml:space="preserve">
+    <value>Ora sei amico di {0}.</value>
+  </data>
+  <data name="FriendRequestDeclined" xml:space="preserve">
+    <value>Richiesta di amicizia da {0} rifiutata.</value>
+  </data>
+  <data name="SendRequestFailed" xml:space="preserve">
+    <value>Impossibile inviare la richiesta di amicizia.</value>
+  </data>
+  <data name="CancelRequestFailed" xml:space="preserve">
+    <value>Impossibile annullare la richiesta di amicizia.</value>
+  </data>
+  <data name="RemoveFriendFailed" xml:space="preserve">
+    <value>Impossibile rimuovere l'amico.</value>
+  </data>
+  <data name="AcceptRequestFailed" xml:space="preserve">
+    <value>Impossibile accettare la richiesta di amicizia.</value>
+  </data>
+  <data name="DeclineRequestFailed" xml:space="preserve">
+    <value>Impossibile rifiutare la richiesta di amicizia.</value>
+  </data>
 </root>

@@ -91,4 +91,19 @@
   <data name="LoadMore" xml:space="preserve">
     <value>Mehr laden</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unbekannt</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Benutzer</value>
+  </data>
+  <data name="DeleteNotificationFailed" xml:space="preserve">
+    <value>Benachrichtigung konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="MarkAllReadFailed" xml:space="preserve">
+    <value>Benachrichtigungen konnten nicht als gelesen markiert werden.</value>
+  </data>
+  <data name="ClearReadFailed" xml:space="preserve">
+    <value>Gelesene Benachrichtigungen konnten nicht gelöscht werden.</value>
+  </data>
 </root>

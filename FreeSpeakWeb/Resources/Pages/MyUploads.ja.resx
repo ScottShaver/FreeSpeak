@@ -118,4 +118,25 @@
   <data name="ConfirmDeleteUpload" xml:space="preserve">
     <value>このアップロードを削除しますか？投稿からも削除されます。この操作は元に戻せません。</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>たった今</value>
+  </data>
+  <data name="MinutesAgo" xml:space="preserve">
+    <value>{0}分前</value>
+  </data>
+  <data name="HoursAgo" xml:space="preserve">
+    <value>{0}時間前</value>
+  </data>
+  <data name="DaysAgo" xml:space="preserve">
+    <value>{0}日前</value>
+  </data>
+  <data name="WeeksAgo" xml:space="preserve">
+    <value>{0}週間前</value>
+  </data>
+  <data name="MonthsAgo" xml:space="preserve">
+    <value>{0}か月前</value>
+  </data>
+  <data name="YearsAgo" xml:space="preserve">
+    <value>{0}年前</value>
+  </data>
 </root>

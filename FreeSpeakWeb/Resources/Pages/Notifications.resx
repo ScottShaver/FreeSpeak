@@ -91,4 +91,19 @@
   <data name="LoadMore" xml:space="preserve">
     <value>Load more</value>
   </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="DeleteNotificationFailed" xml:space="preserve">
+    <value>Failed to delete notification.</value>
+  </data>
+  <data name="MarkAllReadFailed" xml:space="preserve">
+    <value>Failed to mark notifications as read.</value>
+  </data>
+  <data name="ClearReadFailed" xml:space="preserve">
+    <value>Failed to delete read notifications.</value>
+  </data>
 </root>

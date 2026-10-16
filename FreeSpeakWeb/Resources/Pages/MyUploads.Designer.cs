@@ -239,5 +239,68 @@ namespace FreeSpeakWeb.Resources.Pages {
                 return ResourceManager.GetString("Videos", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Just now.
+        /// </summary>
+        public static string JustNow {
+            get {
+                return ResourceManager.GetString("JustNow", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}m ago.
+        /// </summary>
+        public static string MinutesAgo {
+            get {
+                return ResourceManager.GetString("MinutesAgo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}h ago.
+        /// </summary>
+        public static string HoursAgo {
+            get {
+                return ResourceManager.GetString("HoursAgo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}d ago.
+        /// </summary>
+        public static string DaysAgo {
+            get {
+                return ResourceManager.GetString("DaysAgo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}w ago.
+        /// </summary>
+        public static string WeeksAgo {
+            get {
+                return ResourceManager.GetString("WeeksAgo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}mo ago.
+        /// </summary>
+        public static string MonthsAgo {
+            get {
+                return ResourceManager.GetString("MonthsAgo", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0}y ago.
+        /// </summary>
+        public static string YearsAgo {
+            get {
+                return ResourceManager.GetString("YearsAgo", resourceCulture);
+            }
+        }
     }
 }

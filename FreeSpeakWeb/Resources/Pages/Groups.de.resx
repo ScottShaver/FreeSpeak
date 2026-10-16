@@ -163,4 +163,43 @@
   <data name="JumpToGroup" xml:space="preserve">
     <value>Zur Gruppe springen</value>
   </data>
+  <data name="SubmitRequest" xml:space="preserve">
+    <value>Anfrage senden</value>
+  </data>
+  <data name="JoinGroup" xml:space="preserve">
+    <value>Gruppe beitreten</value>
+  </data>
+  <data name="JoinRequestFailed" xml:space="preserve">
+    <value>Beitrittsanfrage konnte nicht gesendet werden.</value>
+  </data>
+  <data name="JoinGroupFailed" xml:space="preserve">
+    <value>Beitritt zur Gruppe fehlgeschlagen.</value>
+  </data>
+  <data name="JoinGroupError" xml:space="preserve">
+    <value>Beim Beitritt zur Gruppe ist ein Fehler aufgetreten. {0}</value>
+  </data>
+  <data name="CancelJoinRequestFailed" xml:space="preserve">
+    <value>Beitrittsanfrage konnte nicht abgebrochen werden.</value>
+  </data>
+  <data name="CancelJoinRequestError" xml:space="preserve">
+    <value>Beim Abbrechen der Beitrittsanfrage ist ein Fehler aufgetreten. {0}</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Beitrag konnte nicht angeheftet werden.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Anheften des Beitrags konnte nicht aufgehoben werden.</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>Gruppenbeitrag erfolgreich aktualisiert.</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>Gruppenbeitrag konnte nicht aktualisiert werden.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Meldung erfolgreich gesendet. Danke, dass du hilfst, unsere Community sicher zu halten.</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Unbekannt</value>
+  </data>
 </root>

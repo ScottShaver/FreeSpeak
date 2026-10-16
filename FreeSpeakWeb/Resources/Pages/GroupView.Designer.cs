@@ -419,5 +419,113 @@ namespace FreeSpeakWeb.Resources.Pages {
                 return ResourceManager.GetString("YourPosts", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group.
+        /// </summary>
+        public static string DefaultGroupName {
+            get {
+                return ResourceManager.GetString("DefaultGroupName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Loading more posts....
+        /// </summary>
+        public static string LoadingMorePosts {
+            get {
+                return ResourceManager.GetString("LoadingMorePosts", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No more posts at this time.
+        /// </summary>
+        public static string NoMorePosts {
+            get {
+                return ResourceManager.GetString("NoMorePosts", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string UnknownUser {
+            get {
+                return ResourceManager.GetString("UnknownUser", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to pin post..
+        /// </summary>
+        public static string PinPostFailed {
+            get {
+                return ResourceManager.GetString("PinPostFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to unpin post..
+        /// </summary>
+        public static string UnpinPostFailed {
+            get {
+                return ResourceManager.GetString("UnpinPostFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to upload images..
+        /// </summary>
+        public static string UploadImagesFailed {
+            get {
+                return ResourceManager.GetString("UploadImagesFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to create post..
+        /// </summary>
+        public static string CreatePostFailed {
+            get {
+                return ResourceManager.GetString("CreatePostFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while creating your post..
+        /// </summary>
+        public static string CreatePostError {
+            get {
+                return ResourceManager.GetString("CreatePostError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group post updated successfully..
+        /// </summary>
+        public static string GroupPostUpdated {
+            get {
+                return ResourceManager.GetString("GroupPostUpdated", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to update group post..
+        /// </summary>
+        public static string GroupPostUpdateFailed {
+            get {
+                return ResourceManager.GetString("GroupPostUpdateFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Report submitted successfully. Thank you for helping keep our community safe..
+        /// </summary>
+        public static string ReportSubmitted {
+            get {
+                return ResourceManager.GetString("ReportSubmitted", resourceCulture);
+            }
+        }
     }
 }

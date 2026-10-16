@@ -83,4 +83,16 @@
   <data name="NoPosts" xml:space="preserve">
     <value>暂无公开帖子显示。成为第一个分享内容的人！</value>
   </data>
+  <data name="LoadMore" xml:space="preserve">
+    <value>加载更多</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>正在加载更多帖子...</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>未知用户</value>
+  </data>
 </root>

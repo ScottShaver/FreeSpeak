@@ -230,5 +230,140 @@ namespace FreeSpeakWeb.Resources.Pages {
                 return ResourceManager.GetString("YourFriends", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading your friends..
+        /// </summary>
+        public static string LoadFriendsError {
+            get {
+                return ResourceManager.GetString("LoadFriendsError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading friend requests..
+        /// </summary>
+        public static string LoadRequestsError {
+            get {
+                return ResourceManager.GetString("LoadRequestsError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading sent requests..
+        /// </summary>
+        public static string LoadSentRequestsError {
+            get {
+                return ResourceManager.GetString("LoadSentRequestsError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading suggestions..
+        /// </summary>
+        public static string LoadSuggestionsError {
+            get {
+                return ResourceManager.GetString("LoadSuggestionsError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while searching. Please try again..
+        /// </summary>
+        public static string SearchError {
+            get {
+                return ResourceManager.GetString("SearchError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Friend request sent to {0}..
+        /// </summary>
+        public static string FriendRequestSent {
+            get {
+                return ResourceManager.GetString("FriendRequestSent", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cancelled friend request to {0}..
+        /// </summary>
+        public static string FriendRequestCancelled {
+            get {
+                return ResourceManager.GetString("FriendRequestCancelled", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Removed {0} from your friends..
+        /// </summary>
+        public static string FriendRemoved {
+            get {
+                return ResourceManager.GetString("FriendRemoved", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You are now friends with {0}..
+        /// </summary>
+        public static string NowFriends {
+            get {
+                return ResourceManager.GetString("NowFriends", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Declined friend request from {0}..
+        /// </summary>
+        public static string FriendRequestDeclined {
+            get {
+                return ResourceManager.GetString("FriendRequestDeclined", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to send friend request..
+        /// </summary>
+        public static string SendRequestFailed {
+            get {
+                return ResourceManager.GetString("SendRequestFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to cancel friend request..
+        /// </summary>
+        public static string CancelRequestFailed {
+            get {
+                return ResourceManager.GetString("CancelRequestFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to remove friend..
+        /// </summary>
+        public static string RemoveFriendFailed {
+            get {
+                return ResourceManager.GetString("RemoveFriendFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to accept friend request..
+        /// </summary>
+        public static string AcceptRequestFailed {
+            get {
+                return ResourceManager.GetString("AcceptRequestFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to decline friend request..
+        /// </summary>
+        public static string DeclineRequestFailed {
+            get {
+                return ResourceManager.GetString("DeclineRequestFailed", resourceCulture);
+            }
+        }
     }
 }

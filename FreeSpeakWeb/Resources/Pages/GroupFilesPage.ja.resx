@@ -78,4 +78,52 @@
   <data name="DownloadFailed" xml:space="preserve">
     <value>ダウンロードに失敗しました: {0}</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>グループ</value>
+  </data>
+  <data name="LoadFilesFailed" xml:space="preserve">
+    <value>ファイルの読み込みに失敗しました: {0}</value>
+  </data>
+  <data name="LoadPendingFilesFailed" xml:space="preserve">
+    <value>保留中のファイルの読み込みに失敗しました: {0}</value>
+  </data>
+  <data name="UploadedPendingApproval" xml:space="preserve">
+    <value>ファイルをアップロードしました。管理者の承認後に表示されます。</value>
+  </data>
+  <data name="UploadedSuccessfully" xml:space="preserve">
+    <value>ファイルをアップロードしました！</value>
+  </data>
+  <data name="UploadFileFailed" xml:space="preserve">
+    <value>ファイルのアップロードに失敗しました。</value>
+  </data>
+  <data name="UploadFailedWithReason" xml:space="preserve">
+    <value>アップロードに失敗しました: {0}</value>
+  </data>
+  <data name="FileDeleted" xml:space="preserve">
+    <value>ファイルを削除しました。</value>
+  </data>
+  <data name="DeleteFileFailed" xml:space="preserve">
+    <value>ファイルの削除に失敗しました。</value>
+  </data>
+  <data name="DeleteFailedWithReason" xml:space="preserve">
+    <value>削除に失敗しました: {0}</value>
+  </data>
+  <data name="FileApproved" xml:space="preserve">
+    <value>ファイルを承認しました。</value>
+  </data>
+  <data name="ApproveFileFailed" xml:space="preserve">
+    <value>ファイルの承認に失敗しました。</value>
+  </data>
+  <data name="ApprovalFailedWithReason" xml:space="preserve">
+    <value>承認に失敗しました: {0}</value>
+  </data>
+  <data name="FileDeclined" xml:space="preserve">
+    <value>ファイルを却下しました。</value>
+  </data>
+  <data name="DeclineFileFailed" xml:space="preserve">
+    <value>ファイルの却下に失敗しました。</value>
+  </data>
+  <data name="DeclineFailedWithReason" xml:space="preserve">
+    <value>却下に失敗しました: {0}</value>
+  </data>
 </root>

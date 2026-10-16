@@ -166,4 +166,40 @@
   <data name="NonMemberPrivateNotice" xml:space="preserve">
     <value>Вы просматриваете эту закрытую группу. Вступите, чтобы публиковать записи и участвовать.</value>
   </data>
+  <data name="DefaultGroupName" xml:space="preserve">
+    <value>Группа</value>
+  </data>
+  <data name="LoadingMorePosts" xml:space="preserve">
+    <value>Загрузка новых публикаций...</value>
+  </data>
+  <data name="NoMorePosts" xml:space="preserve">
+    <value>Пока больше нет публикаций</value>
+  </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="PinPostFailed" xml:space="preserve">
+    <value>Не удалось закрепить публикацию.</value>
+  </data>
+  <data name="UnpinPostFailed" xml:space="preserve">
+    <value>Не удалось открепить публикацию.</value>
+  </data>
+  <data name="UploadImagesFailed" xml:space="preserve">
+    <value>Не удалось загрузить изображения.</value>
+  </data>
+  <data name="CreatePostFailed" xml:space="preserve">
+    <value>Не удалось создать публикацию.</value>
+  </data>
+  <data name="CreatePostError" xml:space="preserve">
+    <value>Произошла ошибка при создании публикации.</value>
+  </data>
+  <data name="GroupPostUpdated" xml:space="preserve">
+    <value>Публикация группы успешно обновлена.</value>
+  </data>
+  <data name="GroupPostUpdateFailed" xml:space="preserve">
+    <value>Не удалось обновить публикацию группы.</value>
+  </data>
+  <data name="ReportSubmitted" xml:space="preserve">
+    <value>Жалоба успешно отправлена. Спасибо, что помогаете сохранять безопасность нашего сообщества.</value>
+  </data>
 </root>

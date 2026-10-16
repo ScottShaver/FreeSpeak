@@ -7,4 +7,22 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="PostNotAvailable" xml:space="preserve"><value>Post non disponibile</value></data>
   <data name="GoToHome" xml:space="preserve"><value>Vai alla home</value></data>
+  <data name="Loading" xml:space="preserve">
+    <value>Caricamento...</value>
+  </data>
+  <data name="LoadingPost" xml:space="preserve">
+    <value>Caricamento del post...</value>
+  </data>
+  <data name="PostTitle" xml:space="preserve">
+    <value>Post</value>
+  </data>
+  <data name="PostByAuthor" xml:space="preserve">
+    <value>Post di {0}</value>
+  </data>
+  <data name="PostNoLongerAvailable" xml:space="preserve">
+    <value>Spiacenti, questo post non è più disponibile.</value>
+  </data>
+  <data name="LoadPostError" xml:space="preserve">
+    <value>Si è verificato un errore durante il caricamento di questo post.</value>
+  </data>
 </root>
