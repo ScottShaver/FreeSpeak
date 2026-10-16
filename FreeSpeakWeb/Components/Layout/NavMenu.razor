@@ -194,10 +194,10 @@
                     {
                         <div class="nav-item px-3 position-relative">
                             <button type="button" class="nav-link w-100 text-start d-flex align-items-center justify-content-between" @onclick="ToggleFriendsPopup" @onclick:stopPropagation="true">
-                                <span>
+                                <span class="nav-expander-label">
                                     <span class="bi bi-box-arrow-up-right" aria-hidden="true"></span> @Localizer["JumpToFriend"]
                                 </span>
-                                <span class="bi @(showFriendsPopup ? "bi-chevron-up" : "bi-chevron-down")" style="font-size: 0.75rem;"></span>
+                                <span class="bi nav-expander-chevron @(showFriendsPopup ? "bi-chevron-up" : "bi-chevron-down")"></span>
                             </button>
 
                             @if (showFriendsPopup)
@@ -224,10 +224,10 @@
                     {
                         <div class="nav-item px-3 position-relative">
                             <button type="button" class="nav-link w-100 text-start d-flex align-items-center justify-content-between" @onclick="ToggleGroupsPopup" @onclick:stopPropagation="true">
-                                <span>
+                                <span class="nav-expander-label">
                                     <span class="bi bi-box-arrow-up-right" aria-hidden="true"></span> @Localizer["JumpToGroup"]
                                 </span>
-                                <span class="bi @(showGroupsPopup ? "bi-chevron-up" : "bi-chevron-down")" style="font-size: 0.75rem;"></span>
+                                <span class="bi nav-expander-chevron @(showGroupsPopup ? "bi-chevron-up" : "bi-chevron-down")"></span>
                             </button>
 
                             @if (showGroupsPopup)
