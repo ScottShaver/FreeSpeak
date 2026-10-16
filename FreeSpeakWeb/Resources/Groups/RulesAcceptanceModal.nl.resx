@@ -85,4 +85,10 @@
   <data name="AgreeAndJoin" xml:space="preserve">
     <value>Akkoord &amp; Lid Worden</value>
   </data>
+  <data name="GroupInformationMissing" xml:space="preserve">
+    <value>Groepsinformatie ontbreekt.</value>
+  </data>
+  <data name="ErrorLoadingRules" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het laden van de groepsregels.</value>
+  </data>
 </root>

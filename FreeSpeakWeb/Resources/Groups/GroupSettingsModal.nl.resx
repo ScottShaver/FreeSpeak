@@ -145,4 +145,19 @@
   <data name="RequiresFileApprovalHelp" xml:space="preserve">
     <value>Geüploade bestanden moeten worden goedgekeurd door een moderator voordat ze zichtbaar zijn voor andere leden.</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Sluiten</value>
+  </data>
+  <data name="GroupNameRequired" xml:space="preserve">
+    <value>Groepsnaam is verplicht.</value>
+  </data>
+  <data name="GroupDescriptionRequired" xml:space="preserve">
+    <value>Groepsbeschrijving is verplicht.</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Instellingen succesvol opgeslagen!</value>
+  </data>
+  <data name="ErrorSavingSettings" xml:space="preserve">
+    <value>Er is een onverwachte fout opgetreden bij het opslaan van de instellingen.</value>
+  </data>
 </root>

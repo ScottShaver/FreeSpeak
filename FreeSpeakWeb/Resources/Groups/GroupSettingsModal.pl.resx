@@ -145,4 +145,19 @@
   <data name="RequiresFileApprovalHelp" xml:space="preserve">
     <value>Przesłane pliki muszą zostać zatwierdzone przez moderatora, zanim będą widoczne dla innych członków.</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Zamknij</value>
+  </data>
+  <data name="GroupNameRequired" xml:space="preserve">
+    <value>Nazwa grupy jest wymagana.</value>
+  </data>
+  <data name="GroupDescriptionRequired" xml:space="preserve">
+    <value>Opis grupy jest wymagany.</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Ustawienia zostały zapisane!</value>
+  </data>
+  <data name="ErrorSavingSettings" xml:space="preserve">
+    <value>Podczas zapisywania ustawień wystąpił nieoczekiwany błąd.</value>
+  </data>
 </root>

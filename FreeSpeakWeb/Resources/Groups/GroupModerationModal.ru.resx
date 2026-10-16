@@ -352,4 +352,7 @@
   <data name="Cancel" xml:space="preserve">
     <value>Отмена</value>
   </data>
+  <data name="PostImage" xml:space="preserve">
+    <value>Изображение публикации</value>
+  </data>
 </root>

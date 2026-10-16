@@ -109,4 +109,7 @@
   <data name="ErrorUnbanningMember" xml:space="preserve">
     <value>An error occurred while unbanning the member.</value>
   </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
 </root>

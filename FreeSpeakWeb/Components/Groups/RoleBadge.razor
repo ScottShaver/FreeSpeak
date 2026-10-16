@@ -1,4 +1,7 @@
 @using FreeSpeakWeb.Data
+@using Microsoft.Extensions.Localization
+
+@inject IStringLocalizer<FreeSpeakWeb.Resources.Groups.RoleBadge> Localizer
 
 @* Display role badge for group/system administrators and moderators *@
 @if (ShowBadge)
@@ -41,10 +44,10 @@
     /// </summary>
     private string RoleText => Role switch
     {
-        RoleType.GroupAdmin => "Group Admin",
-        RoleType.GroupModerator => "Group Mod",
-        RoleType.SystemAdmin => "Admin",
-        RoleType.SystemModerator => "Mod",
+        RoleType.GroupAdmin => Localizer["GroupAdmin"].Value,
+        RoleType.GroupModerator => Localizer["GroupModerator"].Value,
+        RoleType.SystemAdmin => Localizer["SystemAdmin"].Value,
+        RoleType.SystemModerator => Localizer["SystemModerator"].Value,
         _ => ""
     };
 

@@ -77,7 +77,7 @@
         @if (!string.IsNullOrEmpty(ImageUrl) && !isEditMode)
         {
             <div class="comment-image-container">
-                <img src="@ImageUrl" alt="Comment image" class="comment-image" @onclick="OnImageClick" />
+                <img src="@ImageUrl" alt="@Localizer["CommentImageAlt"]" class="comment-image" @onclick="OnImageClick" />
             </div>
         }
 
@@ -144,7 +144,7 @@
             <div class="comment-reply-editor" @ref="replyEditorRef">
                 @if (!string.IsNullOrEmpty(CurrentUserImageUrl))
                 {
-                    <img src="@CurrentUserImageUrl" alt="You" class="reply-user-avatar" />
+                    <img src="@CurrentUserImageUrl" alt="@Localizer["YouAlt"]" class="reply-user-avatar" />
                 }
                 else
                 {
@@ -748,22 +748,22 @@
 
     private string FormattedTimestamp => FormatTimestamp(Timestamp);
 
-    private string FullTimestamp => Timestamp.ToLocalTime().ToString("MMMM d, yyyy 'at' h:mm:ss tt");
+    private string FullTimestamp => Timestamp.ToLocalTime().ToString("F");
 
     private string FormatTimestamp(DateTime timestamp)
     {
         var timeSpan = DateTime.UtcNow - timestamp;
 
         if (timeSpan.TotalMinutes < 1)
-            return "Just now";
+            return Localizer["JustNow"];
         if (timeSpan.TotalMinutes < 60)
-            return $"{(int)timeSpan.TotalMinutes}m";
+            return string.Format(Localizer["MinutesShort"].Value, (int)timeSpan.TotalMinutes);
         if (timeSpan.TotalHours < 24)
-            return $"{(int)timeSpan.TotalHours}h";
+            return string.Format(Localizer["HoursShort"].Value, (int)timeSpan.TotalHours);
         if (timeSpan.TotalDays < 7)
-            return $"{(int)timeSpan.TotalDays}d";
+            return string.Format(Localizer["DaysShort"].Value, (int)timeSpan.TotalDays);
 
-        return timestamp.ToLocalTime().ToString("MMMM d 'at' h:mm tt");
+        return timestamp.ToLocalTime().ToString("g");
     }
 
     private string FormatContentWithLineBreaks(string content)

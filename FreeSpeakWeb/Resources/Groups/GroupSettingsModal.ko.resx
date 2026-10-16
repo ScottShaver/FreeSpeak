@@ -145,4 +145,19 @@
   <data name="RequiresFileApprovalHelp" xml:space="preserve">
     <value>업로드된 파일은 다른 회원에게 표시되기 전에 모더레이터의 승인을 받아야 합니다.</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>닫기</value>
+  </data>
+  <data name="GroupNameRequired" xml:space="preserve">
+    <value>그룹 이름은 필수입니다.</value>
+  </data>
+  <data name="GroupDescriptionRequired" xml:space="preserve">
+    <value>그룹 설명은 필수입니다.</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>설정이 저장되었습니다!</value>
+  </data>
+  <data name="ErrorSavingSettings" xml:space="preserve">
+    <value>설정을 저장하는 중 예기치 않은 오류가 발생했습니다.</value>
+  </data>
 </root>

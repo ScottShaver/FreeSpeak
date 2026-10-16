@@ -30,4 +30,7 @@
   <data name="ErrorUnbanningMember" xml:space="preserve">
     <value>Wystąpił błąd podczas odblokowywania członka.</value>
   </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Nieznany</value>
+  </data>
 </root>

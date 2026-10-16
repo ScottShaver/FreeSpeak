@@ -352,4 +352,7 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="PostImage" xml:space="preserve">
+    <value>Post image</value>
+  </data>
 </root>

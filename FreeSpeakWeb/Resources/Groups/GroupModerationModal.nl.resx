@@ -352,4 +352,7 @@
   <data name="Cancel" xml:space="preserve">
     <value>Annuleren</value>
   </data>
+  <data name="PostImage" xml:space="preserve">
+    <value>Berichtafbeelding</value>
+  </data>
 </root>

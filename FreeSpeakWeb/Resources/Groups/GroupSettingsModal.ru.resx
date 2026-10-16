@@ -145,4 +145,19 @@
   <data name="RequiresFileApprovalHelp" xml:space="preserve">
     <value>Загруженные файлы должны быть одобрены модератором, прежде чем они станут видимыми другим участникам.</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="GroupNameRequired" xml:space="preserve">
+    <value>Название группы обязательно.</value>
+  </data>
+  <data name="GroupDescriptionRequired" xml:space="preserve">
+    <value>Описание группы обязательно.</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Настройки успешно сохранены!</value>
+  </data>
+  <data name="ErrorSavingSettings" xml:space="preserve">
+    <value>При сохранении настроек произошла непредвиденная ошибка.</value>
+  </data>
 </root>

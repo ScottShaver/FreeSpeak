@@ -151,4 +151,34 @@
   <data name="BanMemberConfirmTitle" xml:space="preserve"><value>Lid verbannen?</value></data>
   <data name="BanMemberConfirmMessage" xml:space="preserve"><value>Weet je zeker dat je {0} uit deze groep wilt verbannen? Het lid wordt verwijderd en kan de groep niet meer bekijken of erin plaatsen.</value></data>
   <data name="MemberBannedSuccess" xml:space="preserve"><value>{0} is uit de groep verbannen.</value></data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Onbekend</value>
+  </data>
+  <data name="OnlyCreatorOrSystemAdminCanSetAdmin" xml:space="preserve">
+    <value>Alleen de maker van de groep of systeembeheerders kunnen beheerdersrollen toewijzen</value>
+  </data>
+  <data name="OnlyAdminOrSystemAdminCanSetModerator" xml:space="preserve">
+    <value>Alleen beheerders of systeembeheerders kunnen moderatorrollen toewijzen</value>
+  </data>
+  <data name="OnlyCreatorCanBanAdmins" xml:space="preserve">
+    <value>Alleen de maker van de groep kan beheerders verbannen</value>
+  </data>
+  <data name="OnlyCreatorCanRemoveAdmins" xml:space="preserve">
+    <value>Alleen de maker van de groep kan beheerders verwijderen</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Laden...</value>
+  </data>
+  <data name="LoadMoreMembers" xml:space="preserve">
+    <value>Meer leden laden</value>
+  </data>
+  <data name="ShowingMembersSingular" xml:space="preserve">
+    <value>{0} lid weergegeven</value>
+  </data>
+  <data name="ShowingMembersPlural" xml:space="preserve">
+    <value>{0} leden weergegeven</value>
+  </data>
+  <data name="MoreAvailable" xml:space="preserve">
+    <value>Meer beschikbaar</value>
+  </data>
 </root>

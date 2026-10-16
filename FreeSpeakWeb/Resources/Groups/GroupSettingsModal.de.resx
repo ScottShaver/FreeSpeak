@@ -145,4 +145,19 @@
   <data name="RequiresFileApprovalHelp" xml:space="preserve">
     <value>Hochgeladene Dateien müssen von einem Moderator genehmigt werden, bevor sie für andere Mitglieder sichtbar sind.</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="GroupNameRequired" xml:space="preserve">
+    <value>Der Gruppenname ist erforderlich.</value>
+  </data>
+  <data name="GroupDescriptionRequired" xml:space="preserve">
+    <value>Die Gruppenbeschreibung ist erforderlich.</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Einstellungen erfolgreich gespeichert!</value>
+  </data>
+  <data name="ErrorSavingSettings" xml:space="preserve">
+    <value>Beim Speichern der Einstellungen ist ein unerwarteter Fehler aufgetreten.</value>
+  </data>
 </root>

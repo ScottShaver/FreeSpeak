@@ -352,4 +352,7 @@
   <data name="Cancel" xml:space="preserve">
     <value>取消</value>
   </data>
+  <data name="PostImage" xml:space="preserve">
+    <value>帖子图片</value>
+  </data>
 </root>

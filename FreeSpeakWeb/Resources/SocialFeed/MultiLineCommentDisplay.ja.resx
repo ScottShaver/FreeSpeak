@@ -125,4 +125,22 @@
   <data name="DeleteCommentCancelButton" xml:space="preserve">
     <value>キャンセル</value>
   </data>
+  <data name="JustNow" xml:space="preserve">
+    <value>たった今</value>
+  </data>
+  <data name="MinutesShort" xml:space="preserve">
+    <value>{0}分</value>
+  </data>
+  <data name="HoursShort" xml:space="preserve">
+    <value>{0}時間</value>
+  </data>
+  <data name="DaysShort" xml:space="preserve">
+    <value>{0}日</value>
+  </data>
+  <data name="CommentImageAlt" xml:space="preserve">
+    <value>コメントの画像</value>
+  </data>
+  <data name="YouAlt" xml:space="preserve">
+    <value>あなた</value>
+  </data>
 </root>

@@ -145,4 +145,19 @@
   <data name="RequiresFileApprovalHelp" xml:space="preserve">
     <value>يجب الموافقة على الملفات المرفوعة من قبل المشرف قبل أن تكون مرئية للأعضاء الآخرين.</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="GroupNameRequired" xml:space="preserve">
+    <value>اسم المجموعة مطلوب.</value>
+  </data>
+  <data name="GroupDescriptionRequired" xml:space="preserve">
+    <value>وصف المجموعة مطلوب.</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>تم حفظ الإعدادات بنجاح!</value>
+  </data>
+  <data name="ErrorSavingSettings" xml:space="preserve">
+    <value>حدث خطأ غير متوقع أثناء حفظ الإعدادات.</value>
+  </data>
 </root>

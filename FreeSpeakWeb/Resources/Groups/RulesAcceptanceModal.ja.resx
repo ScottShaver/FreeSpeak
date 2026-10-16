@@ -85,4 +85,10 @@
   <data name="AgreeAndJoin" xml:space="preserve">
     <value>同意して参加</value>
   </data>
+  <data name="GroupInformationMissing" xml:space="preserve">
+    <value>グループ情報がありません。</value>
+  </data>
+  <data name="ErrorLoadingRules" xml:space="preserve">
+    <value>グループのルールの読み込み中にエラーが発生しました。</value>
+  </data>
 </root>

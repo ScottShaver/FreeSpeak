@@ -478,7 +478,7 @@
         && NavigationManager.Uri.Contains($"/friend/{FriendId}", StringComparison.OrdinalIgnoreCase);
 
     private string FormattedTimestamp => TimestampFormatter.FormatTimeAgo(CreatedAt);
-    private string FullTimestamp => CreatedAt.ToLocalTime().ToString("MMMM d, yyyy 'at' h:mm:ss tt");
+    private string FullTimestamp => CreatedAt.ToLocalTime().ToString("F");
 
     private string _menuAnchorId = $"header-menu-{Guid.NewGuid():N}";
 

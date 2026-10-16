@@ -30,4 +30,7 @@
   <data name="ErrorUnbanningMember" xml:space="preserve">
     <value>Si è verificato un errore durante la revoca del ban del membro.</value>
   </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Sconosciuto</value>
+  </data>
 </root>

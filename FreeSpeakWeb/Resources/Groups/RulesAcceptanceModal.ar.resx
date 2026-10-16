@@ -85,4 +85,10 @@
   <data name="AgreeAndJoin" xml:space="preserve">
     <value>الموافقة والانضمام</value>
   </data>
+  <data name="GroupInformationMissing" xml:space="preserve">
+    <value>معلومات المجموعة مفقودة.</value>
+  </data>
+  <data name="ErrorLoadingRules" xml:space="preserve">
+    <value>حدث خطأ أثناء تحميل قواعد المجموعة.</value>
+  </data>
 </root>

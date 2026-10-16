@@ -85,4 +85,10 @@
   <data name="AgreeAndJoin" xml:space="preserve">
     <value>동의 및 가입</value>
   </data>
+  <data name="GroupInformationMissing" xml:space="preserve">
+    <value>그룹 정보가 없습니다.</value>
+  </data>
+  <data name="ErrorLoadingRules" xml:space="preserve">
+    <value>그룹 규칙을 불러오는 중 오류가 발생했습니다.</value>
+  </data>
 </root>

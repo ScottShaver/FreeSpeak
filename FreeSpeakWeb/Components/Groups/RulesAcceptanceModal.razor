@@ -134,7 +134,7 @@
     {
         if (Group == null)
         {
-            errorMessage = "Group information is missing.";
+            errorMessage = Localizer["GroupInformationMissing"];
             isLoading = false;
             return;
         }
@@ -147,7 +147,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error loading rules for group {GroupId}", Group.Id);
-            errorMessage = "An error occurred while loading the group rules.";
+            errorMessage = Localizer["ErrorLoadingRules"];
             isLoading = false;
         }
     }

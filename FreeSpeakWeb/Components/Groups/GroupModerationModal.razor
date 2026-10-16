@@ -25,7 +25,7 @@
                 <h5 class="modal-title">
                     <i class="bi bi-shield-check me-2"></i>@Localizer["Title"]
                 </h5>
-                <button type="button" class="btn-close" @onclick="OnClose" aria-label="Close"></button>
+                <button type="button" class="btn-close" @onclick="OnClose" aria-label="@Localizer["Close"]"></button>
             </div>
             <div class="modal-body">
                 @if (isLoading)
@@ -354,7 +354,7 @@
                                                             @foreach (var image in selectedPendingPost.Images)
                                                             {
                                                                 <img src="@image.ImageUrl" 
-                                                                     alt="Post image" 
+                                                                     alt="@Localizer["PostImage"]" 
                                                                      class="img-thumbnail" 
                                                                      style="max-width: 200px; max-height: 200px; object-fit: cover;" />
                                                             }
@@ -1140,7 +1140,7 @@
         if (timeSpan.TotalDays < 30)
             return string.Format(Localizer["DaysAgo"], (int)timeSpan.TotalDays);
 
-        return dateTime.ToLocalTime().ToString("MMM dd, yyyy");
+        return dateTime.ToLocalTime().ToString("d");
     }
 
     #region Reported Post Detail Modal Methods

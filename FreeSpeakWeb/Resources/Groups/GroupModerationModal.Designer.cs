@@ -941,5 +941,14 @@ namespace FreeSpeakWeb.Resources.Groups {
                 return ResourceManager.GetString("ViolatedRule", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Post image.
+        /// </summary>
+        public static string PostImage {
+            get {
+                return ResourceManager.GetString("PostImage", resourceCulture);
+            }
+        }
     }
 }

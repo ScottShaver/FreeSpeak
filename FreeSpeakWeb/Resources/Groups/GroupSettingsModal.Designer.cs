@@ -320,5 +320,50 @@ namespace FreeSpeakWeb.Resources.Groups {
                 return ResourceManager.GetString("Title", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Close {
+            get {
+                return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group name is required..
+        /// </summary>
+        public static string GroupNameRequired {
+            get {
+                return ResourceManager.GetString("GroupNameRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Group description is required..
+        /// </summary>
+        public static string GroupDescriptionRequired {
+            get {
+                return ResourceManager.GetString("GroupDescriptionRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Settings saved successfully!.
+        /// </summary>
+        public static string SettingsSaved {
+            get {
+                return ResourceManager.GetString("SettingsSaved", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An unexpected error occurred while saving settings..
+        /// </summary>
+        public static string ErrorSavingSettings {
+            get {
+                return ResourceManager.GetString("ErrorSavingSettings", resourceCulture);
+            }
+        }
     }
 }

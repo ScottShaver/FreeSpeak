@@ -80,7 +80,7 @@
                 <div class="modlog-entry" @key="entry.Id">
                     <div class="d-flex justify-content-between flex-wrap">
                         <span class="modlog-action">@ActionLabel(entry.Action)</span>
-                        <span class="modlog-time" title="@entry.CreatedAtUtc.ToLocalTime().ToString("MMM d, yyyy 'at' h:mm:ss tt")">
+                        <span class="modlog-time" title="@entry.CreatedAtUtc.ToLocalTime().ToString("G")">
                             <TimestampDisplay Timestamp="@entry.CreatedAtUtc" Mode="relative" />
                         </span>
                     </div>

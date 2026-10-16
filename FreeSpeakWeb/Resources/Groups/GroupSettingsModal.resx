@@ -145,4 +145,19 @@
   <data name="RequiresFileApprovalHelp" xml:space="preserve">
     <value>Uploaded files must be approved by a moderator before they are visible to other members.</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="GroupNameRequired" xml:space="preserve">
+    <value>Group name is required.</value>
+  </data>
+  <data name="GroupDescriptionRequired" xml:space="preserve">
+    <value>Group description is required.</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Settings saved successfully!</value>
+  </data>
+  <data name="ErrorSavingSettings" xml:space="preserve">
+    <value>An unexpected error occurred while saving settings.</value>
+  </data>
 </root>

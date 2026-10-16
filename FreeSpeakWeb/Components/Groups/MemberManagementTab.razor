@@ -28,7 +28,7 @@
     <div class="mb-3">
         <input type="text" 
                class="form-control" 
-               placeholder="🔍 Search members..." 
+               placeholder="@("🔍 " + Localizer["SearchMembers"])" 
                @bind="searchQuery" 
                @bind:event="oninput"
                @onkeyup="OnSearchKeyUp" />
@@ -38,14 +38,14 @@
     {
         <div class="text-center py-4">
             <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading members...</span>
+                <span class="visually-hidden">@Localizer["LoadingMembers"]</span>
             </div>
         </div>
     }
     else if (!members.Any())
     {
         <div class="alert alert-info">
-            <i class="bi bi-info-circle me-2"></i>No members found.
+            <i class="bi bi-info-circle me-2"></i>@Localizer["NoMembersFound"]
         </div>
     }
     else
@@ -56,7 +56,7 @@
                 {
                     var isExpanded = expandedMemberId == member.UserId;
                     var isSaving = savingMemberId == member.UserId;
-                    var memberDisplayName = memberNames.ContainsKey(member.UserId) ? memberNames[member.UserId] : "Unknown";
+                    var memberDisplayName = memberNames.ContainsKey(member.UserId) ? memberNames[member.UserId] : Localizer["UnknownUser"].Value;
                     var isGroupCreator = member.UserId == Group.CreatorId;
 
                     <div class="member-item @(isExpanded ? "expanded" : "")" @key="member.UserId">
@@ -72,21 +72,21 @@
                                     @memberDisplayName
                                     @if (isGroupCreator)
                                     {
-                                        <span class="badge bg-primary ms-2">Creator</span>
+                                        <span class="badge bg-primary ms-2">@Localizer["Creator"]</span>
                                     }
                                     else if (member.IsAdmin)
                                     {
-                                        <span class="badge bg-success ms-2">Admin</span>
+                                        <span class="badge bg-success ms-2">@Localizer["Admin"]</span>
                                     }
                                     else if (member.IsModerator)
                                     {
-                                        <span class="badge bg-info ms-2">Moderator</span>
+                                        <span class="badge bg-info ms-2">@Localizer["Moderator"]</span>
                                     }
                                 </div>
                                 <div class="member-stats text-muted small">
-                                    Joined: @member.JoinedAt.ToLocalTime().ToString("MMM dd, yyyy") | 
-                                    Posts: @member.PostCount | 
-                                    Points: @member.GroupPoints
+                                    @Localizer["Joined"]: @member.JoinedAt.ToLocalTime().ToString("d") | 
+                                    @Localizer["Posts"]: @member.PostCount | 
+                                    @Localizer["Points"]: @member.GroupPoints
                                 </div>
                             </div>
                         </div>
@@ -115,14 +115,14 @@
                             @if (isGroupCreator)
                             {
                                 <div class="alert alert-info alert-sm">
-                                    <i class="bi bi-info-circle me-2"></i>The group creator's permissions cannot be modified.
+                                    <i class="bi bi-info-circle me-2"></i>@Localizer["CannotModifyCreator"]
                                 </div>
                             }
                             else
                             {
                                 <!-- Role Assignment Section -->
                                 <div class="action-section">
-                                    <h6 class="section-title">Role Assignment</h6>
+                                    <h6 class="section-title">@Localizer["RoleAssignment"]</h6>
 
                                     <div class="role-controls">
                                         <div class="form-check form-switch">
@@ -133,11 +133,11 @@
                                                    @onchange="@(async (e) => await HandleAdminToggle(member.UserId, (bool)e.Value!))"
                                                    disabled="@(isSaving || !CanSetAdmin)" />
                                             <label class="form-check-label" for="admin-@member.UserId">
-                                                <i class="bi bi-shield-check me-1"></i>Group Administrator
+                                                <i class="bi bi-shield-check me-1"></i>@Localizer["GroupAdmin"]
                                             </label>
                                             @if (!CanSetAdmin)
                                             {
-                                                <small class="text-muted d-block">Only the group creator or system administrators can assign admin roles</small>
+                                                <small class="text-muted d-block">@Localizer["OnlyCreatorOrSystemAdminCanSetAdmin"]</small>
                                             }
                                         </div>
                                         <div class="form-check form-switch">
@@ -148,11 +148,11 @@
                                                    @onchange="@(async (e) => await HandleModeratorToggle(member.UserId, (bool)e.Value!))"
                                                    disabled="@(isSaving || !CanSetModerator)" />
                                             <label class="form-check-label" for="moderator-@member.UserId">
-                                                <i class="bi bi-person-badge me-1"></i>Group Moderator
+                                                <i class="bi bi-person-badge me-1"></i>@Localizer["GroupModerator"]
                                             </label>
                                             @if (!CanSetModerator)
                                             {
-                                                <small class="text-muted d-block">Only admins or system administrators can assign moderator roles</small>
+                                                <small class="text-muted d-block">@Localizer["OnlyAdminOrSystemAdminCanSetModerator"]</small>
                                             }
                                         </div>
                                     </div>
@@ -160,24 +160,23 @@
 
                                 <!-- Ban/Unban Section -->
                                 <div class="action-section">
-                                    <h6 class="section-title">Member Status</h6>
+                                    <h6 class="section-title">@Localizer["MemberStatus"]</h6>
                                     <div class="ban-controls">
                                         <button type="button" 
                                                 class="btn btn-danger btn-sm"
                                                 @onclick="@(() => RequestBanMember(member))"
                                                 disabled="@(isSaving || !CanBanMember(member))">
-                                            <i class="bi bi-slash-circle me-1"></i>Ban Member
-                                        </button>
+                                            <i class="bi bi-slash-circle me-1">                                            </i>@Localizer["BanMember"]                                        </button>
                                         @if (!CanBanMember(member))
                                         {
                                             <small class="text-muted d-block mt-1">
                                                 @if (member.IsAdmin && !IsCurrentUserCreator)
                                                 {
-                                                    <text>Only the group creator can ban administrators</text>
+                                                    <text>@Localizer["OnlyCreatorCanBanAdmins"]</text>
                                                 }
                                                 else if (!CanSetModerator)
                                                 {
-                                                    <text>You must be an admin or moderator to ban members</text>
+                                                    <text>@Localizer["RequireAdminOrModeratorToBan"]</text>
                                                 }
                                             </small>
                                         }
@@ -188,22 +187,21 @@
                                 @if (CanRemoveMember)
                                 {
                                     <div class="action-section">
-                                        <h6 class="section-title text-danger">Danger Zone</h6>
+                                        <h6 class="section-title text-danger">@Localizer["DangerZone"]</h6>
                                         <div class="remove-controls">
                                             <button type="button" 
                                                     class="btn btn-outline-danger btn-sm"
                                                     @onclick="@(async () => await HandleRemoveMember(member.UserId))"
                                                     disabled="@(isSaving || !CanRemoveSpecificMember(member))">
-                                                <i class="bi bi-person-x me-1"></i>Remove from Group
-                                            </button>
+                                                <i class="bi bi-person-x me-1">                                                </i>@Localizer["RemoveFromGroup"]                                            </button>
                                             <small class="text-muted d-block mt-1">
                                                 @if (!CanRemoveSpecificMember(member))
                                                 {
-                                                    <text>Only the group creator can remove administrators</text>
+                                                    <text>@Localizer["OnlyCreatorCanRemoveAdmins"]</text>
                                                 }
                                                 else
                                                 {
-                                                    <text>This will permanently remove the member from the group</text>
+                                                    <text>@Localizer["RemoveMemberWarning"]</text>
                                                 }
                                             </small>
                                         </div>
@@ -227,19 +225,19 @@
                     @if (isLoadingMore)
                     {
                         <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        <span>Loading...</span>
+                        <span>@Localizer["Loading"]</span>
                     }
                     else
                     {
                         <i class="bi bi-arrow-down-circle me-2"></i>
-                        <span>Load More Members</span>
+                        <span>@Localizer["LoadMoreMembers"]</span>
                     }
                 </button>
                 <div class="pagination-info text-muted small mt-2">
-                    Showing @members.Count member@(members.Count != 1 ? "s" : "")
+                    @string.Format(Localizer[members.Count != 1 ? "ShowingMembersPlural" : "ShowingMembersSingular"].Value, members.Count)
                     @if (hasMore)
                     {
-                        <text> • More available</text>
+                        <text> • @Localizer["MoreAvailable"]</text>
                     }
                 </div>
             </div>
@@ -392,7 +390,7 @@
                 userDetails[member.UserId] = (
                     member.User!.FirstName,
                     member.User.LastName,
-                    member.User.UserName ?? "Unknown"
+                    member.User.UserName ?? Localizer["UnknownUser"].Value
                 );
             }
 
@@ -478,21 +476,21 @@
                     member.IsAdmin = isAdmin;
                 }
 
-                successMessage = isAdmin ? "Admin role granted successfully." : "Admin role revoked successfully.";
+                successMessage = Localizer[isAdmin ? "AdminRoleGranted" : "AdminRoleRevoked"];
                 successMemberId = userId;
 
                 await OnMemberActionPerformed.InvokeAsync();
             }
             else
             {
-                errorMessage = result.ErrorMessage ?? "An error occurred while updating the role.";
+                errorMessage = result.ErrorMessage ?? Localizer["ErrorUpdatingRole"];
                 errorMemberId = userId;
             }
         }
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error toggling admin role for user {UserId} in group {GroupId}", userId, Group.Id);
-            errorMessage = "An error occurred while updating the role.";
+            errorMessage = Localizer["ErrorUpdatingRole"];
             errorMemberId = userId;
         }
         finally
@@ -526,21 +524,21 @@
                     member.IsModerator = isModerator;
                 }
 
-                successMessage = isModerator ? "Moderator role granted successfully." : "Moderator role revoked successfully.";
+                successMessage = Localizer[isModerator ? "ModeratorRoleGranted" : "ModeratorRoleRevoked"];
                 successMemberId = userId;
 
                 await OnMemberActionPerformed.InvokeAsync();
             }
             else
             {
-                errorMessage = result.ErrorMessage ?? "An error occurred while updating the role.";
+                errorMessage = result.ErrorMessage ?? Localizer["ErrorUpdatingRole"];
                 errorMemberId = userId;
             }
         }
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error toggling moderator role for user {UserId} in group {GroupId}", userId, Group.Id);
-            errorMessage = "An error occurred while updating the role.";
+            errorMessage = Localizer["ErrorUpdatingRole"];
             errorMemberId = userId;
         }
         finally
@@ -558,7 +556,7 @@
     /// <param name="userId">The user ID of the member.</param>
     /// <returns>The member's display name.</returns>
     private string GetMemberDisplayName(string userId) =>
-        memberNames.TryGetValue(userId, out var name) ? name : "Unknown";
+        memberNames.TryGetValue(userId, out var name) ? name : Localizer["UnknownUser"].Value;
 
     /// <summary>
     /// Opens the ban confirmation dialog for a member.
@@ -658,14 +656,14 @@
             }
             else
             {
-                errorMessage = result.ErrorMessage ?? "An error occurred while removing the member.";
+                errorMessage = result.ErrorMessage ?? Localizer["ErrorRemovingMember"];
                 errorMemberId = userId;
             }
         }
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error removing user {UserId} from group {GroupId}", userId, Group.Id);
-            errorMessage = "An error occurred while removing the member.";
+            errorMessage = Localizer["ErrorRemovingMember"];
             errorMemberId = userId;
         }
         finally

@@ -151,4 +151,34 @@
   <data name="BanMemberConfirmTitle" xml:space="preserve"><value>Bannir le membre ?</value></data>
   <data name="BanMemberConfirmMessage" xml:space="preserve"><value>Voulez-vous vraiment bannir {0} de ce groupe ? Il sera retiré et ne pourra plus le consulter ni y publier.</value></data>
   <data name="MemberBannedSuccess" xml:space="preserve"><value>{0} a été banni du groupe.</value></data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
+  <data name="OnlyCreatorOrSystemAdminCanSetAdmin" xml:space="preserve">
+    <value>Seuls le créateur du groupe ou les administrateurs système peuvent attribuer des rôles d'administrateur</value>
+  </data>
+  <data name="OnlyAdminOrSystemAdminCanSetModerator" xml:space="preserve">
+    <value>Seuls les administrateurs ou les administrateurs système peuvent attribuer des rôles de modérateur</value>
+  </data>
+  <data name="OnlyCreatorCanBanAdmins" xml:space="preserve">
+    <value>Seul le créateur du groupe peut bannir les administrateurs</value>
+  </data>
+  <data name="OnlyCreatorCanRemoveAdmins" xml:space="preserve">
+    <value>Seul le créateur du groupe peut supprimer les administrateurs</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Chargement...</value>
+  </data>
+  <data name="LoadMoreMembers" xml:space="preserve">
+    <value>Charger plus de membres</value>
+  </data>
+  <data name="ShowingMembersSingular" xml:space="preserve">
+    <value>Affichage de {0} membre</value>
+  </data>
+  <data name="ShowingMembersPlural" xml:space="preserve">
+    <value>Affichage de {0} membres</value>
+  </data>
+  <data name="MoreAvailable" xml:space="preserve">
+    <value>Plus disponibles</value>
+  </data>
 </root>

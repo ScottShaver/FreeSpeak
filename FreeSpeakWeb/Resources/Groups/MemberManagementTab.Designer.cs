@@ -356,5 +356,95 @@ namespace FreeSpeakWeb.Resources.Groups {
                 return ResourceManager.GetString("SearchMembers", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string UnknownUser {
+            get {
+                return ResourceManager.GetString("UnknownUser", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Only the group creator or system administrators can assign admin roles.
+        /// </summary>
+        public static string OnlyCreatorOrSystemAdminCanSetAdmin {
+            get {
+                return ResourceManager.GetString("OnlyCreatorOrSystemAdminCanSetAdmin", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Only admins or system administrators can assign moderator roles.
+        /// </summary>
+        public static string OnlyAdminOrSystemAdminCanSetModerator {
+            get {
+                return ResourceManager.GetString("OnlyAdminOrSystemAdminCanSetModerator", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Only the group creator can ban administrators.
+        /// </summary>
+        public static string OnlyCreatorCanBanAdmins {
+            get {
+                return ResourceManager.GetString("OnlyCreatorCanBanAdmins", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Only the group creator can remove administrators.
+        /// </summary>
+        public static string OnlyCreatorCanRemoveAdmins {
+            get {
+                return ResourceManager.GetString("OnlyCreatorCanRemoveAdmins", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        public static string Loading {
+            get {
+                return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Load More Members.
+        /// </summary>
+        public static string LoadMoreMembers {
+            get {
+                return ResourceManager.GetString("LoadMoreMembers", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Showing {0} member.
+        /// </summary>
+        public static string ShowingMembersSingular {
+            get {
+                return ResourceManager.GetString("ShowingMembersSingular", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Showing {0} members.
+        /// </summary>
+        public static string ShowingMembersPlural {
+            get {
+                return ResourceManager.GetString("ShowingMembersPlural", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to More available.
+        /// </summary>
+        public static string MoreAvailable {
+            get {
+                return ResourceManager.GetString("MoreAvailable", resourceCulture);
+            }
+        }
     }
 }

@@ -151,4 +151,34 @@
   <data name="BanMemberConfirmTitle" xml:space="preserve"><value>封禁成员？</value></data>
   <data name="BanMemberConfirmMessage" xml:space="preserve"><value>确定要将 {0} 从此群组封禁吗？该成员将被移除，且无法再查看或在其中发帖。</value></data>
   <data name="MemberBannedSuccess" xml:space="preserve"><value>{0} 已被群组封禁。</value></data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="OnlyCreatorOrSystemAdminCanSetAdmin" xml:space="preserve">
+    <value>只有群组创建者或系统管理员可以分配管理员角色</value>
+  </data>
+  <data name="OnlyAdminOrSystemAdminCanSetModerator" xml:space="preserve">
+    <value>只有管理员或系统管理员可以分配版主角色</value>
+  </data>
+  <data name="OnlyCreatorCanBanAdmins" xml:space="preserve">
+    <value>只有群组创建者可以封禁管理员</value>
+  </data>
+  <data name="OnlyCreatorCanRemoveAdmins" xml:space="preserve">
+    <value>只有群组创建者可以移除管理员</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>加载中...</value>
+  </data>
+  <data name="LoadMoreMembers" xml:space="preserve">
+    <value>加载更多成员</value>
+  </data>
+  <data name="ShowingMembersSingular" xml:space="preserve">
+    <value>显示 {0} 位成员</value>
+  </data>
+  <data name="ShowingMembersPlural" xml:space="preserve">
+    <value>显示 {0} 位成员</value>
+  </data>
+  <data name="MoreAvailable" xml:space="preserve">
+    <value>还有更多</value>
+  </data>
 </root>

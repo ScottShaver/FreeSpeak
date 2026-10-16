@@ -30,4 +30,7 @@
   <data name="ErrorUnbanningMember" xml:space="preserve">
     <value>Beim Entsperren des Mitglieds ist ein Fehler aufgetreten.</value>
   </data>
+  <data name="UnknownUser" xml:space="preserve">
+    <value>Unbekannt</value>
+  </data>
 </root>
