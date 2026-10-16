@@ -100,4 +100,49 @@
   <data name="RoleUser" xml:space="preserve">
     <value>مستخدم عادي بوصول أساسي</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>الملف الشخصي</value>
+  </data>
+  <data name="SelfEditConfirm" xml:space="preserve">
+    <value>أنت تعدّل أدوارك الخاصة. هل أنت متأكد أنك تريد المتابعة؟</value>
+  </data>
+  <data name="SelfEditConfirmRemovingAdmin" xml:space="preserve">
+    <value>أنت تعدّل أدوارك الخاصة وتزيل دور SystemAdministrator الخاص بك. ستفقد إمكانية الوصول إلى إدارة النظام. هل أنت متأكد أنك تريد المتابعة؟</value>
+  </data>
+  <data name="ConfirmSaveRoleChanges" xml:space="preserve">
+    <value>نعم، احفظ تغييرات أدواري</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="ErrorLoadRoles" xml:space="preserve">
+    <value>فشل تحميل الأدوار. يرجى المحاولة مرة أخرى.</value>
+  </data>
+  <data name="RoleChangesSaved" xml:space="preserve">
+    <value>تم حفظ تغييرات الأدوار بنجاح!</value>
+  </data>
+  <data name="FailedToSaveRoles" xml:space="preserve">
+    <value>فشل حفظ تغييرات الأدوار: {0}</value>
+  </data>
+  <data name="FailedToAddRole" xml:space="preserve">
+    <value>فشلت إضافة الدور: {0}</value>
+  </data>
+  <data name="FailedToRemoveRole" xml:space="preserve">
+    <value>فشلت إزالة الدور: {0} ({1})</value>
+  </data>
+  <data name="ReasonLastAdministrator" xml:space="preserve">
+    <value>يجب أن يبقى مسؤول نظام واحد على الأقل</value>
+  </data>
+  <data name="ReasonRejected" xml:space="preserve">
+    <value>تم رفض العملية</value>
+  </data>
+  <data name="RoleGroupAdministrator" xml:space="preserve">
+    <value>يمكنه إنشاء المجموعات وإدارتها</value>
+  </data>
+  <data name="RoleGroupModerator" xml:space="preserve">
+    <value>يمكنه الإشراف على المحتوى داخل المجموعات المعيّنة</value>
+  </data>
+  <data name="RoleCustom" xml:space="preserve">
+    <value>دور مخصص</value>
+  </data>
 </root>

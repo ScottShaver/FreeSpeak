@@ -248,5 +248,23 @@ namespace FreeSpeakWeb.Resources.Admin {
                 return ResourceManager.GetString("UserIdPlaceholder", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Show raw details.
+        /// </summary>
+        public static string ShowRawDetails {
+            get {
+                return ResourceManager.GetString("ShowRawDetails", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while searching audit logs. Please try again..
+        /// </summary>
+        public static string ErrorSearching {
+            get {
+                return ResourceManager.GetString("ErrorSearching", resourceCulture);
+            }
+        }
     }
 }

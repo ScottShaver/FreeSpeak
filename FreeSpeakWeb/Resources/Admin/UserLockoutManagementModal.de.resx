@@ -154,4 +154,64 @@
   <data name="Close" xml:space="preserve">
     <value>Schließen</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="DurationDays" xml:space="preserve">
+    <value>{0} T</value>
+  </data>
+  <data name="DurationHours" xml:space="preserve">
+    <value>{0} Std.</value>
+  </data>
+  <data name="DurationMinutes" xml:space="preserve">
+    <value>{0} Min.</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0} Sek.</value>
+  </data>
+  <data name="DurationSeparator" xml:space="preserve">
+    <value>, </value>
+  </data>
+  <data name="NotAvailable" xml:space="preserve">
+    <value>k. A.</value>
+  </data>
+  <data name="Expired" xml:space="preserve">
+    <value>Abgelaufen</value>
+  </data>
+  <data name="SetLockoutUntilDate" xml:space="preserve">
+    <value>Sperre bis Datum festlegen</value>
+  </data>
+  <data name="ErrorLoadStatus" xml:space="preserve">
+    <value>Sperrstatus konnte nicht geladen werden. Bitte versuchen Sie es erneut.</value>
+  </data>
+  <data name="LockoutRemoved" xml:space="preserve">
+    <value>Sperre erfolgreich aufgehoben. Fehlgeschlagene Anmeldeversuche wurden zurückgesetzt.</value>
+  </data>
+  <data name="ErrorRemoveLockout" xml:space="preserve">
+    <value>Sperre konnte nicht aufgehoben werden. Bitte versuchen Sie es erneut.</value>
+  </data>
+  <data name="ErrorRemoveLockoutDetail" xml:space="preserve">
+    <value>Sperre konnte nicht aufgehoben werden: {0}</value>
+  </data>
+  <data name="PermanentLockoutSet" xml:space="preserve">
+    <value>Der Benutzer wurde dauerhaft gesperrt.</value>
+  </data>
+  <data name="ErrorSetPermanent" xml:space="preserve">
+    <value>Dauerhafte Sperre konnte nicht festgelegt werden. Bitte versuchen Sie es erneut.</value>
+  </data>
+  <data name="ErrorSetPermanentDetail" xml:space="preserve">
+    <value>Dauerhafte Sperre konnte nicht festgelegt werden: {0}</value>
+  </data>
+  <data name="LockedOutForDuration" xml:space="preserve">
+    <value>Der Benutzer wurde für {0} gesperrt.</value>
+  </data>
+  <data name="LockedOutUntilDate" xml:space="preserve">
+    <value>Der Benutzer wurde bis {0} gesperrt.</value>
+  </data>
+  <data name="ErrorSetTemporary" xml:space="preserve">
+    <value>Temporäre Sperre konnte nicht festgelegt werden. Bitte versuchen Sie es erneut.</value>
+  </data>
+  <data name="ErrorSetTemporaryDetail" xml:space="preserve">
+    <value>Temporäre Sperre konnte nicht festgelegt werden: {0}</value>
+  </data>
 </root>

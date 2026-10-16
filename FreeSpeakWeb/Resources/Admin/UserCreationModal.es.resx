@@ -154,4 +154,10 @@
   <data name="CreateUser" xml:space="preserve">
     <value>Crear Usuario</value>
   </data>
+  <data name="UserCreatedSuccessfully" xml:space="preserve">
+    <value>¡Usuario '{0}' creado correctamente!</value>
+  </data>
+  <data name="ErrorCreatingUser" xml:space="preserve">
+    <value>Se produjo un error al crear el usuario: {0}</value>
+  </data>
 </root>

@@ -100,4 +100,49 @@
   <data name="RoleUser" xml:space="preserve">
     <value>Utente standard con accesso base</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Profilo</value>
+  </data>
+  <data name="SelfEditConfirm" xml:space="preserve">
+    <value>Stai modificando i tuoi ruoli. Vuoi davvero continuare?</value>
+  </data>
+  <data name="SelfEditConfirmRemovingAdmin" xml:space="preserve">
+    <value>Stai modificando i tuoi ruoli e rimuovendo il tuo ruolo SystemAdministrator. Perderai l'accesso all'amministrazione del sistema. Vuoi davvero continuare?</value>
+  </data>
+  <data name="ConfirmSaveRoleChanges" xml:space="preserve">
+    <value>Sì, salva le modifiche ai miei ruoli</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
+  <data name="ErrorLoadRoles" xml:space="preserve">
+    <value>Impossibile caricare i ruoli. Riprova.</value>
+  </data>
+  <data name="RoleChangesSaved" xml:space="preserve">
+    <value>Modifiche ai ruoli salvate correttamente!</value>
+  </data>
+  <data name="FailedToSaveRoles" xml:space="preserve">
+    <value>Impossibile salvare le modifiche ai ruoli: {0}</value>
+  </data>
+  <data name="FailedToAddRole" xml:space="preserve">
+    <value>Impossibile aggiungere il ruolo: {0}</value>
+  </data>
+  <data name="FailedToRemoveRole" xml:space="preserve">
+    <value>Impossibile rimuovere il ruolo: {0} ({1})</value>
+  </data>
+  <data name="ReasonLastAdministrator" xml:space="preserve">
+    <value>deve rimanere almeno un amministratore di sistema</value>
+  </data>
+  <data name="ReasonRejected" xml:space="preserve">
+    <value>l'operazione è stata rifiutata</value>
+  </data>
+  <data name="RoleGroupAdministrator" xml:space="preserve">
+    <value>Può creare e gestire gruppi</value>
+  </data>
+  <data name="RoleGroupModerator" xml:space="preserve">
+    <value>Può moderare i contenuti nei gruppi assegnati</value>
+  </data>
+  <data name="RoleCustom" xml:space="preserve">
+    <value>Ruolo personalizzato</value>
+  </data>
 </root>

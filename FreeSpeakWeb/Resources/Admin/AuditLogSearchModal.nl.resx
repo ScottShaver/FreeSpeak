@@ -121,4 +121,10 @@
   <data name="Close" xml:space="preserve">
     <value>Sluiten</value>
   </data>
+  <data name="ShowRawDetails" xml:space="preserve">
+    <value>Ruwe details tonen</value>
+  </data>
+  <data name="ErrorSearching" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het zoeken in de auditlogs. Probeer het opnieuw.</value>
+  </data>
 </root>

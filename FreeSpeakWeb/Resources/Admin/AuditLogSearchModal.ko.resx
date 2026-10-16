@@ -121,4 +121,10 @@
   <data name="Close" xml:space="preserve">
     <value>닫기</value>
   </data>
+  <data name="ShowRawDetails" xml:space="preserve">
+    <value>원시 세부 정보 표시</value>
+  </data>
+  <data name="ErrorSearching" xml:space="preserve">
+    <value>감사 로그를 검색하는 중 오류가 발생했습니다. 다시 시도해 주세요.</value>
+  </data>
 </root>

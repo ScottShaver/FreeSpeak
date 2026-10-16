@@ -100,4 +100,49 @@
   <data name="RoleUser" xml:space="preserve">
     <value>Standardowy użytkownik z podstawowym dostępem</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="SelfEditConfirm" xml:space="preserve">
+    <value>Edytujesz własne role. Czy na pewno chcesz kontynuować?</value>
+  </data>
+  <data name="SelfEditConfirmRemovingAdmin" xml:space="preserve">
+    <value>Edytujesz własne role i usuwasz swoją rolę SystemAdministrator. Utracisz dostęp do administracji systemem. Czy na pewno chcesz kontynuować?</value>
+  </data>
+  <data name="ConfirmSaveRoleChanges" xml:space="preserve">
+    <value>Tak, zapisz zmiany moich ról</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="ErrorLoadRoles" xml:space="preserve">
+    <value>Nie udało się załadować ról. Spróbuj ponownie.</value>
+  </data>
+  <data name="RoleChangesSaved" xml:space="preserve">
+    <value>Zmiany ról zostały zapisane!</value>
+  </data>
+  <data name="FailedToSaveRoles" xml:space="preserve">
+    <value>Nie udało się zapisać zmian ról: {0}</value>
+  </data>
+  <data name="FailedToAddRole" xml:space="preserve">
+    <value>Nie udało się dodać roli: {0}</value>
+  </data>
+  <data name="FailedToRemoveRole" xml:space="preserve">
+    <value>Nie udało się usunąć roli: {0} ({1})</value>
+  </data>
+  <data name="ReasonLastAdministrator" xml:space="preserve">
+    <value>musi pozostać co najmniej jeden administrator systemu</value>
+  </data>
+  <data name="ReasonRejected" xml:space="preserve">
+    <value>operacja została odrzucona</value>
+  </data>
+  <data name="RoleGroupAdministrator" xml:space="preserve">
+    <value>Może tworzyć grupy i nimi zarządzać</value>
+  </data>
+  <data name="RoleGroupModerator" xml:space="preserve">
+    <value>Może moderować treści w przydzielonych grupach</value>
+  </data>
+  <data name="RoleCustom" xml:space="preserve">
+    <value>Rola niestandardowa</value>
+  </data>
 </root>

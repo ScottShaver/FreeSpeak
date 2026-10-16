@@ -121,4 +121,10 @@
   <data name="Close" xml:space="preserve">
     <value>Cerrar</value>
   </data>
+  <data name="ShowRawDetails" xml:space="preserve">
+    <value>Mostrar detalles sin procesar</value>
+  </data>
+  <data name="ErrorSearching" xml:space="preserve">
+    <value>Se produjo un error al buscar en los registros de auditoría. Inténtelo de nuevo.</value>
+  </data>
 </root>

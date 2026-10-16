@@ -121,4 +121,10 @@
   <data name="Close" xml:space="preserve">
     <value>Закрыть</value>
   </data>
+  <data name="ShowRawDetails" xml:space="preserve">
+    <value>Показать необработанные данные</value>
+  </data>
+  <data name="ErrorSearching" xml:space="preserve">
+    <value>Произошла ошибка при поиске в журналах аудита. Повторите попытку.</value>
+  </data>
 </root>

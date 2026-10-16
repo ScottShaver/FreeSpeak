@@ -100,4 +100,49 @@
   <data name="RoleUser" xml:space="preserve">
     <value>Standaard gebruiker met basistoegang</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Profiel</value>
+  </data>
+  <data name="SelfEditConfirm" xml:space="preserve">
+    <value>U bewerkt uw eigen rollen. Weet u zeker dat u wilt doorgaan?</value>
+  </data>
+  <data name="SelfEditConfirmRemovingAdmin" xml:space="preserve">
+    <value>U bewerkt uw eigen rollen en verwijdert uw rol SystemAdministrator. U verliest de toegang tot systeembeheer. Weet u zeker dat u wilt doorgaan?</value>
+  </data>
+  <data name="ConfirmSaveRoleChanges" xml:space="preserve">
+    <value>Ja, mijn rolwijzigingen opslaan</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuleren</value>
+  </data>
+  <data name="ErrorLoadRoles" xml:space="preserve">
+    <value>Rollen laden mislukt. Probeer het opnieuw.</value>
+  </data>
+  <data name="RoleChangesSaved" xml:space="preserve">
+    <value>Rolwijzigingen zijn opgeslagen!</value>
+  </data>
+  <data name="FailedToSaveRoles" xml:space="preserve">
+    <value>Rolwijzigingen opslaan mislukt: {0}</value>
+  </data>
+  <data name="FailedToAddRole" xml:space="preserve">
+    <value>Rol toevoegen mislukt: {0}</value>
+  </data>
+  <data name="FailedToRemoveRole" xml:space="preserve">
+    <value>Rol verwijderen mislukt: {0} ({1})</value>
+  </data>
+  <data name="ReasonLastAdministrator" xml:space="preserve">
+    <value>er moet minimaal één systeembeheerder overblijven</value>
+  </data>
+  <data name="ReasonRejected" xml:space="preserve">
+    <value>bewerking is geweigerd</value>
+  </data>
+  <data name="RoleGroupAdministrator" xml:space="preserve">
+    <value>Kan groepen maken en beheren</value>
+  </data>
+  <data name="RoleGroupModerator" xml:space="preserve">
+    <value>Kan content modereren binnen toegewezen groepen</value>
+  </data>
+  <data name="RoleCustom" xml:space="preserve">
+    <value>Aangepaste rol</value>
+  </data>
 </root>

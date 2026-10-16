@@ -347,5 +347,185 @@ namespace FreeSpeakWeb.Resources.Admin {
                 return ResourceManager.GetString("UserLockedUntil", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        public static string ProfilePictureAlt {
+            get {
+                return ResourceManager.GetString("ProfilePictureAlt", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0} d.
+        /// </summary>
+        public static string DurationDays {
+            get {
+                return ResourceManager.GetString("DurationDays", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0} h.
+        /// </summary>
+        public static string DurationHours {
+            get {
+                return ResourceManager.GetString("DurationHours", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0} min.
+        /// </summary>
+        public static string DurationMinutes {
+            get {
+                return ResourceManager.GetString("DurationMinutes", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0} s.
+        /// </summary>
+        public static string DurationSeconds {
+            get {
+                return ResourceManager.GetString("DurationSeconds", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to , .
+        /// </summary>
+        public static string DurationSeparator {
+            get {
+                return ResourceManager.GetString("DurationSeparator", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to N/A.
+        /// </summary>
+        public static string NotAvailable {
+            get {
+                return ResourceManager.GetString("NotAvailable", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Expired.
+        /// </summary>
+        public static string Expired {
+            get {
+                return ResourceManager.GetString("Expired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Set Lockout Until Date.
+        /// </summary>
+        public static string SetLockoutUntilDate {
+            get {
+                return ResourceManager.GetString("SetLockoutUntilDate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to load lockout status. Please try again..
+        /// </summary>
+        public static string ErrorLoadStatus {
+            get {
+                return ResourceManager.GetString("ErrorLoadStatus", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Lockout removed successfully. Failed login attempts have been reset..
+        /// </summary>
+        public static string LockoutRemoved {
+            get {
+                return ResourceManager.GetString("LockoutRemoved", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to remove lockout. Please try again..
+        /// </summary>
+        public static string ErrorRemoveLockout {
+            get {
+                return ResourceManager.GetString("ErrorRemoveLockout", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to remove lockout: {0}.
+        /// </summary>
+        public static string ErrorRemoveLockoutDetail {
+            get {
+                return ResourceManager.GetString("ErrorRemoveLockoutDetail", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to User has been permanently locked out..
+        /// </summary>
+        public static string PermanentLockoutSet {
+            get {
+                return ResourceManager.GetString("PermanentLockoutSet", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to set permanent lockout. Please try again..
+        /// </summary>
+        public static string ErrorSetPermanent {
+            get {
+                return ResourceManager.GetString("ErrorSetPermanent", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to set permanent lockout: {0}.
+        /// </summary>
+        public static string ErrorSetPermanentDetail {
+            get {
+                return ResourceManager.GetString("ErrorSetPermanentDetail", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to User has been locked out for {0}..
+        /// </summary>
+        public static string LockedOutForDuration {
+            get {
+                return ResourceManager.GetString("LockedOutForDuration", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to User has been locked out until {0}..
+        /// </summary>
+        public static string LockedOutUntilDate {
+            get {
+                return ResourceManager.GetString("LockedOutUntilDate", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to set temporary lockout. Please try again..
+        /// </summary>
+        public static string ErrorSetTemporary {
+            get {
+                return ResourceManager.GetString("ErrorSetTemporary", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to set temporary lockout: {0}.
+        /// </summary>
+        public static string ErrorSetTemporaryDetail {
+            get {
+                return ResourceManager.GetString("ErrorSetTemporaryDetail", resourceCulture);
+            }
+        }
     }
 }

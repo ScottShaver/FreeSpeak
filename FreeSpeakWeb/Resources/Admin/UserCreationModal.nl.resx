@@ -154,4 +154,10 @@
   <data name="CreateUser" xml:space="preserve">
     <value>Gebruiker Aanmaken</value>
   </data>
+  <data name="UserCreatedSuccessfully" xml:space="preserve">
+    <value>Gebruiker '{0}' is succesvol aangemaakt!</value>
+  </data>
+  <data name="ErrorCreatingUser" xml:space="preserve">
+    <value>Er is een fout opgetreden bij het aanmaken van de gebruiker: {0}</value>
+  </data>
 </root>

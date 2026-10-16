@@ -121,4 +121,10 @@
   <data name="Close" xml:space="preserve">
     <value>閉じる</value>
   </data>
+  <data name="ShowRawDetails" xml:space="preserve">
+    <value>生の詳細を表示</value>
+  </data>
+  <data name="ErrorSearching" xml:space="preserve">
+    <value>監査ログの検索中にエラーが発生しました。もう一度お試しください。</value>
+  </data>
 </root>

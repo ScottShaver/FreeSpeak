@@ -100,4 +100,49 @@
   <data name="RoleUser" xml:space="preserve">
     <value>基本アクセス権を持つ標準ユーザー</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>プロフィール</value>
+  </data>
+  <data name="SelfEditConfirm" xml:space="preserve">
+    <value>自分自身のロールを編集しています。続行してもよろしいですか？</value>
+  </data>
+  <data name="SelfEditConfirmRemovingAdmin" xml:space="preserve">
+    <value>自分自身のロールを編集し、SystemAdministrator ロールを削除しようとしています。システム管理へのアクセス権を失います。続行してもよろしいですか？</value>
+  </data>
+  <data name="ConfirmSaveRoleChanges" xml:space="preserve">
+    <value>はい、ロールの変更を保存します</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="ErrorLoadRoles" xml:space="preserve">
+    <value>ロールの読み込みに失敗しました。もう一度お試しください。</value>
+  </data>
+  <data name="RoleChangesSaved" xml:space="preserve">
+    <value>ロールの変更を保存しました。</value>
+  </data>
+  <data name="FailedToSaveRoles" xml:space="preserve">
+    <value>ロールの変更を保存できませんでした: {0}</value>
+  </data>
+  <data name="FailedToAddRole" xml:space="preserve">
+    <value>ロールを追加できませんでした: {0}</value>
+  </data>
+  <data name="FailedToRemoveRole" xml:space="preserve">
+    <value>ロールを削除できませんでした: {0} ({1})</value>
+  </data>
+  <data name="ReasonLastAdministrator" xml:space="preserve">
+    <value>少なくとも 1 人のシステム管理者が必要です</value>
+  </data>
+  <data name="ReasonRejected" xml:space="preserve">
+    <value>操作が拒否されました</value>
+  </data>
+  <data name="RoleGroupAdministrator" xml:space="preserve">
+    <value>グループの作成と管理ができます</value>
+  </data>
+  <data name="RoleGroupModerator" xml:space="preserve">
+    <value>割り当てられたグループ内のコンテンツを管理できます</value>
+  </data>
+  <data name="RoleCustom" xml:space="preserve">
+    <value>カスタムロール</value>
+  </data>
 </root>

@@ -185,5 +185,140 @@ namespace FreeSpeakWeb.Resources.Admin {
                 return ResourceManager.GetString("UnsavedChanges", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        public static string ProfilePictureAlt {
+            get {
+                return ResourceManager.GetString("ProfilePictureAlt", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You are editing your own roles. Are you sure you want to continue?.
+        /// </summary>
+        public static string SelfEditConfirm {
+            get {
+                return ResourceManager.GetString("SelfEditConfirm", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to You are editing your own roles and removing your SystemAdministrator role. You will lose access to system administration. Are you sure you want to continue?.
+        /// </summary>
+        public static string SelfEditConfirmRemovingAdmin {
+            get {
+                return ResourceManager.GetString("SelfEditConfirmRemovingAdmin", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Yes, save my role changes.
+        /// </summary>
+        public static string ConfirmSaveRoleChanges {
+            get {
+                return ResourceManager.GetString("ConfirmSaveRoleChanges", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to load roles. Please try again..
+        /// </summary>
+        public static string ErrorLoadRoles {
+            get {
+                return ResourceManager.GetString("ErrorLoadRoles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Role changes saved successfully!.
+        /// </summary>
+        public static string RoleChangesSaved {
+            get {
+                return ResourceManager.GetString("RoleChangesSaved", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to save role changes: {0}.
+        /// </summary>
+        public static string FailedToSaveRoles {
+            get {
+                return ResourceManager.GetString("FailedToSaveRoles", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to add role: {0}.
+        /// </summary>
+        public static string FailedToAddRole {
+            get {
+                return ResourceManager.GetString("FailedToAddRole", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to remove role: {0} ({1}).
+        /// </summary>
+        public static string FailedToRemoveRole {
+            get {
+                return ResourceManager.GetString("FailedToRemoveRole", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to at least one system administrator must remain.
+        /// </summary>
+        public static string ReasonLastAdministrator {
+            get {
+                return ResourceManager.GetString("ReasonLastAdministrator", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to operation was rejected.
+        /// </summary>
+        public static string ReasonRejected {
+            get {
+                return ResourceManager.GetString("ReasonRejected", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Can create and manage groups.
+        /// </summary>
+        public static string RoleGroupAdministrator {
+            get {
+                return ResourceManager.GetString("RoleGroupAdministrator", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Can moderate content within assigned groups.
+        /// </summary>
+        public static string RoleGroupModerator {
+            get {
+                return ResourceManager.GetString("RoleGroupModerator", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Custom role.
+        /// </summary>
+        public static string RoleCustom {
+            get {
+                return ResourceManager.GetString("RoleCustom", resourceCulture);
+            }
+        }
     }
 }

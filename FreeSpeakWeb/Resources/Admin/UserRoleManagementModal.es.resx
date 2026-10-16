@@ -100,4 +100,49 @@
   <data name="RoleUser" xml:space="preserve">
     <value>Usuario estándar con acceso básico</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="SelfEditConfirm" xml:space="preserve">
+    <value>Estás editando tus propios roles. ¿Seguro que quieres continuar?</value>
+  </data>
+  <data name="SelfEditConfirmRemovingAdmin" xml:space="preserve">
+    <value>Estás editando tus propios roles y eliminando tu rol SystemAdministrator. Perderás el acceso a la administración del sistema. ¿Seguro que quieres continuar?</value>
+  </data>
+  <data name="ConfirmSaveRoleChanges" xml:space="preserve">
+    <value>Sí, guardar mis cambios de roles</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="ErrorLoadRoles" xml:space="preserve">
+    <value>No se pudieron cargar los roles. Inténtalo de nuevo.</value>
+  </data>
+  <data name="RoleChangesSaved" xml:space="preserve">
+    <value>¡Los cambios de roles se guardaron correctamente!</value>
+  </data>
+  <data name="FailedToSaveRoles" xml:space="preserve">
+    <value>No se pudieron guardar los cambios de roles: {0}</value>
+  </data>
+  <data name="FailedToAddRole" xml:space="preserve">
+    <value>No se pudo agregar el rol: {0}</value>
+  </data>
+  <data name="FailedToRemoveRole" xml:space="preserve">
+    <value>No se pudo quitar el rol: {0} ({1})</value>
+  </data>
+  <data name="ReasonLastAdministrator" xml:space="preserve">
+    <value>debe permanecer al menos un administrador del sistema</value>
+  </data>
+  <data name="ReasonRejected" xml:space="preserve">
+    <value>la operación fue rechazada</value>
+  </data>
+  <data name="RoleGroupAdministrator" xml:space="preserve">
+    <value>Puede crear y administrar grupos</value>
+  </data>
+  <data name="RoleGroupModerator" xml:space="preserve">
+    <value>Puede moderar el contenido de los grupos asignados</value>
+  </data>
+  <data name="RoleCustom" xml:space="preserve">
+    <value>Rol personalizado</value>
+  </data>
 </root>

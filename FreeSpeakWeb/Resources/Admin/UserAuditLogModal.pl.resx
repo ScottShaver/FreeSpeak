@@ -91,4 +91,22 @@
   <data name="Close" xml:space="preserve">
     <value>Zamknij</value>
   </data>
+  <data name="ShowRawDetails" xml:space="preserve">
+    <value>Pokaż surowe szczegóły</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Poprzednia</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Następna</value>
+  </data>
+  <data name="PageOfPages" xml:space="preserve">
+    <value>Strona {0} z {1}</value>
+  </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="ErrorLoading" xml:space="preserve">
+    <value>Wystąpił błąd podczas ładowania dzienników audytu. Spróbuj ponownie.</value>
+  </data>
 </root>

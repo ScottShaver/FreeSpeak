@@ -154,4 +154,64 @@
   <data name="Close" xml:space="preserve">
     <value>Cerrar</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="DurationDays" xml:space="preserve">
+    <value>{0} d</value>
+  </data>
+  <data name="DurationHours" xml:space="preserve">
+    <value>{0} h</value>
+  </data>
+  <data name="DurationMinutes" xml:space="preserve">
+    <value>{0} min</value>
+  </data>
+  <data name="DurationSeconds" xml:space="preserve">
+    <value>{0} s</value>
+  </data>
+  <data name="DurationSeparator" xml:space="preserve">
+    <value>, </value>
+  </data>
+  <data name="NotAvailable" xml:space="preserve">
+    <value>N/D</value>
+  </data>
+  <data name="Expired" xml:space="preserve">
+    <value>Caducado</value>
+  </data>
+  <data name="SetLockoutUntilDate" xml:space="preserve">
+    <value>Establecer bloqueo hasta la fecha</value>
+  </data>
+  <data name="ErrorLoadStatus" xml:space="preserve">
+    <value>No se pudo cargar el estado de bloqueo. Inténtalo de nuevo.</value>
+  </data>
+  <data name="LockoutRemoved" xml:space="preserve">
+    <value>Bloqueo eliminado correctamente. Se restablecieron los intentos de inicio de sesión fallidos.</value>
+  </data>
+  <data name="ErrorRemoveLockout" xml:space="preserve">
+    <value>No se pudo eliminar el bloqueo. Inténtalo de nuevo.</value>
+  </data>
+  <data name="ErrorRemoveLockoutDetail" xml:space="preserve">
+    <value>No se pudo eliminar el bloqueo: {0}</value>
+  </data>
+  <data name="PermanentLockoutSet" xml:space="preserve">
+    <value>El usuario ha sido bloqueado permanentemente.</value>
+  </data>
+  <data name="ErrorSetPermanent" xml:space="preserve">
+    <value>No se pudo establecer el bloqueo permanente. Inténtalo de nuevo.</value>
+  </data>
+  <data name="ErrorSetPermanentDetail" xml:space="preserve">
+    <value>No se pudo establecer el bloqueo permanente: {0}</value>
+  </data>
+  <data name="LockedOutForDuration" xml:space="preserve">
+    <value>El usuario ha sido bloqueado durante {0}.</value>
+  </data>
+  <data name="LockedOutUntilDate" xml:space="preserve">
+    <value>El usuario ha sido bloqueado hasta {0}.</value>
+  </data>
+  <data name="ErrorSetTemporary" xml:space="preserve">
+    <value>No se pudo establecer el bloqueo temporal. Inténtalo de nuevo.</value>
+  </data>
+  <data name="ErrorSetTemporaryDetail" xml:space="preserve">
+    <value>No se pudo establecer el bloqueo temporal: {0}</value>
+  </data>
 </root>

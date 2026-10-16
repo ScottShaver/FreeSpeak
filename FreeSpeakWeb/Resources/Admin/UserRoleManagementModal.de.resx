@@ -100,4 +100,49 @@
   <data name="RoleUser" xml:space="preserve">
     <value>Standardbenutzer mit grundlegendem Zugriff</value>
   </data>
+  <data name="ProfilePictureAlt" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="SelfEditConfirm" xml:space="preserve">
+    <value>Sie bearbeiten Ihre eigenen Rollen. Möchten Sie wirklich fortfahren?</value>
+  </data>
+  <data name="SelfEditConfirmRemovingAdmin" xml:space="preserve">
+    <value>Sie bearbeiten Ihre eigenen Rollen und entfernen Ihre Rolle SystemAdministrator. Sie verlieren den Zugriff auf die Systemverwaltung. Möchten Sie wirklich fortfahren?</value>
+  </data>
+  <data name="ConfirmSaveRoleChanges" xml:space="preserve">
+    <value>Ja, meine Rollenänderungen speichern</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="ErrorLoadRoles" xml:space="preserve">
+    <value>Rollen konnten nicht geladen werden. Bitte versuchen Sie es erneut.</value>
+  </data>
+  <data name="RoleChangesSaved" xml:space="preserve">
+    <value>Rollenänderungen wurden erfolgreich gespeichert!</value>
+  </data>
+  <data name="FailedToSaveRoles" xml:space="preserve">
+    <value>Rollenänderungen konnten nicht gespeichert werden: {0}</value>
+  </data>
+  <data name="FailedToAddRole" xml:space="preserve">
+    <value>Rolle konnte nicht hinzugefügt werden: {0}</value>
+  </data>
+  <data name="FailedToRemoveRole" xml:space="preserve">
+    <value>Rolle konnte nicht entfernt werden: {0} ({1})</value>
+  </data>
+  <data name="ReasonLastAdministrator" xml:space="preserve">
+    <value>mindestens ein Systemadministrator muss verbleiben</value>
+  </data>
+  <data name="ReasonRejected" xml:space="preserve">
+    <value>Vorgang wurde abgelehnt</value>
+  </data>
+  <data name="RoleGroupAdministrator" xml:space="preserve">
+    <value>Kann Gruppen erstellen und verwalten</value>
+  </data>
+  <data name="RoleGroupModerator" xml:space="preserve">
+    <value>Kann Inhalte in zugewiesenen Gruppen moderieren</value>
+  </data>
+  <data name="RoleCustom" xml:space="preserve">
+    <value>Benutzerdefinierte Rolle</value>
+  </data>
 </root>
