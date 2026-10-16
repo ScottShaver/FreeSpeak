@@ -257,7 +257,8 @@ Controls the system moderator dashboard (`/system-moderator`). Also editable at 
 ```json
 {
   "Moderation": {
-    "StaleReportDays": 3
+    "StaleReportDays": 3,
+    "MaxModeratorSuspensionDays": 7
   }
 }
 ```
@@ -265,6 +266,7 @@ Controls the system moderator dashboard (`/system-moderator`). Also editable at 
 | Key | Default | Description |
 |-----|---------|-------------|
 | `StaleReportDays` | 3 | A pending report older than this many days is flagged as stale (banner, Overview card and one-click filter). Allowed range 1 to 365. |
+| `MaxModeratorSuspensionDays` | 7 | The longest suspension a system moderator may issue. Longer or permanent suspensions require a system administrator. Suspensions are enforced at sign-in and on every request of a signed-in user (Blazor circuits are re-checked about every minute). |
 
 ## Database-Backed System Settings
 
